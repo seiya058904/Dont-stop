@@ -1,6 +1,6 @@
 """Alternating M6/M7 on identical pressure input; isolated source copies only."""
 from pathlib import Path
-import hashlib,json,subprocess,os,shutil,time
+import hashlib,json,subprocess,os,shutil,time,sys
 root=Path(__file__).resolve().parents[1]
 copy=root/'evidence/m7-perf-project'
 out=root/'docs/iteration/evidence/m7'
@@ -16,7 +16,10 @@ if not copy.exists():
 changed=subprocess.check_output(['git','diff','--name-only','6e3219c','--','TowDownGame-Iteration/autoload','TowDownGame-Iteration/game','TowDownGame-Iteration/ui'],cwd=root.parent,text=True).splitlines()
 changed=[n.removeprefix('TowDownGame-Iteration/') for n in changed if n.endswith('.gd')]
 versions={'M7':{n:(root/n).read_bytes() for n in changed},'M6':{}}
-for n in changed:versions['M6'][n]=subprocess.check_output(['git','show','6e3219c:TowDownGame-Iteration/'+n],cwd=root.parent)
+for n in changed:
+ baseline=subprocess.run(['git','show','6e3219c:TowDownGame-Iteration/'+n],cwd=root.parent,capture_output=True)
+ # New M7-only effects are inert under M6 BaseGun; keep the file to allow cached imports.
+ versions['M6'][n]=baseline.stdout if baseline.returncode==0 else versions['M7'][n]
 runner=(root/'tests/M5Pressure.gd').read_text(encoding='utf-8')
 runner=runner.replace('var normal = false','var normal = "normal" in OS.get_cmdline_user_args()').replace('if DisplayServer.get_name() != "headless": get_tree().quit(2); return','# Both headless and offscreen render use the identical fixture.')
 # Wait until the authorized encounter audit stops competing for CPU/GPU samples.
@@ -29,6 +32,8 @@ def regression_done():
 while not (regression_done() and all((out/f'audit-{t}-execution.json').exists() for t in ['basic','middle','late'])):
  if time.time()-start>3000:raise RuntimeError('Audit wait timed out')
  time.sleep(10)
+if '--optimized' in sys.argv:
+ out=out/'optimized-performance'; out.mkdir(exist_ok=True)
 results=[]
 cases=[(v,'pressure','headless') for v in ['M6','M7','M7','M6','M6','M7']]+[(v,'normal','headless') for v in ['M6','M7']]+[(v,'tier5','gpu') for v in ['M6','M7','M7','M6']]
 for i,(version,scenario,display) in enumerate(cases):

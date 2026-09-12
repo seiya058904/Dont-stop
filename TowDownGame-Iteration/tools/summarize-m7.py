@@ -45,3 +45,25 @@ boss_raw=sum(r.get('boss_raw',0) for r in summary); boss_applied=sum(r.get('boss
 lines += ['', f'实际受击链观测：普通敌人防御后原始 {normal_raw:.3f} → 应用 {normal_applied:.3f}，比值 {normal_applied/normal_raw:.6f}；Boss {boss_raw:.3f} → {boss_applied:.3f}，比值 {boss_applied/boss_raw:.6f}。分别为明确的 12.5% 和 3% 下调；不增加 HP，不改敌人数量、遭遇时限或玩家血量。Boss 召唤的普通单位按普通伤害系数。', '', '完成 82/90 → 87/90，死亡 8 → 3；M7 仍有死亡，未把挑战消除。总受伤不是逐档必降：后期配置死亡更少、存活更久，也可能承受更多累计伤害。定时生存遭遇时间主要由固定时限决定，平均通关时间混合了生存场与 Boss 场，不等价于击杀速度。', '', '所有 90 行见 encounters-90.csv；原始 JSON 包含敌方构成、Boss 用时、清理数量、无伤害时段与 watchdog。三个 execution 文件均要求 code=0/source_unchanged=true。真人压力、走位与可反应性仍需第二次试玩。']
 (out/'difficulty-audit.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
 print('Wrote 24 weapon rows and 90 encounter rows.')
+benchmark=read(out/'optimized-performance/benchmark-index.json')
+assert len(benchmark)==12 and all(r['code']==0 and r['metrics'] for r in benchmark)
+lines=['# M7 性能对照与限制','',
+'同一台 Windows / Ryzen 7 9700X / RX 7900 XT，Godot 4.7.2。隔离项目逐次还原 M6 6e3219c 与 M7 产品脚本；共六次 headless 压力、两次正常战斗、四次原生 OpenGL 离屏 Tier V 压力。后者强制 1366×768 SubViewport 持续绘制，日志有非零 draw calls；没有用最小化空窗口冒充渲染负载。', '',
+'压力为 150 活敌人、约 400 活弹体，持续补齐，包含反弹、裂片、追踪、热流、引力、回返盘；Tier V 另加入轨道炮、火箭、转管。最终样本全部保留于 optimized-performance；每次结束敌人、临时与孤立节点均清空。', '',
+'测量值是引擎主循环 delta 的百分位，含原生绘制负担但不是硬件 GPU timestamp，也不等于真实键鼠全屏 FPS。正常战斗与极端补齐夹具分别比较；不能将正常场景的 6.94 ms 套用于极端压力。', '',
+'|最终同批场景|版本|p50 中位 ms|p95 中位 ms|p99 中位 ms|各次 p99 ms|', '|---|---|---:|---:|---:|---|']
+performance=[]
+for scenario in ['pressure','normal','tier5']:
+    for version in ['M6','M7']:
+        rows=[r for r in benchmark if r['scenario']==scenario and r['version']==version]
+        med={k:statistics.median(r['metrics']['frame_ms'][k] for r in rows) for k in ['p50','p95','p99']}
+        values=[r['metrics']['frame_ms']['p99'] for r in rows]
+        performance.append(dict(scenario=scenario,version=version,median=med,p99_samples=values))
+        lines.append(f"|{scenario}|{version}|{med['p50']:.3f}|{med['p95']:.3f}|{med['p99']:.3f}|{' / '.join(f'{v:.3f}' for v in values)}|")
+lines += ['', '## 诊断与必要修正', '',
+'首批同会话 headless 压力 p99 中位 M6 26.389、M7 47.222 ms，不能忽略这次退化。进一步节点统计显示极端夹具 33 秒约 5600 次击杀、3700 枚未拾取金币、两万节点；更多击杀也增加掉落与后续刷新负担。仅关掉新增 Tier 绘制的隔离对照没有消除尖峰（93.034 / 136.486 ms），不据此把差异全归因于视觉。', '',
+'唯一补充产品优化在 Gold.gd：按天赋等级缓存吸附半径平方，使用平方距离比较，收取后停止无用轮询。等级改变当帧刷新缓存。未合并/删除金币、未减少掉落值、未缩小范围、未跳过墙体射线或延迟拾取；高 Tier 特效完整保留。随后重跑金币天赋与交叉机制回归。', '',
+'最终同批正常战斗一致；headless 压力中位 M6 75.644 → M7 59.339 ms，原生渲染压力中位 144.312 → 144.124 ms，未见 M7 持续额外退化。但 M6 自身各批 26–144 ms 的变化表明调度、动态击杀/掉落量与后台渲染条件影响很大；不能声称该小缓存带来固定百分比加速。', '',
+'极端压力双方仍明显超出 33.3 ms 参考预算，属于已记录的高密度边界，不写成稳定达标。本轮结论是与同批 M6 保持相当、正常战斗无回归，真实全屏/其他硬件及第二次真人舒适度仍未验证。未通过削弱玩家伤害、减少敌人/弹体或删除视觉来追数字。']
+(out/'performance.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+write('performance-summary.json',performance)

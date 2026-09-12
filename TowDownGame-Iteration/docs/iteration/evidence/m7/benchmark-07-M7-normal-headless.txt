@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PRESSURE {"damage_events":66,"display":"headless","encounter_completed":true,"fixture":"M5 mixed pressure with six special mechanisms","frame_ms":{"p50":7.57575757575758,"p95":8.33333333333333,"p99":8.33333333333333},"gpu":"","live_enemy_p50":27,"live_enemy_peak":51,"live_projectile_p50":4,"live_projectile_peak":9,"node_end":337.0,"node_start":354,"orphan_nodes":0.0,"pre_refill_enemy_p50":0,"pre_refill_projectile_p50":0,"scenario":"normal","seconds":48.0054940909092,"viewport":"(64, 64)"}
+PRESSURE CLEANUP nodes=337.0 orphans=0.0 transients=0 enemies=0

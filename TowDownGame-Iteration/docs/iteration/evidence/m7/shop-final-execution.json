@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "seconds": 7.120629787445068,
+  "command": [
+    "D:\\xia zai\\AI project\\8.30 Backup game\\archive\\workspace-support\\_tools\\godot\\4.7.2\\Godot_v4.7.2-stable_win64.exe",
+    "--path",
+    "D:\\xia zai\\AI project\\8.30 Backup game\\TowDownGame-Iteration",
+    "--position",
+    "-10000,-10000",
+    "--resolution",
+    "1366x768",
+    "--minimized",
+    "res://tests/M7Shop.tscn",
+    "--",
+    "capture"
+  ]
+}

@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 24.5.1.240502 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon RX 7900 XT
+
+RENDER DRAW CALLS 1930.0
+PRESSURE {"damage_events":6217,"display":"Windows","encounter_completed":false,"fixture":"M5 mixed pressure with six special mechanisms","frame_ms":{"p50":85.4166666666667,"p95":138.842333333333,"p99":143.17},"gpu":"AMD Radeon RX 7900 XT","live_enemy_p50":150,"live_enemy_peak":150,"live_projectile_p50":401,"live_projectile_peak":403,"node_end":17069.0,"node_start":367,"orphan_nodes":0.0,"pre_refill_enemy_p50":131,"pre_refill_projectile_p50":346,"scenario":"pressure","seconds":33.0266666666667,"viewport":"(1366, 768)"}
+PRESSURE CLEANUP nodes=390.0 orphans=0.0 transients=0 enemies=0

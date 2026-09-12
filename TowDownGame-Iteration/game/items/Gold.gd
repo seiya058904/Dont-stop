@@ -1,8 +1,14 @@
 extends "res://game/items/BaseItem.gd"
 #金币
 var collected = false
+var magnet_rank = -1
+var magnet_radius_squared = 0.0
 func _physics_process(_delta):
-	if Demo.rank("T09") > 0 and is_instance_valid(Utils.player) and global_position.distance_to(Utils.player.global_position) <= 20*(1.0+DemoConfig.talent_value("T09",Demo.rank("T09"))) and Combat.clear_line(global_position,Utils.player.global_position):
+	var rank = Demo.rank("T09")
+	if rank != magnet_rank:
+		magnet_rank = rank
+		magnet_radius_squared = pow(20*(1.0+DemoConfig.talent_value("T09",rank)),2) if rank > 0 else 0.0
+	if magnet_rank > 0 and is_instance_valid(Utils.player) and global_position.distance_squared_to(Utils.player.global_position) <= magnet_radius_squared and Combat.clear_line(global_position,Utils.player.global_position):
 		_on_area_2d_body_entered(Utils.player)
 func _ready():
 	add_to_group("combat_transient")
@@ -12,6 +18,7 @@ func _ready():
 func _on_area_2d_body_entered(body):
 	if body is Player and not collected and LevelServer.state == "COMBAT" and Combat.clear_line(global_position,body.global_position):
 		collected = true
+		set_physics_process(false)
 		if giveCallBack:
 			giveCallBack.call()
 		PlayerData.gold += 1

@@ -1,0 +1,330 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS normal fresh wallet is modest
+PASS universal install 111/121
+PASS universal effective benefit 111/121
+PASS universal saved graph 111/121
+PASS universal install 113/121
+PASS universal effective benefit 113/121
+PASS universal saved graph 113/121
+PASS universal install 115/121
+PASS universal effective benefit 115/121
+PASS universal saved graph 115/121
+PASS universal install 116/121
+PASS universal effective benefit 116/121
+PASS universal saved graph 116/121
+PASS universal install 118/121
+PASS universal effective benefit 118/121
+PASS universal saved graph 118/121
+PASS universal install 119/121
+PASS universal effective benefit 119/121
+PASS universal saved graph 119/121
+PASS universal install 120/121
+PASS universal effective benefit 120/121
+PASS universal saved graph 120/121
+PASS universal install 123/121
+PASS universal effective benefit 123/121
+PASS universal saved graph 123/121
+PASS universal install 124/121
+PASS universal effective benefit 124/121
+PASS universal saved graph 124/121
+PASS universal install 110/121
+PASS universal effective benefit 110/121
+PASS universal saved graph 110/121
+PASS universal install 112/121
+PASS universal effective benefit 112/121
+PASS universal saved graph 112/121
+PASS universal install 114/121
+PASS universal effective benefit 114/121
+PASS universal saved graph 114/121
+PASS universal install 117/121
+PASS universal effective benefit 117/121
+PASS universal saved graph 117/121
+PASS universal install 121/121
+PASS universal effective benefit 121/121
+PASS universal saved graph 121/121
+PASS universal install 122/121
+PASS universal effective benefit 122/121
+PASS universal saved graph 122/121
+PASS universal install 0/121
+PASS universal effective benefit 0/121
+PASS universal saved graph 0/121
+PASS universal install 1/121
+PASS universal effective benefit 1/121
+PASS universal saved graph 1/121
+PASS universal install 2/121
+PASS universal effective benefit 2/121
+PASS universal saved graph 2/121
+PASS universal install 3/121
+PASS universal effective benefit 3/121
+PASS universal saved graph 3/121
+PASS universal install 5/121
+PASS universal effective benefit 5/121
+PASS universal saved graph 5/121
+PASS universal install 6/121
+PASS universal effective benefit 6/121
+PASS universal saved graph 6/121
+PASS universal install 7/121
+PASS universal effective benefit 7/121
+PASS universal saved graph 7/121
+PASS universal install 8/121
+PASS universal effective benefit 8/121
+PASS universal saved graph 8/121
+PASS universal install 9/121
+FAIL universal effective benefit 9/121
+PASS universal saved graph 9/121
+PASS timed reload 121/0
+PASS timed reload 121/1
+PASS timed reload 121/2
+PASS timed reload 121/3
+PASS timed reload 121/4
+PASS timed reload 121/5
+PASS timed reload 121/6
+PASS timed reload 121/7
+PASS timed reload 121/8
+PASS timed reload 121/9
+PASS no reserve cannot reload 121
+PASS cancel does not spend magazine
+PASS universal install 111/122
+PASS universal effective benefit 111/122
+PASS universal saved graph 111/122
+PASS universal install 113/122
+PASS universal effective benefit 113/122
+PASS universal saved graph 113/122
+PASS universal install 115/122
+PASS universal effective benefit 115/122
+PASS universal saved graph 115/122
+PASS universal install 116/122
+PASS universal effective benefit 116/122
+PASS universal saved graph 116/122
+PASS universal install 118/122
+PASS universal effective benefit 118/122
+PASS universal saved graph 118/122
+PASS universal install 119/122
+PASS universal effective benefit 119/122
+PASS universal saved graph 119/122
+PASS universal install 120/122
+PASS universal effective benefit 120/122
+PASS universal saved graph 120/122
+PASS universal install 123/122
+PASS universal effective benefit 123/122
+PASS universal saved graph 123/122
+PASS universal install 124/122
+PASS universal effective benefit 124/122
+PASS universal saved graph 124/122
+PASS universal install 110/122
+PASS universal effective benefit 110/122
+PASS universal saved graph 110/122
+PASS universal install 112/122
+PASS universal effective benefit 112/122
+PASS universal saved graph 112/122
+PASS universal install 114/122
+PASS universal effective benefit 114/122
+PASS universal saved graph 114/122
+PASS universal install 117/122
+PASS universal effective benefit 117/122
+PASS universal saved graph 117/122
+PASS universal install 121/122
+PASS universal effective benefit 121/122
+PASS universal saved graph 121/122
+PASS universal install 122/122
+PASS universal effective benefit 122/122
+PASS universal saved graph 122/122
+PASS universal install 0/122
+PASS universal effective benefit 0/122
+PASS universal saved graph 0/122
+PASS universal install 1/122
+PASS universal effective benefit 1/122
+PASS universal saved graph 1/122
+PASS universal install 2/122
+PASS universal effective benefit 2/122
+PASS universal saved graph 2/122
+PASS universal install 3/122
+PASS universal effective benefit 3/122
+PASS universal saved graph 3/122
+PASS universal install 5/122
+PASS universal effective benefit 5/122
+PASS universal saved graph 5/122
+PASS universal install 6/122
+PASS universal effective benefit 6/122
+PASS universal saved graph 6/122
+PASS universal install 7/122
+PASS universal effective benefit 7/122
+PASS universal saved graph 7/122
+PASS universal install 8/122
+PASS universal effective benefit 8/122
+PASS universal saved graph 8/122
+PASS universal install 9/122
+FAIL universal effective benefit 9/122
+PASS universal saved graph 9/122
+PASS timed reload 122/0
+PASS timed reload 122/1
+PASS timed reload 122/2
+PASS timed reload 122/3
+PASS timed reload 122/4
+PASS timed reload 122/5
+PASS timed reload 122/6
+PASS timed reload 122/7
+PASS timed reload 122/8
+PASS timed reload 122/9
+PASS no reserve cannot reload 122
+PASS cancel does not spend magazine
+PASS universal install 111/124
+PASS universal effective benefit 111/124
+PASS universal saved graph 111/124
+PASS universal install 113/124
+PASS universal effective benefit 113/124
+PASS universal saved graph 113/124
+PASS universal install 115/124
+PASS universal effective benefit 115/124
+PASS universal saved graph 115/124
+PASS universal install 116/124
+PASS universal effective benefit 116/124
+PASS universal saved graph 116/124
+PASS universal install 118/124
+PASS universal effective benefit 118/124
+PASS universal saved graph 118/124
+PASS universal install 119/124
+PASS universal effective benefit 119/124
+PASS universal saved graph 119/124
+PASS universal install 120/124
+PASS universal effective benefit 120/124
+PASS universal saved graph 120/124
+PASS universal install 123/124
+PASS universal effective benefit 123/124
+PASS universal saved graph 123/124
+PASS universal install 124/124
+PASS universal effective benefit 124/124
+PASS universal saved graph 124/124
+PASS universal install 110/124
+PASS universal effective benefit 110/124
+PASS universal saved graph 110/124
+PASS universal install 112/124
+PASS universal effective benefit 112/124
+PASS universal saved graph 112/124
+PASS universal install 114/124
+PASS universal effective benefit 114/124
+PASS universal saved graph 114/124
+PASS universal install 117/124
+PASS universal effective benefit 117/124
+PASS universal saved graph 117/124
+PASS universal install 121/124
+PASS universal effective benefit 121/124
+PASS universal saved graph 121/124
+PASS universal install 122/124
+PASS universal effective benefit 122/124
+PASS universal saved graph 122/124
+PASS universal install 0/124
+PASS universal effective benefit 0/124
+PASS universal saved graph 0/124
+PASS universal install 1/124
+PASS universal effective benefit 1/124
+PASS universal saved graph 1/124
+PASS universal install 2/124
+PASS universal effective benefit 2/124
+PASS universal saved graph 2/124
+PASS universal install 3/124
+PASS universal effective benefit 3/124
+PASS universal saved graph 3/124
+PASS universal install 5/124
+PASS universal effective benefit 5/124
+PASS universal saved graph 5/124
+PASS universal install 6/124
+PASS universal effective benefit 6/124
+PASS universal saved graph 6/124
+PASS universal install 7/124
+PASS universal effective benefit 7/124
+PASS universal saved graph 7/124
+PASS universal install 8/124
+PASS universal effective benefit 8/124
+PASS universal saved graph 8/124
+PASS universal install 9/124
+FAIL universal effective benefit 9/124
+PASS universal saved graph 9/124
+PASS timed reload 124/0
+PASS timed reload 124/1
+PASS timed reload 124/2
+PASS timed reload 124/3
+PASS timed reload 124/4
+PASS timed reload 124/5
+PASS timed reload 124/6
+PASS timed reload 124/7
+PASS timed reload 124/8
+PASS timed reload 124/9
+PASS no reserve cannot reload 124
+PASS cancel does not spend magazine
+PASS universal install 111/111
+PASS universal effective benefit 111/111
+PASS universal saved graph 111/111
+PASS universal install 113/111
+PASS universal effective benefit 113/111
+PASS universal saved graph 113/111
+PASS universal install 115/111
+PASS universal effective benefit 115/111
+PASS universal saved graph 115/111
+PASS universal install 116/111
+PASS universal effective benefit 116/111
+PASS universal saved graph 116/111
+PASS universal install 118/111
+PASS universal effective benefit 118/111
+PASS universal saved graph 118/111
+PASS universal install 119/111
+PASS universal effective benefit 119/111
+PASS universal saved graph 119/111
+PASS universal install 120/111
+PASS universal effective benefit 120/111
+PASS universal saved graph 120/111
+PASS universal install 123/111
+PASS universal effective benefit 123/111
+PASS universal saved graph 123/111
+PASS universal install 124/111
+PASS universal effective benefit 124/111
+PASS universal saved graph 124/111
+PASS universal install 110/111
+PASS universal effective benefit 110/111
+PASS universal saved graph 110/111
+PASS universal install 112/111
+PASS universal effective benefit 112/111
+PASS universal saved graph 112/111
+PASS universal install 114/111
+PASS universal effective benefit 114/111
+PASS universal saved graph 114/111
+PASS universal install 117/111
+PASS universal effective benefit 117/111
+PASS universal saved graph 117/111
+PASS universal install 121/111
+PASS universal effective benefit 121/111
+PASS universal saved graph 121/111
+PASS universal install 122/111
+PASS universal effective benefit 122/111
+PASS universal saved graph 122/111
+PASS universal install 0/111
+PASS universal effective benefit 0/111
+PASS universal saved graph 0/111
+PASS universal install 1/111
+PASS universal effective benefit 1/111
+PASS universal saved graph 1/111
+PASS universal install 2/111
+PASS universal effective benefit 2/111
+PASS universal saved graph 2/111
+PASS universal install 3/111
+PASS universal effective benefit 3/111
+PASS universal saved graph 3/111
+PASS universal install 5/111
+PASS universal effective benefit 5/111
+PASS universal saved graph 5/111
+PASS universal install 6/111
+PASS universal effective benefit 6/111
+PASS universal saved graph 6/111
+PASS universal install 7/111
+PASS universal effective benefit 7/111
+PASS universal saved graph 7/111
+PASS universal install 8/111
+PASS universal effective benefit 8/111
+PASS universal saved graph 8/111
+PASS universal install 9/111
+FAIL universal effective benefit 9/111
+PASS universal saved graph 9/111
+PASS timed reload 111/0
+PASS timed reload 111/1
+PASS timed reload 111/2

@@ -1,0 +1,74 @@
+[
+  {
+    "version": "m6",
+    "build": "basic",
+    "encounters": 30,
+    "completed": 28,
+    "deaths": 2,
+    "flow_failures": 0,
+    "damage_taken": 48.0,
+    "mean_completed_seconds": 41.2225
+  },
+  {
+    "version": "m6",
+    "build": "middle",
+    "encounters": 30,
+    "completed": 26,
+    "deaths": 4,
+    "flow_failures": 0,
+    "damage_taken": 80.55,
+    "mean_completed_seconds": 41.29634615384615
+  },
+  {
+    "version": "m6",
+    "build": "late",
+    "encounters": 30,
+    "completed": 28,
+    "deaths": 2,
+    "flow_failures": 0,
+    "damage_taken": 54.35,
+    "mean_completed_seconds": 40.796
+  },
+  {
+    "version": "m7",
+    "build": "basic",
+    "encounters": 30,
+    "completed": 28,
+    "deaths": 2,
+    "flow_failures": 0,
+    "damage_taken": 44.32,
+    "mean_completed_seconds": 41.20292857142857,
+    "normal_raw": 45.0,
+    "normal_applied": 39.375,
+    "boss_raw": 6.0,
+    "boss_applied": 5.82
+  },
+  {
+    "version": "m7",
+    "build": "middle",
+    "encounters": 30,
+    "completed": 30,
+    "deaths": 0,
+    "flow_failures": 0,
+    "damage_taken": 53.225,
+    "mean_completed_seconds": 40.87283333333333,
+    "normal_raw": 61.0,
+    "normal_applied": 53.375,
+    "boss_raw": 0.0,
+    "boss_applied": 0.0
+  },
+  {
+    "version": "m7",
+    "build": "late",
+    "encounters": 30,
+    "completed": 29,
+    "deaths": 1,
+    "flow_failures": 0,
+    "damage_taken": 60.625,
+    "mean_completed_seconds": 40.74072413793103,
+    "normal_raw": 70.0,
+    "normal_applied": 61.25,
+    "boss_raw": 0.0,
+    "boss_applied": 0.0
+  }
+]
