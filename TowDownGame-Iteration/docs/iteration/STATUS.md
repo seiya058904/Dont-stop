@@ -41,3 +41,7 @@ M2：3新枪、6新配件、6天赋、3新敌人、R1三遭遇、营地练枪；
 
 开发分支：`feat/towdown-experience-upgrade`；起点main：`e267aa449c45860c42a3d0e8ae6a26e635341ba7`。
 阶段源码与验证记录按普通文件提交，非gitlink。已确认remote为用户seiya058904/game-prototype-lab且push权限有效；推送本开发分支，不合并main、不创建正式发行。实际提交号与最终推送结果以交付回复为准，可运行 `git log -1` / `git status -sb` 核对。
+
+## M2-R1 追加记录（2026-09-12）
+
+审查基线 4416768。R01—R04 第一批修复完成：真实击杀升级刷新、完整配置后恢复弹药、全量校验及 v1 迁移、坏档保留与恢复入口、保存失败状态与退出选择。R1Regression 原始23项中16失败，A批后余5项待B/C批。存档专项33/33，跨进程18次恢复72/72。证据见 evidence/m2-r1。未完成长期验证，HUMAN_ACCEPTED=false。

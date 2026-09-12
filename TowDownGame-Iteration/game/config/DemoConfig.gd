@@ -21,3 +21,10 @@ const ENCOUNTERS = {
 	3:{"name":"R1 · 远程交错", "info":"近战推进，喷射者间歇压制；生存45秒", "seconds":45, "roles":["E01","E02","E01","E05"], "cap":40, "interval":0.7},
 	4:{"name":"R1 · 蜂群冲锋", "info":"分方向蜂群，少量预警冲锋者；生存45秒", "seconds":45, "roles":["E02","E02","E02","E04"], "cap":55, "interval":0.55}
 }
+
+static func weapon_tags(id: int) -> Array:
+	if id == 6: return ["beam","energy"]
+	if id == 112: return ["chain","energy"]
+	if id == 114: return ["projectile","explosive","energy"]
+	if id == 123: return ["projectile","spread","burst"]
+	return ["projectile","spread"] if id in [1,5,8] else ["projectile"]

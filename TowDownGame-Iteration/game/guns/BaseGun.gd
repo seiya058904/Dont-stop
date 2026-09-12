@@ -71,8 +71,7 @@ func _init():
 func _ready() -> void:
 	add_to_group("guns")
 	base_stats = {"damage":damage,"magazine":bullets_max_count,"reload":change_speed,"rate":fire_rate,"impulse":knockback_speed}
-	if weapon_id == 6: tags = ["beam","energy"]
-	if weapon_id in [1,5,8,123]: tags.append("spread")
+	tags = DemoConfig.weapon_tags(weapon_id)
 	audio.bus = "SFX"
 	audio.max_polyphony = 4
 	audio_reload_ammo.bus = "SFX"
@@ -87,7 +86,7 @@ func onPlayerFireRateChange(_rate):
 	updateGun()
 
 func updateGun():
-	if base_stats.is_empty(): return
+	if base_stats.is_empty() or Demo.loading: return
 	effective = EffectiveStats.calculate(self, attachments_dict.values())
 	bullets_max_count = effective.magazine
 	if bullets_count > bullets_max_count:
@@ -180,7 +179,7 @@ func set_use(use:bool):
 	if player && is_use:
 		player.gun = self
 		PlayerData.emit_signal("onWeaponChangeAnim",weapon_id,Utils.GUN_CHANGE_TYPE.CHANGE)
-		if bullets_count == 0:
+		if bullets_count == 0 and not Demo.loading:
 			reload_ammo()
 	PlayerData.emit_signal("onWeaponChanged")
 

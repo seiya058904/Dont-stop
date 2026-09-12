@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FAIL R02 exact ammo gun 0 case 0
+PASS R02 exact ammo gun 4 case 0
+PASS R02 exact reserve
+PASS R02 duplicate model instances remain distinct
+R1 SAVE failures=1

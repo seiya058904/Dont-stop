@@ -16,6 +16,10 @@ var loading = false
 var save_blocked = false
 var test_mode = false
 var fire_released = true
+var save_store = CampSaveStore.new()
+var dirty = false
+var save_result = {"success":true,"reason":""}
+var save_dialog
 var save_path = "user://camp-v1.json"
 var ui
 var ui_audio = AudioStreamPlayer.new()
@@ -31,6 +35,7 @@ func _ready():
 	ui_audio.stream = load("res://audio/bullet/GUNMech_Insert Clip_01.wav")
 	add_child(ui_audio)
 	Utils.onGameStart.connect(_start)
+	PlayerData.onPlayerLevelChange.connect(_level_changed)
 
 func _start():
 	TranslationServer.set_locale("zh_CN")
@@ -50,6 +55,9 @@ func play_ui():
 
 func rank(id: String) -> int:
 	return int(talents.get(id,0))
+
+func _level_changed(_level):
+	if not loading: refresh()
 
 func refresh():
 	for gun in PlayerData.player_weapon_list.values():
@@ -154,7 +162,8 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 	result.charged_currency = currency
 	result.charged_amount = price
 	refresh()
-	save_camp()
+	result.saved = save_camp().success
+	if not result.saved: result.reason += "\n已购买但尚未保存；请重试保存（不会再次扣款）"
 	return result
 
 func replenish():
@@ -183,81 +192,116 @@ func snapshot() -> Dictionary:
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
 	var attachments = []
 	for am in PlayerData.player_am_list.values(): attachments.append({"definition":str(am.am_id),"instance":am.id,"gun":str(am.gun.weapon_id) if is_instance_valid(am.gun) else ""})
-	return {"schema_version":1,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"ammo":PlayerData.player_ammo,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"legacy":purchases,"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":2,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"ammo":PlayerData.player_ammo,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"legacy":purchases,"legacy_state":legacy_state(),"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
-func save_camp():
-	if loading or test_mode or save_blocked or LevelServer.state != "CAMP": return
-	var file = FileAccess.open(save_path+".tmp", FileAccess.WRITE)
-	if file == null: return
-	file.store_string(JSON.stringify(snapshot(),"\t"))
-	file.flush()
-	var error = file.get_error()
-	file.close()
-	if error == OK: DirAccess.rename_absolute(save_path+".tmp",save_path)
+func legacy_state() -> Dictionary:
+	var result = {}
+	if is_instance_valid(Utils.player):
+		for reward in Utils.player.reward_root.get_children():
+			if reward.id == 10: result["10"] = reward.kill_count
+	return result
 
-func load_camp():
-	if not FileAccess.file_exists(save_path): return
-	var data = JSON.parse_string(FileAccess.get_file_as_string(save_path))
-	if not valid_save(data):
+func save_camp() -> Dictionary:
+	if loading or test_mode: return {"success":true,"skipped":true,"reason":"测试或恢复中，不写磁盘"}
+	dirty = true
+	if save_blocked:
+		save_result = {"success":false,"reason":"原存档待处理；临时试玩不会覆盖"}
+	elif LevelServer.state != "CAMP":
+		save_result = {"success":false,"reason":"战斗尚未结算，回营后保存"}
+	else:
+		var data = snapshot()
+		save_result = save_store.save(save_path,data) if valid_save(data) else {"success":false,"reason":"当前配置未通过完整校验"}
+	if save_result.success: dirty = false
+	changed.emit()
+	return save_result
+
+func load_camp() -> bool:
+	if not FileAccess.file_exists(save_path): return false
+	var parser = JSON.new()
+	var parse_error = parser.parse(FileAccess.get_file_as_string(save_path))
+	var parsed = parser.data if parse_error == OK else null
+	if not valid_save(parsed):
 		save_blocked = true
-		DirAccess.copy_absolute(save_path,save_path+".invalid-"+str(Time.get_unix_time_from_system()))
-		Utils.showToast("存档无法读取，原文件已保留；本次为临时试玩，未覆盖存档",6)
-		return
+		save_result = {"success":false,"reason":"存档损坏，原文保持；当前为临时试玩"}
+		if not test_mode: show_save_dialog(true)
+		return false
+	var data = CampSnapshot.normalize(parsed)
+	# Validation has completed. From here, restore the entire graph before any recalc.
 	loading = true
-	talents = data.talents
+	stop_attacks()
+	Utils.player.gun = null
+	for am in PlayerData.player_am_list.values(): am.free()
+	PlayerData.player_am_list.clear()
+	for gun in PlayerData.player_weapon_list.values(): gun.free()
+	PlayerData.player_weapon_list.clear()
+	for reward in Utils.player.reward_root.get_children(): reward.free()
+	Utils.player.SPEED = 100 * PlayerData.player_speed
+	talents = data.talents.duplicate()
 	PlayerData.player_level = int(data.level)
 	PlayerData.player_exp = data.exp
 	for w in data.weapons:
-		if Utils.weapon_list.has(w.id) and not PlayerData.player_weapon_list.has(int(w.id)):
-			var gun = Utils.weapon_list[w.id].instantiate()
-			PlayerData.add_weapon(gun)
-			gun.bullets_count = int(w.ammo)
+		PlayerData.add_weapon(Utils.weapon_list[w.id].instantiate())
 	for a in data.attachments:
-		if Utils.am_dict.has(a.definition):
-			var am = Utils.am_dict[a.definition].instantiate()
-			am.id = int(a.instance)
-			PlayerData.add_attachment(am)
-			if PlayerData.player_weapon_list.has(int(a.gun)) and a.gun != "": PlayerData.player_weapon_list[int(a.gun)].addAttachMent(am)
-	purchases = data.get("legacy",[])
+		var am = Utils.am_dict[a.definition].instantiate()
+		am.id = int(a.instance)
+		PlayerData.add_attachment(am)
+		if a.gun != "":
+			var gun = PlayerData.player_weapon_list[int(a.gun)]
+			gun.attachments_dict[am.am_type] = am
+			am.reparent(gun.attachments_node)
+			am.gun = gun
+	purchases = data.legacy.duplicate()
 	for id in purchases:
-		if RewardServer.reward_list.has(id): RewardServer.addReward(RewardServer.reward_list[id].instantiate())
-	PlayerData.player_hp_max = data.hp_max
-	PlayerData.player_hp = data.hp
-	PlayerData.gold = int(data.gold)
-	PlayerData.reward_point = int(data.points)
-	PlayerData.player_ammo = int(data.ammo)
+		var reward = RewardServer.reward_list[id].instantiate()
+		if reward.only_start: reward.free()
+		else: RewardServer.addReward(reward)
+	for reward in Utils.player.reward_root.get_children():
+		if reward.id == 10: reward.kill_count = int(data.legacy_state.get("10",0))
 	next_instance = int(data.next_instance)
 	next_stage = int(data.next_stage)
 	selected_stage = int(data.selected_stage)
+	trial = false
+	kill_stacks = 0; stack_time = 0
+	for gun in PlayerData.player_weapon_list.values(): gun.bullets_count = 0
+	loading = false
+	# One complete configuration calculation; intermediate ammo is never restored.
+	refresh()
+	for w in data.weapons: PlayerData.player_weapon_list[int(w.id)].bullets_count = int(w.ammo)
+	PlayerData.player_ammo = int(data.ammo)
+	PlayerData.player_hp_max = data.hp_max
+	PlayerData.player_hp = data.hp
+	Utils.player.is_dead = data.hp <= 0
+	PlayerData.gold = int(data.gold)
+	PlayerData.reward_point = int(data.points)
+	loading = true
 	if data.equipped != "": Utils.player.changeWeapon(int(data.equipped))
 	loading = false
+	save_blocked = false; dirty = false
+	save_result = {"success":true,"reason":"已恢复"}
+	changed.emit()
+	return true
 
 func valid_save(data) -> bool:
-	if not data is Dictionary: return false
-	for key in ["schema_version","gold","points","ammo","level","exp","hp","hp_max","weapons","attachments","talents","next_instance","next_stage","selected_stage","equipped"]:
-		if not data.has(key): return false
-	if data.schema_version != 1 or not data.weapons is Array or not data.attachments is Array or not data.talents is Dictionary: return false
-	for key in ["gold","points","ammo","level","exp","hp","hp_max","next_instance","next_stage","selected_stage"]:
-		if not (data[key] is float or data[key] is int) or not is_finite(float(data[key])) or data[key] < 0: return false
-	if data.level < 1 or data.hp_max <= 0 or data.hp <= 0 or not DemoConfig.ENCOUNTERS.has(int(data.next_stage)) or not DemoConfig.ENCOUNTERS.has(int(data.selected_stage)): return false
-	var instances = []
-	var weapon_ids = []
-	for w in data.weapons:
-		if not w is Dictionary or not w.has_all(["id","ammo"]) or not w.id is String or w.id in weapon_ids: return false
-		if not (w.ammo is float or w.ammo is int) or not is_finite(float(w.ammo)) or w.ammo < 0: return false
-		weapon_ids.append(w.id)
-	for a in data.attachments:
-		if not a is Dictionary or not a.has_all(["definition","instance","gun"]): return false
-		if not a.definition is String or not a.gun is String or not (a.instance is int or a.instance is float): return false
-		if a.instance in instances or a.instance < 1 or a.instance >= data.next_instance: return false
-		instances.append(a.instance)
-	for id in data.talents:
-		if not DemoConfig.TALENTS.has(id): return false
-		var value = data.talents[id]
-		if not (value is int or value is float) or not is_finite(float(value)) or value != int(value) or value < 0 or value > DemoConfig.TALENTS[id].max: return false
-	if not data.equipped is String or (data.equipped != "" and data.equipped not in weapon_ids): return false
+	return CampSnapshot.validate(data)
 
-	return true
+func show_save_dialog(recovery = false, quitting = false):
+	if is_instance_valid(save_dialog): return
+	save_dialog = load("res://ui/SaveDialog.gd").new()
+	save_dialog.recovery = recovery
+	save_dialog.quitting = quitting
+	Utils.canvasLayer.add_child(save_dialog)
+
+func export_bad_save() -> String:
+	var destination = save_path+".invalid-"+str(Time.get_ticks_usec())+".json"
+	return ProjectSettings.globalize_path(destination) if DirAccess.copy_absolute(save_path,destination) == OK else "导出失败；原文件未改动"
+
+func create_new_save() -> bool:
+	var exported = export_bad_save()
+	if exported.begins_with("导出失败"): return false
+	var fresh = {"schema_version":2,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"ammo":100,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"attachments":[],"talents":{},"legacy":[],"legacy_state":{},"next_instance":1,"next_stage":1,"selected_stage":1,"equipped":""}
+	var result = save_store.save(save_path,fresh)
+	if not result.success: return false
+	return load_camp()
 
 func open_panel():
 	if is_instance_valid(ui): return
@@ -273,7 +317,12 @@ func open_settings():
 
 func quit_game():
 	stop_attacks()
-	save_camp()
+	if Utils.is_game_start and not save_camp().success:
+		show_save_dialog(save_blocked,true)
+		return
+	finish_quit()
+
+func finish_quit():
 	for type in ["AudioStreamPlayer","AudioStreamPlayer2D"]:
 		for node in get_tree().root.find_children("*",type,true,false): node.stop()
 	await get_tree().create_timer(0.1,true).timeout

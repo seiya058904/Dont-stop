@@ -42,6 +42,7 @@ func updateHero():
 	SPEED = 100 * PlayerData.player_speed
 
 func onPlayerLevelChange(level):
+	if Demo.loading: return
 	var ins = level_up_effect.instantiate()
 	add_child(ins)
 
@@ -65,7 +66,7 @@ func playerWeaponListChange():
 			local_gun.name = str(weapon_id)
 			gun_root.add_child(local_gun)
 			local_gun.setOwner(self)
-			if gun == null:
+			if gun == null and not Demo.loading:
 				gun = local_gun
 				gun.set_use(true)
 
