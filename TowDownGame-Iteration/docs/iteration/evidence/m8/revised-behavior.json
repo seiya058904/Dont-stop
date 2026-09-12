@@ -1,0 +1,1412 @@
+[
+	{
+		"actions": {},
+		"cooldown_moving": 0.0,
+		"damage": 14.0,
+		"id": "E01",
+		"moving": 1.6,
+		"near_response": 0.0,
+		"pursuing": 1.6,
+		"samples": [
+			{
+				"distance": 142.0,
+				"phase": null,
+				"s": 0.0
+			},
+			{
+				"distance": 52.0,
+				"phase": null,
+				"s": 1.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 2.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 3.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 4.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 5.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 6.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 7.0
+			},
+			{
+				"distance": 20.5,
+				"phase": null,
+				"s": 8.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 9.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 10.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 11.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 12.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 13.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 14.0
+			},
+			{
+				"distance": 25.0,
+				"phase": null,
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 139.5
+	},
+	{
+		"actions": {},
+		"cooldown_moving": 0.0,
+		"damage": 16.625,
+		"id": "E02",
+		"moving": 1.8,
+		"near_response": 8.99664783477783,
+		"pursuing": 1.8,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 95.25,
+				"phase": "move",
+				"s": 1.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 2.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 3.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 4.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 5.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 6.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 7.0
+			},
+			{
+				"distance": 12.0033521652222,
+				"phase": "move",
+				"s": 8.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 9.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 10.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 11.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 12.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 13.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 14.0
+			},
+			{
+				"distance": 16.0033531188965,
+				"phase": "move",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 156.99365901947
+	},
+	{
+		"actions": {
+			"attack": 11,
+			"charge": 22,
+			"contact": 10,
+			"dash_end": 11,
+			"windup_charge": 11
+		},
+		"cooldown_moving": 0.8,
+		"damage": 8.75,
+		"id": "E03",
+		"moving": 2.6,
+		"near_response": 128.471611022949,
+		"pursuing": 2.2,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 134.033294677734,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "warn",
+				"s": 3.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "warn",
+				"s": 4.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "move",
+				"s": 5.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "recover",
+				"s": 6.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "warn",
+				"s": 7.0
+			},
+			{
+				"distance": 12.000864982605,
+				"phase": "warn",
+				"s": 8.0
+			},
+			{
+				"distance": 66.9666442871094,
+				"phase": "recover",
+				"s": 9.0
+			},
+			{
+				"distance": 26.3833084106445,
+				"phase": "dash",
+				"s": 10.0
+			},
+			{
+				"distance": 16.0008659362793,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 16.0008659362793,
+				"phase": "move",
+				"s": 12.0
+			},
+			{
+				"distance": 16.0008659362793,
+				"phase": "recover",
+				"s": 13.0
+			},
+			{
+				"distance": 16.0037231445313,
+				"phase": "recover",
+				"s": 14.0
+			},
+			{
+				"distance": 16.0008659362793,
+				"phase": "warn",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 276.476457595825
+	},
+	{
+		"actions": {},
+		"cooldown_moving": 0.6,
+		"damage": 0.0,
+		"id": "E04",
+		"moving": 1.8,
+		"near_response": 15.498143196106,
+		"pursuing": 1.6,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 154.91667175293,
+				"phase": "dash",
+				"s": 1.0
+			},
+			{
+				"distance": 12.0019016265869,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 12.001856803894,
+				"phase": "move",
+				"s": 3.0
+			},
+			{
+				"distance": 12.001856803894,
+				"phase": "move",
+				"s": 4.0
+			},
+			{
+				"distance": 12.001856803894,
+				"phase": "move",
+				"s": 5.0
+			},
+			{
+				"distance": 12.001856803894,
+				"phase": "move",
+				"s": 6.0
+			},
+			{
+				"distance": 12.001856803894,
+				"phase": "move",
+				"s": 7.0
+			},
+			{
+				"distance": 12.001856803894,
+				"phase": "move",
+				"s": 8.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 9.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 10.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 11.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 12.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 13.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 14.0
+			},
+			{
+				"distance": 16.0018558502197,
+				"phase": "move",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 163.496286392212
+	},
+	{
+		"actions": {},
+		"cooldown_moving": 3.4,
+		"damage": 2.625,
+		"id": "E05",
+		"moving": 4.2,
+		"near_response": 9.04271030426025,
+		"pursuing": 4.2,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 159.16667175293,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 115.833488464355,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 101.666778564453,
+				"phase": "recover",
+				"s": 3.0
+			},
+			{
+				"distance": 50.0000190734863,
+				"phase": "recover",
+				"s": 4.0
+			},
+			{
+				"distance": 35.0000419616699,
+				"phase": "recover",
+				"s": 5.0
+			},
+			{
+				"distance": 12.0048599243164,
+				"phase": "move",
+				"s": 6.0
+			},
+			{
+				"distance": 12.0043077468872,
+				"phase": "move",
+				"s": 7.0
+			},
+			{
+				"distance": 12.0000486373901,
+				"phase": "move",
+				"s": 8.0
+			},
+			{
+				"distance": 16.0043067932129,
+				"phase": "move",
+				"s": 9.0
+			},
+			{
+				"distance": 16.0043067932129,
+				"phase": "move",
+				"s": 10.0
+			},
+			{
+				"distance": 16.0000476837158,
+				"phase": "move",
+				"s": 11.0
+			},
+			{
+				"distance": 16.0048599243164,
+				"phase": "move",
+				"s": 12.0
+			},
+			{
+				"distance": 16.0043067932129,
+				"phase": "move",
+				"s": 13.0
+			},
+			{
+				"distance": 16.0000476837158,
+				"phase": "move",
+				"s": 14.0
+			},
+			{
+				"distance": 16.0048599243164,
+				"phase": "move",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 157.053388595581
+	},
+	{
+		"actions": {
+			"attack": 1,
+			"circle": 1,
+			"detonate": 1,
+			"windup_detonate": 1
+		},
+		"cooldown_moving": 0.0,
+		"damage": 0.875,
+		"id": "E06",
+		"moving": 1.2,
+		"near_response": 0.0,
+		"pursuing": 1.2,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 93.333366394043,
+				"phase": "move",
+				"s": 1.0
+			},
+			{
+				"distance": 30.8333492279053,
+				"phase": "warn",
+				"s": 2.0
+			}
+		],
+		"seconds": 2.4,
+		"travel": 129.166650772095
+	},
+	{
+		"actions": {
+			"attack": 6,
+			"contact": 1,
+			"summon": 6,
+			"windup_summon": 6
+		},
+		"cooldown_moving": 10.4,
+		"damage": 0.875,
+		"id": "E07",
+		"moving": 12.6,
+		"near_response": 422.821093559265,
+		"pursuing": 8.8,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 137.200057983398,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 99.1352233886719,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 68.4010772705078,
+				"phase": "recover",
+				"s": 3.0
+			},
+			{
+				"distance": 66.3147125244141,
+				"phase": "warn",
+				"s": 4.0
+			},
+			{
+				"distance": 65.6762466430664,
+				"phase": "recover",
+				"s": 5.0
+			},
+			{
+				"distance": 66.2136154174805,
+				"phase": "recover",
+				"s": 6.0
+			},
+			{
+				"distance": 64.6907196044922,
+				"phase": "recover",
+				"s": 7.0
+			},
+			{
+				"distance": 65.0090637207031,
+				"phase": "recover",
+				"s": 8.0
+			},
+			{
+				"distance": 51.0803871154785,
+				"phase": "move",
+				"s": 9.0
+			},
+			{
+				"distance": 59.8781242370605,
+				"phase": "recover",
+				"s": 10.0
+			},
+			{
+				"distance": 64.6359939575195,
+				"phase": "recover",
+				"s": 11.0
+			},
+			{
+				"distance": 65.9833755493164,
+				"phase": "warn",
+				"s": 12.0
+			},
+			{
+				"distance": 67.3555221557617,
+				"phase": "recover",
+				"s": 13.0
+			},
+			{
+				"distance": 64.6240386962891,
+				"phase": "recover",
+				"s": 14.0
+			},
+			{
+				"distance": 66.4235000610352,
+				"phase": "warn",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 838.294762015343
+	},
+	{
+		"actions": {
+			"attack": 6,
+			"heal": 6,
+			"windup_heal": 7
+		},
+		"cooldown_moving": 9.6,
+		"damage": 0.0,
+		"id": "E08",
+		"moving": 12.4,
+		"near_response": 536.039646148682,
+		"pursuing": 9.0,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 135.067626953125,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 99.1073150634766,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 85.4016952514648,
+				"phase": "recover",
+				"s": 3.0
+			},
+			{
+				"distance": 82.4184112548828,
+				"phase": "recover",
+				"s": 4.0
+			},
+			{
+				"distance": 82.9345855712891,
+				"phase": "recover",
+				"s": 5.0
+			},
+			{
+				"distance": 84.8478775024414,
+				"phase": "warn",
+				"s": 6.0
+			},
+			{
+				"distance": 81.8147354125977,
+				"phase": "recover",
+				"s": 7.0
+			},
+			{
+				"distance": 82.2936096191406,
+				"phase": "move",
+				"s": 8.0
+			},
+			{
+				"distance": 31.0012245178223,
+				"phase": "recover",
+				"s": 9.0
+			},
+			{
+				"distance": 76.8017730712891,
+				"phase": "recover",
+				"s": 10.0
+			},
+			{
+				"distance": 83.3337249755859,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 85.381950378418,
+				"phase": "recover",
+				"s": 12.0
+			},
+			{
+				"distance": 85.6397018432617,
+				"phase": "move",
+				"s": 13.0
+			},
+			{
+				"distance": 84.5305252075195,
+				"phase": "recover",
+				"s": 14.0
+			},
+			{
+				"distance": 84.786750793457,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 1090.69739508629
+	},
+	{
+		"actions": {
+			"attack": 9,
+			"cone": 19,
+			"contact": 13,
+			"windup_cone": 10
+		},
+		"cooldown_moving": 1.2,
+		"damage": 18.375,
+		"id": "E09",
+		"moving": 2.8,
+		"near_response": 18.8364644935355,
+		"pursuing": 2.6,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 121.546173095703,
+				"phase": "move",
+				"s": 1.0
+			},
+			{
+				"distance": 52.4623336791992,
+				"phase": "warn",
+				"s": 2.0
+			},
+			{
+				"distance": 13.9837217330933,
+				"phase": "recover",
+				"s": 3.0
+			},
+			{
+				"distance": 13.8648347854614,
+				"phase": "warn",
+				"s": 4.0
+			},
+			{
+				"distance": 13.5351858139038,
+				"phase": "warn",
+				"s": 5.0
+			},
+			{
+				"distance": 13.3584957122803,
+				"phase": "recover",
+				"s": 6.0
+			},
+			{
+				"distance": 13.199538230896,
+				"phase": "warn",
+				"s": 7.0
+			},
+			{
+				"distance": 12.8710536956787,
+				"phase": "warn",
+				"s": 8.0
+			},
+			{
+				"distance": 16.1310558319092,
+				"phase": "recover",
+				"s": 9.0
+			},
+			{
+				"distance": 16.1394004821777,
+				"phase": "warn",
+				"s": 10.0
+			},
+			{
+				"distance": 16.1556854248047,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 16.1624526977539,
+				"phase": "recover",
+				"s": 12.0
+			},
+			{
+				"distance": 16.1709327697754,
+				"phase": "warn",
+				"s": 13.0
+			},
+			{
+				"distance": 16.1847839355469,
+				"phase": "move",
+				"s": 14.0
+			},
+			{
+				"distance": 16.190336227417,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 170.795292885043
+	},
+	{
+		"actions": {
+			"artillery": 4,
+			"attack": 8,
+			"beam": 4,
+			"circle": 4,
+			"line": 4,
+			"windup_artillery": 4,
+			"windup_beam": 4
+		},
+		"cooldown_moving": 7.0,
+		"damage": 10.5,
+		"id": "E10",
+		"moving": 10.4,
+		"near_response": 347.571196317673,
+		"pursuing": 4.4,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 150.723846435547,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 143.170486450195,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 134.889007568359,
+				"phase": "warn",
+				"s": 3.0
+			},
+			{
+				"distance": 133.548294067383,
+				"phase": "recover",
+				"s": 4.0
+			},
+			{
+				"distance": 131.003997802734,
+				"phase": "warn",
+				"s": 5.0
+			},
+			{
+				"distance": 131.861221313477,
+				"phase": "recover",
+				"s": 6.0
+			},
+			{
+				"distance": 129.908782958984,
+				"phase": "warn",
+				"s": 7.0
+			},
+			{
+				"distance": 130.527938842773,
+				"phase": "recover",
+				"s": 8.0
+			},
+			{
+				"distance": 52.1937713623047,
+				"phase": "warn",
+				"s": 9.0
+			},
+			{
+				"distance": 95.027587890625,
+				"phase": "recover",
+				"s": 10.0
+			},
+			{
+				"distance": 104.502151489258,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 122.92928314209,
+				"phase": "recover",
+				"s": 12.0
+			},
+			{
+				"distance": 124.670524597168,
+				"phase": "warn",
+				"s": 13.0
+			},
+			{
+				"distance": 128.482772827148,
+				"phase": "move",
+				"s": 14.0
+			},
+			{
+				"distance": 128.802856445313,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 670.99400305748
+	},
+	{
+		"actions": {
+			"attack": 11,
+			"charge": 22,
+			"contact": 10,
+			"dash_end": 11,
+			"windup_charge": 11
+		},
+		"cooldown_moving": 5.4,
+		"damage": 8.75,
+		"id": "E11",
+		"moving": 10.4,
+		"near_response": 539.002882480621,
+		"pursuing": 7.0,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 123.078224182129,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 33.569408416748,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 39.5436134338379,
+				"phase": "warn",
+				"s": 3.0
+			},
+			{
+				"distance": 40.1017379760742,
+				"phase": "warn",
+				"s": 4.0
+			},
+			{
+				"distance": 39.0352973937988,
+				"phase": "recover",
+				"s": 5.0
+			},
+			{
+				"distance": 20.0913124084473,
+				"phase": "recover",
+				"s": 6.0
+			},
+			{
+				"distance": 39.6646995544434,
+				"phase": "warn",
+				"s": 7.0
+			},
+			{
+				"distance": 42.681453704834,
+				"phase": "warn",
+				"s": 8.0
+			},
+			{
+				"distance": 85.6565628051758,
+				"phase": "recover",
+				"s": 9.0
+			},
+			{
+				"distance": 45.3216018676758,
+				"phase": "warn",
+				"s": 10.0
+			},
+			{
+				"distance": 42.3897018432617,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 38.0005035400391,
+				"phase": "recover",
+				"s": 12.0
+			},
+			{
+				"distance": 18.0676517486572,
+				"phase": "recover",
+				"s": 13.0
+			},
+			{
+				"distance": 40.3756332397461,
+				"phase": "warn",
+				"s": 14.0
+			},
+			{
+				"distance": 40.5692710876465,
+				"phase": "move",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 1105.21499824524
+	},
+	{
+		"actions": {
+			"attack": 9,
+			"cone": 19,
+			"contact": 13,
+			"windup_cone": 10
+		},
+		"cooldown_moving": 0.8,
+		"damage": 18.375,
+		"id": "E12",
+		"moving": 2.0,
+		"near_response": 15.3700685501099,
+		"pursuing": 1.8,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 109.333404541016,
+				"phase": "move",
+				"s": 1.0
+			},
+			{
+				"distance": 52.3333435058594,
+				"phase": "warn",
+				"s": 2.0
+			},
+			{
+				"distance": 12.0043306350708,
+				"phase": "move",
+				"s": 3.0
+			},
+			{
+				"distance": 12.0043306350708,
+				"phase": "recover",
+				"s": 4.0
+			},
+			{
+				"distance": 12.0002241134644,
+				"phase": "warn",
+				"s": 5.0
+			},
+			{
+				"distance": 12.0002241134644,
+				"phase": "move",
+				"s": 6.0
+			},
+			{
+				"distance": 12.0043306350708,
+				"phase": "recover",
+				"s": 7.0
+			},
+			{
+				"distance": 12.0002241134644,
+				"phase": "warn",
+				"s": 8.0
+			},
+			{
+				"distance": 16.00022315979,
+				"phase": "recover",
+				"s": 9.0
+			},
+			{
+				"distance": 16.0043296813965,
+				"phase": "recover",
+				"s": 10.0
+			},
+			{
+				"distance": 16.00022315979,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 16.0043296813965,
+				"phase": "recover",
+				"s": 12.0
+			},
+			{
+				"distance": 16.0043296813965,
+				"phase": "recover",
+				"s": 13.0
+			},
+			{
+				"distance": 16.00022315979,
+				"phase": "warn",
+				"s": 14.0
+			},
+			{
+				"distance": 16.00022315979,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 163.394484519959
+	},
+	{
+		"actions": {
+			"attack": 10,
+			"charge": 8,
+			"circle": 3,
+			"cleave": 3,
+			"cone": 4,
+			"contact": 13,
+			"dash_end": 4,
+			"slam": 3,
+			"windup_charge": 4,
+			"windup_cleave": 4,
+			"windup_slam": 3
+		},
+		"cooldown_moving": 0.8,
+		"damage": 18.4300000000005,
+		"id": "B01",
+		"moving": 2.0,
+		"near_response": 46.9504311215132,
+		"pursuing": 1.6,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 133.400115966797,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 15.2306365966797,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 15.1007347106934,
+				"phase": "warn",
+				"s": 3.0
+			},
+			{
+				"distance": 14.8732433319092,
+				"phase": "warn",
+				"s": 4.0
+			},
+			{
+				"distance": 14.7825107574463,
+				"phase": "recover",
+				"s": 5.0
+			},
+			{
+				"distance": 14.6608953475952,
+				"phase": "warn",
+				"s": 6.0
+			},
+			{
+				"distance": 14.5095224380493,
+				"phase": "warn",
+				"s": 7.0
+			},
+			{
+				"distance": 14.3936214447021,
+				"phase": "recover",
+				"s": 8.0
+			},
+			{
+				"distance": 24.0176639556885,
+				"phase": "recover",
+				"s": 9.0
+			},
+			{
+				"distance": 15.3334789276123,
+				"phase": "warn",
+				"s": 10.0
+			},
+			{
+				"distance": 15.1957921981812,
+				"phase": "recover",
+				"s": 11.0
+			},
+			{
+				"distance": 15.0964279174805,
+				"phase": "recover",
+				"s": 12.0
+			},
+			{
+				"distance": 14.9175701141357,
+				"phase": "warn",
+				"s": 13.0
+			},
+			{
+				"distance": 14.751841545105,
+				"phase": "recover",
+				"s": 14.0
+			},
+			{
+				"distance": 14.6650466918945,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 197.516227109358
+	},
+	{
+		"actions": {
+			"attack": 8,
+			"brood": 3,
+			"circle": 6,
+			"cone": 3,
+			"contact": 5,
+			"lockdown": 3,
+			"pulse": 2,
+			"windup_brood": 3,
+			"windup_lockdown": 3,
+			"windup_pulse": 3
+		},
+		"cooldown_moving": 6.2,
+		"damage": 12.6100000000004,
+		"id": "B02",
+		"moving": 9.6,
+		"near_response": 276.014439180493,
+		"pursuing": 4.8,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 140.968643188477,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 111.967422485352,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 94.8938980102539,
+				"phase": "warn",
+				"s": 3.0
+			},
+			{
+				"distance": 69.9060974121094,
+				"phase": "recover",
+				"s": 4.0
+			},
+			{
+				"distance": 21.7726173400879,
+				"phase": "warn",
+				"s": 5.0
+			},
+			{
+				"distance": 54.439525604248,
+				"phase": "recover",
+				"s": 6.0
+			},
+			{
+				"distance": 68.0712280273438,
+				"phase": "recover",
+				"s": 7.0
+			},
+			{
+				"distance": 80.8572616577148,
+				"phase": "move",
+				"s": 8.0
+			},
+			{
+				"distance": 27.6930904388428,
+				"phase": "warn",
+				"s": 9.0
+			},
+			{
+				"distance": 14.2619304656982,
+				"phase": "recover",
+				"s": 10.0
+			},
+			{
+				"distance": 14.2024030685425,
+				"phase": "recover",
+				"s": 11.0
+			},
+			{
+				"distance": 60.1197509765625,
+				"phase": "warn",
+				"s": 12.0
+			},
+			{
+				"distance": 73.4203720092773,
+				"phase": "recover",
+				"s": 13.0
+			},
+			{
+				"distance": 82.0778045654297,
+				"phase": "warn",
+				"s": 14.0
+			},
+			{
+				"distance": 68.4192276000977,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 627.011123433709
+	},
+	{
+		"actions": {
+			"attack": 9,
+			"burst": 3,
+			"charge": 4,
+			"cone": 3,
+			"dash": 3,
+			"dash_end": 3,
+			"line": 3,
+			"shot": 9,
+			"sweep": 3,
+			"windup_burst": 3,
+			"windup_dash": 4,
+			"windup_sweep": 3
+		},
+		"cooldown_moving": 5.8,
+		"damage": 9.70000000000027,
+		"id": "B03",
+		"moving": 10.0,
+		"near_response": 594.248298168182,
+		"pursuing": 7.4,
+		"samples": [
+			{
+				"distance": 160.0,
+				"phase": "spawn",
+				"s": 0.0
+			},
+			{
+				"distance": 127.994354248047,
+				"phase": "warn",
+				"s": 1.0
+			},
+			{
+				"distance": 57.0162086486816,
+				"phase": "recover",
+				"s": 2.0
+			},
+			{
+				"distance": 60.2684898376465,
+				"phase": "warn",
+				"s": 3.0
+			},
+			{
+				"distance": 65.710205078125,
+				"phase": "move",
+				"s": 4.0
+			},
+			{
+				"distance": 62.3009033203125,
+				"phase": "recover",
+				"s": 5.0
+			},
+			{
+				"distance": 66.3964920043945,
+				"phase": "warn",
+				"s": 6.0
+			},
+			{
+				"distance": 58.6734085083008,
+				"phase": "recover",
+				"s": 7.0
+			},
+			{
+				"distance": 58.1091651916504,
+				"phase": "warn",
+				"s": 8.0
+			},
+			{
+				"distance": 60.2985877990723,
+				"phase": "warn",
+				"s": 9.0
+			},
+			{
+				"distance": 60.4737091064453,
+				"phase": "recover",
+				"s": 10.0
+			},
+			{
+				"distance": 64.0730514526367,
+				"phase": "warn",
+				"s": 11.0
+			},
+			{
+				"distance": 64.2645950317383,
+				"phase": "move",
+				"s": 12.0
+			},
+			{
+				"distance": 65.6565017700195,
+				"phase": "recover",
+				"s": 13.0
+			},
+			{
+				"distance": 60.8333930969238,
+				"phase": "warn",
+				"s": 14.0
+			},
+			{
+				"distance": 64.9084320068359,
+				"phase": "recover",
+				"s": 15.0
+			}
+		],
+		"seconds": 16.0,
+		"travel": 1218.48751342297
+	}
+]

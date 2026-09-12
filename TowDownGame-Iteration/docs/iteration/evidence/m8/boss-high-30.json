@@ -1,0 +1,65 @@
+[
+	{
+		"boss": {
+			"actions": {
+				"attack": 39,
+				"burst": 13,
+				"charge": 13,
+				"cone": 13,
+				"dash": 13,
+				"dash_end": 13,
+				"line": 13,
+				"phase_two": 1,
+				"shot": 55,
+				"sweep": 13,
+				"windup_burst": 13,
+				"windup_dash": 13,
+				"windup_sweep": 13
+			},
+			"phase_two": true,
+			"remaining_hp": 41.979999999985,
+			"travel": 4557.29951381683
+		},
+		"boss_successful_hits": 1,
+		"clear": true,
+		"damage_received": 0.97,
+		"death": false,
+		"effective": {
+			"angle": 0.54,
+			"bounce_retention": 0.85,
+			"bounces": 1,
+			"crit": 0.23,
+			"damage": 65.48256,
+			"impulse": 156.6,
+			"jumps": 4,
+			"lock_angle": 0.0,
+			"magazine": 54,
+			"pierce": 7,
+			"radius": 38.4,
+			"range": 655.2,
+			"rate": 1.416,
+			"recovery": 0.8,
+			"refill": 1,
+			"reload": 0.65919744,
+			"shard_ratio": 0.25,
+			"shards": 2,
+			"spread": 0.75,
+			"tags": [
+				"beam",
+				"energy",
+				"charged",
+				"straight"
+			],
+			"turn": 0.0,
+			"warmup": 1.08,
+			"width": 2.295
+		},
+		"gun": 113,
+		"player_movement": 6992.3122356385,
+		"seconds": 58.6,
+		"shots": 32,
+		"stage": 30,
+		"successful_hits": 1,
+		"tier": "high"
+	}
+]

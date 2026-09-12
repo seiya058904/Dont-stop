@@ -1,0 +1,238 @@
+{
+  "status": "M8 IMPLEMENTED / READY FOR THIRD HUMAN REVIEW",
+  "H1_STATUS": "SECOND_FEEDBACK_ADDRESSED",
+  "HUMAN_ACCEPTED": false,
+  "regression_processes": 21,
+  "regression_checks": 921,
+  "global_checks": 1409,
+  "real_pairs": 576,
+  "refill_checks": 49,
+  "encounters": 30,
+  "clears": 29,
+  "deaths": 1,
+  "groups": [
+    {
+      "version": "M7",
+      "range": "1–9",
+      "pursuit": 0.36198987662132237,
+      "pressure": 0.36198987662132237,
+      "threats": 0.5740365800789721,
+      "peak": 6,
+      "damage": 0.0,
+      "deaths": 0
+    },
+    {
+      "version": "M7",
+      "range": "11–19",
+      "pursuit": 0.4446998722860791,
+      "pressure": 0.4446998722860791,
+      "threats": 1.2316730523627057,
+      "peak": 9,
+      "damage": 11.375,
+      "deaths": 0
+    },
+    {
+      "version": "M7",
+      "range": "21–29",
+      "pursuit": 0.6291187739463602,
+      "pressure": 0.6291187739463602,
+      "threats": 1.5353767560664122,
+      "peak": 9,
+      "damage": 14.0,
+      "deaths": 0
+    },
+    {
+      "version": "M8",
+      "range": "1–9",
+      "pursuit": 0.310089399744572,
+      "pressure": 0.310089399744572,
+      "threats": 0.442401021711367,
+      "peak": 5,
+      "damage": 0.0,
+      "deaths": 0
+    },
+    {
+      "version": "M8",
+      "range": "11–19",
+      "pursuit": 0.7333333333333334,
+      "pressure": 0.7333333333333334,
+      "threats": 1.7507024265644966,
+      "peak": 10,
+      "damage": 0.0,
+      "deaths": 0
+    },
+    {
+      "version": "M8",
+      "range": "21–29",
+      "pursuit": 0.7491698595146871,
+      "pressure": 0.7491698595146871,
+      "threats": 2.1800766283524897,
+      "peak": 12,
+      "damage": 7.0,
+      "deaths": 0
+    }
+  ],
+  "performance": [
+    {
+      "M7": {
+        "p50": 31.887999999999998,
+        "p95": 32.876999999999995,
+        "p99": 33.303,
+        "max": 33.739000000000004
+      },
+      "M8": {
+        "p50": 32.08,
+        "p95": 33.445,
+        "p99": 34.006,
+        "max": 34.334999999999994
+      },
+      "scenario": "normal",
+      "review_needed": false
+    },
+    {
+      "M7": {
+        "p50": 35.138999999999996,
+        "p95": 38.0785,
+        "p99": 39.296499999999995,
+        "max": 39.72
+      },
+      "M8": {
+        "p50": 36.5955,
+        "p95": 39.364999999999995,
+        "p99": 40.3315,
+        "max": 41.3155
+      },
+      "scenario": "late",
+      "review_needed": false
+    },
+    {
+      "M7": {
+        "p50": 31.1845,
+        "p95": 32.0295,
+        "p99": 32.346000000000004,
+        "max": 50.606
+      },
+      "M8": {
+        "p50": 31.404,
+        "p95": 32.123999999999995,
+        "p99": 32.519999999999996,
+        "max": 51.438
+      },
+      "scenario": "boss",
+      "review_needed": false
+    },
+    {
+      "M7": {
+        "p50": 54.4435,
+        "p95": 128.95350000000002,
+        "p99": 140.90949999999998,
+        "max": 144.25549999999998
+      },
+      "M8": {
+        "p50": 46.394000000000005,
+        "p95": 59.855000000000004,
+        "p99": 65.1055,
+        "max": 71.425
+      },
+      "scenario": "projectile",
+      "review_needed": false
+    },
+    {
+      "M7": {
+        "p50": 34.985,
+        "p95": 37.453,
+        "p99": 38.6655,
+        "max": 40.0775
+      },
+      "M8": {
+        "p50": 45.294,
+        "p95": 48.543,
+        "p99": 50.459,
+        "max": 53.3395
+      },
+      "scenario": "telegraph",
+      "review_needed": false
+    },
+    {
+      "M7": {
+        "p50": 34.295500000000004,
+        "p95": 36.9785,
+        "p99": 37.9965,
+        "max": 39.1495
+      },
+      "M8": {
+        "p50": 34.906499999999994,
+        "p95": 37.251000000000005,
+        "p99": 38.254999999999995,
+        "max": 38.6965
+      },
+      "scenario": "particle",
+      "review_needed": false
+    }
+  ],
+  "bosses": [
+    {
+      "tier": "middle",
+      "stage": 10,
+      "seconds": 74.56,
+      "damage_received": 0.97,
+      "boss_successful_hits": 1
+    },
+    {
+      "tier": "middle",
+      "stage": 20,
+      "seconds": 82.677,
+      "damage_received": 4.85,
+      "boss_successful_hits": 5
+    },
+    {
+      "tier": "middle",
+      "stage": 30,
+      "seconds": 116.547,
+      "damage_received": 6.79,
+      "boss_successful_hits": 7
+    },
+    {
+      "tier": "high",
+      "stage": 10,
+      "seconds": 42.366,
+      "damage_received": 0.0,
+      "boss_successful_hits": 0
+    },
+    {
+      "tier": "high",
+      "stage": 20,
+      "seconds": 56.457,
+      "damage_received": 0.97,
+      "boss_successful_hits": 1
+    },
+    {
+      "tier": "high",
+      "stage": 30,
+      "seconds": 58.6,
+      "damage_received": 0.97,
+      "boss_successful_hits": 1
+    },
+    {
+      "tier": "full",
+      "stage": 10,
+      "seconds": 31.897,
+      "damage_received": 0.0,
+      "boss_successful_hits": 0
+    },
+    {
+      "tier": "full",
+      "stage": 20,
+      "seconds": 43.851,
+      "damage_received": 0.97,
+      "boss_successful_hits": 1
+    },
+    {
+      "tier": "full",
+      "stage": 30,
+      "seconds": 46.084,
+      "damage_received": 2.91,
+      "boss_successful_hits": 3
+    }
+  ]
+}

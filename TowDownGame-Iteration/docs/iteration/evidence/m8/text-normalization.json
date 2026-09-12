@@ -1,0 +1,16 @@
+[
+  {
+    "file": "baseline-behavior.txt",
+    "operation": "Strip terminal trailing whitespace and repeated empty EOF lines only",
+    "raw_local_copy": "archive\\workspace-support\\m8-raw-terminal-logs\\baseline-behavior.txt",
+    "raw_sha256": "d5688e7642416ad8f9bf31e58df564f631146963dec4a3f61d2471515db6cfe5",
+    "published_sha256": "55222da4630d11c3aea792d75c7f85f4ff6a92efbddfecc51c2c981ebfc4cb22"
+  },
+  {
+    "file": "final-import.txt",
+    "operation": "Strip terminal trailing whitespace and repeated empty EOF lines only",
+    "raw_local_copy": "archive\\workspace-support\\m8-raw-terminal-logs\\final-import.txt",
+    "raw_sha256": "f809a699a714410488b5a18347665b4bbe7ff28997cddeffd84e2c37b89532c0",
+    "published_sha256": "4bed51cdb1bb35877e9603021a9bfb8feecad46e345c478eda990a8fbce63fe3"
+  }
+]

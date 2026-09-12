@@ -171,6 +171,8 @@ text+='''
 
 所有初次失败/被中止日志保留：旧机器人无法合理躲避造成 Boss 死亡；早期预警截图 Vulkan surface 失败；矩阵 fixture 的 StringName ID/激光坐标问题；回填 fixture 的散弹扣费/自动换弹误判。修订后以本文指向的最终日志为准，未把旧失败混计为通过。
 
+baseline-behavior.txt 与 final-import.txt 仅规范化终端行末空白和重复空白尾行；错误和事件文本完整保留。原始字节已归档在工作区 archive/workspace-support/m8-raw-terminal-logs，原始/发布 SHA256 见 text-normalization.json。
+
 保留回归中的固定音频退出诊断只包含 AudioStreamMP3/AudioStreamPlaybackMP3 与 Cephalopod.mp3，按原 M6/M7 分类列在 regression/index.json；没有宣称修复这个历史诊断。若出现其他运行时错误或不同泄漏身份则不在该豁免内。
 
 早期执行记录的 source_unchanged 可能为 false（同一会话中继续改测试或调整战斗）；原始哈希和失败日志保留。最终短测及性能 runner 同时记录脚本、场景、project.godot 与 changed_during_run；Boss 3 预算由最终单关实战覆盖。跨版本普通遭遇的测试角色逻辑一致，旧版和新版强化数量/碰撞差异已明确，不能把入伤差异全部归因于敌人行为。

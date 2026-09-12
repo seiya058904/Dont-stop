@@ -1,0 +1,68 @@
+{
+  "globals-r4": {
+    "changed_since_run": [
+      "autoload/Demo.gd",
+      "autoload/server/LevelServer.gd",
+      "game/config/M5Content.gd",
+      "game/effects/HostileVFX.gd",
+      "game/monster/TacticalEnemy.gd",
+      "game/map/mapTown/Town.gd",
+      "tests/M8Bosses.gd",
+      "tests/M8Encounters.gd",
+      "tests/M8Runtime.gd"
+    ],
+    "recorded_unchanged": false
+  },
+  "full-build-dps": {
+    "changed_since_run": [
+      "autoload/Demo.gd",
+      "autoload/server/LevelServer.gd",
+      "game/config/EffectiveStats.gd",
+      "game/config/M5Content.gd",
+      "game/effects/HostileVFX.gd",
+      "game/monster/TacticalEnemy.gd",
+      "game/map/mapTown/Town.gd",
+      "tests/M8Encounters.gd",
+      "tests/M8Globals.gd",
+      "tests/M8Runtime.gd"
+    ],
+    "recorded_unchanged": false
+  },
+  "encounters-fixed-final": {
+    "changed_since_run": [
+      "autoload/Demo.gd",
+      "game/config/M5Content.gd",
+      "game/effects/HostileVFX.gd",
+      "tests/M8Bosses.gd",
+      "tests/M8Runtime.gd"
+    ],
+    "recorded_unchanged": false
+  },
+  "bosses-full-verified": {
+    "changed_since_run": [
+      "autoload/Demo.gd",
+      "game/config/M5Content.gd",
+      "game/effects/HostileVFX.gd",
+      "tests/M8Bosses.gd"
+    ],
+    "recorded_unchanged": true
+  },
+  "bosses-high-verified": {
+    "changed_since_run": [
+      "autoload/Demo.gd",
+      "game/config/M5Content.gd",
+      "game/effects/HostileVFX.gd",
+      "tests/M8Bosses.gd"
+    ],
+    "recorded_unchanged": true
+  },
+  "bosses-middle-verified": {
+    "changed_since_run": [
+      "autoload/Demo.gd",
+      "game/config/M5Content.gd",
+      "game/effects/HostileVFX.gd",
+      "tests/M8Bosses.gd"
+    ],
+    "recorded_unchanged": false
+  }
+}
