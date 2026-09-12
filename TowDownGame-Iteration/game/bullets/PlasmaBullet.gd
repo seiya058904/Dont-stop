@@ -11,5 +11,5 @@ func _physics_process(delta):
 	var collision = move_and_collide(velocity*delta)
 	if collision:
 		exploded = true
-		Combat.explosion(global_position,gun.effective.radius,hurt,gun)
+		Combat.explosion_context(global_position,context.get("radius",32.0),context)
 		queue_free()

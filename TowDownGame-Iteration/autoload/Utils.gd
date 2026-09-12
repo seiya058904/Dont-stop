@@ -32,6 +32,11 @@ enum ATTACHMENTS_TYPE { #配件类型
 }
 
 var weapon_list = {
+	"117" = load("res://game/guns/W17.tscn"),
+	"118" = load("res://game/guns/W18.tscn"),
+	"119" = load("res://game/guns/W19.tscn"),
+	"120" = load("res://game/guns/W20.tscn"),
+
 	"112" =  preload("res://game/guns/ArcCaster.tscn"),
 	"114" =  preload("res://game/guns/PlasmaOrb.tscn"),
 	"123" =  preload("res://game/guns/BurstCarbine.tscn"),
@@ -67,6 +72,7 @@ var am_dict = {
 }
 
 const weapon_money_list = {
+	"117" = 180,"118" = 180,"119" = 220,"120" = 220,
 	"112" = 150,"114" = 200,"123" = 150,
 	"0" = 10,
 	"1" = 10,

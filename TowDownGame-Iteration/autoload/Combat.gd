@@ -71,6 +71,10 @@ func explosion(position: Vector2, radius: float, damage: float, gun = null, dept
 	if is_instance_valid(gun):
 		context = gun.damage_context(depth)
 		context.damage = damage
+	explosion_context(position,radius,context)
+
+func explosion_context(position: Vector2, radius: float, context: Dictionary):
+	if context.get("depth",0) > DemoConfig.MAX_DERIVATION: return
 	for target in get_tree().get_nodes_in_group("monsters"):
 		if not target.is_die and position.distance_to(target.global_position) <= radius and clear_line(position,target.global_position):
 			hit(target,context)
@@ -80,6 +84,13 @@ func explosion(position: Vector2, radius: float, damage: float, gun = null, dept
 	effect.global_position = position
 	get_tree().current_scene.add_child(effect)
 	sound(load("res://audio/body_hit_finisher_52.wav"),position)
+
+func trace(points: Array, color = Color(0.4,0.85,1), width = 2.0):
+	var effect = load("res://game/effects/CombatEffect.gd").new()
+	effect.points.assign(points)
+	effect.color = color
+	effect.width = width
+	get_tree().current_scene.add_child(effect)
 
 func arc(gun, start: Vector2, direction: Vector2):
 	attacks += 1

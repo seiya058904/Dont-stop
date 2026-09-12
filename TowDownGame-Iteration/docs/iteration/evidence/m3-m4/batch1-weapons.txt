@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS purchase 117
+PASS real firing collision damage 117
+PASS single group consumes once 117
+PASS empty firing safe 117
+PASS real timed reload 117
+PASS pause stops firing 117
+PASS purchase 118
+PASS real firing collision damage 118
+PASS single group consumes once 118
+PASS empty firing safe 118
+PASS real timed reload 118
+PASS pause stops firing 118
+PASS purchase 119
+PASS real firing collision damage 119
+PASS single group consumes once 119
+PASS empty firing safe 119
+PASS real timed reload 119
+PASS pause stops firing 119
+PASS purchase 120
+PASS real firing collision damage 120
+PASS single group consumes once 120
+PASS empty firing safe 120
+PASS real timed reload 120
+PASS pause stops firing 120
+PASS ricochet actual reflected collision
+PASS mother and fragment actual distinct hits
+PASS fragment depth one
+PASS dead homing target safely expires
+PASS corner finite bounces and lifetime
+PASS camp cleanup
+M3 SUMMARY checks=30 failures=0

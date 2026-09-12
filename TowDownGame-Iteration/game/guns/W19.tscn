@@ -1,0 +1,80 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://game/guns/MechanismGun.gd" id="1_hv6am"]
+[ext_resource type="Texture2D" path="res://Sprites/The Tiny Alchemist - Guns/gun13.png" id="2_knpti"]
+[ext_resource type="PackedScene" path="res://game/bullets/SmpBullet.tscn" id="3_v01pf"]
+[ext_resource type="Animation" path="res://game/guns/anim/reload.anim" id="4_ehwfm"]
+[ext_resource type="AudioStream" path="res://audio/GUNAuto_Assault Rifle B Fire_01.wav" id="4_ysjra"]
+
+[sub_resource type="Animation" id="Animation_4mjfa"]
+resource_name = "run"
+length = 0.15
+loop_mode = 2
+step = 0.15
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:offset:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-1, -0.25, 0, 0.25, 0, -2, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.15)
+}
+
+[sub_resource type="Animation" id="Animation_0xp66"]
+resource_name = "shoot"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lo2pw"]
+_data = {
+"reload": ExtResource("4_ehwfm"),
+"run": SubResource("Animation_4mjfa"),
+"shoot": SubResource("Animation_0xp66")
+}
+
+[node name="GunSprite" type="Node2D"]
+position = Vector2(2, -7)
+script = ExtResource("1_hv6am")
+image = ExtResource("2_knpti")
+bullet_scene = ExtResource("3_v01pf")
+knockback_speed = 80
+freeze_frame = 4
+recoil = 15
+shake_vector = Vector2(2, 2)
+
+weapon_id = 119
+
+weapon_name = "散射火箭炮"
+
+damage = 3.0
+
+fire_rate = 1.4
+
+bullets_max_count = 9
+
+change_speed = 1.8
+
+bullet_speed = 110
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_knpti")
+offset = Vector2(6, -1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_lo2pw")
+}
+
+[node name="shoot_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX"
+position = Vector2(1, 0)
+stream = ExtResource("4_ysjra")
+
+[node name="GunTip" type="Node2D" parent="."]
+position = Vector2(11, -1)
+
+[connection signal="timeout" from="shoot_timer" to="." method="_on_timer_timeout"]

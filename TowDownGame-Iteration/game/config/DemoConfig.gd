@@ -50,6 +50,7 @@ const ENCOUNTERS = {
 }
 
 static func weapon_tags(id: int) -> Array:
+	if WeaponCatalog.DEFINITIONS.has(id): return WeaponCatalog.DEFINITIONS[id].tags
 	if id == 6: return ["beam","energy"]
 	if id == 112: return ["chain","energy"]
 	if id == 114: return ["projectile","explosive","energy"]
@@ -63,4 +64,5 @@ const WEAPON_INFO = {
 	6:"原型激光：射线阻墙，0.1秒持续tick，保留0.4秒脉冲。"
 }
 static func weapon_info(id: int) -> String:
+	if WeaponCatalog.DEFINITIONS.has(id): return WeaponCatalog.DEFINITIONS[id].info
 	return WEAPON_INFO.get(id,"保留原型弹道、开火节奏、枪体动作与音色。")

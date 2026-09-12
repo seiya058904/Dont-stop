@@ -41,7 +41,7 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
 		"rate": clampf(b.rate * PlayerData.player_fire_rate * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,
-		"impulse": b.impulse * impulse, "radius":32.0 * radius, "jumps":jumps
+		"impulse": b.impulse * impulse, "radius":WeaponCatalog.definition(gun.weapon_id).get("radius",32.0) * radius, "jumps":jumps
 	}
 
 static func describe(s: Dictionary) -> String:

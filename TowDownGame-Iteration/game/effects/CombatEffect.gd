@@ -2,6 +2,8 @@ extends Node2D
 var radius = 0.0
 var points: Array[Vector2] = []
 var life = 0.0
+var color = Color(0.4,0.85,1)
+var width = 2.0
 func _ready():
 	add_to_group("combat_transient")
 	z_index = 3
@@ -19,5 +21,5 @@ func _draw():
 			var a = points[i-1]
 			var b = points[i]
 			var middle = (a+b)*0.5 + (b-a).orthogonal().normalized()*4
-			draw_polyline(PackedVector2Array([a,middle,b]),Color(0.4,0.85,1,opacity),2)
+			draw_polyline(PackedVector2Array([a,middle,b]),Color(color,opacity),width)
 			draw_circle(b,3,Color(1,1,0.7,opacity))

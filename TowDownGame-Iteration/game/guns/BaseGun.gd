@@ -132,7 +132,7 @@ func cancel_actions():
 	if is_instance_valid(anim_player): anim_player.stop()
 
 func damage_context(depth = 0) -> Dictionary:
-	return {"gun":self,"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"depth":depth,"epoch":LevelServer.epoch}
+	return {"gun":self,"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"depth":depth,"epoch":LevelServer.epoch}
 
 #子弹装填完毕
 func reload_over():
