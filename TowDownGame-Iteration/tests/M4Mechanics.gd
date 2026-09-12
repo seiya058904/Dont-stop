@@ -31,8 +31,8 @@ func _ready():
 	gun._shoot()
 	var first = get_tree().get_nodes_in_group("combat_transient").filter(func(n): return n is Bullet)[0]
 	var initial = first.velocity.angle()
-	await wait(0.06)
-	var normal_turn = absf(first.velocity.angle()-initial)
+	for frame in 4: await get_tree().physics_frame
+	var normal_turn = absf(first.velocity.angle()-initial)/first.age
 	await clean()
 	target = enemy(origin+Vector2(150,65))
 	aim(gun)
@@ -41,8 +41,9 @@ func _ready():
 	gun._shoot()
 	first = get_tree().get_nodes_in_group("combat_transient").filter(func(n): return n is Bullet)[0]
 	initial = first.velocity.angle()
-	await wait(0.06)
-	check(absf(first.velocity.angle()-initial) > normal_turn,"A23 real projectile turns faster")
+	for frame in 4: await get_tree().physics_frame
+	# Compare observed angular rate over actual physics age; wall time can span 3 or 4 ticks.
+	check(absf(first.velocity.angle()-initial)/first.age > normal_turn,"A23 real projectile turns faster")
 	gun.removeAttachMent(am)
 	await clean()
 	gun = PlayerData.player_weapon_list[124]

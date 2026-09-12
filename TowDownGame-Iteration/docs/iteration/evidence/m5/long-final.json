@@ -1,0 +1,4441 @@
+{
+  "cleanup_samples": [
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 70,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 117,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 59,
+      "lifecycle_tail": [
+        {
+          "created_ms": 45815,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 48427,
+          "epoch": 1,
+          "id": 442213868609,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 48658,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 48844,
+          "epoch": 1,
+          "id": 449562289230,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 48021,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 49153,
+          "epoch": 1,
+          "id": 447347696715,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 46825,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 49449,
+          "epoch": 1,
+          "id": 444411683471,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 48658,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 49449,
+          "epoch": 1,
+          "id": 449310630521,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 48069,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 49526,
+          "epoch": 1,
+          "id": 447767127035,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 47137,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 49746,
+          "epoch": 1,
+          "id": 445032440838,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 48364,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 49822,
+          "epoch": 1,
+          "id": 448438215665,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 47432,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 50056,
+          "epoch": 1,
+          "id": 445686752169,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 48672,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 50133,
+          "epoch": 1,
+          "id": 449830724204,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 49326,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 50196,
+          "epoch": 1,
+          "id": 450703133842,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 49700,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 50461,
+          "epoch": 1,
+          "id": 452213089104,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 49700,
+          "destroyed_epoch": 1,
+          "destroyed_ms": 50490,
+          "epoch": 1,
+          "id": 452464747541,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 49403,
+          "destroyed_epoch": 2,
+          "destroyed_ms": 50729,
+          "epoch": 1,
+          "id": 451172901959,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 49700,
+          "destroyed_epoch": 2,
+          "destroyed_ms": 50729,
+          "epoch": 1,
+          "id": 452733182744,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 50631,
+          "destroyed_epoch": 2,
+          "destroyed_ms": 50729,
+          "epoch": 1,
+          "id": 453672707093,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 280,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 497,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 0,
+      "round": 1,
+      "seconds": 50.82,
+      "stage": 1,
+      "telemetry": {
+        "objects": 8839,
+        "resources": 717,
+        "signal_connections": 634,
+        "static_bytes": 148624479,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 169,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 118,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 130,
+      "lifecycle_tail": [
+        {
+          "created_ms": 99089,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100309,
+          "epoch": 3,
+          "id": 681524077611,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 99810,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100419,
+          "epoch": 3,
+          "id": 683856110291,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 99182,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100529,
+          "epoch": 3,
+          "id": 681943507962,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 99810,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100529,
+          "epoch": 3,
+          "id": 684107768889,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 99810,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100636,
+          "epoch": 3,
+          "id": 684359426655,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 99418,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100761,
+          "epoch": 3,
+          "id": 682530710438,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 100090,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 100996,
+          "epoch": 3,
+          "id": 684913075457,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 99669,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 101011,
+          "epoch": 3,
+          "id": 683151467724,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 100106,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 101075,
+          "epoch": 3,
+          "id": 685198287768,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 100499,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 101075,
+          "epoch": 3,
+          "id": 686758568570,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 100499,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 101106,
+          "epoch": 3,
+          "id": 686506910690,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 100499,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 101121,
+          "epoch": 3,
+          "id": 687010227132,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 100357,
+          "destroyed_epoch": 3,
+          "destroyed_ms": 101324,
+          "epoch": 3,
+          "id": 685768713171,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 101137,
+          "destroyed_epoch": 4,
+          "destroyed_ms": 101597,
+          "epoch": 3,
+          "id": 688100746227,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 101370,
+          "destroyed_epoch": 4,
+          "destroyed_ms": 101597,
+          "epoch": 3,
+          "id": 688704726209,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 101091,
+          "destroyed_epoch": 4,
+          "destroyed_ms": 101597,
+          "epoch": 3,
+          "id": 687698092666,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        }
+      ],
+      "lifecycle_total": 688,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 496,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 0,
+      "round": 2,
+      "seconds": 101.606,
+      "stage": 2,
+      "telemetry": {
+        "objects": 8839,
+        "resources": 717,
+        "signal_connections": 631,
+        "static_bytes": 149366963,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 257,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 119,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 199,
+      "lifecycle_tail": [
+        {
+          "created_ms": 149533,
+          "destroyed_epoch": 5,
+          "destroyed_ms": 151746,
+          "epoch": 5,
+          "id": 897815940241,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151700,
+          "destroyed_epoch": 5,
+          "destroyed_ms": 151778,
+          "epoch": 5,
+          "id": 905852233001,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 150571,
+          "destroyed_epoch": 5,
+          "destroyed_ms": 151917,
+          "epoch": 5,
+          "id": 901523710564,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 149970,
+          "destroyed_epoch": 5,
+          "destroyed_ms": 152165,
+          "epoch": 5,
+          "id": 899141346079,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 152119,
+          "destroyed_epoch": 5,
+          "destroyed_ms": 152195,
+          "epoch": 5,
+          "id": 907177632601,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 150403,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152388,
+          "epoch": 5,
+          "id": 900466746095,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 150839,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152388,
+          "epoch": 5,
+          "id": 902513566893,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 150839,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152388,
+          "epoch": 5,
+          "id": 902983328584,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151261,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152388,
+          "epoch": 5,
+          "id": 903872520850,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151261,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 904107401894,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151261,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 904342283535,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151701,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 906087113599,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151701,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 906321994736,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 152119,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 907412513692,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 152119,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 907647394597,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 151670,
+          "destroyed_epoch": 6,
+          "destroyed_ms": 152389,
+          "epoch": 5,
+          "id": 905483133590,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 1032,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 497,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 0,
+      "round": 3,
+      "seconds": 152.34,
+      "stage": 3,
+      "telemetry": {
+        "objects": 8843,
+        "resources": 718,
+        "signal_connections": 640,
+        "static_bytes": 149735059,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 366,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 120,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 286,
+      "lifecycle_tail": [
+        {
+          "created_ms": 199836,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202327,
+          "epoch": 7,
+          "id": 1139860841720,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 201256,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202391,
+          "epoch": 7,
+          "id": 1144474575634,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 202267,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202563,
+          "epoch": 7,
+          "id": 1150447265007,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 202267,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202563,
+          "epoch": 7,
+          "id": 1150749254918,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 200429,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202639,
+          "epoch": 7,
+          "id": 1141303682316,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 202608,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202733,
+          "epoch": 7,
+          "id": 1152175318339,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 202608,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 202733,
+          "epoch": 7,
+          "id": 1152477307571,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 202936,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 203031,
+          "epoch": 7,
+          "id": 1154054365927,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 202936,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 203031,
+          "epoch": 7,
+          "id": 1154389910773,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 200739,
+          "destroyed_epoch": 7,
+          "destroyed_ms": 203061,
+          "epoch": 7,
+          "id": 1141756666812,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 200132,
+          "destroyed_epoch": 8,
+          "destroyed_ms": 203147,
+          "epoch": 7,
+          "id": 1140867474130,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 201036,
+          "destroyed_epoch": 8,
+          "destroyed_ms": 203147,
+          "epoch": 7,
+          "id": 1143669269048,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 201334,
+          "destroyed_epoch": 8,
+          "destroyed_ms": 203147,
+          "epoch": 7,
+          "id": 1145548318033,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 201630,
+          "destroyed_epoch": 8,
+          "destroyed_ms": 203148,
+          "epoch": 7,
+          "id": 1147377034183,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 201927,
+          "destroyed_epoch": 8,
+          "destroyed_ms": 203148,
+          "epoch": 7,
+          "id": 1148568216833,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 202936,
+          "destroyed_epoch": 8,
+          "destroyed_ms": 203148,
+          "epoch": 7,
+          "id": 1153785931092,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 1366,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 509,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 0,
+      "round": 4,
+      "seconds": 203.118,
+      "stage": 4,
+      "telemetry": {
+        "objects": 8867,
+        "resources": 718,
+        "signal_connections": 714,
+        "static_bytes": 149950011,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 471,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 111,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 358,
+      "lifecycle_tail": [
+        {
+          "created_ms": 241383,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 241974,
+          "epoch": 9,
+          "id": 1286560818252,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 241880,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 242394,
+          "epoch": 9,
+          "id": 1287919772398,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 242379,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 242896,
+          "epoch": 9,
+          "id": 1289446499559,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 242880,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 243410,
+          "epoch": 9,
+          "id": 1290906116813,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 243378,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 243921,
+          "epoch": 9,
+          "id": 1292432843747,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 243876,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 244434,
+          "epoch": 9,
+          "id": 1293892461373,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 244372,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 244937,
+          "epoch": 9,
+          "id": 1295419188130,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 245371,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 245885,
+          "epoch": 9,
+          "id": 1296878806206,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 246383,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 246914,
+          "epoch": 9,
+          "id": 1298590081977,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 247381,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 247927,
+          "epoch": 9,
+          "id": 1300301358094,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 248378,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 248969,
+          "epoch": 9,
+          "id": 1302012634255,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 249377,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 249875,
+          "epoch": 9,
+          "id": 1303723909837,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 250373,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 250902,
+          "epoch": 9,
+          "id": 1305435186335,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 251384,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 251929,
+          "epoch": 9,
+          "id": 1307045798841,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 252379,
+          "destroyed_epoch": 9,
+          "destroyed_ms": 252958,
+          "epoch": 9,
+          "id": 1308757074946,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 253378,
+          "destroyed_epoch": 10,
+          "destroyed_ms": 253882,
+          "epoch": 9,
+          "id": 1310468351059,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 1439,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 503,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 0,
+      "round": 5,
+      "seconds": 253.829,
+      "stage": 5,
+      "telemetry": {
+        "objects": 8855,
+        "resources": 718,
+        "signal_connections": 680,
+        "static_bytes": 150382015,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 672,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 113,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 417,
+      "lifecycle_tail": [
+        {
+          "created_ms": 290301,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 291377,
+          "epoch": 11,
+          "id": 1441196418115,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 290909,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 291872,
+          "epoch": 11,
+          "id": 1443578782554,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 292106,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 292872,
+          "epoch": 11,
+          "id": 1445944370484,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 291499,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 293370,
+          "epoch": 11,
+          "id": 1444803519358,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 293306,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 293869,
+          "epoch": 11,
+          "id": 1449148818571,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 292700,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 294368,
+          "epoch": 11,
+          "id": 1447571760195,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 294506,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 295373,
+          "epoch": 11,
+          "id": 1452504261297,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 293901,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 295870,
+          "epoch": 11,
+          "id": 1451480851037,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 295108,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 296369,
+          "epoch": 11,
+          "id": 1454249091882,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 296400,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 296963,
+          "epoch": 11,
+          "id": 1456933446964,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 297710,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 298787,
+          "epoch": 11,
+          "id": 1458376287538,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 299004,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 299520,
+          "epoch": 11,
+          "id": 1460641211459,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 300313,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 301342,
+          "epoch": 11,
+          "id": 1462084052151,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 301607,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 302164,
+          "epoch": 11,
+          "id": 1464399308069,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 302908,
+          "destroyed_epoch": 11,
+          "destroyed_ms": 303904,
+          "epoch": 11,
+          "id": 1465892479591,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 304204,
+          "destroyed_epoch": 12,
+          "destroyed_ms": 304613,
+          "epoch": 11,
+          "id": 1468140626707,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        }
+      ],
+      "lifecycle_total": 1517,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 496,
+      "orphans": 0,
+      "region": "R2",
+      "remaining": [],
+      "revives": 0,
+      "round": 6,
+      "seconds": 304.622,
+      "stage": 6,
+      "telemetry": {
+        "objects": 8844,
+        "resources": 721,
+        "signal_connections": 635,
+        "static_bytes": 150669684,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 759,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 115,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 488,
+      "lifecycle_tail": [
+        {
+          "created_ms": 343405,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 345050,
+          "epoch": 13,
+          "id": 1588785586790,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 343900,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 345361,
+          "epoch": 13,
+          "id": 1589523783958,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 342893,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 345969,
+          "epoch": 13,
+          "id": 1587275638108,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 345906,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 347182,
+          "epoch": 13,
+          "id": 1594506618209,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 344396,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 347477,
+          "epoch": 13,
+          "id": 1590563971955,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 345393,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 347477,
+          "epoch": 13,
+          "id": 1593097331910,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 344894,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 347788,
+          "epoch": 13,
+          "id": 1592224916573,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 347899,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 348998,
+          "epoch": 13,
+          "id": 1598801585237,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 346902,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 349311,
+          "epoch": 13,
+          "id": 1596368888686,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 349901,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 351147,
+          "epoch": 13,
+          "id": 1602811339811,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 348905,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 351750,
+          "epoch": 13,
+          "id": 1601217504461,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 350897,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 353794,
+          "epoch": 13,
+          "id": 1604774273326,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 353902,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 355014,
+          "epoch": 13,
+          "id": 1610193314569,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 351892,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 355014,
+          "epoch": 13,
+          "id": 1606921757455,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 352905,
+          "destroyed_epoch": 13,
+          "destroyed_ms": 355326,
+          "epoch": 13,
+          "id": 1607609623736,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 354906,
+          "destroyed_epoch": 14,
+          "destroyed_ms": 355410,
+          "epoch": 13,
+          "id": 1612961555408,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 1590,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 520,
+      "orphans": 0,
+      "region": "R2",
+      "remaining": [],
+      "revives": 0,
+      "round": 7,
+      "seconds": 355.42,
+      "stage": 7,
+      "telemetry": {
+        "objects": 8892,
+        "resources": 721,
+        "signal_connections": 782,
+        "static_bytes": 151445884,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 986,
+      "fire_released": true,
+      "generation": 17,
+      "gun": 116,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 509,
+      "lifecycle_tail": [
+        {
+          "created_ms": 389785,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1808952992815,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 390387,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1814388810371,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 391584,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1823414953120,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 392191,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1827961578794,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 392788,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1833598723202,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 394068,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1840410272751,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 395266,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1852791858583,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 395873,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1857674028051,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 396469,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1862992405515,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 397061,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1869032203683,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 398371,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1879434077016,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 399661,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1890574148901,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 400965,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1901177348935,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 402336,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1913592488787,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 403631,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1922534744687,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 404934,
+          "destroyed_epoch": 16,
+          "destroyed_ms": 406340,
+          "epoch": 15,
+          "id": 1933070837157,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 1929,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 496,
+      "orphans": 0,
+      "region": "R2",
+      "remaining": [],
+      "revives": 2,
+      "round": 8,
+      "seconds": 406.362,
+      "stage": 8,
+      "telemetry": {
+        "objects": 8844,
+        "resources": 721,
+        "signal_connections": 639,
+        "static_bytes": 152076888,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1104,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 121,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 567,
+      "lifecycle_tail": [
+        {
+          "created_ms": 443337,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 443710,
+          "epoch": 17,
+          "id": 2144614753064,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 442947,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 443851,
+          "epoch": 17,
+          "id": 2144446981118,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 443836,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 444133,
+          "epoch": 17,
+          "id": 2145822712616,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 443431,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 444335,
+          "epoch": 17,
+          "id": 2145134846629,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 443710,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 444613,
+          "epoch": 17,
+          "id": 2145554277504,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 440834,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 444832,
+          "epoch": 17,
+          "id": 2134196102137,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 444335,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 444926,
+          "epoch": 17,
+          "id": 2147819201189,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 444132,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 445035,
+          "epoch": 17,
+          "id": 2146913231694,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 444833,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 445176,
+          "epoch": 17,
+          "id": 2148725170905,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 445332,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 445612,
+          "epoch": 17,
+          "id": 2149664695566,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 444925,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 445830,
+          "epoch": 17,
+          "id": 2149194933434,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 445176,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 446081,
+          "epoch": 17,
+          "id": 2149396259708,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 445830,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 446437,
+          "epoch": 17,
+          "id": 2151224976180,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 445612,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 446516,
+          "epoch": 17,
+          "id": 2150570664789,
+          "type": "res://game/effects/GravityField.gd"
+        },
+        {
+          "created_ms": 442125,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 446578,
+          "epoch": 17,
+          "id": 2139346707529,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 446437,
+          "destroyed_epoch": 17,
+          "destroyed_ms": 447326,
+          "epoch": 17,
+          "id": 2152869143359,
+          "type": "res://game/effects/GravityField.gd"
+        }
+      ],
+      "lifecycle_total": 2131,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 499,
+      "orphans": 0,
+      "region": "R2",
+      "remaining": [],
+      "revives": 2,
+      "round": 9,
+      "seconds": 457.091,
+      "stage": 9,
+      "telemetry": {
+        "objects": 8851,
+        "resources": 722,
+        "signal_connections": 658,
+        "static_bytes": 152140396,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "B01",
+      "bot": false,
+      "damage_events": 1163,
+      "fire_released": true,
+      "generation": 7,
+      "gun": 122,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 568,
+      "lifecycle_tail": [
+        {
+          "created_ms": 459865,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 462074,
+          "epoch": 18,
+          "id": 2166710346513,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 461370,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 462074,
+          "epoch": 18,
+          "id": 2169847686451,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 461808,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 462074,
+          "epoch": 18,
+          "id": 2171089199809,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 462134,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 463562,
+          "epoch": 19,
+          "id": 2191037310131,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 462573,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 463984,
+          "epoch": 19,
+          "id": 2191725175488,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 463285,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 464108,
+          "epoch": 19,
+          "id": 2193637778285,
+          "type": "res://game/monster/HostileZone.gd"
+        },
+        {
+          "created_ms": 463006,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 464453,
+          "epoch": 19,
+          "id": 2192664699623,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 463439,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 464919,
+          "epoch": 19,
+          "id": 2194124317887,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 463875,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 465341,
+          "epoch": 19,
+          "id": 2195734930033,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 464311,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 465762,
+          "epoch": 19,
+          "id": 2197295211184,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 464747,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 466182,
+          "epoch": 19,
+          "id": 2198486394092,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 466059,
+          "destroyed_epoch": 19,
+          "destroyed_ms": 466900,
+          "epoch": 19,
+          "id": 2202026386183,
+          "type": "res://game/monster/HostileZone.gd"
+        },
+        {
+          "created_ms": 466027,
+          "destroyed_epoch": 20,
+          "destroyed_ms": 467047,
+          "epoch": 19,
+          "id": 2201523069653,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 466464,
+          "destroyed_epoch": 20,
+          "destroyed_ms": 467047,
+          "epoch": 19,
+          "id": 2202697474749,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 466900,
+          "destroyed_epoch": 20,
+          "destroyed_ms": 467047,
+          "epoch": 19,
+          "id": 2203787993687,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 462073,
+          "destroyed_epoch": 20,
+          "destroyed_ms": 467047,
+          "epoch": 19,
+          "id": 2190601102762,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 2152,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 521,
+      "orphans": 0,
+      "region": "R2",
+      "remaining": [],
+      "revives": 2,
+      "round": 10,
+      "seconds": 467.078,
+      "stage": 10,
+      "telemetry": {
+        "objects": 8897,
+        "resources": 722,
+        "signal_connections": 792,
+        "static_bytes": 152351892,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1284,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 124,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 639,
+      "lifecycle_tail": [
+        {
+          "created_ms": 516778,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517179,
+          "epoch": 21,
+          "id": 2633033065880,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516778,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517195,
+          "epoch": 21,
+          "id": 2632781406861,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516453,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517226,
+          "epoch": 21,
+          "id": 2629526627138,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516345,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517272,
+          "epoch": 21,
+          "id": 2628754875816,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 516499,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517288,
+          "epoch": 21,
+          "id": 2629962835349,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516560,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517334,
+          "epoch": 21,
+          "id": 2630348710835,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516606,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517395,
+          "epoch": 21,
+          "id": 2630818473283,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516669,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517442,
+          "epoch": 21,
+          "id": 2631204348816,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516716,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517506,
+          "epoch": 21,
+          "id": 2631657334047,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 516777,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517553,
+          "epoch": 21,
+          "id": 2632043209259,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 517427,
+          "destroyed_epoch": 21,
+          "destroyed_ms": 517802,
+          "epoch": 21,
+          "id": 2634173916399,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 517537,
+          "destroyed_epoch": 22,
+          "destroyed_ms": 517855,
+          "epoch": 21,
+          "id": 2634710787263,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 517631,
+          "destroyed_epoch": 22,
+          "destroyed_ms": 517855,
+          "epoch": 21,
+          "id": 2635113440501,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 517708,
+          "destroyed_epoch": 22,
+          "destroyed_ms": 517855,
+          "epoch": 21,
+          "id": 2635599979717,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 517786,
+          "destroyed_epoch": 22,
+          "destroyed_ms": 517855,
+          "epoch": 21,
+          "id": 2635985855488,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 517349,
+          "destroyed_epoch": 22,
+          "destroyed_ms": 517855,
+          "epoch": 21,
+          "id": 2633788040014,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 3034,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 496,
+      "orphans": 0,
+      "region": "R3",
+      "remaining": [],
+      "revives": 2,
+      "round": 11,
+      "seconds": 517.849,
+      "stage": 11,
+      "telemetry": {
+        "objects": 8845,
+        "resources": 722,
+        "signal_connections": 637,
+        "static_bytes": 153075564,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1447,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 0,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 713,
+      "lifecycle_tail": [
+        {
+          "created_ms": 566938,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 567955,
+          "epoch": 23,
+          "id": 2971194631174,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567064,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568065,
+          "epoch": 23,
+          "id": 2971848942267,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567191,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568204,
+          "epoch": 23,
+          "id": 2972402590931,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 568220,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568282,
+          "epoch": 23,
+          "id": 2978459165912,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567315,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568328,
+          "epoch": 23,
+          "id": 2973694436590,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567720,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568374,
+          "epoch": 23,
+          "id": 2975439267253,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567847,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568515,
+          "epoch": 23,
+          "id": 2976043246665,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 568220,
+          "destroyed_epoch": 23,
+          "destroyed_ms": 568609,
+          "epoch": 23,
+          "id": 2978224284571,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567595,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2974734624244,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567986,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2976697558143,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 568111,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2977301537754,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 568235,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2978744378210,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 568422,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2979818120112,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 568547,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2980472431883,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 567517,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2974449410959,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 568421,
+          "destroyed_epoch": 24,
+          "destroyed_ms": 568616,
+          "epoch": 23,
+          "id": 2979532908014,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 3593,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 507,
+      "orphans": 0,
+      "region": "R3",
+      "remaining": [],
+      "revives": 2,
+      "round": 12,
+      "seconds": 568.621,
+      "stage": 12,
+      "telemetry": {
+        "objects": 8867,
+        "resources": 722,
+        "signal_connections": 704,
+        "static_bytes": 153303872,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1519,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 6,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 764,
+      "lifecycle_tail": [
+        {
+          "created_ms": 603801,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 604344,
+          "epoch": 25,
+          "id": 3071874704599,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 604502,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 605047,
+          "epoch": 25,
+          "id": 3073250436504,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 605202,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 605761,
+          "epoch": 25,
+          "id": 3074592613021,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 605902,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 606477,
+          "epoch": 25,
+          "id": 3075884458841,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 606600,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 607190,
+          "epoch": 25,
+          "id": 3077125972659,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 607301,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 607907,
+          "epoch": 25,
+          "id": 3078518482328,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 608002,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 608627,
+          "epoch": 25,
+          "id": 3079860659048,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 608706,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 609229,
+          "epoch": 25,
+          "id": 3081253167737,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 609402,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 609963,
+          "epoch": 25,
+          "id": 3082595345407,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 610103,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 610680,
+          "epoch": 25,
+          "id": 3083987854400,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 611598,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 612234,
+          "epoch": 25,
+          "id": 3085531358692,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 613094,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 613635,
+          "epoch": 25,
+          "id": 3087074862511,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 614603,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 615179,
+          "epoch": 25,
+          "id": 3088668697209,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 616100,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 616695,
+          "epoch": 25,
+          "id": 3090212201343,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 617596,
+          "destroyed_epoch": 25,
+          "destroyed_ms": 618125,
+          "epoch": 25,
+          "id": 3091806036311,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 619105,
+          "destroyed_epoch": 26,
+          "destroyed_ms": 619406,
+          "epoch": 25,
+          "id": 3093349540494,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 3645,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 501,
+      "orphans": 0,
+      "region": "R3",
+      "remaining": [],
+      "revives": 2,
+      "round": 13,
+      "seconds": 619.367,
+      "stage": 13,
+      "telemetry": {
+        "objects": 8856,
+        "resources": 722,
+        "signal_connections": 670,
+        "static_bytes": 153388212,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1646,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 112,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 852,
+      "lifecycle_tail": [
+        {
+          "created_ms": 657944,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 661359,
+          "epoch": 27,
+          "id": 3236056540521,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 659945,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 661566,
+          "epoch": 27,
+          "id": 3242448659212,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 658744,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 661566,
+          "epoch": 27,
+          "id": 3238757671668,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 661642,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 662394,
+          "epoch": 27,
+          "id": 3247599264053,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 659145,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 662601,
+          "epoch": 27,
+          "id": 3239781081762,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 660745,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 662808,
+          "epoch": 27,
+          "id": 3244814246915,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 660345,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 663636,
+          "epoch": 27,
+          "id": 3243790837233,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 662546,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 663843,
+          "epoch": 27,
+          "id": 3250703049048,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 663443,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 664050,
+          "epoch": 27,
+          "id": 3253253186759,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 664347,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 664913,
+          "epoch": 27,
+          "id": 3254410814759,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 665244,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 665844,
+          "epoch": 27,
+          "id": 3255669105552,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 666148,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 666672,
+          "epoch": 27,
+          "id": 3256877065252,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 667045,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 667603,
+          "epoch": 27,
+          "id": 3258135356396,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 667949,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 668535,
+          "epoch": 27,
+          "id": 3259292984196,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 668846,
+          "destroyed_epoch": 27,
+          "destroyed_ms": 669363,
+          "epoch": 27,
+          "id": 3260601607329,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 669750,
+          "destroyed_epoch": 28,
+          "destroyed_ms": 670149,
+          "epoch": 27,
+          "id": 3261859897688,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 3738,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 498,
+      "orphans": 0,
+      "region": "R3",
+      "remaining": [],
+      "revives": 2,
+      "round": 14,
+      "seconds": 670.158,
+      "stage": 14,
+      "telemetry": {
+        "objects": 8849,
+        "resources": 722,
+        "signal_connections": 654,
+        "static_bytes": 153381256,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1777,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 114,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 921,
+      "lifecycle_tail": [
+        {
+          "created_ms": 715436,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 718107,
+          "epoch": 29,
+          "id": 3433155273901,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 717803,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 718714,
+          "epoch": 29,
+          "id": 3439614501956,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 717003,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 718742,
+          "epoch": 29,
+          "id": 3437383132610,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 718203,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 718777,
+          "epoch": 29,
+          "id": 3440319144605,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 716202,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 718852,
+          "epoch": 29,
+          "id": 3434765886817,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 717403,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 719142,
+          "epoch": 29,
+          "id": 3438154884501,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 716437,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 719273,
+          "epoch": 29,
+          "id": 3435621523750,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 717430,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 719707,
+          "epoch": 29,
+          "id": 3438691754584,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 719645,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 720480,
+          "epoch": 29,
+          "id": 3444177904424,
+          "type": "res://game/monster/HostileZone.gd"
+        },
+        {
+          "created_ms": 720129,
+          "destroyed_epoch": 29,
+          "destroyed_ms": 720543,
+          "epoch": 29,
+          "id": 3445285201364,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 718603,
+          "destroyed_epoch": 30,
+          "destroyed_ms": 720935,
+          "epoch": 29,
+          "id": 3441292223660,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 720529,
+          "destroyed_epoch": 30,
+          "destroyed_ms": 720935,
+          "epoch": 29,
+          "id": 3446610601430,
+          "type": "res://game/bullets/PlasmaBullet.gd"
+        },
+        {
+          "created_ms": 713435,
+          "destroyed_epoch": 30,
+          "destroyed_ms": 720935,
+          "epoch": 29,
+          "id": 3427132252987,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 718431,
+          "destroyed_epoch": 30,
+          "destroyed_ms": 720935,
+          "epoch": 29,
+          "id": 3440956678902,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 719431,
+          "destroyed_epoch": 30,
+          "destroyed_ms": 720935,
+          "epoch": 29,
+          "id": 3443792028928,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 720432,
+          "destroyed_epoch": 30,
+          "destroyed_ms": 720935,
+          "epoch": 29,
+          "id": 3446224724973,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 3934,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 504,
+      "orphans": 0,
+      "region": "R3",
+      "remaining": [],
+      "revives": 2,
+      "round": 15,
+      "seconds": 721.075,
+      "stage": 15,
+      "telemetry": {
+        "objects": 8862,
+        "resources": 723,
+        "signal_connections": 688,
+        "static_bytes": 154577140,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 1946,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 123,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1012,
+      "lifecycle_tail": [
+        {
+          "created_ms": 728343,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3501337879678,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 743663,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3589367931674,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 743663,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3589653144771,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 759747,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3708435834208,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 761148,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3715012502992,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 762148,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3728115507979,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 762148,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3728400720645,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 762549,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3731403842853,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 765550,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3753264554918,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 768068,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3769605563558,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 768068,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3769890775836,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 770055,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3788194718621,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 770131,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3788563816744,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 771546,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771855,
+          "epoch": 31,
+          "id": 3796532994608,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 771795,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771856,
+          "epoch": 31,
+          "id": 3798126830144,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 771795,
+          "destroyed_epoch": 32,
+          "destroyed_ms": 771856,
+          "epoch": 31,
+          "id": 3798412043563,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 4445,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 503,
+      "orphans": 0,
+      "region": "R4",
+      "remaining": [],
+      "revives": 2,
+      "round": 16,
+      "seconds": 772.002,
+      "stage": 16,
+      "telemetry": {
+        "objects": 8860,
+        "resources": 723,
+        "signal_connections": 680,
+        "static_bytes": 154594988,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 2005,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 3,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1046,
+      "lifecycle_tail": [
+        {
+          "created_ms": 792474,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 3924895474723,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 793874,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 3934995358607,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 798070,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 3973146748124,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 802975,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4015978980566,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 805073,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4031716008957,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 809268,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4070739813777,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 810669,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4083993813690,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 811373,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4090050388614,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 812070,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4093405831829,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 813470,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4106290733382,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 814871,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4117883789928,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 816272,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4128805757955,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 817673,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4137513133044,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 819073,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4147478798917,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 820474,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4156068734439,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 821868,
+          "destroyed_epoch": 34,
+          "destroyed_ms": 822779,
+          "epoch": 33,
+          "id": 4164021134708,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 4848,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 505,
+      "orphans": 0,
+      "region": "R4",
+      "remaining": [],
+      "revives": 2,
+      "round": 17,
+      "seconds": 822.883,
+      "stage": 17,
+      "telemetry": {
+        "objects": 8864,
+        "resources": 723,
+        "signal_connections": 694,
+        "static_bytes": 154618292,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 2144,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 5,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1132,
+      "lifecycle_tail": [
+        {
+          "created_ms": 873380,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4495153046456,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 873380,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4495387927973,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 873497,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4496964985403,
+          "type": "res://game/monster/HostileZone.gd"
+        },
+        {
+          "created_ms": 873016,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4491294286538,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 873415,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4495757026533,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 873415,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4496025461675,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 873614,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4497854178570,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 873615,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4498172945574,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 869157,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4465977467558,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 870357,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4472889680855,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 871254,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4478174503479,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 871558,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4478560380017,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 871855,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4479265023193,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 872158,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4482754684380,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 872455,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4485388706632,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 873456,
+          "destroyed_epoch": 36,
+          "destroyed_ms": 873662,
+          "epoch": 35,
+          "id": 4496461669136,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 5466,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 497,
+      "orphans": 0,
+      "region": "R4",
+      "remaining": [],
+      "revives": 2,
+      "round": 18,
+      "seconds": 873.609,
+      "stage": 18,
+      "telemetry": {
+        "objects": 8848,
+        "resources": 723,
+        "signal_connections": 644,
+        "static_bytes": 154609956,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 2256,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 8,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1200,
+      "lifecycle_tail": [
+        {
+          "created_ms": 904295,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4700673942112,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 905274,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4709347762864,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 905979,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4714699694866,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 909532,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4745334891807,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 909532,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4745620103687,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 909863,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4747197162493,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 909863,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4747482375097,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 911581,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4763840160767,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 912285,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4771054363920,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 913686,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4784576799446,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 916577,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4813651715097,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 919579,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4842558858625,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 921082,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4860225266616,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 922579,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4872338416956,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 923000,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4877170254391,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 924084,
+          "destroyed_epoch": 38,
+          "destroyed_ms": 924387,
+          "epoch": 37,
+          "id": 4888679424820,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 5972,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 496,
+      "orphans": 0,
+      "region": "R4",
+      "remaining": [],
+      "revives": 2,
+      "round": 19,
+      "seconds": 924.519,
+      "stage": 19,
+      "telemetry": {
+        "objects": 8846,
+        "resources": 723,
+        "signal_connections": 637,
+        "static_bytes": 154823752,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "B02",
+      "bot": false,
+      "damage_events": 2369,
+      "fire_released": true,
+      "generation": 7,
+      "gun": 7,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1201,
+      "lifecycle_tail": [
+        {
+          "created_ms": 931415,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4968807408883,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 931415,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4969092621527,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 931415,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4969377834350,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 932215,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4981071552834,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932216,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4981306434992,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932312,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4982245958192,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932312,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4982480838918,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932402,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4983118373985,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932402,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4983353248916,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 931802,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4975182751143,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 931898,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4976155829503,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 931994,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4977665779097,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932091,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4978840184145,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932187,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4980199138276,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 932284,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4981574870184,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 929505,
+          "destroyed_epoch": 40,
+          "destroyed_ms": 932408,
+          "epoch": 39,
+          "id": 4953087157258,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 6105,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 496,
+      "orphans": 0,
+      "region": "R4",
+      "remaining": [],
+      "revives": 2,
+      "round": 20,
+      "seconds": 932.52,
+      "stage": 20,
+      "telemetry": {
+        "objects": 8846,
+        "resources": 723,
+        "signal_connections": 639,
+        "static_bytes": 154866748,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 2613,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 1,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1269,
+      "lifecycle_tail": [
+        {
+          "created_ms": 982291,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982292,
+          "epoch": 41,
+          "id": 5337922937077,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 982291,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982292,
+          "epoch": 41,
+          "id": 5338040378436,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 981684,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982429,
+          "epoch": 41,
+          "id": 5334181618581,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 981684,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982498,
+          "epoch": 41,
+          "id": 5333879628743,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 982443,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982664,
+          "epoch": 41,
+          "id": 5338543694407,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 982443,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982664,
+          "epoch": 41,
+          "id": 5338778575193,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 981987,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982664,
+          "epoch": 41,
+          "id": 5336245215756,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 981987,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982677,
+          "epoch": 41,
+          "id": 5335993558077,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 981987,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982677,
+          "epoch": 41,
+          "id": 5336547205908,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 982291,
+          "destroyed_epoch": 41,
+          "destroyed_ms": 982981,
+          "epoch": 41,
+          "id": 5337620948363,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 982795,
+          "destroyed_epoch": 42,
+          "destroyed_ms": 983298,
+          "epoch": 41,
+          "id": 5340154307560,
+          "type": "res://game/monster/HostileZone.gd"
+        },
+        {
+          "created_ms": 983278,
+          "destroyed_epoch": 42,
+          "destroyed_ms": 983298,
+          "epoch": 41,
+          "id": 5341764920590,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 983278,
+          "destroyed_epoch": 42,
+          "destroyed_ms": 983298,
+          "epoch": 41,
+          "id": 5342066910226,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 983278,
+          "destroyed_epoch": 42,
+          "destroyed_ms": 983298,
+          "epoch": 41,
+          "id": 5342368900373,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 981491,
+          "destroyed_epoch": 42,
+          "destroyed_ms": 983298,
+          "epoch": 41,
+          "id": 5333091099200,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 982595,
+          "destroyed_epoch": 42,
+          "destroyed_ms": 983298,
+          "epoch": 41,
+          "id": 5339298669891,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 6729,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 512,
+      "orphans": 0,
+      "region": "R5",
+      "remaining": [],
+      "revives": 2,
+      "round": 21,
+      "seconds": 983.251,
+      "stage": 21,
+      "telemetry": {
+        "objects": 8879,
+        "resources": 723,
+        "signal_connections": 734,
+        "static_bytes": 155017544,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 2760,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 2,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1377,
+      "lifecycle_tail": [
+        {
+          "created_ms": 1030619,
+          "destroyed_epoch": 43,
+          "destroyed_ms": 1032841,
+          "epoch": 43,
+          "id": 5582618633619,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1029818,
+          "destroyed_epoch": 43,
+          "destroyed_ms": 1032841,
+          "epoch": 43,
+          "id": 5577921013163,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1032972,
+          "destroyed_epoch": 43,
+          "destroyed_ms": 1033027,
+          "epoch": 43,
+          "id": 5593540600734,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1033372,
+          "destroyed_epoch": 43,
+          "destroyed_ms": 1033428,
+          "epoch": 43,
+          "id": 5594278798295,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1033772,
+          "destroyed_epoch": 43,
+          "destroyed_ms": 1033848,
+          "epoch": 43,
+          "id": 5595235100075,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 991011,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5388791456377,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 991012,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5389076668760,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 998146,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5418067697992,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 998146,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5418352911370,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1031019,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5584866779449,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1031419,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5587349808154,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1031820,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5589547623576,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1032220,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5590554256229,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1032620,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5592970175672,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1033531,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5594882777671,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1033924,
+          "destroyed_epoch": 44,
+          "destroyed_ms": 1034029,
+          "epoch": 43,
+          "id": 5596006851363,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 7124,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 503,
+      "orphans": 0,
+      "region": "R5",
+      "remaining": [],
+      "revives": 2,
+      "round": 22,
+      "seconds": 1034.14,
+      "stage": 24,
+      "telemetry": {
+        "objects": 8860,
+        "resources": 723,
+        "signal_connections": 682,
+        "static_bytes": 156848580,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 2893,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 4,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1480,
+      "lifecycle_tail": [
+        {
+          "created_ms": 1084110,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5995606582010,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084206,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5996395111851,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084303,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5997435298441,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084400,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5997955392205,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084497,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5998525817669,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084593,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 6000253871490,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084689,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 6001025623222,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084786,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 6001713488543,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1084883,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 6002585904438,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1081813,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5972118479973,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1083014,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5983946417139,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1083310,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084917,
+          "epoch": 45,
+          "id": 5986194563659,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1083910,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084918,
+          "epoch": 45,
+          "id": 5992251139012,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1084214,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084918,
+          "epoch": 45,
+          "id": 5996898428389,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1084510,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084918,
+          "epoch": 45,
+          "id": 5999029134597,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        },
+        {
+          "created_ms": 1084814,
+          "destroyed_epoch": 46,
+          "destroyed_ms": 1084918,
+          "epoch": 45,
+          "id": 6002250359944,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 7864,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 508,
+      "orphans": 0,
+      "region": "R6",
+      "remaining": [],
+      "revives": 2,
+      "round": 23,
+      "seconds": 1085.05,
+      "stage": 29,
+      "telemetry": {
+        "objects": 8870,
+        "resources": 723,
+        "signal_connections": 712,
+        "static_bytes": 156935492,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "B03",
+      "bot": false,
+      "damage_events": 2994,
+      "fire_released": true,
+      "generation": 7,
+      "gun": 9,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1481,
+      "lifecycle_tail": [
+        {
+          "created_ms": 1092816,
+          "destroyed_epoch": 47,
+          "destroyed_ms": 1093120,
+          "epoch": 47,
+          "id": 6084374832513,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1092919,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6085599569300,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1092705,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6082160239256,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1092919,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6085834449988,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093016,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6086824305450,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093016,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6087059186563,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093119,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6088200037228,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093119,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6088434918708,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093203,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6089525436954,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093203,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6089760318334,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1092802,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6083519193886,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1092898,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6084743930433,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1092995,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6086169994499,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093091,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6087327621690,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1093188,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6088686576851,
+          "type": "res://game/bullets/SmpBullet.gd"
+        },
+        {
+          "created_ms": 1090036,
+          "destroyed_epoch": 48,
+          "destroyed_ms": 1093210,
+          "epoch": 47,
+          "id": 6060920284138,
+          "type": "res://game/monster/TacticalEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 7989,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 507,
+      "orphans": 0,
+      "region": "R6",
+      "remaining": [],
+      "revives": 2,
+      "round": 24,
+      "seconds": 1093.252,
+      "stage": 30,
+      "telemetry": {
+        "objects": 8868,
+        "resources": 723,
+        "signal_connections": 706,
+        "static_bytes": 156959788,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 3063,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 117,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1540,
+      "lifecycle_tail": [
+        {
+          "created_ms": 1141326,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1142457,
+          "epoch": 49,
+          "id": 6270367049185,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 1141961,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1142616,
+          "epoch": 49,
+          "id": 6273168844214,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1141961,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1142664,
+          "epoch": 49,
+          "id": 6272917185623,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1140090,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1142698,
+          "epoch": 49,
+          "id": 6267313595525,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1141332,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1142961,
+          "epoch": 49,
+          "id": 6270719370433,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1140394,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1143016,
+          "epoch": 49,
+          "id": 6267967906913,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1141636,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1143264,
+          "epoch": 49,
+          "id": 6271407235968,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1140698,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1143313,
+          "epoch": 49,
+          "id": 6268672549928,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1143217,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1143395,
+          "epoch": 49,
+          "id": 6275987415990,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1141940,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1143561,
+          "epoch": 49,
+          "id": 6272111879406,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1142622,
+          "destroyed_epoch": 49,
+          "destroyed_ms": 1143713,
+          "epoch": 49,
+          "id": 6273789601206,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 1142678,
+          "destroyed_epoch": 50,
+          "destroyed_ms": 1144030,
+          "epoch": 49,
+          "id": 6274175476823,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1142982,
+          "destroyed_epoch": 50,
+          "destroyed_ms": 1144030,
+          "epoch": 49,
+          "id": 6274880119745,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1143217,
+          "destroyed_epoch": 50,
+          "destroyed_ms": 1144030,
+          "epoch": 49,
+          "id": 6275735757146,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1143285,
+          "destroyed_epoch": 50,
+          "destroyed_ms": 1144030,
+          "epoch": 49,
+          "id": 6276390068829,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1143927,
+          "destroyed_epoch": 50,
+          "destroyed_ms": 1144030,
+          "epoch": 49,
+          "id": 6277178598593,
+          "type": "res://game/monster/DemoEnemy.gd"
+        }
+      ],
+      "lifecycle_total": 8260,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 502,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 2,
+      "round": 25,
+      "seconds": 1144.135,
+      "stage": 1,
+      "telemetry": {
+        "objects": 8858,
+        "resources": 723,
+        "signal_connections": 676,
+        "static_bytes": 156900408,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 3144,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 118,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1612,
+      "lifecycle_tail": [
+        {
+          "created_ms": 1193180,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1193545,
+          "epoch": 51,
+          "id": 6502563718223,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1192406,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1193676,
+          "epoch": 51,
+          "id": 6500063912567,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1192710,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1193731,
+          "epoch": 51,
+          "id": 6501120877596,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1192951,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1193966,
+          "epoch": 51,
+          "id": 6501708079911,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1193407,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1194407,
+          "epoch": 51,
+          "id": 6503553573156,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1193503,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1194483,
+          "epoch": 51,
+          "id": 6503922673132,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1193911,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1194483,
+          "epoch": 51,
+          "id": 6505600393888,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1193911,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1194483,
+          "epoch": 51,
+          "id": 6505852052305,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1193911,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1194545,
+          "epoch": 51,
+          "id": 6505348735681,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1193745,
+          "destroyed_epoch": 51,
+          "destroyed_ms": 1194711,
+          "epoch": 51,
+          "id": 6504526651735,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1194435,
+          "destroyed_epoch": 52,
+          "destroyed_ms": 1194919,
+          "epoch": 51,
+          "id": 6506690913245,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1194676,
+          "destroyed_epoch": 52,
+          "destroyed_ms": 1194919,
+          "epoch": 51,
+          "id": 6507378779075,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1194912,
+          "destroyed_epoch": 52,
+          "destroyed_ms": 1194919,
+          "epoch": 51,
+          "id": 6508251194231,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1194912,
+          "destroyed_epoch": 52,
+          "destroyed_ms": 1194919,
+          "epoch": 51,
+          "id": 6508502852256,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1194912,
+          "destroyed_epoch": 52,
+          "destroyed_ms": 1194919,
+          "epoch": 51,
+          "id": 6508754510733,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1194407,
+          "destroyed_epoch": 52,
+          "destroyed_ms": 1194919,
+          "epoch": 51,
+          "id": 6506405700450,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        }
+      ],
+      "lifecycle_total": 8668,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 500,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 2,
+      "round": 26,
+      "seconds": 1195.016,
+      "stage": 2,
+      "telemetry": {
+        "objects": 8856,
+        "resources": 723,
+        "signal_connections": 666,
+        "static_bytes": 156904412,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    },
+    {
+      "attachments": 27,
+      "boss": "",
+      "bot": false,
+      "damage_events": 3208,
+      "fire_released": true,
+      "generation": 9,
+      "gun": 119,
+      "guns": 24,
+      "input_shoot": false,
+      "kills": 1664,
+      "lifecycle_tail": [
+        {
+          "created_ms": 1230775,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1232741,
+          "epoch": 53,
+          "id": 6665537594574,
+          "type": "res://game/monster/Monster 2/Monster2.gd"
+        },
+        {
+          "created_ms": 1227283,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1232741,
+          "epoch": 53,
+          "id": 6653072123248,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1231333,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1232844,
+          "epoch": 53,
+          "id": 6668490384307,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1231762,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233127,
+          "epoch": 53,
+          "id": 6670100997491,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1232617,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233211,
+          "epoch": 53,
+          "id": 6673607435244,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1232644,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233211,
+          "epoch": 53,
+          "id": 6674312078702,
+          "type": "res://game/monster/EnemyShot.gd"
+        },
+        {
+          "created_ms": 1231761,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233445,
+          "epoch": 53,
+          "id": 6669631234810,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1232189,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233548,
+          "epoch": 53,
+          "id": 6671862605189,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1232189,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233659,
+          "epoch": 53,
+          "id": 6671627723047,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1231278,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233707,
+          "epoch": 53,
+          "id": 6667685078224,
+          "type": "res://game/monster/DemoEnemy.gd"
+        },
+        {
+          "created_ms": 1232189,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1233859,
+          "epoch": 53,
+          "id": 6671392842913,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1232617,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1234162,
+          "epoch": 53,
+          "id": 6673372553470,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1232617,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1234211,
+          "epoch": 53,
+          "id": 6673842316672,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1233045,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1234597,
+          "epoch": 53,
+          "id": 6674865726832,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1233045,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1234645,
+          "epoch": 53,
+          "id": 6675335488966,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        },
+        {
+          "created_ms": 1233045,
+          "destroyed_epoch": 53,
+          "destroyed_ms": 1234680,
+          "epoch": 53,
+          "id": 6675100607352,
+          "type": "res://game/bullets/MechanismProjectile.gd"
+        }
+      ],
+      "lifecycle_total": 8917,
+      "marks": 0,
+      "monsters": 0,
+      "nodes": 505,
+      "orphans": 0,
+      "region": "R1",
+      "remaining": [],
+      "revives": 2,
+      "round": 27,
+      "seconds": 1245.908,
+      "stage": 3,
+      "telemetry": {
+        "objects": 8864,
+        "resources": 723,
+        "signal_connections": 694,
+        "static_bytes": 156964960,
+        "timers": 56,
+        "tweens": 0
+      },
+      "transients": 0,
+      "voices": 1
+    }
+  ],
+  "complete": true,
+  "configuration_panels": 27,
+  "content_counts": {
+    "attachments": 24,
+    "bosses": 3,
+    "encounters": 30,
+    "enemies": 12,
+    "regions": 6,
+    "talents": 24,
+    "weapons": 24
+  },
+  "cpu": "AMD Ryzen 7 9700X 8-Core Processor",
+  "display": "headless",
+  "failures": 0,
+  "frame_ms": {
+    "p50": 6.9,
+    "p95": 15.695,
+    "p99": 16.133
+  },
+  "frames": 169888,
+  "gpu": "",
+  "input_backend": "engine trigger adapter",
+  "live_enemies_p50": 2,
+  "live_enemies_peak": 38,
+  "live_projectiles_p50": 2,
+  "live_projectiles_peak": 23,
+  "max_fps": 160,
+  "pause_events": 24,
+  "peak_hostile_zones": 6,
+  "purchases": 51,
+  "revives": 2,
+  "rounds": 27,
+  "save_restores": 27,
+  "seconds": 1246.0,
+  "viewport": "(1536, 864)",
+  "window": "(0, 0)"
+}

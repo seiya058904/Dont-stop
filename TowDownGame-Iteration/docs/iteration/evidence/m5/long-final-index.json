@@ -1,0 +1,196 @@
+{
+  "seconds": 1246.0,
+  "rounds": 27,
+  "failures": 0,
+  "save_restores": 27,
+  "pause_events": 24,
+  "revives": 2,
+  "frames": 169888,
+  "frame_ms": {
+    "p50": 6.9,
+    "p95": 15.695,
+    "p99": 16.133
+  },
+  "live_enemies_p50": 2,
+  "live_enemies_peak": 38,
+  "live_projectiles_p50": 2,
+  "live_projectiles_peak": 23,
+  "peak_hostile_zones": 6,
+  "content_counts": {
+    "attachments": 24,
+    "bosses": 3,
+    "encounters": 30,
+    "enemies": 12,
+    "regions": 6,
+    "talents": 24,
+    "weapons": 24
+  },
+  "weapons_hit": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124
+  ],
+  "regions": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+  ],
+  "bosses": [
+    "B01",
+    "B02",
+    "B03"
+  ],
+  "nodes_range": [
+    496,
+    521
+  ],
+  "orphans_range": [
+    0,
+    0
+  ],
+  "transients_range": [
+    0,
+    0
+  ],
+  "monsters_range": [
+    0,
+    0
+  ],
+  "marks_range": [
+    0,
+    0
+  ],
+  "voices_range": [
+    1,
+    1
+  ],
+  "timers_range": [
+    56,
+    56
+  ],
+  "signal_connections_range": [
+    631,
+    792
+  ],
+  "resources_range": [
+    717,
+    723
+  ],
+  "objects_range": [
+    8839,
+    8897
+  ],
+  "static_bytes_range": [
+    148624479,
+    156964960
+  ],
+  "tweens_range": [
+    0,
+    0
+  ],
+  "final_telemetry": {
+    "objects": 8864,
+    "resources": 723,
+    "signal_connections": 694,
+    "static_bytes": 156964960,
+    "timers": 56,
+    "tweens": 0
+  },
+  "first_telemetry": {
+    "objects": 8839,
+    "resources": 717,
+    "signal_connections": 634,
+    "static_bytes": 148624479,
+    "timers": 56,
+    "tweens": 0
+  },
+  "damage_events": 3208,
+  "kills": 1664,
+  "source_commit": "a3307ddffb4e4584f25614ebbddad2d2f6f33bf5",
+  "source_files_unchanged": 243,
+  "exit_code": 0,
+  "runtime_errors": [],
+  "known_shutdown_diagnostic": "2 objects / 1 resource diagnostic retained; exact long-run resource identity not established",
+  "resource_samples": [
+    717,
+    717,
+    718,
+    718,
+    718,
+    721,
+    721,
+    721,
+    722,
+    722,
+    722,
+    722,
+    722,
+    722,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723,
+    723
+  ],
+  "signal_samples": [
+    634,
+    631,
+    640,
+    714,
+    680,
+    635,
+    782,
+    639,
+    658,
+    792,
+    637,
+    704,
+    670,
+    654,
+    688,
+    680,
+    694,
+    644,
+    637,
+    639,
+    734,
+    682,
+    712,
+    706,
+    676,
+    666,
+    694
+  ]
+}

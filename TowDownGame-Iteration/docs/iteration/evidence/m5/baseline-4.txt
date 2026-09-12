@@ -1,0 +1,12 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS load preserves spent gold instead of granting 9999
+PASS load preserves spent talent points
+PASS load restores exact ranks
+PASS load restores owned plasma
+PASS load does not refill magazine
+PASS load recomputes equipped fuse
+PASS load applies talent once
+PASS load resumes camp with selected encounter
+PASS load restores equipped gun
+SAVE SUMMARY failures=0

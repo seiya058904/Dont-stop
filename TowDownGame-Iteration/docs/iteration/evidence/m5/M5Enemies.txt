@@ -1,0 +1,77 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS safe enemy spawn E01
+PASS enemy acted without invalid lifetime E01
+PASS baseline real pursuit or attack E01
+PASS real bullet damage enemy E01
+PASS enemy death once E01
+PASS enemy camp cleanup E01
+PASS safe enemy spawn E02
+PASS enemy acted without invalid lifetime E02
+PASS baseline real pursuit or attack E02
+PASS real bullet damage enemy E02
+PASS enemy death once E02
+PASS enemy camp cleanup E02
+PASS safe enemy spawn E03
+PASS enemy acted without invalid lifetime E03
+PASS enemy executed attack E03
+PASS real bullet damage enemy E03
+PASS enemy death once E03
+PASS enemy camp cleanup E03
+PASS safe enemy spawn E04
+PASS enemy acted without invalid lifetime E04
+PASS baseline real pursuit or attack E04
+PASS real bullet damage enemy E04
+PASS enemy death once E04
+PASS enemy camp cleanup E04
+PASS safe enemy spawn E05
+PASS enemy acted without invalid lifetime E05
+PASS baseline real pursuit or attack E05
+PASS real bullet damage enemy E05
+PASS enemy death once E05
+PASS enemy camp cleanup E05
+PASS safe enemy spawn E06
+PASS enemy acted without invalid lifetime E06
+PASS self explosion actual player damage
+PASS enemy camp cleanup E06
+PASS safe enemy spawn E07
+PASS enemy acted without invalid lifetime E07
+PASS producer actual finite spawn
+PASS real bullet damage enemy E07
+PASS enemy death once E07
+PASS enemy camp cleanup E07
+PASS safe enemy spawn E08
+PASS enemy acted without invalid lifetime E08
+PASS support actual bounded healing
+PASS real bullet damage enemy E08
+PASS enemy death once E08
+PASS enemy camp cleanup E08
+PASS safe enemy spawn E09
+PASS enemy acted without invalid lifetime E09
+PASS enemy executed attack E09
+PASS real bullet damage enemy E09
+PASS enemy death once E09
+PASS enemy camp cleanup E09
+PASS safe enemy spawn E10
+PASS enemy acted without invalid lifetime E10
+PASS enemy executed attack E10
+PASS real bullet damage enemy E10
+PASS enemy death once E10
+PASS enemy camp cleanup E10
+PASS safe enemy spawn E11
+PASS enemy acted without invalid lifetime E11
+PASS enemy executed attack E11
+PASS real bullet damage enemy E11
+PASS enemy death once E11
+PASS enemy camp cleanup E11
+PASS safe enemy spawn E12
+PASS enemy acted without invalid lifetime E12
+PASS enemy executed attack E12
+PASS real bullet damage enemy E12
+PASS enemy death once E12
+PASS enemy camp cleanup E12
+M5 ENEMIES SUMMARY checks=70 failures=0
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

@@ -1,0 +1,10 @@
+{
+  "case": "M5BossCombat",
+  "checks": 15,
+  "failures": 0,
+  "execution": "Separate headless process after the three-case M5 suite",
+  "log": "boss-combat-15.txt",
+  "source_commit": "a3307ddffb4e4584f25614ebbddad2d2f6f33bf5",
+  "runtime_errors": 0,
+  "shutdown_diagnostics": 0
+}

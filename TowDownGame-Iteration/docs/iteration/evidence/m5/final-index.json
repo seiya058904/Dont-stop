@@ -1,0 +1,26 @@
+[
+  {
+    "case": "M5Enemies",
+    "checks": "70",
+    "passed": true,
+    "known_exit_diagnostic": true,
+    "clean_exit": false,
+    "code": 0
+  },
+  {
+    "case": "M5World",
+    "checks": "159",
+    "passed": true,
+    "known_exit_diagnostic": false,
+    "clean_exit": true,
+    "code": 0
+  },
+  {
+    "case": "M5Mechanics",
+    "checks": "43",
+    "passed": true,
+    "known_exit_diagnostic": true,
+    "clean_exit": false,
+    "code": 0
+  }
+]

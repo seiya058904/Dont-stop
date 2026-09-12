@@ -5,7 +5,7 @@ $godotPath = Join-Path $workspaceRoot 'archive/workspace-support/_tools/godot/4.
 $evidenceRoot = Join-Path $iterationRoot 'docs/iteration/evidence/m5'
 $failed = $false
 $results = @()
-foreach ($case in @('M5Enemies','M5World','M5Mechanics')) {
+foreach ($case in @('M5Enemies','M5World','M5Mechanics','M5BossCombat')) {
     $log = Join-Path $evidenceRoot ($case + '.txt')
     & $godotPath --headless --max-fps 160 --path $iterationRoot --quit-after 30000 ("res://tests/$case.tscn") *> $log
     $code = $LASTEXITCODE

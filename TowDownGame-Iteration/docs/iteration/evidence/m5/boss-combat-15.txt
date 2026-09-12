@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BOSS OBSERVED B01 actions={"attack":6,"cone":2,"dash_end":2,"line":2,"summon":4} damage_to_player=11.0 movement=214.864662565524
+PASS boss natural attack actually damages player B01
+PASS boss natural pattern B01/dash_end
+PASS boss natural pattern B01/cone
+PASS boss natural pattern B01/summon
+PASS boss death resolves and clears owned attacks
+BOSS OBSERVED B02 actions={"attack":5,"circle":1,"shot":10,"summon":6} damage_to_player=4.0 movement=0.0
+PASS boss natural attack actually damages player B02
+PASS boss natural pattern B02/summon
+PASS boss natural pattern B02/shot
+PASS boss natural pattern B02/circle
+PASS boss death resolves and clears owned attacks
+BOSS OBSERVED B03 actions={"attack":6,"dash_end":2,"line":4,"shot":24} damage_to_player=3.0 movement=362.229490041733
+PASS boss natural attack actually damages player B03
+PASS boss natural pattern B03/dash_end
+PASS boss natural pattern B03/line
+PASS boss natural pattern B03/shot
+PASS boss death resolves and clears owned attacks
+M5 BOSS COMBAT SUMMARY checks=15 failures=0

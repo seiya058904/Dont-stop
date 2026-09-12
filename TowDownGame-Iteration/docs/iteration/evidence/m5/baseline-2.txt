@@ -1,0 +1,140 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS A01 new wallets
+PASS E M3-M4 registered counts (M2 baseline 13/15 retained in history)
+PASS B01 threshold minus one
+PASS B01 exact threshold
+PASS B02 multiple levels retain overflow
+PASS B negative XP rejected
+PASS B03 assigning level does not stack growth
+PASS A03 gold buys actual gun
+PASS A06 owned gun cannot charge twice
+PASS A12 invalid transaction
+PASS E acquire gun 121
+PASS E acquire gun 122
+PASS E acquire gun 124
+PASS E acquire gun 111
+PASS E acquire gun 113
+PASS E acquire gun 115
+PASS E acquire gun 116
+PASS E acquire gun 117
+PASS E acquire gun 118
+PASS E acquire gun 119
+PASS E acquire gun 120
+PASS E acquire gun 112
+PASS E acquire gun 114
+PASS E acquire gun 123
+PASS E acquire gun 1
+PASS E acquire gun 2
+PASS E acquire gun 3
+PASS E acquire gun 4
+PASS E acquire gun 5
+PASS E acquire gun 6
+PASS E acquire gun 7
+PASS E acquire gun 8
+PASS E acquire gun 9
+PASS A07 talent gold T01
+PASS A07 talent gold T03
+PASS A07 talent gold T04
+PASS A07 talent gold T10
+PASS A07 talent gold T16
+PASS A07 talent gold T24
+PASS A08 talent points only
+PASS A09 max talent free rejection
+PASS B05 talent damage applies to effective combat snapshot
+PASS A10 insufficient balance
+PASS A11 replenish preserves content
+PASS A13 purchased instance stays in backpack
+PASS A19 twenty equip/remove cycles no drift
+PASS A16 same-slot replacement returns old item
+PASS A18 instance transfers between guns
+PASS A17 duplicate definitions unique instances
+PASS E attachment compatible 110
+PASS E attachment rejects unsupported mechanism 110
+PASS E attachment compatible 112
+PASS E attachment rejects unsupported mechanism 112
+PASS E attachment compatible 114
+PASS A14 overload explicitly universal
+PASS E attachment compatible 117
+PASS E attachment rejects unsupported mechanism 117
+PASS E attachment compatible 121
+PASS E attachment rejects unsupported mechanism 121
+PASS E attachment compatible 122
+PASS E attachment rejects unsupported mechanism 122
+PASS A15 incompatible installation cannot mutate
+PASS B explosion radius changes actual value
+PASS A20 structured camp snapshot accepted
+PASS save rejects partial schema
+PASS save rejects malformed document
+PASS D04 closing settings preserves inventory pause
+PASS D04 last menu resumes
+PASS D01 relative input debounce active
+PASS D01 requested short input debounce releases independently of HUD
+PASS E R1 navigation built from actual ground and physics
+PASS D11 first departure accepted
+PASS D camp purchases rejected during combat without charge
+PASS D camp refill unavailable during combat
+PASS D practice cannot inject targets during combat
+PASS D11 duplicate departure rejected
+NAV cells=624 spawn=(296.0, 664.0) hero=(289.0, 406.0)
+PASS E R1 reachable safe spawning
+PASS E all three new enemy behaviors spawn in actual encounters
+PASS C04 laser damage applies without temporary Bullet
+PASS C04 same tick target deduplicated
+PASS C04 next tick applies
+PASS C14 sixty laser hits do not allocate orphan nodes
+PASS D03 pause stops beam tick audio
+PASS D10 old laser callback cannot reactivate
+PASS C12 burst with one remaining shot cannot go negative
+PASS D10 interrupted burst cancels remaining shots
+PASS C06 default arc hits initial plus three distinct targets
+PASS A22 relay adds one actual target
+PASS C06 arc initial ray stops at real wall
+PASS C08 explosion radius and same-target single damage
+PASS C actual firing and ammo use gun 0
+PASS C actual firing and ammo use gun 121
+PASS C actual firing and ammo use gun 122
+PASS C actual firing and ammo use gun 124
+PASS C actual firing and ammo use gun 111
+PASS C actual firing and ammo use gun 113
+PASS C actual firing and ammo use gun 115
+PASS C actual firing and ammo use gun 116
+PASS C actual firing and ammo use gun 117
+PASS C actual firing and ammo use gun 118
+PASS C actual firing and ammo use gun 119
+PASS C actual firing and ammo use gun 120
+PASS C actual firing and ammo use gun 112
+PASS C actual firing and ammo use gun 114
+PASS C actual firing and ammo use gun 123
+PASS C actual firing and ammo use gun 1
+PASS C actual firing and ammo use gun 2
+PASS C actual firing and ammo use gun 3
+PASS C actual firing and ammo use gun 4
+PASS C actual firing and ammo use gun 5
+PASS C actual firing and ammo use gun 6
+PASS C actual firing and ammo use gun 7
+PASS C actual firing and ammo use gun 8
+PASS C actual firing and ammo use gun 9
+PASS C15 one death one kill
+PASS C15 one death one XP
+PASS C16 derived depth bounded
+PASS C16 excessive depth rejected
+PASS C16 rejected damage not applied
+PASS T24 direct kill heals
+PASS T24 derived kill does not heal
+PASS T10 kill stacks affect actual rate
+PASS T10 buff expires
+PASS D07 timeout settles and returns camp
+PASS D07 repeated victory cannot reward
+PASS D09 return clears encounter projectiles/effects
+PASS E start actual stage 3
+PASS E resolve stage 3
+PASS E start actual stage 4
+PASS E resolve stage 4
+PASS D03 viewport Tab opens camp cycle 0
+PASS D04 Esc closes only settings cycle 0
+PASS D04 next Esc resumes camp cycle 0
+PASS D03 viewport Tab opens camp cycle 1
+PASS D04 Esc closes only settings cycle 1
+PASS D04 next Esc resumes camp cycle 1
+CONTRACT SUMMARY checks=136 failures=0 damage_events=75

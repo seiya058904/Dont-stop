@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS schema3 with all talents valid
+PASS write independent cross-process fixture
+PASS old version accepted without fabricated history 1
+PASS write old version fixture
+PASS old version actual restore 1
+PASS old ranks retained, unknown payment explicit
+PASS old version accepted without fabricated history 2
+PASS write old version fixture
+PASS old version actual restore 2
+PASS old ranks retained, unknown payment explicit
+PASS restore current fixture after migration tests
+PASS repeat restore no duplicate source 0
+PASS instance and expanded ammo stable 0
+PASS repeat restore no duplicate source 1
+PASS instance and expanded ammo stable 1
+PASS repeat restore no duplicate source 2
+PASS instance and expanded ammo stable 2
+PASS bad payment schema rejected missing
+PASS bad payment schema rejected duplicate
+PASS bad payment schema rejected currency
+PASS bad payment schema rejected amount
+PASS bad payment schema rejected level
+PASS bad payment schema rejected fractional_schema
+M4 PERSISTENCE SUMMARY checks=23 failures=0
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
