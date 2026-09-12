@@ -86,7 +86,9 @@ func _physics_process(delta):
 	if target is BaseMonster:
 		if not target.get_instance_id() in visited:
 			visited.append(target.get_instance_id())
-			Combat.hit(target,context)
+			var impact = context.duplicate()
+			impact.impact_origin = global_position-velocity.normalized()*10
+			Combat.hit(target,impact)
 		if spec.get("mode","") == "disc":
 			add_collision_exception_with(target)
 			return

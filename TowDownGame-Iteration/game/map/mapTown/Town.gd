@@ -70,17 +70,18 @@ func _on_portal_2_move_out() -> void:
 
 func onTimeTick(timeout) -> void:
 	if Utils.player.is_dead == false:
-		$CanvasLayer/timeout.text =tr("REMAINING TIME") + str(timeout)
+		$CanvasLayer/timeout.text = ("Boss 战斗用时 " if DemoConfig.ENCOUNTERS[LevelServer.level].has("boss") else tr("REMAINING TIME")) + str(timeout)
 
 #回合开始
 func onRoundStart():
 	Utils.showToast("START_TIP",2)
 	$CanvasLayer/timeout.visible = true
 	$CanvasLayer/level.visible = true
-	$CanvasLayer/level.text = tr("DIFFICULTY LEVEL") + " " + str(LevelServer.level)
+	$CanvasLayer/level.text = DemoConfig.ENCOUNTERS[LevelServer.level].name
 
 #回合结束
 func onRoundEnd():
+	if is_instance_valid(arena): arena.queue_free(); arena = null
 	Utils.player.global_position = $PositionHome.global_position
 	$CanvasLayer/timeout.text = "营地整备 · E 商店 / Tab 配置"
 	for item in $TileMap2/PortalRoot.get_children(): item.reset()
@@ -148,19 +149,17 @@ func monsterCreate():
 	var active = 0
 	for enemy in get_tree().get_nodes_in_group("monsters"):
 		if not enemy.is_die and not enemy.training: active += 1
-	if active >= config.cap: return
+	if active >= config.cap or config.roles.is_empty(): return
 	var point = spawn_point()
 	if point == Vector2.INF: return
 	var role = config.roles[LevelServer.spawn_index % config.roles.size()]
+	if config.rhythm == "交替": role = config.roles[int(LevelServer.level_info.time/7)%config.roles.size()]
+	if config.rhythm == "三段": role = config.roles[mini(2,int(LevelServer.level_info.time/15))*2%config.roles.size()]
 	LevelServer.spawn_index += 1
-	var ins = monster_pre.instantiate()
-	if role != "E01":
-		ins.set_script(load("res://game/monster/DemoEnemy.gd"))
-		ins.role = role
-	ins.global_position = point
-	ins.setData({"speed":90,"hp":2,"hurt":1})
-	ins.setDeathCallBack(onMonsterDeath)
-	monster_root.add_child(ins)
+	var ins = M5Content.spawn(role,monster_root,point)
+	if config.rhythm == "精英" and LevelServer.level_info.time >= 30 and not LevelServer.elite_spawned:
+		LevelServer.elite_spawned = true; ins.is_elite = true; ins.HP *= 1.5
+		var marker = Label.new(); marker.text = "精英"; marker.add_theme_font_size_override("font_size",7); marker.position = Vector2(-10,-32); ins.add_child(marker)
 
 #怪物死亡
 func onMonsterDeath(monster_ins):
@@ -210,6 +209,7 @@ func nav_cell(point: Vector2) -> Vector2i:
 	return Vector2i(floor(point.x/16),floor(point.y/16))
 
 func path_step(from: Vector2, to: Vector2) -> Vector2:
+	if is_instance_valid(arena): return arena.path_step(from,to)
 	if not nav_ready or Combat.clear_line(from,to): return to
 	var a = nav_cell(from)
 	var b = nav_cell(to)
@@ -219,11 +219,15 @@ func path_step(from: Vector2, to: Vector2) -> Vector2:
 	return path[1] if path.size() > 1 else from
 
 func spawn_point() -> Vector2:
+	if is_instance_valid(arena):
+		var sides = M5Content.REGIONS[arena.region_id].sides
+		return arena.spawn_near(Utils.player.global_position,145,280,sides[LevelServer.spawn_index%sides.size()])
 	if not nav_ready or walkable.is_empty(): return Vector2.INF
 	var player_cell = nav_cell(Utils.player.global_position)
 	if not navigation.is_in_boundsv(player_cell) or navigation.is_point_solid(player_cell): return Vector2.INF
-	for attempt in 32:
-		var cell = walkable.pick_random()
+	var offset = randi()%walkable.size()
+	for attempt in walkable.size():
+		var cell = walkable[(offset+attempt)%walkable.size()]
 		var point = navigation.get_point_position(cell)
 		var distance = point.distance_to(Utils.player.global_position)
 		if distance < 145 or distance > 280: continue
@@ -241,7 +245,11 @@ func depart(stage: int, is_trial: bool) -> bool:
 		Demo.selected_stage = previous_stage
 		Demo.trial = previous_trial
 		return false
-	Utils.player.global_position = portal_lv1.global_position + Vector2(0,35)
+	prepare_region(DemoConfig.ENCOUNTERS[target_stage].region)
+	if DemoConfig.ENCOUNTERS[target_stage].has("boss"):
+		var point = spawn_near(Utils.player.global_position,160,220)
+		var boss = M5Content.spawn(DemoConfig.ENCOUNTERS[target_stage].boss,monster_root,point)
+		LevelServer.boss_instance = boss.get_instance_id()
 	return true
 
 func clear_practice():
@@ -265,3 +273,23 @@ func practice(count = 3):
 		label.add_theme_font_size_override("font_size",6)
 		label.position = Vector2(-12,-25)
 		dummy.add_child(label)
+
+func spawn_near(center: Vector2, minimum: float, maximum: float) -> Vector2:
+	if is_instance_valid(arena): return arena.spawn_near(center,minimum,maximum)
+	if not nav_ready: return Vector2.INF
+	var offset = randi()%walkable.size()
+	for attempt in walkable.size():
+		var cell = walkable[(offset+attempt)%walkable.size()]
+		var point = navigation.get_point_position(cell)
+		if point.distance_to(center) < minimum or point.distance_to(center) > maximum: continue
+		if point.distance_to(Utils.player.global_position) < 50: continue
+		var dest = nav_cell(Utils.player.global_position)
+		if navigation.is_in_boundsv(dest) and not navigation.is_point_solid(dest) and navigation.get_id_path(cell,dest).size() > 1: return point
+	return Vector2.INF
+
+var arena
+func prepare_region(id: String):
+	if is_instance_valid(arena): arena.queue_free(); arena = null
+	if id == "R1": Utils.player.global_position = portal_lv1.global_position+Vector2(0,35); return
+	arena = load("res://game/map/CombatArena.gd").new(); arena.region_id = id; arena.position = Vector2(10000+int(id.substr(1))*1000,-6000); add_child(arena)
+	Utils.player.global_position = arena.global_position

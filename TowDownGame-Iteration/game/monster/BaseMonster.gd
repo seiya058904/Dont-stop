@@ -131,6 +131,7 @@ func flip_h(flip:bool):
 func hitFlash(_collision, bullet:Bullet):
 	var context = bullet.context.duplicate()
 	context.damage = bullet.hurt
+	context.impact_origin = bullet.global_position-bullet.velocity.normalized()*10
 	Combat.hit(self,context)
 
 var idle_frame_num = 0.0

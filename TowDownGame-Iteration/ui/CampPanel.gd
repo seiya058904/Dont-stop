@@ -337,12 +337,15 @@ func stage_list():
 		label(listing,"战斗中不可出发或补给")
 		label(detail,"完成遭遇或失败返回营地后，可购买、补给与练枪。")
 		return
-	button(listing,"继续下一关",func(): depart(Demo.next_stage,false))
+	button(listing,"继续："+DemoConfig.ENCOUNTERS[Demo.next_stage].name,func(): depart(Demo.next_stage,false))
+	if Demo.campaign_complete:
+		button(listing,"已完成核心 · 从第1轮再次出发",func(): Demo.next_stage = 1; depart(1,false))
 	for id in DemoConfig.ENCOUNTERS:
+		if (id-1)%5 == 0: label(listing,M5Content.REGIONS[DemoConfig.ENCOUNTERS[id].region].name)
 		entry(DemoConfig.ENCOUNTERS[id].name,str(id),func():
 			clear_box(detail)
 			label(detail,DemoConfig.ENCOUNTERS[id].name,10)
-			label(detail,DemoConfig.ENCOUNTERS[id].info+"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
+			label(detail,M5Content.REGIONS[DemoConfig.ENCOUNTERS[id].region].info+"\n"+DemoConfig.ENCOUNTERS[id].info+"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
 			button(detail,"开始此遭遇",func(): depart(id,true)))
 	button(listing,"试玩补充资源",func(): Demo.replenish(); message.text = "两种钱包已补到至少9999；装备、天赋、关卡保持")
 	button(listing,"补充300备弹 · 10金币",func(): purchase("supply","ammo"))

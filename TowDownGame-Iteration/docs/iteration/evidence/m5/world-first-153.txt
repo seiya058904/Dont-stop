@@ -1,0 +1,160 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS registered 12/3/6/30
+PASS enter stage 1
+PASS 100 fixed seeds reachable R1
+PASS region real actor exists and starts R1
+PASS encounter actual spawns 1
+PASS trial resolves without skipping progress 1
+PASS stage cleanup 1
+PASS enter stage 2
+PASS encounter actual spawns 2
+PASS trial resolves without skipping progress 2
+PASS stage cleanup 2
+PASS enter stage 3
+PASS encounter actual spawns 3
+PASS trial resolves without skipping progress 3
+PASS stage cleanup 3
+PASS enter stage 4
+PASS encounter actual spawns 4
+PASS trial resolves without skipping progress 4
+PASS stage cleanup 4
+PASS enter stage 5
+PASS encounter actual spawns 5
+PASS trial resolves without skipping progress 5
+PASS stage cleanup 5
+PASS enter stage 6
+PASS 100 fixed seeds reachable R2
+PASS region real actor exists and starts R2
+PASS encounter actual spawns 6
+PASS trial resolves without skipping progress 6
+PASS stage cleanup 6
+PASS enter stage 7
+PASS encounter actual spawns 7
+PASS trial resolves without skipping progress 7
+PASS stage cleanup 7
+PASS enter stage 8
+PASS encounter actual spawns 8
+PASS trial resolves without skipping progress 8
+PASS stage cleanup 8
+PASS enter stage 9
+PASS encounter actual spawns 9
+PASS trial resolves without skipping progress 9
+PASS stage cleanup 9
+PASS enter stage 10
+PASS boss battle exists B01
+PASS boss cannot timer win B01
+PASS boss multiple natural actions B01
+PASS boss actual weapon hit B01
+PASS boss half health phase B01
+PASS trial resolves without skipping progress 10
+PASS stage cleanup 10
+PASS enter stage 11
+PASS 100 fixed seeds reachable R3
+PASS region real actor exists and starts R3
+PASS encounter actual spawns 11
+PASS trial resolves without skipping progress 11
+PASS stage cleanup 11
+PASS enter stage 12
+PASS encounter actual spawns 12
+PASS trial resolves without skipping progress 12
+PASS stage cleanup 12
+PASS enter stage 13
+PASS encounter actual spawns 13
+PASS trial resolves without skipping progress 13
+PASS stage cleanup 13
+PASS enter stage 14
+PASS encounter actual spawns 14
+PASS trial resolves without skipping progress 14
+PASS stage cleanup 14
+PASS enter stage 15
+PASS encounter actual spawns 15
+PASS trial resolves without skipping progress 15
+PASS stage cleanup 15
+PASS enter stage 16
+PASS 100 fixed seeds reachable R4
+PASS region real actor exists and starts R4
+PASS encounter actual spawns 16
+PASS trial resolves without skipping progress 16
+PASS stage cleanup 16
+PASS enter stage 17
+PASS encounter actual spawns 17
+PASS trial resolves without skipping progress 17
+PASS stage cleanup 17
+PASS enter stage 18
+PASS encounter actual spawns 18
+PASS trial resolves without skipping progress 18
+PASS stage cleanup 18
+PASS enter stage 19
+PASS encounter actual spawns 19
+PASS trial resolves without skipping progress 19
+PASS stage cleanup 19
+PASS enter stage 20
+PASS boss battle exists B02
+PASS boss cannot timer win B02
+PASS boss multiple natural actions B02
+PASS boss actual weapon hit B02
+PASS boss half health phase B02
+PASS trial resolves without skipping progress 20
+PASS stage cleanup 20
+PASS enter stage 21
+PASS 100 fixed seeds reachable R5
+PASS region real actor exists and starts R5
+PASS encounter actual spawns 21
+PASS trial resolves without skipping progress 21
+PASS stage cleanup 21
+PASS enter stage 22
+PASS encounter actual spawns 22
+PASS trial resolves without skipping progress 22
+PASS stage cleanup 22
+PASS enter stage 23
+PASS encounter actual spawns 23
+PASS trial resolves without skipping progress 23
+PASS stage cleanup 23
+PASS enter stage 24
+PASS encounter actual spawns 24
+PASS trial resolves without skipping progress 24
+PASS stage cleanup 24
+PASS enter stage 25
+PASS encounter actual spawns 25
+PASS trial resolves without skipping progress 25
+PASS stage cleanup 25
+PASS enter stage 26
+PASS 100 fixed seeds reachable R6
+PASS region real actor exists and starts R6
+PASS encounter actual spawns 26
+PASS trial resolves without skipping progress 26
+PASS stage cleanup 26
+PASS enter stage 27
+PASS encounter actual spawns 27
+PASS trial resolves without skipping progress 27
+PASS stage cleanup 27
+PASS enter stage 28
+PASS encounter actual spawns 28
+PASS trial resolves without skipping progress 28
+PASS stage cleanup 28
+PASS enter stage 29
+PASS encounter actual spawns 29
+PASS trial resolves without skipping progress 29
+PASS stage cleanup 29
+PASS enter stage 30
+PASS boss battle exists B03
+PASS boss cannot timer win B03
+PASS boss multiple natural actions B03
+PASS boss actual weapon hit B03
+PASS boss half health phase B03
+PASS trial resolves without skipping progress 30
+PASS stage cleanup 30
+PASS normal stage29 departure
+PASS normal progression reaches30
+PASS normal final battle
+PASS final campaign resolves without stage31
+PASS schema4 completed campaign snapshot
+PASS old schema defaults without invented completion 1
+PASS old schema defaults without invented completion 2
+PASS old schema defaults without invented completion 3
+M5 WORLD SUMMARY checks=153 failures=0
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

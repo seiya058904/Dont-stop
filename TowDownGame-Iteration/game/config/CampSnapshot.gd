@@ -7,7 +7,8 @@ static func number(value, integral = false) -> bool:
 static func validate(data) -> bool:
 	if not data is Dictionary: return false
 	if not data.has_all(["schema_version","gold","points","ammo","level","exp","hp","hp_max","weapons","attachments","talents","next_instance","next_stage","selected_stage","equipped"]): return false
-	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3]: return false
+	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3,4]: return false
+	if data.schema_version >= 4 and not data.get("campaign_complete") is bool: return false
 	for key in ["gold","points","ammo","level","next_instance","next_stage","selected_stage"]:
 		if not number(data[key],true): return false
 	for key in ["hp","hp_max","exp"]:
@@ -82,6 +83,7 @@ static func validate(data) -> bool:
 
 static func normalize(data: Dictionary) -> Dictionary:
 	var result = data.duplicate(true)
+	result.campaign_complete = data.get("campaign_complete",false)
 	result.talent_payments = data.get("talent_payments",[]).duplicate(true) if data.schema_version >= 3 else []
 	result.legacy = data.get("legacy",[]).duplicate()
 	result.legacy_state = data.get("legacy_state",{}).duplicate()

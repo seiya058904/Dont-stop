@@ -1,4 +1,5 @@
 extends CharacterBody2D
+var owner_ref: WeakRef
 var life = 0.0
 var epoch = 0
 func _ready():
@@ -18,12 +19,13 @@ func _draw():
 	draw_circle(Vector2.ZERO,2.8,Color(1,0.55,0.15))
 func _physics_process(delta):
 	life += delta
-	if life > 4 or epoch != LevelServer.epoch:
+	if life > 4 or epoch != LevelServer.epoch or (owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die)):
 		queue_free()
 		return
+	var previous = global_position
 	if move_and_collide(velocity*delta):
 		queue_free()
 		return
-	if global_position.distance_to(Utils.player.global_position) < 12:
+	if Geometry2D.get_closest_point_to_segment(Utils.player.global_position,previous,global_position).distance_to(Utils.player.global_position) < 12:
 		Utils.player.onHit(1)
 		queue_free()

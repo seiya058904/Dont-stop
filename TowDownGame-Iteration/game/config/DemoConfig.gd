@@ -25,7 +25,7 @@ const TALENTS = {
 	"T18": {"name":"冲击放大","max":3,"step":0.15,"info":"普通敌人冲量每级+15%；Boss免推移。","unit":"冲量"},
 	"T19": {"name":"应急护盾","max":1,"cooldown":8.0,"step":1.0,"info":"战斗抵消一次正伤害，冷却8秒；先占用冷却再反馈，同帧下一击仍受伤。","unit":"抵消次数"},
 	"T20": {"name":"战后修复","max":3,"step":0.1,"info":"有效遭遇胜利回复最大生命10%×等级；手动回营、选关和重复结算不触发。","unit":"胜利回复生命比例"},
-	"T21": {"name":"精英猎手","max":3,"values":[0.1,0.15,0.2],"info":"对显式is_elite目标伤害+10/15/20%；Boss不适用。当前R1未增加精英内容。","unit":"对精英伤害"},
+	"T21": {"name":"精英猎手","max":3,"values":[0.1,0.15,0.2],"info":"对显式is_elite目标伤害+10/15/20%；Boss不适用。第5/15/25轮末段有显式精英，Boss不适用。","unit":"对精英伤害"},
 	"T22": {"name":"密集火网","max":3,"step":0.05,"radius":100.0,"count":3,"interval":0.2,"info":"100范围内至少3名存活敌人时伤害+5%×等级；每0.2秒更新，发射快照保留该次状态。","unit":"条件伤害"},
 	"T23": {"name":"暴击回响","max":1,"step":0.3,"radius":70.0,"cooldown":0.15,"info":"直接暴击向附近一个不同目标回响30%该次伤害，冷却0.15秒；墙阻挡，回响不暴击、不递归。","unit":"回响伤害比例"},
 
@@ -70,11 +70,7 @@ static func talent_info(id: String) -> String:
 		"T24": return "直接击杀回复 %.2f × 等级 生命，冷却%.1f秒；假人不触发" % [d.step,d.cooldown]
 	return ""
 
-const ENCOUNTERS = {
-	1:{"name":"R1 · 街口接敌", "info":"追击者为主，少量蜂群；生存45秒", "seconds":45, "roles":["E01","E01","E02"], "cap":35, "interval":0.8},
-	3:{"name":"R1 · 远程交错", "info":"近战推进，喷射者间歇压制；生存45秒", "seconds":45, "roles":["E01","E02","E01","E05"], "cap":40, "interval":0.7},
-	4:{"name":"R1 · 蜂群冲锋", "info":"分方向蜂群，少量预警冲锋者；生存45秒", "seconds":45, "roles":["E02","E02","E02","E04"], "cap":55, "interval":0.55}
-}
+static var ENCOUNTERS = M5Content.encounters()
 
 static func weapon_tags(id: int) -> Array:
 	if WeaponCatalog.DEFINITIONS.has(id): return WeaponCatalog.DEFINITIONS[id].tags

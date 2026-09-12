@@ -95,6 +95,8 @@ var epoch = 0
 var town
 var spawn_index = 0
 var settled_epoch = -1
+var boss_instance = 0
+var elite_spawned = false
 
 func _ready() -> void:
 	timer.wait_time = 0.1
@@ -113,6 +115,8 @@ func roundStart() -> bool:
 	level = Demo.selected_stage
 	resetLevelInfo()
 	spawn_index = 0
+	boss_instance = 0
+	elite_spawned = false
 	wait_time_temp = 0
 	level_time = DemoConfig.ENCOUNTERS[level].seconds
 	state = "COMBAT"
@@ -121,7 +125,7 @@ func roundStart() -> bool:
 	return true
 
 func resetLevelInfo():
-	level_info = {"time":0.0,"kill":0,"gold":0}
+	level_info = {"time":0.0,"kill":0,"gold":0,"stage":level,"trial":Demo.trial}
 
 func getLevelMonsterData():
 	return monster_attr[str(level)]
@@ -142,8 +146,11 @@ func _timeout():
 		state = "DEAD"
 		timerStop()
 		return
-	level_time = maxf(0,level_time-0.1)
 	level_info.time += 0.1
+	if DemoConfig.ENCOUNTERS[level].has("boss"):
+		onTimeTick.emit(int(level_info.time))
+		return
+	level_time = maxf(0,level_time-0.1)
 	if level_time <= 0: victory()
 	else:
 		onMonsterCreate()
@@ -152,14 +159,20 @@ func _timeout():
 func onMonsterCreate():
 	wait_time_temp += 0.1
 	var config = DemoConfig.ENCOUNTERS[level]
+	if config.has("boss"): return
 	var phase = level_info.time / config.seconds
 	# Arrival, build, peak, brief recovery. No hidden health scaling.
 	var multiplier = 1.3 if phase < 0.2 else (0.7 if phase < 0.8 else 1.5)
+	if config.rhythm == "脉冲": multiplier = 0.5 if fmod(level_info.time,10)<4 else 1.8
+	if config.rhythm == "三段": multiplier = [1.3,0.7,0.5][mini(2,int(level_info.time/15))]
 	if wait_time_temp >= config.interval * multiplier:
 		wait_time_temp = 0
 		monsterCreate.emit()
 
 func victory() -> bool:
+	if DemoConfig.ENCOUNTERS[level].has("boss"):
+		var boss = instance_from_id(boss_instance) if boss_instance else null
+		if boss_instance == 0 or (is_instance_valid(boss) and not boss.is_die): return false
 	if state != "COMBAT" or settled_epoch == epoch or Utils.player.is_dead: return false
 	state = "RESOLVING"
 	settled_epoch = epoch
@@ -172,6 +185,7 @@ func victory() -> bool:
 	if not Demo.trial:
 		var stages = DemoConfig.ENCOUNTERS.keys()
 		Demo.next_stage = stages[mini(stages.find(level)+1,stages.size()-1)]
+		if level == 30: Demo.campaign_complete = true
 	roundVictory.emit()
 	return_to_camp()
 	return true
@@ -199,3 +213,7 @@ func getScoreboard():
 	var board = score_board.instantiate()
 	board.setData(level_info.duplicate())
 	return board
+
+func boss_defeated(generation: int):
+	if generation == epoch and state == "COMBAT" and DemoConfig.ENCOUNTERS[level].has("boss"):
+		victory()

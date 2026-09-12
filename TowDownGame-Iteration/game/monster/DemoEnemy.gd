@@ -45,6 +45,7 @@ func _physics_process(delta):
 			else:
 				var projectile = CharacterBody2D.new()
 				projectile.set_script(load("res://game/monster/EnemyShot.gd"))
+				projectile.owner_ref = weakref(self)
 				projectile.global_position = global_position
 				projectile.velocity = locked_direction*85
 				get_tree().current_scene.add_child(projectile)
