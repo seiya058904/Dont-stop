@@ -1,6 +1,7 @@
 extends Node
 # Dedicated test process/path: never reads or writes the player's camp file.
 var main
+var play_viewport: Viewport
 var started = 0
 var previous_frame = 0
 var frames_ms: Array = []
@@ -19,6 +20,17 @@ var sampled_enemies: Array = []
 var sampled_shots: Array = []
 var pause_events = 0
 var config_events = 0
+# Headless uses an engine-only trigger adapter; no OS pointer/keyboard events.
+# It exercises real weapon timers, projectiles and collisions, not desktop input/rendering.
+var background = DisplayServer.get_name() == "headless"
+var background_aim = Vector2.ZERO
+var background_smoke = "background-smoke" in OS.get_cmdline_user_args()
+var diagnostic = "diagnostic" in OS.get_cmdline_user_args() or background_smoke
+var live_entities = {}
+var cleanup_trace = []
+var recording_cleanup = false
+var mouse_events = []
+var last_trace = 0
 var weapon_ids = [0,6,112,114,123,3,5,8,7,1,2,4,9]
 func check(ok,name):
 	if not ok: failures += 1
@@ -37,11 +49,20 @@ func _ready():
 	Demo.test_mode = true
 	seed(912)
 	main = load("res://game/map/Main.tscn").instantiate()
-	add_child(main)
+	play_viewport = get_viewport()
+	if background:
+		# Root headless Window has no mouse; SubViewport stores engine-local input.
+		play_viewport = SubViewport.new()
+		play_viewport.size = Vector2i(1536,864)
+		play_viewport.world_2d = get_viewport().world_2d
+		play_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+		add_child(play_viewport)
+		play_viewport.add_child(main)
+	else: add_child(main)
 	Utils.gameStart()
 	await wait(0.3)
 	DirAccess.make_dir_recursive_absolute("res://evidence/r1-long")
-	Demo.save_path = "res://evidence/r1-long/camp.json"
+	Demo.save_path = "res://evidence/r1-long/diagnostic-camp.json" if diagnostic else "res://evidence/r1-long/camp.json"
 	for id in Utils.weapon_list: Demo.try_purchase("weapon",id); purchases += 1
 	Demo.try_purchase("legacy","6"); Demo.try_purchase("legacy","10")
 	Demo.try_purchase("attachment","110")
@@ -50,7 +71,7 @@ func _ready():
 	for id in DemoConfig.TALENTS: Demo.try_purchase("talent",id,"points")
 	started = Time.get_ticks_msec()
 	previous_frame = Time.get_ticks_usec()
-	while Time.get_ticks_msec()-started < 1205000 or round_index < 10:
+	while (round_index < (3 if background_smoke else 24) if diagnostic else (Time.get_ticks_msec()-started < 1205000 or round_index < 10)):
 		round_index += 1
 		stop_input(); dismiss()
 		if PlayerData.player_hp < PlayerData.player_hp_max: Demo.try_purchase("supply","health")
@@ -71,10 +92,12 @@ func _ready():
 		LevelServer.town.practice(1 if round_index%2 else 3)
 		await wait(0.1)
 		var xp = PlayerData.player_exp
+		var practice_hits = Combat.damage_events
 		bot = true
 		await wait(2.0)
 		bot = false; stop_input()
 		check(PlayerData.player_exp == xp,"round practice has no XP")
+		if background: check(Combat.damage_events > practice_hits,"background real practice collision gun "+str(id))
 		Demo.test_mode = false
 		check(Demo.save_camp().success,"round save complete camp snapshot")
 		Demo.test_mode = true
@@ -85,6 +108,7 @@ func _ready():
 		if round_index%2: LevelServer.town._on_portal_move_in(LevelServer.town.portal_lv1)
 		else: LevelServer.town.depart([1,3,4][round_index%3],true)
 		check(LevelServer.state == "COMBAT" and LevelServer.epoch == epoch+1,"round depart exactly once")
+		if diagnostic: LevelServer.level_time = 2.0
 		bot = true; pause_done = false; force_death_done = false
 		round_started = Time.get_ticks_msec()
 		while LevelServer.state != "CAMP":
@@ -93,7 +117,9 @@ func _ready():
 				check(false,"round watchdog exceeded 90s")
 				LevelServer.return_to_camp(); break
 		bot = false; stop_input(); dismiss()
+		cleanup_trace.clear(); recording_cleanup = true
 		await wait(2.0)
+		recording_cleanup = false
 		var voices = 0
 		for type in ["AudioStreamPlayer","AudioStreamPlayer2D"]:
 			for voice in get_tree().root.find_children("*",type,true,false):
@@ -102,6 +128,16 @@ func _ready():
 		for reward in get_tree().get_nodes_in_group("reward"):
 			if reward.id == 6: cache += reward.mark_dict.size()
 		var sample = {"round":round_index,"seconds":(Time.get_ticks_msec()-started)/1000.0,"gun":id,"nodes":int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)),"orphans":int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),"transients":get_tree().get_nodes_in_group("combat_transient").size(),"monsters":get_tree().get_nodes_in_group("monsters").size(),"voices":voices,"marks":cache,"guns":PlayerData.player_weapon_list.size(),"attachments":PlayerData.player_am_list.size(),"damage_events":Combat.damage_events,"kills":Combat.kill_events,"revives":revives}
+		sample.remaining = []
+		for entity in get_tree().get_nodes_in_group("combat_transient"):
+			sample.remaining.append({"script":entity.get_script().resource_path if entity.get_script() else "","age_ms":Time.get_ticks_msec()-live_entities.get(entity.get_instance_id(),Time.get_ticks_msec()),"position":str(entity.global_position)})
+		if sample.transients > 0:
+			sample.cleanup_trace = cleanup_trace.duplicate(true)
+			sample.native_mouse_events = mouse_events.duplicate(true)
+		sample.input_shoot = Input.is_action_pressed("shoot")
+		sample.bot = bot
+		sample.fire_released = Demo.fire_released
+		sample.generation = Utils.player.gun.action_generation
 		samples.append(sample)
 		check(sample.transients == 0 and sample.monsters == 0 and cache == 0,"round common camp cleanup empty")
 		print("LONG ROUND ",JSON.stringify(sample))
@@ -111,10 +147,18 @@ func _ready():
 	await Demo.quit_game()
 func _process(_delta):
 	if started == 0: return
+	var current_entities = {}
+	for entity in get_tree().get_nodes_in_group("combat_transient"):
+		current_entities[entity.get_instance_id()] = live_entities.get(entity.get_instance_id(),Time.get_ticks_msec())
+	live_entities = current_entities
 	var now = Time.get_ticks_usec()
 	if now-previous_frame > 0: frames_ms.append((now-previous_frame)/1000.0)
 	previous_frame = now
+	if recording_cleanup and Time.get_ticks_msec()-last_trace >= 100:
+		last_trace = Time.get_ticks_msec()
+		cleanup_trace.append({"ms":last_trace,"shoot":Input.is_action_pressed("shoot"),"bot":bot,"ammo":Utils.player.gun.bullets_count,"generation":Utils.player.gun.action_generation,"paused":get_tree().paused,"state":LevelServer.state,"transients":get_tree().get_nodes_in_group("combat_transient").size()})
 	if not bot: return
+	if background: drive_background_trigger()
 	if LevelServer.state == "DEAD":
 		stop_input()
 		for menu in Demo.pause_stack.duplicate():
@@ -128,7 +172,7 @@ func _process(_delta):
 			bot = false; stop_input(); Demo.open_panel()
 			await wait(0.8); dismiss(); bot = true
 			return
-		if round_index == 3 and not force_death_done and Time.get_ticks_msec()-round_started > 22000:
+		if (round_index == 3 or (diagnostic and round_index%3 == 0)) and not force_death_done and Time.get_ticks_msec()-round_started > (1000 if diagnostic else 22000):
 			force_death_done = true
 			Utils.player.onHit(PlayerData.player_hp+1)
 			return
@@ -142,8 +186,14 @@ func _process(_delta):
 	enemies.sort_custom(func(a,b): return a.global_position.distance_squared_to(Utils.player.global_position)<b.global_position.distance_squared_to(Utils.player.global_position))
 	var target = enemies.front()
 	var point = target.global_position-Vector2(0,9)
-	get_viewport().warp_mouse(get_viewport().get_canvas_transform()*point)
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	if background:
+		background_aim = point
+		var motion = InputEventMouseMotion.new()
+		motion.position = play_viewport.get_canvas_transform()*point
+		play_viewport.push_input(motion,true)
+	else:
+		get_viewport().warp_mouse(get_viewport().get_canvas_transform()*point)
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 	Demo.fire_released = true
 	Input.action_press("shoot")
 	if Utils.player.gun.bullets_count == 0 and not Utils.player.gun.is_reloading: Utils.player.gun.reload_ammo()
@@ -157,6 +207,23 @@ func percentile(values, fraction):
 	var sorted = values.duplicate(); sorted.sort()
 	return sorted[mini(sorted.size()-1,int(sorted.size()*fraction))] if not sorted.is_empty() else 0
 func write_result(complete):
-	var result = {"complete":complete,"seconds":(Time.get_ticks_msec()-started)/1000.0,"rounds":round_index,"failures":failures,"revives":revives,"purchases":purchases,"save_restores":reloads,"pause_events":pause_events,"configuration_panels":config_events,"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"display":DisplayServer.get_name(),"window":str(DisplayServer.window_get_size()),"viewport":str(get_viewport().size),"frame_ms":{"p50":percentile(frames_ms,.5),"p95":percentile(frames_ms,.95),"p99":percentile(frames_ms,.99)},"frames":frames_ms.size(),"live_enemies_p50":percentile(sampled_enemies,.5),"live_enemies_peak":sampled_enemies.max() if not sampled_enemies.is_empty() else 0,"live_projectiles_p50":percentile(sampled_shots,.5),"live_projectiles_peak":sampled_shots.max() if not sampled_shots.is_empty() else 0,"cleanup_samples":samples}
-	var file = FileAccess.open("res://evidence/r1-long/result.json",FileAccess.WRITE)
+	var result = {"complete":complete,"seconds":(Time.get_ticks_msec()-started)/1000.0,"rounds":round_index,"failures":failures,"revives":revives,"purchases":purchases,"save_restores":reloads,"pause_events":pause_events,"configuration_panels":config_events,"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"display":DisplayServer.get_name(),"input_backend":"engine trigger adapter" if background else "engine input in native window","max_fps":Engine.max_fps,"window":str(DisplayServer.window_get_size()),"viewport":str(play_viewport.size),"frame_ms":{"p50":percentile(frames_ms,.5),"p95":percentile(frames_ms,.95),"p99":percentile(frames_ms,.99)},"frames":frames_ms.size(),"live_enemies_p50":percentile(sampled_enemies,.5),"live_enemies_peak":sampled_enemies.max() if not sampled_enemies.is_empty() else 0,"live_projectiles_p50":percentile(sampled_shots,.5),"live_projectiles_peak":sampled_shots.max() if not sampled_shots.is_empty() else 0,"cleanup_samples":samples}
+	var file = FileAccess.open(("res://evidence/r1-long/diagnostic.json" if diagnostic else "res://evidence/r1-long/result.json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(result,"\t")); file.close()
+
+func _input(event):
+	if event is InputEventMouseButton:
+		mouse_events.append({"ms":Time.get_ticks_msec(),"button":event.button_index,"pressed":event.pressed})
+		if mouse_events.size() > 16: mouse_events.pop_front()
+
+func drive_background_trigger():
+	var gun = Utils.player.gun
+	if get_tree().paused or Utils.player.is_dead or not is_instance_valid(gun): return
+	gun.look_at(background_aim)
+	gun.direction = gun.gun_tip.global_position.direction_to(background_aim)
+	# Equivalent cooldown/reload gates to BaseGun._process; headless has no captured mouse.
+	if Input.is_action_pressed("shoot") and Demo.fire_released and gun.is_use and gun.can_shoot and not gun.is_reloading:
+		gun.can_shoot = false
+		gun.timer.start()
+		if gun.bullets_count > 0: gun._shoot()
+		else: gun.reload_ammo()
