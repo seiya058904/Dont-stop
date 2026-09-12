@@ -230,7 +230,8 @@ func show_attachment(id: String,am,owned: bool):
 			if owned:
 				button(detail,"安装到此枪",func():
 					if gun.addAttachMent(am):
-						message.text = "已装备：%s → %s · %s；旧件已返回背包" % [tr(am.am_name),tr(gun.weapon_name),tr(am.am_type)]
+						message.text = "已装备：%s → %s · %s" % [tr(am.am_name),tr(gun.weapon_name),tr(am.am_type)]
+						if old and old != am: message.text += "；旧件已返回背包"
 						show_attachment(id,am,true))
 		else: label(detail,"此枪不兼容；可购买后用于其他兼容枪")
 	if owned:

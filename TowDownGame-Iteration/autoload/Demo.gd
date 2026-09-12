@@ -159,7 +159,7 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 			next_instance += 1
 			PlayerData.add_attachment(obtained)
 			result.instance_id = obtained.id
-			result.reason = "已购买「%s」· %d金币 · 未装备\n在配件背包选择后点击安装" % [tr(obtained.am_name),price]
+			result.reason = "已购买「%s」· %d金币 · 未装备\n已定位到新实例；确认属性后点击安装" % [tr(obtained.am_name),price]
 		"talent":
 			talents[id] = rank(id)+1
 			result.reason = "%s：%d → %d / %d\n%s" % [DemoConfig.TALENTS[id].name, rank(id)-1,rank(id), DemoConfig.TALENTS[id].max,DemoConfig.TALENTS[id].info]
@@ -238,7 +238,7 @@ func load_camp() -> bool:
 	if not valid_save(parsed):
 		save_blocked = true
 		save_result = {"success":false,"reason":"存档损坏，原文保持；当前为临时试玩"}
-		if not test_mode: show_save_dialog(true)
+		if not test_mode: show_save_dialog.call_deferred(true)
 		return false
 	var data = CampSnapshot.normalize(parsed)
 	# Validation has completed. From here, restore the entire graph before any recalc.
@@ -301,7 +301,11 @@ func valid_save(data) -> bool:
 	return CampSnapshot.validate(data)
 
 func show_save_dialog(recovery = false, quitting = false):
-	if is_instance_valid(save_dialog): return
+	if is_instance_valid(save_dialog):
+		if not quitting or save_dialog.quitting: return
+		# A close request must also offer cancel/discard while recovery is open.
+		save_dialog.queue_free()
+		save_dialog = null
 	save_dialog = load("res://ui/SaveDialog.gd").new()
 	save_dialog.recovery = recovery
 	save_dialog.quitting = quitting
@@ -339,6 +343,8 @@ func quit_game():
 	finish_quit()
 
 func finish_quit():
+	# Release the custom cursor texture before the renderer shuts down.
+	Input.set_custom_mouse_cursor(null)
 	for type in ["AudioStreamPlayer","AudioStreamPlayer2D"]:
 		for node in get_tree().root.find_children("*",type,true,false): node.stop()
 	await get_tree().create_timer(0.1,true).timeout

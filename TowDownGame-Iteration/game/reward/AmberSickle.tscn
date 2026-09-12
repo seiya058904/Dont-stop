@@ -6,6 +6,7 @@
 script/source = "extends BaseReward
 
 var fire
+var buff_active = false
 
 func onRewardStart():
 	fire = preload(\"res://game/other/FireEffect.tscn\").instantiate()
@@ -24,12 +25,18 @@ func _on_timer_timeout():
 func doBuff():
 	if $Buff.is_stopped():
 		fire.show()
+		buff_active = true
 		PlayerData.player_fire_rate += 0.2
 		$Buff.start(count + 1)
 
 func _on_buff_timeout():
-	PlayerData.player_fire_rate -= 0.2
-	fire.hide()
+	if buff_active:
+		buff_active = false
+		PlayerData.player_fire_rate -= 0.2
+	if is_instance_valid(fire): fire.hide()
+
+func onRewardRemove():
+	_on_buff_timeout()
 "
 
 [node name="HpReward" type="Node2D"]

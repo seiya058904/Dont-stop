@@ -8,6 +8,8 @@ $cases = @(
     @('tests/R1Regression.tscn'),
     @('tests/R1Persistence.tscn'),
     @('tests/R1Flow.tscn'),
+    @('tests/R1RecoveryUI.tscn'),
+    @('tests/R1LegacyRestore.tscn'),
     @('tests/R1SaveMatrix.tscn', '--', 'write')
 )
 foreach ($cycle in 1..3) {

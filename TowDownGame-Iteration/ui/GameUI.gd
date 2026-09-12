@@ -43,6 +43,8 @@ func _ready() -> void:
 		hp_bar.max_value = max_hp;hp_bar.value = hp)
 
 func onGameStart():
+	level_label.text = tr("LEVEL") + str(PlayerData.player_level)
+	onPlayerExpChange(PlayerData.player_exp,PlayerData.getMaxExp())
 	onGoldChange(PlayerData.gold)
 	onRewardChange(PlayerData.reward_point)
 	onAmmoChange(PlayerData.player_ammo)

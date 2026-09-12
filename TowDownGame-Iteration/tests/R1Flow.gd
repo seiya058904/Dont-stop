@@ -22,6 +22,7 @@ func _ready():
 	add_child(load("res://game/map/Main.tscn").instantiate())
 	Utils.gameStart()
 	await frames(8)
+	check(main_ui().level_label.text.ends_with("1"),"R06 fresh profile HUD shows level one before first upgrade")
 	town = LevelServer.town
 	var position_before = Utils.player.global_position
 	check(not town.depart(1,false) and Utils.player.global_position == position_before,"R05 no gun rejects without teleport")
