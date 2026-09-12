@@ -1,0 +1,48 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS R04 initial snapshot written
+PASS R04 transaction succeeds but saving open fails visibly
+PASS R04 prior snapshot byte-identical after open
+PASS R04 charged once open
+PASS R04 retry saves open
+PASS R04 retry never charges or grants again
+PASS R04 written content actually restores
+PASS R04 transaction succeeds but saving write fails visibly
+PASS R04 prior snapshot byte-identical after write
+PASS R04 charged once write
+PASS R04 retry saves write
+PASS R04 retry never charges or grants again
+PASS R04 written content actually restores
+PASS R04 transaction succeeds but saving replace fails visibly
+PASS R04 prior snapshot byte-identical after replace
+PASS R04 charged once replace
+PASS R04 retry saves replace
+PASS R04 retry never charges or grants again
+PASS R04 written content actually restores
+PASS legacy bacteria lifetime cap survives load
+PASS v1 bacteria cap migrates from persisted HP
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 invalid data never changes memory
+PASS R03 temporary game cannot overwrite bad file
+PASS R03 truncated JSON rejected
+PASS R03 export preserves bad original bytes
+PASS R03 legal missing-legacy v1
+PASS R03 old one-shot rewards neither regrant nor revive
+R1 PERSISTENCE checks=45 failures=0

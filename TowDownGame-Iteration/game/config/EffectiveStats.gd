@@ -45,10 +45,17 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 	}
 
 static func describe(s: Dictionary) -> String:
-	var text = "伤害 %.2f %s · %.2f次/秒\n弹匣 %d · 装填 %.2f秒 · 暴击 %.0f%%" % [s.damage,"/tick" if "beam" in s.tags else "/次",s.rate,s.magazine,s.reload,s.crit*100]
+	var text = "伤害 %.2f %s · %.2f次/秒\n弹匣 %d · 装填 %.2f秒 · 暴击 %.0f%%" % [s.damage,damage_unit(s),s.rate,s.magazine,s.reload,s.crit*100]
 	if "beam" in s.tags: text += "\n激光tick：0.1秒；射速为脉冲次数"
 	if "projectile" in s.tags or "beam" in s.tags: text += "\n对普通敌人冲量 %.1f" % s.impulse
 	if "spread" in s.tags: text += " · 散布倍率 %.2f" % s.spread
 	if "explosive" in s.tags: text += "\n爆炸半径 %.1f" % s.radius
 	if "chain" in s.tags: text += "\n电弧后跳 %d" % s.jumps
 	return text
+
+static func damage_unit(s: Dictionary) -> String:
+	if "beam" in s.tags: return "/tick（0.1秒）"
+	if "chain" in s.tags: return "/主目标；每后跳×75%"
+	if "burst" in s.tags: return "/弹；3发一组"
+	if "spread" in s.tags: return "/弹丸（多弹丸分别结算）"
+	return "/弹"

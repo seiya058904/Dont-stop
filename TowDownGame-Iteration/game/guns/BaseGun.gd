@@ -127,6 +127,7 @@ func cancel_actions():
 	if is_instance_valid(timer): timer.stop()
 	if is_instance_valid(audio): audio.stop()
 	audio_reload_ammo.stop()
+	for voice in attachments_node.find_children("*","AudioStreamPlayer2D",true,false): voice.stop()
 	for effect in find_children("*","GPUParticles2D",true,false): effect.emitting = false
 	if is_instance_valid(anim_player): anim_player.stop()
 

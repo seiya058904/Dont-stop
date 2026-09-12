@@ -106,6 +106,7 @@ script = ExtResource("1_0j57y")
 visible = false
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Music"
 process_mode = 3
 stream = ExtResource("3_xmmcd")
 volume_db = -10.0

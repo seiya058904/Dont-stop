@@ -52,3 +52,6 @@ func onCountChange():
 
 func _exit_tree():
 	onRewardRemove()
+
+func target_removed(_target):
+	pass

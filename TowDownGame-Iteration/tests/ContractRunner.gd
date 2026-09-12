@@ -125,11 +125,21 @@ func _ready():
 	check(not get_tree().paused,"D04 last menu resumes")
 	a_menu.queue_free()
 	b_menu.queue_free()
-	PlayerData.changeWeapon(0)
-	PlayerData._physics_process(0.5)
-	check(PlayerData.is_change_weapon,"D01 relative switch lock not global frame")
-	PlayerData._physics_process(0.61)
-	check(not PlayerData.is_change_weapon,"D01 documented animation duration releases switch")
+	# The original 1.1s expectations remain for baseline comparison. M2-R1
+	# explicitly replaces that product rule with <= .15s input debounce.
+	if DemoConfig.SWITCH_SECONDS == 1.1:
+		PlayerData.changeWeapon(0)
+		PlayerData._physics_process(0.5)
+		check(PlayerData.is_change_weapon,"D01 relative switch lock not global frame")
+		PlayerData._physics_process(0.61)
+		check(not PlayerData.is_change_weapon,"D01 documented animation duration releases switch")
+	else:
+		PlayerData.changeWeapon(4)
+		check(PlayerData.is_change_weapon,"D01 relative input debounce active")
+		while Time.get_ticks_msec() <= PlayerData.switch_deadline:
+			await get_tree().process_frame
+		PlayerData._physics_process(0)
+		check(not PlayerData.is_change_weapon and DemoConfig.SWITCH_SECONDS <= 0.15,"D01 requested short input debounce releases independently of HUD")
 	check(town.nav_ready and town.walkable.size() > 50,"E R1 navigation built from actual ground and physics")
 	check(town.depart(1,true),"D11 first departure accepted")
 	var camp_only_gold = PlayerData.gold

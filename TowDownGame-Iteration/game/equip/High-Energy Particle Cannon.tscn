@@ -131,6 +131,7 @@ disabled = true
 wait_time = 0.1
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX"
 stream = ExtResource("3_s0rdg")
 
 [connection signal="body_entered" from="Root/Line2D/Area2D" to="." method="_on_area_2d_body_entered"]

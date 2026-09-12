@@ -4,10 +4,9 @@ func _shoot():
 	super._shoot()
 	gun_tip.rotation = direction.angle()
 
-	call_deferred("createBullet")
+	call_deferred("createBullet",action_generation)
 
-func createBullet():
-	var generation = action_generation
+func createBullet(generation):
 	for index in 2:
 		if generation != action_generation or not is_use or player.is_dead or get_tree().paused: return
 		for i in 2:

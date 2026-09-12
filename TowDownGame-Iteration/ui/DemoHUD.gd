@@ -9,12 +9,28 @@ func _ready():
 	add_theme_constant_override("shadow_offset_x",1)
 	add_theme_constant_override("shadow_offset_y",1)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Demo.changed.connect(refresh)
+
+func refresh():
+	update_text()
+
 func _process(delta):
 	elapsed += delta
 	if elapsed < 0.2: return
 	elapsed = 0
-	if not Utils.player.gun: return
+	update_text()
+
+func update_text():
+	if not Utils.player.gun:
+		text = "Tab 配置 · 枪械页可找到全部13把武器"
+		return
 	var gun = Utils.player.gun
 	var names = []
 	for am in gun.attachments_dict.values(): names.append(tr(am.am_name))
 	text = "%s · %d/%d | 配件 %s · Tab详情\n火力%d 装填%d 携弹%d | 连杀 %d层 %.1fs · 爆破%s 修复%d" % [tr(gun.weapon_name),gun.bullets_count,gun.bullets_max_count,("无" if names.is_empty() else " / ".join(names)),Demo.rank("T01"),Demo.rank("T03"),Demo.rank("T04"),Demo.kill_stacks,maxf(0,Demo.stack_time),"开" if Demo.rank("T16") else "关",Demo.rank("T24")]
+
+	if LevelServer.state == "CAMP":
+		for target in get_tree().get_nodes_in_group("monsters"):
+			if target.training:
+				text += "\n练枪 · "+EffectiveStats.damage_unit(gun.effective)+" · 不结算奖励；Tab清理"
+				break

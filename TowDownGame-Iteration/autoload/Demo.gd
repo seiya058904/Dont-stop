@@ -1,6 +1,7 @@
 extends Node
 
 signal changed
+signal restored
 var talents: Dictionary = {}
 var purchases: Array = []
 var next_instance = 1
@@ -34,6 +35,7 @@ func _ready():
 	ui_audio.bus = "UI"
 	ui_audio.stream = load("res://audio/bullet/GUNMech_Insert Clip_01.wav")
 	add_child(ui_audio)
+	apply_audio_settings()
 	Utils.onGameStart.connect(_start)
 	PlayerData.onPlayerLevelChange.connect(_level_changed)
 
@@ -42,13 +44,22 @@ func _start():
 	var hud = Label.new()
 	hud.set_script(load("res://ui/DemoHUD.gd"))
 	Utils.canvasLayer.add_child(hud)
-	for bus in ["Master","Music","SFX","UI"]:
-		var volume = ConfigUtils.getConfig("demo_audio",bus)
-		AudioServer.set_bus_volume_db(AudioServer.get_bus_index(bus),linear_to_db(maxf(float(volume)/100.0,0.0001)) if volume != null else linear_to_db(0.8))
+	apply_audio_settings()
 	Utils.shake = ConfigUtils.getConfig("demo","shake") if ConfigUtils.getConfig("demo","shake") != null else 0.35
 	Combat.reduced_flash = ConfigUtils.getConfig("demo","reduced_flash") == true
 	if not test_mode: load_camp()
 	refresh()
+
+func set_volume(bus: String, value: float):
+	var index = AudioServer.get_bus_index(bus)
+	if index < 0: return
+	AudioServer.set_bus_mute(index,value <= 0)
+	AudioServer.set_bus_volume_db(index,linear_to_db(maxf(value/100.0,0.0001)))
+
+func apply_audio_settings():
+	for bus in ["Master","Music","SFX","UI"]:
+		var value = ConfigUtils.getConfig("demo_audio",bus)
+		set_volume(bus,float(value) if value != null else 80.0)
 
 func play_ui():
 	ui_audio.play()
@@ -78,6 +89,10 @@ func _process(delta):
 func stop_attacks():
 	fire_released = false
 	for gun in PlayerData.player_weapon_list.values(): gun.cancel_actions()
+	if is_instance_valid(Combat):
+		for voice in Combat.audio_pool: voice.stop()
+	for effect in get_tree().get_nodes_in_group("combat_transient"):
+		for voice in effect.find_children("*","AudioStreamPlayer2D",true,false): voice.stop()
 
 func push_pause(owner_node):
 	if owner_node in pause_stack: return
@@ -278,6 +293,7 @@ func load_camp() -> bool:
 	loading = false
 	save_blocked = false; dirty = false
 	save_result = {"success":true,"reason":"已恢复"}
+	restored.emit()
 	changed.emit()
 	return true
 

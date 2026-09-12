@@ -1,0 +1,26 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS R01 actual bullet kill levels up without T10
+PASS R01 first new shot snapshot refreshed
+PASS R01 held reserve gun refreshed
+PASS R01 level does not refill ammo
+PASS R01 in-flight normal projectile keeps snapshot
+PASS R01 first post-level actual collision damage
+PASS R01 reserve weapon actual collision damage
+PASS R03 valid current snapshot
+PASS R03 legacy dictionary rejected
+PASS R03 null legacy entry rejected
+PASS R03 unknown weapon rejected
+PASS R03 dangling attachment owner rejected
+PASS R03 occupied slot conflict rejected
+PASS R03 fractional instance rejected
+PASS R03 next instance collision rejected
+PASS R03 invalid talent rejected
+PASS R03 schema1 missing legacy migration
+PASS R04 save returns structured outcome
+PASS V02 old Baby volley cancelled across pause
+PASS R05 old portal uses next normal encounter
+PASS feedback nonzero default shake is active
+PASS R07 old kill sound uses SFX
+PASS V01 freed target removes mark cache
+R1 SUMMARY checks=23 failures=0

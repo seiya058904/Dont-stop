@@ -31,7 +31,7 @@ func _ready():
 	add_to_group("camera")
 
 func shootShake(_step):
-	if int(Utils.shake) == 0:
+	if float(Utils.shake) <= 0:
 		return
 	if is_shake:
 		return

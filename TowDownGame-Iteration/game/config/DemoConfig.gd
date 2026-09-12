@@ -28,3 +28,12 @@ static func weapon_tags(id: int) -> Array:
 	if id == 114: return ["projectile","explosive","energy"]
 	if id == 123: return ["projectile","spread","burst"]
 	return ["projectile","spread"] if id in [1,5,8] else ["projectile"]
+
+const WEAPON_INFO = {
+	112:"首次射线主目标命中，最多3次后跳；后跳伤害逐次×75%，墙阻挡电弧。",
+	114:"慢速可见大弹，接触后半径32爆炸；每目标一次伤害。",
+	123:"每组3发，组内0.08秒，组间独立间隔；剩弹不足只射剩余。",
+	6:"原型激光：射线阻墙，0.1秒持续tick，保留0.4秒脉冲。"
+}
+static func weapon_info(id: int) -> String:
+	return WEAPON_INFO.get(id,"保留原型弹道、开火节奏、枪体动作与音色。")

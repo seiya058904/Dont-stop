@@ -2070,6 +2070,7 @@ autowrap_mode = 1
 texture = ExtResource("11_7j3nn")
 
 [node name="Kill" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
 stream = ExtResource("12_43xda")
 volume_db = -10.0
 

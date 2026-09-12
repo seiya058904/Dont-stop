@@ -23,10 +23,12 @@ const rw_top = preload("res://ui/widgets/RewardTopItem.tscn")
 @onready var level_bar = $hpUI/ProgressBar2
 @onready var level_panel = $LevelUpPanel
 
+var weapon_feedback_tween: Tween
 var inv_ui
 
 func _ready() -> void:
 	change_audio.bus = "UI"
+	Demo.restored.connect(on_restore)
 	Utils.onGameStart.connect(self.onGameStart)
 	RewardServer.onRewardAdd.connect(self.onRewardAdd)
 	PlayerData.onRewardChange.connect(self.onRewardChange)
@@ -50,6 +52,17 @@ func onGameStart():
 	tween.tween_property(weapon_lsit_node,"position:y",weapon_lsit_node.position.y,0.3).from(weapon_lsit_node.position.y+weapon_lsit_node.size.y)
 	show()
 
+func on_restore():
+	for box in [weapon_lsit_node,rw_grid,weapon_bullet_list]:
+		for child in box.get_children(): child.free()
+	playerWeaponListChange()
+	for reward in Utils.player.reward_root.get_children(): onRewardAdd(reward)
+	if Utils.player.gun: loadWeaponBullets(Utils.player.gun.weapon_id)
+	else:
+		ammo_count_label.text = "0"
+		weapon_change_image.texture = null
+		weapon_change_name.text = ""
+
 func playerWeaponListChange():
 	for item in PlayerData.player_weapon_list:
 		if weapon_lsit_node.get_child_count() < 7 and !weapon_lsit_node.has_node(str(item)):
@@ -65,12 +78,14 @@ func onWeaponChangeAnim(weapon_id,tag = Utils.GUN_CHANGE_TYPE.CHANGE):
 		weapon_change_name.text = weapon.weapon_name
 		ammo_count_label.text = "%s" %[weapon.bullets_count]
 		weapon_change_image.texture = weapon.image
-		var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
-		tween.tween_property(weapon_change_image,"modulate:a",1.0,0.3).from(0.0)
-		tween.tween_property(weapon_change_image,"modulate:a",0.0,0.3).from(1.0).set_delay(0.5)
+		if weapon_feedback_tween and weapon_feedback_tween.is_valid(): weapon_feedback_tween.kill()
+		weapon_feedback_tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
+		weapon_feedback_tween.tween_property(weapon_change_image,"modulate:a",1.0,0.3).from(0.0)
+		weapon_feedback_tween.tween_property(weapon_change_image,"modulate:a",0.0,0.3).from(1.0).set_delay(0.5)
 	call_deferred("loadWeaponBullets",weapon_id)
 
 func loadWeaponBullets(weapon_id):
+	if not PlayerData.player_weapon_list.has(weapon_id): return
 	for item in weapon_bullet_list.get_children():
 		item.free()
 	weapon_bullet_list.get_children().clear()
@@ -103,7 +118,6 @@ func onRewardAdd(rw:BaseReward):
 		return
 	if rw_grid.has_node(str(rw.id)):
 		rw_grid.get_node(str(rw.id)).setData(rw)
-		print(rw.count)
 	else:
 		var ins = rw_top.instantiate()
 		ins.name = str(rw.id)

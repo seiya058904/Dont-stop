@@ -30,7 +30,7 @@ func _ready():
 		slider.max_value = 100
 		slider.value = float(ConfigUtils.getConfig("demo_audio",bus)) if ConfigUtils.getConfig("demo_audio",bus) != null else 80
 		slider.value_changed.connect(func(value):
-			AudioServer.set_bus_volume_db(AudioServer.get_bus_index(bus),linear_to_db(maxf(value/100.0,0.0001)))
+			Demo.set_volume(bus,value)
 			ConfigUtils.setConfig("demo_audio",bus,value))
 		box.add_child(slider)
 	var shake = HSlider.new()

@@ -294,6 +294,7 @@ theme_override_font_sizes/font_size = 10
 text = "CANCEL"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"UI"
 stream = ExtResource("6_7g7yj")
 
 [connection signal="pressed" from="reload" to="." method="_on_reload_pressed"]

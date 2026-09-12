@@ -334,6 +334,7 @@ grow_vertical = 0
 alignment = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Music"
 process_mode = 3
 stream = ExtResource("2_3wxy5")
 volume_db = -10.0

@@ -8,7 +8,9 @@ func _shoot():
 	createBullet()
 
 func createBullet():
+	var generation = action_generation
 	for i in 3:
+		if generation != action_generation or not is_use or player.is_dead or get_tree().paused: return
 		var b = bullet_scene.instantiate()
 		b.setOnwer(player)
 		get_tree().root.add_child(b)
@@ -16,7 +18,7 @@ func createBullet():
 		b.rotation = gun_tip.rotation
 		fire(b)
 		call_deferred("_shootAnim")
-		await get_tree().create_timer(0.15).timeout
+		await get_tree().create_timer(0.15,false).timeout
 
 func _shootAnim():
 	if not is_use or player.is_dead or get_tree().paused: return

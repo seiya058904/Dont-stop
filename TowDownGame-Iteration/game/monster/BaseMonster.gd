@@ -50,6 +50,7 @@ func setData(data):
 
 func _process(delta):
 	flash_time = maxf(0,flash_time-delta)
+	queue_redraw()
 	anim.material.set_shader_parameter("flash", 0.7 if flash_time > 0 and not Combat.reduced_flash else 0.0)
 	anim.scale = Vector2(1.08,0.92) if flash_time > 0 else Vector2.ONE
 	label_time -= delta
@@ -133,6 +134,7 @@ func receive_damage(amount: float, critical: bool, context: Dictionary):
 func onDie(is_death_effect = true):
 	if is_die or training: return
 	is_die = true
+	get_tree().call_group("reward","target_removed",self)
 	Combat.kill_events += 1
 	Demo.on_kill(self,last_context)
 	PlayerData.player_exp += 1
@@ -158,3 +160,9 @@ func setDeathCallBack(death_callback:Callable):
 
 func addEffect(node):
 	get_node("EffectRoot").add_child(node)
+
+func _draw():
+	# Compact contact bracket remains visible with flash and shake disabled.
+	if flash_time > 0 and not is_die:
+		draw_arc(Vector2(0,-8),10,-0.6,0.6,5,Color(1,0.85,0.5),1)
+		draw_arc(Vector2(0,-8),10,PI-0.6,PI+0.6,5,Color(1,0.85,0.5),1)

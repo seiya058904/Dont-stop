@@ -121,6 +121,17 @@ func _ready():
 	marked.queue_free()
 	for frame in 2: await get_tree().process_frame
 	check(star.mark_dict.is_empty(),"V01 freed target removes mark cache")
+	LevelServer.town.depart(1,true); LevelServer.timerStop()
+	var derived = enemy(Vector2(0,-1500),0.1)
+	star.afterAtk(derived,0.01)
+	var kills = Combat.kill_events
+	Combat.hit(derived,{"damage":1,"depth":1})
+	check(star.mark_dict.is_empty() and Combat.kill_events == kills+1,"V01 derived death clears cache without extra reward kills")
+	var cleaned = enemy(Vector2(0,-1550),20)
+	star.afterAtk(cleaned,0.01)
+	LevelServer.return_to_camp()
+	for frame in 2: await get_tree().process_frame
+	check(star.mark_dict.is_empty(),"V01 camp cleanup clears live target marks")
 	print("R1 SUMMARY checks=",checks," failures=",failures)
 	for kind in ["AudioStreamPlayer","AudioStreamPlayer2D"]:
 		for node in get_tree().root.find_children("*",kind,true,false): node.stream_paused = false; node.stop()

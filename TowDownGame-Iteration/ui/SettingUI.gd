@@ -10,9 +10,9 @@ func _ready() -> void:
 	var shake = ConfigUtils.getConfig("setting","shake")
 	var volume = ConfigUtils.getConfig("setting","volume")
 	if volume != null:
-		volume_slider.value = volume
+		volume_slider.set_value_no_signal(volume)
 	if shake != null:
-		shake_slider.value = shake
+		shake_slider.set_value_no_signal(shake)
 	if language != null:
 		language_ui.select(language)
 		_on_language_item_selected(language)
@@ -29,16 +29,12 @@ func _on_language_item_selected(index: int) -> void:
 	ConfigUtils.setConfig("setting","language",index)
 
 func _on_shake_value_changed(value: float) -> void:
-	Utils.shake = value
-	ConfigUtils.setConfig("setting","shake",value)
+	Utils.shake = clampf(value/100.0,0,1)
+	ConfigUtils.setConfig("demo","shake",Utils.shake)
 
 func _on_volume_value_changed(value: float) -> void:
-	if value == 0:
-		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"),true)
-	else:
-		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"),false)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"),(value - 50) / 5)
-	ConfigUtils.setConfig("setting","volume",value)
+	Demo.set_volume("Master",value)
+	ConfigUtils.setConfig("demo_audio","Master",value)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel"): return
@@ -51,4 +47,4 @@ func _unhandled_input(event: InputEvent) -> void:
 		Demo.open_settings()
 
 func _on_button_pressed() -> void:
-	get_tree().quit()
+	Demo.quit_game()

@@ -101,9 +101,12 @@ func _ready() -> void:
 	timer.timeout.connect(_timeout)
 	add_child(timer)
 
+func can_start(stage: int) -> bool:
+	return state == "CAMP" and is_instance_valid(Utils.player) and not Utils.player.is_dead and PlayerData.player_hp > 0 and Utils.player.gun != null and PlayerData.player_weapon_list.values().has(Utils.player.gun) and DemoConfig.ENCOUNTERS.has(stage)
+
 func roundStart() -> bool:
-	if state != "CAMP" or not is_instance_valid(Utils.player) or Utils.player.gun == null: return false
-	if not DemoConfig.ENCOUNTERS.has(Demo.selected_stage): return false
+	if not can_start(Demo.selected_stage): return false
+	if is_instance_valid(town): town.clear_practice()
 	state = "PREPARING"
 	Demo.stop_attacks()
 	epoch += 1
@@ -180,7 +183,7 @@ func return_to_camp():
 	epoch += 1
 	for node in get_tree().get_nodes_in_group("combat_transient"): node.queue_free()
 	for node in get_tree().get_nodes_in_group("monsters"):
-		if not node.training: node.queue_free()
+		node.queue_free()
 	Demo.kill_stacks = 0
 	Demo.stack_time = 0
 	state = "CAMP"

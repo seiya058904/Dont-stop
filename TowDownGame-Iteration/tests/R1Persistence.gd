@@ -55,6 +55,14 @@ func _ready():
 	old.schema_version = 1; old.erase("legacy_state")
 	check(CampSnapshot.normalize(old).legacy_state["10"] == 1000,"v1 bacteria cap migrates from persisted HP")
 	var cases = []
+	var malformed = data.duplicate(true)
+	malformed.attachments = [{"definition":"unknown","instance":1,"gun":"0"}]; malformed.next_instance = 2; cases.append(malformed)
+	malformed = data.duplicate(true); malformed.weapons[0].ammo = 1.5; cases.append(malformed)
+	malformed = data.duplicate(true); malformed.exp = PlayerData.getMaxExp(); cases.append(malformed)
+	malformed = data.duplicate(true); malformed.hp = malformed.hp_max+1; cases.append(malformed)
+	malformed = data.duplicate(true); malformed.legacy_state["10"] = 1001; cases.append(malformed)
+	malformed = data.duplicate(true)
+	malformed.attachments = [{"definition":"122","instance":1,"gun":"0"}]; malformed.next_instance = 2; cases.append(malformed)
 	for value in [{},[null]]:
 		var bad = data.duplicate(true); bad.legacy = value; cases.append(bad)
 	var bad = data.duplicate(true); bad.weapons[0].id = "missing"; cases.append(bad)

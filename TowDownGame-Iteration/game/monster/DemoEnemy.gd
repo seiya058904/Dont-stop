@@ -78,11 +78,14 @@ func _on_animated_sprite_2d_frame_changed():
 	pass
 
 func _draw():
+	super._draw()
 	if is_die: return
 	if phase == "spawn": draw_arc(Vector2.ZERO,14,0,TAU,16,Color(0.6,0.85,1,0.6),1)
 	if role == "E04":
 		draw_polyline(PackedVector2Array([Vector2(-8,-18),Vector2(0,-25),Vector2(8,-18)]),Color(1,0.65,0.2),2)
-		if phase == "warn": draw_line(Vector2.ZERO,locked_direction*100,Color(1,0.5,0.15,0.85),2)
+		if phase == "warn":
+			draw_line(Vector2.ZERO,locked_direction*100,Color(0.1,0.05,0.02),4)
+			draw_line(Vector2.ZERO,locked_direction*100,Color(1,0.5,0.15,0.85),2)
 	if role == "E05":
 		draw_arc(Vector2(0,-12),10,PI,TAU,12,Color(0.7,1,0.4),2)
 		if phase == "warn": draw_circle(Vector2(0,-20),3+sin(phase_time*18),Color(1,0.6,0.3))

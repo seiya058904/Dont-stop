@@ -63,6 +63,7 @@ libraries = {
 one_shot = true
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX"
 position = Vector2(1, 0)
 stream = ExtResource("4_556r1")
 

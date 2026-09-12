@@ -65,7 +65,8 @@ func onPlayerDeath():
 	Demo.push_pause(ins)
 
 func _on_portal_2_move_out() -> void:
-	if LevelServer.state == "CAMP" and Utils.player.gun != null: LevelServer.roundStart()
+	# Arrival is cosmetic; the shared departure request already started the round.
+	pass
 
 func onTimeTick(timeout) -> void:
 	if Utils.player.is_dead == false:
@@ -120,11 +121,10 @@ func _on_shop_body_exited(body: Node2D) -> void:
 		shopBtn.visible = false
 
 #进入地图
-func _on_portal_move_in(next_area):
-	if Utils.player.gun == null:
-		Utils.showToast("PLEASE PURCHASE A WEAPON FIRST")
-	else:
-		Utils.player.global_position = next_area.global_position
+func _on_portal_move_in(_next_area):
+	if not depart(Demo.next_stage,false):
+		Utils.showToast("无法出发：需要存活、装备武器并处于营地")
+		portal_start.call_deferred("reset")
 
 #下一关通知
 func onNextLevel(level):
@@ -231,18 +231,30 @@ func spawn_point() -> Vector2:
 	return Vector2.INF
 
 func depart(stage: int, is_trial: bool) -> bool:
-	if LevelServer.state != "CAMP" or Utils.player.gun == null: return false
-	Demo.selected_stage = stage
+	var target_stage = stage if is_trial else Demo.next_stage
+	if not LevelServer.can_start(target_stage): return false
+	var previous_stage = Demo.selected_stage
+	var previous_trial = Demo.trial
+	Demo.selected_stage = target_stage
 	Demo.trial = is_trial
-	Demo.save_camp()
+	if not LevelServer.roundStart():
+		Demo.selected_stage = previous_stage
+		Demo.trial = previous_trial
+		return false
 	Utils.player.global_position = portal_lv1.global_position + Vector2(0,35)
-	return LevelServer.roundStart()
+	return true
 
-func practice():
+func clear_practice():
 	if LevelServer.state != "CAMP": return
+	Demo.stop_attacks()
 	for enemy in get_tree().get_nodes_in_group("monsters"):
-		if enemy.training: return
-	for offset in [Vector2(70,0),Vector2(85,18),Vector2(90,-18)]:
+		if enemy.training: enemy.queue_free()
+	for effect in get_tree().get_nodes_in_group("combat_transient"): effect.queue_free()
+
+func practice(count = 3):
+	if LevelServer.state != "CAMP": return
+	clear_practice()
+	for offset in [Vector2(70,0),Vector2(85,18),Vector2(90,-18)].slice(0,clampi(count,1,3)):
 		var dummy = monster_pre.instantiate()
 		dummy.training = true
 		dummy.global_position = $PositionHome.global_position+offset

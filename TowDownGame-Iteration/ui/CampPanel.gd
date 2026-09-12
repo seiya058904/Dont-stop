@@ -10,6 +10,8 @@ var wallet: Label
 var message: Label
 var cached: Array = []
 var selected_gun = -1
+var detail_actions = {}
+var refresh_pending = false
 
 func _enter_tree():
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -71,12 +73,15 @@ func _ready():
 	body.add_child(top)
 	wallet = label(top,"",8)
 	wallet.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button(top,"重试保存",func():
+		message.text = Demo.save_camp().reason
+		if Demo.save_blocked: Demo.show_save_dialog(true))
 	button(top,"设置",func(): Demo.open_settings())
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)
 	for pair in [["weapon","枪械"],["attachment","配件商店"],["talent","持久天赋"],["equipment","当前配置"],["stage","出发/补给"],["legacy","原型奖励"]]:
-		button(tabs,pair[1],func(): tab = pair[0]; selection = ""; render())
+		button(tabs,pair[1],func(): tab = pair[0]; selection = ""; listing_scroll.scroll_vertical = 0; render())
 	var columns = HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(columns)
@@ -99,11 +104,21 @@ func _ready():
 	message = label(body,"WASD 移动 · 鼠标射击 · R 装填 · Shift 冲刺 · Tab 配置",7)
 	message.custom_minimum_size.y = 25
 	if Utils.player.gun: selected_gun = Utils.player.gun.weapon_id
-	Demo.changed.connect(update_wallet)
+	Demo.changed.connect(request_refresh)
 	render()
+
+func request_refresh():
+	if refresh_pending: return
+	refresh_pending = true
+	call_deferred("render")
+
+func entry(text: String, key: String, action: Callable):
+	detail_actions[key] = action
+	button(listing,text,func(): selection = key; action.call())
 
 func update_wallet():
 	wallet.text = "营地整备  |  金币 %d  天赋点 %d" % [PlayerData.gold,PlayerData.reward_point]
+	if Demo.dirty or Demo.save_blocked: wallet.text += " · 未保存"
 
 func clear_box(box):
 	for child in box.get_children():
@@ -111,7 +126,9 @@ func clear_box(box):
 		child.queue_free()
 
 func render():
-	listing_scroll.scroll_vertical = 0
+	refresh_pending = false
+	var scroll_position = listing_scroll.scroll_vertical
+	detail_actions.clear()
 	update_wallet()
 	clear_box(listing)
 	clear_box(detail)
@@ -125,23 +142,25 @@ func render():
 			for id in ids:
 				var gun = Utils.weapon_list[id].instantiate()
 				cached.append(gun)
-				button(listing,("✓ " if PlayerData.player_weapon_list.has(int(id)) else "")+tr(gun.weapon_name),func(): selection = id; show_weapon(id,gun))
+				entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name),id,func(): show_weapon(id,gun))
 		"attachment":
 			for id in Utils.am_dict:
 				var am = Utils.am_dict[id].instantiate()
 				cached.append(am)
-				button(listing,tr(am.am_name),func(): selection = id; show_attachment(id,am,false))
+				entry(tr(am.am_name),id,func(): show_attachment(id,am,false))
 		"talent":
 			for id in DemoConfig.TALENTS:
 				var d = DemoConfig.TALENTS[id]
-				button(listing,"%s %d/%d" % [d.name,Demo.rank(id),d.max],func(): selection = id; show_talent(id))
+				entry("%s %d/%d" % [d.name,Demo.rank(id),d.max],id,func(): show_talent(id))
 		"equipment": equipment_list()
 		"stage": stage_list()
 		"legacy":
 			for id in RewardServer.reward_list:
 				var reward = RewardServer.reward_list[id].instantiate()
 				cached.append(reward)
-				button(listing,tr(reward.reward_name),func(): show_legacy(id,reward))
+				entry(tr(reward.reward_name),id,func(): show_legacy(id,reward))
+	if detail_actions.has(selection): detail_actions[selection].call()
+	listing_scroll.set_deferred("scroll_vertical",scroll_position)
 	if selection == "": label(detail,"选择左侧条目查看用途、价格与实际配置。\n\n战斗已暂停；Esc 只关闭最上层。\n购买与补给仅在营地开放。\n装备和天赋不会因失败丢失。",8)
 
 func purchase(kind: String,id: String,currency = "gold"):
@@ -149,13 +168,11 @@ func purchase(kind: String,id: String,currency = "gold"):
 	message.text = result.reason
 	if result.success:
 		Demo.play_ui()
-	update_wallet()
-	if kind == "talent":
-		render()
-		show_talent(id)
-	if kind == "weapon" and result.success:
-		render()
-		show_weapon(id,PlayerData.player_weapon_list[int(id)])
+	if result.success and kind == "attachment":
+		tab = "equipment"
+		selection = "am:"+str(result.instance_id)
+	else: selection = id
+	request_refresh()
 
 func show_weapon(id: String, gun):
 	clear_box(detail)
@@ -166,13 +183,17 @@ func show_weapon(id: String, gun):
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	detail.add_child(image)
-	var description = {"112":"首次射线命中 → 最多3次后跳，每跳伤害75%；墙阻挡电弧。", "114":"慢速可见大弹，接触后半径32爆炸；每目标一次伤害。", "123":"每组3发，组内0.08秒，组间独立间隔；剩弹不足只射剩余。", "6":"原型激光：射线阻墙，0.1秒持续tick，保留0.4秒脉冲。"}.get(id,"保留原型弹道、开火节奏、枪体动作与音色。")
+	var description = DemoConfig.weapon_info(int(id))
 	label(detail,description)
 	if PlayerData.player_weapon_list.has(int(id)):
 		gun = PlayerData.player_weapon_list[int(id)]
 		label(detail,EffectiveStats.describe(gun.effective))
 		label(detail,"已装备" if gun.is_use else "已拥有但未装备")
-		button(detail,"装备到手中",func(): selected_gun = int(id); PlayerData.changeWeapon(int(id),true); Demo.save_camp(); message.text = "已装备「%s」" % tr(gun.weapon_name))
+		button(detail,"装备到手中",func():
+			selected_gun = int(id)
+			if PlayerData.changeWeapon(int(id),true): message.text = "已装备「%s」" % tr(gun.weapon_name)
+			else: message.text = "切枪去抖中或角色无法装备，请稍后重试"
+			request_refresh())
 	else:
 		label(detail,"基础武器伤害 %.2f · %.2f次/秒\n弹匣 %d · 装填 %.2f秒\n价格：%d金币" % [gun.damage,gun.fire_rate,gun.bullets_max_count,gun.change_speed,Utils.weapon_money_list[id]])
 		button(detail,"金币购买",func(): purchase("weapon",id))
@@ -187,7 +208,7 @@ func show_attachment(id: String,am,owned: bool):
 	var compatible = []
 	for key in Utils.weapon_list:
 		var candidate = Utils.weapon_list[key].instantiate()
-		candidate.tags = gun_tags(int(key))
+		candidate.tags = DemoConfig.weapon_tags(int(key))
 		if am.can_equip(candidate): compatible.append(tr(candidate.weapon_name))
 		candidate.free()
 	label(detail,"兼容："+" / ".join(compatible))
@@ -217,14 +238,6 @@ func show_attachment(id: String,am,owned: bool):
 		if am.gun: button(detail,"卸回背包",func(): am.gun.removeAttachMent(am); message.text = "配件已卸回背包"; show_attachment(id,am,true))
 	else: button(detail,"购买到背包（未装备）",func(): purchase("attachment",id))
 
-func gun_tags(id: int) -> Array:
-	match id:
-		6: return ["beam","energy"]
-		112: return ["chain","energy"]
-		114: return ["projectile","explosive","energy"]
-		1,5,8,123: return ["projectile","spread"]
-	return ["projectile"]
-
 func show_talent(id: String):
 	clear_box(detail)
 	var d = DemoConfig.TALENTS[id]
@@ -233,17 +246,17 @@ func show_talent(id: String):
 	label(detail,d.info)
 	var cumulative = {"T01":"累计伤害 +%d%%" % (rank*8),"T03":"累计装填 -%d%%" % (rank*5),"T04":"累计弹匣 +%d%%" % (rank*10),"T10":"当前%d层，剩余%.1f秒；每层 +%d%%" % [Demo.kill_stacks,Demo.stack_time,rank*3],"T16":"已解锁" if rank else "未解锁","T24":"每次回复 %.2f；冷却剩余%.1f秒" % [rank*0.15,Demo.heal_cooldown]}
 	label(detail,cumulative[id],8)
-	label(detail,"已满级；不会扣款" if rank == d.max else "下一等级 %d → %d；按上述每级数值增加\n支付任选一种：100金币 或 1天赋点" % [rank,rank+1])
+	label(detail,"已满级；不会扣款" if rank == d.max else "下一等级 %d → %d；按上述每级数值增加\n支付任选一种：%d金币 或 1天赋点" % [rank,rank+1,DemoConfig.TALENT_GOLD_PRICE])
 	button(detail,"金币购买",func(): purchase("talent",id,"gold")).disabled = rank == d.max
 	button(detail,"天赋点升级",func(): purchase("talent",id,"points")).disabled = rank == d.max
 
 func equipment_list():
 	for id in PlayerData.player_weapon_list:
 		var gun = PlayerData.player_weapon_list[id]
-		button(listing,"枪 · "+tr(gun.weapon_name),func(): selected_gun = id; show_weapon(str(id),gun))
+		entry(("▶ " if gun.is_use else "枪 · ")+tr(gun.weapon_name),"gun:"+str(id),func(): selected_gun = id; show_weapon(str(id),gun))
 	label(listing,"配件实例（选择查看/安装）")
 	for am in PlayerData.player_am_list.values():
-		button(listing,"#%d %s%s" % [am.id,tr(am.am_name)," ✓" if am.gun else ""],func(): selection = str(am.id); show_attachment(str(am.am_id),am,true))
+		entry("#%d %s%s" % [am.id,tr(am.am_name)," ✓" if am.gun else ""],"am:"+str(am.id),func(): show_attachment(str(am.am_id),am,true))
 	button(listing,"原型拖拽背包",func():
 		if Utils.player.gun:
 			var inv = load("res://ui/Inventory.tscn").instantiate()
@@ -256,7 +269,7 @@ func stage_list():
 		return
 	button(listing,"继续下一关",func(): depart(Demo.next_stage,false))
 	for id in DemoConfig.ENCOUNTERS:
-		button(listing,DemoConfig.ENCOUNTERS[id].name,func():
+		entry(DemoConfig.ENCOUNTERS[id].name,str(id),func():
 			clear_box(detail)
 			label(detail,DemoConfig.ENCOUNTERS[id].name,10)
 			label(detail,DemoConfig.ENCOUNTERS[id].info+"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
@@ -264,9 +277,11 @@ func stage_list():
 	button(listing,"试玩补充资源",func(): Demo.replenish(); message.text = "两种钱包已补到至少9999；装备、天赋、关卡保持")
 	button(listing,"补充300备弹 · 10金币",func(): purchase("supply","ammo"))
 	button(listing,"恢复生命 · 10金币",func(): purchase("supply","health"))
-	button(listing,"营地练枪靶",func(): LevelServer.town.practice(); queue_free())
+	for count in [1,3]:
+		button(listing,"练枪：%d目标" % count,func(): LevelServer.town.practice(count); queue_free())
+	button(listing,"清理练枪靶与效果",func(): LevelServer.town.clear_practice(); message.text = "已清理；练枪不发金币、经验或击杀奖励")
 	label(detail,"正常下一关："+DemoConfig.ENCOUNTERS[Demo.next_stage].name)
-	label(detail,"原移动速度/冲刺/视角保持。\n快捷键1—7选枪；所有拥有武器可在配置页装备。\n练枪靶不掉落、不结算经验。")
+	label(detail,"原移动速度/冲刺/视角保持。\n原数字键1—7对应持有栏前7把；全部13把可在枪械页购买/装备，也可在当前配置选枪。\n练枪靶不掉落、不结算经验。")
 
 func depart(stage: int, trial: bool):
 	if not Utils.player.gun:
@@ -276,8 +291,10 @@ func depart(stage: int, trial: bool):
 		message.text = "当前仍在战斗；需先完成或返回营地"
 		return
 	Demo.pop_pause(self)
-	LevelServer.town.depart(stage,trial)
-	queue_free()
+	if LevelServer.town.depart(stage,trial): queue_free()
+	else:
+		Demo.push_pause(self)
+		message.text = "出发校验失败；位置与进度保持"
 
 func show_legacy(id: String,reward):
 	clear_box(detail)
@@ -285,7 +302,7 @@ func show_legacy(id: String,reward):
 	label(detail,tr(reward.reward_info))
 	var current = Utils.player.reward_root.get_node_or_null(reward.reward_name)
 	label(detail,"一次性补给（不计持久天赋）" if reward.only_start else "原型持久奖励：%d / %d" % [current.count if current else 0,reward.max_count])
-	button(detail,"100金币购买",func(): purchase("legacy",id))
+	button(detail,"%d金币购买" % DemoConfig.TALENT_GOLD_PRICE,func(): purchase("legacy",id))
 	button(detail,"1天赋点升级",func(): purchase("legacy",id,"points"))
 
 func _unhandled_input(event):

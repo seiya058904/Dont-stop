@@ -126,9 +126,11 @@ theme_override_font_sizes/font_size = 8
 text = "REFRESH"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"UI"
 stream = ExtResource("4_xfdjs")
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+bus = &"UI"
 stream = ExtResource("5_1ii6f")
 
 [connection signal="pressed" from="NinePatchRect/Button" to="." method="_on_button_pressed"]
