@@ -34,6 +34,18 @@ func _ready():
 	check(is_equal_approx(100-victim.HP,disc.effective.damage*2),"disc actual one hit outbound and one return")
 	await wait(1.1)
 	check(get_tree().get_nodes_in_group("combat_transient").is_empty(),"disc safely returns or expires")
+	await clean()
+	aim(disc)
+	get_tree().node_added.connect(trace_disc_lifecycle)
+	var freed_victim = enemy(origin+Vector2(45,8))
+	await wait(0.06)
+	disc._shoot()
+	await wait(0.1)
+	check(freed_victim.HP < 100,"disc freed-target setup has actual outbound hit")
+	freed_victim.queue_free()
+	await wait(1.5)
+	check(get_tree().get_nodes_in_group("combat_transient").is_empty(),"disc returns safely after hit target is freed")
+	get_tree().node_added.disconnect(trace_disc_lifecycle)
 	var rotary = PlayerData.player_weapon_list[124]
 	aim(rotary)
 	rotary.drive_spin(true,0.01)
@@ -56,3 +68,10 @@ func _ready():
 	await wait(1.5)
 	print("M3 SPECIAL SUMMARY checks=",checks," failures=",failures)
 	get_tree().quit.call_deferred(1 if failures else 0)
+
+func trace_disc_lifecycle(node):
+	if not (node is BaseMonster or node is Bullet): return
+	var identity = {"type":node.get_script().resource_path,"id":node.get_instance_id(),"created_ms":Time.get_ticks_msec(),"epoch":LevelServer.epoch}
+	print("DISC LIFECYCLE created ",JSON.stringify(identity))
+	node.tree_exiting.connect(func():
+		print("DISC LIFECYCLE exiting ",JSON.stringify(identity)," destroyed_ms=",Time.get_ticks_msec()," epoch=",LevelServer.epoch))

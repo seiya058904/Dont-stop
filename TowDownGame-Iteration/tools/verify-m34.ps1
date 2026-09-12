@@ -32,7 +32,8 @@ foreach ($case in $cases) {
     $assertionsPassed = $summary.Success -and $summary.Groups[2].Value -eq '0' -and $code -eq 0
     $runtimeError = ($out + $err) -match 'SCRIPT ERROR|Parse Error|FAIL '
     $knownExitDiagnostic = $err -match '2 ObjectDB instances were leaked at exit' -and $err -match '1 resources still in use at exit'
-    $unclassifiedError = $err -match 'ERROR:' -and -not $knownExitDiagnostic
+    $otherErrors = (($out + $err) -split "`r?`n" | Where-Object { $_ -match 'ERROR:' -and $_ -notmatch '^ERROR: 1 resources still in use at exit \(run with --verbose for details\)\.$' })
+    $unclassifiedError = @($otherErrors).Count -gt 0 -or ($err -match 'ERROR:' -and -not $knownExitDiagnostic)
     $cleanExit = -not ($err -match 'ERROR:|leaked at exit')
     $result = [ordered]@{ case = $case.name; checks = $summary.Groups[1].Value; assertions_passed = $assertionsPassed; clean_exit = $cleanExit; known_exit_diagnostic = $knownExitDiagnostic; code = $code; log = ('final-' + $case.name + '.txt') }
     $results += $result

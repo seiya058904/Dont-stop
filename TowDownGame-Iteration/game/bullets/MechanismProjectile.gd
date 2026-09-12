@@ -11,8 +11,11 @@ var returning = false
 
 func begin_return():
 	returning = true
+	# Physics exception RIDs may outlive a killed target; resolve our hit IDs instead.
+	for id in visited:
+		var body = instance_from_id(id)
+		if is_instance_valid(body): remove_collision_exception_with(body)
 	visited.clear()
-	for body in get_collision_exceptions(): remove_collision_exception_with(body)
 
 func gravity_field():
 	if finished: return
