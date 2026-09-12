@@ -1,5 +1,14 @@
 # TowDownGame Experience Demo
 
+## M5 当前执行（覆盖下方历史阶段门）
+
+- 基线：e9ca7c703767f54756351748bb084b55476c40aa，本地/远端0/0，仅计划ZIP未跟踪。
+- M3—M4 = IMPLEMENTED / ENGINEERING ACCEPTED（用户明确指定）。
+- H1_STATUS = DEFERRED_BY_USER；HUMAN_ACCEPTED = false；AUTHORIZED_SCOPE = M5。
+- 成功标准：12普通敌人、3Boss、6区、30遭遇真实战斗可达；24/24/24冻结；旧档兼容、正常与试玩进度分离；全部内容后至少20分钟/24循环统一长回归，完整日志和实体采样。
+- 按敌人→区域/遭遇→Boss/进度→验证分批提交推送现有分支。原三项目只读，不操作桌面、不发行、不合并main、不进入M6。
+- 当前：IMPLEMENTATION IN PROGRESS。
+
 ## M3—M4 H2候选（覆盖下方历史阶段门，2026-09-12）
 
 - M2-R1稳定基线：`0ab53f47f5c885c2790edf090743aedd513e2ef1`；开始时HEAD与origin一致，没有后续提交，工作树仅有用户计划ZIP未跟踪。
