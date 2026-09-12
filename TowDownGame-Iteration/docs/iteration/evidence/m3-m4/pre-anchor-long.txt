@@ -1,0 +1,106 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS round 1 select gun 117
+PASS round practice has no XP
+PASS background real practice collision gun 117
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":68,"fire_released":true,"generation":9,"gun":117,"guns":24,"input_shoot":false,"kills":56,"marks":0,"monsters":0,"nodes":508,"orphans":0,"remaining":[],"revives":0,"round":1,"seconds":50.762,"transients":0,"voices":1}
+PASS round 2 select gun 118
+PASS round practice has no XP
+PASS background real practice collision gun 118
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":192,"fire_released":true,"generation":9,"gun":118,"guns":24,"input_shoot":false,"kills":143,"marks":0,"monsters":0,"nodes":505,"orphans":0,"remaining":[],"revives":0,"round":2,"seconds":101.5,"transients":0,"voices":1}
+PASS round 3 select gun 119
+PASS round practice has no XP
+PASS background real practice collision gun 119
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":280,"fire_released":true,"generation":9,"gun":119,"guns":24,"input_shoot":false,"kills":212,"marks":0,"monsters":0,"nodes":497,"orphans":0,"remaining":[],"revives":0,"round":3,"seconds":152.296,"transients":0,"voices":1}
+PASS round 4 select gun 120
+PASS round practice has no XP
+PASS background real practice collision gun 120
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":369,"fire_released":true,"generation":9,"gun":120,"guns":24,"input_shoot":false,"kills":281,"marks":0,"monsters":0,"nodes":506,"orphans":0,"remaining":[],"revives":0,"round":4,"seconds":203.018,"transients":0,"voices":1}
+PASS round 5 select gun 111
+PASS round practice has no XP
+PASS background real practice collision gun 111
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":489,"fire_released":true,"generation":9,"gun":111,"guns":24,"input_shoot":false,"kills":369,"marks":0,"monsters":0,"nodes":505,"orphans":0,"remaining":[],"revives":0,"round":5,"seconds":253.902,"transients":0,"voices":1}
+PASS round 6 select gun 113
+PASS round practice has no XP
+PASS background real practice collision gun 113
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":560,"fire_released":true,"generation":9,"gun":113,"guns":24,"input_shoot":false,"kills":428,"marks":0,"monsters":0,"nodes":498,"orphans":0,"remaining":[],"revives":0,"round":6,"seconds":304.786,"transients":0,"voices":1}
+PASS round 7 select gun 115
+PASS round practice has no XP
+PASS background real practice collision gun 115
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":666,"fire_released":true,"generation":9,"gun":115,"guns":24,"input_shoot":false,"kills":515,"marks":0,"monsters":0,"nodes":521,"orphans":0,"remaining":[],"revives":0,"round":7,"seconds":355.705,"transients":0,"voices":1}
+PASS round 8 select gun 116
+PASS round practice has no XP
+PASS background real practice collision gun 116
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":882,"fire_released":true,"generation":9,"gun":116,"guns":24,"input_shoot":false,"kills":602,"marks":0,"monsters":0,"nodes":496,"orphans":0,"remaining":[],"revives":0,"round":8,"seconds":406.596,"transients":0,"voices":1}
+PASS round 9 select gun 121
+PASS round practice has no XP
+PASS background real practice collision gun 121
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":952,"fire_released":true,"generation":9,"gun":121,"guns":24,"input_shoot":false,"kills":666,"marks":0,"monsters":0,"nodes":501,"orphans":0,"remaining":[],"revives":0,"round":9,"seconds":457.482,"transients":0,"voices":1}
+PASS round 10 select gun 122
+PASS round practice has no XP
+PASS background real practice collision gun 122
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+ERROR: Parameter "body" is null.
+   at: body_get_object_instance_id (modules/godot_physics_2d/godot_physics_server_2d.cpp:689)
+   GDScript backtrace (most recent call first):
+       [0] begin_return (res://game/bullets/MechanismProjectile.gd:15)
+       [1] _physics_process (res://game/bullets/MechanismProjectile.gd:64)
+ERROR: Required object "rp_node" is null.
+   at: remove_collision_exception_with (scene/2d/physics/physics_body_2d.cpp:170)
+   GDScript backtrace (most recent call first):
+       [0] begin_return (res://game/bullets/MechanismProjectile.gd:15)
+       [1] _physics_process (res://game/bullets/MechanismProjectile.gd:64)
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":1064,"fire_released":true,"generation":9,"gun":122,"guns":24,"input_shoot":false,"kills":736,"marks":0,"monsters":0,"nodes":498,"orphans":0,"remaining":[],"revives":0,"round":10,"seconds":508.376,"transients":0,"voices":1}
+PASS round 11 select gun 124
+PASS round practice has no XP
+PASS background real practice collision gun 124
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":27,"bot":false,"damage_events":1184,"fire_released":true,"generation":9,"gun":124,"guns":24,"input_shoot":false,"kills":809,"marks":0,"monsters":0,"nodes":521,"orphans":0,"remaining":[],"revives":0,"round":11,"seconds":559.136,"transients":0,"voices":1}
+PASS round 12 select gun 0
+PASS round practice has no XP
+PASS background real practice collision gun 0
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once

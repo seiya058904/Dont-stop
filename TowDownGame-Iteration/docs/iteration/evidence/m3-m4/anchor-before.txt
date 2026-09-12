@@ -1,11 +1,11 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
-THERMAL local gun position before=(2.0, -7.0) after=(2.0, -7.0)
+THERMAL local gun position before=(2.0, -7.0) after=(1.916647, -7.083354)
 THERMAL fps=30 actual_ticks=20
-PASS local gun returns to same resting anchor at 30
-THERMAL local gun position before=(2.0, -7.0) after=(2.0, -7.0)
+FAIL local gun returns to same resting anchor at 30
+THERMAL local gun position before=(2.0, -7.0) after=(1.615324, -7.384676)
 THERMAL fps=160 actual_ticks=20
-PASS local gun returns to same resting anchor at 160
+FAIL local gun returns to same resting anchor at 160
 PASS fixed tick throughput independent of process FPS
 PASS thermal accumulator cancelled release
 PASS thermal accumulator cancelled pause
@@ -13,4 +13,4 @@ PASS thermal accumulator cancelled switch
 PASS thermal accumulator cancelled reload
 PASS thermal accumulator cancelled death
 PASS thermal accumulator cancelled camp
-M4 THERMAL SUMMARY checks=9 failures=0
+M4 THERMAL SUMMARY checks=9 failures=2

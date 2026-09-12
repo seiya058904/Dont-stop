@@ -24,6 +24,7 @@ func _ready():
 	var target = enemy(origin+Vector2(40,8)); target.training = true
 	await wait(0.05)
 	var results = []
+	var original_local = gun.position
 	for fps in [30,160]:
 		Engine.max_fps = fps
 		gun.cancel_actions()
@@ -33,8 +34,10 @@ func _ready():
 		await wait(2.0)
 		running = false
 		results.append(70-gun.bullets_count)
+		print("THERMAL local gun position before=",original_local," after=",gun.position)
 		print("THERMAL fps=",fps," actual_ticks=",70-gun.bullets_count)
 		await wait(0.2)
+		check(gun.position.distance_to(original_local) < 0.01,"local gun returns to same resting anchor at "+str(fps))
 	check(absi(results[0]-results[1]) <= 1 and mini(results[0],results[1]) >= 19,"fixed tick throughput independent of process FPS")
 	for stop in ["release","pause","switch","reload","death","camp"]:
 		aim(gun)

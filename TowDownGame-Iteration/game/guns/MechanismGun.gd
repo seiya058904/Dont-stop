@@ -5,8 +5,10 @@ var charge_time = 0.0
 var sustained = false
 var spin = 0.0
 var thermal_clock = 0.0
+var resting_position = Vector2.ZERO
 
 func _ready():
+	resting_position = position
 	var spec = WeaponCatalog.definition(weapon_id)
 	damage = spec.damage
 	fire_rate = spec.rate
@@ -14,6 +16,12 @@ func _ready():
 	change_speed = spec.reload
 	bullet_speed = spec.speed
 	super._ready()
+
+func _shootAnim():
+	if not is_use or player.is_dead or get_tree().paused: return
+	# Recoil always returns to the scene anchor, not an intermediate tween position.
+	position = resting_position
+	super._shootAnim()
 
 func drive_spin(pressed: bool, delta: float):
 	var spec = WeaponCatalog.definition(weapon_id)
