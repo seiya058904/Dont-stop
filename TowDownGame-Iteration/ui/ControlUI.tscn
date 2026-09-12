@@ -638,6 +638,7 @@ texture = ExtResource("9_ud0yi")
 [connection signal="pressed" from="MainUI/VBoxContainer/start" to="MainUI" method="_on_start_pressed"]
 [connection signal="pressed" from="MainUI/VBoxContainer/mod" to="MainUI" method="_on_mod_pressed"]
 [connection signal="pressed" from="MainUI/VBoxContainer/setting" to="MainUI" method="_on_setting_pressed"]
+[connection signal="pressed" from="MainUI/VBoxContainer/quit" to="MainUI" method="_on_quit_pressed"]
 [connection signal="item_selected" from="MainUI/SettingUI/VBoxContainer/VBoxContainer/language" to="MainUI/SettingUI" method="_on_language_item_selected"]
 [connection signal="value_changed" from="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control/shake" to="MainUI/SettingUI" method="_on_shake_value_changed"]
 [connection signal="value_changed" from="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control2/volume" to="MainUI/SettingUI" method="_on_volume_value_changed"]

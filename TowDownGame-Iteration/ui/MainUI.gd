@@ -26,6 +26,9 @@ func onGameStart():
 func _on_setting_pressed() -> void:
 	Demo.open_settings()
 
+func _on_quit_pressed() -> void:
+	Demo.quit_game()
+
 func _on_mod_pressed() -> void:
 	#Utils.showToast("WAIT_MORE")
 	pass
