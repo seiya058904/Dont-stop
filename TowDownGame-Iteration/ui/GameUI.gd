@@ -2,7 +2,6 @@ extends Control
 
 const weapon_item_pre = preload("res://ui/widgets/WeaponListItem.tscn")
 const weapon_bullet_pre = preload("res://ui/widgets/BulletCountItem.tscn")
-const weapon_inventory = preload("res://ui/Inventory.tscn")
 const rw_top = preload("res://ui/widgets/RewardTopItem.tscn")
 
 @onready var change_audio = $AudioStreamPlayer2D

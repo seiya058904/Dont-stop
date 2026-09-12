@@ -1,0 +1,114 @@
+extends "res://tests/M3Weapons.gd"
+func equip(id: int, _gun):
+	Demo.owned_global_upgrades = [str(id)]; Demo.refresh()
+	return id
+func _ready():
+	Demo.test_mode = true
+	var main = load("res://game/map/Main.tscn").instantiate()
+	add_child(main)
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
+	await wait(0.2)
+	Utils.player.global_position = origin-Vector2(100,0)
+	for id in [0,1,111,114,117,120,124]: Demo.try_purchase("weapon",str(id))
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	LevelServer.state = "COMBAT"
+	var gun = PlayerData.player_weapon_list[117]
+	aim(gun)
+	var am = equip(119,gun)
+	var target = enemy(origin+Vector2(-40,8))
+	var barrier = wall(origin+Vector2(60,0),Vector2(4,120))
+	await wait(0.06)
+	gun._shoot()
+	await wait(0.6)
+	check(is_equal_approx(100-target.HP,snappedf(gun.effective.damage*0.85,0.01)),"A19 actual reflected hit retains 85 percent")
+	barrier.queue_free(); Demo.owned_global_upgrades.clear(); Demo.refresh()
+	await clean()
+	gun = PlayerData.player_weapon_list[120]
+	aim(gun)
+	target = enemy(origin+Vector2(150,65))
+	await wait(0.06)
+	gun._shoot()
+	var first = get_tree().get_nodes_in_group("combat_transient").filter(func(n): return n is Bullet)[0]
+	var initial = first.velocity.angle()
+	for frame in 4: await get_tree().physics_frame
+	var normal_turn = absf(first.velocity.angle()-initial)/first.age
+	await clean()
+	target = enemy(origin+Vector2(150,65))
+	aim(gun)
+	am = equip(123,gun)
+	await wait(0.06)
+	gun._shoot()
+	first = get_tree().get_nodes_in_group("combat_transient").filter(func(n): return n is Bullet)[0]
+	initial = first.velocity.angle()
+	for frame in 4: await get_tree().physics_frame
+	# Compare observed angular rate over actual physics age; wall time can span 3 or 4 ticks.
+	check(absf(first.velocity.angle()-initial)/first.age > normal_turn,"A23 real projectile turns faster")
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	await clean()
+	gun = PlayerData.player_weapon_list[124]
+	aim(gun)
+	gun.drive_spin(true,0.6)
+	var initial_spin = gun.spin
+	gun.spin = 0
+	am = equip(115,gun)
+	gun.drive_spin(true,0.6)
+	check(gun.spin > initial_spin,"A15 actual faster warmup")
+	gun.bullets_count = 0; PlayerData.reserve_magazines = 1000
+	gun.reload_ammo()
+	check(is_equal_approx(gun.change_timer.wait_time,gun.base_stats.reload*0.85),"A15 actual reload timer reduced")
+	gun.cancel_actions(); Demo.owned_global_upgrades.clear(); Demo.refresh()
+	gun = PlayerData.player_weapon_list[0]
+	aim(gun)
+	var length = gun.timer.wait_time
+	gun._shootAnim()
+	await wait(length*0.82)
+	var ordinary_scale = gun.gun_image.scale.x
+	await wait(length)
+	am = equip(116,gun)
+	gun._shootAnim()
+	await wait(length*0.82)
+	check(is_equal_approx(gun.gun_image.scale.x,1.0) and ordinary_scale < 1.0,"A16 actual local recoil recovers earlier")
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	await clean()
+	aim(gun)
+	target = enemy(origin+Vector2(60,8),10000)
+	var base_damage = gun.effective.damage
+	am = equip(114,gun)
+	var bullet = gun.bullet_scene.instantiate(); add_child(bullet); bullet.position = origin; bullet.rotation = 0; gun.fire(bullet)
+	await wait(0.3)
+	check(10000-target.HP > base_damage,"A14 actual collision damage increased")
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	am = equip(117,gun)
+	Combat.hit(target,gun.damage_context())
+	check(is_equal_approx(target.velocity.length(),gun.effective.impulse-target.knockback_def),"A17 actual received impulse")
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	am = equip(110,gun)
+	seed(110)
+	for i in 200: Combat.hit(target,gun.damage_context())
+	check(target.critical_total > 0,"A10 actual critical events")
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	await clean()
+	gun = PlayerData.player_weapon_list[1]
+	aim(gun)
+	gun._shoot()
+	var shots = get_tree().get_nodes_in_group("combat_transient").filter(func(n): return n is Bullet)
+	var normal_angle = absf(shots[0].velocity.angle())
+	await clean()
+	am = equip(112,gun)
+	gun._shoot()
+	shots = get_tree().get_nodes_in_group("combat_transient").filter(func(n): return n is Bullet)
+	check(is_equal_approx(absf(shots[0].velocity.angle()),normal_angle*0.75),"A12 actual pellet spread reduced")
+	Demo.owned_global_upgrades.clear(); Demo.refresh()
+	await clean()
+	gun = PlayerData.player_weapon_list[114]
+	aim(gun)
+	target = enemy(origin+Vector2(35,0))
+	Combat.explosion_context(origin,gun.effective.radius,gun.damage_context())
+	check(target.HP == 100,"A21 baseline explosion misses edge")
+	am = equip(121,gun)
+	Combat.explosion_context(origin,gun.effective.radius,gun.damage_context())
+	check(target.HP < 100,"A21 actual expanded explosion reaches edge")
+	await clean()
+	await wait(1)
+	print("M8 MECHANICS SUMMARY checks=",checks," failures=",failures)
+	get_tree().quit.call_deferred(1 if failures else 0)

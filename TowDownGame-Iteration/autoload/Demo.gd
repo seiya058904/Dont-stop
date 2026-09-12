@@ -4,6 +4,8 @@ signal changed
 signal restored
 var talents: Dictionary = {}
 var purchases: Array = []
+var owned_global_upgrades: Array = []
+var grenade_cooldown = 0.0
 var next_instance = 1
 var campaign_complete = false
 var next_stage = 1
@@ -106,6 +108,8 @@ func _start():
 	var hud = Label.new()
 	hud.set_script(load("res://ui/DemoHUD.gd"))
 	Utils.canvasLayer.add_child(hud)
+	var boss_hud = load("res://ui/BossHUD.gd").new()
+	Utils.canvasLayer.add_child(boss_hud)
 	apply_audio_settings()
 	Utils.shake = ConfigUtils.getConfig("demo","shake") if ConfigUtils.getConfig("demo","shake") != null else 0.35
 	Combat.reduced_flash = ConfigUtils.getConfig("demo","reduced_flash") == true
@@ -154,6 +158,7 @@ func refresh():
 func _process(delta):
 	if not Input.is_action_pressed("shoot"): fire_released = true
 	if get_tree().paused: return
+	grenade_cooldown = maxf(0,grenade_cooldown-delta)
 	for id in talent_cooldowns: talent_cooldowns[id] = maxf(0,talent_cooldowns[id]-delta)
 	crowd_clock -= delta
 	if crowd_clock <= 0:
@@ -211,6 +216,7 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 		price = Utils.weapon_money_list[id]
 		obtained = Utils.weapon_list[id].instantiate()
 	elif kind == "attachment" and Utils.am_dict.has(id) and currency == "gold":
+		if id in owned_global_upgrades: return {"success":false,"reason":"强化已激活；未扣款"}
 		obtained = Utils.am_dict[id].instantiate()
 		price = obtained.money
 	elif kind == "talent" and DemoConfig.TALENTS.has(id):
@@ -238,13 +244,12 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 	match kind:
 		"weapon":
 			PlayerData.add_weapon(obtained)
-			result.reason = "已购买「%s」· %d金币\n%s" % [tr(obtained.weapon_name), price, "已装备" if obtained.is_use else "已拥有但未装备；在配置页选枪"]
+			result.reason = "已购买「%s」· %d金币\n%s" % [tr(obtained.weapon_name), price, "已装备" if obtained.is_use else "已拥有；在武器页选择装备"]
 		"attachment":
-			obtained.id = next_instance
-			next_instance += 1
-			PlayerData.add_attachment(obtained)
-			result.instance_id = obtained.id
-			result.reason = "已购买「%s」· %d金币 · 未装备\n已定位到新实例；确认属性后点击安装" % [tr(obtained.am_name),price]
+			owned_global_upgrades.append(id)
+			owned_global_upgrades.sort()
+			result.reason = "「%s」已激活 · %d金币\n所有当前和未来武器自动生效" % [tr(obtained.am_name),price]
+			obtained.free()
 		"talent":
 			talents[id] = rank(id)+1
 			talent_payments.append({"id":id,"level":rank(id),"currency":currency,"amount":price})
@@ -301,9 +306,7 @@ func on_kill(monster, context: Dictionary):
 func snapshot() -> Dictionary:
 	var weapons = []
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
-	var attachments = []
-	for am in PlayerData.player_am_list.values(): attachments.append({"definition":str(am.am_id),"instance":am.id,"gun":str(am.gun.weapon_id) if is_instance_valid(am.gun) else ""})
-	return {"schema_version":5,"campaign_complete":campaign_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":6,"campaign_complete":campaign_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}
@@ -348,6 +351,8 @@ func load_camp() -> bool:
 	for reward in Utils.player.reward_root.get_children(): reward.free()
 	Utils.player.SPEED = 100 * PlayerData.player_speed
 	talents = data.talents.duplicate()
+	owned_global_upgrades = data.owned_global_upgrades.duplicate()
+	grenade_cooldown = 0
 	talent_payments = data.talent_payments.duplicate(true)
 	applied_talent_hp = DemoConfig.talent_value("T07",rank("T07"))
 	reset_revision += 1
@@ -358,15 +363,6 @@ func load_camp() -> bool:
 	PlayerData.player_exp = data.exp
 	for w in data.weapons:
 		PlayerData.add_weapon(Utils.weapon_list[w.id].instantiate())
-	for a in data.attachments:
-		var am = Utils.am_dict[a.definition].instantiate()
-		am.id = int(a.instance)
-		PlayerData.add_attachment(am)
-		if a.gun != "":
-			var gun = PlayerData.player_weapon_list[int(a.gun)]
-			gun.attachments_dict[am.am_type] = am
-			am.reparent(gun.attachments_node)
-			am.gun = gun
 	purchases = data.legacy.duplicate()
 	for id in purchases:
 		var reward = RewardServer.reward_list[id].instantiate()
@@ -374,7 +370,6 @@ func load_camp() -> bool:
 		else: RewardServer.addReward(reward)
 	for reward in Utils.player.reward_root.get_children():
 		if reward.id == 10: reward.kill_count = int(data.legacy_state.get("10",0))
-	next_instance = int(data.next_instance)
 	campaign_complete = data.get("campaign_complete",false)
 	next_stage = int(data.next_stage)
 	selected_stage = int(data.selected_stage)
@@ -398,6 +393,7 @@ func load_camp() -> bool:
 	save_result = {"success":true,"reason":"已恢复"}
 	restored.emit()
 	changed.emit()
+	if parsed.schema_version < 6 and not test_mode: save_camp()
 	return true
 
 func valid_save(data) -> bool:
@@ -421,7 +417,7 @@ func export_bad_save() -> String:
 func create_new_save() -> bool:
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
-	var fresh = {"schema_version":5,"campaign_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"attachments":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_instance":1,"next_stage":1,"selected_stage":1,"equipped":""}
+	var fresh = {"schema_version":6,"campaign_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"equipped":""}
 	var result = save_store.save(save_path,fresh)
 	if not result.success: return false
 	return load_camp()
@@ -459,3 +455,18 @@ func finish_quit():
 func _notification(what):
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and Utils.is_game_start and LevelServer.state == "COMBAT" and pause_stack.is_empty():
 		open_panel()
+
+func fire_global_grenade(point: Vector2) -> bool:
+	if not "9" in owned_global_upgrades or grenade_cooldown > 0 or get_tree().paused or not is_instance_valid(Utils.player) or Utils.player.is_dead or not Utils.player.gun: return false
+	if LevelServer.state != "COMBAT": return false
+	grenade_cooldown = 2.0
+	var grenade = load("res://game/other/Grenade.tscn").instantiate()
+	grenade.hurt = Utils.player.gun.effective.damage*0.35
+	grenade.global_position = Utils.player.gun.global_position
+	get_tree().current_scene.add_child(grenade)
+	grenade.launch(point)
+	return true
+
+func _unhandled_input(event):
+	if event.is_action_pressed("mouse_right") and pause_stack.is_empty() and is_instance_valid(Utils.player):
+		if fire_global_grenade(Utils.player.get_global_mouse_position()): get_viewport().set_input_as_handled()

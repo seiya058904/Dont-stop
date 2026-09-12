@@ -106,9 +106,8 @@ func add_weapons(weapons :Array):
 	emit_signal("playerWeaponListChange")
 
 func add_attachment(am:BaseAttachment):
-	if !player_am_list.has(am.id):
-		player_am_list[am.id] = am
-		add_child(am)
+	# Legacy scene entry point cannot create inventory in the M8 product model.
+	am.free()
 
 var switch_deadline = 0
 var switch_remaining = 0.0

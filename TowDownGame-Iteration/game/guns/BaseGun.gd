@@ -93,7 +93,7 @@ func onPlayerFireRateChange(_rate):
 
 func updateGun():
 	if base_stats.is_empty() or Demo.loading: return
-	effective = EffectiveStats.calculate(self, attachments_dict.values())
+	effective = EffectiveStats.calculate(self)
 	bullets_max_count = effective.magazine
 	if bullets_count > bullets_max_count:
 		bullets_count = bullets_max_count
@@ -101,28 +101,11 @@ func updateGun():
 	if is_use: PlayerData.onWeaponBulletsChange.emit(bullets_count,bullets_max_count)
 
 func addAttachMent(am:BaseAttachment) -> bool:
-	if not am.can_equip(self): return false
-	if am.gun == self: return true
-	cancel_actions()
-	if is_instance_valid(am.gun): am.gun.removeAttachMent(am)
-	if attachments_dict.has(am.am_type): removeAttachMent(attachments_dict[am.am_type])
-	attachments_dict[am.am_type] = am
-	am.reparent(attachments_node)
-	am.gun = self
-	updateGun()
-	Demo.changed.emit()
-	Demo.save_camp()
-	return true
+	# Retired API retained for historical scenes; M8 has no installation state.
+	return false
 
 func removeAttachMent(am:BaseAttachment):
-	if am.gun != self: return
-	cancel_actions()
-	attachments_dict.erase(am.am_type)
-	am.reparent(PlayerData)
-	am.gun = null
-	updateGun()
-	Demo.changed.emit()
-	Demo.save_camp()
+	pass
 
 func cancel_actions():
 	if is_instance_valid(tier_muzzle): tier_muzzle.stop()

@@ -24,19 +24,16 @@ const weapon_choose = preload("res://ui/widgets/WeaponChoose.tscn")
 const monster_pre = preload("res://game/monster/Monster 2/Monster2.tscn")
 const death_borad = preload("res://ui/widgets/DeathBoard.tscn")
 
-var camp_actions: HBoxContainer
+var camp_prompt: Label
 
 func _ready():
 	LevelServer.town = self
-	camp_actions = HBoxContainer.new()
-	camp_actions.position = Vector2(70,188)
-	$CanvasLayer.add_child(camp_actions)
-	for pair in [["买枪","weapon"],["买弹匣","magazine"],["装配件","attachment"],["升天赋","talent"],["出发","stage"]]:
-		var action = Button.new()
-		action.text = pair[0]; action.custom_minimum_size = Vector2(50,20)
-		action.add_theme_font_size_override("font_size",8)
-		camp_actions.add_child(action)
-		action.pressed.connect(func(): Demo.open_panel(); Demo.ui.switch_tab(pair[1]))
+	camp_prompt = Label.new()
+	camp_prompt.text = "按 E 打开营地"
+	camp_prompt.position = Vector2(165,188)
+	camp_prompt.add_theme_font_size_override("font_size",8)
+	camp_prompt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$CanvasLayer.add_child(camp_prompt)
 	call_deferred("build_navigation")
 	LevelServer.monsterCreate.connect(self.monsterCreate)
 	LevelServer.roundVictory.connect(self.roundVictory)
@@ -85,7 +82,7 @@ func onTimeTick(timeout) -> void:
 
 #回合开始
 func onRoundStart():
-	camp_actions.hide()
+	camp_prompt.hide()
 	Utils.showToast("START_TIP",2)
 	$CanvasLayer/timeout.visible = true
 	$CanvasLayer/level.visible = true
@@ -93,7 +90,7 @@ func onRoundStart():
 
 #回合结束
 func onRoundEnd():
-	camp_actions.show()
+	camp_prompt.show()
 	if is_instance_valid(arena): arena.queue_free(); arena = null
 	Utils.player.global_position = $PositionHome.global_position
 	$CanvasLayer/timeout.text = "营地整备 · E 商店 / Tab 配置"
@@ -166,8 +163,7 @@ func monsterCreate():
 	var point = spawn_point()
 	if point == Vector2.INF: return
 	var role = config.roles[LevelServer.spawn_index % config.roles.size()]
-	if config.rhythm == "交替": role = config.roles[int(LevelServer.level_info.time/7)%config.roles.size()]
-	if config.rhythm == "三段": role = config.roles[mini(2,int(LevelServer.level_info.time/15))*2%config.roles.size()]
+	# Rhythm controls arrival timing, never replaces a mixed roster with one role for 7-15 seconds.
 	LevelServer.spawn_index += 1
 	var ins = M5Content.spawn(role,monster_root,point)
 	if config.rhythm == "精英" and LevelServer.level_info.time >= 30 and not LevelServer.elite_spawned:

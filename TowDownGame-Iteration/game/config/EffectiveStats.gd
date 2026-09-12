@@ -1,7 +1,8 @@
 extends RefCounted
 class_name EffectiveStats
 
-static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictionary:
+static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionary:
+	if upgrades == null: upgrades = Demo.owned_global_upgrades if saved.is_empty() else saved.get("owned_global_upgrades",[])
 	var b = gun.base_stats
 	var ranks = Demo.talents if saved.is_empty() else saved.talents
 	var level_damage = PlayerData.player_damage if saved.is_empty() else 0.3 * saved.level
@@ -23,9 +24,12 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 	if "straight" in gun.tags: extras.pierce += int(ranks.get("T13",0))
 	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))
 	if "continuous" in gun.tags: damage_mul *= cycle
-	for am in attachments:
-		if AttachmentCatalog.DEFINITIONS.has(am.am_id):
-			var d = AttachmentCatalog.DEFINITIONS[am.am_id]
+	var applied = {}
+	for upgrade in upgrades:
+		var id = int(upgrade) if upgrade is String or upgrade is StringName or upgrade is int else upgrade.am_id
+		if AttachmentCatalog.DEFINITIONS.has(id) and not applied.has(id):
+			applied[id] = true
+			var d = AttachmentCatalog.DEFINITIONS[id]
 			magazine_mul *= d.get("magazine_mul",1.0)
 			crit += d.get("crit",0.0)
 			damage_percent += d.get("damage",0.0)

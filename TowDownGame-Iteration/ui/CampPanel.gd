@@ -15,14 +15,12 @@ var refresh_pending = false
 var search_text = ""
 var category = "全部"
 var owned_only = false
-var compatible_only = false # Legacy fixture field; universal attachments need no filter.
 var tier_filter = 0
 var sort_mode = 0
 var action_bar: VBoxContainer
 var tab_buttons = {}
 var tier_box: OptionButton
 var sort_box: OptionButton
-var purchased_instance = -1
 var tab_state: Dictionary = {}
 var search_box: LineEdit
 var category_box: OptionButton
@@ -108,7 +106,7 @@ func _ready():
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)
-	for pair in [["weapon","武器"],["attachment","配件"],["magazine","弹匣补给"],["talent","天赋"],["stage","出发"],["equipment","装备"]]:
+	for pair in [["weapon","武器"],["attachment","武器强化"],["magazine","弹匣补给"],["talent","天赋"],["stage","出发"]]:
 		var nav = button(tabs,pair[1],func(): switch_tab(pair[0]))
 		nav.toggle_mode = true
 		nav.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -123,7 +121,7 @@ func _ready():
 	search_box.text_changed.connect(func(value): search_text = value; request_refresh())
 	category_box = OptionButton.new()
 	category_box.add_theme_font_size_override("font_size",7)
-	for item in ["全部","实体","能量","爆炸","特殊","Optics","Muzzle","Barrel","Underbarrel","Ammunition","Stock","Tactical","Perks"]: category_box.add_item(item)
+	for item in ["全部","实体","能量","爆炸","特殊"]: category_box.add_item(item)
 	filters.add_child(category_box)
 	category_box.item_selected.connect(func(index): category = category_box.get_item_text(index); request_refresh())
 	var owned = CheckButton.new()
@@ -195,6 +193,7 @@ func render():
 	detail_actions.clear()
 	update_wallet()
 	for key in tab_buttons: tab_buttons[key].set_pressed_no_signal(key == tab)
+	category_box.visible = tab == "weapon"
 	tier_box.visible = tab == "weapon"
 	sort_box.visible = tab == "weapon"
 	clear_box(listing)
@@ -226,16 +225,10 @@ func render():
 			for id in Utils.am_dict:
 				var am = Utils.am_dict[id].instantiate()
 				cached.append(am)
-				if AttachmentCatalog.DEFINITIONS.has(am.am_id): am.am_info = AttachmentCatalog.DEFINITIONS[am.am_id].info
-				var instances = PlayerData.player_am_list.values().filter(func(a): return a.am_id == am.am_id)
-				var slots = [am.am_type.trim_prefix("WEAPON_").capitalize().replace(" ","")]
-				if not matches(tr(am.am_name)+id+tr(am.am_info),slots): continue
-				if owned_only and instances.is_empty(): continue
-				if compatible_only and (not active_gun() or not am.can_equip(active_gun())): continue
-				entry(tr(am.am_name)+(" ✓×%d" % instances.size() if not instances.is_empty() else ""),id,func():
-					var instance = PlayerData.player_am_list.get(purchased_instance)
-					if instance and instance.am_id == am.am_id: show_attachment(id,instance,true)
-					else: show_attachment(id,am,false))
+				var active = id in Demo.owned_global_upgrades
+				if not matches(tr(am.am_name)+AttachmentCatalog.DEFINITIONS[am.am_id].info): continue
+				if owned_only and not active: continue
+				entry(tr(am.am_name)+"\n"+("✓ 已激活" if active else "%d金币 · 未激活" % am.money),id,func(): show_attachment(id,am,active))
 		"magazine": magazine_list()
 		"talent":
 			button(listing,"重置计划天赋 / 查看退款",show_reset)
@@ -259,12 +252,8 @@ func render():
 func purchase(kind: String,id: String,currency = "gold"):
 	var result = Demo.try_purchase(kind,id,currency)
 	message.text = result.reason
-	if result.success:
-		Demo.play_ui()
-	if result.success and kind == "attachment":
-		purchased_instance = result.instance_id
-		selection = id
-	else: selection = id
+	if result.success: Demo.play_ui()
+	selection = id
 	request_refresh()
 
 func show_weapon(id: String, gun):
@@ -277,7 +266,7 @@ func show_weapon(id: String, gun):
 	if stats.is_empty():
 		gun.tags = DemoConfig.weapon_tags(int(id))
 		gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
-		stats = EffectiveStats.calculate(gun,[])
+		stats = EffectiveStats.calculate(gun)
 	label(detail,"伤害 %.2f · 射速 %.1f次/秒\n弹匣 %d · 换弹 %.2f秒" % [stats.damage,stats.rate,stats.magazine,stats.reload],8)
 	label(detail,WeaponCatalog.short_info(int(id)))
 	label(detail," / ".join(WeaponCatalog.labels(int(id))))
@@ -309,39 +298,16 @@ func magazine_list():
 func active_gun():
 	return PlayerData.player_weapon_list.get(selected_gun,Utils.player.gun)
 
-func show_attachment(id: String,am,owned: bool):
+func show_attachment(id: String,am,_owned: bool):
 	clear_box(detail)
 	label(detail,tr(am.am_name),10)
-	if AttachmentCatalog.DEFINITIONS.has(am.am_id): am.am_info = AttachmentCatalog.DEFINITIONS[am.am_id].info
-	label(detail,"槽位：%s\n%s\n价格：%d金币" % [tr(am.am_type),tr(am.am_info),am.money])
-	var gun = active_gun()
-	if gun:
-		label(detail,"目标枪：" + tr(gun.weapon_name))
-		if am.can_equip(gun):
-			var preview = gun.attachments_dict.duplicate()
-			var old = preview.get(am.am_type)
-			preview[am.am_type] = am
-			var after = EffectiveStats.calculate(gun,preview.values())
-			var comparison = "装配前 → 后\n伤害 %.2f → %.2f · 弹匣 %d → %d\n装填 %.2f → %.2f秒\n暴击 %.0f → %.0f%%" % [gun.effective.damage,after.damage,gun.effective.magazine,after.magazine,gun.effective.reload,after.reload,gun.effective.crit*100,after.crit*100]
-			if "projectile" in gun.tags or "beam" in gun.tags: comparison += "\n冲量 %.1f → %.1f" % [gun.effective.impulse,after.impulse]
-			if "spread" in gun.tags: comparison += "\n散布 %.2f → %.2f" % [gun.effective.spread,after.spread]
-			if "explosive" in gun.tags: comparison += "\n爆炸半径 %.1f → %.1f" % [gun.effective.radius,after.radius]
-			if "chain" in gun.tags: comparison += "\n电弧后跳 %d → %d" % [gun.effective.jumps,after.jumps]
-			label(detail,comparison)
-
-			if old and old != am: label(detail,"替换「%s」；旧件返回背包" % tr(old.am_name))
-			if owned:
-				button(detail,"安装到此枪",func():
-					if gun.addAttachMent(am):
-						message.text = "已装备：%s → %s · %s" % [tr(am.am_name),tr(gun.weapon_name),tr(am.am_type)]
-						if old and old != am: message.text += "；旧件已返回背包"
-						show_attachment(id,am,true))
-		else: label(detail,"此枪不兼容；可购买后用于其他兼容枪")
-	if owned:
-		label(detail,"实例 #%d · %s" % [am.id,"未装备" if am.gun == null else "已装备到 "+tr(am.gun.weapon_name)])
-		if am.gun: button(detail,"卸回背包",func(): am.gun.removeAttachMent(am); message.text = "配件已卸回背包"; show_attachment(id,am,true))
-	else: button(detail,"购买到背包（未装备）",func(): purchase("attachment",id))
-	if owned: button(detail,"再购买一个独立实例",func(): purchase("attachment",id))
+	label(detail,AttachmentCatalog.DEFINITIONS[am.am_id].info,8)
+	label(detail,"所有当前和未来武器自动生效",8)
+	label(detail,"价格：%d金币" % am.money,8)
+	var active = id in Demo.owned_global_upgrades
+	label(detail,"✓ 已激活" if active else "未激活",9)
+	var action = button(detail,"✓ 已激活" if active else "%d金币 | 购买" % am.money,func(): purchase("attachment",id))
+	action.disabled = active
 
 func show_talent(id: String):
 	clear_box(detail)
@@ -359,16 +325,7 @@ func show_talent(id: String):
 	button(detail,"天赋点升级",func(): purchase("talent",id,"points")).disabled = rank == d.max
 
 func equipment_list():
-	for id in PlayerData.player_weapon_list:
-		var gun = PlayerData.player_weapon_list[id]
-		entry(("▶ " if gun.is_use else "枪 · ")+tr(gun.weapon_name),"gun:"+str(id),func(): selected_gun = id; show_weapon(str(id),gun))
-	label(listing,"配件实例（选择查看/安装）")
-	for am in PlayerData.player_am_list.values():
-		entry("#%d %s%s" % [am.id,tr(am.am_name)," ✓" if am.gun else ""],"am:"+str(am.id),func(): show_attachment(str(am.am_id),am,true))
-	button(listing,"原型拖拽背包",func():
-		if Utils.player.gun:
-			var inv = load("res://ui/Inventory.tscn").instantiate()
-			get_parent().add_child(inv))
+	switch_tab("weapon")
 
 func stage_list():
 	if LevelServer.state != "CAMP":

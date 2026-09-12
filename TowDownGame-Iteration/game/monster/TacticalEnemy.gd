@@ -14,18 +14,29 @@ var owned_attacks: Array[WeakRef] = []
 var locked_point = Vector2.ZERO
 var summon_total = 0
 var travelled = 0.0
+var movement_clock = 0.0
+var orbit_side = 1.0
+var desired_point = Vector2.ZERO
+var dash_speed = 300.0
+var dash_seconds = 0.5
+var dash_clock = 0.0
+var phase_flash = 0.0
+var attack_kind = ""
+var phase_label: Label
+
 func _ready():
 	super._ready()
 	var d = M5Content.definition(role)
 	HP = d.hp; max_hp = HP; SPEED = d.speed; armor = d.get("armor",0.0)
 	born_epoch = LevelServer.epoch
+	orbit_side = 1.0 if get_instance_id()%2 else -1.0
 	is_boss = role.begins_with("B")
 	sprite_body.scale = Vector2.ONE*(1.8 if is_boss else (1.15 if role in ["E03","E07","E09"] else 1.0))
-	phase = "spawn"; phase_time = 0.7
+	phase = "spawn"; phase_time = 0.3
 	if is_boss:
 		var hull = CircleShape2D.new(); hull.radius = 11
 		$CollisionShape2D.shape = hull; $CollisionShape2D.position = Vector2(0,-2)
-		var title = Label.new(); title.text = d.name; title.position = Vector2(-22,-47); title.add_theme_font_size_override("font_size",8); add_child(title)
+		var title = Label.new(); phase_label = title; title.text = d.name+" · I"; title.position = Vector2(-22,-47); title.add_theme_font_size_override("font_size",8); add_child(title)
 func remember(action: String):
 	actions[action] = actions.get(action,0)+1
 func move_towards(point: Vector2, delta: float, multiplier = 1.0):
@@ -40,6 +51,7 @@ func zone(kind: String, point: Vector2, reach: float, delay: float, time = 0.12)
 	var node = load("res://game/monster/HostileZone.gd").new()
 	node.mode = kind; node.radius = reach; node.length = reach; node.warning = delay; node.duration = time; node.direction = locked_direction; node.owner_ref = weakref(self)
 	node.position = point
+	if kind == "charge": node.width = 22 if is_boss else 18
 	get_tree().current_scene.add_child(node)
 	owned_attacks.append(weakref(node))
 	remember(kind)
@@ -48,6 +60,7 @@ func shot(dir: Vector2, speed_value = 100.0):
 	var node = CharacterBody2D.new(); node.set_script(load("res://game/monster/EnemyShot.gd"))
 	node.position = global_position; node.velocity = dir*speed_value; node.owner_ref = weakref(self)
 	get_tree().current_scene.add_child(node); owned_attacks.append(weakref(node)); remember("shot")
+	preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,12,dir)
 func fan(count: int, spread: float, speed_value = 85.0):
 	for i in count: shot(locked_direction.rotated(lerpf(-spread,spread,i/float(maxi(1,count-1)))),speed_value)
 func summon(count: int, id = "E02"):
@@ -66,103 +79,168 @@ func choose_attack():
 	attack_index += 1
 	locked_direction = global_position.direction_to(Utils.player.global_position)
 	locked_point = Utils.player.global_position
-	phase = "warn"; phase_time = 0.7
+	var distance = global_position.distance_to(locked_point)
+	phase = "warn"; phase_time = 0.65 if not phase_two else 0.5
+	var delay = phase_time
 	match role:
-		"E03","E11": zone("line",global_position,150.0,0.7).damage = 0
-		"E06": zone("circle",global_position,42.0,0.8).damage = 0; phase_time = 0.8
-		"E07","E08": pass
-		"E09","E12": zone("cone",global_position,52.0,0.7)
-		"E10":
-			if attack_index%2: zone("line",global_position,260.0,0.9).damage = 0; phase_time = 0.9
-			else: zone("circle",locked_point,36.0,1.0); phase_time = 1.0
-		"B01":
-			if attack_index%3 == 1: zone("line",global_position,150.0,0.7).damage = 0
-			elif attack_index%3 == 2: zone("cone",global_position,100,0.7)
-		"B02":
-			if attack_index%3 == 0: zone("circle",locked_point,58.0,1.0)
-		"B03":
-			if attack_index%3 == 1: zone("line",global_position,330.0,0.9,0.65).sweep = 0.45 if phase_two else 0.3; phase_time = 0.9
-			elif attack_index%3 == 2:
-				locked_direction = locked_direction.orthogonal()*(1 if attack_index%2 else -1)
-				zone("line",global_position,160.0,0.7).damage = 0
-func perform_attack():
-	remember("attack")
-	phase = "recover"; phase_time = 1.0 if not phase_two else 0.7
-	match role:
-		"E03","E11": phase = "dash"; phase_time = 0.4 if role == "E03" else 0.25
+		"E03","E11":
+			dash_speed = 265 if role == "E03" else 310
+			dash_seconds = clampf((distance+25)/dash_speed,0.25,0.8)
+			zone("charge",global_position,dash_speed*dash_seconds,delay).damage = 0
+			attack_kind = "charge"
 		"E06":
-			if global_position.distance_to(Utils.player.global_position) <= 42 and Combat.clear_line(global_position,Utils.player.global_position): Utils.player.onHit(1,self)
-			remember("detonate"); last_context = {"depth":1}; onDie()
-		"E07": summon(1); phase_time = 3.0
+			zone("circle",global_position,42,0.8).damage = 0; phase_time = 0.8; attack_kind = "detonate"
+		"E07","E08": attack_kind = "summon" if role == "E07" else "heal"
+		"E09","E12": zone("cone",global_position,60,delay); attack_kind = "cone"
+		"E10":
+			if attack_index%2:
+				zone("line",global_position,280,0.85,0.3); phase_time = 0.85; attack_kind = "beam"
+			else: zone("circle",locked_point,40,0.95); phase_time = 0.95; attack_kind = "artillery"
+		"B01":
+			match attack_index%3:
+				1:
+					dash_speed = 330 if phase_two else 290
+					dash_seconds = clampf((distance+55)/dash_speed,0.4,0.95)
+					zone("charge",global_position,dash_speed*dash_seconds,delay).damage = 0; attack_kind = "charge"
+				2: zone("cone",global_position,125,delay).angle = 0.95; attack_kind = "cleave"
+				0: zone("circle",global_position,100 if phase_two else 85,delay); attack_kind = "slam"
+		"B02":
+			match attack_index%3:
+				1: attack_kind = "brood"
+				2:
+					zone("circle",locked_point,65,0.95)
+					zone("circle",locked_point+Utils.player.velocity.limit_length(85)*0.7,48,1.35)
+					if phase_two: zone("circle",locked_point-locked_direction.orthogonal()*80,45,1.55)
+					phase_time = 0.95; attack_kind = "lockdown"
+				0: zone("cone",global_position,160,delay).angle = 0.9; attack_kind = "pulse"
+		"B03":
+			match attack_index%3:
+				1:
+					dash_speed = 440
+					var intercept = locked_point+Utils.player.velocity.limit_length(100)*0.25
+					locked_direction = global_position.direction_to(intercept)
+					dash_seconds = clampf(global_position.distance_to(intercept)/dash_speed,0.24,0.65)
+					zone("charge",global_position,dash_speed*dash_seconds,delay).damage = 0; attack_kind = "dash"
+				2:
+					locked_direction = locked_direction.rotated(-orbit_side*0.25)
+					zone("line",global_position,330,0.9,0.85).sweep = orbit_side*(1.3 if phase_two else 1.0)
+					phase_time = 0.9; attack_kind = "sweep"
+				0:
+					zone("cone",global_position,240,delay).damage = 0; attack_kind = "burst"
+	remember("windup_"+attack_kind)
+
+func perform_attack():
+	remember("attack"); remember(attack_kind)
+	preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,24 if is_boss else 12,locked_direction)
+	phase = "recover"; phase_time = 0.75 if not phase_two else 0.45
+	match role:
+		"E03","E11": phase = "dash"; phase_time = dash_seconds
+		"E06":
+			if global_position.distance_to(Utils.player.global_position)<=42 and Combat.clear_line(global_position,Utils.player.global_position): Utils.player.onHit(1,self)
+			last_context = {"depth":1}; onDie()
+		"E07": summon(1); phase_time = 2.0
 		"E08":
 			var healed = 0
 			for other in get_tree().get_nodes_in_group("monsters"):
 				if other == self or other.is_die or other.is_boss or other.get_meta("content_id","") == "E08": continue
 				var id = other.get_instance_id()
-				if global_position.distance_to(other.global_position) > 130 or not Combat.clear_line(global_position,other.global_position): continue
+				if global_position.distance_to(other.global_position)>155 or not Combat.clear_line(global_position,other.global_position): continue
 				var maximum = M5Content.definition(other.get_meta("content_id","E01")).get("hp",2.0)
 				var amount = minf(1.0,minf(maximum-other.HP,3.0-heal_budget.get(id,0.0)))
-				if amount <= 0: continue
-				other.HP += amount; heal_budget[id] = heal_budget.get(id,0.0)+amount; remember("heal"); Combat.trace([global_position,other.global_position],Color(0.3,1,0.6)); healed += 1
+				if amount<=0: continue
+				other.HP += amount; heal_budget[id] = heal_budget.get(id,0.0)+amount; remember("heal")
+				Combat.trace([global_position,other.global_position],Color(0.3,1,0.6)); healed += 1
 				if healed == 2: break
-			phase_time = 2.2
-		"E10":
-			if attack_index%2: shot(locked_direction,220)
-			phase_time = 1.4
+			phase_time = 1.7
+		"E10": phase_time = 0.9
 		"B01":
-			if attack_index%3 == 1: phase = "dash"; phase_time = 0.55
-			elif attack_index%3 == 2: pass
-			else: summon(2); phase_time = 1.4
+			if attack_kind == "charge": phase = "dash"; phase_time = dash_seconds
 		"B02":
-			if attack_index%3 == 1: summon(3,"E07" if phase_two else "E02")
-			elif attack_index%3 == 2: fan(7 if phase_two else 5,1.1,80)
-			phase_time = 1.5
+			if attack_kind == "brood": summon(3,"E06" if phase_two else "E02")
+			phase_time = 1.0 if not phase_two else 0.65
 		"B03":
-			if attack_index%3 == 2:
-				phase = "dash"; phase_time = 0.45
-			elif attack_index%3 == 0:
-				for i in 12: shot(Vector2.RIGHT.rotated(i*TAU/12),70)
-				if phase_two: summon(2)
+			if attack_kind == "dash": phase = "dash"; phase_time = dash_seconds
+			elif attack_kind == "burst": fan(5 if phase_two else 3,0.65,150)
+
 func _physics_process(delta):
 	if is_die: return
 	if born_epoch != LevelServer.epoch: queue_free(); return
-	if LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or Utils.player.is_dead: return
-	phase_time -= delta; contact_cooldown = maxf(0,contact_cooldown-delta); queue_redraw()
+	if LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or Utils.player.is_dead: velocity = Vector2.ZERO; return
+	phase_time -= delta; contact_cooldown = maxf(0,contact_cooldown-delta); phase_flash = maxf(0,phase_flash-delta); queue_redraw()
 	if state_array.has(Utils.STATE_TYPE.STUN): return
 	if hit: move_and_slide(); return
-	if role == "E07" and summoned:
-		if phase == "spawn" and phase_time > 0: return
-		move_towards(Utils.player.global_position,delta)
-		if global_position.distance_to(Utils.player.global_position)<18 and contact_cooldown<=0:
-			Utils.player.onHit(1,self); contact_cooldown=0.9; remember("contact")
-		return
 	owned_attacks = owned_attacks.filter(func(ref): return is_instance_valid(ref.get_ref()))
-	if is_boss and HP <= max_hp*0.5 and not phase_two:
-		phase_two = true; phase = "recover"; phase_time = 1.1; remember("phase_two")
+	if is_boss and HP<=max_hp*0.5 and not phase_two:
+		phase_two = true; phase = "transition"; phase_time = 1.0; phase_flash = 1.0; remember("phase_two")
+		phase_label.text = M5Content.definition(role).name+" · PHASE II"
 		for ref in owned_attacks:
 			if is_instance_valid(ref.get_ref()): ref.get_ref().queue_free()
-	if phase == "spawn" or phase == "recover":
-		if phase_time <= 0: phase = "move"; phase_time = 0.5
+		orbit_side *= -1
+		if role == "B01": summon(2,"E09")
+	if phase == "spawn" or phase == "transition":
+		if phase == "spawn": move_towards(Utils.player.global_position,delta,0.8)
+		if phase_time<=0: phase = "move"; phase_time = 0.3
 		return
 	if phase == "warn":
-		if phase_time <= 0: perform_attack()
+		velocity = Vector2.ZERO
+		if phase_time<=0: perform_attack()
 		return
 	if phase == "dash":
-		var previous = global_position; velocity = locked_direction*(210 if is_boss else 195); move_and_slide(); travelled += previous.distance_to(global_position)
-		if global_position.distance_to(Utils.player.global_position) < 22 and contact_cooldown <= 0: Utils.player.onHit(1,self); contact_cooldown = 1.0; remember("contact")
-		if phase_time <= 0 or get_slide_collision_count() > 0: phase = "recover"; phase_time = 1.0; remember("dash_end")
+		var previous = global_position; velocity = locked_direction*dash_speed; move_and_slide(); travelled += previous.distance_to(global_position)
+		dash_clock += delta
+		if dash_clock>0.08:
+			dash_clock = 0; preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,previous,10,locked_direction)
+		contact(24)
+		if phase_time<=0 or get_slide_collision_count()>0: phase = "recover"; phase_time = 0.5; remember("dash_end"); orbit_side *= -1
 		return
 	var distance = global_position.distance_to(Utils.player.global_position)
-	facing = facing.rotated(clampf(facing.angle_to(global_position.direction_to(Utils.player.global_position)),-delta*1.6,delta*1.6))
-	var point = Utils.player.global_position
-	if role in ["E07","E08","E10","B02"]:
-		if distance < 115: point = global_position+(global_position-Utils.player.global_position).normalized()*70
-		elif distance < 210: point = global_position
-	elif role in ["E11","B03"] and distance > 70: point = Utils.player.global_position+facing.orthogonal()*85
-	move_towards(point,delta)
-	var reach = 42 if role in ["E09","E12"] else (35 if role == "E06" else 260)
-	if role == "E11": reach = 120
-	if distance < reach and phase_time <= 0 and Combat.clear_line(global_position,Utils.player.global_position): choose_attack()
+	facing = facing.rotated(clampf(facing.angle_to(global_position.direction_to(Utils.player.global_position)),-delta*2.8,delta*2.8))
+	movement_clock -= delta
+	if movement_clock<=0:
+		movement_clock = 0.25; desired_point = movement_target(distance)
+	move_towards(desired_point,delta,1.15 if is_boss and (phase_two or distance>190) else 1.0)
+	if role not in ["E08","E10"]: contact(24 if is_boss else 19)
+	if phase == "recover":
+		if phase_time<=0: phase = "move"; phase_time = 0.15
+		return
+	if role == "E07" and summoned: return
+	var reach = 240.0
+	if role in ["E09","E12"]: reach = 55
+	elif role == "E06": reach = 34
+	elif role == "E11": reach = 125
+	elif role == "B01": reach = 260 if (attack_index+1)%3==1 else 95
+	elif role == "B02": reach = 240 if (attack_index+1)%3!=0 else 145
+	if distance<reach and phase_time<=0 and Combat.clear_line(global_position,Utils.player.global_position): choose_attack()
+
+func contact(reach: float):
+	if global_position.distance_to(Utils.player.global_position)<reach and contact_cooldown<=0:
+		Utils.player.onHit(1,self); contact_cooldown = 0.85; remember("contact")
+
+func movement_target(distance: float) -> Vector2:
+	var player = Utils.player.global_position
+	var radial = player.direction_to(global_position)
+	if role == "E08":
+		var ally = null; var best = 240.0
+		for other in get_tree().get_nodes_in_group("monsters"):
+			if other == self or other.is_die or other.get_meta("content_id","") in ["E08","E10"]: continue
+			var d = other.global_position.distance_to(player)
+			if d<best: best = d; ally = other
+		if ally and distance>65: return ally.global_position+radial*40+radial.orthogonal()*orbit_side*25
+		return player+radial.rotated(orbit_side*0.65)*90
+	if role == "E10":
+		return player+radial.rotated(orbit_side*0.6)*145 if distance<190 else player
+	if role == "E07":
+		return player+radial.rotated(orbit_side*0.6)*70 if not summoned and distance<130 else player
+	if role in ["E11","B03"]:
+		if distance>145 or not Combat.clear_line(global_position,player): return player
+		return player+radial.rotated(orbit_side*0.9)*(45 if phase_two or role == "E11" else 70)
+	if role == "B02":
+		return player if attack_index%3 == 2 or phase_two else player+radial.rotated(orbit_side*0.7)*95
+	if role == "E09":
+		# A broad pushing front with alternating sides instead of a single-file queue.
+		return player+radial.orthogonal()*orbit_side*minf(32,distance*0.15)
+	return player
+
 func receive_damage(amount: float, critical: bool, context: Dictionary):
 	if armor > 0:
 		var source = context.get("impact_origin",Utils.player.global_position)
@@ -201,3 +279,5 @@ func _draw():
 	if role == "E12": draw_circle(Vector2(0,-20),5,Color(0.2,0.9,1))
 	if is_boss:
 		draw_rect(Rect2(-27,-37,54,4),Color(0.1,0.1,0.1)); draw_rect(Rect2(-27,-37,54*maxf(0,HP/max_hp),4),Color(1,0.4,0.2) if phase_two else Color(0.9,0.8,0.3))
+		draw_line(Vector2(0,-38),Vector2(0,-32),Color(0.05,0.04,0.02),2)
+		if phase_two: draw_arc(Vector2(0,-8),30,0,TAU,36,Color(1,0.4,0.12,0.65),2,true)

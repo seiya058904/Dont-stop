@@ -5,7 +5,7 @@ const DEFINITIONS = {
 	1:{"magazine_mul":1.2,"info":"所有武器弹匣容量+20%。"},
 	2:{"magazine_mul":1.35,"info":"所有武器弹匣容量+35%。"},
 	3:{"magazine_mul":1.2,"reload_mul":0.8,"info":"所有武器弹匣+20%，换弹时间-20%。"},
-	9:{"damage":0.1,"info":"所有武器伤害+10%，保留右键榴弹。"},
+	9:{"damage":0.1,"info":"所有武器伤害+10%；右键发射榴弹，冷却2秒，伤害为当前武器35%。"},
 	5:{"magazine_mul":1.15,"reload_mul":0.8,"info":"所有武器弹匣+15%，换弹时间-20%。"},
 	6:{"magazine_mul":1.5,"info":"所有武器弹匣容量+50%。"},
 	7:{"magazine_mul":1.3,"info":"所有武器弹匣容量+30%。"},

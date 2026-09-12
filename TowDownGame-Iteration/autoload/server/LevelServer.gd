@@ -171,6 +171,9 @@ func onMonsterCreate():
 	if wait_time_temp >= config.interval * multiplier:
 		wait_time_temp = 0
 		monsterCreate.emit()
+		if level>=16 and spawn_index%4==0:
+			# A second existing roster member arrives from the next side. Each emission obeys the encounter cap.
+			monsterCreate.emit()
 
 func victory() -> bool:
 	if DemoConfig.ENCOUNTERS[level].has("boss"):

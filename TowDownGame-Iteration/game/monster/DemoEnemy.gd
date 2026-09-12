@@ -22,7 +22,7 @@ func _ready():
 	$AtkTimer.stop()
 
 func _physics_process(delta):
-	if is_die: return
+	if is_die or not is_instance_valid(Utils.player) or Utils.player.is_dead or LevelServer.state != "COMBAT": return
 	phase_time -= delta
 	contact_cooldown = maxf(0,contact_cooldown-delta)
 	queue_redraw()
@@ -63,6 +63,8 @@ func _physics_process(delta):
 			phase_time = 0.8
 		return
 	if phase == "recover":
+		is_atk = false
+		super._physics_process(delta)
 		if phase_time <= 0: phase = "move"
 		return
 	is_atk = false
@@ -85,8 +87,7 @@ func _draw():
 	if role == "E04":
 		draw_polyline(PackedVector2Array([Vector2(-8,-18),Vector2(0,-25),Vector2(8,-18)]),Color(1,0.65,0.2),2)
 		if phase == "warn":
-			draw_line(Vector2.ZERO,locked_direction*100,Color(0.1,0.05,0.02),4)
-			draw_line(Vector2.ZERO,locked_direction*100,Color(1,0.5,0.15,0.85),2)
+			preload("res://game/effects/CombatTelegraph.gd").paint(self,"charge",locked_direction,0,108,19,0,1-phase_time/0.6,false)
 	if role == "E05":
 		draw_arc(Vector2(0,-12),10,PI,TAU,12,Color(0.7,1,0.4),2)
 		if phase == "warn": draw_circle(Vector2(0,-20),3+sin(phase_time*18),Color(1,0.6,0.3))

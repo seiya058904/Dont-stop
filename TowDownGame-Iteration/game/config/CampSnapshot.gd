@@ -6,18 +6,26 @@ static func number(value, integral = false) -> bool:
 
 static func validate(data) -> bool:
 	if not data is Dictionary: return false
-	if not data.has_all(["schema_version","gold","points","level","exp","hp","hp_max","weapons","attachments","talents","next_instance","next_stage","selected_stage","equipped"]): return false
-	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3,4,5]: return false
+	if not data.has_all(["schema_version","gold","points","level","exp","hp","hp_max","weapons","talents","next_stage","selected_stage","equipped"]): return false
+	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3,4,5,6]: return false
+	if data.schema_version < 6:
+		if not data.get("attachments") is Array or not number(data.get("next_instance"),true): return false
+	else:
+		if data.has("attachments") or data.has("next_instance") or not data.get("owned_global_upgrades") is Array: return false
+		var seen = {}
+		for id in data.owned_global_upgrades:
+			if not id is String or not Utils.am_dict.has(id) or seen.has(id): return false
+			seen[id] = true
 	var reserve_key = "reserve_magazines" if data.schema_version >= 5 else "ammo"
 	if not number(data.get(reserve_key),true): return false
 	if data.schema_version >= 4 and not data.get("campaign_complete") is bool: return false
-	for key in ["gold","points","level","next_instance","next_stage","selected_stage"]:
+	for key in ["gold","points","level","next_stage","selected_stage"]:
 		if not number(data[key],true): return false
 	for key in ["hp","hp_max","exp"]:
 		if not number(data[key]): return false
 	if data.level < 1 or data.hp_max <= 0 or data.hp > data.hp_max or data.exp >= pow(data.level,2.2)+15: return false
 	if not DemoConfig.ENCOUNTERS.has(int(data.next_stage)) or not DemoConfig.ENCOUNTERS.has(int(data.selected_stage)): return false
-	if not data.weapons is Array or not data.attachments is Array or not data.talents is Dictionary: return false
+	if not data.weapons is Array or not data.talents is Dictionary: return false
 	if not data.get("legacy",[]) is Array or (data.schema_version >= 2 and not data.has_all(["legacy","legacy_state"])): return false
 	for id in data.talents:
 		if not DemoConfig.TALENTS.has(id) or not number(data.talents[id],true) or data.talents[id] > DemoConfig.TALENTS[id].max: return false
@@ -58,9 +66,9 @@ static func validate(data) -> bool:
 		guns[w.id] = gun
 	var ids = []
 	var slots = {}
-	if data.next_instance < 1: valid = false
+	if data.schema_version < 6 and data.next_instance < 1: valid = false
 	if valid:
-		for a in data.attachments:
+		for a in data.get("attachments",[]):
 			if not a is Dictionary or not a.has_all(["definition","instance","gun"]) or not a.definition is String or not Utils.am_dict.has(a.definition) or not a.gun is String or not number(a.instance,true):
 				valid = false; break
 			if a.instance < 1 or a.instance >= data.next_instance or a.instance in ids or (a.gun != "" and not guns.has(a.gun)):
@@ -77,7 +85,8 @@ static func validate(data) -> bool:
 	if valid:
 		for w in data.weapons:
 			var gun = guns[w.id]
-			if data.schema_version >= 5 and w.ammo > EffectiveStats.calculate(gun,gun.attachments_dict.values(),data).magazine: valid = false
+			var upgrades = data.owned_global_upgrades if data.schema_version >= 6 else gun.attachments_dict.values()
+			if data.schema_version >= 5 and w.ammo > EffectiveStats.calculate(gun,upgrades,data).magazine: valid = false
 	for am in items: am.free()
 	for gun in guns.values(): gun.free()
 	if not data.equipped is String or (data.equipped != "" and not guns.has(data.equipped)): valid = false
@@ -115,5 +124,11 @@ static func normalize(data: Dictionary) -> Dictionary:
 			w.ammo = mini(int(w.ammo),EffectiveStats.calculate(gun,items,result).magazine)
 			for am in items: am.free()
 			gun.free()
-	result.schema_version = 5
+	var upgrades = result.get("owned_global_upgrades",[]).duplicate()
+	for a in result.get("attachments",[]):
+		if not a.definition in upgrades: upgrades.append(a.definition)
+	upgrades.sort()
+	result.owned_global_upgrades = upgrades
+	result.erase("attachments"); result.erase("next_instance"); result.erase("compatibility")
+	result.schema_version = 6
 	return result
