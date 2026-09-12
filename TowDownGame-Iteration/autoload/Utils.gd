@@ -1,0 +1,186 @@
+extends Node
+
+var shop_pre = load("res://ui/CampPanel.tscn")
+
+enum STATE_TYPE {
+	STUN #眩晕
+}
+
+enum GUN_TYPE { #枪械类型
+	ASSAULT_RIFLES = 1 << 0, #突击步枪
+	SUBMACHINE_GUNSRELOAD = 1 << 1, #冲锋枪
+	MACHINE_GUNS = 1 << 2, #机枪
+	SNIPER_RIFLES = 1 << 3, #狙击步枪
+	SHOTGUNS = 1 << 4, #霰弹枪
+	LASER_WEAPONS = 1 << 5, #激光武器
+}
+
+enum GUN_CHANGE_TYPE { #切枪类型
+	CHANGE, #切换枪械
+	RELOAD #切换子弹
+}
+
+enum ATTACHMENTS_TYPE { #配件类型
+	WEAPON_OPTICS, #瞄准镜
+	WEAPON_MUZZLE, #枪口
+	WEAPON_BARREL, #枪口
+	WEAPON_UNDERBARREL, #枪口
+	WEAPON_AMMUNITION, #枪口
+	WEAPON_STOCK, #枪口
+	WEAPON_TACTICAL, #枪口
+	WEAPON_PERKS, #枪口
+}
+
+var weapon_list = {
+	"112" =  preload("res://game/guns/ArcCaster.tscn"),
+	"114" =  preload("res://game/guns/PlasmaOrb.tscn"),
+	"123" =  preload("res://game/guns/BurstCarbine.tscn"),
+	"0" = preload("res://game/guns/GunSprite.tscn"),
+	"1" = preload("res://game/guns/ShotgunBlaster.tscn"),
+	"2" = preload("res://game/guns/Sniper.tscn"),
+	"3" = preload("res://game/guns/BabyZapZap.tscn"),
+	"4" = preload("res://game/guns/AlienRifle.tscn"),
+	"5" = preload("res://game/guns/EmpireShotgun.tscn"),
+	"6" = preload("res://game/guns/BoomBoi.tscn"),
+	"7" = preload("res://game/guns/AlienMachine.tscn"),
+	"8" = preload("res://game/guns/RebalShotgun.tscn"),
+	"9" = preload("res://game/guns/Uzi.tscn")
+}
+
+var am_dict = {
+	"110" =  preload("res://game/attachments/A110.tscn"),
+	"112" =  preload("res://game/attachments/A112.tscn"),
+	"114" =  preload("res://game/attachments/A114.tscn"),
+	"117" =  preload("res://game/attachments/A117.tscn"),
+	"121" =  preload("res://game/attachments/A121.tscn"),
+	"122" =  preload("res://game/attachments/A122.tscn"),
+
+	"0" = preload("res://game/attachments/QuickdrawMagazine.tscn"),
+	"1" = preload("res://game/attachments/UniversalExtendedMagazines.tscn"),
+	"2" = preload("res://game/attachments/ExtendedRifleMagazine.tscn"),
+	"3" = preload("res://game/attachments/QuickExpansionMagazine.tscn"),
+	"5" = preload("res://game/attachments/ShotgunShellPouch.tscn"),
+	"6" = preload("res://game/attachments/MachineGunMagazine.tscn"),
+	"7" = preload("res://game/attachments/SubmachineGunMagazine.tscn"),
+	"8" = preload("res://game/attachments/SuperUniversalMagazine.tscn"),
+	"9" = preload("res://game/attachments/GrenadeLauncher.tscn")
+}
+
+const weapon_money_list = {
+	"112" = 150,"114" = 200,"123" = 150,
+	"0" = 10,
+	"1" = 10,
+	"2" = 10,
+	"3" = 10,
+	"4" = 50,
+	"5" = 50,
+	"6" = 100,
+	"7" = 100,
+	"8" = 100,
+	"9" = 100
+}
+
+const hitlabel = preload("res://ui/widgets/HitLabel.tscn")
+
+var canvasLayer:CanvasLayer
+var player:Player
+var freeze_frame = false
+var shake = 1.0 #振动幅度
+var pause_state = false #暂停状态
+var is_game_start = false #游戏是否开始
+
+var is_inv_show = false #是否展示背包
+
+var crosshair_position = Vector2.ZERO
+
+var temp_am_list = []
+
+signal onGameStart()
+
+func _ready() -> void:
+	TranslationServer.set_locale("zh_CN")
+
+func reloadTempAmList():
+	temp_am_list.clear()
+	var temp = am_dict.keys().duplicate()
+	temp.shuffle()
+	for i in 5:
+		temp_am_list.append(temp[i])
+
+func getTempAmList():
+	if temp_am_list.is_empty():
+		var temp = am_dict.keys().duplicate()
+		temp.shuffle()
+		for i in 5:
+			temp_am_list.append(temp[i])
+	return temp_am_list
+
+func gameStart():
+	is_game_start = true
+	emit_signal("onGameStart")
+
+#伤害数字
+func showHitLabel(num,traget:Node2D):
+	if get_tree().get_nodes_in_group("damage_labels").size() >= 90: return
+	var ins = hitlabel.instantiate()
+	ins.setNumber(num)
+	traget.add_child(ins)
+
+#伤害数字 加强版
+func showHitLabelMore(num,traget:Node2D,position = Vector2.ZERO,color = Color.WHITE):
+	if get_tree().get_nodes_in_group("damage_labels").size() >= 90: return
+	var ins = hitlabel.instantiate()
+	ins.setNumber(num)
+	ins.position = position
+	ins.setColor(color)
+	traget.add_child(ins)
+
+#获取配件类型名称
+func getAttachmentsName(type:ATTACHMENTS_TYPE):
+	match type:
+		ATTACHMENTS_TYPE.WEAPON_OPTICS :return "WEAPON_OPTICS"
+		ATTACHMENTS_TYPE.WEAPON_MUZZLE :return "WEAPON_MUZZLE"
+		ATTACHMENTS_TYPE.WEAPON_BARREL :return "WEAPON_BARREL"
+		ATTACHMENTS_TYPE.WEAPON_UNDERBARREL :return "WEAPON_UNDERBARREL"
+		ATTACHMENTS_TYPE.WEAPON_AMMUNITION :return "WEAPON_AMMUNITION"
+		ATTACHMENTS_TYPE.WEAPON_STOCK :return "WEAPON_STOCK"
+		ATTACHMENTS_TYPE.WEAPON_TACTICAL :return "WEAPON_TACTICAL"
+		ATTACHMENTS_TYPE.WEAPON_PERKS :return "WEAPON_PERKS"
+
+#获取武器类型名称
+func getWeaponName(type:GUN_TYPE):
+	match type:
+		GUN_TYPE.ASSAULT_RIFLES :return "ASSAULT_RIFLES"
+		GUN_TYPE.SUBMACHINE_GUNSRELOAD :return "SUBMACHINE_GUNSRELOAD"
+		GUN_TYPE.MACHINE_GUNS :return "MACHINE_GUNS"
+		GUN_TYPE.SNIPER_RIFLES :return "SNIPER_RIFLES"
+		GUN_TYPE.SHOTGUNS :return "SHOTGUNS"
+		GUN_TYPE.LASER_WEAPONS :return "LASER_WEAPONS"
+
+func freezeFrame(scale):
+	#OS.delay_msec(50)
+	#return
+	if !freeze_frame && scale > 0:
+		# 冻结帧
+		pass
+		#freeze_frame = true
+		# 将时间比例设置为0.1
+		#Engine.time_scale = scale
+
+func showToast(msg,time = 1):
+	if is_instance_valid(canvasLayer): canvasLayer.showToast(msg,time)
+
+func crosshairChange(is_change):
+	canvasLayer.crosshairChange(is_change)
+
+func getShader(quality):
+	match quality:
+		0:""
+
+#func _physics_process(delta):
+#	if freeze_frame && Engine.get_physics_frames() % 2 == 0:
+		# 暂停一帧
+#		freeze_frame = false
+		# 将时间比例设置为1
+#		Engine.time_scale = 1
+#		return

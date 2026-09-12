@@ -1,4 +1,4 @@
-# The public workspace repository contains only the three current game projects.
+# The public workspace repository contains three frozen originals and the iteration source.
 /archive/
 
 # Keep each child repository's local Git metadata out of the outer repository.
@@ -11,3 +11,8 @@
 # Common operating-system noise.
 **/Thumbs.db
 **/.DS_Store
+
+# Iteration generated output and local evidence.
+/TowDownGame-Iteration/*.log
+/TowDownGame-Iteration/build/
+/TowDownGame-Iteration/evidence/

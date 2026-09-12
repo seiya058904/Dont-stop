@@ -13,7 +13,7 @@
 | `TowDownGame/` | 原型基线（冻结只读） | 保留纯净的 TowDownGame 原型；后续不在此目录直接开发 |
 | `Godot-GameTemplate/` | 只读参考项目 | 提取模板架构、工程组织和可复用技术思路；不作为本轮开发目标 |
 | `Barren-Game/` | 只读参考项目 | 提取玩法、表现和完成度方面的优秀点；不作为本轮开发目标 |
-| `TowDownGame-Iteration/` | 计划中的唯一开发副本 | 完整复制 `TowDownGame/` 后建立；所有升级和优化只进入此副本（当前尚未建立） |
+| `TowDownGame-Iteration/` | 唯一开发副本 | 完整复制 `TowDownGame/` 后建立；所有升级和优化只进入此副本（已建立；M2 等待 H1 真人体验） |
 | `archive\Blutfest\` | 已归档候选 | 暂时冷藏，不参与当前开发和候选筛选 |
 
 已删除候选 (SOURCE REMOVED AFTER PLAYTEST): top-down-pew-pew / WarZone_2 / Hypersomnia / cdogs-sdl / quiver tiny-wizard-demo / top-down-shooter-core / Godot-Top-down-Shooter-Tutorial。评分与淘汰结论见 `archive\workspace-support\candidate-review\`。
@@ -34,13 +34,13 @@
 
 英文概念可概括为 **Frozen Baseline / Core-Loop-First / Reference-Informed / Human-Validated Iteration**：先冻结原型基线，再在独立复制体中围绕核心体验持续收敛，用参考项目提供证据，用真人试玩决定取舍。
 
-本工作区保留三个原始游戏仓库作为只读参考库。`TowDownGame/` 是被保留的纯净原型基线，不直接修改；正式开发前应将它完整复制为新的独立项目（暂定目录名：`TowDownGame-Iteration/`），复制体才是唯一允许发生产品和代码变化的开发项目。每一次改动都应收敛到可试玩、可验证、可回滚的小阶段。
+本工作区保留三个原始游戏仓库作为只读参考库。`TowDownGame/` 是被保留的纯净原型基线，不直接修改；现已将它完整复制为独立项目 `TowDownGame-Iteration/`，复制体才是唯一允许发生产品和代码变化的开发项目。每一次改动都应收敛到可试玩、可验证、可回滚的小阶段。
 
 | 原则 | 在本工作区中的具体含义 |
 |------|------------------------|
 | 三仓库保留 | `TowDownGame/`、`Godot-GameTemplate/`、`Barren-Game/` 原始仓库全部保留，不以开发便利为由删除或替代 |
 | 原型冻结 | `TowDownGame/` 只作为纯净基线和参考，不直接写入升级代码 |
-| 复制迭代 | 完整复制 `TowDownGame/` 后，只有 `TowDownGame-Iteration/`（暂定名）承担后续开发 |
+| 复制迭代 | 完整复制 `TowDownGame/` 后，只有 `TowDownGame-Iteration/` 承担后续开发 |
 | 参考驱动 | 从另外两个项目提取优秀点，但不直接照搬，不修改参考项目 |
 | 核心循环优先 | 先打磨移动、战斗、武器、敌人、奖励和关卡推进，再扩展外围内容 |
 | 垂直切片迭代 | 每个阶段都形成一段从开始到结束的可试玩体验，而不是只堆积孤立功能 |
@@ -59,20 +59,20 @@
 
 ## 一键试玩
 
-3 个当前保留游戏的原始仓库根目录都有 `PLAY_GAME.bat`，双击即可启动。未来建立 `TowDownGame-Iteration/` 后，应为复制体单独保留自己的启动入口；`archive\workspace-support\candidate-review\launchers\` 下的旧入口现在只是兼容包装器。
+3 个当前保留游戏的原始仓库根目录都有 `PLAY_GAME.bat`，双击即可启动。`TowDownGame-Iteration/PLAY_GAME.bat` 是体验版独立启动入口；`archive\workspace-support\candidate-review\launchers\` 下的旧入口现在只是兼容包装器。
 
 | 游戏 | 一键启动文件 | 启动方式 |
 |---|---|---|
 | TowDownGame 原型 | `TowDownGame\PLAY_GAME.bat` | Godot 4.7.2；冻结基线 |
 | Godot Game Template | `Godot-GameTemplate\PLAY_GAME.bat` | Godot 4.7.2；只读参考 |
 | Barren | `Barren-Game\PLAY_GAME.bat` | 自带 Windows 导出版本；只读参考 |
-| TowDownGame 复制体 | `TowDownGame-Iteration\PLAY_GAME.bat` | 待复制建立后启用 |
+| TowDownGame 复制体 | `TowDownGame-Iteration\PLAY_GAME.bat` | 独立体验版入口 |
 
 ## 当前整理状态
 
 - 当前保留的原始游戏仓库：`TowDownGame`、`Godot-GameTemplate`、`Barren-Game`
 - 冻结原型基线：`TowDownGame`
-- 计划中的唯一开发副本：`TowDownGame-Iteration`（当前尚未建立）
+- 唯一开发副本：`TowDownGame-Iteration`（已建立；M2 等待 H1 真人体验）
 - 只读参考项目：三个原始仓库全部只读；其中 `TowDownGame` 是复制基线，另外两个用于提取优秀点
 - 已弃用冷藏：`archive\Blutfest`、`archive\project-outpost-v1`、`archive\project-outpost-v2`
 - 候选试玩记录和历史评审仍保留在 `archive\workspace-support\candidate-review\`
@@ -88,3 +88,7 @@
 - `archive\workspace-support\_downloads\`、`_cache\`、`_tmp\` = 仍保留在工作区内的支持目录
 - **禁止项目专用全局安装**: 不要默认 `winget` 全局安装 / `pip` 全局安装 / `npm -g` / 写入系统 PATH / 安装到 `C:\Program Files` / 散落到 `D:\tmp`。优先 portable ZIP、local executable、Python venv（`_tools\python-envs\<name>\`）、npm local dependency。
 - **正式游戏存档**继续使用 Godot `user://` / AppData，不为了完全自包含而硬塞进 Git 工作区。
+
+## TowDownGame 体验增强版
+
+迭代源码由外层仓库以普通文件跟踪。启动 `TowDownGame-Iteration/PLAY_GAME.bat`；当前进度、验证及 H1 真人关口见 `TowDownGame-Iteration/docs/iteration/STATUS.md`。

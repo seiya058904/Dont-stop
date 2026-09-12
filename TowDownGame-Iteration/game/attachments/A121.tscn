@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="Script" path="res://game/attachments/BaseAttachment.gd" id="1"]
+[ext_resource type="Texture2D" path="res://Sprites/All_Icons/Blue Circuit.png" id="2"]
+[node name="A121" type="Node2D"]
+script = ExtResource("1")
+am_id = 121
+am_name = "扩爆引信"
+am_image = ExtResource("2")
+am_type = "WEAPON_AMMUNITION"
+am_info = "爆炸武器：爆炸半径 +20%，外圈与伤害同步"
+money = 40

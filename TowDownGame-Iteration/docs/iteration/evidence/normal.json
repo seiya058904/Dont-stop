@@ -1,0 +1,21 @@
+{
+	"damage_events": 91,
+	"display": "Windows",
+	"encounter_completed": true,
+	"frame_ms": {
+		"p50": 6.25,
+		"p95": 6.25,
+		"p99": 6.25
+	},
+	"gpu": "AMD Radeon RX 7900 XT",
+	"live_enemy_p50": 5,
+	"live_enemy_peak": 11,
+	"live_projectile_p50": 2,
+	"live_projectile_peak": 6,
+	"node_end": 256.0,
+	"node_start": 255,
+	"orphan_nodes": 0.0,
+	"scenario": "normal",
+	"seconds": 48.00423033334,
+	"viewport": "(1920, 1080)"
+}

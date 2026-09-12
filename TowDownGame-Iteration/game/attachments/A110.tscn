@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="Script" path="res://game/attachments/BaseAttachment.gd" id="1"]
+[ext_resource type="Texture2D" path="res://Sprites/All_Icons/Blue Circuit.png" id="2"]
+[node name="A110" type="Node2D"]
+script = ExtResource("1")
+am_id = 110
+am_name = "精准瞄具"
+am_image = ExtResource("2")
+am_type = "WEAPON_OPTICS"
+am_info = "非持续攻击：暴击率 +8个百分点；不兼容持续激光"
+money = 40

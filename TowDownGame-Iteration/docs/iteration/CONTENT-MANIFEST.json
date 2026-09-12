@@ -1,0 +1,471 @@
+{
+	"attachments": [
+		{
+			"baseline": false,
+			"description": "非持续攻击：暴击率 +8个百分点；不兼容持续激光",
+			"id": "110",
+			"name": "精准瞄具",
+			"price": 40,
+			"scene": "res://game/attachments/A110.tscn",
+			"slot": "WEAPON_OPTICS"
+		},
+		{
+			"baseline": false,
+			"description": "散布实体枪：散布角 -25%",
+			"id": "112",
+			"name": "补偿枪口",
+			"price": 40,
+			"scene": "res://game/attachments/A112.tscn",
+			"slot": "WEAPON_MUZZLE"
+		},
+		{
+			"baseline": false,
+			"description": "所有枪：伤害 +15%；装填时间 +10%",
+			"id": "114",
+			"name": "过载枪管",
+			"price": 60,
+			"scene": "res://game/attachments/A114.tscn",
+			"slot": "WEAPON_BARREL"
+		},
+		{
+			"baseline": false,
+			"description": "实体弹/光束：普通敌人击退 +35%；Boss保留抗性",
+			"id": "117",
+			"name": "冲量支架",
+			"price": 40,
+			"scene": "res://game/attachments/A117.tscn",
+			"slot": "WEAPON_UNDERBARREL"
+		},
+		{
+			"baseline": false,
+			"description": "爆炸武器：爆炸半径 +20%，外圈与伤害同步",
+			"id": "121",
+			"name": "扩爆引信",
+			"price": 40,
+			"scene": "res://game/attachments/A121.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": false,
+			"description": "链电武器：额外跳跃1个不同目标；每跳伤害衰减25%",
+			"id": "122",
+			"name": "电弧中继",
+			"price": 60,
+			"scene": "res://game/attachments/A122.tscn",
+			"slot": "WEAPON_TACTICAL"
+		},
+		{
+			"baseline": true,
+			"description": "换弹速度+20%",
+			"id": "0",
+			"name": "快速弹夹",
+			"price": 20,
+			"scene": "res://game/attachments/QuickdrawMagazine.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "弹夹容量+10",
+			"id": "1",
+			"name": "扩容步枪弹夹",
+			"price": 20,
+			"scene": "res://game/attachments/UniversalExtendedMagazines.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "弹夹容量+20",
+			"id": "2",
+			"name": "通用扩容弹夹",
+			"price": 20,
+			"scene": "res://game/attachments/ExtendedRifleMagazine.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "换弹速度+20%\n弹夹容量+10",
+			"id": "3",
+			"name": "快速扩容弹夹",
+			"price": 20,
+			"scene": "res://game/attachments/QuickExpansionMagazine.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "弹夹容量+5\n换弹速度+20%",
+			"id": "5",
+			"name": "霰弹枪子弹袋",
+			"price": 20,
+			"scene": "res://game/attachments/ShotgunShellPouch.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "弹夹容量+50",
+			"id": "6",
+			"name": "机枪弹夹",
+			"price": 20,
+			"scene": "res://game/attachments/MachineGunMagazine.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "弹夹容量+19",
+			"id": "7",
+			"name": "冲锋枪弹夹",
+			"price": 20,
+			"scene": "res://game/attachments/SubmachineGunMagazine.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "弹夹容量+70",
+			"id": "8",
+			"name": "超级通用弹夹",
+			"price": 100,
+			"scene": "res://game/attachments/SuperUniversalMagazine.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": true,
+			"description": "按下右键会向鼠标瞄准处发射一枚榴弹，造成AOE伤害，冷却3秒",
+			"id": "9",
+			"name": "榴弹发射器",
+			"price": 20,
+			"scene": "res://game/attachments/GrenadeLauncher.tscn",
+			"slot": "WEAPON_UNDERBARREL"
+		}
+	],
+	"bosses": [],
+	"encounters": {
+		"1": {
+			"cap": 35,
+			"info": "追击者为主，少量蜂群；生存45秒",
+			"interval": 0.8,
+			"name": "R1 · 街口接敌",
+			"roles": [
+				"E01",
+				"E01",
+				"E02"
+			],
+			"seconds": 45
+		},
+		"3": {
+			"cap": 40,
+			"info": "近战推进，喷射者间歇压制；生存45秒",
+			"interval": 0.7,
+			"name": "R1 · 远程交错",
+			"roles": [
+				"E01",
+				"E02",
+				"E01",
+				"E05"
+			],
+			"seconds": 45
+		},
+		"4": {
+			"cap": 55,
+			"info": "分方向蜂群，少量预警冲锋者；生存45秒",
+			"interval": 0.55,
+			"name": "R1 · 蜂群冲锋",
+			"roles": [
+				"E02",
+				"E02",
+				"E02",
+				"E04"
+			],
+			"seconds": 45
+		}
+	},
+	"enemies": [
+		"E01",
+		"E02",
+		"E04",
+		"E05"
+	],
+	"legacy_rewards": [
+		{
+			"id": "0",
+			"max": 99,
+			"name": "小型钱袋",
+			"persistent": false,
+			"scene": "res://game/reward/GoldReward.tscn"
+		},
+		{
+			"id": "1",
+			"max": 99,
+			"name": "医疗箱",
+			"persistent": false,
+			"scene": "res://game/reward/HpReward.tscn"
+		},
+		{
+			"id": "2",
+			"max": 99,
+			"name": "异形头盔",
+			"persistent": true,
+			"scene": "res://game/reward/AlienHelmentReward.tscn"
+		},
+		{
+			"id": "3",
+			"max": 99,
+			"name": "警示盾牌",
+			"persistent": true,
+			"scene": "res://game/reward/WarningShield.tscn"
+		},
+		{
+			"id": "4",
+			"max": 10,
+			"name": "蓝色巨斧",
+			"persistent": true,
+			"scene": "res://game/reward/BlueAxe.tscn"
+		},
+		{
+			"id": "5",
+			"max": 99,
+			"name": "蓝色跑靴",
+			"persistent": true,
+			"scene": "res://game/reward/BlueBoots.tscn"
+		},
+		{
+			"id": "6",
+			"max": 99,
+			"name": "琥珀之星",
+			"persistent": true,
+			"scene": "res://game/reward/AmberStar.tscn"
+		},
+		{
+			"id": "7",
+			"max": 99,
+			"name": "医疗包",
+			"persistent": true,
+			"scene": "res://game/reward/HeathPack.tscn"
+		},
+		{
+			"id": "8",
+			"max": 5,
+			"name": "琥珀镰刀",
+			"persistent": true,
+			"scene": "res://game/reward/AmberSickle.tscn"
+		},
+		{
+			"id": "9",
+			"max": 99,
+			"name": "电池",
+			"persistent": true,
+			"scene": "res://game/reward/Battery.tscn"
+		},
+		{
+			"id": "10",
+			"max": 1,
+			"name": "蓝色细菌",
+			"persistent": true,
+			"scene": "res://game/reward/BlueBacteria.tscn"
+		},
+		{
+			"id": "11",
+			"max": 99,
+			"name": "蓝色电路",
+			"persistent": true,
+			"scene": "res://game/reward/BlueCircuit.tscn"
+		}
+	],
+	"profile": "experience_demo",
+	"regions": [
+		"R1 improved original town block"
+	],
+	"talents": [
+		{
+			"definition": {
+				"info": "常驻：每级武器伤害 +8%（含基础伤害）",
+				"max": 3,
+				"name": "火力强化"
+			},
+			"id": "T01"
+		},
+		{
+			"definition": {
+				"info": "常驻：每级装填时间 -5%，最低 0.15 秒",
+				"max": 3,
+				"name": "熟练装填"
+			},
+			"id": "T03"
+		},
+		{
+			"definition": {
+				"info": "常驻：每级弹匣 +10%；不会凭空补弹",
+				"max": 3,
+				"name": "扩充携弹"
+			},
+			"id": "T04"
+		},
+		{
+			"definition": {
+				"info": "有效击杀：每层射速 +3% × 等级，最多5层；4秒刷新，超时归零",
+				"max": 3,
+				"name": "连杀加速"
+			},
+			"id": "T10"
+		},
+		{
+			"definition": {
+				"info": "直接击杀：半径32的小爆炸（伤害2），冷却0.4秒；派生击杀不再爆破",
+				"max": 1,
+				"name": "连锁爆破"
+			},
+			"id": "T16"
+		},
+		{
+			"definition": {
+				"info": "直接击杀回复 0.15 × 等级 生命，冷却0.5秒；假人不触发",
+				"max": 3,
+				"name": "吸能修复"
+			},
+			"id": "T24"
+		}
+	],
+	"weapons": [
+		{
+			"base_damage": 2.0,
+			"baseline": false,
+			"id": "112",
+			"magazine": 12,
+			"name": "跃迁电弧枪",
+			"price": 150,
+			"rate": 3.0,
+			"reload": 1.4,
+			"scene": "res://game/guns/ArcCaster.tscn"
+		},
+		{
+			"base_damage": 4.0,
+			"baseline": false,
+			"id": "114",
+			"magazine": 8,
+			"name": "等离子榴炮",
+			"price": 200,
+			"rate": 1.5,
+			"reload": 1.6,
+			"scene": "res://game/guns/PlasmaOrb.tscn"
+		},
+		{
+			"base_damage": 1.0,
+			"baseline": false,
+			"id": "123",
+			"magazine": 24,
+			"name": "三连发卡宾",
+			"price": 150,
+			"rate": 2.0,
+			"reload": 1.2,
+			"scene": "res://game/guns/BurstCarbine.tscn"
+		},
+		{
+			"base_damage": 1.5,
+			"baseline": true,
+			"id": "0",
+			"magazine": 25,
+			"name": "冲击波步枪",
+			"price": 10,
+			"rate": 5.0,
+			"reload": 1.0,
+			"scene": "res://game/guns/GunSprite.tscn"
+		},
+		{
+			"base_damage": 1.0,
+			"baseline": true,
+			"id": "1",
+			"magazine": 15,
+			"name": "冲击波霰弹枪",
+			"price": 10,
+			"rate": 2.0,
+			"reload": 1.0,
+			"scene": "res://game/guns/ShotgunBlaster.tscn"
+		},
+		{
+			"base_damage": 5,
+			"baseline": true,
+			"id": "2",
+			"magazine": 10,
+			"name": "轻型狙击枪",
+			"price": 10,
+			"rate": 1.5,
+			"reload": 1.0,
+			"scene": "res://game/guns/Sniper.tscn"
+		},
+		{
+			"base_damage": 0.7,
+			"baseline": true,
+			"id": "3",
+			"magazine": 27,
+			"name": "Baby冲锋枪",
+			"price": 10,
+			"rate": 1.5,
+			"reload": 1.0,
+			"scene": "res://game/guns/BabyZapZap.tscn"
+		},
+		{
+			"base_damage": 2,
+			"baseline": true,
+			"id": "4",
+			"magazine": 35,
+			"name": "异形者枪步",
+			"price": 50,
+			"rate": 7.0,
+			"reload": 1.0,
+			"scene": "res://game/guns/AlienRifle.tscn"
+		},
+		{
+			"base_damage": 2,
+			"baseline": true,
+			"id": "5",
+			"magazine": 12,
+			"name": "帝国霰弹枪",
+			"price": 50,
+			"rate": 1.5,
+			"reload": 1.0,
+			"scene": "res://game/guns/EmpireShotgun.tscn"
+		},
+		{
+			"base_damage": 2.0,
+			"baseline": true,
+			"id": "6",
+			"magazine": 10,
+			"name": "BoomBoi",
+			"price": 100,
+			"rate": 1.0,
+			"reload": 1.0,
+			"scene": "res://game/guns/BoomBoi.tscn"
+		},
+		{
+			"base_damage": 1.0,
+			"baseline": true,
+			"id": "7",
+			"magazine": 50,
+			"name": "异形者机枪",
+			"price": 100,
+			"rate": 10.0,
+			"reload": 1.2,
+			"scene": "res://game/guns/AlienMachine.tscn"
+		},
+		{
+			"base_damage": 2.5,
+			"baseline": true,
+			"id": "8",
+			"magazine": 5,
+			"name": "RebalShotgun",
+			"price": 100,
+			"rate": 1.0,
+			"reload": 1.0,
+			"scene": "res://game/guns/RebalShotgun.tscn"
+		},
+		{
+			"base_damage": 0.5,
+			"baseline": true,
+			"id": "9",
+			"magazine": 24,
+			"name": "Uzi",
+			"price": 100,
+			"rate": 10.0,
+			"reload": 1.0,
+			"scene": "res://game/guns/Uzi.tscn"
+		}
+	]
+}
