@@ -1,5 +1,17 @@
 # TowDownGame Experience Demo
 
+## M3—M4 当前执行（覆盖下方历史阶段门，2026-09-12）
+
+- M2-R1稳定基线：`0ab53f47f5c885c2790edf090743aedd513e2ef1`；开始时HEAD与origin一致，没有后续提交，工作树仅有用户计划ZIP未跟踪。
+- H1_STATUS = DEFERRED_BY_USER
+- HUMAN_ACCEPTED = false
+- AUTHORIZED_SCOPE = M3—M4
+- H2_STATUS = PENDING
+- 用户暂时不能真人试玩，明确授权按M3三批→M4直接推进；不解释为认可手感。下方“等待H1”仅为历史记录。
+- 成功标准：实际24枪/24配件/24持久天赋；真实命中、有限派生、停止路径、配置与版本化存档、实际币种退款、代表组合回归；全部内容完成后20分钟/10回营后台混合流程。未实测的音画/真人操作留待H2。
+- 所有游戏改动仅在迭代目录；原三项目只读，不操作桌面、不启动可见窗口。原GPU残留与退出资源诊断保留为待查，非推进前置。
+- 当前下一任务：M3.1 W17/W18/W19/W20。
+
 > 当前：**M2-R1已交付 / READY FOR HUMAN REVIEW**。**HUMAN_ACCEPTED=false**。最新验证、未确认项和提交映射见本文末及VALIDATION；下方原M2与分批进度保留为历史。
 
 **READY FOR HUMAN REVIEW**
