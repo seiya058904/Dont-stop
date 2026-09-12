@@ -150,7 +150,9 @@ func gunAnim():
 		#gun_player.stop()
 		$GPUParticles2D.emitting = false
 
-func onHit(hurt):
+signal incoming_hit(raw: float, applied: float, boss: bool)
+
+func onHit(hurt, attacker = null):
 	if is_dead or LevelServer.state != "COMBAT" or get_tree().paused: return
 	if Demo.shield_hit(hurt):
 		Utils.showHitLabel("护盾",self)
@@ -164,6 +166,11 @@ func onHit(hurt):
 	hurt += temp_hurt
 	if hurt < 1:
 		hurt = 1
+	var raw_pressure = hurt
+	var boss_source = is_instance_valid(attacker) and attacker.get("is_boss") == true
+	if is_instance_valid(attacker):
+		hurt *= DemoConfig.BOSS_INCOMING if boss_source else DemoConfig.NORMAL_INCOMING
+	incoming_hit.emit(raw_pressure,hurt,boss_source)
 	PlayerData.player_hp -= hurt
 	Utils.showHitLabel(hurt,self)
 	get_tree().call_group("control","hit")

@@ -19,7 +19,7 @@ func _ready():
 	seed(444)
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	Utils.player.global_position = origin-Vector2(100,0)
 	Demo.try_purchase("weapon","0")
@@ -78,7 +78,7 @@ func _ready():
 	# Direct kills versus derived kills and fake targets.
 	ranks({"T10":3,"T11":3,"T16":1,"T24":3})
 	PlayerData.player_hp = 2
-	var ammo = PlayerData.player_ammo
+	var ammo = PlayerData.reserve_magazines
 	var victim = enemy(origin+Vector2(35,8),0.1)
 	var neighbour = enemy(origin+Vector2(45,8))
 	hit_enemy(victim,0,1)
@@ -90,7 +90,7 @@ func _ready():
 	check(PlayerData.player_hp == healed and Demo.ammo_kills == 1,"T11 T24 derived kill exclusion")
 	for i in 4:
 		victim = enemy(origin+Vector2(220+i*35,8),0.1); hit_enemy(victim,0,1)
-	check(PlayerData.player_ammo == ammo+6 and Demo.ammo_kills == 0,"T11 five direct kills restore reserve")
+	check(PlayerData.reserve_magazines == ammo+3 and Demo.ammo_kills == 0,"T11 five direct kills restore reserve")
 	check(Demo.kill_stacks <= 5,"T10 bounded stacks")
 	var dummy = enemy(origin); dummy.training = true
 	var stacks = Demo.kill_stacks
@@ -102,7 +102,7 @@ func _ready():
 	# First shot comes only from completed actual refill.
 	ranks({"T12":3})
 	aim(gun)
-	gun.bullets_count = 0; PlayerData.player_ammo = 1000
+	gun.bullets_count = 0; PlayerData.reserve_magazines = 1000
 	gun.reload_ammo(); gun.cancel_actions()
 	check(not gun.first_round,"T12 cancelled reload does not prime")
 	gun.reload_ammo()

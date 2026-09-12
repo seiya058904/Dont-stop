@@ -19,7 +19,7 @@ func _ready() -> void:
 func onGameStart():
 	$ControlUI.visible = true
 	$CanvasLayer/Panel.visible = true
-	PlayerData.player_ammo = 9999999
+	PlayerData.reserve_magazines = 9999999
 	var gun = Utils.weapon_list['0']
 	PlayerData.add_weapon(gun.instantiate())
 	await get_tree().create_timer(0.7).timeout

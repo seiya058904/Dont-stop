@@ -20,7 +20,7 @@ func _ready():
 	play_viewport = SubViewport.new(); play_viewport.size = Vector2i(1536,864)
 	play_viewport.world_2d = get_viewport().world_2d
 	play_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	add_child(play_viewport); play_viewport.add_child(main); Utils.gameStart()
+	add_child(play_viewport); play_viewport.add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.3)
 	Demo.save_path = "res://evidence/m6-audit-"+tier+".json"
 	get_tree().node_added.connect(observe_spawn)
@@ -67,7 +67,7 @@ func _ready():
 		check(row.cleanup.monsters == 0 and row.cleanup.transients == 0,"audit cleanup "+str(stage))
 		rows.append(row.duplicate(true))
 		print("M6 AUDIT ROW ",JSON.stringify(row))
-		var file = FileAccess.open("res://docs/iteration/evidence/m6/audit-"+tier+".json",FileAccess.WRITE)
+		var file = FileAccess.open("res://docs/iteration/evidence/m7/regression-artifacts/audit-"+tier+".json",FileAccess.WRITE)
 		file.store_string(JSON.stringify({"configuration":configuration,"rows":rows,"failures":failures},"\t")); file.close()
 	print("M6 AUDIT COMPLETE tier=",tier," rows=",rows.size()," failures=",failures)
 	await Demo.quit_game()

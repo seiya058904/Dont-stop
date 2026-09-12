@@ -27,7 +27,7 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Demo.test_mode = true
 	add_child(load("res://game/map/Main.tscn").instantiate())
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	for id in Utils.weapon_list: Demo.try_purchase("weapon",id)
 	Demo.try_purchase("talent","T10","points")

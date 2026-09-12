@@ -43,6 +43,7 @@ func start(local:Vector2,pos:Vector2):
 	velocity = local.direction_to(pos)
 
 func fire():
+	queue_redraw()
 	velocity = Vector2(speed * 2, 0).rotated(rotation)
 	set_physics_process(true)
 
@@ -92,3 +93,10 @@ func bulletSmoke(collisionResult):
 	#get_parent().add_child(imapct)
 	#imapct.global_position = collisionResult.get_position()
 	#imapct.rotation = collisionResult.get_normal().angle()
+
+func _draw():
+	var tier = int(context.get("tier",1))
+	if tier < 2: return
+	var color = Color("d9a2ff") if tier == 5 else Color("83cddd")
+	color.a = 0.55
+	draw_line(Vector2(-4-tier*2,0),Vector2.ZERO,color,1.0+tier*0.15)

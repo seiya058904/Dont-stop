@@ -4,7 +4,7 @@ func _ready():
 	Demo.test_mode = true
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	Utils.player.global_position = origin-Vector2(100,0)
 	for id in [111,113,115,116]: Demo.try_purchase("weapon",str(id))
@@ -20,7 +20,7 @@ func _ready():
 	rail.handle_charge(false,0)
 	check(rail.bullets_count == ammo-1 and not rail.charging,"release consumes once")
 	check(targets.slice(0,6).all(func(t): return t.HP < 100) and targets[6].HP == 100,"rail max six distinct actual hits")
-	check(is_equal_approx(100-targets[0].HP,rail.effective.damage*2.5),"full charge actual 2.5 multiplier")
+	check(is_equal_approx(100-targets[0].HP,snappedf(rail.effective.damage*2.5,0.01)),"full charge actual 2.5 multiplier")
 	for stop in ["switch","pause","reload","death","camp"]:
 		rail.can_shoot = true
 		rail.handle_charge(true,0.7)

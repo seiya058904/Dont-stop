@@ -3,7 +3,7 @@ func _ready():
 	Demo.test_mode = true
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	Utils.player.global_position = origin-Vector2(100,0)
 	for id in Utils.weapon_list: Demo.try_purchase("weapon",id)
@@ -89,7 +89,7 @@ func _ready():
 	check(edge.HP == 100,"A13 base cone excludes edge")
 	cone.addAttachMent(diffuser)
 	cone._shoot()
-	check(edge.HP < 100 and cone.effective.damage < cone.base_stats.damage+PlayerData.player_damage,"A13 wider actual cone with damage tradeoff")
+	check(edge.HP < 100 and is_equal_approx(cone.effective.damage,(cone.base_stats.damage+PlayerData.player_damage)*WeaponCatalog.power(cone.weapon_id)*1.1),"A13 wider actual cone with universal damage buff")
 	await clean()
 	gun = PlayerData.player_weapon_list[0]
 	aim(gun)

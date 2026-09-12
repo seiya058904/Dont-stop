@@ -11,7 +11,7 @@ func _ready() -> void:
 	Utils.gameStart()
 
 func onGameStart():
-	PlayerData.player_ammo = 9999999
+	PlayerData.reserve_magazines = 9999999
 	var gun = Utils.weapon_list['1']
 	PlayerData.add_weapon(gun.instantiate())
 	await get_tree().create_timer(1).timeout

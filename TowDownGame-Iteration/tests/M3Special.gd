@@ -3,7 +3,7 @@ func _ready():
 	Demo.test_mode = true
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	Utils.player.global_position = origin-Vector2(100,0)
 	for id in [121,122,124]: Demo.try_purchase("weapon",str(id))

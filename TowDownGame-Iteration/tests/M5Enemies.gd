@@ -1,7 +1,7 @@
 extends "res://tests/M3Weapons.gd"
 func _ready():
 	Demo.test_mode = true; seed(515)
-	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.5)
+	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.5)
 	Demo.try_purchase("weapon","117")
 	var town = LevelServer.town
 	for id in M5Content.ENEMIES:

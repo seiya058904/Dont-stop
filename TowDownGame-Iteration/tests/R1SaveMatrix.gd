@@ -7,7 +7,7 @@ func _ready():
 	Demo.test_mode = true
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	for frame in 8: await get_tree().physics_frame
 	var args = OS.get_cmdline_user_args()
 	DirAccess.make_dir_recursive_absolute("res://evidence/r1-save")
@@ -27,7 +27,7 @@ func _ready():
 			for i in 2:
 				var gun = PlayerData.player_weapon_list[[0,4][i]]
 				gun.bullets_count = int(gun.bullets_max_count * [1.0,0.0,0.5][(variation+i)%3])
-			PlayerData.player_ammo = 123+variation
+			PlayerData.reserve_magazines = 123+variation
 			Demo.save_path = "res://evidence/r1-save/case-%d.json" % variation
 			Demo.test_mode = false
 			Demo.save_camp()
@@ -47,7 +47,7 @@ func _ready():
 		var expected = JSON.parse_string(FileAccess.get_file_as_string("res://evidence/r1-save/expected-%d.json" % variation))
 		for w in expected.weapons:
 			check(PlayerData.player_weapon_list[int(w.id)].bullets_count == w.ammo,"R02 exact ammo gun "+w.id+" case "+str(variation))
-		check(PlayerData.player_ammo == expected.ammo,"R02 exact reserve")
+		check(PlayerData.reserve_magazines == expected.reserve_magazines,"R02 exact reserve")
 		check(PlayerData.player_am_list.size() == 4,"R02 duplicate model instances remain distinct")
 		Demo.test_mode = false
 		Demo.save_camp()

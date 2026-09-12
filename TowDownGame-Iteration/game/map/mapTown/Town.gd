@@ -24,8 +24,19 @@ const weapon_choose = preload("res://ui/widgets/WeaponChoose.tscn")
 const monster_pre = preload("res://game/monster/Monster 2/Monster2.tscn")
 const death_borad = preload("res://ui/widgets/DeathBoard.tscn")
 
+var camp_actions: HBoxContainer
+
 func _ready():
 	LevelServer.town = self
+	camp_actions = HBoxContainer.new()
+	camp_actions.position = Vector2(70,188)
+	$CanvasLayer.add_child(camp_actions)
+	for pair in [["买枪","weapon"],["买弹匣","magazine"],["装配件","attachment"],["升天赋","talent"],["出发","stage"]]:
+		var action = Button.new()
+		action.text = pair[0]; action.custom_minimum_size = Vector2(50,20)
+		action.add_theme_font_size_override("font_size",8)
+		camp_actions.add_child(action)
+		action.pressed.connect(func(): Demo.open_panel(); Demo.ui.switch_tab(pair[1]))
 	call_deferred("build_navigation")
 	LevelServer.monsterCreate.connect(self.monsterCreate)
 	LevelServer.roundVictory.connect(self.roundVictory)
@@ -74,6 +85,7 @@ func onTimeTick(timeout) -> void:
 
 #回合开始
 func onRoundStart():
+	camp_actions.hide()
 	Utils.showToast("START_TIP",2)
 	$CanvasLayer/timeout.visible = true
 	$CanvasLayer/level.visible = true
@@ -81,6 +93,7 @@ func onRoundStart():
 
 #回合结束
 func onRoundEnd():
+	camp_actions.show()
 	if is_instance_valid(arena): arena.queue_free(); arena = null
 	Utils.player.global_position = $PositionHome.global_position
 	$CanvasLayer/timeout.text = "营地整备 · E 商店 / Tab 配置"

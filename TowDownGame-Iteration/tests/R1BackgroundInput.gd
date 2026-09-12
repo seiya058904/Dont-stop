@@ -10,7 +10,7 @@ func _ready():
 	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	add_child(viewport)
 	viewport.add_child(load("res://game/map/Main.tscn").instantiate())
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	for frame in 10: await get_tree().process_frame
 	Demo.try_purchase("weapon","0")
 	var target = Utils.player.global_position+Vector2(70,-9)

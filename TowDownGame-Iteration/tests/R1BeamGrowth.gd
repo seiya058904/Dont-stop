@@ -12,7 +12,7 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Demo.test_mode = true
 	add_child(load("res://game/map/Main.tscn").instantiate())
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	for i in 8: await get_tree().physics_frame
 	Demo.try_purchase("weapon","0"); Demo.try_purchase("weapon","6")
 	LevelServer.town.depart(1,true); LevelServer.timerStop()

@@ -3,7 +3,7 @@ func _ready():
 	Demo.test_mode = true
 	var viewport = SubViewport.new(); viewport.size = Vector2i(410,230)
 	viewport.world_2d = get_viewport().world_2d; viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED; add_child(viewport)
-	viewport.add_child(load("res://game/map/Main.tscn").instantiate()); Utils.gameStart(); await wait(0.3)
+	viewport.add_child(load("res://game/map/Main.tscn").instantiate()); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.3)
 	for id in Utils.weapon_list: Demo.try_purchase("weapon",id)
 	for id in Utils.am_dict: Demo.try_purchase("attachment",id)
 	Demo.open_panel(); await frames(); var panel = Demo.ui
@@ -24,7 +24,7 @@ func _ready():
 					if control.get_minimum_size().x > control.size.x+1: clipped.append({"tab":tab,"id":key,"text":control.text,"minimum":control.get_minimum_size().x,"width":control.size.x})
 			check(labels_fit,"detail labels wrap or fit "+tab+"/"+key)
 	check(clipped.is_empty(),"buttons fit their allocated widths at logical 410x230")
-	var file = FileAccess.open("res://docs/iteration/evidence/m6/layout.json",FileAccess.WRITE)
+	var file = FileAccess.open("res://docs/iteration/evidence/m7/regression-artifacts/layout.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"viewport":"410x230 logical; production stretch to desktop","clipped":clipped,"checks":checks,"failures":failures},"\t")); file.close()
 	panel.queue_free(); await frames()
 	print("M6 LAYOUT SUMMARY checks=",checks," failures=",failures)

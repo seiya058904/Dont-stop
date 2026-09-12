@@ -19,10 +19,10 @@ var player_fire_rate = 1: #全局武器间隔
 	set(value):
 		player_fire_rate = value
 		emit_signal("onPlayerFireRateChange",player_fire_rate)
-var player_ammo = 100:#子弹数量
+var reserve_magazines = 10: # Shared whole reloads, independent of gun capacity
 	set(value):
-		player_ammo = value
-		emit_signal("onAmmoChange",player_ammo)
+		reserve_magazines = maxi(0,int(value))
+		emit_signal("onAmmoChange",reserve_magazines)
 var player_am_list = {} #配件列表
 var player_weapon_list = {} #武器列表
 var player_reward = {} #奖励列表
@@ -78,9 +78,7 @@ func resurrectPlayer(hp, ammo_percentage):
 	else:
 		player_hp = hp
 	if Utils.player.gun != null:
-		var player_ammo_percentage = (player_ammo / Utils.player.gun.bullets_max_count) * 100
-		if player_ammo_percentage < ammo_percentage:
-			player_ammo = Utils.player.gun.bullets_max_count * ammo_percentage * 0.01
+		reserve_magazines = maxi(reserve_magazines,ceili(ammo_percentage/100.0))
 	emit_signal("onPlayerResurrect")
 
 #回复血量

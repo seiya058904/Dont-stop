@@ -18,3 +18,29 @@ const DEFINITIONS = {
 
 static func definition(id: int) -> Dictionary:
 	return DEFINITIONS.get(id,{})
+
+# Fixed progression, no random rarity. Multipliers are applied once in EffectiveStats.
+const TIERS = {3:1,1:1,0:1,9:1,2:2,5:2,8:2,123:2,7:2,4:3,117:3,118:3,115:3,6:3,111:4,112:4,114:4,116:4,122:4,113:5,119:5,120:5,121:5,124:5}
+const PRICES = {"3":60,"1":80,"0":100,"9":120,"2":260,"5":290,"8":320,"123":350,"7":380,"4":650,"117":700,"118":760,"115":800,"6":850,"111":1400,"112":1500,"114":1600,"116":1700,"122":1800,"113":2800,"119":3000,"120":3200,"121":3400,"124":3600}
+const POWER = {3:1.4,1:1.0,0:1.0,9:1.0,2:1.4,5:1.2,8:1.6,123:1.7,7:1.1,4:1.35,117:2.5,118:2.0,115:2.3,6:1.7,111:1.9,112:3.6,114:4.2,116:3.0,122:3.0,113:4.8,119:4.0,120:3.4,121:4.5,124:1.9}
+static func tier(id: int) -> int:
+	return TIERS.get(id,1)
+static func power(id: int) -> float:
+	return POWER.get(id,1.0)
+static func short_info(id: int) -> String:
+	var basics = {0:"均衡的单发弹道，适合稳定压制。",1:"扇形弹丸覆盖近距离敌人。",2:"高单发伤害，适合中远距离点射。",3:"轻便连射，适合低成本起步。",4:"较高射速与伤害兼顾的主力步枪。",5:"近距离散射压制，多弹丸分别命中。",6:"远距离持续束流，实墙阻断。",7:"大弹匣机枪，适合持续火力。",8:"近距离五弹丸爆发，换弹频繁。",9:"高射速冲锋枪，快速倾泻小弹匣。"}
+	if basics.has(id): return basics[id]
+	var info = DemoConfig.weapon_info(id)
+	return info.split("。")[0].split("；")[0].split("\n")[0]+"。"
+static func type_name(id: int) -> String:
+	var tags = DemoConfig.weapon_tags(id)
+	if "explosive" in tags: return "爆破"
+	if "energy" in tags: return "能量"
+	if "spread" in tags: return "散射"
+	return "直射"
+
+static func labels(id: int) -> Array:
+	var names = {"projectile":"实体弹","straight":"直射","spread":"散射","energy":"能量","explosive":"爆炸","chain":"连锁电弧","beam":"束流","pulse":"多束脉冲","charged":"蓄力贯穿","pulse_cone":"扇面覆盖","continuous":"持续热流","ricochet":"墙面反弹","split":"命中裂片","homing":"有限追踪","returning":"出返双击","gravity":"聚拢控制","rotary":"加速连射","burst":"三发连射"}
+	var result = []
+	for tag in DemoConfig.weapon_tags(id): result.append(names.get(tag,tag))
+	return result.slice(0,4)

@@ -8,7 +8,7 @@ func _ready():
 	Demo.save_path = "user://contract-test-camp.json"
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	for i in 8: await get_tree().physics_frame
 	if "write" in OS.get_cmdline_user_args():
 		Demo.try_purchase("weapon","114")
@@ -25,7 +25,7 @@ func _ready():
 		check(FileAccess.file_exists(Demo.save_path),"save writes test snapshot atomically")
 	else:
 		Demo.load_camp()
-		check(PlayerData.gold == 9659,"load preserves spent gold instead of granting 9999")
+		check(PlayerData.gold == 100000-Utils.weapon_money_list["114"]-100-40,"load preserves spent gold instead of granting 9999")
 		check(PlayerData.reward_point == 9998,"load preserves spent talent points")
 		check(Demo.rank("T01") == 1 and Demo.rank("T04") == 1,"load restores exact ranks")
 		check(PlayerData.player_weapon_list.has(114),"load restores owned plasma")
@@ -33,7 +33,7 @@ func _ready():
 		if gun:
 			check(gun.bullets_count == 3,"load does not refill magazine")
 			check(is_equal_approx(gun.effective.radius,38.4),"load recomputes equipped fuse")
-			check(is_equal_approx(gun.effective.damage,4.3*1.08),"load applies talent once")
+			check(is_equal_approx(gun.effective.damage,4.3*WeaponCatalog.power(114)*1.18),"load applies talent once")
 		check(Demo.selected_stage == 3 and LevelServer.state == "CAMP","load resumes camp with selected encounter")
 		check(Utils.player.gun.weapon_id == 114,"load restores equipped gun")
 	main.get_node("AudioStreamPlayer").stop()

@@ -3,7 +3,7 @@ func dismiss():
 	for panel in Demo.pause_stack.duplicate(): Demo.pop_pause(panel); panel.queue_free()
 func _ready():
 	Demo.test_mode = true; seed(606)
-	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.3)
+	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.3)
 	Demo.try_purchase("weapon","117")
 	Utils.player.set_process(false); Utils.player.set_physics_process(false)
 	# Same-size membership replacement used to leave the previous actor RID cached.

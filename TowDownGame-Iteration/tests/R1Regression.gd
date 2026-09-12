@@ -27,7 +27,7 @@ func _ready():
 	seed(920)
 	main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	town = main.get_node("Town")
 	for frame in 8: await get_tree().physics_frame
 	Demo.try_purchase("weapon","0")
@@ -48,7 +48,7 @@ func _ready():
 	for frame in 16: await get_tree().physics_frame
 	check(PlayerData.player_level == 2 and Demo.rank("T10") == 0,"R01 actual bullet kill levels up without T10")
 	check(is_equal_approx(gun.damage_context().damage,gun.base_stats.damage+0.6),"R01 first new shot snapshot refreshed")
-	check(is_equal_approx(reserve.damage_context().damage,reserve.base_stats.damage+0.6),"R01 held reserve gun refreshed")
+	check(is_equal_approx(reserve.damage_context().damage,(reserve.base_stats.damage+0.6)*WeaponCatalog.power(reserve.weapon_id)),"R01 held reserve gun refreshed")
 	check(gun.bullets_count == remaining,"R01 level does not refill ammo")
 	check(is_equal_approx(old_bullet.hurt,old_damage),"R01 in-flight normal projectile keeps snapshot")
 	var next_target = enemy(Vector2(80,-1100),50)
@@ -59,7 +59,7 @@ func _ready():
 	var reserve_target = enemy(Vector2(80,-1150),50)
 	physical_shot(reserve,reserve_target)
 	for frame in 16: await get_tree().physics_frame
-	check(is_equal_approx(50-reserve_target.HP,reserve.base_stats.damage+0.6),"R01 reserve weapon actual collision damage")
+	check(is_equal_approx(50-reserve_target.HP,(reserve.base_stats.damage+0.6)*WeaponCatalog.power(reserve.weapon_id)),"R01 reserve weapon actual collision damage")
 	LevelServer.return_to_camp()
 	Demo.try_purchase("attachment","110")
 	Demo.try_purchase("attachment","1")
@@ -86,7 +86,7 @@ func _ready():
 	check(not Demo.valid_save(bad),"R03 next instance collision rejected")
 	bad = data.duplicate(true); bad.talents.T01 = 4
 	check(not Demo.valid_save(bad),"R03 invalid talent rejected")
-	bad = data.duplicate(true); bad.erase("legacy"); bad.schema_version = 1
+	bad = data.duplicate(true); bad.erase("legacy"); bad = M7Fixtures.legacy(bad,1)
 	check(Demo.valid_save(bad),"R03 schema1 missing legacy migration")
 	var result = Demo.save_camp()
 	check(result is Dictionary and result.has("success"),"R04 save returns structured outcome")

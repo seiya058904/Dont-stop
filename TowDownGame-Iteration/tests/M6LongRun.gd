@@ -68,7 +68,7 @@ func _ready():
 		add_child(play_viewport)
 		play_viewport.add_child(main)
 	else: add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	LevelServer.roundVictory.connect(func():
 		var boss = DemoConfig.ENCOUNTERS[LevelServer.level].get("boss", "")
 		if boss != "": boss_wins[boss] = boss_wins.get(boss,0)+1)

@@ -18,7 +18,7 @@ func _ready():
 	file.store_string(raw); file.close()
 	add_child(load("res://game/map/Main.tscn").instantiate())
 	# The real start button calls these synchronously in this order.
-	Utils.gameStart(); Demo.open_panel()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; Demo.open_panel()
 	await frames()
 	check(Demo.pause_stack.back() == Demo.save_dialog and Demo.save_dialog.get_index() > Demo.ui.get_index(),"R03 recovery dialog stays above startup camp panel")
 	check(FileAccess.get_file_as_string(Demo.save_path) == raw,"R03 startup keeps corrupt bytes")

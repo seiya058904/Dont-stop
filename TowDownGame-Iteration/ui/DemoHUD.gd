@@ -27,7 +27,7 @@ func update_text():
 	var gun = Utils.player.gun
 	var names = []
 	for am in gun.attachments_dict.values(): names.append(tr(am.am_name))
-	text = "%s · %d/%d | 配件 %s · Tab全部武器/详情\n火力%d 装填%d 携弹%d | 连杀 %d层 %.1fs · 爆破%s 修复%d" % [tr(gun.weapon_name),gun.bullets_count,gun.bullets_max_count,("无" if names.is_empty() else " / ".join(names.slice(0,2))),Demo.rank("T01"),Demo.rank("T03"),Demo.rank("T04"),Demo.kill_stacks,maxf(0,Demo.stack_time),"开" if Demo.rank("T16") else "关",Demo.rank("T24")]
+	text = "%s · %d / %d MAGS | 配件 %s · Tab全部武器/详情\n火力%d 装填%d 携弹%d | 连杀 %d层 %.1fs · 爆破%s 修复%d" % [tr(gun.weapon_name),gun.bullets_count,PlayerData.reserve_magazines,("无" if names.is_empty() else " / ".join(names.slice(0,2))),Demo.rank("T01"),Demo.rank("T03"),Demo.rank("T04"),Demo.kill_stacks,maxf(0,Demo.stack_time),"开" if Demo.rank("T16") else "关",Demo.rank("T24")]
 
 	if Demo.rank("T19") > 0: text += " · 盾%.1fs" % Demo.cooldown("T19")
 	if Demo.crowd_active: text += " · 火网生效"

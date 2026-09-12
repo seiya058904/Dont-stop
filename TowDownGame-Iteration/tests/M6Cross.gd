@@ -3,7 +3,7 @@ func dismiss():
 	for panel in Demo.pause_stack.duplicate(): Demo.pop_pause(panel); panel.queue_free()
 func _ready():
 	Demo.test_mode = true; seed(660)
-	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.3)
+	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.3)
 	for id in [117,118,120,121,122,116,113,124]: Demo.try_purchase("weapon",str(id))
 	Utils.player.global_position = origin-Vector2(100,0)
 	PlayerData.player_hp_max = 500; PlayerData.player_hp = 500
@@ -34,9 +34,9 @@ func _ready():
 	LevelServer.state = "COMBAT"
 	var gun = PlayerData.player_weapon_list[117]; aim(gun)
 	var barrier = wall(origin+Vector2(60,0),Vector2(4,120))
-	var shield = M5Content.spawn("E09",LevelServer.town.monster_root,origin+Vector2(-40,8)); shield.set_physics_process(false)
+	var shield = M5Content.spawn("E09",LevelServer.town.monster_root,origin+Vector2(-40,8)); shield.set_physics_process(false); shield.HP = 100
 	var hp = shield.HP; await wait(0.06); gun._shoot(); await wait(0.6)
-	check(shield.HP < hp and shield.HP > 0,"ricochet hits shield once after actual wall")
+	check(shield.HP < hp and shield.HP > 0 and hp-shield.HP <= gun.effective.damage+0.01,"ricochet hits shield once after actual wall")
 	barrier.queue_free(); await clean()
 	# Fragment mother and separately owned summon behind it.
 	gun = PlayerData.player_weapon_list[118]; aim(gun)

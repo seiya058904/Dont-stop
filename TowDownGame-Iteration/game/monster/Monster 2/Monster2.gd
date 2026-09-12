@@ -21,7 +21,7 @@ func onAtk():
 
 func _on_animated_sprite_2d_frame_changed():
 	if anim.animation == "atk" && anim.frame == 5 && area_player != null && !is_die:
-		area_player.onHit(hurt)
+		area_player.onHit(hurt,self)
 
 
 func _on_area_2d_body_exited(body):

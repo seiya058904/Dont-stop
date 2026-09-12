@@ -3,7 +3,7 @@ var samples = []
 func _ready():
 	Demo.test_mode = true
 	if DisplayServer.get_name() == "headless": get_tree().quit(2); return
-	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.5)
+	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.5)
 	for id in [6,117,118,120,121,122,124]: Demo.try_purchase("weapon",str(id))
 	for cycle in 12:
 		var id = [6,117,118,120,121,122,124][cycle%7]
@@ -25,6 +25,6 @@ func _ready():
 		samples.append(row); print("GPU CLEANUP ",JSON.stringify(row))
 		check(row.enemies == 0 and row.transients == 0 and row.orphans == 0,"GPU camp cleanup empty")
 	var result = {"renderer":RenderingServer.get_video_adapter_name(),"display":DisplayServer.get_name(),"samples":samples,"checks":checks,"failures":failures}
-	var file = FileAccess.open("res://docs/iteration/evidence/m6/gpu-cleanup.json",FileAccess.WRITE); file.store_string(JSON.stringify(result,"\t")); file.close()
+	var file = FileAccess.open("res://docs/iteration/evidence/m7/regression-artifacts/gpu-cleanup.json",FileAccess.WRITE); file.store_string(JSON.stringify(result,"\t")); file.close()
 	print("M6 GPU SUMMARY checks=",checks," failures=",failures)
 	await Demo.quit_game()

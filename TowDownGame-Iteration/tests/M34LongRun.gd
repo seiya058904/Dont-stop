@@ -59,7 +59,7 @@ func _ready():
 		add_child(play_viewport)
 		play_viewport.add_child(main)
 	else: add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.3)
 	DirAccess.make_dir_recursive_absolute("res://evidence/m34-long")
 	Demo.save_path = "res://evidence/m34-long/diagnostic-camp.json" if diagnostic else "res://evidence/m34-long/camp.json"

@@ -218,8 +218,8 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 			result.reason = "已满级；未扣款"
 			return result
 		price = DemoConfig.TALENT_GOLD_PRICE if currency == "gold" else 1
-	elif kind == "supply" and id in ["ammo","health"] and currency == "gold":
-		price = 10
+	elif kind == "supply" and id in ["ammo","mag5","mag10","mag25","health"] and currency == "gold":
+		price = {"ammo":10,"mag5":10,"mag10":18,"mag25":40,"health":10}[id]
 		if id == "health" and PlayerData.player_hp >= PlayerData.player_hp_max:
 			result.reason = "生命已满；未扣款"
 			return result
@@ -248,9 +248,9 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 			purchases.append(id)
 			result.reason = "已获得原型奖励；详见当前配置"
 		"supply":
-			if id == "ammo": PlayerData.player_ammo += 300
+			if id != "health": PlayerData.reserve_magazines += {"ammo":5,"mag5":5,"mag10":10,"mag25":25}[id]
 			else: PlayerData.addPlayerHp(PlayerData.player_hp_max)
-			result.reason = "补给完成 · 10金币"
+			result.reason = "补给完成 · %d金币 · 备用%d弹匣" % [price,PlayerData.reserve_magazines]
 	if currency == "gold": PlayerData.gold -= price
 	else: PlayerData.reward_point -= price
 	result.success = true
@@ -263,8 +263,8 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 
 func replenish():
 	if LevelServer.state != "CAMP": return
-	PlayerData.gold = maxi(PlayerData.gold,DemoConfig.INITIAL_GOLD)
-	PlayerData.reward_point = maxi(PlayerData.reward_point,DemoConfig.INITIAL_TALENT_POINTS)
+	PlayerData.gold = maxi(PlayerData.gold,9999)
+	PlayerData.reward_point = maxi(PlayerData.reward_point,9999)
 	changed.emit()
 	save_camp()
 
@@ -279,7 +279,7 @@ func on_kill(monster, context: Dictionary):
 		ammo_kills += 1
 		if ammo_kills >= DemoConfig.TALENTS.T11.kills:
 			ammo_kills = 0
-			PlayerData.player_ammo += int(DemoConfig.talent_value("T11",rank("T11")))
+			PlayerData.reserve_magazines += int(DemoConfig.talent_value("T11",rank("T11")))
 	var gun = context.get("gun")
 	if is_instance_valid(gun) and context.get("refill",0) > 0 and cooldown("A24") <= 0:
 		talent_cooldowns.A24 = AttachmentCatalog.DEFINITIONS[124].cooldown
@@ -296,7 +296,7 @@ func snapshot() -> Dictionary:
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
 	var attachments = []
 	for am in PlayerData.player_am_list.values(): attachments.append({"definition":str(am.am_id),"instance":am.id,"gun":str(am.gun.weapon_id) if is_instance_valid(am.gun) else ""})
-	return {"schema_version":4,"campaign_complete":campaign_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"ammo":PlayerData.player_ammo,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":5,"campaign_complete":campaign_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}
@@ -378,7 +378,7 @@ func load_camp() -> bool:
 	# One complete configuration calculation; intermediate ammo is never restored.
 	refresh()
 	for w in data.weapons: PlayerData.player_weapon_list[int(w.id)].bullets_count = int(w.ammo)
-	PlayerData.player_ammo = int(data.ammo)
+	PlayerData.reserve_magazines = int(data.reserve_magazines)
 	PlayerData.player_hp_max = data.hp_max
 	PlayerData.player_hp = data.hp
 	Utils.player.is_dead = data.hp <= 0
@@ -414,7 +414,7 @@ func export_bad_save() -> String:
 func create_new_save() -> bool:
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
-	var fresh = {"schema_version":4,"campaign_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"ammo":100,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"attachments":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_instance":1,"next_stage":1,"selected_stage":1,"equipped":""}
+	var fresh = {"schema_version":5,"campaign_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"attachments":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_instance":1,"next_stage":1,"selected_stage":1,"equipped":""}
 	var result = save_store.save(save_path,fresh)
 	if not result.success: return false
 	return load_camp()

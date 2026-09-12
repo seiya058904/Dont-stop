@@ -47,7 +47,7 @@ func onGameStart():
 	onPlayerExpChange(PlayerData.player_exp,PlayerData.getMaxExp())
 	onGoldChange(PlayerData.gold)
 	onRewardChange(PlayerData.reward_point)
-	onAmmoChange(PlayerData.player_ammo)
+	onAmmoChange(PlayerData.reserve_magazines)
 	var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT).set_parallel(true)
 	tween.tween_property(box_top,"position:y",box_top.position.y,0.3).from(box_top.position.y-box_top.size.y)
 	tween.tween_property(bottom_bls,"position:y",bottom_bls.position.y,0.3).from(bottom_bls.position.y+bottom_bls.size.y)
@@ -110,7 +110,7 @@ func onGoldChange(gold):
 	gold_label.text = tr("GOLD_HAS") + str(gold)
 
 func onAmmoChange(ammo):
-	ammo_label.text = tr("AMMO_ALL") + str(ammo)
+	ammo_label.text = "%d MAGS" % ammo
 
 func onRewardChange(reward):
 	reward_label.text = tr("REWARD_POINT") + str(reward)

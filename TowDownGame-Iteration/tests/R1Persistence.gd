@@ -24,7 +24,7 @@ func check(ok, name):
 func _ready():
 	Demo.test_mode = true
 	add_child(load("res://game/map/Main.tscn").instantiate())
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	for frame in 8: await get_tree().physics_frame
 	DirAccess.make_dir_recursive_absolute("res://evidence/r1-save")
 	Demo.save_path = "res://evidence/r1-save/fault.json"
@@ -57,7 +57,7 @@ func _ready():
 	Demo.test_mode = true
 	check(Utils.player.reward_root.get_node("REWARD BLUE BACTERIA").kill_count == 1000,"legacy bacteria lifetime cap survives load")
 	var old = data.duplicate(true)
-	old.schema_version = 1; old.erase("legacy_state")
+	old = M7Fixtures.legacy(old,1); old.erase("legacy_state")
 	check(CampSnapshot.normalize(old).legacy_state["10"] == 1000,"v1 bacteria cap migrates from persisted HP")
 	var cases = []
 	var malformed = data.duplicate(true)
@@ -67,7 +67,7 @@ func _ready():
 	malformed = data.duplicate(true); malformed.hp = malformed.hp_max+1; cases.append(malformed)
 	malformed = data.duplicate(true); malformed.legacy_state["10"] = 1001; cases.append(malformed)
 	malformed = data.duplicate(true)
-	malformed.attachments = [{"definition":"122","instance":1,"gun":"0"}]; malformed.next_instance = 2; cases.append(malformed)
+	malformed.attachments = [{"definition":"122","instance":1,"gun":"missing"}]; malformed.next_instance = 2; cases.append(malformed)
 	for value in [{},[null]]:
 		var bad = data.duplicate(true); bad.legacy = value; cases.append(bad)
 	var bad = data.duplicate(true); bad.weapons[0].id = "missing"; cases.append(bad)
@@ -85,7 +85,7 @@ func _ready():
 	var raw = FileAccess.get_file_as_string(Demo.save_path)
 	var exported = Demo.export_bad_save()
 	check(FileAccess.get_file_as_string(exported) == raw,"R03 export preserves bad original bytes")
-	old = data.duplicate(true); old.schema_version = 1; old.erase("legacy"); old.erase("legacy_state")
+	old = data.duplicate(true); old = M7Fixtures.legacy(old,1); old.erase("legacy"); old.erase("legacy_state")
 	check(Demo.valid_save(old),"R03 legal missing-legacy v1")
 	data.legacy.append("0"); data.legacy.append("1"); data.hp = 0
 	file = FileAccess.open(Demo.save_path,FileAccess.WRITE); file.store_string(JSON.stringify(data)); file.close()

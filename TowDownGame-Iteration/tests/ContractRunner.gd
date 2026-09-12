@@ -27,7 +27,8 @@ func _ready():
 	town = main.get_node("Town")
 	Utils.gameStart()
 	for i in 8: await get_tree().physics_frame
-	check(PlayerData.gold == 9999 and PlayerData.reward_point == 9999,"A01 new wallets")
+	check(PlayerData.gold == 180 and PlayerData.reward_point == 0,"A01 new wallets")
+	PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	check(Utils.weapon_list.size() == 24 and Utils.am_dict.size() == 24,"E M3-M4 registered counts (M2 baseline 13/15 retained in history)")
 	var exact = PlayerData.getMaxExp()
 	PlayerData.player_exp = exact-1
@@ -48,7 +49,7 @@ func _ready():
 	PlayerData.player_hp = 5
 	PlayerData.reward_point = 9999
 	var result = Demo.try_purchase("weapon","0")
-	check(result.success and PlayerData.gold == 9989,"A03 gold buys actual gun")
+	check(result.success and PlayerData.gold == 100000-Utils.weapon_money_list["0"],"A03 gold buys actual gun")
 	var balance = PlayerData.gold
 	check(not Demo.try_purchase("weapon","0").success and PlayerData.gold == balance,"A06 owned gun cannot charge twice")
 	check(not Demo.try_purchase("weapon","invalid").success and PlayerData.gold == balance,"A12 invalid transaction")
@@ -100,13 +101,13 @@ func _ready():
 			if a.can_equip(weapon): yes += 1
 			else: no += 1
 		check(yes > 0,"E attachment compatible "+id)
-		if id != "114": check(no > 0,"E attachment rejects unsupported mechanism "+id)
+		if id != "114": check(no == 0,"E attachment universal roster "+id)
 		else: check(yes == 24,"A14 overload explicitly universal")
 	var plasma = PlayerData.player_weapon_list[114]
 	var fuse
 	for a in PlayerData.player_am_list.values():
 		if a.am_id == 121: fuse = a
-	check(not gun.addAttachMent(fuse) and fuse.gun == null,"A15 incompatible installation cannot mutate")
+	check(gun.addAttachMent(fuse) and fuse.gun == gun,"A15 formerly restricted attachment installs universally")
 	plasma.addAttachMent(fuse)
 	check(is_equal_approx(plasma.effective.radius,38.4),"B explosion radius changes actual value")
 	var save = Demo.snapshot()

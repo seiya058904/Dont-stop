@@ -5,7 +5,7 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 	var b = gun.base_stats
 	var ranks = Demo.talents if saved.is_empty() else saved.talents
 	var level_damage = PlayerData.player_damage if saved.is_empty() else 0.3 * saved.level
-	var magazine_flat = 0
+	var magazine_mul = 1.0
 	var reload_mul = 1.0
 	var damage_percent = PlayerData.base_bullet_damage + DemoConfig.talent_value("T01",int(ranks.get("T01",0)))
 	var crit = PlayerData.base_aim_enh * 0.01
@@ -24,21 +24,9 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))
 	if "continuous" in gun.tags: damage_mul *= cycle
 	for am in attachments:
-		match am.am_id:
-			0: reload_mul *= 0.8
-			1: magazine_flat += 10
-			2: magazine_flat += 20
-			3:
-				reload_mul *= 0.8
-				magazine_flat += 10
-			5:
-				reload_mul *= 0.8
-				magazine_flat += 5
-			6: magazine_flat += 50
-			7: magazine_flat += 19
-			8: magazine_flat += 70
 		if AttachmentCatalog.DEFINITIONS.has(am.am_id):
 			var d = AttachmentCatalog.DEFINITIONS[am.am_id]
+			magazine_mul *= d.get("magazine_mul",1.0)
 			crit += d.get("crit",0.0)
 			damage_percent += d.get("damage",0.0)
 			damage_mul *= d.get("damage_mul",1.0)
@@ -56,8 +44,8 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 				if d.has(key): extras[key] = d[key]
 
 	var result = {
-		"tags":gun.tags, "damage": (b.damage + level_damage) * (1.0 + damage_percent)*damage_mul,
-		"magazine": maxi(1, int((b.magazine + magazine_flat) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
+		"tags":gun.tags, "damage": (b.damage + level_damage) * WeaponCatalog.power(gun.weapon_id) * (1.0 + damage_percent)*damage_mul,
+		"magazine": maxi(1, int((b.magazine * magazine_mul) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
 		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
 		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle * PlayerData.player_fire_rate * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 24.0 if "rotary" in gun.tags else 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,

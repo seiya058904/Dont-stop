@@ -4,7 +4,7 @@ func _ready():
 	Demo.save_path = "user://m4-persistence-test.json"
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	if "read" in OS.get_cmdline_user_args():
 		check(Demo.load_camp(),"cross-process schema3 restore")
@@ -30,7 +30,7 @@ func _ready():
 		check(Demo.save_store.save(Demo.save_path,data).success,"write independent cross-process fixture")
 		for version in [1,2]:
 			var old = data.duplicate(true)
-			old.schema_version = version
+			old = M7Fixtures.legacy(old,version)
 			old.erase("talent_payments")
 			check(Demo.valid_save(old),"old version accepted without fabricated history "+str(version))
 			check(Demo.save_store.save(Demo.save_path+"-old",old).success,"write old version fixture")

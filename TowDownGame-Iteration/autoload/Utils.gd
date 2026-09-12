@@ -90,22 +90,7 @@ var am_dict = {
 	"9" = preload("res://game/attachments/GrenadeLauncher.tscn")
 }
 
-const weapon_money_list = {
-	"121" = 240,"122" = 200,"124" = 220,
-	"111" = 180,"113" = 240,"115" = 180,"116" = 220,
-	"117" = 180,"118" = 180,"119" = 220,"120" = 220,
-	"112" = 150,"114" = 200,"123" = 150,
-	"0" = 10,
-	"1" = 10,
-	"2" = 10,
-	"3" = 10,
-	"4" = 50,
-	"5" = 50,
-	"6" = 100,
-	"7" = 100,
-	"8" = 100,
-	"9" = 100
-}
+const weapon_money_list = WeaponCatalog.PRICES
 
 const hitlabel = preload("res://ui/widgets/HitLabel.tscn")
 

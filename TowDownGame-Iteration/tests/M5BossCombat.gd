@@ -1,7 +1,7 @@
 extends "res://tests/M3Weapons.gd"
 func _ready():
 	Demo.test_mode=true; seed(551)
-	var main=load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.5)
+	var main=load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.5)
 	Demo.try_purchase("weapon","117"); Utils.player.set_process(false); Utils.player.set_physics_process(false)
 	for stage in [10,20,30]:
 		PlayerData.player_hp_max=500; PlayerData.player_hp=500

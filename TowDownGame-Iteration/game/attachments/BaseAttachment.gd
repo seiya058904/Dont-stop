@@ -29,7 +29,7 @@ func _ready() -> void:
 
 #当前配件是否可用安装到枪械
 func canUseAm(type):
-	return use_type.has(type)
+	return true
 
 #可用类型
 func _checkTypeList():
@@ -63,13 +63,4 @@ func gunUpdate():
 	gun.updateGun()
 
 func can_equip(target: BaseGun) -> bool:
-	_checkTypeList()
-	if AttachmentCatalog.DEFINITIONS.has(am_id): return AttachmentCatalog.compatible(am_id,target)
-	match am_id:
-		110: return not "beam" in target.tags
-		112: return "spread" in target.tags
-		114: return true
-		117: return "projectile" in target.tags or "beam" in target.tags
-		121: return "explosive" in target.tags
-		122: return "chain" in target.tags
-	return canUseAm(target.weapon_type)
+	return is_instance_valid(target) and target.damage > 0 and target.bullets_max_count > 0

@@ -3,7 +3,7 @@ func dismiss():
 	for panel in Demo.pause_stack.duplicate(): Demo.pop_pause(panel); panel.queue_free()
 func _ready():
 	Demo.test_mode = true; seed(505)
-	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.5)
+	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.5)
 	Demo.try_purchase("weapon","117"); PlayerData.player_hp_max = 500; PlayerData.player_hp = 500
 	Utils.player.set_physics_process(false); Utils.player.set_process(false)
 	var town = LevelServer.town
@@ -58,9 +58,9 @@ func _ready():
 	await wait(0.8); var boss = instance_from_id(LevelServer.boss_instance); Combat.hit(boss,{"damage":10000.0,"epoch":LevelServer.epoch}); await wait(0.1)
 	check(Demo.campaign_complete and Demo.next_stage==30 and LevelServer.state=="CAMP","final campaign resolves without stage31")
 	dismiss(); await wait(0.7)
-	var snap = Demo.snapshot(); check(CampSnapshot.validate(snap) and snap.schema_version==4 and snap.campaign_complete,"schema4 completed campaign snapshot")
+	var snap = Demo.snapshot(); check(CampSnapshot.validate(snap) and snap.schema_version==5 and snap.campaign_complete,"schema4 completed campaign snapshot")
 	for version in [1,2,3]:
-		var old = snap.duplicate(true); old.schema_version = version; old.erase("campaign_complete")
+		var old = snap.duplicate(true); old = M7Fixtures.legacy(old,version); old.erase("campaign_complete")
 		check(CampSnapshot.validate(old) and not CampSnapshot.normalize(old).campaign_complete,"old schema defaults without invented completion "+str(version))
 	print("M5 WORLD SUMMARY checks=",checks," failures=",failures)
 	await wait(1.0); get_tree().quit(1 if failures else 0)

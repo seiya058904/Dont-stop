@@ -3,7 +3,7 @@ func dismiss():
 	for p in Demo.pause_stack.duplicate(): Demo.pop_pause(p); p.queue_free()
 func _ready():
 	Demo.test_mode=true; seed(550)
-	var main=load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.5)
+	var main=load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.5)
 	Demo.try_purchase("weapon","117"); var town=LevelServer.town
 	town.depart(6,true); LevelServer.timerStop(); await wait(0.2)
 	PlayerData.player_hp_max=500; PlayerData.player_hp=500; Utils.player.set_physics_process(false); Utils.player.set_process(false)

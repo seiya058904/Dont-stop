@@ -45,7 +45,7 @@ func _ready():
 	seed(317)
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	Utils.player.global_position = origin-Vector2(100,0)
 	for id in WeaponCatalog.DEFINITIONS:
@@ -64,7 +64,7 @@ func _ready():
 		gun.bullets_count = 0
 		gun._shoot()
 		check(gun.bullets_count == 0,"empty firing safe "+str(id))
-		PlayerData.player_ammo = 1000
+		PlayerData.reserve_magazines = 1000
 		gun.reload_ammo()
 		await wait(gun.effective.reload+0.1)
 		check(gun.bullets_count > 0,"real timed reload "+str(id))

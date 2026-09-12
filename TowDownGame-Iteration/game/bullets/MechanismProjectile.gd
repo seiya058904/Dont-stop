@@ -136,6 +136,7 @@ func split():
 		shard.fire()
 
 func _draw():
+	super._draw()
 	var mode = spec.get("mode","")
 	var color = Color(1,0.65,0.2) if mode in ["rocket","missile"] else Color(0.4,0.9,1)
 	draw_line(Vector2(-9,0),Vector2.ZERO,color,2 if mode != "fragment" else 1)

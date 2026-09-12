@@ -10,7 +10,7 @@ func _ready():
 	Demo.test_mode = true
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	for id in Utils.weapon_list: Demo.try_purchase("weapon",id)
 	Demo.open_panel()
@@ -23,10 +23,10 @@ func _ready():
 	panel.search_text = ""; panel.category = "爆炸"; panel.render()
 	check(panel.detail_actions.size() == 4,"weapon explosive category real tag filter")
 	panel.category = "全部"; panel.selection = "117"; panel.render()
-	check("W17" in detail_text(panel) and "存档ID 117" in detail_text(panel),"detail exposes stable plan mapping")
+	check("TIER III" in detail_text(panel),"detail exposes fixed strength tier")
 	panel.switch_tab("attachment")
 	panel.selected_gun = 120; panel.compatible_only = true; panel.render()
-	check(panel.detail_actions.has("123") and not panel.detail_actions.has("122"),"attachment compatibility filter")
+	check(panel.detail_actions.has("123") and panel.detail_actions.has("122"),"attachment compatibility filter")
 	panel.compatible_only = false; panel.category = "Tactical"; panel.render()
 	check(panel.detail_actions.has("123") and panel.detail_actions.has("122"),"attachment slot classification")
 	panel.category = "全部"; panel.selection = "123"; panel.render()

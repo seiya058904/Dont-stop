@@ -10,7 +10,7 @@ func _ready():
 	add_child(play_viewport)
 	main = load("res://game/map/Main.tscn").instantiate()
 	play_viewport.add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.3)
 	Demo.save_path = "res://evidence/r1-long/camp.json"
 	check(Demo.load_camp(),"exit diagnostic restores long profile")

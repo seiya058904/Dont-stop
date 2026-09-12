@@ -7,7 +7,7 @@ func _ready():
 	Demo.test_mode = true
 	var main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await wait(0.2)
 	Utils.player.global_position = origin-Vector2(100,0)
 	for id in [0,1,111,114,117,120,124]: Demo.try_purchase("weapon",str(id))
@@ -54,7 +54,7 @@ func _ready():
 	am = equip(115,gun)
 	gun.drive_spin(true,0.6)
 	check(gun.spin > initial_spin,"A15 actual faster warmup")
-	gun.bullets_count = 0; PlayerData.player_ammo = 1000
+	gun.bullets_count = 0; PlayerData.reserve_magazines = 1000
 	gun.reload_ammo()
 	check(is_equal_approx(gun.change_timer.wait_time,gun.base_stats.reload*0.85),"A15 actual reload timer reduced")
 	gun.cancel_actions(); gun.removeAttachMent(am)

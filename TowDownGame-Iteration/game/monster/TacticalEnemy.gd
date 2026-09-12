@@ -91,7 +91,7 @@ func perform_attack():
 	match role:
 		"E03","E11": phase = "dash"; phase_time = 0.4 if role == "E03" else 0.25
 		"E06":
-			if global_position.distance_to(Utils.player.global_position) <= 42 and Combat.clear_line(global_position,Utils.player.global_position): Utils.player.onHit(1)
+			if global_position.distance_to(Utils.player.global_position) <= 42 and Combat.clear_line(global_position,Utils.player.global_position): Utils.player.onHit(1,self)
 			remember("detonate"); last_context = {"depth":1}; onDie()
 		"E07": summon(1); phase_time = 3.0
 		"E08":
@@ -134,7 +134,7 @@ func _physics_process(delta):
 		if phase == "spawn" and phase_time > 0: return
 		move_towards(Utils.player.global_position,delta)
 		if global_position.distance_to(Utils.player.global_position)<18 and contact_cooldown<=0:
-			Utils.player.onHit(1); contact_cooldown=0.9; remember("contact")
+			Utils.player.onHit(1,self); contact_cooldown=0.9; remember("contact")
 		return
 	owned_attacks = owned_attacks.filter(func(ref): return is_instance_valid(ref.get_ref()))
 	if is_boss and HP <= max_hp*0.5 and not phase_two:
@@ -149,7 +149,7 @@ func _physics_process(delta):
 		return
 	if phase == "dash":
 		var previous = global_position; velocity = locked_direction*(210 if is_boss else 195); move_and_slide(); travelled += previous.distance_to(global_position)
-		if global_position.distance_to(Utils.player.global_position) < 22 and contact_cooldown <= 0: Utils.player.onHit(1); contact_cooldown = 1.0; remember("contact")
+		if global_position.distance_to(Utils.player.global_position) < 22 and contact_cooldown <= 0: Utils.player.onHit(1,self); contact_cooldown = 1.0; remember("contact")
 		if phase_time <= 0 or get_slide_collision_count() > 0: phase = "recover"; phase_time = 1.0; remember("dash_end")
 		return
 	var distance = global_position.distance_to(Utils.player.global_position)

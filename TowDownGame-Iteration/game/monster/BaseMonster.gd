@@ -195,5 +195,9 @@ func addEffect(node):
 func _draw():
 	# Compact contact bracket remains visible with flash and shake disabled.
 	if flash_time > 0 and not is_die:
+		var tier = int(last_context.get("tier",1))
+		if tier >= 3:
+			var color = Color(0.8,0.55,1,0.5) if tier == 5 else Color(0.4,0.8,1,0.45)
+			draw_arc(Vector2(0,-8),9+tier,-1.3,1.3,8,color,1.3)
 		draw_arc(Vector2(0,-8),10,-0.6,0.6,5,Color(1,0.85,0.5),1)
 		draw_arc(Vector2(0,-8),10,PI-0.6,PI+0.6,5,Color(1,0.85,0.5),1)

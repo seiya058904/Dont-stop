@@ -15,7 +15,13 @@ var refresh_pending = false
 var search_text = ""
 var category = "全部"
 var owned_only = false
-var compatible_only = false
+var compatible_only = false # Legacy fixture field; universal attachments need no filter.
+var tier_filter = 0
+var sort_mode = 0
+var action_bar: VBoxContainer
+var tab_buttons = {}
+var tier_box: OptionButton
+var sort_box: OptionButton
 var purchased_instance = -1
 var tab_state: Dictionary = {}
 var search_box: LineEdit
@@ -53,6 +59,7 @@ func label(parent, text: String, size = 7) -> Label:
 
 func button(parent, text: String, action: Callable) -> Button:
 	var item = Button.new()
+	if parent == detail and is_instance_valid(action_bar): parent = action_bar
 	item.text = text
 	item.add_theme_font_size_override("font_size",7)
 	item.custom_minimum_size.y = 16
@@ -73,7 +80,7 @@ func _ready():
 	theme_res.set_stylebox("panel","PanelContainer",style)
 	for state in ["normal","hover","pressed","focus","disabled"]:
 		var bs = style.duplicate()
-		bs.bg_color = Color("314955") if state != "hover" else Color("4c6971")
+		bs.bg_color = Color("6b5730") if state == "pressed" else (Color("314955") if state != "hover" else Color("4c6971"))
 		theme_res.set_stylebox(state,"Button",bs)
 	theme = theme_res
 	var shade = ColorRect.new()
@@ -101,8 +108,11 @@ func _ready():
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)
-	for pair in [["weapon","枪械"],["attachment","配件商店"],["talent","持久天赋"],["equipment","当前配置"],["stage","出发/补给"],["legacy","原型奖励"]]:
-		button(tabs,pair[1],func(): switch_tab(pair[0]))
+	for pair in [["weapon","武器"],["attachment","配件"],["magazine","弹匣补给"],["talent","天赋"],["stage","出发"],["equipment","装备"]]:
+		var nav = button(tabs,pair[1],func(): switch_tab(pair[0]))
+		nav.toggle_mode = true
+		nav.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tab_buttons[pair[0]] = nav
 	var filters = HBoxContainer.new()
 	body.add_child(filters)
 	search_box = LineEdit.new()
@@ -120,10 +130,14 @@ func _ready():
 	owned.text = "已拥有"
 	filters.add_child(owned)
 	owned.toggled.connect(func(value): owned_only = value; request_refresh())
-	var compatible = CheckButton.new()
-	compatible.text = "兼容当前枪"
-	filters.add_child(compatible)
-	compatible.toggled.connect(func(value): compatible_only = value; request_refresh())
+	tier_box = OptionButton.new()
+	for text in ["全部Tier","Tier I","Tier II","Tier III","Tier IV","Tier V"]: tier_box.add_item(text)
+	filters.add_child(tier_box)
+	tier_box.item_selected.connect(func(index): tier_filter = index; request_refresh())
+	sort_box = OptionButton.new()
+	for text in ["Tier↑","强度↓","价格↑","价格↓"]: sort_box.add_item(text)
+	filters.add_child(sort_box)
+	sort_box.item_selected.connect(func(index): sort_mode = index; request_refresh())
 	var columns = HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(columns)
@@ -135,16 +149,23 @@ func _ready():
 	listing = VBoxContainer.new()
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(listing)
+	var right = VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columns.add_child(right)
 	var detail_scroll = ScrollContainer.new()
 	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	columns.add_child(detail_scroll)
+	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_child(detail_scroll)
 	detail = VBoxContainer.new()
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail.add_theme_constant_override("separation",4)
 	detail_scroll.add_child(detail)
+	action_bar = VBoxContainer.new()
+	right.add_child(action_bar)
 	message = label(body,"WASD 移动 · 鼠标射击 · R 装填 · Shift 冲刺 · Tab 配置",7)
-	message.custom_minimum_size.y = 25
+	message.custom_minimum_size.y = 18
+	message.max_lines_visible = 2
 	if Utils.player.gun: selected_gun = Utils.player.gun.weapon_id
 	Demo.changed.connect(request_refresh)
 	render()
@@ -163,6 +184,7 @@ func update_wallet():
 	if Demo.dirty or Demo.save_blocked: wallet.text += " · 未保存"
 
 func clear_box(box):
+	if box == detail and is_instance_valid(action_bar): clear_box(action_bar)
 	for child in box.get_children():
 		box.remove_child(child)
 		child.queue_free()
@@ -172,6 +194,9 @@ func render():
 	var scroll_position = listing_scroll.scroll_vertical
 	detail_actions.clear()
 	update_wallet()
+	for key in tab_buttons: tab_buttons[key].set_pressed_no_signal(key == tab)
+	tier_box.visible = tab == "weapon"
+	sort_box.visible = tab == "weapon"
 	clear_box(listing)
 	clear_box(detail)
 	for node in cached:
@@ -180,8 +205,13 @@ func render():
 	match tab:
 		"weapon":
 			var ids = Utils.weapon_list.keys()
-			ids.sort_custom(func(a,b): return int(a)<int(b))
+			ids.sort_custom(func(a,b):
+				if sort_mode == 3: return Utils.weapon_money_list[a] > Utils.weapon_money_list[b]
+				if sort_mode == 2: return Utils.weapon_money_list[a] < Utils.weapon_money_list[b]
+				if WeaponCatalog.tier(int(a)) != WeaponCatalog.tier(int(b)): return WeaponCatalog.tier(int(a)) > WeaponCatalog.tier(int(b)) if sort_mode == 1 else WeaponCatalog.tier(int(a)) < WeaponCatalog.tier(int(b))
+				return Utils.weapon_money_list[a] < Utils.weapon_money_list[b])
 			for id in ids:
+				if tier_filter > 0 and WeaponCatalog.tier(int(id)) != tier_filter: continue
 				var gun = Utils.weapon_list[id].instantiate()
 				cached.append(gun)
 				var tags = DemoConfig.weapon_tags(int(id))
@@ -191,7 +221,7 @@ func render():
 				if int(id) >= 111: categories.append("特殊")
 				if not matches(tr(gun.weapon_name)+id+WeaponCatalog.definition(int(id)).get("plan","")+DemoConfig.weapon_info(int(id)),categories): continue
 				if owned_only and not PlayerData.player_weapon_list.has(int(id)): continue
-				entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name),id,func(): show_weapon(id,gun))
+				entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
 		"attachment":
 			for id in Utils.am_dict:
 				var am = Utils.am_dict[id].instantiate()
@@ -206,6 +236,7 @@ func render():
 					var instance = PlayerData.player_am_list.get(purchased_instance)
 					if instance and instance.am_id == am.am_id: show_attachment(id,instance,true)
 					else: show_attachment(id,am,false))
+		"magazine": magazine_list()
 		"talent":
 			button(listing,"重置计划天赋 / 查看退款",show_reset)
 			for id in DemoConfig.TALENTS:
@@ -220,6 +251,7 @@ func render():
 				var reward = RewardServer.reward_list[id].instantiate()
 				cached.append(reward)
 				entry(tr(reward.reward_name),id,func(): show_legacy(id,reward))
+	if selection.is_empty() and not detail_actions.is_empty(): selection = detail_actions.keys()[0]
 	if detail_actions.has(selection): detail_actions[selection].call()
 	listing_scroll.set_deferred("scroll_vertical",scroll_position)
 	if not detail_actions.has(selection): label(detail,"选择左侧条目查看用途、价格与实际配置。\n没有匹配条目时，可清空搜索或切回全部分类。\n战斗已暂停；Esc 只关闭最上层。\n购买与补给仅在营地开放。",8)
@@ -237,29 +269,42 @@ func purchase(kind: String,id: String,currency = "gold"):
 
 func show_weapon(id: String, gun):
 	clear_box(detail)
+	var owned = PlayerData.player_weapon_list.has(int(id))
+	if owned: gun = PlayerData.player_weapon_list[int(id)]
 	label(detail,tr(gun.weapon_name),10)
-	var plan_id = WeaponCatalog.definition(int(id)).get("plan","")
-	if not plan_id.is_empty(): label(detail,"计划编号 %s · 存档ID %s" % [plan_id,id])
-	var image = TextureRect.new()
-	image.texture = gun.image
-	image.custom_minimum_size = Vector2(40,22)
-	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	detail.add_child(image)
-	var description = DemoConfig.weapon_info(int(id))
-	label(detail,description)
-	if PlayerData.player_weapon_list.has(int(id)):
-		gun = PlayerData.player_weapon_list[int(id)]
-		label(detail,EffectiveStats.describe(gun.effective))
-		label(detail,"已装备" if gun.is_use else "已拥有但未装备")
-		button(detail,"装备到手中",func():
+	label(detail,"TIER %s · %s · %d金币" % [["I","II","III","IV","V"][WeaponCatalog.tier(int(id))-1],WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],8)
+	var stats = gun.effective if owned else {}
+	if stats.is_empty():
+		gun.tags = DemoConfig.weapon_tags(int(id))
+		gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
+		stats = EffectiveStats.calculate(gun,[])
+	label(detail,"伤害 %.2f · 射速 %.1f次/秒\n弹匣 %d · 换弹 %.2f秒" % [stats.damage,stats.rate,stats.magazine,stats.reload],8)
+	label(detail,WeaponCatalog.short_info(int(id)))
+	label(detail," / ".join(WeaponCatalog.labels(int(id))))
+	var more = CheckButton.new()
+	more.text = "查看详细属性"
+	detail.add_child(more)
+	var full = label(detail,EffectiveStats.describe(stats)+"\n"+DemoConfig.weapon_info(int(id)))
+	full.visible = false
+	more.toggled.connect(func(value): full.visible = value)
+	if owned:
+		var equip = button(detail,"当前装备" if gun.is_use else "已拥有 | 装备",func():
 			selected_gun = int(id)
 			if PlayerData.changeWeapon(int(id),true): message.text = "已装备「%s」" % tr(gun.weapon_name)
-			else: message.text = "切枪去抖中或角色无法装备，请稍后重试"
 			request_refresh())
+		equip.disabled = gun.is_use
 	else:
-		label(detail,"基础武器伤害 %.2f · %.2f次/秒\n弹匣 %d · 装填 %.2f秒\n价格：%d金币" % [gun.damage,gun.fire_rate,gun.bullets_max_count,gun.change_speed,Utils.weapon_money_list[id]])
-		button(detail,"金币购买",func(): purchase("weapon",id))
+		button(detail,"%d金币 | 购买" % Utils.weapon_money_list[id],func(): purchase("weapon",id))
+
+func magazine_list():
+	for count in [5,10,25]:
+		var price = {5:10,10:18,25:40}[count]
+		entry("+%d 弹匣 · %d金币" % [count,price],"mag"+str(count),func():
+			clear_box(detail)
+			label(detail,"备用弹匣补给",10)
+			label(detail,"当前 %d 弹匣\n购买 +%d → %d 弹匣" % [PlayerData.reserve_magazines,count,PlayerData.reserve_magazines+count],9)
+			label(detail,"一次换弹消耗1个备用弹匣，将当前枪补满。")
+			button(detail,"%d金币 | 购买%d弹匣" % [price,count],func(): purchase("supply","mag"+str(count))))
 
 func active_gun():
 	return PlayerData.player_weapon_list.get(selected_gun,Utils.player.gun)
@@ -269,13 +314,6 @@ func show_attachment(id: String,am,owned: bool):
 	label(detail,tr(am.am_name),10)
 	if AttachmentCatalog.DEFINITIONS.has(am.am_id): am.am_info = AttachmentCatalog.DEFINITIONS[am.am_id].info
 	label(detail,"槽位：%s\n%s\n价格：%d金币" % [tr(am.am_type),tr(am.am_info),am.money])
-	var compatible = []
-	for key in Utils.weapon_list:
-		var candidate = Utils.weapon_list[key].instantiate()
-		candidate.tags = DemoConfig.weapon_tags(int(key))
-		if am.can_equip(candidate): compatible.append(tr(candidate.weapon_name))
-		candidate.free()
-	label(detail,"兼容："+" / ".join(compatible))
 	var gun = active_gun()
 	if gun:
 		label(detail,"目标枪：" + tr(gun.weapon_name))
@@ -290,7 +328,7 @@ func show_attachment(id: String,am,owned: bool):
 			if "explosive" in gun.tags: comparison += "\n爆炸半径 %.1f → %.1f" % [gun.effective.radius,after.radius]
 			if "chain" in gun.tags: comparison += "\n电弧后跳 %d → %d" % [gun.effective.jumps,after.jumps]
 			label(detail,comparison)
-			label(detail,"完整装配后机制\n"+EffectiveStats.describe(after))
+
 			if old and old != am: label(detail,"替换「%s」；旧件返回背包" % tr(old.am_name))
 			if owned:
 				button(detail,"安装到此枪",func():
@@ -347,8 +385,8 @@ func stage_list():
 			label(detail,DemoConfig.ENCOUNTERS[id].name,10)
 			label(detail,M5Content.REGIONS[DemoConfig.ENCOUNTERS[id].region].info+"\n"+DemoConfig.ENCOUNTERS[id].info+"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
 			button(detail,"开始此遭遇",func(): depart(id,true)))
-	button(listing,"试玩补充资源",func(): Demo.replenish(); message.text = "两种钱包已补到至少9999；装备、天赋、关卡保持")
-	button(listing,"补充300备弹 · 10金币",func(): purchase("supply","ammo"))
+	button(listing,"开发辅助：补充测试钱包",func(): Demo.replenish(); message.text = "两种钱包已补到至少9999；装备、天赋、关卡保持")
+	button(listing,"购买备用弹匣 →",func(): switch_tab("magazine"))
 	button(listing,"恢复生命 · 10金币",func(): purchase("supply","health"))
 	for count in [1,3]:
 		button(listing,"练枪：%d目标" % count,func(): LevelServer.town.practice(count); queue_free())

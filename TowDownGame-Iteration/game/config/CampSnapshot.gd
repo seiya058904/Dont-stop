@@ -6,10 +6,12 @@ static func number(value, integral = false) -> bool:
 
 static func validate(data) -> bool:
 	if not data is Dictionary: return false
-	if not data.has_all(["schema_version","gold","points","ammo","level","exp","hp","hp_max","weapons","attachments","talents","next_instance","next_stage","selected_stage","equipped"]): return false
-	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3,4]: return false
+	if not data.has_all(["schema_version","gold","points","level","exp","hp","hp_max","weapons","attachments","talents","next_instance","next_stage","selected_stage","equipped"]): return false
+	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3,4,5]: return false
+	var reserve_key = "reserve_magazines" if data.schema_version >= 5 else "ammo"
+	if not number(data.get(reserve_key),true): return false
 	if data.schema_version >= 4 and not data.get("campaign_complete") is bool: return false
-	for key in ["gold","points","ammo","level","next_instance","next_stage","selected_stage"]:
+	for key in ["gold","points","level","next_instance","next_stage","selected_stage"]:
 		if not number(data[key],true): return false
 	for key in ["hp","hp_max","exp"]:
 		if not number(data[key]): return false
@@ -75,7 +77,7 @@ static func validate(data) -> bool:
 	if valid:
 		for w in data.weapons:
 			var gun = guns[w.id]
-			if w.ammo > EffectiveStats.calculate(gun,gun.attachments_dict.values(),data).magazine: valid = false
+			if data.schema_version >= 5 and w.ammo > EffectiveStats.calculate(gun,gun.attachments_dict.values(),data).magazine: valid = false
 	for am in items: am.free()
 	for gun in guns.values(): gun.free()
 	if not data.equipped is String or (data.equipped != "" and not guns.has(data.equipped)): valid = false
@@ -91,4 +93,27 @@ static func normalize(data: Dictionary) -> Dictionary:
 		# v1 persisted HP growth, but omitted the bacteria's lifetime counter.
 		var base_hp = 5.0 + 0.5*(data.level-1) + 3.0*result.legacy.count("2")
 		result.legacy_state["10"] = clampi(roundi((data.hp_max-base_hp)/0.1),0,1000)
+	if data.schema_version < 5:
+		var capacity = 30
+		if Utils.weapon_list.has(data.equipped):
+			var gun = Utils.weapon_list[data.equipped].instantiate()
+			capacity = gun.bullets_max_count
+			for a in data.attachments:
+				if a.gun == data.equipped: capacity += {"1":10,"2":20,"3":10,"5":5,"6":50,"7":19,"8":70}.get(a.definition,0)
+			capacity = maxi(1,int(capacity*(1.0+DemoConfig.talent_value("T04",int(data.talents.get("T04",0))))))
+			gun.free()
+		result.reserve_magazines = ceili(float(data.ammo)/capacity)
+		result.erase("ammo")
+		# Capacity buffs changed to percentages. Keep every item, clamp loaded rounds only.
+		for w in result.weapons:
+			var gun = Utils.weapon_list[w.id].instantiate()
+			gun.tags = DemoConfig.weapon_tags(int(w.id))
+			gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
+			var items = []
+			for a in result.attachments:
+				if a.gun == w.id: items.append(Utils.am_dict[a.definition].instantiate())
+			w.ammo = mini(int(w.ammo),EffectiveStats.calculate(gun,items,result).magazine)
+			for am in items: am.free()
+			gun.free()
+	result.schema_version = 5
 	return result

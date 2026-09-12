@@ -20,7 +20,7 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Demo.test_mode = true
 	add_child(load("res://game/map/Main.tscn").instantiate())
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	await frames(8)
 	check(main_ui().level_label.text.ends_with("1"),"R06 fresh profile HUD shows level one before first upgrade")
 	town = LevelServer.town
@@ -72,7 +72,7 @@ func _ready():
 	await get_tree().create_timer(0.14,true).timeout
 	PlayerData.changeWeapon(114,true); await frames(5)
 	check(panel.tab == "weapon" and panel.selection == "114" and panel.listing_scroll.scroll_vertical == scroll,"R06 selection tab scroll preserved on equip")
-	check("已装备" in detail_text(panel) and not "已拥有但未装备" in detail_text(panel),"R06 equipped detail refreshes")
+	check(panel.action_bar.get_child(0).text == "当前装备" and panel.action_bar.get_child(0).disabled,"R06 equipped detail refreshes")
 	panel.tab = "legacy"; panel.selection = "5"; panel.render()
 	panel.purchase("legacy","5"); await frames()
 	check("1 / 99" in detail_text(panel),"R06 original reward rank immediately refreshes")

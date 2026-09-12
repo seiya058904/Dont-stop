@@ -41,6 +41,7 @@ var attachments = {
 @onready var timer = $shoot_timer
 @onready var gun_image = $Sprite2D
 
+var tier_muzzle: Node2D
 var base_stats: Dictionary = {}
 var effective: Dictionary = {}
 var action_generation = 0
@@ -73,6 +74,8 @@ func _init():
 
 func _ready() -> void:
 	add_to_group("guns")
+	tier_muzzle = preload("res://game/effects/TierMuzzle.gd").new()
+	gun_tip.add_child(tier_muzzle)
 	base_stats = {"damage":damage,"magazine":bullets_max_count,"reload":change_speed,"rate":fire_rate,"impulse":knockback_speed}
 	tags = DemoConfig.weapon_tags(weapon_id)
 	audio.bus = "SFX"
@@ -93,7 +96,6 @@ func updateGun():
 	effective = EffectiveStats.calculate(self, attachments_dict.values())
 	bullets_max_count = effective.magazine
 	if bullets_count > bullets_max_count:
-		PlayerData.player_ammo += bullets_count - bullets_max_count
 		bullets_count = bullets_max_count
 	timer.wait_time = 1.0 / effective.rate
 	if is_use: PlayerData.onWeaponBulletsChange.emit(bullets_count,bullets_max_count)
@@ -123,6 +125,7 @@ func removeAttachMent(am:BaseAttachment):
 	Demo.save_camp()
 
 func cancel_actions():
+	if is_instance_valid(tier_muzzle): tier_muzzle.stop()
 	action_generation += 1
 	change_timer.stop()
 	is_reloading = false
@@ -135,7 +138,7 @@ func cancel_actions():
 	if is_instance_valid(anim_player): anim_player.stop()
 
 func damage_context(depth = 0) -> Dictionary:
-	var context = {"gun":self,"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"pierce":effective.get("pierce",0),"shards":effective.get("shards",0),"shard_ratio":effective.get("shard_ratio",0.25),"range_mul":effective.get("range",320.0)/320.0,"refill":effective.get("refill",0),"depth":depth,"epoch":LevelServer.epoch}
+	var context = {"gun":self,"tier":WeaponCatalog.tier(weapon_id),"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"pierce":effective.get("pierce",0),"shards":effective.get("shards",0),"shard_ratio":effective.get("shard_ratio",0.25),"range_mul":effective.get("range",320.0)/320.0,"refill":effective.get("refill",0),"depth":depth,"epoch":LevelServer.epoch}
 
 	context.burn_talent = DemoConfig.talent_value("T15",Demo.rank("T15"))
 	context.slow = DemoConfig.talent_value("T17",Demo.rank("T17"))
@@ -159,12 +162,10 @@ func shot_context() -> Dictionary:
 func reload_over():
 	if not is_reloading or not is_use: return
 	var ammo = bullets_max_count - bullets_count
-	if PlayerData.player_ammo < ammo:
-		ammo = PlayerData.player_ammo
-		PlayerData.player_ammo = 0
-	else:
-		PlayerData.player_ammo -= ammo
-	bullets_count += ammo
+	if ammo > 0 and PlayerData.reserve_magazines > 0:
+		PlayerData.reserve_magazines -= 1
+		bullets_count = bullets_max_count
+	else: ammo = 0
 	if ammo > 0: first_round = Demo.rank("T12") > 0
 	PlayerData.emit_signal("onWeaponChangeAnim",weapon_id,Utils.GUN_CHANGE_TYPE.RELOAD)
 	is_reloading = false
@@ -238,7 +239,7 @@ func fire(bullet:Bullet,is_bullet = true,is_play = true):
 
 #切换子弹
 func reload_ammo():
-	if PlayerData.player_ammo == 0:
+	if PlayerData.reserve_magazines == 0:
 		Utils.showToast("AMMO_OUT")
 		return
 	if !is_reloading && change_timer.is_stopped() && bullets_count < bullets_max_count:
@@ -269,7 +270,9 @@ func _shoot() -> void:
 
 func _shootAnim():
 	if not is_use or player.is_dead or get_tree().paused: return
-	player.cameraSnake(shake_vector * direction)
+	var tier = WeaponCatalog.tier(weapon_id)
+	tier_muzzle.pulse(tier)
+	player.cameraSnake((shake_vector + Vector2.ONE*maxi(0,tier-3)*0.12) * direction)
 	var ins = particles_pre.instantiate()
 	ins.position = gun_tip.position
 	add_child(ins)

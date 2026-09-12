@@ -23,7 +23,7 @@ func _ready():
 	seed(333)
 	main = load("res://game/map/Main.tscn").instantiate()
 	add_child(main)
-	Utils.gameStart()
+	Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	for frame in 8: await get_tree().physics_frame
 	Demo.try_purchase("weapon","112")
 	Demo.try_purchase("weapon","114")

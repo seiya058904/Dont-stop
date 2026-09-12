@@ -3,7 +3,7 @@ func dismiss():
 	for panel in Demo.pause_stack.duplicate(): Demo.pop_pause(panel); panel.queue_free()
 func _ready():
 	Demo.test_mode = true
-	add_child(load("res://game/map/Main.tscn").instantiate()); Utils.gameStart(); await wait(0.3)
+	add_child(load("res://game/map/Main.tscn").instantiate()); Utils.gameStart(); PlayerData.gold = 100000; PlayerData.reward_point = 9999; await wait(0.3)
 	Demo.try_purchase("weapon","0")
 	Utils.player.set_process(false); Utils.player.set_physics_process(false)
 	for stage in [10,20,30]:

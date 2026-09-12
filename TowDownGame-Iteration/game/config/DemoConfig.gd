@@ -1,9 +1,11 @@
 extends RefCounted
 class_name DemoConfig
 
+const NORMAL_INCOMING = 0.875
+const BOSS_INCOMING = 0.97
 const PROFILE = "experience_demo"
-const INITIAL_GOLD = 9999
-const INITIAL_TALENT_POINTS = 9999
+const INITIAL_GOLD = 180
+const INITIAL_TALENT_POINTS = 0
 const TALENT_GOLD_PRICE = 100
 const SWITCH_SECONDS = 0.12 # Input debounce only; HUD keeps its .3 + .5 + .3 animation.
 const MAX_DERIVATION = 2
@@ -16,7 +18,7 @@ const TALENTS = {
 	"T07": {"name":"生存余量","max":3,"step":1.0,"info":"每级最大生命+1（初始基础5的20%），购买补该增量；旧头盔生命增量作为历史来源保留。","unit":"生命"},
 	"T08": {"name":"轻装移动","max":3,"step":0.03,"info":"每级基础移速+3%；不改变冲刺。旧蓝靴来源保留，详情另列。","unit":"基础移速"},
 	"T09": {"name":"拾取磁场","max":3,"step":0.2,"info":"金币/回血拾取半径每级+20%；隔墙不可吸附，不执行寻路。","unit":"拾取范围"},
-	"T11": {"name":"弹药回流","max":3,"step":2.0,"kills":5,"info":"每5次有效直接击杀补2×等级备弹；假人、派生击杀不计，不填弹匣。","unit":"每5杀备弹"},
+	"T11": {"name":"弹药回流","max":3,"step":1.0,"kills":5,"info":"每5次有效直接击杀补1×等级备用弹匣；假人、派生击杀不计，不填弹匣。","unit":"每5杀弹匣"},
 	"T12": {"name":"首发重击","max":3,"values":[0.15,0.2,0.25],"info":"完成实际补弹后的第一发伤害+15/20/25%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。","unit":"首发伤害"},
 	"T13": {"name":"贯穿专精","max":1,"step":1.0,"info":"明确兼容的直射攻击+1贯穿；总目标最多8，实墙阻断，不影响爆炸/跟踪/锯盘。","unit":"额外贯穿"},
 	"T14": {"name":"静电跃迁","max":1,"step":0.2,"cooldown":0.6,"damage":0.4,"radius":80.0,"info":"直接命中20%概率电弧到附近一个不同目标，40%命中伤害；冷却0.6秒，墙阻挡；派生不触发。","unit":"触发概率"},
@@ -47,7 +49,7 @@ static func talent_effect(id: String, rank: int) -> String:
 	var value = talent_value(id,rank)
 	if TALENTS[id].has("unit"):
 		var unit = TALENTS[id].unit
-		if unit in ["生命","每5杀备弹","每次灼烧tick","额外贯穿","抵消次数"]: return "累计 %s：%.2f" % [unit,value]
+		if unit in ["生命","每5杀弹匣","每次灼烧tick","额外贯穿","抵消次数"]: return "累计 %s：%.2f" % [unit,value]
 		return "累计 %s：%.0f%%" % [unit,value*100]
 	match id:
 		"T01": return "累计伤害 +%d%%" % roundi(value*100)

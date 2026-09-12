@@ -27,5 +27,5 @@ func _physics_process(delta):
 		queue_free()
 		return
 	if Geometry2D.get_closest_point_to_segment(Utils.player.global_position,previous,global_position).distance_to(Utils.player.global_position) < 12:
-		Utils.player.onHit(1)
+		Utils.player.onHit(1,owner_ref.get_ref() if owner_ref else null)
 		queue_free()
