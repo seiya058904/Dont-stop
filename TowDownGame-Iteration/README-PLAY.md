@@ -1,4 +1,6 @@
-# TowDownGame · M5 完整战斗试玩
+# TowDownGame · M6 工程候选试玩
+
+**M6 ENGINEERING COMPLETE / READY FOR HUMAN ACCEPTANCE**。自动工程验证完成，H1_STATUS = DEFERRED_BY_USER，HUMAN_ACCEPTED = false。
 
 **启动：双击本目录 `PLAY_GAME.bat`。** 使用工作区已有 portable Godot 4.7.2；首次启动导入资源。没有新的独立 Game.exe 或导出 ZIP。
 
@@ -31,6 +33,6 @@ schema4新增明确的正常通关记录；旧档兼容、不重复发资源、�
 
 H1_STATUS = DEFERRED_BY_USER；HUMAN_ACCEPTED = false。M3—M4为用户指定的ENGINEERING ACCEPTED，不等于真人认可。
 
-本轮使用headless、关闭渲染的SubViewport和独立存档；未操作桌面或启动可见游戏窗口。最终画面、声音、键盘手感仍待真人验收。后台循环时间不能代表GPU帧率；合成极限压力未达到参考帧时间预算。此前GPU残留及部分短测音频退出诊断继续保留，详见 `docs/iteration/VALIDATION.md`。最终阶段状态见 `STATUS.md`。
+M6使用headless、关闭渲染的SubViewport和独立测试存档；另完成一次最小化离屏窗口的12轮GPU清理复验，无系统键鼠或前台computer use。最终画面、声音、键盘手感仍待真人验收。后台循环时间不能代表GPU帧率；极限压力33.3ms目标未达。音频固定退出引用已识别，历史GPU残留未复现，详见 `docs/iteration/VALIDATION.md`。最终阶段状态见 `docs/iteration/STATUS.md`。
 
-没有匹配导出模板，不升级引擎、不以旧Game.exe冒充新包。M5结束后停止，不自动进入M6。
+没有匹配导出模板，不升级引擎、不以旧Game.exe冒充新包。M6工程候选完成后等待真人最终试玩；不进入M7、不自动合并main或创建Release。

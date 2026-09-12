@@ -1,0 +1,125 @@
+{
+  "rows": 90,
+  "survived": 82,
+  "deaths": [
+    {
+      "tier": "basic",
+      "stage": 13,
+      "seconds": 11.045
+    },
+    {
+      "tier": "basic",
+      "stage": 22,
+      "seconds": 13.369
+    },
+    {
+      "tier": "middle",
+      "stage": 13,
+      "seconds": 24.657
+    },
+    {
+      "tier": "middle",
+      "stage": 15,
+      "seconds": 28.992
+    },
+    {
+      "tier": "middle",
+      "stage": 28,
+      "seconds": 20.252
+    },
+    {
+      "tier": "middle",
+      "stage": 29,
+      "seconds": 31.609
+    },
+    {
+      "tier": "late",
+      "stage": 8,
+      "seconds": 37.479
+    },
+    {
+      "tier": "late",
+      "stage": 13,
+      "seconds": 30.431
+    }
+  ],
+  "watchdogs": 0,
+  "path_failure_samples": 57,
+  "cleanup_all_zero": true,
+  "boss_runs": [
+    {
+      "tier": "basic",
+      "boss": "B01",
+      "seconds": 11.136,
+      "completed": true
+    },
+    {
+      "tier": "basic",
+      "boss": "B02",
+      "seconds": 7.683,
+      "completed": true
+    },
+    {
+      "tier": "basic",
+      "boss": "B03",
+      "seconds": 8.082,
+      "completed": true
+    },
+    {
+      "tier": "middle",
+      "boss": "B01",
+      "seconds": 14.348,
+      "completed": true
+    },
+    {
+      "tier": "middle",
+      "boss": "B02",
+      "seconds": 10.527,
+      "completed": true
+    },
+    {
+      "tier": "middle",
+      "boss": "B03",
+      "seconds": 12.322,
+      "completed": true
+    },
+    {
+      "tier": "late",
+      "boss": "B01",
+      "seconds": 4.46,
+      "completed": true
+    },
+    {
+      "tier": "late",
+      "boss": "B02",
+      "seconds": 3.236,
+      "completed": true
+    },
+    {
+      "tier": "late",
+      "boss": "B03",
+      "seconds": 6.67,
+      "completed": true
+    }
+  ],
+  "supplemental_stage13": [
+    {
+      "tier": "basic",
+      "completed": true,
+      "seconds": 45.165,
+      "damage_taken": 5.0
+    },
+    {
+      "tier": "middle",
+      "completed": true,
+      "seconds": 45.151,
+      "damage_taken": 12.0
+    },
+    {
+      "tier": "late",
+      "completed": true,
+      "seconds": 45.018,
+      "damage_taken": 2.0
+    }
+  ]
+}

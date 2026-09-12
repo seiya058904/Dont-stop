@@ -1,0 +1,72 @@
+{
+	"configuration": {
+		"ammo": 100,
+		"attachments": [
+			{
+				"definition": "1",
+				"gun": "",
+				"instance": 1
+			}
+		],
+		"build_profile": "experience_demo",
+		"campaign_complete": false,
+		"equipped": "0",
+		"exp": 0.0,
+		"gold": 9969,
+		"hp": 9.5,
+		"hp_max": 9.5,
+		"legacy": [],
+		"legacy_state": {},
+		"level": 10,
+		"next_instance": 2,
+		"next_stage": 1,
+		"points": 9999,
+		"schema_version": 4,
+		"selected_stage": 1,
+		"talent_payments": [],
+		"talents": {},
+		"weapons": [
+			{
+				"ammo": 25,
+				"id": "0"
+			}
+		]
+	},
+	"failures": 0,
+	"rows": [
+		{
+			"boss": "",
+			"boss_seconds": null,
+			"cleanup": {
+				"monsters": 0,
+				"orphans": 0.0,
+				"transients": 0
+			},
+			"clear_seconds": null,
+			"completed": true,
+			"damage_taken": 5.0,
+			"dead": false,
+			"elite_composition": {},
+			"elite_total": 0,
+			"enemy_composition": {
+				"E05": 25,
+				"E10": 24
+			},
+			"hp_max": 9.5,
+			"last_enemy_blocks_victory": false,
+			"max_no_damage_seconds": 9.36001975757582,
+			"path_failure_samples": 0,
+			"region": "R3",
+			"remaining_enemies": 0,
+			"seconds": 45.165,
+			"spawn_total": 49,
+			"stage": 13,
+			"summon_total": 0,
+			"survival_seconds": 45.165,
+			"talents": {},
+			"tier": "basic",
+			"watchdog": false,
+			"weapon": 0
+		}
+	]
+}

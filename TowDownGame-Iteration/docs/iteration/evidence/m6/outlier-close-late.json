@@ -1,0 +1,610 @@
+{
+	"configuration": {
+		"ammo": 100,
+		"attachments": [
+			{
+				"definition": "111",
+				"gun": "",
+				"instance": 1
+			},
+			{
+				"definition": "113",
+				"gun": "",
+				"instance": 2
+			},
+			{
+				"definition": "115",
+				"gun": "",
+				"instance": 3
+			},
+			{
+				"definition": "116",
+				"gun": "",
+				"instance": 4
+			},
+			{
+				"definition": "118",
+				"gun": "",
+				"instance": 5
+			},
+			{
+				"definition": "119",
+				"gun": "",
+				"instance": 6
+			},
+			{
+				"definition": "120",
+				"gun": "",
+				"instance": 7
+			},
+			{
+				"definition": "123",
+				"gun": "",
+				"instance": 8
+			},
+			{
+				"definition": "124",
+				"gun": "",
+				"instance": 9
+			},
+			{
+				"definition": "110",
+				"gun": "",
+				"instance": 10
+			},
+			{
+				"definition": "112",
+				"gun": "",
+				"instance": 11
+			},
+			{
+				"definition": "114",
+				"gun": "",
+				"instance": 12
+			},
+			{
+				"definition": "117",
+				"gun": "",
+				"instance": 13
+			},
+			{
+				"definition": "121",
+				"gun": "",
+				"instance": 14
+			},
+			{
+				"definition": "122",
+				"gun": "",
+				"instance": 15
+			},
+			{
+				"definition": "0",
+				"gun": "",
+				"instance": 16
+			},
+			{
+				"definition": "1",
+				"gun": "",
+				"instance": 17
+			},
+			{
+				"definition": "2",
+				"gun": "",
+				"instance": 18
+			},
+			{
+				"definition": "3",
+				"gun": "",
+				"instance": 19
+			},
+			{
+				"definition": "5",
+				"gun": "",
+				"instance": 20
+			},
+			{
+				"definition": "6",
+				"gun": "",
+				"instance": 21
+			},
+			{
+				"definition": "7",
+				"gun": "",
+				"instance": 22
+			},
+			{
+				"definition": "8",
+				"gun": "",
+				"instance": 23
+			},
+			{
+				"definition": "9",
+				"gun": "",
+				"instance": 24
+			}
+		],
+		"build_profile": "experience_demo",
+		"campaign_complete": false,
+		"equipped": "116",
+		"exp": 0.0,
+		"gold": 8789,
+		"hp": 12.5,
+		"hp_max": 12.5,
+		"legacy": [],
+		"legacy_state": {},
+		"level": 10,
+		"next_instance": 25,
+		"next_stage": 1,
+		"points": 9937,
+		"schema_version": 4,
+		"selected_stage": 1,
+		"talent_payments": [
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T02",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T02",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T02",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T05",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T05",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T05",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T06",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T06",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T06",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T07",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T07",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T07",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T08",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T08",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T08",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T09",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T09",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T09",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T11",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T11",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T11",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T12",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T12",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T12",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T13",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T14",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T15",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T15",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T15",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T17",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T17",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T17",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T18",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T18",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T18",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T19",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T20",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T20",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T20",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T21",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T21",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T21",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T22",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T22",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T22",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T23",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T01",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T01",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T01",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T03",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T03",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T03",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T04",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T04",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T04",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T10",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T10",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T10",
+				"level": 3
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T16",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T24",
+				"level": 1
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T24",
+				"level": 2
+			},
+			{
+				"amount": 1,
+				"currency": "points",
+				"id": "T24",
+				"level": 3
+			}
+		],
+		"talents": {
+			"T01": 3,
+			"T02": 3,
+			"T03": 3,
+			"T04": 3,
+			"T05": 3,
+			"T06": 3,
+			"T07": 3,
+			"T08": 3,
+			"T09": 3,
+			"T10": 3,
+			"T11": 3,
+			"T12": 3,
+			"T13": 1,
+			"T14": 1,
+			"T15": 3,
+			"T16": 1,
+			"T17": 3,
+			"T18": 3,
+			"T19": 1,
+			"T20": 3,
+			"T21": 3,
+			"T22": 3,
+			"T23": 1,
+			"T24": 3
+		},
+		"weapons": [
+			{
+				"ammo": 70,
+				"id": "116"
+			}
+		]
+	},
+	"failures": 0,
+	"rows": [
+		{
+			"boss": "",
+			"boss_seconds": null,
+			"cleanup": {
+				"monsters": 0,
+				"orphans": 0.0,
+				"transients": 0
+			},
+			"clear_seconds": null,
+			"completed": true,
+			"damage_taken": 2.0,
+			"dead": false,
+			"elite_composition": {},
+			"elite_total": 0,
+			"enemy_composition": {
+				"E05": 26,
+				"E10": 25
+			},
+			"hp_max": 12.5,
+			"last_enemy_blocks_victory": false,
+			"max_no_damage_seconds": 3.14989499999998,
+			"path_failure_samples": 0,
+			"region": "R3",
+			"remaining_enemies": 0,
+			"seconds": 45.018,
+			"spawn_total": 51,
+			"stage": 13,
+			"summon_total": 0,
+			"survival_seconds": 45.018,
+			"talents": {
+				"T01": 3,
+				"T02": 3,
+				"T03": 3,
+				"T04": 3,
+				"T05": 3,
+				"T06": 3,
+				"T07": 3,
+				"T08": 3,
+				"T09": 3,
+				"T10": 3,
+				"T11": 3,
+				"T12": 3,
+				"T13": 1,
+				"T14": 1,
+				"T15": 3,
+				"T16": 1,
+				"T17": 3,
+				"T18": 3,
+				"T19": 1,
+				"T20": 3,
+				"T21": 3,
+				"T22": 3,
+				"T23": 1,
+				"T24": 3
+			},
+			"tier": "late",
+			"watchdog": false,
+			"weapon": 116
+		}
+	]
+}

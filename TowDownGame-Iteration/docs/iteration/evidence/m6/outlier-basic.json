@@ -1,0 +1,142 @@
+{
+	"configuration": {
+		"ammo": 100,
+		"attachments": [
+			{
+				"definition": "1",
+				"gun": "",
+				"instance": 1
+			}
+		],
+		"build_profile": "experience_demo",
+		"campaign_complete": false,
+		"equipped": "0",
+		"exp": 0.0,
+		"gold": 9969,
+		"hp": 9.5,
+		"hp_max": 9.5,
+		"legacy": [],
+		"legacy_state": {},
+		"level": 10,
+		"next_instance": 2,
+		"next_stage": 1,
+		"points": 9999,
+		"schema_version": 4,
+		"selected_stage": 1,
+		"talent_payments": [],
+		"talents": {},
+		"weapons": [
+			{
+				"ammo": 25,
+				"id": "0"
+			}
+		]
+	},
+	"failures": 0,
+	"rows": [
+		{
+			"boss": "",
+			"boss_seconds": null,
+			"cleanup": {
+				"monsters": 0,
+				"orphans": 0.0,
+				"transients": 0
+			},
+			"clear_seconds": null,
+			"completed": false,
+			"damage_taken": 9.5,
+			"dead": true,
+			"elite_composition": {},
+			"elite_total": 0,
+			"enemy_composition": {
+				"E05": 5,
+				"E10": 6
+			},
+			"hp_max": 9.5,
+			"last_enemy_blocks_victory": false,
+			"max_no_damage_seconds": 11.2776107575758,
+			"path_failure_samples": 0,
+			"region": "R3",
+			"remaining_enemies": 11,
+			"seconds": 12.72,
+			"spawn_total": 11,
+			"stage": 13,
+			"summon_total": 0,
+			"survival_seconds": 12.72,
+			"talents": {},
+			"tier": "basic",
+			"watchdog": false,
+			"weapon": 0
+		},
+		{
+			"boss": "",
+			"boss_seconds": null,
+			"cleanup": {
+				"monsters": 0,
+				"orphans": 0.0,
+				"transients": 0
+			},
+			"clear_seconds": null,
+			"completed": true,
+			"damage_taken": 2.0,
+			"dead": false,
+			"elite_composition": {},
+			"elite_total": 0,
+			"enemy_composition": {
+				"E01": 18,
+				"E05": 20,
+				"E10": 22
+			},
+			"hp_max": 9.5,
+			"last_enemy_blocks_victory": false,
+			"max_no_damage_seconds": 1.88576648484848,
+			"path_failure_samples": 0,
+			"region": "R5",
+			"remaining_enemies": 0,
+			"seconds": 45.181,
+			"spawn_total": 60,
+			"stage": 22,
+			"summon_total": 0,
+			"survival_seconds": 45.181,
+			"talents": {},
+			"tier": "basic",
+			"watchdog": false,
+			"weapon": 0
+		},
+		{
+			"boss": "",
+			"boss_seconds": null,
+			"cleanup": {
+				"monsters": 0,
+				"orphans": 0.0,
+				"transients": 0
+			},
+			"clear_seconds": null,
+			"completed": true,
+			"damage_taken": 5.0,
+			"dead": false,
+			"elite_composition": {},
+			"elite_total": 0,
+			"enemy_composition": {
+				"E02": 19,
+				"E04": 21,
+				"E10": 25
+			},
+			"hp_max": 9.5,
+			"last_enemy_blocks_victory": false,
+			"max_no_damage_seconds": 1.38906475757576,
+			"path_failure_samples": 0,
+			"region": "R6",
+			"remaining_enemies": 0,
+			"seconds": 44.996,
+			"spawn_total": 65,
+			"stage": 28,
+			"summon_total": 0,
+			"survival_seconds": 44.996,
+			"talents": {},
+			"tier": "basic",
+			"watchdog": false,
+			"weapon": 0
+		}
+	]
+}

@@ -1,0 +1,126 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS actual mechanism crosses boss threshold B01/117
+PASS mechanism phase exactly once B01/117
+PASS threshold is not a death or reward B01/117
+PASS mechanism target death idempotent
+M6 CROSS PENDING B01/117 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B01/118
+PASS mechanism phase exactly once B01/118
+PASS threshold is not a death or reward B01/118
+PASS mechanism target death idempotent
+M6 CROSS PENDING B01/118 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B01/120
+PASS mechanism phase exactly once B01/120
+PASS threshold is not a death or reward B01/120
+PASS mechanism target death idempotent
+PASS phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B01/121
+PASS mechanism phase exactly once B01/121
+PASS threshold is not a death or reward B01/121
+PASS mechanism target death idempotent
+M6 CROSS PENDING B01/121 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B01/122
+PASS mechanism phase exactly once B01/122
+PASS threshold is not a death or reward B01/122
+PASS mechanism target death idempotent
+PASS phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B01/116
+PASS mechanism phase exactly once B01/116
+PASS threshold is not a death or reward B01/116
+PASS mechanism target death idempotent
+M6 CROSS PENDING B01/116 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B01/113
+PASS mechanism phase exactly once B01/113
+PASS threshold is not a death or reward B01/113
+PASS mechanism target death idempotent
+M6 CROSS PENDING B01/113 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/117
+PASS mechanism phase exactly once B02/117
+PASS threshold is not a death or reward B02/117
+PASS mechanism target death idempotent
+M6 CROSS PENDING B02/117 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/118
+PASS mechanism phase exactly once B02/118
+PASS threshold is not a death or reward B02/118
+PASS mechanism target death idempotent
+M6 CROSS PENDING B02/118 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/120
+PASS mechanism phase exactly once B02/120
+PASS threshold is not a death or reward B02/120
+PASS mechanism target death idempotent
+M6 CROSS PENDING B02/120 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/121
+PASS mechanism phase exactly once B02/121
+PASS threshold is not a death or reward B02/121
+PASS mechanism target death idempotent
+PASS phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/122
+PASS mechanism phase exactly once B02/122
+PASS threshold is not a death or reward B02/122
+PASS mechanism target death idempotent
+PASS phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/116
+PASS mechanism phase exactly once B02/116
+PASS threshold is not a death or reward B02/116
+PASS mechanism target death idempotent
+M6 CROSS PENDING B02/116 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B02/113
+PASS mechanism phase exactly once B02/113
+PASS threshold is not a death or reward B02/113
+PASS mechanism target death idempotent
+M6 CROSS PENDING B02/113 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/117
+PASS mechanism phase exactly once B03/117
+PASS threshold is not a death or reward B03/117
+PASS mechanism target death idempotent
+M6 CROSS PENDING B03/117 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/118
+PASS mechanism phase exactly once B03/118
+PASS threshold is not a death or reward B03/118
+PASS mechanism target death idempotent
+M6 CROSS PENDING B03/118 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/120
+PASS mechanism phase exactly once B03/120
+PASS threshold is not a death or reward B03/120
+PASS mechanism target death idempotent
+PASS phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/121
+PASS mechanism phase exactly once B03/121
+PASS threshold is not a death or reward B03/121
+PASS mechanism target death idempotent
+M6 CROSS PENDING B03/121 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/122
+PASS mechanism phase exactly once B03/122
+PASS threshold is not a death or reward B03/122
+PASS mechanism target death idempotent
+M6 CROSS PENDING B03/122 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/116
+PASS mechanism phase exactly once B03/116
+PASS threshold is not a death or reward B03/116
+PASS mechanism target death idempotent
+M6 CROSS PENDING B03/116 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS actual mechanism crosses boss threshold B03/113
+PASS mechanism phase exactly once B03/113
+PASS threshold is not a death or reward B03/113
+PASS mechanism target death idempotent
+M6 CROSS PENDING B03/113 res://game/items/Gold.gd age=<null> position=(50.0, -1992.0)
+FAIL phase then death leaves no orphan attack
+PASS ricochet hits shield once after actual wall
+PASS fragment hits distinct summoned target
+PASS fragment generation bounded

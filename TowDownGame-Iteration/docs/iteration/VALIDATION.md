@@ -271,3 +271,48 @@ M5BossCombat另补15项：三位Boss各自然运行14秒，不通过直接调用
 证据：evidence/m5/long-final.json、long-final.txt、long-final-index.json及frozen-source.json。运行前后243个游戏源文件和长测夹具SHA256一致；后续仅测试夹具与交付文档调整，没有热加载或用旧进程验证新游戏源码。最终短测计数287+575分别记录，不把重复复跑累加。
 
 最终状态：M5 IMPLEMENTED / READY FOR DEFERRED HUMAN REVIEW；H1_STATUS = DEFERRED_BY_USER；HUMAN_ACCEPTED = false。本轮没有进入M6、合并main或发行。入口PLAY_GAME.bat，灰盒最终观感、真实键鼠/声音/手感、GPU表现及其他硬件仍待延后真人验收。
+
+
+## M6 FINAL ENGINEERING CONSOLIDATION（当前结果）
+
+**M6 ENGINEERING COMPLETE / READY FOR HUMAN ACCEPTANCE**。H1_STATUS = DEFERRED_BY_USER；HUMAN_ACCEPTED = false。M5基线62a49ea；游戏改动提交1066e0a。运行前后游戏源码及M6LongRun夹具SHA256一致，见evidence/m6/long-final-execution.json。以下结果覆盖历史阶段的待查描述，不抹去历史失败记录。
+
+### automated verified
+
+主入口 `python tools/verify-m6.py`：50进程1636断言全部通过，exit0。含M5专项287、M3/M4兼容575、早期351、M6Contracts109 / M6Cross117 / M6SaveUI197。补充M6Layout151、M6BossStops24、M6GPUCleanup24，合计53个短测进程1835断言，M6新增622；不累计重复复跑或长测PASS数。GPU补测在用户最新后台要求之前完成，此后没有前台computer use或系统输入。
+
+Contracts验证同数量实体替换的RID缓存、受击状态、三Boss阶段只切一次、目标丢失、零伤害预告、暂停、过量伤害、重复死亡与放弃结算。Cross覆盖三Boss×七种实际机制跨阶段阈值，以及墙面反弹命中盾、裂片×召唤、追踪/回返盘目标销毁、引力大体型、轨道过杀、rotary36次真实命中和并存攻击清理。当前实现没有射弹池，检查现有分配/回收而不伪造pool覆盖。BossStops分别让玩家实际死亡、关闭死亡UI后等待、复活、放弃，确认Boss停止/恢复及清理。
+
+SaveUI197覆盖schema1/2/3/4及当前档、M2前和M3/M4/M5字段迁移、非法/删除ID、重复和缺字段、购买/退款、实例/天赋/当前枪/弹药/进度、多次加载不复制资源。旧档是按合法旧结构构造的兼容夹具，不冒称全部历史用户档实物。原R1 migration矩阵同步全过。24枪搜索/分类、24配件兼容过滤、24天赋、价格付款、退款、装配和读取后状态、空状态与内容ID断言通过。Layout在实际410×230逻辑SubViewport检查151项文本换行/控件可用宽度，不能代替截图审美或真人视觉验收。
+
+保留原断言；R1旧1→3子集预期改为当前完整遭遇的1→2。初次Cross父节点错误、金币误判为攻击残留、SaveUI保留上个用例搜索、Contracts跨帧置空玩家及回归汇总旧格式解析问题均已定位修正夹具；原失败日志保留，最终分开索引，不放宽游戏契约。最终headless editor import exit0，无脚本解析错误。音频teardown诊断与断言通过分开分类。
+
+### runtime verified：长测
+
+不中断实跑1809.228秒（30分9.228秒），38次回营/保存恢复/配置面板，35次暂停、1次死亡复活、62次购买；0流程失败、0运行时异常、进程exit0。实际进入1—30全部遭遇，E01—E12均参与，B01/B02/B03各胜利一次，24种枪全部真实练枪碰撞命中。mechanisms_seen记录反弹233、裂片1018、追踪470、引力97、回返盘146、rotary1023及9881个热流触发帧；交叉测试另验证实际机制效果。累计4452次伤害、2401击杀。
+
+38个统一回营采样：敌人/射弹/召唤/危险区域/临时节点/孤立节点均0；节点496—523，声音节点1，Timer56，活动Timer1，Tween0。对象8842—8899、末次8856；资源717—723、末次723；signal连接639—806、末次674，无持续实体或连接累积。静态字节148697651→159741628，峰159784824，测试自身记录233685帧、12049条生命周期和缓存，不将约11MB增长冒称全部无堆泄漏。未采样OS handles，无法排除所有底层内存问题。
+
+主线程墙钟p50/p95/p99=6.900/15.935/16.407ms；headless1536×864逻辑SubViewport关闭渲染，max-fps160，不是GPU FPS。首轮被用户中断的519秒记录保留为long-interrupted，未拼接时长。最终long-final.json/txt及process/execution包含完整38轮采样和冻结哈希。
+
+### runtime verified：30遭遇与3Boss
+
+M6EncounterAudit实际运行三档×30场共90场，正常轮原45秒生存、Boss实际击杀。基础普通枪少配件、中期中等天赋和完整兼容配装、后期满成长强机制；各轮原受伤/死亡如实记录。82场原机器人成功，基础13/22、中期13/15/28/29、后期8/13死亡，未自动复活写成成功。无150秒watchdog，90场回营敌人/临时/孤立均0。
+
+第13关三档都触发的异常，经实际移动/射击跟踪确认90像素远距离策略被墙阻挡；使用50像素靠近、30像素退让的普通输入补测三档均45秒成功，分别受伤5/12/2，未改敌人、伤害、胜利条件或无敌。其余死亡关有其他配置成功。57次path_failure_samples全部来自后期第1关的零方向采样（每0.1秒统计），该关成功且最长无伤害2.972秒；它不是引擎报错计数，也未造成永久卡死。保留候选，不能据此宣称寻路从无停顿。普通轮不要求找出最后一个敌人，clear_seconds为null是正确语义；Boss才记录清场耗时。
+
+三档Boss时间B01/B02/B03：基础11.136/7.683/8.082秒，中期14.348/10.527/12.322秒，后期4.460/3.236/6.670秒，9场全部实际胜利。配装机制并非线性排序，不据此修改成漂亮曲线。三Boss额外生命周期/phase/同帧死亡/暂停/重开/目标丢失/玩家死亡审计通过。当前没有已确认阻塞性异常，不等于真人难度平衡验收。90行区域、组成、总数、精英、召唤、受伤、死亡、路径和清理记录见encounters-90.csv与audit三份JSON；spawn_total是观察生成量（含召唤），不是静态配置数量。
+
+### performance measured / 退出分类
+
+先profile再做两处低风险改动。完整函数self/inclusive/calls和全部重复样本见evidence/m6/performance.md、profile-functions.json和benchmark索引。历史压力48.485ms；同环境交替三次p99中位M5 33.333→M6 17.600ms，但M6最差49.864ms，调度波动明显，不能宣称稳定≤33.3或已证明显著代码加速。正常场景p95/p99均8.333ms，长测p99较M5约+1.7%，未见明显退化。剩余高密度普通弹物理、敌人绘制、查询成本有可靠归因，按用户允许的剩余瓶颈证据路径通过工程门，不牺牲玩法追数字。
+
+2 objects / 1 resource分类 **B**：AudioStreamPlaybackMP3 + AudioStreamMP3，res://audio/bgm/Cephalopod.mp3，引用计数均1。精确版本AudioServer播放列表持有playback，playback持有stream；异步淡出/释放尚未完成时退出会留下固定引用。最小无游戏场景12次播放停止对象2195/资源484恒定、stream引用2恒定；立即退出复现同一对，正常停音等待退出干净。完整长测末尾也是这两个身份。部分短测仍因异步时序出现同类诊断，没有屏蔽、没有写成全部日志无错误。来源与实验详见audio-classification.md。
+
+历史GPU残留 **NOT REPRODUCED**：一次已完成的Windows Vulkan / RX7900XT最小化离屏12轮清理，24断言通过，退出未见GPU RID残留；纹理内存55281952字节恒定、显存82090656—82090880，资源716→719缓存平台。纹理格式转换警告保留。这不是30分钟GPU长测，不声称修复历史GPU问题或真人画面已验收。
+
+### human NOT verified / 构建与Git边界
+
+后续全程后台headless；浏览器不能直接替代原生Godot物理/音频验证，没有用浏览器页面截图冒充游戏验收。真实键鼠、声音、画面、审美、手感、其他硬件、长期GPU及底层全部内存/handles仍未验证。
+
+没有兼容Godot4.7.2 Windows export templates，未安装工具/修改PATH/升级引擎/下载依赖；未生成独立preview。PLAY_GAME.bat保持相对路径启动当前源码，未拿旧exe代替。原三个项目tree保持M5基线、计划ZIP未提交；仅现有开发分支分批commit/push，不merge main、不Release。最终SHA与0/0以交付后的git检查为准。完成后停止，等待真人试玩决定后续。

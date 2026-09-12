@@ -1,0 +1,28 @@
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://tests/M6GPUCleanup.gd:6)
+WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://tests/M6GPUCleanup.gd:6)
+WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.
+   at: _validate_texture_format (servers/rendering/renderer_rd/storage_rd/texture_storage.cpp:2855)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://tests/M6GPUCleanup.gd:6)

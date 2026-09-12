@@ -1,5 +1,20 @@
 # TowDownGame Experience Demo
 
+## M6 最终工程候选（覆盖以下历史阶段门）
+
+- **M6 ENGINEERING COMPLETE / READY FOR HUMAN ACCEPTANCE**。
+- 基线 `62a49eaea7db3c960530ed215767728e6782fa21`；分支 `feat/towdown-experience-upgrade`；最终文档提交号见 `git log -1`。
+- H1_STATUS = DEFERRED_BY_USER；HUMAN_ACCEPTED = false；停止于M6，不自动进入M7。
+- 内容冻结：24枪 / 24配件 / 24持久天赋 / 12普通敌人 / 3 Boss / 6区 / 30遭遇。
+- automated verified：53个短测进程1835断言全部通过，M6新增622；包括原M5 287和兼容575，原测试保留。
+- runtime verified：1809.228秒 / 38回营，0流程失败、0运行时异常；30遭遇、12敌人、3Boss完成、24枪实际命中。38个清理点敌人/射弹/召唤/危险区/临时/孤立节点均0。
+- 90场三档遭遇82场原机器人成功、8场死亡，无超时；13关靠近射击补测三档均成功。57个零路径步采样只在已完成的后期配置第1关，不等于57次引擎错误。无已确认阻塞，难度待真人评估。
+- performance measured：交替三次压力p99中位M5 33.333→M6 17.600ms，但M6最慢49.864ms；不声称稳定达标或代码显著加速。正常p95/p99均8.333ms。详见evidence/m6/performance.md。
+- 音频退出分类B：AudioStreamPlaybackMP3 + AudioStreamMP3 / Cephalopod.mp3，固定异步退出引用；GPU历史残留 NOT REPRODUCED。
+- 两处游戏改动：实体生命周期使射线排除缓存失效、受击视觉按状态变化刷新。R1三处旧子集下一关预期更新为正式第2关，未删断言。
+- human NOT verified：真实键鼠、音画、审美、手感与其他硬件；无匹配Windows导出模板，未生成preview，PLAY_GAME.bat仍启动当前源码。
+- 仅现有分支分批提交推送；三个原项目tree不改、用户ZIP不提交、不合并main、不Release。详细证据和限制见VALIDATION及evidence/m6。
+
 ## M5 当前执行（覆盖下方历史阶段门）
 
 - 基线：e9ca7c703767f54756351748bb084b55476c40aa，本地/远端0/0，仅计划ZIP未跟踪。

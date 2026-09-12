@@ -1,0 +1,116 @@
+{
+	"checks": 24,
+	"display": "Windows",
+	"failures": 0,
+	"renderer": "AMD Radeon RX 7900 XT",
+	"samples": [
+		{
+			"cycle": 0,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 716.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090656.0
+		},
+		{
+			"cycle": 1,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 717.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 2,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 717.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 3,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 718.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 4,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 5,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 6,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 7,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090880.0
+		},
+		{
+			"cycle": 8,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 9,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 10,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		},
+		{
+			"cycle": 11,
+			"enemies": 0,
+			"orphans": 0.0,
+			"resources": 719.0,
+			"texture_memory": 55281952.0,
+			"transients": 0,
+			"video_memory": 82090800.0
+		}
+	]
+}

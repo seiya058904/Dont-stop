@@ -1,0 +1,274 @@
+[
+  {
+    "version": "M5",
+    "scenario": "pressure",
+    "code": 0,
+    "log": "benchmark-0-M5-pressure.txt",
+    "metrics": {
+      "damage_events": 6574,
+      "display": "headless",
+      "encounter_completed": false,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 9.52380952380952,
+        "p95": 37.4168888888889,
+        "p99": 75.0
+      },
+      "gpu": "",
+      "live_enemy_p50": 150,
+      "live_enemy_peak": 150,
+      "live_projectile_p50": 401,
+      "live_projectile_peak": 402,
+      "node_end": 17241.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 133,
+      "pre_refill_projectile_p50": 352,
+      "scenario": "pressure",
+      "seconds": 33.057518,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "54858fd8b5aa6042b925be591add8dfdf77e0147597c24999b639663a1e65983",
+      "game/monster/BaseMonster.gd": "664d1f32494dd6cc0690724869d7dd7faba132b1c996161b22df8ea37c0adfdb"
+    }
+  },
+  {
+    "version": "M6",
+    "scenario": "pressure",
+    "code": 0,
+    "log": "benchmark-1-M6-pressure.txt",
+    "metrics": {
+      "damage_events": 6805,
+      "display": "headless",
+      "encounter_completed": false,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 8.33333333333333,
+        "p95": 33.701,
+        "p99": 77.7777777777778
+      },
+      "gpu": "",
+      "live_enemy_p50": 150,
+      "live_enemy_peak": 150,
+      "live_projectile_p50": 401,
+      "live_projectile_peak": 402,
+      "node_end": 18107.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 132,
+      "pre_refill_projectile_p50": 351,
+      "scenario": "pressure",
+      "seconds": 33.0579539999999,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "b4c83fd0512e8854ce03d79729a1323d4ba2a84a502d7f20ec4b7a69caa34411",
+      "game/monster/BaseMonster.gd": "730cd9c483a8f7dea78b2e895eb992a85fb5884e7d029b2e997bc3f74a0e0b30"
+    }
+  },
+  {
+    "version": "M6",
+    "scenario": "pressure",
+    "code": 0,
+    "log": "benchmark-2-M6-pressure.txt",
+    "metrics": {
+      "damage_events": 6903,
+      "display": "headless",
+      "encounter_completed": false,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 8.33333333333333,
+        "p95": 35.958,
+        "p99": 82.052
+      },
+      "gpu": "",
+      "live_enemy_p50": 150,
+      "live_enemy_peak": 150,
+      "live_projectile_p50": 401,
+      "live_projectile_peak": 402,
+      "node_end": 18147.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 132,
+      "pre_refill_projectile_p50": 351,
+      "scenario": "pressure",
+      "seconds": 33.0285940000001,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "b4c83fd0512e8854ce03d79729a1323d4ba2a84a502d7f20ec4b7a69caa34411",
+      "game/monster/BaseMonster.gd": "730cd9c483a8f7dea78b2e895eb992a85fb5884e7d029b2e997bc3f74a0e0b30"
+    }
+  },
+  {
+    "version": "M5",
+    "scenario": "pressure",
+    "code": 0,
+    "log": "benchmark-3-M5-pressure.txt",
+    "metrics": {
+      "damage_events": 6664,
+      "display": "headless",
+      "encounter_completed": false,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 9.76027272727273,
+        "p95": 48.361,
+        "p99": 95.8333333333333
+      },
+      "gpu": "",
+      "live_enemy_p50": 150,
+      "live_enemy_peak": 150,
+      "live_projectile_p50": 401,
+      "live_projectile_peak": 402,
+      "node_end": 17804.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 131,
+      "pre_refill_projectile_p50": 350,
+      "scenario": "pressure",
+      "seconds": 33.0333333333332,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "54858fd8b5aa6042b925be591add8dfdf77e0147597c24999b639663a1e65983",
+      "game/monster/BaseMonster.gd": "664d1f32494dd6cc0690724869d7dd7faba132b1c996161b22df8ea37c0adfdb"
+    }
+  },
+  {
+    "version": "M5",
+    "scenario": "pressure",
+    "code": 0,
+    "log": "benchmark-4-M5-pressure.txt",
+    "metrics": {
+      "damage_events": 6461,
+      "display": "headless",
+      "encounter_completed": false,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 8.33333333333333,
+        "p95": 27.487,
+        "p99": 80.108
+      },
+      "gpu": "",
+      "live_enemy_p50": 150,
+      "live_enemy_peak": 150,
+      "live_projectile_p50": 401,
+      "live_projectile_peak": 402,
+      "node_end": 16694.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 132,
+      "pre_refill_projectile_p50": 352,
+      "scenario": "pressure",
+      "seconds": 33.1034846666667,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "54858fd8b5aa6042b925be591add8dfdf77e0147597c24999b639663a1e65983",
+      "game/monster/BaseMonster.gd": "664d1f32494dd6cc0690724869d7dd7faba132b1c996161b22df8ea37c0adfdb"
+    }
+  },
+  {
+    "version": "M6",
+    "scenario": "pressure",
+    "code": 0,
+    "log": "benchmark-5-M6-pressure.txt",
+    "metrics": {
+      "damage_events": 6513,
+      "display": "headless",
+      "encounter_completed": false,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 8.33333333333333,
+        "p95": 35.2995858585858,
+        "p99": 75.0
+      },
+      "gpu": "",
+      "live_enemy_p50": 150,
+      "live_enemy_peak": 150,
+      "live_projectile_p50": 401,
+      "live_projectile_peak": 402,
+      "node_end": 17604.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 132,
+      "pre_refill_projectile_p50": 352,
+      "scenario": "pressure",
+      "seconds": 33.070646,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "b4c83fd0512e8854ce03d79729a1323d4ba2a84a502d7f20ec4b7a69caa34411",
+      "game/monster/BaseMonster.gd": "730cd9c483a8f7dea78b2e895eb992a85fb5884e7d029b2e997bc3f74a0e0b30"
+    }
+  },
+  {
+    "version": "M5",
+    "scenario": "normal",
+    "code": 0,
+    "log": "benchmark-6-M5-normal.txt",
+    "metrics": {
+      "damage_events": 83,
+      "display": "headless",
+      "encounter_completed": true,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 7.57575757575758,
+        "p95": 8.33333333333333,
+        "p99": 8.33333333333333
+      },
+      "gpu": "",
+      "live_enemy_p50": 18,
+      "live_enemy_peak": 44,
+      "live_projectile_p50": 2,
+      "live_projectile_peak": 6,
+      "node_end": 327.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 0,
+      "pre_refill_projectile_p50": 0,
+      "scenario": "normal",
+      "seconds": 48.0048356666667,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "54858fd8b5aa6042b925be591add8dfdf77e0147597c24999b639663a1e65983",
+      "game/monster/BaseMonster.gd": "664d1f32494dd6cc0690724869d7dd7faba132b1c996161b22df8ea37c0adfdb"
+    }
+  },
+  {
+    "version": "M6",
+    "scenario": "normal",
+    "code": 0,
+    "log": "benchmark-7-M6-normal.txt",
+    "metrics": {
+      "damage_events": 79,
+      "display": "headless",
+      "encounter_completed": true,
+      "fixture": "M5 mixed pressure with six special mechanisms",
+      "frame_ms": {
+        "p50": 7.57575757575758,
+        "p95": 8.33333333333333,
+        "p99": 8.33333333333333
+      },
+      "gpu": "",
+      "live_enemy_p50": 15,
+      "live_enemy_peak": 44,
+      "live_projectile_p50": 2,
+      "live_projectile_peak": 6,
+      "node_end": 325.0,
+      "node_start": 339,
+      "orphan_nodes": 0.0,
+      "pre_refill_enemy_p50": 0,
+      "pre_refill_projectile_p50": 0,
+      "scenario": "normal",
+      "seconds": 48.0029884545455,
+      "viewport": "(64, 64)"
+    },
+    "source": {
+      "autoload/Combat.gd": "b4c83fd0512e8854ce03d79729a1323d4ba2a84a502d7f20ec4b7a69caa34411",
+      "game/monster/BaseMonster.gd": "730cd9c483a8f7dea78b2e895eb992a85fb5884e7d029b2e997bc3f74a0e0b30"
+    }
+  }
+]
