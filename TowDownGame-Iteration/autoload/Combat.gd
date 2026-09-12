@@ -92,6 +92,45 @@ func trace(points: Array, color = Color(0.4,0.85,1), width = 2.0):
 	effect.width = width
 	get_tree().current_scene.add_child(effect)
 
+func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: int):
+	var visited = []
+	for lane in [0.0,-0.5,0.5]:
+		var from = start+direction.orthogonal()*gun.effective.width*lane
+		var end = from+direction*gun.effective.range
+		var query = PhysicsRayQueryParameters2D.create(from,end,2147483651)
+		query.exclude = [Utils.player.get_rid()]
+		var count = 0
+		for step in limit:
+			var result = gun.get_world_2d().direct_space_state.intersect_ray(query)
+			if result.is_empty(): break
+			var target = result.collider
+			if not target is BaseMonster:
+				end = result.position
+				break
+			if not target.get_instance_id() in visited and visited.size() < limit:
+				visited.append(target.get_instance_id())
+				hit(target,context)
+			count += 1
+			var excluded = query.exclude
+			excluded.append(target.get_rid())
+			query.exclude = excluded
+			if count == limit: end = result.position
+		trace([from,end],Color(0.7,0.9,1),maxf(1,gun.effective.width/3.0))
+
+func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
+	var length = gun.effective.range
+	var angle = gun.effective.angle
+	for target in get_tree().get_nodes_in_group("monsters"):
+		var point = target.global_position+Vector2(0,-8)
+		var offset = point-start
+		if offset.length() <= length and absf(direction.angle_to(offset)) <= angle and clear_line(start,point):
+			hit(target,context)
+			if context.has("burn") and not target.is_die: target.apply_burn("thermal",context.burn,1.0,context)
+	var edge = [start]
+	for i in 9: edge.append(start+direction.rotated(lerpf(-angle,angle,i/8.0))*length)
+	edge.append(start)
+	trace(edge,Color(1,0.5,0.2) if context.has("burn") else Color(0.4,0.9,1),1.0)
+
 func arc(gun, start: Vector2, direction: Vector2):
 	attacks += 1
 	var query = PhysicsRayQueryParameters2D.create(start,start+direction*320,2147483651)

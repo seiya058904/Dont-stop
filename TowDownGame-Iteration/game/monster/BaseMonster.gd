@@ -14,6 +14,16 @@ var label_time = 0.0
 var critical_total = 0.0
 var last_context: Dictionary = {}
 var movement_delta: float
+var burns: Dictionary = {}
+
+func apply_burn(source: String, amount: float, seconds: float, context: Dictionary):
+	var saved = context.duplicate(true)
+	saved.damage = amount
+	saved.depth = 1
+	saved.crit = 0.0
+	saved.erase("burn")
+	var old = burns.get(source,{"tick":0.25})
+	burns[source] = {"remaining":seconds,"tick":old.tick,"context":saved}
 
 var audio_hit: AudioStreamPlayer2D
 @onready var sprite_body = get_node("body")
@@ -49,6 +59,15 @@ func setData(data):
 	knockback_def = 5
 
 func _process(delta):
+	if not is_die:
+		for source in burns.keys():
+			var burn = burns[source]
+			burn.remaining -= delta
+			burn.tick -= delta
+			while burn.tick <= 0 and not is_die:
+				burn.tick += 0.25
+				Combat.hit(self,burn.context)
+			if burn.remaining <= 0: burns.erase(source)
 	flash_time = maxf(0,flash_time-delta)
 	queue_redraw()
 	anim.material.set_shader_parameter("flash", 0.7 if flash_time > 0 and not Combat.reduced_flash else 0.0)

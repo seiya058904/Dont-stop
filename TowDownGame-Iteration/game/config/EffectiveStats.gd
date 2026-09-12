@@ -36,7 +36,7 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 			121: radius *= 1.2
 			122: jumps += 1
 	return {
-		"tags":gun.tags, "damage": (b.damage + level_damage) * (1.0 + damage_percent),
+		"tags":gun.tags, "range":WeaponCatalog.definition(gun.weapon_id).get("range",320.0),"width":WeaponCatalog.definition(gun.weapon_id).get("width",6.0),"angle":WeaponCatalog.definition(gun.weapon_id).get("angle",0.4),"damage": (b.damage + level_damage) * (1.0 + damage_percent),
 		"magazine": maxi(1, int((b.magazine + magazine_flat) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
 		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
 		"rate": clampf(b.rate * PlayerData.player_fire_rate * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 60.0),
@@ -54,6 +54,10 @@ static func describe(s: Dictionary) -> String:
 	return text
 
 static func damage_unit(s: Dictionary) -> String:
+	if "continuous" in s.tags: return "/tick（0.1秒）"
+	if "charged" in s.tags: return "/基础贯穿；满蓄×2.5"
+	if "pulse" in s.tags: return "/单束；3束独立交集"
+	if "pulse_cone" in s.tags: return "/目标/次扇面"
 	if "beam" in s.tags: return "/tick（0.1秒）"
 	if "chain" in s.tags: return "/主目标；每后跳×75%"
 	if "burst" in s.tags: return "/弹；3发一组"

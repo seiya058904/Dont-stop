@@ -64,6 +64,7 @@ func _ready():
 		gun.bullets_count = 0
 		gun._shoot()
 		check(gun.bullets_count == 0,"empty firing safe "+str(id))
+		PlayerData.player_ammo = 1000
 		gun.reload_ammo()
 		await wait(gun.effective.reload+0.1)
 		check(gun.bullets_count > 0,"real timed reload "+str(id))
