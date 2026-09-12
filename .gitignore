@@ -1,0 +1,13 @@
+# The public workspace repository contains only the three current game projects.
+/archive/
+
+# Keep each child repository's local Git metadata out of the outer repository.
+**/.git/
+
+# Generated Godot editor/import state is local machine output, not source.
+**/.godot/
+**/.import/
+
+# Common operating-system noise.
+**/Thumbs.db
+**/.DS_Store

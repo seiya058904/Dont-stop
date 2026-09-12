@@ -1,0 +1,817 @@
+[gd_scene load_steps=74 format=3 uid="uid://oc0fa0b3t0mo"]
+
+[ext_resource type="Script" path="res://Scenes/ScreenUI.gd" id="1_1kk4v"]
+[ext_resource type="Texture2D" uid="uid://bw34yijrs7un1" path="res://UI/Crosshairs/ShotgunCrosshair.png" id="2_gl0xn"]
+[ext_resource type="Texture2D" uid="uid://bhwrmd4a5o4k5" path="res://UI/Crosshairs/PopupCrosshair.png" id="2_hna4r"]
+[ext_resource type="Script" path="res://UI/CrosshairController.gd" id="3_na6ej"]
+[ext_resource type="Texture2D" uid="uid://bs0qkcxpsoh0o" path="res://UI/ReloadBar.png" id="4_7w5bb"]
+[ext_resource type="Texture2D" uid="uid://durakb81ychhg" path="res://UI/ReloadBarFull.png" id="5_xwyaq"]
+[ext_resource type="Script" path="res://UI/AmmoInfoDisplay.gd" id="6_meu8m"]
+[ext_resource type="Texture2D" uid="uid://bexajak04gpbq" path="res://UI/AmmoUIBackground.png" id="7_dwn10"]
+[ext_resource type="FontFile" uid="uid://dkuhw5md47aq3" path="res://UI/upheavtt.ttf" id="7_egwtw"]
+[ext_resource type="Script" path="res://UI/WeaponSlots.gd" id="7_swpyc"]
+[ext_resource type="LabelSettings" uid="uid://4nfmdago1iiu" path="res://UI/DefaultLabelSettings.tres" id="8_75vom"]
+[ext_resource type="Texture2D" uid="uid://cnoopryek4fww" path="res://UI/WeaponSlots.png" id="9_1kvol"]
+[ext_resource type="Texture2D" uid="uid://cfw4thwn4mwks" path="res://ModelContents/Cash/Cash2.png" id="9_gdfer"]
+[ext_resource type="Texture2D" uid="uid://b3p88gsutmh2q" path="res://WeaponsContents/Shotgun/Shotgun.png" id="9_nepcg"]
+[ext_resource type="Script" path="res://UI/MoneyDisplay.gd" id="10_3pf0b"]
+[ext_resource type="Texture2D" uid="uid://dq11xdygrj2ar" path="res://UI/EnemyHealthBarEmpty.png" id="10_rg7kg"]
+[ext_resource type="Texture2D" uid="uid://dayr2ucnwkj3m" path="res://UI/HealthBarIcon.png" id="11_fisi3"]
+[ext_resource type="Texture2D" uid="uid://3vsk53crm10j" path="res://UI/EnemyHealthBar.png" id="11_khyta"]
+[ext_resource type="Script" path="res://Models/SprintBar.gd" id="12_fi0l7"]
+[ext_resource type="Script" path="res://UI/PlayerHealthBar.gd" id="12_h5lnw"]
+[ext_resource type="Texture2D" uid="uid://dwjlnjbs3w8at" path="res://UI/PlayerHealthBarUnder.png" id="12_iad2n"]
+[ext_resource type="Texture2D" uid="uid://ddxuv6xx34fja" path="res://UI/PlayerHealthBarOver.png" id="13_aieh8"]
+[ext_resource type="AudioStream" uid="uid://dwue7dxw755h" path="res://UI/WeaponPick.mp3" id="13_c8cim"]
+[ext_resource type="Texture2D" uid="uid://cycyexib503yu" path="res://UI/WhiteVignette.png" id="18_nr68i"]
+[ext_resource type="Script" path="res://UI/WaveInfoDisplay.gd" id="19_5h3i8"]
+[ext_resource type="Script" path="res://UI/HurtVignette.gd" id="19_cvkcw"]
+[ext_resource type="Texture2D" uid="uid://o7g6hva8yyic" path="res://UI/UpgradesListButton.png" id="24_ukd3x"]
+[ext_resource type="Script" path="res://UI/UpgradesListButton.gd" id="25_48dft"]
+[ext_resource type="Script" path="res://UI/PoisonVignette.gd" id="25_qtgg1"]
+[ext_resource type="Texture2D" uid="uid://ctc2wgurbaps4" path="res://UI/BoxUI.png" id="26_jshui"]
+[ext_resource type="Texture2D" uid="uid://5o2g5av07m5d" path="res://UI/ItemPickupButton.png" id="26_w41u4"]
+[ext_resource type="Script" path="res://UI/ItemDropdownButton.gd" id="26_ygm3m"]
+[ext_resource type="Script" path="res://UI/NearbyItemsListInteractor.gd" id="27_kkdk0"]
+[ext_resource type="Texture2D" uid="uid://xbfhplg0qwri" path="res://UI/UILine.png" id="28_on2at"]
+[ext_resource type="Texture2D" uid="uid://buna2v43gi7fu" path="res://UI/Exit.png" id="29_gq867"]
+[ext_resource type="Texture2D" uid="uid://h2ly6y1sst6y" path="res://UI/ExitHover.png" id="30_qn6y7"]
+[ext_resource type="Texture2D" uid="uid://c3ceom4whd8h5" path="res://UI/AutohealButton.png" id="31_gcehp"]
+[ext_resource type="Script" path="res://UI/AutohealButton.gd" id="31_k5r5l"]
+[ext_resource type="Script" path="res://UI/HideItemDropdownButton.gd" id="32_g7q23"]
+[ext_resource type="AudioStream" uid="uid://dbs0wrf66wnua" path="res://UI/AmmoDispense.mp3" id="33_6wxp8"]
+[ext_resource type="Texture2D" uid="uid://dbpy5qcc4o58a" path="res://UI/InventorySlot.png" id="36_2ahnw"]
+[ext_resource type="Script" path="res://UI/InventoryManager.gd" id="36_ayq42"]
+[ext_resource type="Texture2D" uid="uid://b7wm6rcggce47" path="res://Items/LuckyCoin.png" id="38_8qcta"]
+[ext_resource type="Script" path="res://UI/InventorySlot.gd" id="38_cbyrv"]
+[ext_resource type="Shader" path="res://Environment/Blur.gdshader" id="40_kju6r"]
+[ext_resource type="Shader" path="res://Environment/ScreenShader.gdshader" id="42_yj7vc"]
+[ext_resource type="PackedScene" uid="uid://c3n2txcgiplvt" path="res://UI/TextAlert.tscn" id="43_qyj2u"]
+[ext_resource type="Texture2D" uid="uid://cjdf25vyfl13e" path="res://UI/EnemyIcon.png" id="44_2b04s"]
+[ext_resource type="AudioStream" uid="uid://kaj8k6dnpm81" path="res://UI/Click.mp3" id="44_tk8ou"]
+[ext_resource type="Texture2D" uid="uid://bkbpicxgyxpa" path="res://UI/WaveIcon.png" id="45_856uh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_60nyp"]
+font = ExtResource("7_egwtw")
+font_size = 20
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="InputEventKey" id="InputEventKey_nrd7x"]
+device = -1
+keycode = 80
+unicode = 112
+
+[sub_resource type="InputEventKey" id="InputEventKey_jufq6"]
+device = -1
+shift_pressed = true
+keycode = 80
+unicode = 80
+
+[sub_resource type="Shortcut" id="Shortcut_x550s"]
+events = [SubResource("InputEventKey_nrd7x"), SubResource("InputEventKey_jufq6")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_lh35o"]
+device = -1
+keycode = 77
+unicode = 109
+
+[sub_resource type="InputEventKey" id="InputEventKey_w6ytj"]
+device = -1
+shift_pressed = true
+keycode = 77
+unicode = 77
+
+[sub_resource type="Shortcut" id="Shortcut_dxwur"]
+events = [SubResource("InputEventKey_lh35o"), SubResource("InputEventKey_w6ytj")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_pd0gf"]
+device = -1
+physical_keycode = 73
+unicode = 105
+
+[sub_resource type="InputEventKey" id="InputEventKey_wwgxh"]
+device = -1
+shift_pressed = true
+keycode = 73
+unicode = 73
+
+[sub_resource type="Shortcut" id="Shortcut_54vr2"]
+events = [SubResource("InputEventKey_pd0gf"), SubResource("InputEventKey_wwgxh")]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hdjlq"]
+font = ExtResource("7_egwtw")
+font_size = 40
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(1, 5)
+
+[sub_resource type="InputEventKey" id="InputEventKey_hcuy1"]
+device = -1
+physical_keycode = 73
+unicode = 105
+
+[sub_resource type="InputEventKey" id="InputEventKey_mwkpx"]
+device = -1
+shift_pressed = true
+keycode = 73
+unicode = 73
+
+[sub_resource type="Shortcut" id="Shortcut_fmn4k"]
+events = [SubResource("InputEventKey_hcuy1"), SubResource("InputEventKey_mwkpx")]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4airn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4d2wy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nrkmt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0xdsl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tgonr"]
+
+[sub_resource type="Theme" id="Theme_yhavq"]
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_4airn")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxEmpty_4d2wy")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxEmpty_nrkmt")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_0xdsl")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_tgonr")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_01m7r"]
+size = Vector2(347, 306)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_semmm"]
+shader = ExtResource("40_kju6r")
+shader_parameter/lod = 4.0
+shader_parameter/alpha = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xsud2"]
+shader = ExtResource("42_yj7vc")
+
+[node name="ScreenUI" type="CanvasLayer"]
+process_priority = 10
+layer = 128
+script = ExtResource("1_1kk4v")
+metadata/_edit_use_anchors_ = true
+
+[node name="PopupCrosshair" type="Sprite2D" parent="."]
+visible = false
+z_index = 1000
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("2_hna4r")
+
+[node name="Crosshair" type="Sprite2D" parent="."]
+z_index = 999
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("2_gl0xn")
+script = ExtResource("3_na6ej")
+
+[node name="ReloadingIcon" type="TextureProgressBar" parent="."]
+visible = false
+z_index = 999
+texture_filter = 1
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(16, 16)
+fill_mode = 4
+texture_under = ExtResource("4_7w5bb")
+texture_progress = ExtResource("5_xwyaq")
+
+[node name="WeaponSlots" type="TextureRect" parent="."]
+z_index = -5
+texture_filter = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -739.0
+offset_top = -494.0
+offset_right = -506.0
+offset_bottom = -450.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(2, 2)
+pivot_offset = Vector2(100, 0)
+texture = ExtResource("9_1kvol")
+script = ExtResource("7_swpyc")
+
+[node name="PrimaryWeapon" type="Sprite2D" parent="WeaponSlots"]
+position = Vector2(13, 25.5)
+scale = Vector2(0.85, 0.85)
+texture = ExtResource("9_nepcg")
+
+[node name="SecondaryWeapon" type="Sprite2D" parent="WeaponSlots"]
+position = Vector2(131.5, 25.5)
+scale = Vector2(0.85, 0.85)
+texture = ExtResource("9_nepcg")
+
+[node name="WeaponName" type="Label" parent="WeaponSlots"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 3.0
+offset_top = -17.0
+offset_right = 282.0
+offset_bottom = 9.0
+scale = Vector2(0.75, 0.75)
+text = "Shotgun"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="1" type="Label" parent="WeaponSlots"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 109.5
+offset_top = 27.0
+offset_right = 122.5
+offset_bottom = 53.0
+scale = Vector2(0.6, 0.6)
+text = "1"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="2" type="Label" parent="WeaponSlots"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 223.0
+offset_top = 27.0
+offset_right = 236.0
+offset_bottom = 53.0
+scale = Vector2(0.6, 0.6)
+text = "2"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="PrimaryBar" type="TextureProgressBar" parent="WeaponSlots"]
+z_index = 2
+texture_filter = 1
+layout_mode = 0
+offset_left = -16.0
+offset_top = 38.0
+offset_right = 222.0
+offset_bottom = 47.0
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(31, 3)
+step = 0.0
+value = 100.0
+nine_patch_stretch = true
+stretch_margin_left = 2
+stretch_margin_top = 2
+stretch_margin_right = 2
+stretch_margin_bottom = 2
+texture_under = ExtResource("10_rg7kg")
+texture_progress = ExtResource("11_khyta")
+script = ExtResource("12_fi0l7")
+
+[node name="SecondaryBar" type="TextureProgressBar" parent="WeaponSlots"]
+z_index = 2
+texture_filter = 1
+layout_mode = 0
+offset_left = 106.0
+offset_top = 38.0
+offset_right = 328.0
+offset_bottom = 47.0
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(31, 3)
+step = 0.0
+value = 100.0
+nine_patch_stretch = true
+stretch_margin_left = 2
+stretch_margin_top = 2
+stretch_margin_right = 2
+stretch_margin_bottom = 2
+texture_under = ExtResource("10_rg7kg")
+texture_progress = ExtResource("11_khyta")
+script = ExtResource("12_fi0l7")
+
+[node name="WeaponChanged" type="AudioStreamPlayer" parent="WeaponSlots"]
+stream = ExtResource("13_c8cim")
+volume_db = -10.0
+max_polyphony = 2
+
+[node name="AmmoInfo" type="Control" parent="."]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = -306.0
+offset_right = -306.0
+pivot_offset = Vector2(0, 400)
+script = ExtResource("6_meu8m")
+
+[node name="AmmoBackdrop" type="TextureRect" parent="AmmoInfo"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = 350.0
+offset_right = 100.0
+offset_bottom = 394.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(100, 0)
+texture = ExtResource("7_dwn10")
+
+[node name="AmmoLeft" type="Label" parent="AmmoInfo"]
+texture_filter = 1
+layout_mode = 0
+offset_left = -63.0
+offset_top = 364.0
+offset_right = -1.00002
+offset_bottom = 390.0
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(61, 14)
+text = "0"
+label_settings = ExtResource("8_75vom")
+horizontal_alignment = 2
+
+[node name="MagCapacity" type="Label" parent="AmmoInfo"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 34.0
+offset_top = 364.0
+offset_right = 101.0
+offset_bottom = 390.0
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(0, 14)
+text = "0"
+label_settings = ExtResource("8_75vom")
+
+[node name="Slash" type="Label" parent="AmmoInfo"]
+modulate = Color(0.627047, 0.597041, 0.555939, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = -6.0
+offset_top = 357.0
+offset_right = 25.0
+offset_bottom = 383.0
+scale = Vector2(1.5, 1.5)
+text = "/"
+label_settings = ExtResource("8_75vom")
+horizontal_alignment = 1
+
+[node name="AmmoTitle" type="Label" parent="AmmoInfo"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+self_modulate = Color(0.825732, 0.738706, 0.516004, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = -77.0
+offset_top = 325.0
+offset_right = 45.0
+offset_bottom = 351.0
+scale = Vector2(1.25, 1.25)
+text = "Ammo"
+label_settings = SubResource("LabelSettings_60nyp")
+horizontal_alignment = 1
+
+[node name="Money" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-623, -325)
+scale = Vector2(1.25, 1.25)
+texture = ExtResource("9_gdfer")
+offset = Vector2(14, 13)
+script = ExtResource("10_3pf0b")
+
+[node name="MoneyAmount" type="Label" parent="Money"]
+texture_filter = 1
+offset_left = 36.0
+offset_top = 0.800037
+offset_right = 147.0
+offset_bottom = 26.8
+scale = Vector2(1.2, 1.2)
+text = "0
+"
+label_settings = ExtResource("8_75vom")
+metadata/_edit_use_anchors_ = true
+
+[node name="WaveInfoDisplay" type="Node2D" parent="."]
+position = Vector2(-623, -269)
+script = ExtResource("19_5h3i8")
+
+[node name="Enemies" type="Sprite2D" parent="WaveInfoDisplay"]
+texture_filter = 1
+position = Vector2(18, 0)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("44_2b04s")
+
+[node name="Amount" type="Label" parent="WaveInfoDisplay/Enemies"]
+texture_filter = 1
+offset_left = 10.8
+offset_top = -5.60001
+offset_right = 121.8
+offset_bottom = 20.4
+scale = Vector2(0.6, 0.6)
+text = "0
+"
+label_settings = ExtResource("8_75vom")
+metadata/_edit_use_anchors_ = true
+
+[node name="Wave" type="Sprite2D" parent="WaveInfoDisplay"]
+texture_filter = 1
+position = Vector2(18, 40)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("45_856uh")
+
+[node name="Amount" type="Label" parent="WaveInfoDisplay/Wave"]
+texture_filter = 1
+offset_left = 10.8
+offset_top = -5.60001
+offset_right = 121.8
+offset_bottom = 20.4
+scale = Vector2(0.6, 0.6)
+text = "0
+"
+label_settings = ExtResource("8_75vom")
+metadata/_edit_use_anchors_ = true
+
+[node name="HealthBar" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-604, -365)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("11_fisi3")
+script = ExtResource("12_h5lnw")
+
+[node name="ProgressBarUnder" type="TextureProgressBar" parent="HealthBar"]
+offset_left = 38.0
+offset_top = -56.0
+offset_right = 563.0
+offset_bottom = 53.0
+step = 0.0
+value = 100.0
+texture_under = ExtResource("12_iad2n")
+texture_progress = ExtResource("13_aieh8")
+texture_progress_offset = Vector2(10, 7)
+tint_progress = Color(0.947375, 0.31939, 0.329442, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="ProgressBar" type="TextureProgressBar" parent="HealthBar/ProgressBarUnder"]
+layout_mode = 0
+offset_right = 525.0
+offset_bottom = 109.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource("13_aieh8")
+texture_progress_offset = Vector2(10, 7)
+tint_progress = Color(0.47292, 0.84, 0.3612, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="HealthText" type="Label" parent="HealthBar"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+self_modulate = Color(0.646456, 0.804611, 0.514459, 1)
+texture_filter = 1
+offset_left = 133.333
+offset_top = 50.0
+offset_right = 255.333
+offset_bottom = 76.0
+scale = Vector2(3.5, 3.5)
+text = "100/100HP"
+label_settings = SubResource("LabelSettings_60nyp")
+horizontal_alignment = 2
+
+[node name="HurtVignette" type="NinePatchRect" parent="."]
+self_modulate = Color(1, 0, 0, 0)
+z_index = -50
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1328.0
+offset_top = -849.0
+offset_right = -1052.0
+offset_bottom = -669.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(5, 5)
+texture = ExtResource("18_nr68i")
+patch_margin_left = 60
+patch_margin_top = 60
+patch_margin_right = 60
+patch_margin_bottom = 60
+script = ExtResource("19_cvkcw")
+metadata/_edit_lock_ = true
+
+[node name="PoisonVignette" type="NinePatchRect" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+z_index = -50
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1328.0
+offset_top = -849.0
+offset_right = -1052.0
+offset_bottom = -669.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(5, 5)
+texture = ExtResource("18_nr68i")
+patch_margin_left = 60
+patch_margin_top = 60
+patch_margin_right = 60
+patch_margin_bottom = 60
+script = ExtResource("25_qtgg1")
+metadata/_edit_lock_ = true
+
+[node name="UpgradesListButton" type="TextureButton" parent="."]
+z_index = -2
+texture_filter = 1
+offset_left = 274.0
+offset_top = 341.0
+offset_right = 302.0
+offset_bottom = 368.0
+scale = Vector2(2, 2)
+shortcut = SubResource("Shortcut_x550s")
+texture_normal = ExtResource("24_ukd3x")
+script = ExtResource("25_48dft")
+
+[node name="P" type="Label" parent="UpgradesListButton"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 5.5
+offset_top = -13.5
+offset_right = 33.5
+offset_bottom = 12.5
+scale = Vector2(0.6, 0.6)
+text = "(P)"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="AutohealButton" type="TextureButton" parent="."]
+z_index = -2
+texture_filter = 1
+offset_left = 337.0
+offset_top = 341.0
+offset_right = 365.0
+offset_bottom = 369.0
+scale = Vector2(2, 2)
+shortcut = SubResource("Shortcut_dxwur")
+texture_normal = ExtResource("31_gcehp")
+script = ExtResource("31_k5r5l")
+
+[node name="M" type="Label" parent="AutohealButton"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 5.5
+offset_top = -13.5
+offset_right = 33.5
+offset_bottom = 12.5
+scale = Vector2(0.6, 0.6)
+text = "(M)"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="ItemButton" type="TextureButton" parent="."]
+visible = false
+z_index = -2
+texture_filter = 1
+offset_left = 569.0
+offset_top = -382.0
+offset_right = 609.0
+offset_bottom = -342.0
+scale = Vector2(2, 2)
+shortcut = SubResource("Shortcut_54vr2")
+texture_normal = ExtResource("26_w41u4")
+script = ExtResource("26_ygm3m")
+
+[node name="I" type="Label" parent="ItemButton"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 6.0
+offset_top = 27.0
+offset_right = 34.0
+offset_bottom = 53.0
+scale = Vector2(0.6, 0.6)
+text = "(I)"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="ItemDropdown" type="Node2D" parent="."]
+process_priority = -2
+z_index = -3
+position = Vector2(456, -231)
+
+[node name="SquareUI" type="NinePatchRect" parent="ItemDropdown"]
+self_modulate = Color(0.513233, 0.513233, 0.513233, 1)
+texture_filter = 1
+offset_left = -181.0
+offset_top = -153.0
+offset_right = -41.0
+offset_bottom = -31.0
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("26_jshui")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+
+[node name="SquareUI2" type="NinePatchRect" parent="ItemDropdown/SquareUI"]
+self_modulate = Color(0.303233, 0.303233, 0.303233, 1)
+texture_filter = 1
+layout_mode = 0
+offset_left = 8.0
+offset_top = 19.0
+offset_right = 132.0
+offset_bottom = 115.0
+texture = ExtResource("26_jshui")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+
+[node name="Separator" type="NinePatchRect" parent="ItemDropdown/SquareUI"]
+layout_mode = 0
+offset_left = 134.0
+offset_top = 13.0
+offset_right = 136.0
+offset_bottom = 140.0
+rotation = 1.5708
+texture = ExtResource("28_on2at")
+patch_margin_top = 6
+patch_margin_bottom = 6
+
+[node name="NoItems" type="Label" parent="ItemDropdown/SquareUI"]
+modulate = Color(0.7, 0.7, 0.7, 1)
+layout_mode = 0
+offset_left = 30.4002
+offset_top = 58.8
+offset_right = 427.4
+offset_bottom = 143.8
+scale = Vector2(0.2, 0.2)
+text = "No nearby items to pick up."
+label_settings = SubResource("LabelSettings_hdjlq")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Title" type="Label" parent="ItemDropdown/SquareUI"]
+layout_mode = 0
+offset_left = 9.19998
+offset_top = 3.20001
+offset_right = 495.2
+offset_bottom = 44.2
+scale = Vector2(0.25, 0.25)
+text = "Nearby Items
+"
+label_settings = SubResource("LabelSettings_hdjlq")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HideButton" type="TextureButton" parent="ItemDropdown/SquareUI"]
+layout_mode = 0
+offset_left = 121.8
+offset_top = -3.39999
+offset_right = 142.8
+offset_bottom = 17.6
+mouse_filter = 1
+shortcut = SubResource("Shortcut_fmn4k")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+texture_normal = ExtResource("29_gq867")
+texture_pressed = ExtResource("29_gq867")
+texture_hover = ExtResource("30_qn6y7")
+stretch_mode = 3
+script = ExtResource("32_g7q23")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ItemDropdown/SquareUI/HideButton"]
+custom_minimum_size = Vector2(122, 94)
+layout_mode = 0
+offset_left = -112.6
+offset_top = 23.4
+offset_right = 9.4
+offset_bottom = 117.4
+mouse_filter = 0
+theme = SubResource("Theme_yhavq")
+horizontal_scroll_mode = 0
+
+[node name="NearbyItemsContainer" type="VBoxContainer" parent="ItemDropdown/SquareUI/HideButton/ScrollContainer"]
+layout_mode = 2
+script = ExtResource("27_kkdk0")
+
+[node name="Click" type="AudioStreamPlayer" parent="ItemDropdown/SquareUI"]
+stream = ExtResource("33_6wxp8")
+volume_db = -6.0
+pitch_scale = 2.0
+
+[node name="TouchAbsorber" type="Area2D" parent="ItemDropdown"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ItemDropdown/TouchAbsorber"]
+position = Vector2(-4.5, 0)
+shape = SubResource("RectangleShape2D_01m7r")
+debug_color = Color(0.64, 0.36672, 0.2496, 0.156863)
+
+[node name="Inventory" type="Node2D" parent="."]
+z_index = -2
+position = Vector2(-206, -369)
+script = ExtResource("36_ayq42")
+
+[node name="Slot" type="Sprite2D" parent="Inventory"]
+texture_filter = 1
+position = Vector2(-154, 37)
+scale = Vector2(3, 3)
+texture = ExtResource("36_2ahnw")
+script = ExtResource("38_cbyrv")
+
+[node name="Item" type="Sprite2D" parent="Inventory/Slot"]
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("38_8qcta")
+
+[node name="Key" type="Label" parent="Inventory/Slot"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+offset_left = -12.3335
+offset_top = -14.0
+offset_right = 0.666504
+offset_bottom = 12.0
+scale = Vector2(0.275, 0.275)
+text = "3"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="Amount" type="Label" parent="Inventory/Slot"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+offset_left = -1.66667
+offset_top = 6.66669
+offset_right = 38.3333
+offset_bottom = 32.6667
+scale = Vector2(0.35, 0.35)
+text = "x10"
+label_settings = SubResource("LabelSettings_60nyp")
+horizontal_alignment = 2
+
+[node name="ItemName" type="Label" parent="Inventory"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+texture_filter = 1
+offset_left = -200.0
+offset_top = 89.0
+offset_right = -95.0
+offset_bottom = 115.0
+text = "Item name"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="ItemDescription" type="Label" parent="Inventory"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+self_modulate = Color(0.65834, 0.65834, 0.65834, 1)
+texture_filter = 1
+offset_left = -200.0
+offset_top = 108.0
+offset_right = -95.0
+offset_bottom = 134.0
+scale = Vector2(0.8, 0.8)
+text = "item description"
+label_settings = SubResource("LabelSettings_60nyp")
+
+[node name="Click" type="AudioStreamPlayer" parent="Inventory"]
+stream = ExtResource("44_tk8ou")
+
+[node name="OverlayRect" type="ColorRect" parent="."]
+visible = false
+z_index = 100
+material = SubResource("ShaderMaterial_semmm")
+offset_left = -2149.0
+offset_top = -1955.0
+offset_right = 2195.0
+offset_bottom = 1398.0
+color = Color(0, 0, 0, 0)
+
+[node name="ScreenShader" type="ColorRect" parent="."]
+z_index = -10
+material = SubResource("ShaderMaterial_xsud2")
+offset_left = -2149.0
+offset_top = -1955.0
+offset_right = 2195.0
+offset_bottom = 1398.0
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="TextAlert" parent="." instance=ExtResource("43_qyj2u")]
+z_index = 120
+position = Vector2(0, -112)
+
+[connection signal="mouse_entered" from="UpgradesListButton" to="UpgradesListButton" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="UpgradesListButton" to="UpgradesListButton" method="_on_mouse_exited"]
+[connection signal="pressed" from="UpgradesListButton" to="UpgradesListButton" method="_on_pressed"]
+[connection signal="mouse_entered" from="AutohealButton" to="AutohealButton" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AutohealButton" to="AutohealButton" method="_on_mouse_exited"]
+[connection signal="pressed" from="AutohealButton" to="AutohealButton" method="_on_pressed"]
+[connection signal="mouse_entered" from="ItemButton" to="ItemButton" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="ItemButton" to="ItemButton" method="_on_mouse_exited"]
+[connection signal="pressed" from="ItemButton" to="ItemButton" method="_on_pressed"]
+[connection signal="pressed" from="ItemDropdown/SquareUI/HideButton" to="ItemDropdown/SquareUI/HideButton" method="_on_pressed"]
+[connection signal="focus_entered" from="ItemDropdown/SquareUI/HideButton/ScrollContainer" to="ItemDropdown/SquareUI/HideButton/ScrollContainer/NearbyItemsContainer" method="_on_scroll_container_focus_entered"]
+[connection signal="focus_exited" from="ItemDropdown/SquareUI/HideButton/ScrollContainer" to="ItemDropdown/SquareUI/HideButton/ScrollContainer/NearbyItemsContainer" method="_on_scroll_container_focus_exited"]
+[connection signal="mouse_entered" from="ItemDropdown/SquareUI/HideButton/ScrollContainer" to="ItemDropdown/SquareUI/HideButton/ScrollContainer/NearbyItemsContainer" method="_on_scroll_container_mouse_entered"]
+[connection signal="mouse_exited" from="ItemDropdown/SquareUI/HideButton/ScrollContainer" to="ItemDropdown/SquareUI/HideButton/ScrollContainer/NearbyItemsContainer" method="_on_scroll_container_mouse_exited"]
+[connection signal="mouse_entered" from="ItemDropdown/TouchAbsorber" to="ItemDropdown/SquareUI/HideButton/ScrollContainer/NearbyItemsContainer" method="_on_touch_absorber_mouse_entered"]
+[connection signal="mouse_exited" from="ItemDropdown/TouchAbsorber" to="ItemDropdown/SquareUI/HideButton/ScrollContainer/NearbyItemsContainer" method="_on_touch_absorber_mouse_exited"]

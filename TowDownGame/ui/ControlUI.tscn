@@ -1,0 +1,644 @@
+[gd_scene load_steps=25 format=3 uid="uid://b8fluhc5dx881"]
+
+[ext_resource type="Script" path="res://ui/ControlUI.gd" id="1_hodr7"]
+[ext_resource type="Theme" uid="uid://d264vgetmywyw" path="res://ui/theme.tres" id="2_52b7e"]
+[ext_resource type="Script" path="res://ui/GameUI.gd" id="2_cj0m0"]
+[ext_resource type="Script" path="res://ui/MainUI.gd" id="2_foget"]
+[ext_resource type="PackedScene" uid="uid://cjqkfg0gdxyar" path="res://ui/widgets/Crosshair.tscn" id="3_88kmq"]
+[ext_resource type="Script" path="res://ui/SettingUI.gd" id="4_0nthv"]
+[ext_resource type="AudioStream" uid="uid://ik5t77ml7ave" path="res://audio/CLOTHMvmt_Clothing Rustle Arm_01.wav" id="5_m8t5a"]
+[ext_resource type="PackedScene" uid="uid://dgg8t0vevnaq2" path="res://ui/ModUI.tscn" id="8_hrt6v"]
+[ext_resource type="Texture2D" uid="uid://cck41ti3sn08g" path="res://Sprites/ui/title.png" id="8_ovypj"]
+[ext_resource type="Texture2D" uid="uid://bcy4ifspdj47q" path="res://icon.svg" id="9_ud0yi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x8ohj"]
+bg_color = Color(0.176471, 0.211765, 0.196078, 0.784314)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i6unc"]
+bg_color = Color(0.36, 1.2, 0.44, 0.6)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k7p2a"]
+bg_color = Color(0.176471, 0.211765, 0.196078, 0.784314)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2kfm2"]
+bg_color = Color(0.397355, 0.896716, 1.2, 0.6)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfd7"]
+bg_color = Color(0.117647, 0.117647, 0.117647, 0.843137)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_1rtrt"]
+font_size = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8wm7f"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_m86p8"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_hin5w"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_dixfw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qreuj"]
+bg_color = Color(0.117647, 0.117647, 0.117647, 0.843137)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_ohaid"]
+font_size = 8
+outline_size = 2
+outline_color = Color(0.458824, 0.411765, 0.235294, 1)
+
+[sub_resource type="Shader" id="Shader_87hmn"]
+code = "/*
+	グリッチ トランジション シェーダー by あるる（きのもと 結衣） @arlez80
+	Glitch Transition Shader by Yui Kinomoto @arlez80
+
+	MIT License
+*/
+
+shader_type canvas_item;
+
+uniform sampler2D SCREEN_TEXTURE:hint_screen_texture,filter_linear_mipmap;
+
+// 振動の強さ
+uniform float shake_power = 0.03;
+// 振動ブロックサイズ
+uniform float shake_block_size = 30.5;
+// 色の分離率
+uniform float fade : hint_range( 0.0, 1.0 ) = 0.01;
+// R方向
+uniform vec2 direction_r = vec2( 1.0, 0.0 );
+// G方向
+uniform vec2 direction_g = vec2( 0.4, 1.0 );
+// B方向
+uniform vec2 direction_b = vec2( -0.7, -0.3 );
+
+float random( float seed )
+{
+	return fract( 543.2543 * sin( dot( vec2( seed, seed ), vec2( 3525.46, -54.3415 ) ) ) );
+}
+
+void fragment( )
+{
+	vec2 fixed_uv = SCREEN_UV;
+	fixed_uv.x += (
+		random(
+			( trunc( SCREEN_UV.y * shake_block_size ) / shake_block_size )
+		+	TIME
+		) - 0.5
+	) * shake_power * ( fade * 12.0 );
+
+	COLOR = vec4(
+		textureLod( SCREEN_TEXTURE, fixed_uv + normalize( direction_r ) * fade, 0.0 ).r
+	,	textureLod( SCREEN_TEXTURE, fixed_uv + normalize( direction_g ) * fade, 0.0 ).g
+	,	textureLod( SCREEN_TEXTURE, fixed_uv + normalize( direction_b ) * fade, 0.0 ).b
+	,	0.0
+	) * ( 1.0 - fade );
+	COLOR.a = 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gousy"]
+shader = SubResource("Shader_87hmn")
+shader_parameter/shake_power = 0.03
+shader_parameter/shake_block_size = 30.5
+shader_parameter/fade = 0.0
+shader_parameter/direction_r = Vector2(1, 0)
+shader_parameter/direction_g = Vector2(0.4, 1)
+shader_parameter/direction_b = Vector2(-0.7, -0.3)
+
+[node name="ControlUI" type="CanvasLayer" groups=["control"]]
+process_mode = 3
+layer = 2
+script = ExtResource("1_hodr7")
+
+[node name="GameUI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_52b7e")
+script = ExtResource("2_cj0m0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -24.0
+offset_right = 215.0
+offset_bottom = -4.0
+grow_vertical = 0
+
+[node name="Container" type="Control" parent="GameUI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -19.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="BulletHbox" type="HBoxContainer" parent="GameUI/Container"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = 4.5
+offset_right = 138.0
+offset_bottom = 10.5
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="GameUI/Container"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 1.0
+offset_bottom = 11.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 5
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="all_ammo" type="Label" parent="GameUI/Container"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = -11.0
+offset_bottom = -1.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 5
+text = "Ammo:50"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="WeaponChangeUI" type="Control" parent="GameUI"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 58.0
+grow_horizontal = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="WeaponImage" type="TextureRect" parent="GameUI/WeaponChangeUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = -20.0
+offset_right = 35.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="GameUI/WeaponChangeUI/WeaponImage"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -66.5
+offset_top = -7.0
+offset_right = 67.5
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="hpUI" type="Control" parent="GameUI"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 102.0
+offset_bottom = 43.0
+
+[node name="ProgressBar" type="ProgressBar" parent="GameUI/hpUI"]
+layout_mode = 0
+offset_top = -2.0
+offset_right = 94.0
+offset_bottom = 7.0
+theme_override_font_sizes/font_size = 5
+theme_override_styles/background = SubResource("StyleBoxFlat_x8ohj")
+theme_override_styles/fill = SubResource("StyleBoxFlat_i6unc")
+value = 100.0
+
+[node name="ProgressBar2" type="ProgressBar" parent="GameUI/hpUI"]
+layout_mode = 0
+offset_left = 39.0
+offset_top = 10.0
+offset_right = 94.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 6
+theme_override_styles/background = SubResource("StyleBoxFlat_k7p2a")
+theme_override_styles/fill = SubResource("StyleBoxFlat_2kfm2")
+
+[node name="Label" type="Label" parent="GameUI/hpUI"]
+layout_mode = 1
+offset_top = 24.0
+offset_right = 42.0
+offset_bottom = 36.0
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_wvfd7")
+text = "GOLD_HAS"
+label_settings = SubResource("LabelSettings_1rtrt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="GameUI/hpUI"]
+layout_mode = 1
+offset_top = 10.0
+offset_right = 36.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_wvfd7")
+text = "LEVEL"
+label_settings = SubResource("LabelSettings_1rtrt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="GameUI/hpUI"]
+layout_mode = 1
+offset_top = 40.0
+offset_right = 48.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 6
+theme_override_styles/normal = SubResource("StyleBoxFlat_wvfd7")
+text = "REWARD_POINT"
+label_settings = SubResource("LabelSettings_1rtrt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="GameUI"]
+stream = ExtResource("5_m8t5a")
+
+[node name="RwGridContainer" type="GridContainer" parent="GameUI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 3.0
+offset_right = 90.0
+offset_bottom = 43.0
+grow_horizontal = 2
+theme_override_constants/h_separation = 2
+columns = 13
+
+[node name="LevelUpPanel" type="Panel" parent="GameUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -59.0
+offset_top = -20.0
+offset_bottom = 42.0
+grow_vertical = 2
+
+[node name="all_ammo" type="Label" parent="GameUI/LevelUpPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 15.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 7
+text = "Level Up"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="all_ammo2" type="Label" parent="GameUI/LevelUpPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -29.5
+offset_top = 15.0
+offset_right = 29.5
+offset_bottom = 30.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 7
+text = "LEVLE_DM"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="all_ammo3" type="Label" parent="GameUI/LevelUpPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -29.5
+offset_top = 31.0
+offset_right = 29.5
+offset_bottom = 46.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 7
+text = "LEVLE_HP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="all_ammo4" type="Label" parent="GameUI/LevelUpPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -29.5
+offset_top = 47.0
+offset_right = 29.5
+offset_bottom = 62.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 7
+text = "LEVEL_POINT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MainUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_52b7e")
+script = ExtResource("2_foget")
+
+[node name="TextureRect" type="TextureRect" parent="MainUI"]
+modulate = Color(2, 2, 2, 1)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_right = 91.0
+offset_bottom = 87.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("8_ovypj")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -103.0
+offset_right = 74.0
+offset_bottom = -8.0
+grow_vertical = 0
+
+[node name="start" type="Button" parent="MainUI/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_8wm7f")
+text = "MAIN_UI_START"
+
+[node name="mod" type="Button" parent="MainUI/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_8wm7f")
+text = "MAIN_UI_MOD"
+
+[node name="setting" type="Button" parent="MainUI/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_8wm7f")
+text = "MAIN_UI_SETTING"
+
+[node name="quit" type="Button" parent="MainUI/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_8wm7f")
+text = "MAIN_UI_QUIT"
+
+[node name="SettingUI" type="ColorRect" parent="MainUI"]
+process_mode = 3
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+script = ExtResource("4_0nthv")
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MainUI/SettingUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -155.5
+offset_top = -93.0
+offset_right = 155.5
+offset_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainUI/SettingUI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "SETTING_BASIC"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="language" type="OptionButton" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+item_count = 2
+popup/item_0/text = "LANGUAGE_EN"
+popup/item_0/id = 0
+popup/item_1/text = "LANGUAGE_ZH"
+popup/item_1/id = 1
+
+[node name="Control" type="Control" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control"]
+layout_mode = 0
+theme_override_font_sizes/font_size = 8
+text = "SETTING_SHAKE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="shake" type="HSlider" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control"]
+layout_mode = 0
+offset_left = 0.5
+offset_top = 12.0
+offset_right = 118.5
+offset_bottom = 28.0
+theme_override_icons/grabber = SubResource("ImageTexture_m86p8")
+theme_override_icons/grabber_highlight = SubResource("ImageTexture_hin5w")
+theme_override_icons/tick = SubResource("ImageTexture_dixfw")
+max_value = 3.0
+value = 1.0
+scrollable = false
+
+[node name="Control2" type="Control" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control2"]
+layout_mode = 0
+theme_override_font_sizes/font_size = 8
+text = "SETTING_VOLUME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="volume" type="HSlider" parent="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control2"]
+layout_mode = 0
+offset_left = 0.5
+offset_top = 12.0
+offset_right = 118.5
+offset_bottom = 28.0
+theme_override_icons/grabber = SubResource("ImageTexture_m86p8")
+theme_override_icons/grabber_highlight = SubResource("ImageTexture_hin5w")
+theme_override_icons/tick = SubResource("ImageTexture_dixfw")
+value = 50.0
+scrollable = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MainUI/SettingUI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="MainUI/SettingUI"]
+layout_mode = 0
+offset_left = 304.0
+offset_top = 199.0
+offset_right = 407.0
+offset_bottom = 227.0
+text = "Exit Game"
+
+[node name="ModUI" parent="MainUI" instance=ExtResource("8_hrt6v")]
+visible = false
+layout_mode = 1
+
+[node name="TextureRect" parent="." instance=ExtResource("3_88kmq")]
+offset_left = -32.0
+offset_top = -33.0
+offset_right = 4.0
+offset_bottom = 3.0
+pivot_offset = Vector2(18, 18)
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="."]
+process_mode = 3
+visible = false
+z_index = 2
+layout_mode = 3
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -95.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -142.5
+offset_top = -9.0
+offset_right = 142.5
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_qreuj")
+text = "toast"
+label_settings = SubResource("LabelSettings_ohaid")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="Control"]
+one_shot = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_gousy")
+position = Vector2(204.469, 115.156)
+scale = Vector2(3.1958, 1.79443)
+texture = ExtResource("9_ud0yi")
+
+[connection signal="pressed" from="MainUI/VBoxContainer/start" to="MainUI" method="_on_start_pressed"]
+[connection signal="pressed" from="MainUI/VBoxContainer/mod" to="MainUI" method="_on_mod_pressed"]
+[connection signal="pressed" from="MainUI/VBoxContainer/setting" to="MainUI" method="_on_setting_pressed"]
+[connection signal="item_selected" from="MainUI/SettingUI/VBoxContainer/VBoxContainer/language" to="MainUI/SettingUI" method="_on_language_item_selected"]
+[connection signal="value_changed" from="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control/shake" to="MainUI/SettingUI" method="_on_shake_value_changed"]
+[connection signal="value_changed" from="MainUI/SettingUI/VBoxContainer/VBoxContainer/Control2/volume" to="MainUI/SettingUI" method="_on_volume_value_changed"]
+[connection signal="pressed" from="MainUI/SettingUI/Button" to="MainUI/SettingUI" method="_on_button_pressed"]
+[connection signal="timeout" from="Control/Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://bmmyvowwwwyu1"]
+
+[ext_resource type="Texture2D" uid="uid://jrsera533yx1" path="res://addons/top_down/assets/images/vfx/explosion_0_strip6.png" id="1_bfip5"]
+[ext_resource type="Script" uid="uid://c505hy2cj5vwa" path="res://addons/great_games_library/resources/InstanceResource/PoolNode.gd" id="2_6whf5"]
+
+[sub_resource type="Animation" id="Animation_3bcbr"]
+resource_name = "animate"
+length = 0.5
+step = 0.0833
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 4, 5]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PoolNode")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.416667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"pool_return"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qqpok"]
+_data = {
+&"animate": SubResource("Animation_3bcbr")
+}
+
+[node name="Explosion_0" type="Node2D" unique_id=468261763]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1905399110]
+position = Vector2(0, -8)
+texture = ExtResource("1_bfip5")
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1432983400]
+libraries/ = SubResource("AnimationLibrary_qqpok")
+autoplay = &"animate"
+
+[node name="PoolNode" type="Node" parent="." unique_id=1867445132 node_paths=PackedStringArray("ready_nodes", "animation_player_list")]
+script = ExtResource("2_6whf5")
+ready_nodes = [NodePath("../AnimationPlayer")]
+animation_player_list = [NodePath("../AnimationPlayer")]

@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://cvx2xmr86fa7b"]
+
+[ext_resource type="Texture2D" uid="uid://cwctv2kide844" path="res://addons/top_down/assets/images/kenney_input_prompt/Keyboard & Mouse/Double/keyboard_w.png" id="1_do8rq"]
+[ext_resource type="Script" uid="uid://cd1xnhchu4kak" path="res://addons/top_down/scripts/input/BindingButton.gd" id="2_c7cq0"]
+[ext_resource type="Resource" uid="uid://xoehlofj3mru" path="res://addons/top_down/resources/ControlTextureResource/keyboard_textures.tres" id="3_xjfrb"]
+[ext_resource type="Resource" uid="uid://c2l3mopok8331" path="res://addons/top_down/resources/ControlTextureResource/gamepad_textures_xbox.tres" id="4_xdqvi"]
+[ext_resource type="Resource" uid="uid://co1epfd4a3l5r" path="res://addons/top_down/resources/ControlTextureResource/gamepad_textures_ps.tres" id="5_3vbb3"]
+[ext_resource type="Resource" uid="uid://dsk5usbvnbqi3" path="res://addons/top_down/resources/global_resources/action_resource.tres" id="5_drqok"]
+[ext_resource type="Resource" uid="uid://cryn1snloyh7f" path="res://addons/top_down/resources/ControlTextureResource/gamepad_textures_switch.tres" id="6_7hfhl"]
+[ext_resource type="Resource" uid="uid://crxpln7xah5hj" path="res://addons/top_down/resources/ControlTextureResource/gamepad_textures_generic.tres" id="7_bkuvk"]
+
+[node name="BindingButton" type="TextureButton" unique_id=441097454 node_paths=PackedStringArray("label")]
+custom_minimum_size = Vector2(0, 16)
+size_flags_horizontal = 5
+size_flags_vertical = 0
+texture_normal = ExtResource("1_do8rq")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("2_c7cq0")
+label = NodePath("Label")
+control_texture_kb = ExtResource("3_xjfrb")
+control_texture_xbox = ExtResource("4_xdqvi")
+control_texture_ps = ExtResource("5_3vbb3")
+control_texture_switch = ExtResource("6_7hfhl")
+control_texture_generic = ExtResource("7_bkuvk")
+action_resource = ExtResource("5_drqok")
+
+[node name="Label" type="Label" parent="." unique_id=2059919802]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+vertical_alignment = 1

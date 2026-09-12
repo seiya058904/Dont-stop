@@ -1,0 +1,134 @@
+[gd_scene load_steps=15 format=3 uid="uid://c6ys2qs8aeu8n"]
+
+[ext_resource type="PackedScene" uid="uid://beifde6xst23w" path="res://addons/top_down/scenes/projectiles/projectile.tscn" id="1_lwexf"]
+[ext_resource type="Script" path="res://addons/top_down/scripts/damage/properties/DamageTypeResource.gd" id="2_mr7yn"]
+[ext_resource type="Texture2D" uid="uid://bevk5id3o0bei" path="res://addons/top_down/assets/images/shadow.png" id="2_pfam2"]
+[ext_resource type="PackedScene" uid="uid://djobi3eqlcjvo" path="res://addons/top_down/scenes/vfx/trail_particle.tscn" id="3_gx0bp"]
+[ext_resource type="Texture2D" uid="uid://ddyug4weofr3x" path="res://addons/top_down/assets/images/vfx/slash_3_strip4.png" id="4_u6vsr"]
+[ext_resource type="Resource" uid="uid://dedx0gi4fowby" path="res://addons/top_down/resources/global_resources/axis_multiplication_resource.tres" id="6_gnksn"]
+[ext_resource type="Script" path="res://addons/top_down/scripts/weapon_system/projectile/ProjectileSpawner.gd" id="6_whjok"]
+[ext_resource type="Script" path="res://addons/top_down/scripts/weapon_system/projectile/SubProjectileManager.gd" id="7_n74ie"]
+[ext_resource type="Resource" uid="uid://o8teeob07t1x" path="res://addons/top_down/resources/InstanceResources/projectiles/sword_projectile_instance_resource.tres" id="10_5rio8"]
+
+[sub_resource type="Resource" id="Resource_78e1m"]
+script = ExtResource("2_mr7yn")
+value = 20.0
+type = 0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ssjg"]
+size = Vector2(12, 6)
+
+[sub_resource type="Animation" id="Animation_g0v6g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_xl7km"]
+resource_name = "slash"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(1.5, 0.75), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0666667, 0.133333, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eij6j"]
+_data = {
+"RESET": SubResource("Animation_g0v6g"),
+"slash": SubResource("Animation_xl7km")
+}
+
+[node name="SwordSlash" instance=ExtResource("1_lwexf")]
+speed = 60.0
+
+[node name="ProjectileSetup" parent="." index="0"]
+base_damage = Array[ExtResource("2_mr7yn")]([SubResource("Resource_78e1m")])
+kickback = 100.0
+
+[node name="Shadow" type="Sprite2D" parent="." index="1"]
+visible = false
+modulate = Color(1, 0.983333, 0, 0.168627)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_pfam2")
+
+[node name="ProjectileMover" parent="." index="2"]
+collision_mask = 0
+
+[node name="CollisionShape2D" parent="AreaTransmitter2D" index="0"]
+shape = SubResource("RectangleShape2D_4ssjg")
+
+[node name="TrailParticle" parent="RotatedNode" index="0" instance=ExtResource("3_gx0bp")]
+amount = 12
+explosiveness = 0.49
+
+[node name="Sprite2D" parent="RotatedNode" index="1"]
+scale = Vector2(1, 1)
+texture = ExtResource("4_u6vsr")
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RotatedNode/Sprite2D" index="0"]
+libraries = {
+"": SubResource("AnimationLibrary_eij6j")
+}
+autoplay = "slash"
+
+[node name="ProjectileSpawner" type="Node" parent="." index="5"]
+script = ExtResource("6_whjok")
+axis_multiplication_resource = ExtResource("6_gnksn")
+initial_distance = 10.0
+
+[node name="SubParticleManager" type="Node" parent="." index="6" node_paths=PackedStringArray("projectile", "projectile_spawner")]
+script = ExtResource("7_n74ie")
+projectile = NodePath("..")
+projectile_spawner = NodePath("../ProjectileSpawner")
+start_projectile_instance_resource = ExtResource("10_5rio8")
+axis_multiplication_resource = ExtResource("6_gnksn")
+
+[node name="ProjectileLifetime" parent="." index="10"]
+time = 0.27
+
+[node name="PoolNode" parent="." index="11" node_paths=PackedStringArray("ready_nodes", "animation_player_list", "particle2d_list")]
+ready_nodes = [NodePath(".."), NodePath("../ProjectileSetup"), NodePath("../ProjectileLifetime"), NodePath("../HitLimit"), NodePath("../ProjectileRotation"), NodePath("../SubParticleManager"), NodePath("../RotatedNode/Sprite2D/AnimationPlayer"), NodePath("../RotatedNode/TrailParticle"), NodePath("../ProjectileMover")]
+animation_player_list = [NodePath("../RotatedNode/Sprite2D/AnimationPlayer")]
+particle2d_list = [NodePath("../RotatedNode/TrailParticle")]

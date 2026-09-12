@@ -1,0 +1,2 @@
+# Keep playable Windows builds in Git LFS so GitHub's 100 MB file limit is respected.
+*.exe filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,253 @@
+[gd_scene load_steps=6 format=3 uid="uid://b10pmop73jr0h"]
+
+[ext_resource type="Script" path="res://ui/Inventory.gd" id="1_mwsm4"]
+[ext_resource type="Texture2D" uid="uid://c3pvw3wpadkd2" path="res://Sprites/The Tiny Alchemist - Guns/gun2.png" id="2_1bhhv"]
+[ext_resource type="PackedScene" uid="uid://sos40ogd1gwa" path="res://ui/widgets/InvAMItem.tscn" id="4_r7jeh"]
+[ext_resource type="Script" path="res://ui/widgets/Tooltip.gd" id="6_ohsge"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p23yh"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.384314, 0.384314, 0.384314, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="Inventory" type="Control"]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_force_pass_scroll_events = false
+script = ExtResource("1_mwsm4")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="Panel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -184.0
+offset_top = -81.0
+offset_right = 193.0
+offset_bottom = 106.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_bottom = 24.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="WeaponMain" type="Control" parent="Panel"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 16.0
+offset_top = -54.5
+offset_right = 137.0
+offset_bottom = 87.5
+grow_vertical = 2
+
+[node name="Label2" type="Label" parent="Panel/WeaponMain"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -35.5
+offset_top = -77.0
+offset_right = 36.5
+offset_bottom = -62.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 8
+text = "INVENTORY_AM_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="iamge" type="TextureRect" parent="Panel/WeaponMain"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -56.5
+offset_top = -2.0
+offset_right = 57.5
+offset_bottom = 55.0
+grow_horizontal = 2
+texture = ExtResource("2_1bhhv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/WeaponMain/iamge"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -7.0
+offset_right = 32.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 8
+text = "INVENTORY_TITLE
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="Panel/WeaponMain"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -53.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/h_separation = 8
+columns = 4
+
+[node name="Control" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+
+[node name="Control2" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_MUZZLE"
+
+[node name="Control3" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_BARREL"
+
+[node name="Control4" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_UNDERBARREL"
+
+[node name="Control5" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_AMMUNITION"
+
+[node name="Control6" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_STOCK"
+
+[node name="Control7" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_TACTICAL"
+
+[node name="Control8" parent="Panel/WeaponMain/GridContainer" instance=ExtResource("4_r7jeh")]
+layout_mode = 2
+am_type = "WEAPON_PERKS"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -191.0
+offset_top = -54.5
+offset_right = -6.0
+offset_bottom = 85.5
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="Panel/ScrollContainer"]
+layout_mode = 2
+columns = 5
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.0
+offset_top = 11.0
+offset_right = 32.0
+offset_bottom = 26.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 8
+text = "INVENTORY_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TouchTexture" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+expand_mode = 1
+
+[node name="Tooltip" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(110, 100)
+layout_mode = 0
+offset_left = 44.0
+offset_top = 45.0
+offset_right = 158.0
+offset_bottom = 154.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_p23yh")
+script = ExtResource("6_ohsge")
+
+[node name="Label" type="Label" parent="Tooltip"]
+layout_mode = 1
+offset_left = 3.0
+offset_top = 12.0
+offset_right = 111.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 6
+text = "asdasdasda"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Label3" type="Label" parent="Tooltip/Label"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 67.0
+offset_right = 107.0
+offset_bottom = 96.0
+theme_override_font_sizes/font_size = 6
+text = "可用范围："
+autowrap_mode = 1
+
+[node name="Label2" type="Label" parent="Tooltip"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 43.0
+offset_bottom = 12.0
+theme_override_font_sizes/font_size = 6
+text = "类型："

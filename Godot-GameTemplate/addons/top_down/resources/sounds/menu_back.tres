@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SoundResource" format=3 uid="uid://b1hy8aowwa5hq"]
+
+[ext_resource type="Script" uid="uid://crafwqb5pfm8h" path="res://addons/great_games_library/resources/SoundResource/SoundResource.gd" id="1_bnses"]
+[ext_resource type="AudioStream" uid="uid://p1ufcqkof07c" path="res://addons/top_down/assets/sounds/menu_back.wav" id="2_271ce"]
+
+[resource]
+script = ExtResource("1_bnses")
+pitch_min = 0.98
+pitch_max = 1.2
+volume = -5.0
+sound = ExtResource("2_271ce")

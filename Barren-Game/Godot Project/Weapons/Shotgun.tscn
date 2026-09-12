@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3 uid="uid://diyjuf2ah6fk3"]
+
+[ext_resource type="Script" path="res://WeaponsContents/Gun.gd" id="1_sqank"]
+[ext_resource type="Texture2D" uid="uid://b3p88gsutmh2q" path="res://WeaponsContents/Shotgun/Shotgun.png" id="2_4klu2"]
+[ext_resource type="Texture2D" uid="uid://uu1x68u1mgb5" path="res://WeaponsContents/Shotgun/ShotgunShell.png" id="3_agpxh"]
+[ext_resource type="AudioStream" uid="uid://cb6ha26jlq24k" path="res://WeaponsContents/Shotgun/ShotgunShoot.mp3" id="4_864ks"]
+[ext_resource type="Texture2D" uid="uid://bw34yijrs7un1" path="res://UI/Crosshairs/ShotgunCrosshair.png" id="4_wn14l"]
+[ext_resource type="AudioStream" uid="uid://b01w7am2dnink" path="res://WeaponsContents/Shotgun/ShotgunCock.mp3" id="5_yscbf"]
+[ext_resource type="AudioStream" uid="uid://buvjgbel4tijd" path="res://WeaponsContents/Shotgun/ShotgunReload.mp3" id="6_5pfb5"]
+
+[node name="Shotgun" type="Node"]
+script = ExtResource("1_sqank")
+displayName = "Shotgun"
+needsCocking = true
+fireRate = 1.0
+recoilAmount = 15.0
+automatic = false
+maximumMagCapacity = 5
+startingAmmoCount = 20
+bulletMultiplier = 8
+reloadTime = 2.0
+targetRange = 500.0
+damageSpread = 2.0
+texture = ExtResource("2_4klu2")
+shellTexture = ExtResource("3_agpxh")
+crosshairTexture = ExtResource("4_wn14l")
+dropTextureOffset = Vector2(-25.652, 33.235)
+shootSound = ExtResource("4_864ks")
+shootPitchVariance = 0.07
+cockingSound = ExtResource("5_yscbf")
+cockingSoundVolumeOffset = -5.0
+reloadSound = ExtResource("6_5pfb5")
+reloadSoundVolumeOffset = -9.0
+silverTargetSpreadMultiplier = 0.95
+silverTargetDamageMultiplier = 1.3
+silverFireRateMultiplier = 0.5
+silverMagazineSizeIncrease = 3
+goldenTargetSpreadMultiplier = 0.9
+goldenTargetDamageMultiplier = 1.4
+goldenFireRateMultiplier = 0.15
+goldenMagazineSizeIncrease = 5
+goldenBulletMultiplierIncrease = 3

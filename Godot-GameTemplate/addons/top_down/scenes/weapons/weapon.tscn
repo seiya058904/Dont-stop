@@ -1,0 +1,72 @@
+[gd_scene load_steps=16 format=3 uid="uid://do8p6aamuv46h"]
+
+[ext_resource type="Script" uid="uid://tn8vlsgg76x4" path="res://addons/top_down/scripts/weapon_system/Weapon.gd" id="1_wo85b"]
+[ext_resource type="Texture2D" uid="uid://cmrj6rrgbfvlg" path="res://addons/top_down/assets/images/weapon/gun_0.png" id="2_i2035"]
+[ext_resource type="Script" uid="uid://bphd2malk5asy" path="res://addons/top_down/scripts/damage/properties/DamageTypeResource.gd" id="2_v23wb"]
+[ext_resource type="Script" uid="uid://brofqpbiuj12d" path="res://addons/top_down/scripts/weapon_system/projectile/ProjectileSpawner.gd" id="3_bmtwx"]
+[ext_resource type="Script" uid="uid://bdbat3453sctq" path="res://addons/top_down/scripts/damage/properties/DamageDataResource.gd" id="3_kraft"]
+[ext_resource type="Script" uid="uid://bjto260jky4ru" path="res://addons/top_down/scripts/weapon_system/WeaponRotation.gd" id="3_tyiow"]
+[ext_resource type="Script" uid="uid://baavnpxvjsx7q" path="res://addons/top_down/scripts/weapon_system/WeaponAnimationTrigger.gd" id="4_efjwn"]
+[ext_resource type="Script" uid="uid://dg5sc14fyjex4" path="res://addons/top_down/scripts/damage/properties/DamageStatusResource.gd" id="4_ljeda"]
+[ext_resource type="Script" uid="uid://bjxqnychbvme7" path="res://addons/top_down/scripts/weapon_system/SpreadShot.gd" id="5_mx0vu"]
+[ext_resource type="Script" uid="uid://m3erm6no7wp6" path="res://addons/top_down/scripts/weapon_system/WeaponTrigger.gd" id="6_gfbfl"]
+[ext_resource type="Script" uid="uid://cj47hbfynpfab" path="res://addons/top_down/scripts/weapon_system/WeaponKickback.gd" id="6_spkuj"]
+[ext_resource type="Script" uid="uid://be6amykgldp5e" path="res://addons/top_down/scripts/weapon_system/projectile/ProjectileInterval.gd" id="7_surdb"]
+[ext_resource type="Resource" uid="uid://dedx0gi4fowby" path="res://addons/top_down/resources/global_resources/axis_multiplication_resource.tres" id="9_x0q43"]
+
+[sub_resource type="Resource" id="Resource_pkull"]
+script = ExtResource("3_kraft")
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qujdc"]
+
+[node name="Weapon" type="Node2D"]
+script = ExtResource("1_wo85b")
+damage_data_resource = SubResource("Resource_pkull")
+
+[node name="RotatedNode" type="Node2D" parent="."]
+position = Vector2(0, -8)
+
+[node name="Sprite2D" type="Sprite2D" parent="RotatedNode"]
+texture = ExtResource("2_i2035")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RotatedNode/Sprite2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_qujdc")
+}
+
+[node name="WeaponRotation" type="Node" parent="." node_paths=PackedStringArray("weapon", "rotate_node")]
+script = ExtResource("3_tyiow")
+weapon = NodePath("..")
+rotate_node = NodePath("../RotatedNode")
+
+[node name="WeaponKickback" type="Node" parent="." node_paths=PackedStringArray("weapon", "weapon_trigger")]
+script = ExtResource("6_spkuj")
+weapon = NodePath("..")
+weapon_trigger = NodePath("../WeaponTrigger")
+kickback_strength = 30.0
+
+[node name="WeaponTrigger" type="Node" parent="." node_paths=PackedStringArray("weapon", "projectile_spawner")]
+script = ExtResource("6_gfbfl")
+weapon = NodePath("..")
+projectile_spawner = NodePath("../ProjectileSpawner")
+
+[node name="ProjectileInterval" type="Node" parent="WeaponTrigger" node_paths=PackedStringArray("weapon_trigger")]
+script = ExtResource("7_surdb")
+weapon_trigger = NodePath("..")
+interval = 1.0
+
+[node name="AnimationTrigger" type="Node" parent="WeaponTrigger" node_paths=PackedStringArray("weapon_trigger", "animation_player")]
+script = ExtResource("4_efjwn")
+weapon_trigger = NodePath("..")
+animation_player = NodePath("../../RotatedNode/Sprite2D/AnimationPlayer")
+
+[node name="ProjectileSpawner" type="Node" parent="."]
+script = ExtResource("3_bmtwx")
+axis_multiplication_resource = ExtResource("9_x0q43")
+initial_distance = 10.0
+new_damage = true
+
+[node name="SpreadShot" type="Node" parent="ProjectileSpawner" node_paths=PackedStringArray("projectile_spawner")]
+script = ExtResource("5_mx0vu")
+projectile_spawner = NodePath("..")
+random_angle_offset = 5.0
