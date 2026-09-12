@@ -1,0 +1,50 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS shield actual front mitigation
+PASS shield rear weakness
+PASS shield breaks finite armor
+PASS zero damage warning cannot damage player
+PASS pause freezes pending hazard
+PASS owner death cancels warning damage
+PASS early self-bomber kill cancels blast
+PASS support lifetime heal budget cannot cycle infinitely
+PASS producer hard total and live cap
+PASS death split shares production budget
+PASS death blasts bounded depth and end
+PASS fast hostile projectile stopped by physical cargo wall
+PASS hostile beam actual wall occlusion
+PASS special gun actual new enemy hit 117/E03
+PASS released target has finite projectile lifetime 117
+PASS special gun actual new enemy hit 118/E07
+PASS released target has finite projectile lifetime 118
+PASS special gun actual new enemy hit 119/E09
+PASS released target has finite projectile lifetime 119
+PASS special gun actual new enemy hit 120/E11
+PASS released target has finite projectile lifetime 120
+PASS special gun actual new enemy hit 111/E10
+PASS released target has finite projectile lifetime 111
+PASS special gun actual new enemy hit 113/E08
+PASS released target has finite projectile lifetime 113
+PASS special gun actual new enemy hit 115/E06
+PASS released target has finite projectile lifetime 115
+PASS special gun actual new enemy hit 116/E12
+PASS released target has finite projectile lifetime 116
+PASS special gun actual new enemy hit 121/E03
+PASS released target has finite projectile lifetime 121
+PASS special gun actual new enemy hit 122/E07
+PASS released target has finite projectile lifetime 122
+PASS special gun actual new enemy hit 124/E09
+PASS released target has finite projectile lifetime 124
+PASS special gun actual new enemy hit 112/E11
+PASS released target has finite projectile lifetime 112
+PASS special gun actual new enemy hit 114/E10
+PASS released target has finite projectile lifetime 114
+PASS simultaneous boss/player death keeps death choice
+FAIL revive resolves already defeated boss once
+PASS simultaneous boss/player death keeps death choice
+PASS abandon after double death grants no victory
+M5 MECHANICS SUMMARY checks=43 failures=1
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

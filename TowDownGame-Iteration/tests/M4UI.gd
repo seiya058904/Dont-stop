@@ -64,4 +64,5 @@ func _ready():
 	await frames()
 	check(Demo.pause_stack.is_empty() and not get_tree().paused,"menu cleanly closes")
 	print("M4 UI SUMMARY checks=",checks," failures=",failures)
-	get_tree().quit.call_deferred(1 if failures else 0)
+	if failures: get_tree().quit.call_deferred(1)
+	else: await Demo.quit_game() # Exercise the existing production audio shutdown, not an abrupt test exit.

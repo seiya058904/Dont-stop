@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS cross-process schema3 restore
+PASS cross-process all weapons and talents
+PASS cross-process four magazine instances
+PASS cross-process expanded magazines preserve exact ammo
+PASS cross-process exact payment ledger
+PASS cross-process refund actual gold
+PASS cross-process repeat click cannot refund again
+M4 PERSISTENCE SUMMARY checks=7 failures=0

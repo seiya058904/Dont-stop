@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PRESSURE {"damage_events":5100,"display":"headless","encounter_completed":false,"fixture":"old E01 pressure","frame_ms":{"p50":8.33333333333333,"p95":37.461,"p99":63.4383333333333},"gpu":"","live_enemy_p50":149,"live_enemy_peak":150,"live_projectile_p50":400,"live_projectile_peak":400,"node_end":18807.0,"node_start":339,"orphan_nodes":0.0,"pre_refill_enemy_p50":130,"pre_refill_projectile_p50":347,"scenario":"pressure","seconds":33.0697670000001,"viewport":"(64, 64)"}
+PRESSURE CLEANUP nodes=326.0 orphans=0.0 transients=0 enemies=0

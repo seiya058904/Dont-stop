@@ -25,6 +25,8 @@ func _ready():
 		var epoch = LevelServer.epoch
 		LevelServer.town._on_portal_move_in(LevelServer.town.portal_lv1)
 		LevelServer.town._on_portal_2_move_out()
-		check(LevelServer.level == 3 and not Demo.trial and LevelServer.epoch == epoch+1,"R05 fresh process old gate starts next normal encounter "+args[1])
+
+		# M5 fills the previously unavailable stage 2; normal progression no longer skips it.
+		check(LevelServer.level == 2 and not Demo.trial and LevelServer.epoch == epoch+1,"R05 fresh process old gate starts next normal encounter "+args[1])
 	print("DEPARTURE SAVE failures=",int(failed))
 	await Demo.quit_game()

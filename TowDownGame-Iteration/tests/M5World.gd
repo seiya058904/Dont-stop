@@ -16,13 +16,18 @@ func _ready():
 		var config = DemoConfig.ENCOUNTERS[stage]
 		if (stage-1)%5 == 0:
 			var valid_spawns = 0
+			var physical_clear = 0
 			for fixed_seed in 100:
 				seed(fixed_seed+1000)
 				var point = town.spawn_point()
 				if point == Vector2.INF or point.distance_to(Utils.player.global_position)<145: continue
 				var path = town.arena.grid.get_id_path(town.arena.cell(point),town.arena.cell(Utils.player.global_position)) if is_instance_valid(town.arena) else town.navigation.get_id_path(town.nav_cell(point),town.nav_cell(Utils.player.global_position))
 				if path.size()>1: valid_spawns += 1
+				var circle = CircleShape2D.new(); circle.radius = 12 if is_instance_valid(town.arena) else 6
+				var query = PhysicsShapeQueryParameters2D.new(); query.shape = circle; query.transform = Transform2D(0,point); query.collision_mask=2147483648
+				if town.get_world_2d().direct_space_state.intersect_shape(query,1).is_empty(): physical_clear += 1
 			check(valid_spawns==100,"100 fixed seeds reachable "+config.region)
+			check(physical_clear==100,"100 actual physics hull-clear spawns "+config.region)
 			var mover = M5Content.spawn("E03",town.monster_root,town.spawn_point())
 			var old = mover.global_position; await wait(1.3)
 			check(mover.global_position.distance_to(old)>1,"region real actor exists and starts "+config.region)

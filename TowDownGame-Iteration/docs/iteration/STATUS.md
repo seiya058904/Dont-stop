@@ -7,7 +7,8 @@
 - H1_STATUS = DEFERRED_BY_USER；HUMAN_ACCEPTED = false；AUTHORIZED_SCOPE = M5。
 - 成功标准：12普通敌人、3Boss、6区、30遭遇真实战斗可达；24/24/24冻结；旧档兼容、正常与试玩进度分离；全部内容后至少20分钟/24循环统一长回归，完整日志和实体采样。
 - 按敌人→区域/遭遇→Boss/进度→验证分批提交推送现有分支。原三项目只读，不操作桌面、不发行、不合并main、不进入M6。
-- 当前：IMPLEMENTATION IN PROGRESS。
+- 当前：M5 IMPLEMENTED / FINAL LONG VALIDATION IN PROGRESS。实际12普通敌人/3Boss/6区/30遭遇；24枪/24配件/24天赋保留。
+- 已执行敌人交战70项、全遭遇/物理可达性159项、机制43项；首轮问题及修复原文在evidence/m5。下一步统一20分钟/24回营冻结长测，完成后停止于待真人验收。
 
 ## M3—M4 H2候选（覆盖下方历史阶段门，2026-09-12）
 

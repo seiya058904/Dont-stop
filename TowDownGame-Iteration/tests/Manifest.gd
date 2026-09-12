@@ -1,7 +1,7 @@
 extends Node
 func _ready():
 	TranslationServer.set_locale("zh_CN")
-	var data = {"profile":DemoConfig.PROFILE,"weapons":[],"attachments":[],"talents":[],"legacy_rewards":[],"enemies":["E01","E02","E04","E05"],"bosses":[],"regions":["R1 improved original town block"],"encounters":DemoConfig.ENCOUNTERS}
+	var data = {"profile":DemoConfig.PROFILE,"weapons":[],"attachments":[],"talents":[],"legacy_rewards":[],"enemies":M5Content.ENEMIES,"bosses":M5Content.BOSSES,"regions":M5Content.REGIONS,"encounters":DemoConfig.ENCOUNTERS}
 	for id in Utils.weapon_list:
 		var gun = Utils.weapon_list[id].instantiate()
 		var spec = WeaponCatalog.definition(int(id))

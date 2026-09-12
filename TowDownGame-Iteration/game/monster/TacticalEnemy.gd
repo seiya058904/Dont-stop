@@ -23,6 +23,8 @@ func _ready():
 	sprite_body.scale = Vector2.ONE*(1.8 if is_boss else (1.15 if role in ["E03","E07","E09"] else 1.0))
 	phase = "spawn"; phase_time = 0.7
 	if is_boss:
+		var hull = CircleShape2D.new(); hull.radius = 11
+		$CollisionShape2D.shape = hull; $CollisionShape2D.position = Vector2(0,-2)
 		var title = Label.new(); title.text = d.name; title.position = Vector2(-22,-47); title.add_theme_font_size_override("font_size",8); add_child(title)
 func remember(action: String):
 	actions[action] = actions.get(action,0)+1
@@ -129,6 +131,7 @@ func _physics_process(delta):
 	if state_array.has(Utils.STATE_TYPE.STUN): return
 	if hit: move_and_slide(); return
 	if role == "E07" and summoned:
+		if phase == "spawn" and phase_time > 0: return
 		move_towards(Utils.player.global_position,delta)
 		if global_position.distance_to(Utils.player.global_position)<18 and contact_cooldown<=0:
 			Utils.player.onHit(1); contact_cooldown=0.9; remember("contact")

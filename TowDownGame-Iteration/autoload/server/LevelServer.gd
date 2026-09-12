@@ -96,6 +96,7 @@ var town
 var spawn_index = 0
 var settled_epoch = -1
 var boss_instance = 0
+var boss_victory_epoch = -1
 var elite_spawned = false
 
 func _ready() -> void:
@@ -116,6 +117,7 @@ func roundStart() -> bool:
 	resetLevelInfo()
 	spawn_index = 0
 	boss_instance = 0
+	boss_victory_epoch = -1
 	elite_spawned = false
 	wait_time_temp = 0
 	level_time = DemoConfig.ENCOUNTERS[level].seconds
@@ -148,6 +150,7 @@ func _timeout():
 		return
 	level_info.time += 0.1
 	if DemoConfig.ENCOUNTERS[level].has("boss"):
+		if boss_victory_epoch == epoch: victory(); return
 		onTimeTick.emit(int(level_info.time))
 		return
 	level_time = maxf(0,level_time-0.1)
@@ -215,5 +218,6 @@ func getScoreboard():
 	return board
 
 func boss_defeated(generation: int):
-	if generation == epoch and state == "COMBAT" and DemoConfig.ENCOUNTERS[level].has("boss"):
-		victory()
+	if generation == epoch and state in ["COMBAT","DEAD"] and DemoConfig.ENCOUNTERS[level].has("boss"):
+		boss_victory_epoch = generation
+		if state == "COMBAT": victory()
