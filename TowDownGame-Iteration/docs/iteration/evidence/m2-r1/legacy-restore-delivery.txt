@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS R03 validation previews have no reward side effects
+PASS legacy actual temporary buff active
+PASS legacy load during temporary buff
+PASS legacy discarded reward instance removes only its temporary rate buff
+PASS legacy health and movement permanent rewards apply once
+LEGACY RESTORE failures=0

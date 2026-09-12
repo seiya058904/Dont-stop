@@ -1,0 +1,36 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS R06 fresh profile HUD shows level one before first upgrade
+PASS R05 no gun rejects without teleport
+PASS R05 old portal normal progress reload=false aftertrial=false
+PASS R05 menu normal ignores stale trial stage
+PASS R05 old portal normal progress reload=false aftertrial=true
+PASS R05 menu normal ignores stale trial stage
+PASS R05 persisted camp restored
+PASS R05 old portal normal progress reload=true aftertrial=false
+PASS R05 menu normal ignores stale trial stage
+PASS R05 persisted camp restored
+PASS R05 old portal normal progress reload=true aftertrial=true
+PASS R05 menu normal ignores stale trial stage
+PASS R05 invalid encounter has no teleport
+PASS R05 dead player cannot depart
+PASS R06 same gun equip has no action side effect
+PASS switch request starts next gun
+PASS switch repeat input debounced
+PASS switch unlocked before .15s and cancels old reload
+PASS R06 selection tab scroll preserved on equip
+PASS R06 equipped detail refreshes
+PASS R06 original reward rank immediately refreshes
+PASS R06 talent rank immediately refreshes
+PASS R06 next talent rank displays its cumulative effective value
+PASS R06 purchase locates the new instance
+PASS R06 attachment detail scroll preserved on install
+PASS R06 attachment install detail synchronized
+PASS R06 attachment removal detail synchronized
+PASS menu wheel never changes held weapon
+PASS practice single target
+PASS practice three targets replaces prior targets
+PASS practice grants no money XP kills or stacks
+PASS practice targets cleared before formal encounter
+PASS R06 full snapshot replacement clears old HUD ownership
+R1 FLOW checks=33 failures=0

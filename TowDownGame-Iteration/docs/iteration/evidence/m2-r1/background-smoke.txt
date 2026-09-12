@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS round 1 select gun 0
+PASS round practice has no XP
+PASS background real practice collision gun 0
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":3,"bot":false,"damage_events":13,"fire_released":true,"generation":7,"gun":0,"guns":13,"input_shoot":false,"kills":1,"marks":0,"monsters":0,"nodes":384,"orphans":0,"remaining":[],"revives":0,"round":1,"seconds":6.905,"transients":0,"voices":1}
+PASS round 2 select gun 6
+PASS round practice has no XP
+PASS background real practice collision gun 6
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":3,"bot":false,"damage_events":25,"fire_released":true,"generation":7,"gun":6,"guns":13,"input_shoot":false,"kills":3,"marks":0,"monsters":0,"nodes":377,"orphans":0,"remaining":[],"revives":0,"round":2,"seconds":13.905,"transients":0,"voices":1}
+PASS round 3 select gun 112
+PASS round practice has no XP
+PASS background real practice collision gun 112
+PASS round save complete camp snapshot
+PASS round restore snapshot
+PASS round depart exactly once
+PASS round common camp cleanup empty
+LONG ROUND {"attachments":3,"bot":false,"damage_events":34,"fire_released":true,"generation":11,"gun":112,"guns":13,"input_shoot":false,"kills":4,"marks":0,"monsters":0,"nodes":376,"orphans":0,"remaining":[],"revives":1,"round":3,"seconds":20.879,"transients":0,"voices":1}
+LONG COMPLETE seconds=20.889 rounds=3 failures=0

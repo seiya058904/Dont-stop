@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INPUT PROBE local=false target=(295.0, 108.0) actual=(295.0, 108.0) viewport=(1536, 864)
+INPUT PROBE local=true target=(295.0, 108.0) actual=(295.0, 108.0) viewport=(1536, 864)
+R1 BACKGROUND INPUT checks=1 failures=0

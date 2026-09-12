@@ -1,0 +1,12 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FAIL R03 recovery dialog stays above startup camp panel
+PASS R03 startup keeps corrupt bytes
+FAIL R04 existing recovery prompt gains quit choices
+FAIL R04 cancel quit remains available
+PASS R03 temporary purchase cannot overwrite bad file
+PASS R03 explicit fresh profile backs up and takes over
+PASS R04 open failure keeps purchased state and blocks exit
+PASS R04 cancel exit preserves unsaved purchase
+PASS R04 retry persists without another charge
+R1 RECOVERY UI checks=9 failures=3
