@@ -51,6 +51,9 @@ var tween:Tween
 var direction:Vector2 #朝向
 var player:Player #使用玩家
 var is_use = false #是否正在使用
+var first_round = false
+var boosted_frame = -1
+var volley_boost = 1.0
 var can_shoot = true #是否可以射击
 var bullets_count = 0: #剩余子弹
 	set(value):
@@ -132,7 +135,25 @@ func cancel_actions():
 	if is_instance_valid(anim_player): anim_player.stop()
 
 func damage_context(depth = 0) -> Dictionary:
-	return {"gun":self,"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"depth":depth,"epoch":LevelServer.epoch}
+	var context = {"gun":self,"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"pierce":effective.get("pierce",0),"shards":effective.get("shards",0),"shard_ratio":effective.get("shard_ratio",0.25),"range_mul":effective.get("range",320.0)/320.0,"refill":effective.get("refill",0),"depth":depth,"epoch":LevelServer.epoch}
+
+	context.burn_talent = DemoConfig.talent_value("T15",Demo.rank("T15"))
+	context.slow = DemoConfig.talent_value("T17",Demo.rank("T17"))
+	context.elite_bonus = DemoConfig.talent_value("T21",Demo.rank("T21"))
+	context.static_chance = DemoConfig.talent_value("T14",Demo.rank("T14"))
+	context.echo = DemoConfig.talent_value("T23",Demo.rank("T23"))
+	if Demo.crowd_active: context.damage *= 1.0+DemoConfig.talent_value("T22",Demo.rank("T22"))
+	return context
+
+func shot_context() -> Dictionary:
+	var frame = Engine.get_process_frames()
+	if first_round:
+		first_round = false
+		boosted_frame = frame
+		volley_boost = 1.0+DemoConfig.talent_value("T12",Demo.rank("T12"))
+	var context = damage_context()
+	if boosted_frame == frame: context.damage *= volley_boost
+	return context
 
 #子弹装填完毕
 func reload_over():
@@ -144,6 +165,7 @@ func reload_over():
 	else:
 		PlayerData.player_ammo -= ammo
 	bullets_count += ammo
+	if ammo > 0: first_round = Demo.rank("T12") > 0
 	PlayerData.emit_signal("onWeaponChangeAnim",weapon_id,Utils.GUN_CHANGE_TYPE.RELOAD)
 	is_reloading = false
 
@@ -202,8 +224,8 @@ func fire(bullet:Bullet,is_bullet = true,is_play = true):
 			return
 
 	bullet.speed = bullet_speed
-	bullet.hurt = effective.damage
-	bullet.context = damage_context()
+	bullet.context = shot_context()
+	bullet.hurt = bullet.context.damage
 	bullet.knockback_speed = effective.impulse
 	bullet.knockback_time = knockback_time
 	bullet.gun = self

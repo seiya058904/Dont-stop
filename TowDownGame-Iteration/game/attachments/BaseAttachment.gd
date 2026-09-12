@@ -23,6 +23,7 @@ var id = Time.get_ticks_usec() #配件在背包中的ID
 var gun:BaseGun
 
 func _ready() -> void:
+	if AttachmentCatalog.DEFINITIONS.has(am_id): am_info = AttachmentCatalog.DEFINITIONS[am_id].info
 	name = str(id)
 	_checkTypeList()
 
@@ -63,6 +64,7 @@ func gunUpdate():
 
 func can_equip(target: BaseGun) -> bool:
 	_checkTypeList()
+	if AttachmentCatalog.DEFINITIONS.has(am_id): return AttachmentCatalog.compatible(am_id,target)
 	match am_id:
 		110: return not "beam" in target.tags
 		112: return "spread" in target.tags

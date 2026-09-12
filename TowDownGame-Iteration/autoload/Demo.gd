@@ -24,6 +24,65 @@ var save_dialog
 var save_path = "user://camp-v1.json"
 var ui
 var ui_audio = AudioStreamPlayer.new()
+var talent_payments: Array = []
+var reset_revision = 0
+var applied_talent_hp = 0.0
+var talent_cooldowns: Dictionary = {}
+var ammo_kills = 0
+var crowd_clock = 0.0
+var crowd_active = false
+
+func reset_preview() -> Dictionary:
+	var result = {"gold":0,"points":0,"unknown":0,"revision":reset_revision}
+	var known = {}
+	for payment in talent_payments:
+		result[payment.currency] += payment.amount
+		known[payment.id] = known.get(payment.id,0)+1
+	for id in talents: result.unknown += maxi(0,rank(id)-known.get(id,0))
+	return result
+
+func reset_talents(revision: int) -> Dictionary:
+	if LevelServer.state != "CAMP" or revision != reset_revision: return {"success":false,"reason":"配置已变化或不在营地，请重新查看退款预览"}
+	var refund = reset_preview()
+	if talents.is_empty(): return {"success":false,"reason":"当前无计划天赋可重置"}
+	stop_attacks()
+	reset_revision += 1
+	talents.clear()
+	talent_payments.clear()
+	kill_stacks = 0; stack_time = 0
+	ammo_kills = 0; crowd_active = false
+	talent_cooldowns.clear()
+	for target in get_tree().get_nodes_in_group("monsters"):
+		target.burns.erase("T15")
+		target.slow_time = 0.0
+	PlayerData.gold += refund.gold
+	PlayerData.reward_point += refund.points
+	refresh()
+	var saved = save_camp()
+	return {"success":true,"refund":refund,"saved":saved.success,"reason":"计划天赋已重置；返还%d金币/%d点。历史无凭据%d级未退款，原型历史来源保留。" % [refund.gold,refund.points,refund.unknown]}
+
+func cooldown(id: String) -> float:
+	return talent_cooldowns.get(id,0.0)
+
+func ready_trigger(id: String) -> bool:
+	if cooldown(id) > 0: return false
+	talent_cooldowns[id] = DemoConfig.TALENTS[id].get("cooldown",0.0)
+	return true
+
+func shield_hit(amount: float) -> bool:
+	return amount > 0 and rank("T19") > 0 and ready_trigger("T19")
+
+func talent_status(id: String) -> String:
+	if rank(id) == 0: return "当前未解锁"
+	if id == "T16": return "冷却剩余 %.1f秒" % blast_cooldown
+	if id == "T24": return "冷却剩余 %.1f秒" % heal_cooldown
+	if id == "T22": return "当前生效" if crowd_active else "当前未满足：近距至少3敌"
+	if id == "T13": return "当前枪生效" if Utils.player.gun and "straight" in Utils.player.gun.tags else "当前枪不兼容"
+	if id == "T21": return "条件生效：显式精英（当前R1无新增精英）；Boss不适用"
+	if id == "T11": return "进度 %d / %d 次直接击杀" % [ammo_kills,DemoConfig.TALENTS.T11.kills]
+	if id == "T12": return "首发已就绪" if Utils.player.gun and Utils.player.gun.first_round else "等待真实装填完成"
+	if DemoConfig.TALENTS[id].has("cooldown"): return "冷却剩余 %.1f秒" % cooldown(id)
+	return "已启用；按所列条件触发"
 
 func _ready():
 	get_tree().auto_accept_quit = false
@@ -71,6 +130,15 @@ func _level_changed(_level):
 	if not loading: refresh()
 
 func refresh():
+	if not loading and is_instance_valid(Utils.player):
+		var hp_bonus = DemoConfig.talent_value("T07",rank("T07"))
+		var delta_hp = hp_bonus-applied_talent_hp
+		applied_talent_hp = hp_bonus
+		if delta_hp != 0:
+			PlayerData.player_hp_max += delta_hp
+			PlayerData.player_hp = minf(PlayerData.player_hp_max,PlayerData.player_hp+maxf(0,delta_hp))
+		var boots = Utils.player.reward_root.get_node_or_null("REWARD BLUE BOOTS")
+		Utils.player.SPEED = 100*PlayerData.player_speed+100*DemoConfig.talent_value("T08",rank("T08"))+(5*boots.count if boots else 0)
 	for gun in PlayerData.player_weapon_list.values():
 		if gun.is_node_ready(): gun.updateGun()
 	changed.emit()
@@ -78,6 +146,15 @@ func refresh():
 func _process(delta):
 	if not Input.is_action_pressed("shoot"): fire_released = true
 	if get_tree().paused: return
+	for id in talent_cooldowns: talent_cooldowns[id] = maxf(0,talent_cooldowns[id]-delta)
+	crowd_clock -= delta
+	if crowd_clock <= 0:
+		crowd_clock = DemoConfig.TALENTS.T22.interval
+		var nearby = 0
+		if rank("T22") > 0 and is_instance_valid(Utils.player):
+			for target in get_tree().get_nodes_in_group("monsters"):
+				if not target.is_die and Utils.player.global_position.distance_to(target.global_position) <= DemoConfig.TALENTS.T22.radius: nearby += 1
+		crowd_active = nearby >= DemoConfig.TALENTS.T22.count
 	blast_cooldown = maxf(0,blast_cooldown-delta)
 	heal_cooldown = maxf(0,heal_cooldown-delta)
 	if stack_time > 0:
@@ -162,6 +239,8 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 			result.reason = "已购买「%s」· %d金币 · 未装备\n已定位到新实例；确认属性后点击安装" % [tr(obtained.am_name),price]
 		"talent":
 			talents[id] = rank(id)+1
+			talent_payments.append({"id":id,"level":rank(id),"currency":currency,"amount":price})
+			reset_revision += 1
 			result.reason = "%s：%d → %d / %d\n%s" % [DemoConfig.TALENTS[id].name, rank(id)-1,rank(id), DemoConfig.TALENTS[id].max,DemoConfig.talent_info(id)]
 		"legacy":
 			if not RewardServer.addReward(obtained): return result
@@ -195,6 +274,15 @@ func on_kill(monster, context: Dictionary):
 		stack_time = DemoConfig.TALENTS.T10.seconds
 		refresh()
 	if context.get("depth",0) != 0: return
+	if rank("T11") > 0:
+		ammo_kills += 1
+		if ammo_kills >= DemoConfig.TALENTS.T11.kills:
+			ammo_kills = 0
+			PlayerData.player_ammo += int(DemoConfig.talent_value("T11",rank("T11")))
+	var gun = context.get("gun")
+	if is_instance_valid(gun) and context.get("refill",0) > 0 and cooldown("A24") <= 0:
+		talent_cooldowns.A24 = AttachmentCatalog.DEFINITIONS[124].cooldown
+		gun.bullets_count = mini(gun.bullets_max_count,gun.bullets_count+1)
 	if rank("T24") > 0 and heal_cooldown <= 0:
 		heal_cooldown = DemoConfig.TALENTS.T24.cooldown
 		PlayerData.addPlayerHp(DemoConfig.talent_value("T24",rank("T24")))
@@ -207,7 +295,7 @@ func snapshot() -> Dictionary:
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
 	var attachments = []
 	for am in PlayerData.player_am_list.values(): attachments.append({"definition":str(am.am_id),"instance":am.id,"gun":str(am.gun.weapon_id) if is_instance_valid(am.gun) else ""})
-	return {"schema_version":2,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"ammo":PlayerData.player_ammo,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"legacy":purchases,"legacy_state":legacy_state(),"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":3,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"ammo":PlayerData.player_ammo,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"attachments":attachments,"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_instance":next_instance,"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}
@@ -252,6 +340,12 @@ func load_camp() -> bool:
 	for reward in Utils.player.reward_root.get_children(): reward.free()
 	Utils.player.SPEED = 100 * PlayerData.player_speed
 	talents = data.talents.duplicate()
+	talent_payments = data.talent_payments.duplicate(true)
+	applied_talent_hp = DemoConfig.talent_value("T07",rank("T07"))
+	reset_revision += 1
+	talent_cooldowns.clear()
+	ammo_kills = 0
+	crowd_active = false
 	PlayerData.player_level = int(data.level)
 	PlayerData.player_exp = data.exp
 	for w in data.weapons:
@@ -318,7 +412,7 @@ func export_bad_save() -> String:
 func create_new_save() -> bool:
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
-	var fresh = {"schema_version":2,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"ammo":100,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"attachments":[],"talents":{},"legacy":[],"legacy_state":{},"next_instance":1,"next_stage":1,"selected_stage":1,"equipped":""}
+	var fresh = {"schema_version":3,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"ammo":100,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"attachments":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_instance":1,"next_stage":1,"selected_stage":1,"equipped":""}
 	var result = save_store.save(save_path,fresh)
 	if not result.success: return false
 	return load_camp()

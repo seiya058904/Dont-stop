@@ -10,6 +10,7 @@ extends "res://game/guns/BaseGun.gd"
 
 var beam_tween: Tween
 var is_cast = false
+var pulse_boost = 1.0
 var one_bullet_array = []
 
 func _shoot():
@@ -32,6 +33,7 @@ func _on_timer_timeout():
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
+	cast.target_position = Vector2(effective.range,0)
 	var cast_point = cast.target_position
 	cast.force_raycast_update()
 	if is_cast:
@@ -41,7 +43,6 @@ func _physics_process(delta: float) -> void:
 			particles_end.global_rotation = cast.get_collision_normal().angle()
 			if coller is BaseMonster && one_bullet_array.size() < cast_count:
 				bulletHurt(coller)
-
 	line_2d.points[1] = cast_point
 	particles_box.position = cast_point * 0.5
 	particles_box.process_material.emission_box_extents.x = cast_point.length() * 0.5
@@ -50,12 +51,16 @@ func _physics_process(delta: float) -> void:
 func bulletHurt(coller):
 	if one_bullet_array.has(coller):
 		return
-	Combat.hit(coller, damage_context())
+	var context = damage_context()
+	context.damage *= pulse_boost
+	Combat.hit(coller, context)
 	one_bullet_array.append(coller)
 
 func openFire():
 	if bullets_count == 0:
 		return
+	pulse_boost = 1.0+DemoConfig.talent_value("T12",Demo.rank("T12")) if first_round else 1.0
+	first_round = false
 	bullets_count -= 1
 	is_cast = true
 	openLaser()
@@ -72,7 +77,7 @@ func openLaser():
 	particles_box.emitting = true
 	if beam_tween and beam_tween.is_valid(): beam_tween.kill()
 	beam_tween = get_tree().create_tween().set_ease(Tween.EASE_OUT)
-	beam_tween.tween_property(line_2d,"width",6.0,0.2)
+	beam_tween.tween_property(line_2d,"width",effective.width,0.2)
 
 func stopLaser():
 	audio.stop()

@@ -152,6 +152,9 @@ func gunAnim():
 
 func onHit(hurt):
 	if is_dead or LevelServer.state != "COMBAT" or get_tree().paused: return
+	if Demo.shield_hit(hurt):
+		Utils.showHitLabel("护盾",self)
+		return
 	var nodes = get_tree().get_nodes_in_group("reward")
 	var temp_hurt = 0
 	for node in nodes:

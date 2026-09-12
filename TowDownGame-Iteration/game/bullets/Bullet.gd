@@ -19,6 +19,8 @@ var gun:BaseGun
 var timer: Timer
 var queue_time = 0
 var context: Dictionary = {}
+var hit_ids: Array[int] = []
+var has_split = false
 func _ready():
 	add_to_group("combat_transient")
 	if get_tree().get_nodes_in_group("projectile_lights").size() < 16:
@@ -59,7 +61,15 @@ func _physics_process(delta):
 	if collisionResult:
 		var coller = collisionResult.get_collider()
 		if coller is BaseMonster:
-			coller.hitFlash(collisionResult,self)
+			if not coller.get_instance_id() in hit_ids:
+				hit_ids.append(coller.get_instance_id())
+				coller.hitFlash(collisionResult,self)
+			if not has_split and context.get("shards",0) > 0 and context.get("depth",0) == 0:
+				has_split = true
+				Combat.fragments(global_position,velocity.angle(),context,coller,speed)
+			if hit_ids.size() <= context.get("pierce",0):
+				add_collision_exception_with(coller)
+				return
 			#coller.position += collisionResult.get_remainder()
 			#player.cameraSnake()
 		#else:
@@ -69,7 +79,7 @@ func _physics_process(delta):
 func _on_timer_timeout():
 	z_index = 1
 	queue_time += 0.05
-	if queue_time > 2:
+	if queue_time > 2*context.get("range_mul",1.0):
 		queue_free()
 
 func bulletSmoke(collisionResult):

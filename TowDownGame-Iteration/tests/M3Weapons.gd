@@ -58,7 +58,7 @@ func _ready():
 		await wait(0.06)
 		var count = gun.bullets_count
 		gun._shoot()
-		await wait(0.65)
+		await wait(1.5 if id == 121 else 0.65)
 		check(target.HP < 100,"real firing collision damage "+str(id))
 		check(gun.bullets_count == count-1,"single group consumes once "+str(id))
 		gun.bullets_count = 0
@@ -118,4 +118,4 @@ func _ready():
 	check(get_tree().get_nodes_in_group("combat_transient").is_empty(),"camp cleanup")
 	print("M3 SUMMARY checks=",checks," failures=",failures)
 	await get_tree().create_timer(0.15).timeout
-	get_tree().quit(1 if failures else 0)
+	get_tree().quit.call_deferred(1 if failures else 0)

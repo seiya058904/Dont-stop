@@ -15,6 +15,9 @@ var critical_total = 0.0
 var last_context: Dictionary = {}
 var movement_delta: float
 var burns: Dictionary = {}
+var slow_time = 0.0
+var slow_amount = 0.0
+var is_elite = false
 
 func apply_burn(source: String, amount: float, seconds: float, context: Dictionary):
 	var saved = context.duplicate(true)
@@ -59,11 +62,13 @@ func setData(data):
 	knockback_def = 5
 
 func _process(delta):
+	slow_time = maxf(0,slow_time-delta)
 	if not is_die:
 		for source in burns.keys():
 			var burn = burns[source]
-			burn.remaining -= delta
-			burn.tick -= delta
+			var elapsed = minf(delta,burn.remaining)
+			burn.remaining -= elapsed
+			burn.tick -= elapsed
 			while burn.tick <= 0 and not is_die:
 				burn.tick += 0.25
 				Combat.hit(self,burn.context)
@@ -97,7 +102,7 @@ func _physics_process(delta):
 			next_path_position = cached_step
 		#var next_path_position = navigationAgent2D.get_next_path_position()
 		var current_agent_position: Vector2 = global_position
-		var new_velocity: Vector2 = current_agent_position.direction_to(next_path_position) * SPEED
+		var new_velocity: Vector2 = current_agent_position.direction_to(next_path_position) * SPEED * (1.0-slow_amount if slow_time > 0 else 1.0)
 		_on_velocity_computed(new_velocity)
 
 	if velocity != Vector2.ZERO:
@@ -140,7 +145,7 @@ func receive_damage(amount: float, critical: bool, context: Dictionary):
 	flash_time = 0.08
 	Combat.sound(audio_hit.stream,global_position)
 	var impulse = context.get("impulse",0.0)-knockback_def
-	if impulse > 0 and not training:
+	if impulse > 0 and not training and not is_boss:
 		velocity = Utils.player.global_position.direction_to(global_position)*impulse
 		hit = true
 		get_tree().create_timer(context.get("impulse_time",0.1), false).timeout.connect(func(): hit = false)

@@ -32,6 +32,10 @@ enum ATTACHMENTS_TYPE { #配件类型
 }
 
 var weapon_list = {
+	"121" = load("res://game/guns/W21.tscn"),
+	"122" = load("res://game/guns/W22.tscn"),
+	"124" = load("res://game/guns/W24.tscn"),
+
 	"111" = load("res://game/guns/W11.tscn"),
 	"113" = load("res://game/guns/W13.tscn"),
 	"115" = load("res://game/guns/W15.tscn"),
@@ -58,6 +62,16 @@ var weapon_list = {
 }
 
 var am_dict = {
+	"111" = load("res://game/attachments/A111.tscn"),
+	"113" = load("res://game/attachments/A113.tscn"),
+	"115" = load("res://game/attachments/A115.tscn"),
+	"116" = load("res://game/attachments/A116.tscn"),
+	"118" = load("res://game/attachments/A118.tscn"),
+	"119" = load("res://game/attachments/A119.tscn"),
+	"120" = load("res://game/attachments/A120.tscn"),
+	"123" = load("res://game/attachments/A123.tscn"),
+	"124" = load("res://game/attachments/A124.tscn"),
+
 	"110" =  preload("res://game/attachments/A110.tscn"),
 	"112" =  preload("res://game/attachments/A112.tscn"),
 	"114" =  preload("res://game/attachments/A114.tscn"),
@@ -77,6 +91,7 @@ var am_dict = {
 }
 
 const weapon_money_list = {
+	"121" = 240,"122" = 200,"124" = 220,
 	"111" = 180,"113" = 240,"115" = 180,"116" = 220,
 	"117" = 180,"118" = 180,"119" = 220,"120" = 220,
 	"112" = 150,"114" = 200,"123" = 150,

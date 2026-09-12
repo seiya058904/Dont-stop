@@ -78,4 +78,4 @@ func _ready():
 	await clean()
 	await wait(1.5)
 	print("M3 ENERGY SUMMARY checks=",checks," failures=",failures)
-	get_tree().quit(1 if failures else 0)
+	get_tree().quit.call_deferred(1 if failures else 0)

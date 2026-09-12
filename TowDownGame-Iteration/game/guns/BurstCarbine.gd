@@ -2,7 +2,7 @@ extends "res://game/guns/GunSprite.gd"
 
 func _ready():
 	super._ready()
-	tags = ["projectile","spread","burst"]
+	tags = ["projectile","spread","burst","straight"]
 
 func _shoot():
 	var generation = action_generation

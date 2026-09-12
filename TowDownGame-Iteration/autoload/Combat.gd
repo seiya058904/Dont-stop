@@ -38,6 +38,7 @@ func hit(target, context: Dictionary) -> bool:
 	if depth > DemoConfig.MAX_DERIVATION: return false
 	max_depth_seen = maxi(max_depth_seen,depth)
 	var amount = maxf(0,context.get("damage",0.0))
+	if target.is_elite and not target.is_boss: amount *= 1.0+context.get("elite_bonus",0.0)
 	var critical = depth == 0 and randf() < context.get("crit",0.0)
 	if critical: amount *= 1.5
 	var old_depth = dispatch_depth
@@ -49,11 +50,39 @@ func hit(target, context: Dictionary) -> bool:
 	amount = snappedf(amount,0.01)
 	damage_events += 1
 	target.receive_damage(amount, critical, context)
+	if depth == 0:
+		if not target.is_die:
+			if context.get("burn_talent",0.0) > 0: target.apply_burn("T15",context.burn_talent,DemoConfig.TALENTS.T15.seconds,context)
+			if context.get("slow",0.0) > 0:
+				target.slow_amount = minf(0.24,context.slow)*(0.25 if target.is_boss else 1.0)
+				target.slow_time = DemoConfig.TALENTS.T17.seconds
+		if context.get("static_chance",0.0) > 0 and randf() < context.static_chance:
+			secondary_hit(target,context,amount*DemoConfig.TALENTS.T14.damage,"T14")
+		if critical and context.get("echo",0.0) > 0:
+			secondary_hit(target,context,amount*context.echo,"T23")
 	if depth == 0 and not target.is_die:
 		for reward in rewards:
 			if reward.connect_afterAtk: reward.afterAtk(target,amount)
 	dispatch_depth = old_depth
 	return true
+
+func secondary_hit(source, context: Dictionary, damage: float, talent: String):
+	if Demo.cooldown(talent) > 0: return
+	var nearest = null
+	var distance = DemoConfig.TALENTS[talent].radius
+	for target in get_tree().get_nodes_in_group("monsters"):
+		if target == source or target.is_die: continue
+		var d = source.global_position.distance_to(target.global_position)
+		if d < distance and clear_line(source.global_position,target.global_position):
+			nearest = target
+			distance = d
+	if nearest == null or not Demo.ready_trigger(talent): return
+	var derived = context.duplicate(true)
+	derived.damage = damage
+	derived.depth = 1
+	derived.crit = 0.0
+	hit(nearest,derived)
+	trace([source.global_position,nearest.global_position])
 
 func clear_line(from: Vector2, to: Vector2) -> bool:
 	if not is_instance_valid(Utils.player): return false
@@ -131,15 +160,31 @@ func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 	edge.append(start)
 	trace(edge,Color(1,0.5,0.2) if context.has("burn") else Color(0.4,0.9,1),1.0)
 
+func fragments(position: Vector2, angle: float, context: Dictionary, ignored, speed: float):
+	for i in mini(3,context.get("shards",0)):
+		var shard = load("res://game/bullets/SmpBullet.tscn").instantiate()
+		shard.context = context.duplicate(true)
+		shard.context.depth = 1
+		shard.context.shards = 0
+		shard.context.damage *= context.get("shard_ratio",0.25)
+		shard.context.crit = 0.0
+		shard.hurt = shard.context.damage
+		shard.speed = speed
+		get_tree().current_scene.add_child(shard)
+		shard.global_position = position
+		shard.rotation = angle+(i-(context.shards-1)*0.5)*0.28
+		shard.add_collision_exception_with(ignored)
+		shard.fire()
+
 func arc(gun, start: Vector2, direction: Vector2):
 	attacks += 1
-	var query = PhysicsRayQueryParameters2D.create(start,start+direction*320,2147483651)
+	var query = PhysicsRayQueryParameters2D.create(start,start+direction*gun.effective.range,2147483651)
 	query.exclude = [Utils.player.get_rid()]
 	var hit_result = gun.get_world_2d().direct_space_state.intersect_ray(query)
 	var points: Array[Vector2] = [start]
 	var target = hit_result.get("collider")
 	if not target is BaseMonster:
-		points.append(hit_result.get("position",start+direction*320))
+		points.append(hit_result.get("position",start+direction*gun.effective.range))
 	else:
 		var visited: Array = []
 		var amount = gun.effective.damage

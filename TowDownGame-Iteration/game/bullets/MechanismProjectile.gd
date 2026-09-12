@@ -7,6 +7,21 @@ var visited: Array[int] = []
 var target_ref: WeakRef
 var finished = false
 var last_wall_age = -1.0
+var returning = false
+
+func begin_return():
+	returning = true
+	visited.clear()
+	for body in get_collision_exceptions(): remove_collision_exception_with(body)
+
+func gravity_field():
+	if finished: return
+	finished = true
+	var field = load("res://game/effects/GravityField.gd").new()
+	field.context = context.duplicate(true)
+	field.global_position = global_position
+	get_tree().current_scene.add_child(field)
+	queue_free()
 
 func _ready():
 	super._ready()
@@ -28,7 +43,7 @@ func lock_target():
 func _physics_process(delta):
 	if finished: return
 	age += delta
-	if age >= 2.0 or context.get("epoch",-1) != LevelServer.epoch:
+	if age >= 2.0*context.get("range_mul",1.0) or context.get("epoch",-1) != LevelServer.epoch:
 		finished = true
 		queue_free()
 		return
@@ -39,9 +54,27 @@ func _physics_process(delta):
 			velocity = velocity.rotated(turn)
 			rotation = velocity.angle()
 		else: target_ref = null
+	if spec.get("mode","") == "gravity" and age >= 0.45*context.get("range_mul",1.0):
+		gravity_field()
+		return
+	if spec.get("mode","") == "disc":
+		if not is_instance_valid(player) or player.is_dead:
+			queue_free()
+			return
+		if age >= 0.55*context.get("range_mul",1.0) and not returning: begin_return()
+		if returning:
+			var offset = player.global_position+Vector2(0,-8)-global_position
+			if offset.length() <= speed*2*delta+5:
+				queue_free()
+				return
+			velocity = offset.normalized()*speed*2
+		rotation += delta*20
 	var collision = move_and_collide(velocity*delta)
 	if not collision: return
 	var target = collision.get_collider()
+	if spec.get("mode","") == "gravity":
+		gravity_field()
+		return
 	if spec.get("mode","") in ["rocket","missile"]:
 		finished = true
 		Combat.explosion_context(global_position,context.get("radius",24.0),context)
@@ -51,11 +84,21 @@ func _physics_process(delta):
 		if not target.get_instance_id() in visited:
 			visited.append(target.get_instance_id())
 			Combat.hit(target,context)
+		if spec.get("mode","") == "disc":
+			add_collision_exception_with(target)
+			return
 		if spec.get("shards",0) > 0 and context.get("depth",0) == 0: split()
+		if visited.size() <= spec.get("pierce",0):
+			add_collision_exception_with(target)
+			return
 		finished = true
 		queue_free()
+	elif spec.get("mode","") == "disc" and not returning:
+		begin_return()
 	elif remaining_bounces > 0 and age-last_wall_age > 0.02:
 		remaining_bounces -= 1
+		context.damage *= spec.get("bounce_retention",1.0)
+		hurt = context.damage
 		last_wall_age = age
 		velocity = velocity.bounce(collision.get_normal())
 		rotation = velocity.angle()
@@ -67,13 +110,14 @@ func _physics_process(delta):
 
 func split():
 	var count = mini(3,int(spec.get("shards",0)))
+	spec.shards = 0
 	for i in count:
 		var shard = load("res://game/bullets/SmpBullet.tscn").instantiate()
 		shard.set_script(load("res://game/bullets/MechanismProjectile.gd"))
 		shard.spec = {"mode":"fragment"}
 		shard.context = context.duplicate(true)
 		shard.context.depth = 1
-		shard.context.damage *= 0.35
+		shard.context.damage *= spec.get("shard_ratio",0.35)
 		shard.context.crit = 0.0
 		shard.hurt = shard.context.damage
 		shard.speed = speed
@@ -91,3 +135,6 @@ func _draw():
 	var color = Color(1,0.65,0.2) if mode in ["rocket","missile"] else Color(0.4,0.9,1)
 	draw_line(Vector2(-9,0),Vector2.ZERO,color,2 if mode != "fragment" else 1)
 	if mode == "ricochet": draw_arc(Vector2.ZERO,4,0,TAU,8,color,1)
+	if mode == "disc":
+		draw_arc(Vector2.ZERO,7,0,TAU,12,Color(0.8,0.9,1),2)
+		for i in 6: draw_line(Vector2(4,0).rotated(i*TAU/6),Vector2(9,0).rotated(i*TAU/6+0.3),Color(0.5,0.8,1),1)

@@ -2,135 +2,587 @@
 	"attachments": [
 		{
 			"baseline": false,
-			"description": "非持续攻击：暴击率 +8个百分点；不兼容持续激光",
+			"compatible_count": 2,
+			"compatible_weapon_ids": [
+				"111",
+				"113"
+			],
+			"description": "束流射程+20%、束宽-15%；聚焦后的判定同步变窄。",
+			"id": "111",
+			"name": "束流聚焦镜",
+			"plan_id": "A11",
+			"price": 50,
+			"scene": "res://game/attachments/A111.tscn",
+			"slot": "WEAPON_OPTICS"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 4,
+			"compatible_weapon_ids": [
+				"111",
+				"113",
+				"115",
+				"116"
+			],
+			"description": "束宽/扇宽+35%，每束/每tick伤害-10%，实际判定同步。",
+			"id": "113",
+			"name": "棱镜扩散器",
+			"plan_id": "A13",
+			"price": 50,
+			"scene": "res://game/attachments/A113.tscn",
+			"slot": "WEAPON_MUZZLE"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 8,
+			"compatible_weapon_ids": [
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"112",
+				"114",
+				"6"
+			],
+			"description": "能量/转管装填时间-15%；仅有蓄力/预热者等待-10%。",
+			"id": "115",
+			"name": "能量散热器",
+			"plan_id": "A15",
+			"price": 50,
+			"scene": "res://game/attachments/A115.tscn",
+			"slot": "WEAPON_BARREL"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 23,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "局部枪体形变/反冲回正时间-20%；不改变屏幕震动设置，不虚构命中率。",
+			"id": "116",
+			"name": "抑震枪托",
+			"plan_id": "A16",
+			"price": 50,
+			"scene": "res://game/attachments/A116.tscn",
+			"slot": "WEAPON_STOCK"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 14,
+			"compatible_weapon_ids": [
+				"124",
+				"113",
+				"117",
+				"118",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "兼容直射实体或轨道炮额外贯穿1目标；总目标数有上限，实墙阻断。",
+			"id": "118",
+			"name": "贯穿弹芯",
+			"plan_id": "A18",
+			"price": 50,
+			"scene": "res://game/attachments/A118.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 1,
+			"compatible_weapon_ids": [
+				"117"
+			],
+			"description": "支持反弹的实体弹+1次反弹，反弹后保留85%伤害；最多4次。",
+			"id": "119",
+			"name": "反弹弹壳",
+			"plan_id": "A19",
+			"price": 50,
+			"scene": "res://game/attachments/A119.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 12,
+			"compatible_weapon_ids": [
+				"124",
+				"117",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "常规非分裂直射实体首次命中生成2枚25%伤害裂片；不可再次裂片。",
+			"id": "120",
+			"name": "裂片弹头",
+			"plan_id": "A20",
+			"price": 50,
+			"scene": "res://game/attachments/A120.tscn",
+			"slot": "WEAPON_AMMUNITION"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 1,
+			"compatible_weapon_ids": [
+				"120"
+			],
+			"description": "追踪转向速率+25%，寻找半角+15%；仍有限转向且不能穿墙。",
+			"id": "123",
+			"name": "制导模块",
+			"plan_id": "A23",
+			"price": 50,
+			"scene": "res://game/attachments/A123.tscn",
+			"slot": "WEAPON_TACTICAL"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 24,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "此枪有效直接击杀最多每0.2秒向此枪弹匣返还1发，不超容量；派生与假人不触发。",
+			"id": "124",
+			"name": "击杀回填器",
+			"plan_id": "A24",
+			"price": 50,
+			"scene": "res://game/attachments/A124.tscn",
+			"slot": "WEAPON_PERKS"
+		},
+		{
+			"baseline": false,
+			"compatible_count": 22,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "非持续攻击暴击率+8个百分点；持续tick不兼容。",
 			"id": "110",
 			"name": "精准瞄具",
+			"plan_id": "A10",
 			"price": 40,
 			"scene": "res://game/attachments/A110.tscn",
 			"slot": "WEAPON_OPTICS"
 		},
 		{
 			"baseline": false,
-			"description": "散布实体枪：散布角 -25%",
+			"compatible_count": 5,
+			"compatible_weapon_ids": [
+				"119",
+				"123",
+				"1",
+				"5",
+				"8"
+			],
+			"description": "有散布的实体枪散布角-25%，不改变移动。",
 			"id": "112",
 			"name": "补偿枪口",
+			"plan_id": "A12",
 			"price": 40,
 			"scene": "res://game/attachments/A112.tscn",
 			"slot": "WEAPON_MUZZLE"
 		},
 		{
 			"baseline": false,
-			"description": "所有枪：伤害 +15%；装填时间 +10%",
+			"compatible_count": 24,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "武器伤害+15%，装填时间+10%。",
 			"id": "114",
 			"name": "过载枪管",
+			"plan_id": "A14",
 			"price": 60,
 			"scene": "res://game/attachments/A114.tscn",
 			"slot": "WEAPON_BARREL"
 		},
 		{
 			"baseline": false,
-			"description": "实体弹/光束：普通敌人击退 +35%；Boss保留抗性",
+			"compatible_count": 23,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"117",
+				"118",
+				"119",
+				"120",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9"
+			],
+			"description": "支持冲量的攻击对普通敌人击退+35%；Boss不受推移。",
 			"id": "117",
 			"name": "冲量支架",
+			"plan_id": "A17",
 			"price": 40,
 			"scene": "res://game/attachments/A117.tscn",
 			"slot": "WEAPON_UNDERBARREL"
 		},
 		{
 			"baseline": false,
-			"description": "爆炸武器：爆炸半径 +20%，外圈与伤害同步",
+			"compatible_count": 4,
+			"compatible_weapon_ids": [
+				"121",
+				"119",
+				"120",
+				"114"
+			],
+			"description": "爆炸半径+20%，效果圈同步。",
 			"id": "121",
 			"name": "扩爆引信",
+			"plan_id": "A21",
 			"price": 40,
 			"scene": "res://game/attachments/A121.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": false,
-			"description": "链电武器：额外跳跃1个不同目标；每跳伤害衰减25%",
+			"compatible_count": 1,
+			"compatible_weapon_ids": [
+				"112"
+			],
+			"description": "链式武器额外后跳1目标，不把普通枪变链电。",
 			"id": "122",
 			"name": "电弧中继",
+			"plan_id": "A22",
 			"price": 60,
 			"scene": "res://game/attachments/A122.tscn",
 			"slot": "WEAPON_TACTICAL"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 11,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"4"
+			],
 			"description": "换弹速度+20%",
 			"id": "0",
 			"name": "快速弹夹",
+			"plan_id": "ORIGINAL-0",
 			"price": 20,
 			"scene": "res://game/attachments/QuickdrawMagazine.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 24,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9"
+			],
 			"description": "弹夹容量+10",
 			"id": "1",
 			"name": "扩容步枪弹夹",
+			"plan_id": "ORIGINAL-1",
 			"price": 20,
 			"scene": "res://game/attachments/UniversalExtendedMagazines.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 11,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"4"
+			],
 			"description": "弹夹容量+20",
 			"id": "2",
 			"name": "通用扩容弹夹",
+			"plan_id": "ORIGINAL-2",
 			"price": 20,
 			"scene": "res://game/attachments/ExtendedRifleMagazine.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 11,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"4"
+			],
 			"description": "换弹速度+20%\n弹夹容量+10",
 			"id": "3",
 			"name": "快速扩容弹夹",
+			"plan_id": "ORIGINAL-3",
 			"price": 20,
 			"scene": "res://game/attachments/QuickExpansionMagazine.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 3,
+			"compatible_weapon_ids": [
+				"1",
+				"5",
+				"8"
+			],
 			"description": "弹夹容量+5\n换弹速度+20%",
 			"id": "5",
 			"name": "霰弹枪子弹袋",
+			"plan_id": "ORIGINAL-5",
 			"price": 20,
 			"scene": "res://game/attachments/ShotgunShellPouch.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 2,
+			"compatible_weapon_ids": [
+				"124",
+				"7"
+			],
 			"description": "弹夹容量+50",
 			"id": "6",
 			"name": "机枪弹夹",
+			"plan_id": "ORIGINAL-6",
 			"price": 20,
 			"scene": "res://game/attachments/MachineGunMagazine.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 2,
+			"compatible_weapon_ids": [
+				"3",
+				"9"
+			],
 			"description": "弹夹容量+19",
 			"id": "7",
 			"name": "冲锋枪弹夹",
+			"plan_id": "ORIGINAL-7",
 			"price": 20,
 			"scene": "res://game/attachments/SubmachineGunMagazine.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 24,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"111",
+				"113",
+				"115",
+				"116",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9"
+			],
 			"description": "弹夹容量+70",
 			"id": "8",
 			"name": "超级通用弹夹",
+			"plan_id": "ORIGINAL-8",
 			"price": 100,
 			"scene": "res://game/attachments/SuperUniversalMagazine.tscn",
 			"slot": "WEAPON_AMMUNITION"
 		},
 		{
 			"baseline": true,
+			"compatible_count": 19,
+			"compatible_weapon_ids": [
+				"121",
+				"122",
+				"124",
+				"117",
+				"118",
+				"119",
+				"120",
+				"112",
+				"114",
+				"123",
+				"0",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"7",
+				"8",
+				"9"
+			],
 			"description": "按下右键会向鼠标瞄准处发射一枚榴弹，造成AOE伤害，冷却3秒",
 			"id": "9",
 			"name": "榴弹发射器",
+			"plan_id": "ORIGINAL-9",
 			"price": 20,
 			"scene": "res://game/attachments/GrenadeLauncher.tscn",
 			"slot": "WEAPON_UNDERBARREL"
@@ -186,6 +638,7 @@
 	"legacy_rewards": [
 		{
 			"id": "0",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "小型钱袋",
 			"persistent": false,
@@ -193,6 +646,7 @@
 		},
 		{
 			"id": "1",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "医疗箱",
 			"persistent": false,
@@ -200,6 +654,7 @@
 		},
 		{
 			"id": "2",
+			"mapped_source_of": "T07",
 			"max": 99,
 			"name": "异形头盔",
 			"persistent": true,
@@ -207,6 +662,7 @@
 		},
 		{
 			"id": "3",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "警示盾牌",
 			"persistent": true,
@@ -214,6 +670,7 @@
 		},
 		{
 			"id": "4",
+			"mapped_source_of": "",
 			"max": 10,
 			"name": "蓝色巨斧",
 			"persistent": true,
@@ -221,6 +678,7 @@
 		},
 		{
 			"id": "5",
+			"mapped_source_of": "T08",
 			"max": 99,
 			"name": "蓝色跑靴",
 			"persistent": true,
@@ -228,6 +686,7 @@
 		},
 		{
 			"id": "6",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "琥珀之星",
 			"persistent": true,
@@ -235,6 +694,7 @@
 		},
 		{
 			"id": "7",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "医疗包",
 			"persistent": true,
@@ -242,6 +702,7 @@
 		},
 		{
 			"id": "8",
+			"mapped_source_of": "",
 			"max": 5,
 			"name": "琥珀镰刀",
 			"persistent": true,
@@ -249,6 +710,7 @@
 		},
 		{
 			"id": "9",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "电池",
 			"persistent": true,
@@ -256,6 +718,7 @@
 		},
 		{
 			"id": "10",
+			"mapped_source_of": "",
 			"max": 1,
 			"name": "蓝色细菌",
 			"persistent": true,
@@ -263,6 +726,7 @@
 		},
 		{
 			"id": "11",
+			"mapped_source_of": "",
 			"max": 99,
 			"name": "蓝色电路",
 			"persistent": true,
@@ -276,196 +740,683 @@
 	"talents": [
 		{
 			"definition": {
-				"info": "常驻：每级武器伤害 +8%（含基础伤害）",
+				"info": "每级射速+6%；热流保持0.1秒tick并提升每tick伤害，原激光仅提升脉冲频率。",
 				"max": 3,
-				"name": "火力强化"
+				"name": "快速循环",
+				"step": 0.06,
+				"unit": "射速/DPS"
+			},
+			"id": "T02"
+		},
+		{
+			"definition": {
+				"info": "每级有效射程/实体弹寿命+10%；墙仍阻断。",
+				"max": 3,
+				"name": "弹道延展",
+				"step": 0.1,
+				"unit": "射程"
+			},
+			"id": "T05"
+		},
+		{
+			"definition": {
+				"info": "每级暴击率+5个百分点；每次命中只采样一次，暴击×1.5。",
+				"max": 3,
+				"name": "弱点识别",
+				"step": 0.05,
+				"unit": "暴击率百分点"
+			},
+			"id": "T06"
+		},
+		{
+			"definition": {
+				"info": "每级最大生命+1（初始基础5的20%），购买补该增量；旧头盔生命增量作为历史来源保留。",
+				"max": 3,
+				"name": "生存余量",
+				"step": 1.0,
+				"unit": "生命"
+			},
+			"id": "T07"
+		},
+		{
+			"definition": {
+				"info": "每级基础移速+3%；不改变冲刺。旧蓝靴来源保留，详情另列。",
+				"max": 3,
+				"name": "轻装移动",
+				"step": 0.03,
+				"unit": "基础移速"
+			},
+			"id": "T08"
+		},
+		{
+			"definition": {
+				"info": "金币/回血拾取半径每级+20%；隔墙不可吸附，不执行寻路。",
+				"max": 3,
+				"name": "拾取磁场",
+				"step": 0.2,
+				"unit": "拾取范围"
+			},
+			"id": "T09"
+		},
+		{
+			"definition": {
+				"info": "每5次有效直接击杀补2×等级备弹；假人、派生击杀不计，不填弹匣。",
+				"kills": 5,
+				"max": 3,
+				"name": "弹药回流",
+				"step": 2.0,
+				"unit": "每5杀备弹"
+			},
+			"id": "T11"
+		},
+		{
+			"definition": {
+				"info": "完成实际补弹后的第一发伤害+15/20/25%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。",
+				"max": 3,
+				"name": "首发重击",
+				"unit": "首发伤害",
+				"values": [
+					0.15,
+					0.2,
+					0.25
+				]
+			},
+			"id": "T12"
+		},
+		{
+			"definition": {
+				"info": "明确兼容的直射攻击+1贯穿；总目标最多8，实墙阻断，不影响爆炸/跟踪/锯盘。",
+				"max": 1,
+				"name": "贯穿专精",
+				"step": 1.0,
+				"unit": "额外贯穿"
+			},
+			"id": "T13"
+		},
+		{
+			"definition": {
+				"cooldown": 0.6,
+				"damage": 0.4,
+				"info": "直接命中20%概率电弧到附近一个不同目标，40%命中伤害；冷却0.6秒，墙阻挡；派生不触发。",
+				"max": 1,
+				"name": "静电跃迁",
+				"radius": 80.0,
+				"step": 0.2,
+				"unit": "触发概率"
+			},
+			"id": "T14"
+		},
+		{
+			"definition": {
+				"info": "直接命中施加1.5秒灼烧，每0.25秒伤害0.2×等级；同来源刷新，一条计时记录。",
+				"max": 3,
+				"name": "灼热弹道",
+				"seconds": 1.5,
+				"step": 0.2,
+				"tick": 0.25,
+				"unit": "每次灼烧tick"
+			},
+			"id": "T15"
+		},
+		{
+			"definition": {
+				"info": "直接命中减速8%×等级，1.5秒；最高24%，Boss仅四分之一，不叠无限层。",
+				"max": 3,
+				"name": "低温冲击",
+				"seconds": 1.5,
+				"step": 0.08,
+				"unit": "减速"
+			},
+			"id": "T17"
+		},
+		{
+			"definition": {
+				"info": "普通敌人冲量每级+15%；Boss免推移。",
+				"max": 3,
+				"name": "冲击放大",
+				"step": 0.15,
+				"unit": "冲量"
+			},
+			"id": "T18"
+		},
+		{
+			"definition": {
+				"cooldown": 8.0,
+				"info": "战斗抵消一次正伤害，冷却8秒；先占用冷却再反馈，同帧下一击仍受伤。",
+				"max": 1,
+				"name": "应急护盾",
+				"step": 1.0,
+				"unit": "抵消次数"
+			},
+			"id": "T19"
+		},
+		{
+			"definition": {
+				"info": "有效遭遇胜利回复最大生命10%×等级；手动回营、选关和重复结算不触发。",
+				"max": 3,
+				"name": "战后修复",
+				"step": 0.1,
+				"unit": "胜利回复生命比例"
+			},
+			"id": "T20"
+		},
+		{
+			"definition": {
+				"info": "对显式is_elite目标伤害+10/15/20%；Boss不适用。当前R1未增加精英内容。",
+				"max": 3,
+				"name": "精英猎手",
+				"unit": "对精英伤害",
+				"values": [
+					0.1,
+					0.15,
+					0.2
+				]
+			},
+			"id": "T21"
+		},
+		{
+			"definition": {
+				"count": 3,
+				"info": "100范围内至少3名存活敌人时伤害+5%×等级；每0.2秒更新，发射快照保留该次状态。",
+				"interval": 0.2,
+				"max": 3,
+				"name": "密集火网",
+				"radius": 100.0,
+				"step": 0.05,
+				"unit": "条件伤害"
+			},
+			"id": "T22"
+		},
+		{
+			"definition": {
+				"cooldown": 0.15,
+				"info": "直接暴击向附近一个不同目标回响30%该次伤害，冷却0.15秒；墙阻挡，回响不暴击、不递归。",
+				"max": 1,
+				"name": "暴击回响",
+				"radius": 70.0,
+				"step": 0.3,
+				"unit": "回响伤害比例"
+			},
+			"id": "T23"
+		},
+		{
+			"definition": {
+				"max": 3,
+				"name": "火力强化",
+				"step": 0.08
 			},
 			"id": "T01"
 		},
 		{
 			"definition": {
-				"info": "常驻：每级装填时间 -5%，最低 0.15 秒",
 				"max": 3,
-				"name": "熟练装填"
+				"name": "熟练装填",
+				"step": 0.05
 			},
 			"id": "T03"
 		},
 		{
 			"definition": {
-				"info": "常驻：每级弹匣 +10%；不会凭空补弹",
 				"max": 3,
-				"name": "扩充携弹"
+				"name": "扩充携弹",
+				"step": 0.1
 			},
 			"id": "T04"
 		},
 		{
 			"definition": {
-				"info": "有效击杀：每层射速 +3% × 等级，最多5层；4秒刷新，超时归零",
 				"max": 3,
-				"name": "连杀加速"
+				"name": "连杀加速",
+				"seconds": 4.0,
+				"stacks": 5,
+				"step": 0.03
 			},
 			"id": "T10"
 		},
 		{
 			"definition": {
-				"info": "直接击杀：半径32的小爆炸（伤害2），冷却0.4秒；派生击杀不再爆破",
+				"cooldown": 0.4,
+				"damage": 2.0,
 				"max": 1,
-				"name": "连锁爆破"
+				"name": "连锁爆破",
+				"radius": 32.0
 			},
 			"id": "T16"
 		},
 		{
 			"definition": {
-				"info": "直接击杀回复 0.15 × 等级 生命，冷却0.5秒；假人不触发",
+				"cooldown": 0.5,
 				"max": 3,
-				"name": "吸能修复"
+				"name": "吸能修复",
+				"step": 0.15
 			},
 			"id": "T24"
 		}
 	],
 	"weapons": [
 		{
+			"base_damage": 5.0,
+			"baseline": false,
+			"id": "121",
+			"magazine": 8,
+			"mechanism": "榴弹命中或飞行0.45秒后形成0.9秒聚拢场，再爆开；拉拽经碰撞检测且不隔墙，Boss免拉拽。",
+			"name": "引力榴弹器",
+			"plan_id": "W21",
+			"price": 240,
+			"rate": 1.2,
+			"reload": 1.7,
+			"scene": "res://game/guns/W21.tscn",
+			"tags": [
+				"projectile",
+				"explosive",
+				"gravity"
+			]
+		},
+		{
+			"base_damage": 3.0,
+			"baseline": false,
+			"id": "122",
+			"magazine": 12,
+			"mechanism": "锯盘0.55秒后返回角色；出/回各对同一目标最多一次。触墙提前回返，回程触墙结束，最长2秒。",
+			"name": "回旋锯盘",
+			"plan_id": "W22",
+			"price": 200,
+			"rate": 2.0,
+			"reload": 1.3,
+			"scene": "res://game/guns/W22.tscn",
+			"tags": [
+				"projectile",
+				"returning"
+			]
+		},
+		{
+			"base_damage": 1.2,
+			"baseline": false,
+			"id": "124",
+			"magazine": 100,
+			"mechanism": "按住由每秒6发逐渐加速，1.2秒到每秒24发上限；松手转速回落，不降低角色移速。",
+			"name": "加速转管机枪",
+			"plan_id": "W24",
+			"price": 220,
+			"rate": 24.0,
+			"reload": 2.0,
+			"scene": "res://game/guns/W24.tscn",
+			"tags": [
+				"projectile",
+				"rotary",
+				"straight"
+			]
+		},
+		{
+			"base_damage": 2.2,
+			"baseline": false,
+			"id": "111",
+			"magazine": 16,
+			"mechanism": "一次耗1发，3条轻微分叉束独立阻墙；同一目标可承受实际相交的多束。",
+			"name": "棱镜脉冲枪",
+			"plan_id": "W11",
+			"price": 180,
+			"rate": 2.4,
+			"reload": 1.4,
+			"scene": "res://game/guns/W11.tscn",
+			"tags": [
+				"beam",
+				"energy",
+				"pulse"
+			]
+		},
+		{
+			"base_damage": 5.0,
+			"baseline": false,
+			"id": "113",
+			"magazine": 6,
+			"mechanism": "按住最多蓄力1.2秒，松开发射；轻点基础伤害，满蓄×2.5；最多6目标且实墙阻断。切枪取消。",
+			"name": "蓄能轨道炮",
+			"plan_id": "W13",
+			"price": 240,
+			"rate": 1.2,
+			"reload": 1.8,
+			"scene": "res://game/guns/W13.tscn",
+			"tags": [
+				"beam",
+				"energy",
+				"charged",
+				"straight"
+			]
+		},
+		{
+			"base_damage": 4.2,
+			"baseline": false,
+			"id": "115",
+			"magazine": 12,
+			"mechanism": "一次短程宽扇面冲击；半角37度、距离105，角度/距离/遮墙分别判定，每目标一次。",
+			"name": "扇面脉冲炮",
+			"plan_id": "W15",
+			"price": 180,
+			"rate": 2.0,
+			"reload": 1.5,
+			"scene": "res://game/guns/W15.tscn",
+			"tags": [
+				"pulse_cone",
+				"energy"
+			]
+		},
+		{
+			"base_damage": 0.7,
+			"baseline": false,
+			"id": "116",
+			"magazine": 70,
+			"mechanism": "按住近程喷流，每0.1秒tick消耗1发；目标灼烧1秒，每0.25秒0.35伤害，同来源刷新不叠无限层。",
+			"name": "热流喷射器",
+			"plan_id": "W16",
+			"price": 220,
+			"rate": 10.0,
+			"reload": 1.8,
+			"scene": "res://game/guns/W16.tscn",
+			"tags": [
+				"pulse_cone",
+				"energy",
+				"continuous"
+			]
+		},
+		{
+			"base_damage": 4.0,
+			"baseline": false,
+			"id": "117",
+			"magazine": 10,
+			"mechanism": "重弹最多反弹2次；墙角接触结束，寿命2秒；直接命中冲击。",
+			"name": "反弹重弹枪",
+			"plan_id": "W17",
+			"price": 180,
+			"rate": 2.0,
+			"reload": 1.4,
+			"scene": "res://game/guns/W17.tscn",
+			"tags": [
+				"projectile",
+				"ricochet",
+				"straight"
+			]
+		},
+		{
+			"base_damage": 3.5,
+			"baseline": false,
+			"id": "118",
+			"magazine": 12,
+			"mechanism": "母弹首次命中产生3枚前向裂片，各为母弹35%伤害；裂片不再分裂。",
+			"name": "裂片发射器",
+			"plan_id": "W18",
+			"price": 180,
+			"rate": 2.5,
+			"reload": 1.4,
+			"scene": "res://game/guns/W18.tscn",
+			"tags": [
+				"projectile",
+				"split",
+				"straight"
+			]
+		},
+		{
+			"base_damage": 3.0,
+			"baseline": false,
+			"id": "119",
+			"magazine": 9,
+			"mechanism": "每次耗1发，扇形射出3枚火箭；每枚半径24独立爆炸，各目标每枚至多一次。",
+			"name": "散射火箭炮",
+			"plan_id": "W19",
+			"price": 220,
+			"rate": 1.4,
+			"reload": 1.8,
+			"scene": "res://game/guns/W19.tscn",
+			"tags": [
+				"projectile",
+				"explosive",
+				"spread"
+			]
+		},
+		{
+			"base_damage": 2.8,
+			"baseline": false,
+			"id": "120",
+			"magazine": 12,
+			"mechanism": "每次耗1发射2枚；前方视角内锁定，有限转向；目标消失保持前向，不穿墙。",
+			"name": "微型追踪导弹",
+			"plan_id": "W20",
+			"price": 220,
+			"rate": 1.8,
+			"reload": 1.5,
+			"scene": "res://game/guns/W20.tscn",
+			"tags": [
+				"projectile",
+				"explosive",
+				"homing"
+			]
+		},
+		{
 			"base_damage": 2.0,
 			"baseline": false,
 			"id": "112",
 			"magazine": 12,
+			"mechanism": "首次射线主目标命中，最多3次后跳；后跳伤害逐次×75%，墙阻挡电弧。",
 			"name": "跃迁电弧枪",
+			"plan_id": "W12",
 			"price": 150,
 			"rate": 3.0,
 			"reload": 1.4,
-			"scene": "res://game/guns/ArcCaster.tscn"
+			"scene": "res://game/guns/ArcCaster.tscn",
+			"tags": [
+				"chain",
+				"energy"
+			]
 		},
 		{
 			"base_damage": 4.0,
 			"baseline": false,
 			"id": "114",
 			"magazine": 8,
+			"mechanism": "慢速可见大弹，接触后半径32爆炸；每目标一次伤害。",
 			"name": "等离子榴炮",
+			"plan_id": "W14",
 			"price": 200,
 			"rate": 1.5,
 			"reload": 1.6,
-			"scene": "res://game/guns/PlasmaOrb.tscn"
+			"scene": "res://game/guns/PlasmaOrb.tscn",
+			"tags": [
+				"projectile",
+				"explosive",
+				"energy"
+			]
 		},
 		{
 			"base_damage": 1.0,
 			"baseline": false,
 			"id": "123",
 			"magazine": 24,
+			"mechanism": "每组3发，组内0.08秒，组间独立间隔；剩弹不足只射剩余。",
 			"name": "三连发卡宾",
+			"plan_id": "W23",
 			"price": 150,
 			"rate": 2.0,
 			"reload": 1.2,
-			"scene": "res://game/guns/BurstCarbine.tscn"
+			"scene": "res://game/guns/BurstCarbine.tscn",
+			"tags": [
+				"projectile",
+				"spread",
+				"burst",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 1.5,
 			"baseline": true,
 			"id": "0",
 			"magazine": 25,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "冲击波步枪",
+			"plan_id": "ORIGINAL-0",
 			"price": 10,
 			"rate": 5.0,
 			"reload": 1.0,
-			"scene": "res://game/guns/GunSprite.tscn"
+			"scene": "res://game/guns/GunSprite.tscn",
+			"tags": [
+				"projectile",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 1.0,
 			"baseline": true,
 			"id": "1",
 			"magazine": 15,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "冲击波霰弹枪",
+			"plan_id": "ORIGINAL-1",
 			"price": 10,
 			"rate": 2.0,
 			"reload": 1.0,
-			"scene": "res://game/guns/ShotgunBlaster.tscn"
+			"scene": "res://game/guns/ShotgunBlaster.tscn",
+			"tags": [
+				"projectile",
+				"spread",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 5,
 			"baseline": true,
 			"id": "2",
 			"magazine": 10,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "轻型狙击枪",
+			"plan_id": "ORIGINAL-2",
 			"price": 10,
 			"rate": 1.5,
 			"reload": 1.0,
-			"scene": "res://game/guns/Sniper.tscn"
+			"scene": "res://game/guns/Sniper.tscn",
+			"tags": [
+				"projectile",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 0.7,
 			"baseline": true,
 			"id": "3",
 			"magazine": 27,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "Baby冲锋枪",
+			"plan_id": "ORIGINAL-3",
 			"price": 10,
 			"rate": 1.5,
 			"reload": 1.0,
-			"scene": "res://game/guns/BabyZapZap.tscn"
+			"scene": "res://game/guns/BabyZapZap.tscn",
+			"tags": [
+				"projectile",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 2,
 			"baseline": true,
 			"id": "4",
 			"magazine": 35,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "异形者枪步",
+			"plan_id": "ORIGINAL-4",
 			"price": 50,
 			"rate": 7.0,
 			"reload": 1.0,
-			"scene": "res://game/guns/AlienRifle.tscn"
+			"scene": "res://game/guns/AlienRifle.tscn",
+			"tags": [
+				"projectile",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 2,
 			"baseline": true,
 			"id": "5",
 			"magazine": 12,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "帝国霰弹枪",
+			"plan_id": "ORIGINAL-5",
 			"price": 50,
 			"rate": 1.5,
 			"reload": 1.0,
-			"scene": "res://game/guns/EmpireShotgun.tscn"
+			"scene": "res://game/guns/EmpireShotgun.tscn",
+			"tags": [
+				"projectile",
+				"spread",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 2.0,
 			"baseline": true,
 			"id": "6",
 			"magazine": 10,
+			"mechanism": "原型激光：射线阻墙，0.1秒持续tick，保留0.4秒脉冲。",
 			"name": "BoomBoi",
+			"plan_id": "ORIGINAL-6",
 			"price": 100,
 			"rate": 1.0,
 			"reload": 1.0,
-			"scene": "res://game/guns/BoomBoi.tscn"
+			"scene": "res://game/guns/BoomBoi.tscn",
+			"tags": [
+				"beam",
+				"energy"
+			]
 		},
 		{
 			"base_damage": 1.0,
 			"baseline": true,
 			"id": "7",
 			"magazine": 50,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "异形者机枪",
+			"plan_id": "ORIGINAL-7",
 			"price": 100,
 			"rate": 10.0,
 			"reload": 1.2,
-			"scene": "res://game/guns/AlienMachine.tscn"
+			"scene": "res://game/guns/AlienMachine.tscn",
+			"tags": [
+				"projectile",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 2.5,
 			"baseline": true,
 			"id": "8",
 			"magazine": 5,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "RebalShotgun",
+			"plan_id": "ORIGINAL-8",
 			"price": 100,
 			"rate": 1.0,
 			"reload": 1.0,
-			"scene": "res://game/guns/RebalShotgun.tscn"
+			"scene": "res://game/guns/RebalShotgun.tscn",
+			"tags": [
+				"projectile",
+				"spread",
+				"straight"
+			]
 		},
 		{
 			"base_damage": 0.5,
 			"baseline": true,
 			"id": "9",
 			"magazine": 24,
+			"mechanism": "保留原型弹道、开火节奏、枪体动作与音色。",
 			"name": "Uzi",
+			"plan_id": "ORIGINAL-9",
 			"price": 100,
 			"rate": 10.0,
 			"reload": 1.0,
-			"scene": "res://game/guns/Uzi.tscn"
+			"scene": "res://game/guns/Uzi.tscn",
+			"tags": [
+				"projectile",
+				"straight"
+			]
 		}
 	]
 }

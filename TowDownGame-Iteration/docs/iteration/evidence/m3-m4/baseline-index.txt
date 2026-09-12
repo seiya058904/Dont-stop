@@ -1,0 +1,5 @@
+PASS case 0: D:\xia zai\AI project\8.30 Backup game\TowDownGame-Iteration\verify-0.log
+PASS case 1: D:\xia zai\AI project\8.30 Backup game\TowDownGame-Iteration\verify-1.log
+PASS case 2: D:\xia zai\AI project\8.30 Backup game\TowDownGame-Iteration\verify-2.log
+PASS case 3: D:\xia zai\AI project\8.30 Backup game\TowDownGame-Iteration\verify-3.log
+PASS case 4: D:\xia zai\AI project\8.30 Backup game\TowDownGame-Iteration\verify-4.log

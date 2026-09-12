@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="Script" path="res://game/attachments/BaseAttachment.gd" id="1"]
+[ext_resource type="Texture2D" path="res://Sprites/All_Icons/Blue Circuit.png" id="2"]
+[node name="A113" type="Node2D"]
+script = ExtResource("1")
+am_id = 113
+am_name = "棱镜扩散器"
+am_image = ExtResource("2")
+am_type = "WEAPON_MUZZLE"
+am_info = "棱镜扩散器：详情读取统一机制目录"
+money = 50

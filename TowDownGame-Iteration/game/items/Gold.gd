@@ -1,13 +1,16 @@
 extends "res://game/items/BaseItem.gd"
 #金币
 var collected = false
+func _physics_process(_delta):
+	if Demo.rank("T09") > 0 and is_instance_valid(Utils.player) and global_position.distance_to(Utils.player.global_position) <= 20*(1.0+DemoConfig.talent_value("T09",Demo.rank("T09"))) and Combat.clear_line(global_position,Utils.player.global_position):
+		_on_area_2d_body_entered(Utils.player)
 func _ready():
 	add_to_group("combat_transient")
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
 	tween.tween_property(self,"scale",Vector2(1,1),0.3).from(Vector2.ZERO)
 
 func _on_area_2d_body_entered(body):
-	if body is Player and not collected and LevelServer.state == "COMBAT":
+	if body is Player and not collected and LevelServer.state == "COMBAT" and Combat.clear_line(global_position,body.global_position):
 		collected = true
 		if giveCallBack:
 			giveCallBack.call()

@@ -1,0 +1,133 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS actual 24 weapons and 24 attachment definitions
+PASS attachment purchase 111
+PASS attachment has real compatible weapon 111
+PASS 20 equip/unequip cycles no drift 111
+PASS incompatible rejected unchanged 111
+PASS real effective stats change 111
+PASS attachment purchase 113
+PASS attachment has real compatible weapon 113
+PASS 20 equip/unequip cycles no drift 113
+PASS incompatible rejected unchanged 113
+PASS real effective stats change 113
+PASS attachment purchase 115
+PASS attachment has real compatible weapon 115
+PASS 20 equip/unequip cycles no drift 115
+PASS incompatible rejected unchanged 115
+PASS real effective stats change 115
+PASS attachment purchase 116
+PASS attachment has real compatible weapon 116
+PASS 20 equip/unequip cycles no drift 116
+PASS incompatible rejected unchanged 116
+PASS real effective stats change 116
+PASS attachment purchase 118
+PASS attachment has real compatible weapon 118
+PASS 20 equip/unequip cycles no drift 118
+PASS incompatible rejected unchanged 118
+PASS real effective stats change 118
+PASS attachment purchase 119
+PASS attachment has real compatible weapon 119
+PASS 20 equip/unequip cycles no drift 119
+PASS incompatible rejected unchanged 119
+PASS real effective stats change 119
+PASS attachment purchase 120
+PASS attachment has real compatible weapon 120
+PASS 20 equip/unequip cycles no drift 120
+PASS incompatible rejected unchanged 120
+PASS real effective stats change 120
+PASS attachment purchase 123
+PASS attachment has real compatible weapon 123
+PASS 20 equip/unequip cycles no drift 123
+PASS incompatible rejected unchanged 123
+PASS real effective stats change 123
+PASS attachment purchase 124
+PASS attachment has real compatible weapon 124
+PASS 20 equip/unequip cycles no drift 124
+PASS universal across roster; unsupported definition rejected 124
+PASS real effective stats change 124
+PASS attachment purchase 110
+PASS attachment has real compatible weapon 110
+PASS 20 equip/unequip cycles no drift 110
+PASS incompatible rejected unchanged 110
+PASS real effective stats change 110
+PASS attachment purchase 112
+PASS attachment has real compatible weapon 112
+PASS 20 equip/unequip cycles no drift 112
+PASS incompatible rejected unchanged 112
+PASS real effective stats change 112
+PASS attachment purchase 114
+PASS attachment has real compatible weapon 114
+PASS 20 equip/unequip cycles no drift 114
+PASS universal across roster; unsupported definition rejected 114
+PASS real effective stats change 114
+PASS attachment purchase 117
+PASS attachment has real compatible weapon 117
+PASS 20 equip/unequip cycles no drift 117
+PASS incompatible rejected unchanged 117
+PASS real effective stats change 117
+PASS attachment purchase 121
+PASS attachment has real compatible weapon 121
+PASS 20 equip/unequip cycles no drift 121
+PASS incompatible rejected unchanged 121
+PASS real effective stats change 121
+PASS attachment purchase 122
+PASS attachment has real compatible weapon 122
+PASS 20 equip/unequip cycles no drift 122
+PASS incompatible rejected unchanged 122
+PASS real effective stats change 122
+PASS attachment purchase 0
+PASS attachment has real compatible weapon 0
+PASS 20 equip/unequip cycles no drift 0
+PASS incompatible rejected unchanged 0
+PASS attachment purchase 1
+PASS attachment has real compatible weapon 1
+PASS 20 equip/unequip cycles no drift 1
+PASS universal across roster; unsupported definition rejected 1
+PASS attachment purchase 2
+PASS attachment has real compatible weapon 2
+PASS 20 equip/unequip cycles no drift 2
+PASS incompatible rejected unchanged 2
+PASS attachment purchase 3
+PASS attachment has real compatible weapon 3
+PASS 20 equip/unequip cycles no drift 3
+PASS incompatible rejected unchanged 3
+PASS attachment purchase 5
+PASS attachment has real compatible weapon 5
+PASS 20 equip/unequip cycles no drift 5
+PASS incompatible rejected unchanged 5
+PASS attachment purchase 6
+PASS attachment has real compatible weapon 6
+PASS 20 equip/unequip cycles no drift 6
+PASS incompatible rejected unchanged 6
+PASS attachment purchase 7
+PASS attachment has real compatible weapon 7
+PASS 20 equip/unequip cycles no drift 7
+PASS incompatible rejected unchanged 7
+PASS attachment purchase 8
+PASS attachment has real compatible weapon 8
+PASS 20 equip/unequip cycles no drift 8
+PASS universal across roster; unsupported definition rejected 8
+PASS attachment purchase 9
+PASS attachment has real compatible weapon 9
+PASS 20 equip/unequip cycles no drift 9
+PASS incompatible rejected unchanged 9
+PASS same slot returns exact instance
+PASS same model on two different guns
+PASS complete multi-attachment schema valid
+PASS new schema real save restore
+PASS all distinct instances restored
+PASS A18 actual rail seventh target
+PASS A11 range baseline misses distant target
+PASS A11 actual extended beam hit
+PASS A13 base cone excludes edge
+PASS A13 wider actual cone with damage tradeoff
+PASS A20 actual ordinary projectile fragments
+PASS A24 real direct kill refills one
+PASS A24 derived kill cannot refill
+M4 COMPATIBILITY {"0":{"compatible":11,"cycles":20,"incompatible":13},"1":{"compatible":24,"cycles":20,"incompatible":0},"110":{"compatible":22,"cycles":20,"incompatible":2},"111":{"compatible":2,"cycles":20,"incompatible":22},"112":{"compatible":5,"cycles":20,"incompatible":19},"113":{"compatible":4,"cycles":20,"incompatible":20},"114":{"compatible":24,"cycles":20,"incompatible":0},"115":{"compatible":8,"cycles":20,"incompatible":16},"116":{"compatible":23,"cycles":20,"incompatible":1},"117":{"compatible":23,"cycles":20,"incompatible":1},"118":{"compatible":14,"cycles":20,"incompatible":10},"119":{"compatible":1,"cycles":20,"incompatible":23},"120":{"compatible":12,"cycles":20,"incompatible":12},"121":{"compatible":4,"cycles":20,"incompatible":20},"122":{"compatible":1,"cycles":20,"incompatible":23},"123":{"compatible":1,"cycles":20,"incompatible":23},"124":{"compatible":24,"cycles":20,"incompatible":0},"2":{"compatible":11,"cycles":20,"incompatible":13},"3":{"compatible":11,"cycles":20,"incompatible":13},"5":{"compatible":3,"cycles":20,"incompatible":21},"6":{"compatible":2,"cycles":20,"incompatible":22},"7":{"compatible":2,"cycles":20,"incompatible":22},"8":{"compatible":24,"cycles":20,"incompatible":0},"9":{"compatible":19,"cycles":20,"incompatible":5}}
+M4 ATTACHMENTS SUMMARY checks=125 failures=0
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

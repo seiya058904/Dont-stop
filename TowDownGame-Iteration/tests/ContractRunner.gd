@@ -28,7 +28,7 @@ func _ready():
 	Utils.gameStart()
 	for i in 8: await get_tree().physics_frame
 	check(PlayerData.gold == 9999 and PlayerData.reward_point == 9999,"A01 new wallets")
-	check(Utils.weapon_list.size() == 13 and Utils.am_dict.size() == 15,"E M2 registered counts")
+	check(Utils.weapon_list.size() == 24 and Utils.am_dict.size() == 24,"E M3-M4 registered counts (M2 baseline 13/15 retained in history)")
 	var exact = PlayerData.getMaxExp()
 	PlayerData.player_exp = exact-1
 	check(PlayerData.player_level == 1,"B01 threshold minus one")
@@ -101,7 +101,7 @@ func _ready():
 			else: no += 1
 		check(yes > 0,"E attachment compatible "+id)
 		if id != "114": check(no > 0,"E attachment rejects unsupported mechanism "+id)
-		else: check(yes == 13,"A14 overload explicitly universal")
+		else: check(yes == 24,"A14 overload explicitly universal")
 	var plasma = PlayerData.player_weapon_list[114]
 	var fuse
 	for a in PlayerData.player_am_list.values():

@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS A01 exact threshold upgrades immediately
+PASS A05 refresh does not multiply capacity
+PASS A05 remove restores base capacity
+PASS A02 weapon selection clears attachment
+BASELINE REGRESSION failures=0

@@ -163,6 +163,7 @@ func victory() -> bool:
 	if state != "COMBAT" or settled_epoch == epoch or Utils.player.is_dead: return false
 	state = "RESOLVING"
 	settled_epoch = epoch
+	if Demo.rank("T20") > 0: PlayerData.addPlayerHp(PlayerData.player_hp_max*DemoConfig.talent_value("T20",Demo.rank("T20")))
 	timerStop()
 	Demo.stop_attacks()
 	PlayerData.reward_point += 1

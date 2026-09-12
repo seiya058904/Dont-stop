@@ -80,8 +80,9 @@ func _ready():
 	panel.purchase("talent","T01"); await frames()
 	check("1 / 3" in detail_text(panel),"R06 talent rank immediately refreshes")
 	check("下一等级：累计伤害 +16%" in detail_text(panel),"R06 next talent rank displays its cumulative effective value")
+	panel.tab = "attachment"; panel.selection = "110"; panel.render()
 	panel.purchase("attachment","110"); await frames()
-	check(panel.tab == "equipment" and panel.selection == "am:"+str(Demo.next_instance-1),"R06 purchase locates the new instance")
+	check(panel.tab == "attachment" and panel.selection == "110" and panel.purchased_instance == Demo.next_instance-1,"M4 purchase preserves shop tab and locates new instance")
 	var am = PlayerData.player_am_list[Demo.next_instance-1]
 	gun = PlayerData.player_weapon_list[0]
 	var details_scroll = panel.detail.get_parent()

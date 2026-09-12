@@ -7,7 +7,7 @@ static func number(value, integral = false) -> bool:
 static func validate(data) -> bool:
 	if not data is Dictionary: return false
 	if not data.has_all(["schema_version","gold","points","ammo","level","exp","hp","hp_max","weapons","attachments","talents","next_instance","next_stage","selected_stage","equipped"]): return false
-	if data.schema_version != 1 and data.schema_version != 2: return false
+	if not number(data.schema_version,true) or int(data.schema_version) not in [1,2,3]: return false
 	for key in ["gold","points","ammo","level","next_instance","next_stage","selected_stage"]:
 		if not number(data[key],true): return false
 	for key in ["hp","hp_max","exp"]:
@@ -15,9 +15,20 @@ static func validate(data) -> bool:
 	if data.level < 1 or data.hp_max <= 0 or data.hp > data.hp_max or data.exp >= pow(data.level,2.2)+15: return false
 	if not DemoConfig.ENCOUNTERS.has(int(data.next_stage)) or not DemoConfig.ENCOUNTERS.has(int(data.selected_stage)): return false
 	if not data.weapons is Array or not data.attachments is Array or not data.talents is Dictionary: return false
-	if not data.get("legacy",[]) is Array or (data.schema_version == 2 and not data.has_all(["legacy","legacy_state"])): return false
+	if not data.get("legacy",[]) is Array or (data.schema_version >= 2 and not data.has_all(["legacy","legacy_state"])): return false
 	for id in data.talents:
 		if not DemoConfig.TALENTS.has(id) or not number(data.talents[id],true) or data.talents[id] > DemoConfig.TALENTS[id].max: return false
+	if data.schema_version >= 3:
+		if not data.get("talent_payments") is Array: return false
+		var paid_levels = []
+		for payment in data.talent_payments:
+			if not payment is Dictionary or not payment.has_all(["id","level","currency","amount"]): return false
+			if not payment.id is String or not data.talents.has(payment.id) or payment.currency not in ["gold","points"]: return false
+			if not number(payment.level,true) or payment.level < 1 or payment.level > data.talents[payment.id] or not number(payment.amount,true) or payment.amount <= 0: return false
+			var key = payment.id+":"+str(int(payment.level))
+			if key in paid_levels: return false
+			paid_levels.append(key)
+
 	var counts = {}
 	for id in data.get("legacy",[]):
 		if not id is String or not RewardServer.reward_list.has(id): return false
@@ -31,7 +42,7 @@ static func validate(data) -> bool:
 	if not state is Dictionary: return false
 	for id in state:
 		if id != "10" or not counts.has(id) or not number(state[id],true) or state[id] > 1000: return false
-	if data.schema_version == 2 and counts.has("10") and not state.has("10"): return false
+	if data.schema_version >= 2 and counts.has("10") and not state.has("10"): return false
 	var guns = {}
 	var items = []
 	var valid = true
@@ -71,6 +82,7 @@ static func validate(data) -> bool:
 
 static func normalize(data: Dictionary) -> Dictionary:
 	var result = data.duplicate(true)
+	result.talent_payments = data.get("talent_payments",[]).duplicate(true) if data.schema_version >= 3 else []
 	result.legacy = data.get("legacy",[]).duplicate()
 	result.legacy_state = data.get("legacy_state",{}).duplicate()
 	if data.schema_version == 1 and "10" in result.legacy:

@@ -12,6 +12,27 @@ var cached: Array = []
 var selected_gun = -1
 var detail_actions = {}
 var refresh_pending = false
+var search_text = ""
+var category = "全部"
+var owned_only = false
+var compatible_only = false
+var purchased_instance = -1
+var tab_state: Dictionary = {}
+var search_box: LineEdit
+var category_box: OptionButton
+
+func switch_tab(next_tab: String):
+	tab_state[tab] = {"selection":selection,"scroll":listing_scroll.scroll_vertical}
+	tab = next_tab
+	var state = tab_state.get(tab,{"selection":"","scroll":0})
+	selection = state.selection
+	listing_scroll.scroll_vertical = state.scroll
+	category = "全部"
+	category_box.select(0)
+	render()
+
+func matches(text: String, tags: Array = []) -> bool:
+	return (search_text.is_empty() or search_text.to_lower() in text.to_lower()) and (category == "全部" or category in tags)
 
 func _enter_tree():
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -81,7 +102,28 @@ func _ready():
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)
 	for pair in [["weapon","枪械"],["attachment","配件商店"],["talent","持久天赋"],["equipment","当前配置"],["stage","出发/补给"],["legacy","原型奖励"]]:
-		button(tabs,pair[1],func(): tab = pair[0]; selection = ""; listing_scroll.scroll_vertical = 0; render())
+		button(tabs,pair[1],func(): switch_tab(pair[0]))
+	var filters = HBoxContainer.new()
+	body.add_child(filters)
+	search_box = LineEdit.new()
+	search_box.placeholder_text = "搜索名称 / 编号 / 机制"
+	search_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	search_box.add_theme_font_size_override("font_size",7)
+	filters.add_child(search_box)
+	search_box.text_changed.connect(func(value): search_text = value; request_refresh())
+	category_box = OptionButton.new()
+	category_box.add_theme_font_size_override("font_size",7)
+	for item in ["全部","实体","能量","爆炸","特殊","Optics","Muzzle","Barrel","Underbarrel","Ammunition","Stock","Tactical","Perks"]: category_box.add_item(item)
+	filters.add_child(category_box)
+	category_box.item_selected.connect(func(index): category = category_box.get_item_text(index); request_refresh())
+	var owned = CheckButton.new()
+	owned.text = "已拥有"
+	filters.add_child(owned)
+	owned.toggled.connect(func(value): owned_only = value; request_refresh())
+	var compatible = CheckButton.new()
+	compatible.text = "兼容当前枪"
+	filters.add_child(compatible)
+	compatible.toggled.connect(func(value): compatible_only = value; request_refresh())
 	var columns = HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(columns)
@@ -142,15 +184,34 @@ func render():
 			for id in ids:
 				var gun = Utils.weapon_list[id].instantiate()
 				cached.append(gun)
+				var tags = DemoConfig.weapon_tags(int(id))
+				var categories = []
+				for pair in [["projectile","实体"],["energy","能量"],["explosive","爆炸"]]:
+					if pair[0] in tags: categories.append(pair[1])
+				if int(id) >= 111: categories.append("特殊")
+				if not matches(tr(gun.weapon_name)+id+WeaponCatalog.definition(int(id)).get("plan","")+DemoConfig.weapon_info(int(id)),categories): continue
+				if owned_only and not PlayerData.player_weapon_list.has(int(id)): continue
 				entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name),id,func(): show_weapon(id,gun))
 		"attachment":
 			for id in Utils.am_dict:
 				var am = Utils.am_dict[id].instantiate()
 				cached.append(am)
-				entry(tr(am.am_name),id,func(): show_attachment(id,am,false))
+				if AttachmentCatalog.DEFINITIONS.has(am.am_id): am.am_info = AttachmentCatalog.DEFINITIONS[am.am_id].info
+				var instances = PlayerData.player_am_list.values().filter(func(a): return a.am_id == am.am_id)
+				var slots = [am.am_type.trim_prefix("WEAPON_").capitalize().replace(" ","")]
+				if not matches(tr(am.am_name)+id+tr(am.am_info),slots): continue
+				if owned_only and instances.is_empty(): continue
+				if compatible_only and (not active_gun() or not am.can_equip(active_gun())): continue
+				entry(tr(am.am_name)+(" ✓×%d" % instances.size() if not instances.is_empty() else ""),id,func():
+					var instance = PlayerData.player_am_list.get(purchased_instance)
+					if instance and instance.am_id == am.am_id: show_attachment(id,instance,true)
+					else: show_attachment(id,am,false))
 		"talent":
+			button(listing,"重置计划天赋 / 查看退款",show_reset)
 			for id in DemoConfig.TALENTS:
 				var d = DemoConfig.TALENTS[id]
+				if not matches(id+d.name+DemoConfig.talent_info(id)): continue
+				if owned_only and Demo.rank(id) == 0: continue
 				entry("%s %d/%d" % [d.name,Demo.rank(id),d.max],id,func(): show_talent(id))
 		"equipment": equipment_list()
 		"stage": stage_list()
@@ -161,7 +222,7 @@ func render():
 				entry(tr(reward.reward_name),id,func(): show_legacy(id,reward))
 	if detail_actions.has(selection): detail_actions[selection].call()
 	listing_scroll.set_deferred("scroll_vertical",scroll_position)
-	if selection == "": label(detail,"选择左侧条目查看用途、价格与实际配置。\n\n战斗已暂停；Esc 只关闭最上层。\n购买与补给仅在营地开放。\n装备和天赋不会因失败丢失。",8)
+	if not detail_actions.has(selection): label(detail,"选择左侧条目查看用途、价格与实际配置。\n没有匹配条目时，可清空搜索或切回全部分类。\n战斗已暂停；Esc 只关闭最上层。\n购买与补给仅在营地开放。",8)
 
 func purchase(kind: String,id: String,currency = "gold"):
 	var result = Demo.try_purchase(kind,id,currency)
@@ -169,14 +230,16 @@ func purchase(kind: String,id: String,currency = "gold"):
 	if result.success:
 		Demo.play_ui()
 	if result.success and kind == "attachment":
-		tab = "equipment"
-		selection = "am:"+str(result.instance_id)
+		purchased_instance = result.instance_id
+		selection = id
 	else: selection = id
 	request_refresh()
 
 func show_weapon(id: String, gun):
 	clear_box(detail)
 	label(detail,tr(gun.weapon_name),10)
+	var plan_id = WeaponCatalog.definition(int(id)).get("plan","")
+	if not plan_id.is_empty(): label(detail,"计划编号 %s · 存档ID %s" % [plan_id,id])
 	var image = TextureRect.new()
 	image.texture = gun.image
 	image.custom_minimum_size = Vector2(40,22)
@@ -204,6 +267,7 @@ func active_gun():
 func show_attachment(id: String,am,owned: bool):
 	clear_box(detail)
 	label(detail,tr(am.am_name),10)
+	if AttachmentCatalog.DEFINITIONS.has(am.am_id): am.am_info = AttachmentCatalog.DEFINITIONS[am.am_id].info
 	label(detail,"槽位：%s\n%s\n价格：%d金币" % [tr(am.am_type),tr(am.am_info),am.money])
 	var compatible = []
 	for key in Utils.weapon_list:
@@ -226,6 +290,7 @@ func show_attachment(id: String,am,owned: bool):
 			if "explosive" in gun.tags: comparison += "\n爆炸半径 %.1f → %.1f" % [gun.effective.radius,after.radius]
 			if "chain" in gun.tags: comparison += "\n电弧后跳 %d → %d" % [gun.effective.jumps,after.jumps]
 			label(detail,comparison)
+			label(detail,"完整装配后机制\n"+EffectiveStats.describe(after))
 			if old and old != am: label(detail,"替换「%s」；旧件返回背包" % tr(old.am_name))
 			if owned:
 				button(detail,"安装到此枪",func():
@@ -238,6 +303,7 @@ func show_attachment(id: String,am,owned: bool):
 		label(detail,"实例 #%d · %s" % [am.id,"未装备" if am.gun == null else "已装备到 "+tr(am.gun.weapon_name)])
 		if am.gun: button(detail,"卸回背包",func(): am.gun.removeAttachMent(am); message.text = "配件已卸回背包"; show_attachment(id,am,true))
 	else: button(detail,"购买到背包（未装备）",func(): purchase("attachment",id))
+	if owned: button(detail,"再购买一个独立实例",func(): purchase("attachment",id))
 
 func show_talent(id: String):
 	clear_box(detail)
@@ -246,6 +312,8 @@ func show_talent(id: String):
 	label(detail,d.name+"  %d / %d" % [rank,d.max],10)
 	label(detail,DemoConfig.talent_info(id))
 	label(detail,DemoConfig.talent_effect(id,rank),8)
+	label(detail,Demo.talent_status(id))
+	if id in ["T07","T08"]: label(detail,"旧头盔/蓝靴作为历史来源保留，不在原型商店重复售卖；本页退款仅针对已记录的计划天赋付款。")
 	if id == "T10": label(detail,"当前%d层，剩余%.1f秒" % [Demo.kill_stacks,Demo.stack_time])
 	if id == "T24": label(detail,"冷却剩余%.1f秒" % Demo.heal_cooldown)
 	label(detail,"已满级；不会扣款" if rank == d.max else "下一等级：%s\n等级 %d → %d\n支付任选一种：%d金币 或 1天赋点" % [DemoConfig.talent_effect(id,rank+1),rank,rank+1,DemoConfig.TALENT_GOLD_PRICE])
@@ -283,7 +351,7 @@ func stage_list():
 		button(listing,"练枪：%d目标" % count,func(): LevelServer.town.practice(count); queue_free())
 	button(listing,"清理练枪靶与效果",func(): LevelServer.town.clear_practice(); message.text = "已清理；练枪不发金币、经验或击杀奖励")
 	label(detail,"正常下一关："+DemoConfig.ENCOUNTERS[Demo.next_stage].name)
-	label(detail,"原移动速度/冲刺/视角保持。\n原数字键1—7对应持有栏前7把；全部13把可在枪械页购买/装备，也可在当前配置选枪。\n练枪靶不掉落、不结算经验。")
+	label(detail,"原移动速度/冲刺/视角保持。\n原数字键1—7对应持有栏前7把；全部%d把可在枪械页搜索/购买/装备，也可在当前配置选枪。\n练枪靶不掉落、不结算经验。" % Utils.weapon_list.size())
 
 func depart(stage: int, trial: bool):
 	if not Utils.player.gun:
@@ -304,8 +372,25 @@ func show_legacy(id: String,reward):
 	label(detail,tr(reward.reward_info))
 	var current = Utils.player.reward_root.get_node_or_null(reward.reward_name)
 	label(detail,"一次性补给（不计持久天赋）" if reward.only_start else "原型持久奖励：%d / %d" % [current.count if current else 0,reward.max_count])
+	if id in ["2","5"]:
+		label(detail,"已整合为T07/T08的历史来源；旧等级和原数值保留，新购买请前往持久天赋页。")
+		return
 	button(detail,"%d金币购买" % DemoConfig.TALENT_GOLD_PRICE,func(): purchase("legacy",id))
 	button(detail,"1天赋点升级",func(): purchase("legacy",id,"points"))
+
+func show_reset():
+	var refund = Demo.reset_preview()
+	var dialog = ConfirmationDialog.new()
+	dialog.title = "重置计划天赋"
+	dialog.dialog_text = "撤销计划天赋效果，返还有付款凭据的：\n%d金币 / %d天赋点\n历史缺失付款凭据：%d级，无法精确返还。\n确认后也会清除这些计划等级；历史原型来源保留。\n取消将保留当前全部等级。" % [refund.gold,refund.points,refund.unknown]
+	dialog.min_size = Vector2i(270,130)
+	dialog.get_label().add_theme_font_size_override("font_size",8)
+	dialog.get_ok_button().text = "确认重置"
+	dialog.get_cancel_button().text = "保留配置"
+	add_child(dialog)
+	dialog.confirmed.connect(func(): message.text = Demo.reset_talents(refund.revision).reason; dialog.queue_free(); request_refresh())
+	dialog.canceled.connect(dialog.queue_free)
+	dialog.popup_centered()
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel") and Demo.top_pause(self):
