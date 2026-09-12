@@ -27,7 +27,7 @@ func _ready():
 	town = main.get_node("Town")
 	Utils.gameStart()
 	for i in 8: await get_tree().physics_frame
-	check(PlayerData.gold == 180 and PlayerData.reward_point == 0,"A01 new wallets")
+	check(PlayerData.gold == 9999 and PlayerData.reward_point == 9999,"A01 playtest wallets")
 	PlayerData.gold = 100000; PlayerData.reward_point = 9999
 	check(Utils.weapon_list.size() == 24 and Utils.am_dict.size() == 24,"E M3-M4 registered counts (M2 baseline 13/15 retained in history)")
 	var exact = PlayerData.getMaxExp()
@@ -206,7 +206,7 @@ func _ready():
 	check(burst.bullets_count == 5,"D10 interrupted burst cancels remaining shots")
 
 	# Isolated physical fixture: real rays and projectiles, outside map obstacles.
-	target.queue_free()
+	if is_instance_valid(target): target.queue_free()
 	await get_tree().physics_frame
 	Utils.player.global_position = Vector2(0,-1000)
 	var fixtures = []

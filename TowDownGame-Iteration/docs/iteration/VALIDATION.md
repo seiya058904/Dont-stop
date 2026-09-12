@@ -357,3 +357,7 @@ M7Shop170项，1366×768所对应410×230逻辑SubViewport：24枪逐一选择�
 仅现有feat/towdown-experience-upgrade；三个原项目tree及main保持原值，用户计划ZIP仍未跟踪。HTTPS Git握手多次失败后，采用同账户GitHub Git Data API上传本地对象；逐一校验tree/commit SHA，分支仅fast-forward，不改作者、时间、父提交或文件内容，不修改全局网络配置。最终本地/远端一致性另记录。
 
 没有前台computer use、系统键鼠、工具安装或依赖升级；无匹配Windows导出模板，未生成新独立exe。PLAY_GAME.bat启动当前源码。第二次真人试玩重点是商店便利、弹匣持续性、Tier爽感、通用配件收益及默认压力/危险预告可读性。HUMAN_ACCEPTED=false，完成后停止，不merge、不Release、不进入M8。
+
+## M7 退出与试玩钱包补修
+
+新版设置缺失退出入口已用原始夹具复现；修复后菜单/营地/实际战斗放弃/根窗口关闭信号/旧钱包恢复五个独立进程均正常退出(code0)，固定退出按钮在410×230逻辑视口完整可见，鼠标事件走真实控件。原生1366×768离屏渲染与按钮点击退出另通过，截图见evidence/m7/exit-wallet-fix/settings.png。新档两项9999、旧档7/8启动补到9999、消费后普通保存读取保留9989均通过。保存失败/坏档取消与重试R1RecoveryUI9项通过，ContractRunner136项通过。首次ContractRunner靶子被异步击杀后重复释放导致超时，清理改为存活检查后通过；未删除断言。此补修未重跑M7整套4033项，历史结果不冒称新测试。全程后台，无前台系统输入。

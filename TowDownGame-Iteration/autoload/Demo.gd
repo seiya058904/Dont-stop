@@ -32,6 +32,7 @@ var talent_cooldowns: Dictionary = {}
 var ammo_kills = 0
 var crowd_clock = 0.0
 var crowd_active = false
+var quitting_game = false
 
 func reset_preview() -> Dictionary:
 	var result = {"gold":0,"points":0,"unknown":0,"revision":reset_revision}
@@ -87,6 +88,7 @@ func talent_status(id: String) -> String:
 
 func _ready():
 	get_tree().auto_accept_quit = false
+	get_tree().root.close_requested.connect(quit_game)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	for bus in ["Music","SFX","UI"]:
 		if AudioServer.get_bus_index(bus) < 0:
@@ -107,8 +109,13 @@ func _start():
 	apply_audio_settings()
 	Utils.shake = ConfigUtils.getConfig("demo","shake") if ConfigUtils.getConfig("demo","shake") != null else 0.35
 	Combat.reduced_flash = ConfigUtils.getConfig("demo","reduced_flash") == true
-	if not test_mode: load_camp()
+	if not test_mode:
+		load_camp()
+		# This build is a playtest: refill once at startup, not on each save/load.
+		PlayerData.gold = maxi(PlayerData.gold,DemoConfig.INITIAL_GOLD)
+		PlayerData.reward_point = maxi(PlayerData.reward_point,DemoConfig.INITIAL_TALENT_POINTS)
 	refresh()
+	if not test_mode and not save_blocked: save_camp()
 
 func set_volume(bus: String, value: float):
 	var index = AudioServer.get_bus_index(bus)
@@ -432,6 +439,7 @@ func open_settings():
 	Demo.push_pause(settings)
 
 func quit_game():
+	if quitting_game: return
 	stop_attacks()
 	if Utils.is_game_start and not save_camp().success:
 		show_save_dialog(save_blocked,true)
@@ -439,6 +447,8 @@ func quit_game():
 	finish_quit()
 
 func finish_quit():
+	if quitting_game: return
+	quitting_game = true
 	# Release the custom cursor texture before the renderer shuts down.
 	Input.set_custom_mouse_cursor(null)
 	for type in ["AudioStreamPlayer","AudioStreamPlayer2D"]:
@@ -447,6 +457,5 @@ func finish_quit():
 	get_tree().quit()
 
 func _notification(what):
-	if what == NOTIFICATION_WM_CLOSE_REQUEST: quit_game()
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and Utils.is_game_start and LevelServer.state == "COMBAT" and pause_stack.is_empty():
 		open_panel()

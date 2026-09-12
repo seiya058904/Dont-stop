@@ -4,8 +4,8 @@ class_name DemoConfig
 const NORMAL_INCOMING = 0.875
 const BOSS_INCOMING = 0.97
 const PROFILE = "experience_demo"
-const INITIAL_GOLD = 180
-const INITIAL_TALENT_POINTS = 0
+const INITIAL_GOLD = 9999
+const INITIAL_TALENT_POINTS = 9999
 const TALENT_GOLD_PRICE = 100
 const SWITCH_SECONDS = 0.12 # Input debounce only; HUD keeps its .3 + .5 + .3 animation.
 const MAX_DERIVATION = 2

@@ -1,0 +1,56 @@
+[
+  {
+    "mode": "menu",
+    "code": 0,
+    "checks": [
+      "PASS current settings exposes exit",
+      "PASS exit visible without scrolling",
+      "EXIT REQUESTED menu"
+    ]
+  },
+  {
+    "mode": "camp",
+    "code": 0,
+    "checks": [
+      "PASS current settings exposes exit",
+      "PASS exit visible without scrolling",
+      "PASS playtest starts with both wallets 9999",
+      "EXIT REQUESTED camp"
+    ]
+  },
+  {
+    "mode": "combat",
+    "code": 0,
+    "checks": [
+      "PASS start real combat before opening settings",
+      "PASS current settings exposes exit",
+      "PASS exit visible without scrolling",
+      "PASS combat exit offers unsaved-progress choices",
+      "PASS combat discard exit available",
+      "EXIT REQUESTED combat"
+    ]
+  },
+  {
+    "mode": "window",
+    "code": 0,
+    "checks": [
+      "PASS current settings exposes exit",
+      "PASS exit visible without scrolling",
+      "PASS playtest starts with both wallets 9999",
+      "EXIT REQUESTED window"
+    ]
+  },
+  {
+    "mode": "restore",
+    "code": 0,
+    "checks": [
+      "PASS current settings exposes exit",
+      "PASS exit visible without scrolling",
+      "PASS playtest starts with both wallets 9999",
+      "PASS low-balance test save written",
+      "PASS startup restores and tops up existing wallets",
+      "PASS ordinary load preserves spending",
+      "EXIT REQUESTED restore"
+    ]
+  }
+]

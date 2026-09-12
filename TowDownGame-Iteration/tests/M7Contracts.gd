@@ -2,7 +2,7 @@ extends "res://tests/M3Weapons.gd"
 func _ready():
 	Demo.test_mode = true; seed(707)
 	var main = load("res://game/map/Main.tscn").instantiate(); add_child(main); Utils.gameStart(); await wait(0.3)
-	check(PlayerData.gold == DemoConfig.INITIAL_GOLD and PlayerData.reward_point == 0,"normal fresh wallet is modest")
+	check(PlayerData.gold == 9999 and PlayerData.reward_point == 9999,"playtest fresh wallets are 9999")
 	PlayerData.gold = 100000
 	for id in Utils.weapon_list: Demo.try_purchase("weapon",id)
 	Utils.player.set_process(false); Utils.player.set_physics_process(false)

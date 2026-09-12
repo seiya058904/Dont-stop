@@ -10,7 +10,7 @@ func _ready():
 	var box = VBoxContainer.new()
 	var scroll = ScrollContainer.new()
 	scroll.position = Vector2(85,15)
-	scroll.size = Vector2(240,181)
+	scroll.size = Vector2(240,172)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(scroll)
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -54,10 +54,17 @@ func _ready():
 	var back = Button.new()
 	back.text = "返回上一层 [Esc]"
 	back.pressed.connect(close)
-	back.position = Vector2(85,202)
-	back.size = Vector2(240,18)
+	back.position = Vector2(85,192)
+	back.size = Vector2(116,31)
 	back.theme = t
 	add_child(back)
+	var exit = Button.new()
+	exit.text = "退出游戏"
+	exit.position = Vector2(209,192)
+	exit.size = Vector2(116,31)
+	exit.theme = t
+	exit.pressed.connect(Demo.quit_game)
+	add_child(exit)
 
 func close():
 	Demo.pop_pause(self)
