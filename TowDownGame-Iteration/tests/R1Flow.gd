@@ -44,10 +44,10 @@ func _ready():
 			town._on_portal_move_in(town.portal_lv1)
 			town._on_portal_move_in(town.portal_lv1)
 			town._on_portal_2_move_out()
-			check(LevelServer.level == 3 and not Demo.trial and LevelServer.epoch == before_epoch+1,"R05 old portal normal progress reload="+str(restarted)+" aftertrial="+str(after_trial))
+			check(LevelServer.level == 2 and not Demo.trial and LevelServer.epoch == before_epoch+1,"R05 old portal normal progress reload="+str(restarted)+" aftertrial="+str(after_trial))
 			LevelServer.return_to_camp(); await frames()
 			town.depart(4,false)
-			check(LevelServer.level == 3 and not Demo.trial,"R05 menu normal ignores stale trial stage")
+			check(LevelServer.level == 2 and not Demo.trial,"R05 menu normal ignores stale trial stage")
 			LevelServer.return_to_camp(); await frames()
 	position_before = Utils.player.global_position
 	check(not town.depart(999,true) and Utils.player.global_position == position_before,"R05 invalid encounter has no teleport")

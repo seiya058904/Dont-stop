@@ -1,6 +1,7 @@
 extends Node
 
 var actor_exclusions: Array[RID] = []
+var exclusions_dirty = true
 var dispatch_depth = 0
 var attacks = 0
 var damage_events = 0
@@ -11,6 +12,7 @@ var sound_clock = 0.0
 var reduced_flash = false
 
 func _ready():
+	get_tree().node_added.connect(_actor_added)
 	for i in 8:
 		var player = AudioStreamPlayer2D.new()
 		player.bus = "SFX"
@@ -18,10 +20,19 @@ func _ready():
 		add_child(player)
 		audio_pool.append(player)
 
-func _physics_process(_delta):
+func _actor_added(node: Node):
+	if node is BaseMonster or node is Player:
+		exclusions_dirty = true
+		node.tree_exiting.connect(_actors_changed,CONNECT_ONE_SHOT)
+
+func _actors_changed():
+	exclusions_dirty = true
+
+func _refresh_exclusions():
 	actor_exclusions.clear()
 	if is_instance_valid(Utils.player): actor_exclusions.append(Utils.player.get_rid())
 	for actor in get_tree().get_nodes_in_group("monsters"): actor_exclusions.append(actor.get_rid())
+	exclusions_dirty = false
 
 func sound(stream: AudioStream, position: Vector2):
 	for player in audio_pool:
@@ -87,10 +98,7 @@ func secondary_hit(source, context: Dictionary, damage: float, talent: String):
 func clear_line(from: Vector2, to: Vector2) -> bool:
 	if not is_instance_valid(Utils.player): return false
 	var query = PhysicsRayQueryParameters2D.create(from,to,2147483649)
-	var actors = get_tree().get_nodes_in_group("monsters")
-	if actor_exclusions.size() != actors.size()+1:
-		actor_exclusions = [Utils.player.get_rid()]
-		for actor in actors: actor_exclusions.append(actor.get_rid())
+	if exclusions_dirty: _refresh_exclusions()
 	query.exclude = actor_exclusions
 	return Utils.player.get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 

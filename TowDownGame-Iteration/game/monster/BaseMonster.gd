@@ -18,6 +18,7 @@ var burns: Dictionary = {}
 var slow_time = 0.0
 var slow_amount = 0.0
 var is_elite = false
+var displayed_flash = -1.0
 
 func apply_burn(source: String, amount: float, seconds: float, context: Dictionary):
 	var saved = context.duplicate(true)
@@ -74,9 +75,14 @@ func _process(delta):
 				Combat.hit(self,burn.context)
 			if burn.remaining <= 0: burns.erase(source)
 	flash_time = maxf(0,flash_time-delta)
-	queue_redraw()
-	anim.material.set_shader_parameter("flash", 0.7 if flash_time > 0 and not Combat.reduced_flash else 0.0)
-	anim.scale = Vector2(1.08,0.92) if flash_time > 0 else Vector2.ONE
+	# Physics-driven enemy drawings still refresh in their subclasses. Rebuild
+	# the contact bracket and shader state only when the visible flash changes.
+	var visible_flash = (0.7 if not Combat.reduced_flash else 0.01) if flash_time > 0 else 0.0
+	if displayed_flash != visible_flash:
+		displayed_flash = visible_flash
+		queue_redraw()
+		anim.material.set_shader_parameter("flash",0.7 if visible_flash == 0.7 else 0.0)
+		anim.scale = Vector2(1.08,0.92) if flash_time > 0 else Vector2.ONE
 	label_time -= delta
 	if label_time <= 0:
 		if idle_frame_num > 0: Utils.showHitLabel(idle_frame_num,self)

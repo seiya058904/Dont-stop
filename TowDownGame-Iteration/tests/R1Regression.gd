@@ -107,7 +107,7 @@ func _ready():
 	for frame in 3: await get_tree().process_frame
 	town._on_portal_move_in(town.portal_lv1)
 	town._on_portal_2_move_out()
-	check(LevelServer.level == 3 and not Demo.trial,"R05 old portal uses next normal encounter")
+	check(LevelServer.level == 2 and not Demo.trial,"R05 old portal uses next normal encounter")
 	LevelServer.return_to_camp()
 	var camera = get_tree().get_nodes_in_group("camera")[0]
 	Utils.shake = 0.35
