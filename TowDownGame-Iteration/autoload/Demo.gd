@@ -162,7 +162,7 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 			result.reason = "已购买「%s」· %d金币 · 未装备\n已定位到新实例；确认属性后点击安装" % [tr(obtained.am_name),price]
 		"talent":
 			talents[id] = rank(id)+1
-			result.reason = "%s：%d → %d / %d\n%s" % [DemoConfig.TALENTS[id].name, rank(id)-1,rank(id), DemoConfig.TALENTS[id].max,DemoConfig.TALENTS[id].info]
+			result.reason = "%s：%d → %d / %d\n%s" % [DemoConfig.TALENTS[id].name, rank(id)-1,rank(id), DemoConfig.TALENTS[id].max,DemoConfig.talent_info(id)]
 		"legacy":
 			if not RewardServer.addReward(obtained): return result
 			purchases.append(id)
@@ -191,16 +191,16 @@ func replenish():
 func on_kill(monster, context: Dictionary):
 	if monster.training: return
 	if rank("T10") > 0:
-		kill_stacks = mini(5,kill_stacks+1)
-		stack_time = 4.0
+		kill_stacks = mini(DemoConfig.TALENTS.T10.stacks,kill_stacks+1)
+		stack_time = DemoConfig.TALENTS.T10.seconds
 		refresh()
 	if context.get("depth",0) != 0: return
 	if rank("T24") > 0 and heal_cooldown <= 0:
-		heal_cooldown = 0.5
-		PlayerData.addPlayerHp(0.15 * rank("T24"))
+		heal_cooldown = DemoConfig.TALENTS.T24.cooldown
+		PlayerData.addPlayerHp(DemoConfig.talent_value("T24",rank("T24")))
 	if rank("T16") > 0 and blast_cooldown <= 0:
-		blast_cooldown = 0.4
-		Combat.explosion(monster.global_position,32.0,2.0,context.get("gun"),1)
+		blast_cooldown = DemoConfig.TALENTS.T16.cooldown
+		Combat.explosion(monster.global_position,DemoConfig.TALENTS.T16.radius,DemoConfig.TALENTS.T16.damage,context.get("gun"),1)
 
 func snapshot() -> Dictionary:
 	var weapons = []

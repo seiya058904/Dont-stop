@@ -79,11 +79,16 @@ func _ready():
 	panel.tab = "talent"; panel.selection = "T01"; panel.render()
 	panel.purchase("talent","T01"); await frames()
 	check("1 / 3" in detail_text(panel),"R06 talent rank immediately refreshes")
+	check("下一等级：累计伤害 +16%" in detail_text(panel),"R06 next talent rank displays its cumulative effective value")
 	panel.purchase("attachment","110"); await frames()
 	check(panel.tab == "equipment" and panel.selection == "am:"+str(Demo.next_instance-1),"R06 purchase locates the new instance")
 	var am = PlayerData.player_am_list[Demo.next_instance-1]
 	gun = PlayerData.player_weapon_list[0]
+	var details_scroll = panel.detail.get_parent()
+	details_scroll.scroll_vertical = 30; await frames()
+	var detail_offset = details_scroll.scroll_vertical
 	gun.addAttachMent(am); await frames()
+	check(details_scroll.scroll_vertical == detail_offset,"R06 attachment detail scroll preserved on install")
 	check("已装备到" in detail_text(panel),"R06 attachment install detail synchronized")
 	gun.removeAttachMent(am); await frames()
 	check("未装备" in detail_text(panel),"R06 attachment removal detail synchronized")

@@ -244,10 +244,11 @@ func show_talent(id: String):
 	var d = DemoConfig.TALENTS[id]
 	var rank = Demo.rank(id)
 	label(detail,d.name+"  %d / %d" % [rank,d.max],10)
-	label(detail,d.info)
-	var cumulative = {"T01":"累计伤害 +%d%%" % (rank*8),"T03":"累计装填 -%d%%" % (rank*5),"T04":"累计弹匣 +%d%%" % (rank*10),"T10":"当前%d层，剩余%.1f秒；每层 +%d%%" % [Demo.kill_stacks,Demo.stack_time,rank*3],"T16":"已解锁" if rank else "未解锁","T24":"每次回复 %.2f；冷却剩余%.1f秒" % [rank*0.15,Demo.heal_cooldown]}
-	label(detail,cumulative[id],8)
-	label(detail,"已满级；不会扣款" if rank == d.max else "下一等级 %d → %d；按上述每级数值增加\n支付任选一种：%d金币 或 1天赋点" % [rank,rank+1,DemoConfig.TALENT_GOLD_PRICE])
+	label(detail,DemoConfig.talent_info(id))
+	label(detail,DemoConfig.talent_effect(id,rank),8)
+	if id == "T10": label(detail,"当前%d层，剩余%.1f秒" % [Demo.kill_stacks,Demo.stack_time])
+	if id == "T24": label(detail,"冷却剩余%.1f秒" % Demo.heal_cooldown)
+	label(detail,"已满级；不会扣款" if rank == d.max else "下一等级：%s\n等级 %d → %d\n支付任选一种：%d金币 或 1天赋点" % [DemoConfig.talent_effect(id,rank+1),rank,rank+1,DemoConfig.TALENT_GOLD_PRICE])
 	button(detail,"金币购买",func(): purchase("talent",id,"gold")).disabled = rank == d.max
 	button(detail,"天赋点升级",func(): purchase("talent",id,"points")).disabled = rank == d.max
 

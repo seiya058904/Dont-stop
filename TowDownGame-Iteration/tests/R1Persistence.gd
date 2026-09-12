@@ -9,7 +9,12 @@ class FaultStore extends CampSaveStore:
 			return ERR_FILE_CANT_WRITE
 		return super.write_temp(file,text)
 	func replace_file(source, destination):
-		return ERR_CANT_CREATE if fault == "replace" else super.replace_file(source,destination)
+		if fault == "replace": return ERR_CANT_CREATE
+		var result = super.replace_file(source,destination)
+		if fault == "readback" and result == OK:
+			var file = FileAccess.open(destination,FileAccess.WRITE)
+			file.store_string("corrupt-after-replace"); file.close()
+		return result
 var failures = 0
 var checks = 0
 func check(ok, name):
@@ -34,7 +39,7 @@ func _ready():
 	Demo.test_mode = false
 	check(Demo.save_camp().success,"R04 initial snapshot written")
 	var previous = FileAccess.get_file_as_string(Demo.save_path)
-	for fault in ["open","write","replace"]:
+	for fault in ["open","write","replace","readback"]:
 		store.fault = fault
 		var before = PlayerData.gold
 		var count = PlayerData.player_am_list.size()

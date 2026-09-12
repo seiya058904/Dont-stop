@@ -7,7 +7,7 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 	var level_damage = PlayerData.player_damage if saved.is_empty() else 0.3 * saved.level
 	var magazine_flat = 0
 	var reload_mul = 1.0
-	var damage_percent = PlayerData.base_bullet_damage + int(ranks.get("T01",0)) * 0.08
+	var damage_percent = PlayerData.base_bullet_damage + DemoConfig.talent_value("T01",int(ranks.get("T01",0)))
 	var crit = PlayerData.base_aim_enh * 0.01
 	var spread = 1.0
 	var impulse = 1.0
@@ -37,9 +37,9 @@ static func calculate(gun, attachments: Array, saved: Dictionary = {}) -> Dictio
 			122: jumps += 1
 	return {
 		"tags":gun.tags, "damage": (b.damage + level_damage) * (1.0 + damage_percent),
-		"magazine": maxi(1, int((b.magazine + magazine_flat) * (1.0 + PlayerData.base_magazine_count + int(ranks.get("T04",0)) * 0.1))),
-		"reload": maxf(0.15, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - int(ranks.get("T03",0)) * 0.05) * reload_mul),
-		"rate": clampf(b.rate * PlayerData.player_fire_rate * (1.0 + Demo.kill_stacks * int(ranks.get("T10",0)) * 0.03), 0.1, 60.0),
+		"magazine": maxi(1, int((b.magazine + magazine_flat) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
+		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
+		"rate": clampf(b.rate * PlayerData.player_fire_rate * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,
 		"impulse": b.impulse * impulse, "radius":32.0 * radius, "jumps":jumps
 	}
