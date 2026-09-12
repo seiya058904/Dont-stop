@@ -1,0 +1,56 @@
+{
+  "source_commit": "9f7777806acc4593ed37bd8cfb8f02e6dd921c25",
+  "seconds": 1220.874,
+  "rounds": 24,
+  "failures": 0,
+  "process_exit_code": 0,
+  "clean_log": false,
+  "shutdown_resource_diagnostic": false,
+  "runtime_diagnostic": "Round 10: two pairs of body/rp_node null errors in disc begin_return; reproduced and locally fixed after this run",
+  "actual_hit_weapon_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124
+  ],
+  "cleanup_node_min": 496,
+  "cleanup_node_max": 527,
+  "cleanup_zero_fields": [
+    "orphans",
+    "transients",
+    "monsters",
+    "marks"
+  ],
+  "cleanup_voice_counts": [
+    1
+  ],
+  "damage_events": 2270,
+  "kills": 1440,
+  "revives": 1,
+  "limitations": [
+    "Does not include subsequent disc freed-target fix",
+    "headless loop time is not GPU frame rate",
+    "no human keyboard, visual or audio acceptance",
+    "earlier GPU residue and short-process exit diagnostic remain unresolved"
+  ]
+}

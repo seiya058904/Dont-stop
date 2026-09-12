@@ -1,90 +1,101 @@
 [
   {
-    "case": "weapons",
-    "checks": 72,
-    "failures": 0,
+    "case": "thermal-clock",
+    "checks": "9",
     "assertions_passed": true,
     "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
+    "log": "final-thermal-clock.txt"
+  },
+  {
+    "case": "weapons",
+    "checks": "72",
+    "assertions_passed": true,
+    "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
     "log": "final-weapons.txt"
   },
   {
     "case": "energy",
-    "checks": 16,
-    "failures": 0,
+    "checks": "16",
     "assertions_passed": true,
     "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
     "log": "final-energy.txt"
   },
   {
     "case": "special",
-    "checks": 12,
-    "failures": 0,
+    "checks": "12",
     "assertions_passed": true,
     "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
     "log": "final-special.txt"
   },
   {
-    "case": "attachments",
-    "checks": 125,
-    "failures": 0,
-    "assertions_passed": true,
-    "clean_exit": false,
-    "log": "final-attachments.txt"
-  },
-  {
-    "case": "talents",
-    "checks": 233,
-    "failures": 0,
-    "assertions_passed": true,
-    "clean_exit": false,
-    "log": "final-talents.txt"
-  },
-  {
-    "case": "persistence-write",
-    "checks": 23,
-    "failures": 0,
-    "assertions_passed": true,
-    "clean_exit": true,
-    "log": "final-persistence-write.txt"
-  },
-  {
-    "case": "persistence-read",
-    "checks": 7,
-    "failures": 0,
-    "assertions_passed": true,
-    "clean_exit": false,
-    "log": "final-persistence-read.txt"
-  },
-  {
-    "case": "combinations",
-    "checks": 50,
-    "failures": 0,
-    "assertions_passed": true,
-    "clean_exit": false,
-    "log": "final-combinations.txt"
-  },
-  {
     "case": "mechanics",
-    "checks": 11,
-    "failures": 0,
+    "checks": "11",
     "assertions_passed": true,
     "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
     "log": "final-mechanics.txt"
   },
   {
     "case": "ui",
-    "checks": 15,
-    "failures": 0,
+    "checks": "15",
     "assertions_passed": true,
-    "clean_exit": false,
+    "clean_exit": true,
+    "known_exit_diagnostic": false,
+    "code": 0,
     "log": "final-ui.txt"
   },
   {
-    "case": "thermal-clock",
-    "checks": 9,
-    "failures": 0,
+    "case": "attachments",
+    "checks": "125",
+    "assertions_passed": true,
+    "clean_exit": true,
+    "known_exit_diagnostic": false,
+    "code": 0,
+    "log": "final-attachments.txt"
+  },
+  {
+    "case": "talents",
+    "checks": "233",
     "assertions_passed": true,
     "clean_exit": false,
-    "log": "final-thermal-clock.txt"
+    "known_exit_diagnostic": true,
+    "code": 0,
+    "log": "final-talents.txt"
+  },
+  {
+    "case": "persistence-write",
+    "checks": "23",
+    "assertions_passed": true,
+    "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
+    "log": "final-persistence-write.txt"
+  },
+  {
+    "case": "persistence-read",
+    "checks": "7",
+    "assertions_passed": true,
+    "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
+    "log": "final-persistence-read.txt"
+  },
+  {
+    "case": "combinations",
+    "checks": "50",
+    "assertions_passed": true,
+    "clean_exit": false,
+    "known_exit_diagnostic": true,
+    "code": 0,
+    "log": "final-combinations.txt"
   }
 ]

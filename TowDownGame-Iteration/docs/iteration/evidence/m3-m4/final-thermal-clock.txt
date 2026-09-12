@@ -14,3 +14,7 @@ PASS thermal accumulator cancelled reload
 PASS thermal accumulator cancelled death
 PASS thermal accumulator cancelled camp
 M4 THERMAL SUMMARY checks=9 failures=0
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

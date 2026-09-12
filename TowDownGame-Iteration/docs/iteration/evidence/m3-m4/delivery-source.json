@@ -1,0 +1,11 @@
+{
+  "source_commit": "33da09be16271cb8bddb9104aa88cc7888237499",
+  "long_run_commit": "9f7777806acc4593ed37bd8cfb8f02e6dd921c25",
+  "only_game_source_delta_after_long_run": [
+    "game/bullets/MechanismProjectile.gd"
+  ],
+  "post_fix_projectile_sha256": "fbabb70f64ac82622fc1ee25bac4b9c4ca4fdb776530d036f36e3d7e1fe34c19",
+  "short_diagnostic_seconds": 167.345,
+  "short_diagnostic_rounds": 24,
+  "short_diagnostic_clean_log": true
+}

@@ -16,7 +16,3 @@ PASS cancel reset retains level
 PASS menu scroll cannot switch gun
 PASS menu cleanly closes
 M4 UI SUMMARY checks=15 failures=0
-WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 3 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)

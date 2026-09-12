@@ -1,0 +1,28 @@
+{
+  "source_commit": "33da09be16271cb8bddb9104aa88cc7888237499",
+  "cases": [
+    {
+      "case": "post-disc-special",
+      "checks": 14,
+      "failures": 0,
+      "runtime_errors": [],
+      "known_exit_diagnostic": true
+    },
+    {
+      "case": "post-disc-weapons",
+      "checks": 72,
+      "failures": 0,
+      "runtime_errors": [],
+      "known_exit_diagnostic": true
+    },
+    {
+      "case": "post-disc-combinations",
+      "checks": 50,
+      "failures": 0,
+      "runtime_errors": [],
+      "known_exit_diagnostic": true
+    }
+  ],
+  "log_classifier_before_other_errors": 2,
+  "log_classifier_after_other_errors": 0
+}

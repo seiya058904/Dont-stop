@@ -26,6 +26,8 @@ A11/A13仅适用于有宽度判定的新束流；原激光的中心射线/tick�
 
 ## 验收状态与边界
 
+M3—M4 IMPLEMENTED / READY FOR HUMAN REVIEW。
+
 H1_STATUS = DEFERRED_BY_USER；H2_STATUS = PENDING；HUMAN_ACCEPTED = false。用户授权推进不代表认可手感。
 
 本轮只执行headless/SubViewport/独立存档验证，不操作桌面、不启动可见游戏窗口。后台时间不是GPU帧率，音频节点不是人耳试听。旧GPU临时实体残留、后台退出2对象/1资源诊断仍保留；详见docs/iteration/VALIDATION.md的本轮追加记录。最终状态以STATUS.md为准。

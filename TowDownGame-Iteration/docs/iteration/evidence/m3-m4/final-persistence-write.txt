@@ -24,3 +24,7 @@ PASS bad payment schema rejected amount
 PASS bad payment schema rejected level
 PASS bad payment schema rejected fractional_schema
 M4 PERSISTENCE SUMMARY checks=23 failures=0
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
