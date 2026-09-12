@@ -56,8 +56,10 @@ func onPlayerResurrect():
 		anim.play("idle")
 
 func changeWeapon(weapon_id):
-	for item in gun_root.get_children():
-		item.set_use(item.name == str(weapon_id))
+	var next = PlayerData.player_weapon_list.get(int(weapon_id))
+	if next == null or next == gun: return
+	if is_instance_valid(gun): gun.set_use(false)
+	next.set_use(true)
 
 func playerWeaponListChange():
 	for weapon_id in PlayerData.player_weapon_list:

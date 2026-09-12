@@ -112,20 +112,24 @@ func add_attachment(am:BaseAttachment):
 		player_am_list[am.id] = am
 		add_child(am)
 
-func changeWeapon(weapon_id:int):
-	if is_change_weapon:
-		return
-	if player_weapon_list.has(weapon_id):
-		is_change_weapon = true
-		switch_remaining = DemoConfig.SWITCH_SECONDS
-		Utils.player.changeWeapon(weapon_id)
-		#Engine.time_scale = 0.1
-
+var switch_deadline = 0
 var switch_remaining = 0.0
-func _physics_process(delta: float) -> void:
-	if is_change_weapon:
-		switch_remaining = maxf(0,switch_remaining-delta)
-		is_change_weapon = switch_remaining > 0
+func changeWeapon(weapon_id: int, from_panel = false) -> bool:
+	if not is_instance_valid(Utils.player) or not player_weapon_list.has(weapon_id) or Utils.player.is_dead: return false
+	if get_tree().paused and not from_panel: return false
+	if Utils.player.gun == player_weapon_list[weapon_id]: return true
+	if Time.get_ticks_msec() < switch_deadline: return false
+	switch_deadline = Time.get_ticks_msec() + int(DemoConfig.SWITCH_SECONDS*1000)
+	is_change_weapon = true
+	switch_remaining = DemoConfig.SWITCH_SECONDS
+	Utils.player.changeWeapon(weapon_id)
+	Demo.changed.emit()
+	Demo.save_camp()
+	return true
+
+func _physics_process(_delta: float) -> void:
+	switch_remaining = maxf(0,(switch_deadline-Time.get_ticks_msec())/1000.0)
+	is_change_weapon = switch_remaining > 0
 
 func getMaxExp():
 	return pow(player_level,2.2) + 15

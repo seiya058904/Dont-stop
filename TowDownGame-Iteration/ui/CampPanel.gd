@@ -172,7 +172,7 @@ func show_weapon(id: String, gun):
 		gun = PlayerData.player_weapon_list[int(id)]
 		label(detail,EffectiveStats.describe(gun.effective))
 		label(detail,"已装备" if gun.is_use else "已拥有但未装备")
-		button(detail,"装备到手中",func(): selected_gun = int(id); Utils.player.changeWeapon(int(id)); Demo.save_camp(); message.text = "已装备「%s」" % tr(gun.weapon_name))
+		button(detail,"装备到手中",func(): selected_gun = int(id); PlayerData.changeWeapon(int(id),true); Demo.save_camp(); message.text = "已装备「%s」" % tr(gun.weapon_name))
 	else:
 		label(detail,"基础武器伤害 %.2f · %.2f次/秒\n弹匣 %d · 装填 %.2f秒\n价格：%d金币" % [gun.damage,gun.fire_rate,gun.bullets_max_count,gun.change_speed,Utils.weapon_money_list[id]])
 		button(detail,"金币购买",func(): purchase("weapon",id))

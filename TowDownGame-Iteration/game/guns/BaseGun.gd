@@ -169,6 +169,11 @@ func _process(delta):
 
 #设置是否正在使用
 func set_use(use:bool):
+	if is_use == use and is_node_ready():
+		set_process(use)
+		set_physics_process(use)
+		visible = use
+		return
 	cancel_actions()
 	change_timer.stop()
 	is_reloading = false
