@@ -97,6 +97,11 @@ var spawn_index = 0
 var settled_epoch = -1
 var boss_instance = 0
 var boss_victory_epoch = -1
+var rush_remaining = 0
+var rush_used = false
+var rush_active = false
+var rush_clock = 0.0
+var rush_side = 0
 var elite_spawned = false
 
 func _ready() -> void:
@@ -118,6 +123,7 @@ func roundStart() -> bool:
 	spawn_index = 0
 	boss_instance = 0
 	boss_victory_epoch = -1
+	rush_remaining = 0; rush_used = false; rush_active = false; rush_clock = 0
 	elite_spawned = false
 	wait_time_temp = 0
 	level_time = DemoConfig.ENCOUNTERS[level].seconds
@@ -163,6 +169,14 @@ func onMonsterCreate():
 	wait_time_temp += 0.1
 	var config = DemoConfig.ENCOUNTERS[level]
 	if config.has("boss"): return
+	if level>=16 and not rush_used and level_info.time>=config.seconds*0.5:
+		rush_used = true; rush_remaining = 8 if level>=26 else (6 if level>=21 else 4)
+		rush_side = spawn_index % M5Content.REGIONS[config.region].sides.size()
+	if rush_remaining>0:
+		rush_clock -= 0.1
+		if rush_clock<=0:
+			rush_active = true; monsterCreate.emit(); rush_active = false
+			rush_remaining -= 1; rush_clock = 0.3
 	var phase = level_info.time / config.seconds
 	# Arrival, build, peak, brief recovery. No hidden health scaling.
 	var multiplier = 1.3 if phase < 0.2 else (0.7 if phase < 0.8 else 1.5)

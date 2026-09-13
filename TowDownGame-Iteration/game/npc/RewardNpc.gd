@@ -5,6 +5,9 @@ const reward_shop_pre = preload("res://ui/widgets/RewardChoose.tscn")
 var is_add = false
 var is_in_area = false
 
+func _ready():
+	$Button.pressed.connect(open_reward)
+
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body is Player:
 		$Button.visible = true
@@ -15,7 +18,12 @@ func _on_area_2d_body_exited(body: Node2D) -> void:
 		get_tree().call_group("reward_choose","queue_free")
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("e") && $Button.visible && !is_add:
+	if event.is_action_pressed("e") && $Button.visible && !is_add:
+		open_reward()
+		get_viewport().set_input_as_handled()
+
+func open_reward():
+	if $Button.visible && !is_add && Demo.pause_stack.is_empty():
 		var ins = reward_shop_pre.instantiate()
 		ins.tree_exited.connect(func tree_exited():
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN

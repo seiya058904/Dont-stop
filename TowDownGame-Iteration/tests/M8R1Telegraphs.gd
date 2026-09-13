@@ -22,6 +22,8 @@ func _ready():
 				LevelServer.state = "COMBAT"; Utils.player.global_position = center+Vector2(55,0)
 				var actor = M5Content.spawn(id,LevelServer.town.monster_root,center-Vector2(55,0))
 				actor.set_physics_process(false); actor.phase_two = second; actor.attack_index = index
+				# This fixture selects each legacy normal attack; M10Ultimate tests the new selector separately.
+				actor.ultimate_cooldown = 999.0
 				if second: actor.phase_label.text = M5Content.definition(id).name+" · PHASE II"
 				actor.choose_attack()
 				var action = attacks[id][index]; var label = id+"-"+action+"-"+("II" if second else "I")

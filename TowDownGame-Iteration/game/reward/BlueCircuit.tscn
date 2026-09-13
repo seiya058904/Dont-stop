@@ -12,7 +12,7 @@ func afterAtk(monster:BaseMonster,hit_num):#怪物收到伤害后触发
 		var ins = vfx.instantiate()
 		monster.add_child(ins)
 		var num = snappedf(hit_num * (mini(count,4) * 0.25),0.01)
-		monster.onHit(num,false)
+		Combat.hit(monster,{\"damage\":num,\"depth\":1,\"epoch\":LevelServer.epoch,\"hunter_applied\":true})
 		Utils.showHitLabelMore(num,monster,Vector2(2,2),Color.YELLOW)
 "
 

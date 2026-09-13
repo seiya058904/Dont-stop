@@ -21,6 +21,7 @@ var dash_speed = 300.0
 var dash_seconds = 0.5
 var dash_clock = 0.0
 var phase_flash = 0.0
+var ultimate_cooldown = 0.0
 var attack_kind = ""
 var phase_label: Label
 
@@ -69,7 +70,7 @@ func barrage(kind: String, count: int, waves: int, speed_value: float, spread_va
 	pattern.owner_ref = weakref(self); pattern.heading = locked_direction
 	pattern.kind = kind; pattern.count = count; pattern.waves = waves
 	pattern.speed = speed_value; pattern.spread = spread_value
-	pattern.shift = 0.12*orbit_side
+	pattern.shift = (0.24 if kind == "ring" else 0.18)*orbit_side
 	get_tree().current_scene.add_child(pattern); owned_attacks.append(weakref(pattern))
 func fan(count: int, spread: float, speed_value = 85.0):
 	for i in count: shot(locked_direction.rotated(lerpf(-spread,spread,i/float(maxi(1,count-1)))),speed_value)
@@ -79,13 +80,22 @@ func summon(count: int, id = "E02"):
 	var cap = 8 if is_boss else 3
 	for i in count:
 		if children_ids.size() >= cap or summon_total >= (24 if is_boss else 3): break
-		if get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die).size() >= 70: break
+		if get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die).size() >= DemoConfig.ENCOUNTERS[LevelServer.level].cap: break
 		var point = LevelServer.town.spawn_near(global_position,60.0,95.0)
 		if point == Vector2.INF: continue
 		var child = M5Content.spawn(id,get_parent(),point,true)
 		if child:
 			children_ids.append(child.get_instance_id()); summon_total += 1; remember("summon")
 func choose_attack():
+	if is_boss and phase_two and ultimate_cooldown <= 0 and get_tree().get_nodes_in_group("boss_ultimate").is_empty():
+		var ultimate = preload("res://game/monster/BossUltimate.gd").new()
+		ultimate.role = role; ultimate.owner_ref = weakref(self)
+		ultimate.position = global_position
+		ultimate.direction = global_position.direction_to(Utils.player.global_position)
+		get_tree().current_scene.add_child(ultimate); owned_attacks.append(weakref(ultimate))
+		ultimate_cooldown = 15.0
+		phase = "warn"; phase_time = ultimate.warning; attack_kind = "ultimate"
+		remember("windup_ultimate"); return
 	attack_index += 1
 	locked_direction = global_position.direction_to(Utils.player.global_position)
 	locked_point = Utils.player.global_position
@@ -149,7 +159,7 @@ func perform_attack():
 	match role:
 		"E03","E11":
 			phase = "dash"; phase_time = dash_seconds
-			if role == "E11" and is_elite: barrage("fan",3,1,110,0.65)
+			if role == "E11" and is_elite: barrage("fan",10,1,120,0.9)
 		"E06":
 			if global_position.distance_to(Utils.player.global_position)<=42 and Combat.clear_line(global_position,Utils.player.global_position): Utils.player.onHit(1,self)
 			last_context = {"depth":1}; onDie()
@@ -169,30 +179,31 @@ func perform_attack():
 			phase_time = 1.7
 		"E10":
 			phase_time = 0.9
-			if attack_kind == "artillery": barrage("fan",5,1,100,0.8)
+			if attack_kind == "artillery": barrage("fan",12 if is_elite else 6,1,115,0.9)
 		"B01":
 			if attack_kind == "charge": phase = "dash"; phase_time = dash_seconds
-			elif attack_kind == "slam": barrage("ring",16 if phase_two else 12,2 if phase_two else 1,95)
+			elif attack_kind == "slam": barrage("ring",23 if phase_two else 19,2 if phase_two else 1,115)
 		"B02":
 			if attack_kind == "brood":
 				summon(3,"E06" if phase_two else "E02")
-				barrage("ring",24 if phase_two else 20,3 if phase_two else 2,100)
-			elif attack_kind == "pulse": barrage("fan",19 if phase_two else 15,3 if phase_two else 2,115,1.25)
+				barrage("ring",28 if phase_two else 24,3 if phase_two else 2,115)
+			elif attack_kind == "pulse": barrage("fan",23 if phase_two else 17,3 if phase_two else 2,130,1.3)
 			phase_time = 1.0 if not phase_two else 0.65
 		"B03":
 			if attack_kind == "dash": phase = "dash"; phase_time = dash_seconds
-			elif attack_kind == "burst": barrage("fan",13 if phase_two else 9,3 if phase_two else 2,145,0.9)
+			elif attack_kind == "burst": barrage("fan",17 if phase_two else 13,3 if phase_two else 2,160,1.0)
 
 func _physics_process(delta):
 	if is_die: return
 	if born_epoch != LevelServer.epoch: queue_free(); return
 	if LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or Utils.player.is_dead: velocity = Vector2.ZERO; return
+	ultimate_cooldown = maxf(0,ultimate_cooldown-delta)
 	phase_time -= delta; contact_cooldown = maxf(0,contact_cooldown-delta); phase_flash = maxf(0,phase_flash-delta); queue_redraw()
 	if state_array.has(Utils.STATE_TYPE.STUN): return
 	if hit: move_and_slide(); return
 	owned_attacks = owned_attacks.filter(func(ref): return is_instance_valid(ref.get_ref()))
 	if is_boss and HP<=max_hp*0.5 and not phase_two:
-		phase_two = true; phase = "transition"; phase_time = 1.0; phase_flash = 1.0; remember("phase_two")
+		phase_two = true; ultimate_cooldown = 3.0; phase = "transition"; phase_time = 1.0; phase_flash = 1.0; remember("phase_two")
 		phase_label.text = M5Content.definition(role).name+" · PHASE II"
 		for ref in owned_attacks:
 			if is_instance_valid(ref.get_ref()): ref.get_ref().queue_free()
@@ -212,7 +223,10 @@ func _physics_process(delta):
 		if dash_clock>0.08:
 			dash_clock = 0; preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,previous,10,locked_direction)
 		contact(24)
-		if phase_time<=0 or get_slide_collision_count()>0: phase = "recover"; phase_time = 0.5; remember("dash_end"); orbit_side *= -1
+		if phase_time<=0 or get_slide_collision_count()>0:
+			phase = "recover"; phase_time = 0.5; remember("dash_end"); orbit_side *= -1
+			if role == "B03" and phase_two:
+				locked_direction = -locked_direction; barrage("fan",9,1,140,0.8)
 		return
 	var distance = global_position.distance_to(Utils.player.global_position)
 	facing = facing.rotated(clampf(facing.angle_to(global_position.direction_to(Utils.player.global_position)),-delta*2.8,delta*2.8))

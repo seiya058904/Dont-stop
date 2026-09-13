@@ -46,7 +46,10 @@ func _ready():
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("e") and Utils.is_game_start and LevelServer.state == "CAMP" and Demo.pause_stack.is_empty():
-		Demo.open_panel()
+		if $RewardNpc.get_node("Button").visible:
+			$RewardNpc.open_reward()
+		else:
+			Demo.open_panel()
 		get_viewport().set_input_as_handled()
 
 func onGameStart():
@@ -162,7 +165,7 @@ func monsterCreate():
 	if active >= config.cap or config.roles.is_empty(): return
 	var point = spawn_point()
 	if point == Vector2.INF: return
-	var role = config.roles[LevelServer.spawn_index % config.roles.size()]
+	var role = "E02" if LevelServer.rush_active else config.roles[LevelServer.spawn_index % config.roles.size()]
 	# Rhythm controls arrival timing, never replaces a mixed roster with one role for 7-15 seconds.
 	LevelServer.spawn_index += 1
 	var ins = M5Content.spawn(role,monster_root,point)
@@ -230,7 +233,7 @@ func path_step(from: Vector2, to: Vector2) -> Vector2:
 func spawn_point() -> Vector2:
 	if is_instance_valid(arena):
 		var sides = M5Content.REGIONS[arena.region_id].sides
-		return arena.spawn_near(Utils.player.global_position,145,280,sides[LevelServer.spawn_index%sides.size()])
+		return arena.spawn_near(Utils.player.global_position,145,280,sides[LevelServer.rush_side if LevelServer.rush_active else LevelServer.spawn_index%sides.size()])
 	if not nav_ready or walkable.is_empty(): return Vector2.INF
 	var player_cell = nav_cell(Utils.player.global_position)
 	if not navigation.is_in_boundsv(player_cell) or navigation.is_point_solid(player_cell): return Vector2.INF

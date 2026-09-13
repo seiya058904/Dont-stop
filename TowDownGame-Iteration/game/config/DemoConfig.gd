@@ -2,7 +2,7 @@ extends RefCounted
 class_name DemoConfig
 
 const NORMAL_INCOMING = 0.875
-const BOSS_INCOMING = 0.97
+const BOSS_INCOMING = 1.1155
 const PROFILE = "experience_demo"
 const INITIAL_GOLD = 9999
 const INITIAL_TALENT_POINTS = 9999

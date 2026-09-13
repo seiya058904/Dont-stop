@@ -21,7 +21,6 @@ func _physics_process(delta):
 		Demo.refresh()
 
 func modify_direct(target, amount: float) -> float:
-	if id == 14 and (target.is_elite or target.is_boss): return amount*0.05*count
 	if id == 15:
 		direct_hits += 1
 		if direct_hits >= 8-count:

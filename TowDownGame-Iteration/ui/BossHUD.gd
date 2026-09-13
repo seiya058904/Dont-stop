@@ -13,6 +13,11 @@ func _process(_delta):
 	var boss = instance_from_id(LevelServer.boss_instance)
 	visible = LevelServer.state == "COMBAT" and is_instance_valid(boss) and not boss.is_die
 	if not visible: return
+	# The existing reward grid can now wrap to two rows. Keep both HUDs readable.
+	position.y = 8
+	var rewards = Utils.canvasLayer.get_node_or_null("GameUI/RwGridContainer")
+	if rewards and rewards.get_child_count()>0 and rewards.get_global_rect().intersects(Rect2(position,Vector2(180,29))):
+		position.y = rewards.get_global_rect().end.y+4
 	ratio = maxf(0,boss.HP/boss.max_hp); second = boss.phase_two
 	title.text = M5Content.definition(boss.role).name
 	phases.text = "PHASE I          |          PHASE II" + ("  ◀" if second else "")

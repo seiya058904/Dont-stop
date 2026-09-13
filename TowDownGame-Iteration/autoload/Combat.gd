@@ -50,6 +50,11 @@ func hit(target, context: Dictionary) -> bool:
 	max_depth_seen = maxi(max_depth_seen,depth)
 	var amount = maxf(0,context.get("damage",0.0))
 	if target.is_elite and not target.is_boss: amount *= 1.0+context.get("elite_bonus",0.0)
+	var hunter_applied = context.get("hunter_applied",false)
+	if not hunter_applied and (target.is_elite or target.is_boss) and RewardServer.rank(14)>0:
+		amount *= 1.0+0.05*RewardServer.rank(14); hunter_applied = true
+	var resolved_context = context.duplicate(true)
+	resolved_context.hunter_applied = hunter_applied
 	var critical = depth == 0 and randf() < context.get("crit",0.0)
 	if critical: amount *= 1.5
 	var old_depth = dispatch_depth
@@ -63,19 +68,19 @@ func hit(target, context: Dictionary) -> bool:
 			if reward.has_method("modify_direct"): amount += reward.modify_direct(target,amount)
 	amount = snappedf(amount,0.01)
 	damage_events += 1
-	target.receive_damage(amount, critical, context)
+	target.receive_damage(amount, critical, resolved_context)
 	if depth == 0:
 		if not target.is_die:
 			if context.get("burn_talent",0.0) > 0: target.apply_burn("T15",context.burn_talent,DemoConfig.TALENTS.T15.seconds,context)
 			if context.get("slow",0.0) > 0:
 				target.apply_slow("T17",context.slow,DemoConfig.TALENTS.T17.seconds)
 		if context.get("static_chance",0.0) > 0 and randf() < context.static_chance:
-			secondary_hit(target,context,amount*DemoConfig.TALENTS.T14.damage,"T14")
+			secondary_hit(target,resolved_context,amount*DemoConfig.TALENTS.T14.damage,"T14")
 		if critical and context.get("echo",0.0) > 0:
-			secondary_hit(target,context,amount*context.echo,"T23")
+			secondary_hit(target,resolved_context,amount*context.echo,"T23")
 	if depth == 0:
 		for reward in rewards:
-			if reward.has_method("after_direct"): reward.after_direct(target,amount,critical,context)
+			if reward.has_method("after_direct"): reward.after_direct(target,amount,critical,resolved_context)
 	if depth == 0 and not target.is_die:
 		for reward in rewards:
 			if reward.connect_afterAtk: reward.afterAtk(target,amount)

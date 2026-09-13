@@ -43,12 +43,14 @@ func _physics_process(delta):
 				phase = "dash"
 				phase_time = 0.45
 			else:
-				var projectile = CharacterBody2D.new()
-				projectile.set_script(load("res://game/monster/EnemyShot.gd"))
-				projectile.owner_ref = weakref(self)
-				projectile.global_position = global_position
-				projectile.velocity = locked_direction*85
-				get_tree().current_scene.add_child(projectile)
+				var count = 5 if LevelServer.level>=6 else 1
+				for i in count:
+					var projectile = CharacterBody2D.new()
+					projectile.set_script(load("res://game/monster/EnemyShot.gd"))
+					projectile.owner_ref = weakref(self)
+					projectile.global_position = global_position
+					projectile.velocity = locked_direction.rotated((i-(count-1)*0.5)*0.2)*(95 if count>1 else 85)
+					get_tree().current_scene.add_child(projectile)
 				phase = "recover"
 				phase_time = 1.1
 		return

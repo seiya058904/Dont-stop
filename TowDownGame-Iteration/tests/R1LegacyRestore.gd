@@ -21,7 +21,10 @@ func _ready():
 	Demo.save_path = "res://evidence/r1-save/legacy-restore.json"
 	Demo.test_mode = false; Demo.save_camp(); Demo.test_mode = true
 	check(Demo.load_camp(),"legacy load during temporary buff")
-	check(is_equal_approx(PlayerData.player_fire_rate,baseline_rate),"legacy discarded reward instance removes only its temporary rate buff")
+	check(is_equal_approx(PlayerData.player_fire_rate,baseline_rate+0.2),"saved active buff restores exactly once after old instance removal")
+	sickle = Utils.player.reward_root.get_node("REWARD AMBER SICKLE")
+	sickle._on_buff_timeout()
+	check(is_equal_approx(PlayerData.player_fire_rate,baseline_rate),"restored buff expiry removes only its temporary rate buff")
 	check(hp == PlayerData.player_hp_max and speed == Utils.player.SPEED,"legacy health and movement permanent rewards apply once")
 	print("LEGACY RESTORE failures=",failures)
 	await Demo.quit_game()
