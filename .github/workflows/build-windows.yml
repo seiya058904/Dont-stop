@@ -25,9 +25,9 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $tplDir = "$env:APPDATA\Godot\export_templates\4.7.2.stable"
           New-Item -ItemType Directory -Force -Path $tplDir, "$env:RUNNER_TEMP\godot" | Out-Null
-          Invoke-WebRequest -Retry 3 "$env:GODOT_RELEASE_BASE/Godot_v$($env:GODOT_VERSION)_win64_console.exe.zip" -OutFile "$env:RUNNER_TEMP\godot\godot.zip"
+          curl.exe --fail --location --retry 5 --retry-delay 3 --output "$env:RUNNER_TEMP\godot\godot.zip" "$env:GODOT_RELEASE_BASE/Godot_v$($env:GODOT_VERSION)_win64.exe.zip"
           Expand-Archive "$env:RUNNER_TEMP\godot\godot.zip" -DestinationPath "$env:RUNNER_TEMP\godot\bin" -Force
-          Invoke-WebRequest -Retry 3 "$env:GODOT_RELEASE_BASE/Godot_v$($env:GODOT_VERSION)_export_templates.tpz" -OutFile "$env:RUNNER_TEMP\godot\templates.tpz"
+          curl.exe --fail --location --retry 5 --retry-delay 3 --output "$env:RUNNER_TEMP\godot\templates.tpz" "$env:GODOT_RELEASE_BASE/Godot_v$($env:GODOT_VERSION)_export_templates.tpz"
           $tpz = "$env:RUNNER_TEMP\godot\templates.tpz"
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           $zip = [System.IO.Compression.ZipFile]::OpenRead($tpz)
