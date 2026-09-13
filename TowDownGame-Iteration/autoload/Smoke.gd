@@ -62,13 +62,15 @@ func _e2e_stream() -> void:
 		if Utils.player != null and Utils.player.gun != null:
 			gunrot = rad_to_deg(Utils.player.gun.rotation)
 			gunid = Utils.player.gun.weapon_id
-		print("[e2e] mousemode=%d aimvp=%s aimworld=%s gunrot=%.1f gunid=%d playerpos=%s hp=%.1f paused=%s panels=%d" % [
+		print("[e2e] mousemode=%d aimvp=%s aimworld=%s gunrot=%.1f gunid=%d playerpos=%s hp=%.1f paused=%s panels=%d fr=%s bullets=%d" % [
 			Input.mouse_mode, Utils.get_aim_viewport_position(), Utils.get_aim_world_position(),
 			gunrot, gunid,
 			Utils.player.global_position if Utils.player != null else Vector2.ZERO,
 			PlayerData.player_hp if Utils.player != null else 0.0,
 			str(not Demo.pause_stack.is_empty()),
-			Demo.pause_stack.size()])
+			Demo.pause_stack.size(),
+			str(Demo.fire_released),
+			Utils.player.gun.bullets_count if Utils.player != null and Utils.player.gun != null else -1])
 
 ## Windows cold-path probe: first fire per weapon class + steady-state stats.
 func _stutter_run() -> void:

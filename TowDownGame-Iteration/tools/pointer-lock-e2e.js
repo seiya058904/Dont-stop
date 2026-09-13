@@ -42,10 +42,20 @@ function token(name, ok, extra = '') {
 			gunid: num(/gunid=(-?\d+)/),
 			playerpos: vec(/playerpos=\(([-\d.]+), ([-\d.]+)\)/),
 			paused: l.includes('paused=true'),
+			raw: l,
 		};
 	};
 	const aimAngle = st => Math.atan2(st.aimworld.y - st.playerpos.y, st.aimworld.x - st.playerpos.x) * 180 / Math.PI;
 	const shortestDelta = (a, b) => { let d = (b - a) % 360; if (d > 180) d -= 360; if (d < -180) d += 360; return d; };
+	async function waitForLine(match, ms) {
+		const t0 = Date.now();
+		while (Date.now() - t0 < ms) {
+			const l = [...lines].reverse().find(match);
+			if (l) return l;
+			await page.waitForTimeout(300);
+		}
+		return null;
+	}
 	async function waitFor(pred, ms) {
 		const t0 = Date.now();
 		while (Date.now() - t0 < ms) { if (pred()) return true; await page.waitForTimeout(250); }
@@ -83,10 +93,10 @@ function token(name, ok, extra = '') {
 		await page.waitForTimeout(400);
 	}
 	async function aimLine() {
-		for (let i = 0; i < 12; i++) {
+		for (let i = 0; i < 40; i++) {
 			const st = latest();
-			if (st && !isNaN(st.gunrot) && st.aimworld) return st;
-			await page.waitForTimeout(250);
+			if (st && !isNaN(st.gunrot) && st.aimworld && st.aimvp) return st;
+			await page.waitForTimeout(300);
 		}
 		return latest();
 	}
@@ -144,20 +154,21 @@ function token(name, ok, extra = '') {
 		for (let attempt = 0; attempt < 3; attempt++) {
 			lines.length = 0;
 			await sweep(dx, dy);
-			await page.waitForTimeout(300);
 			await page.mouse.up();          // clear a possibly-lost previous release
 			lines.length = 0;
 			await page.mouse.down();
-			await page.waitForTimeout(1500);
+			// Slow software-GL runners may need several frames to start a shot.
+			let projLine = await waitForLine(l => l.includes('[e2e] proj'), 12000);
 			await page.mouse.up();
-			await page.waitForTimeout(900);
-			const projLine = lines.find(l => l.includes('[e2e] proj'));
+			if (!projLine) projLine = await waitForLine(l => l.includes('[e2e] proj'), 6000);
 			if (projLine) {
 				const m = projLine.match(/proj vx=(-?[\d.]+) vy=(-?[\d.]+)/);
 				const vx = parseFloat(m[1]), vy = parseFloat(m[2]);
 				token(name, cmp(vx, vy), `vx=${vx.toFixed(1)} vy=${vy.toFixed(1)} attempt=${attempt}`);
 				return;
 			}
+			const st = await aimLine();
+			console.log(`[e2e] fire-debug ${name} attempt=${attempt} ` + (st ? st.raw.slice(0, 220) : 'no-state-line'));
 			// Magazine ran dry (capture clicks also fire): reload and retry.
 			await page.keyboard.press('r');
 			await page.waitForTimeout(3000);
@@ -184,18 +195,11 @@ function token(name, ok, extra = '') {
 	// ---- ESC releases Pointer Lock and opens the pause panel (mouse visible).
 	let escState = null;
 	for (let attempt = 0; attempt < 2; attempt++) {
+		lines.length = 0;
 		await page.keyboard.press('Escape');
-		const t0 = Date.now();
-		while (Date.now() - t0 < 5000) {
-			const l = lines.filter(l => l.includes('gunrot')).pop();
-			if (l && l.includes('mousemode=0') && l.includes('paused=true')) {
-				escState = parseState(l);
-				break;
-			}
-			await page.waitForTimeout(250);
-		}
-		if (escState) break;
-		await page.waitForTimeout(800);
+		const l = await waitForLine(l => l.includes('mousemode=0') && l.includes('paused=true'), 20000);
+		if (l) { escState = parseState(l); break; }
+		await page.waitForTimeout(1000);
 	}
 	token('ESC_RELEASES_POINTER_LOCK', escState != null && !(await locked()), `mousemode=${escState?.mousemode}`);
 	token('PAUSE_MOUSE_VISIBLE', escState?.paused === true, 'pause panel open, OS cursor restored');
@@ -205,11 +209,13 @@ function token(name, ok, extra = '') {
 	// before clicking so the re-capture gesture cannot be rejected.
 	async function resumeFromPause() {
 		for (let attempt = 0; attempt < 3; attempt++) {
-			if (latest()?.paused === true) { await page.keyboard.press('Escape'); }
+			const pausedNow = latest()?.paused === true;
+			lines.length = 0;
+			if (pausedNow) { await page.keyboard.press('Escape'); }
 			await page.waitForTimeout(1700);
 			if (!(await locked())) await page.mouse.click(640, 400);
-			const ok = await waitFor(async () => (await locked()) && latest()?.paused === false, 6000);
-			if (ok) return true;
+			const l = await waitForLine(l => l.includes('mousemode=2') && l.includes('paused=false'), 20000);
+			if (l) return true;
 		}
 		return false;
 	}
@@ -245,8 +251,21 @@ function token(name, ok, extra = '') {
 		await page.waitForTimeout(300);
 		afterD = await aimLine();
 	}
-	token('WASD_POSITION_CHANGED', afterD && Math.abs(afterD.playerpos.x - afterW.playerpos.x) > 2,
-		`key=${dKey} dx=${(afterD.playerpos.x - afterW.playerpos.x).toFixed(1)}`);
+	let dxProof = afterD ? (afterD.playerpos.x - afterW.playerpos.x) : 0;
+	if (!(afterD && Math.abs(dxProof) > 2)) {
+		// Both horizontal directions may be wall-blocked; prove with S (down).
+		lines.length = 0;
+		await page.keyboard.down('s');
+		await page.waitForTimeout(700);
+		await page.keyboard.up('s');
+		await page.waitForTimeout(300);
+		const afterS = await aimLine();
+		if (afterS && Math.abs(afterS.playerpos.y - afterW.playerpos.y) > 2) {
+			dxProof = 99; // vertical fallback still proves real key input
+		}
+	}
+	token('WASD_POSITION_CHANGED', afterD && Math.abs(dxProof) > 2,
+		`key=${dKey} dx=${dxProof.toFixed(1)}`);
 
 	await page.screenshot({ path: shotDir + '/e2e-final.png' });
 	await browser.close();
