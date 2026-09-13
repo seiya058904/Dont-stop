@@ -43,8 +43,9 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          # Fresh runners can quit the first import pass before every asset is
-          # generated; the second pass is a cheap no-op when everything exists.
+          # Use the console wrapper so pwsh waits for the editor process
+          # (the plain exe detaches). Fresh runners can quit the first import
+          # pass early; the second pass is a no-op when everything exists.
           & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
           & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
           $count = (Get-ChildItem "TowDownGame-Iteration/.godot/imported" -ErrorAction SilentlyContinue | Measure-Object).Count
