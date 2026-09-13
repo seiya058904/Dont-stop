@@ -1,0 +1,192 @@
+{
+  "status": "M11 DIFFICULTY & CLARITY COMPLETE / READY FOR FINAL HUMAN ACCEPTANCE",
+  "H1_STATUS": "FOURTH_FEEDBACK_ADDRESSED",
+  "HUMAN_ACCEPTED": false,
+  "anchor": "928db1cdc16e1b181527878af602d40b35e17f12",
+  "gates": {
+    "final_product_source_verified": true,
+    "content_frozen": true,
+    "required_runs_pass": true,
+    "old_regressions_pass": true,
+    "three_builds_seven_stages": true,
+    "active_safe_arrivals": true,
+    "sustained_mature_late_horde": true,
+    "native_performance_recorded": true
+  },
+  "runs": [
+    {
+      "label": "clarity-source-final",
+      "passed": true,
+      "checks": 145,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "genuine-save-migration",
+      "passed": true,
+      "checks": 138,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "horde-contracts-final",
+      "passed": true,
+      "checks": 6,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "spawn-final",
+      "passed": true,
+      "checks": 4,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "navigation-final",
+      "passed": true,
+      "checks": 25,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-visual",
+      "passed": true,
+      "checks": 49,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "boss-high-repeat",
+      "passed": true,
+      "checks": 7,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-normal",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-late",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-density",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-boss",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-boss-barrage",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-projectile",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-telegraph",
+      "passed": true,
+      "checks": 4,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "legacy-perf-particle",
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "native-baseline-C",
+      "passed": true,
+      "checks": 43,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "native-final-C",
+      "passed": true,
+      "checks": 43,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "native-final-B",
+      "passed": true,
+      "checks": 43,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "baseline-A",
+      "passed": true,
+      "checks": 36,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "baseline-good-B",
+      "passed": true,
+      "checks": 36,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "baseline-C",
+      "passed": true,
+      "checks": 36,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "horde-final-A",
+      "passed": true,
+      "checks": 36,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "horde-final-B",
+      "passed": true,
+      "checks": 36,
+      "errors": [],
+      "known_audio_teardown": false
+    },
+    {
+      "label": "horde-final-C",
+      "passed": true,
+      "checks": 36,
+      "errors": [],
+      "known_audio_teardown": false
+    }
+  ],
+  "final_product_source_drift": [],
+  "limitations": [
+    "Automated omniscient aiming and real inputs are engineering evidence, not human acceptance.",
+    "Stationary mature bot survives 45 seconds; persistent living horde is demonstrated, mandatory movement is not proved.",
+    "Rare cold spikes and congestion observations remain in raw evidence."
+  ]
+}

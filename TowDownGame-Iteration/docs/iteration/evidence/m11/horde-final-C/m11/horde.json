@@ -1,0 +1,1128 @@
+{
+	"build": {
+		"failures": [],
+		"gold_spent": 20900,
+		"id": "C",
+		"points_spent": 90,
+		"save": {
+			"build_profile": "experience_demo",
+			"campaign_complete": false,
+			"equipped": "124",
+			"exp": 0,
+			"gold": 2600,
+			"hp": 19.0,
+			"hp_max": 28.0,
+			"legacy": [
+				"2",
+				"2",
+				"2",
+				"4",
+				"4",
+				"4",
+				"4",
+				"5",
+				"5",
+				"5",
+				"5",
+				"6",
+				"6",
+				"8",
+				"8",
+				"9",
+				"9",
+				"11",
+				"11",
+				"12",
+				"12",
+				"12",
+				"13",
+				"13",
+				"14",
+				"14",
+				"14",
+				"15",
+				"15",
+				"16",
+				"16",
+				"17",
+				"17",
+				"17",
+				"18",
+				"18",
+				"18",
+				"19",
+				"19",
+				"20",
+				"20",
+				"21",
+				"21",
+				"21",
+				"22",
+				"22",
+				"22",
+				"23",
+				"23"
+			],
+			"legacy_state": {
+				"12": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"13": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"14": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"15": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"16": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"17": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"18": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"19": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"20": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"21": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"22": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"23": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"8": {
+					"kills": 0,
+					"remaining": 0.0,
+					"window": 1.0
+				},
+				"9": {
+					"charged": false,
+					"remaining": 3.0
+				}
+			},
+			"level": 23,
+			"next_stage": 1,
+			"owned_global_upgrades": [
+				"0",
+				"1",
+				"110",
+				"111",
+				"113",
+				"114",
+				"115",
+				"117",
+				"118",
+				"120",
+				"121",
+				"123",
+				"124",
+				"2",
+				"3",
+				"5",
+				"6",
+				"9"
+			],
+			"points": 0,
+			"reserve_magazines": 100,
+			"schema_version": 6,
+			"selected_stage": 1,
+			"talent_payments": [
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T01",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T01",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T01",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T02",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T02",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T02",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T03",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T03",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T03",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T04",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T04",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T04",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T05",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T05",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T05",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T06",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T06",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T06",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T07",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T07",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T07",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T08",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T08",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T08",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T09",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T09",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T10",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T10",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T10",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T11",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T11",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T11",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T12",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T12",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T12",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T13",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T14",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T15",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T15",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T15",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T16",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T17",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T17",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T17",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T18",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T18",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T18",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T19",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T20",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T20",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T21",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T21",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T22",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T22",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T22",
+					"level": 3
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T23",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T24",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T24",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T24",
+					"level": 3
+				}
+			],
+			"talents": {
+				"T01": 3,
+				"T02": 3,
+				"T03": 3,
+				"T04": 3,
+				"T05": 3,
+				"T06": 3,
+				"T07": 3,
+				"T08": 3,
+				"T09": 2,
+				"T10": 3,
+				"T11": 3,
+				"T12": 3,
+				"T13": 1,
+				"T14": 1,
+				"T15": 3,
+				"T16": 1,
+				"T17": 3,
+				"T18": 3,
+				"T19": 1,
+				"T20": 2,
+				"T21": 2,
+				"T22": 3,
+				"T23": 1,
+				"T24": 3
+			},
+			"weapons": [
+				{
+					"ammo": 100,
+					"id": "124"
+				}
+			]
+		},
+		"spec": {
+			"gold": 23500,
+			"gun": 124,
+			"level": 23,
+			"points": 90,
+			"rewards": {
+				"2": 3,
+				"4": 4,
+				"5": 4,
+				"6": 2,
+				"8": 2,
+				"9": 2,
+				"11": 2,
+				"12": 3,
+				"13": 2,
+				"14": 3,
+				"15": 2,
+				"16": 2,
+				"17": 3,
+				"18": 3,
+				"19": 2,
+				"20": 2,
+				"21": 3,
+				"22": 3,
+				"23": 2
+			},
+			"talents": {
+				"T01": 3,
+				"T02": 3,
+				"T03": 3,
+				"T04": 3,
+				"T05": 3,
+				"T06": 3,
+				"T07": 3,
+				"T08": 3,
+				"T09": 2,
+				"T10": 3,
+				"T11": 3,
+				"T12": 3,
+				"T13": 1,
+				"T14": 1,
+				"T15": 3,
+				"T16": 1,
+				"T17": 3,
+				"T18": 3,
+				"T19": 1,
+				"T20": 2,
+				"T21": 2,
+				"T22": 3,
+				"T23": 1,
+				"T24": 3
+			},
+			"upgrades": [
+				0,
+				1,
+				2,
+				3,
+				5,
+				6,
+				9,
+				110,
+				111,
+				113,
+				114,
+				115,
+				117,
+				118,
+				120,
+				121,
+				123,
+				124
+			]
+		}
+	},
+	"checks": 36,
+	"failures": 0,
+	"rows": [
+		{
+			"alive": {
+				"mean": 3.53348729792148,
+				"median": 2,
+				"p90": 8,
+				"p95": 10,
+				"p99": 11,
+				"peak": 12
+			},
+			"arrival_sides": {
+				"0": 19,
+				"1": 28,
+				"2": 51,
+				"3": 41
+			},
+			"below_five_seconds": 29.4281538888889,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 0.508083140877598,
+				"median": 0,
+				"p90": 2,
+				"p95": 2,
+				"p99": 4,
+				"peak": 5
+			},
+			"cpu_ms": {
+				"mean": 1.09886870681146,
+				"median": 1.059,
+				"p90": 1.325,
+				"p95": 1.588,
+				"p99": 2.051,
+				"peak": 2.051
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 6.28989568737349,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 2.93587776072596,
+			"frame_ms": {
+				"mean": 6.8999272787101,
+				"median": 6.902,
+				"p90": 7.613,
+				"p95": 7.768,
+				"p99": 8.534,
+				"peak": 10.046
+			},
+			"hp_loss": 0.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 132.812,
+			"kill_rate": 3.09156824803719,
+			"longest_dead_air": 6.006416,
+			"movement": 5249.15057075024,
+			"overlap_peak": 0,
+			"path_queries": 1036,
+			"player_projectile_peak": 25,
+			"reinforcement_with_survivors": 0,
+			"seconds": 44.961,
+			"shots": 630,
+			"simple_ratio": 0.618705035971223,
+			"spawn_path_queries": 139,
+			"spawn_rate": 3.09156824803719,
+			"stage": 18,
+			"stuck_seconds_peak": 0.624079555555556,
+			"vfx_peak": 4
+		},
+		{
+			"alive": {
+				"mean": 5.98850574712644,
+				"median": 5,
+				"p90": 11,
+				"p95": 13,
+				"p99": 15,
+				"peak": 17
+			},
+			"arrival_sides": {
+				"0": 41,
+				"1": 27,
+				"2": 75,
+				"3": 71
+			},
+			"below_five_seconds": 16.5577320000001,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 1.0367816091954,
+				"median": 1,
+				"p90": 3,
+				"p95": 4,
+				"p99": 6,
+				"peak": 7
+			},
+			"cpu_ms": {
+				"mean": 1.12928146076663,
+				"median": 1.11,
+				"p90": 1.406,
+				"p95": 1.515,
+				"p99": 1.729,
+				"peak": 1.729
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 19.2350406467949,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 3.95362267335969,
+			"frame_ms": {
+				"mean": 6.90012074354337,
+				"median": 6.899,
+				"p90": 7.755,
+				"p95": 7.917,
+				"p99": 8.652,
+				"peak": 9.342
+			},
+			"hp_loss": 0.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 13.432,
+			"kill_rate": 4.6643863000311,
+			"longest_dead_air": 0.62064,
+			"movement": 6080.87711645663,
+			"overlap_peak": 1,
+			"path_queries": 1475,
+			"player_projectile_peak": 26,
+			"reinforcement_with_survivors": 19,
+			"seconds": 45.022,
+			"shots": 758,
+			"simple_ratio": 0.644859813084112,
+			"spawn_path_queries": 214,
+			"spawn_rate": 4.75323175336502,
+			"stage": 21,
+			"stuck_seconds_peak": 0.625,
+			"vfx_peak": 8
+		},
+		{
+			"alive": {
+				"mean": 18.7304147465438,
+				"median": 18,
+				"p90": 28,
+				"p95": 30,
+				"p99": 37,
+				"peak": 39
+			},
+			"arrival_sides": {
+				"0": 46,
+				"1": 71,
+				"2": 141,
+				"3": 69
+			},
+			"below_five_seconds": 1.035879,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 1.7073732718894,
+				"median": 1,
+				"p90": 5,
+				"p95": 7,
+				"p99": 9,
+				"peak": 12
+			},
+			"cpu_ms": {
+				"mean": 1.26972224971137,
+				"median": 1.216,
+				"p90": 1.498,
+				"p95": 1.58,
+				"p99": 2.945,
+				"peak": 2.945
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 14.46971042814,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 6.12897495114585,
+			"frame_ms": {
+				"mean": 6.91821540491504,
+				"median": 6.902,
+				"p90": 8.382,
+				"p95": 8.803,
+				"p99": 12.057,
+				"peak": 19.024
+			},
+			"hp_loss": 0.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 19.024,
+			"kill_rate": 6.7507550186534,
+			"longest_dead_air": 0.104166666666667,
+			"movement": 6148.28595254896,
+			"overlap_peak": 1,
+			"path_queries": 4069,
+			"player_projectile_peak": 25,
+			"reinforcement_with_survivors": 23,
+			"seconds": 45.032,
+			"shots": 770,
+			"simple_ratio": 0.7217125382263,
+			"spawn_path_queries": 327,
+			"spawn_rate": 7.26150293124889,
+			"stage": 24,
+			"stuck_seconds_peak": 0.625,
+			"vfx_peak": 7
+		},
+		{
+			"alive": {
+				"mean": 12.8896551724138,
+				"median": 13,
+				"p90": 18,
+				"p95": 20,
+				"p99": 23,
+				"peak": 25
+			},
+			"arrival_sides": {
+				"0": 37,
+				"1": 61,
+				"2": 137,
+				"3": 82
+			},
+			"below_five_seconds": 1.8505206969697,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 1.01379310344828,
+				"median": 1,
+				"p90": 3,
+				"p95": 3,
+				"p99": 6,
+				"peak": 9
+			},
+			"cpu_ms": {
+				"mean": 1.43303541287437,
+				"median": 1.386,
+				"p90": 1.815,
+				"p95": 2.018,
+				"p99": 2.408,
+				"peak": 2.408
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 13.0666903946256,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 5.87266984028118,
+			"frame_ms": {
+				"mean": 6.94074201555518,
+				"median": 6.893,
+				"p90": 8.401,
+				"p95": 8.947,
+				"p99": 15.002,
+				"peak": 16.984
+			},
+			"hp_loss": 0.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 23.531,
+			"kill_rate": 6.74022333941362,
+			"longest_dead_air": 0.305940000000004,
+			"movement": 6110.75933694839,
+			"overlap_peak": 1,
+			"path_queries": 3045,
+			"player_projectile_peak": 32,
+			"reinforcement_with_survivors": 26,
+			"seconds": 44.954,
+			"shots": 765,
+			"simple_ratio": 0.659305993690852,
+			"spawn_path_queries": 317,
+			"spawn_rate": 7.05165280064065,
+			"stage": 26,
+			"stuck_seconds_peak": 0.625,
+			"vfx_peak": 5
+		},
+		{
+			"alive": {
+				"mean": 17.0276497695853,
+				"median": 17,
+				"p90": 25,
+				"p95": 30,
+				"p99": 33,
+				"peak": 34
+			},
+			"arrival_sides": {
+				"0": 86,
+				"1": 99,
+				"2": 227,
+				"3": 148
+			},
+			"below_five_seconds": 1.86192,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 2.2741935483871,
+				"median": 2,
+				"p90": 5,
+				"p95": 6,
+				"p99": 8,
+				"peak": 9
+			},
+			"cpu_ms": {
+				"mean": 1.60903142481077,
+				"median": 1.57,
+				"p90": 2.025,
+				"p95": 2.118,
+				"p99": 2.478,
+				"peak": 2.478
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 29.9580214557005,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 10.3724762898963,
+			"frame_ms": {
+				"mean": 6.89987446528463,
+				"median": 6.902,
+				"p90": 8.569,
+				"p95": 8.931,
+				"p99": 9.701,
+				"peak": 11.243
+			},
+			"hp_loss": 0.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 13.522,
+			"kill_rate": 12.0827132798792,
+			"longest_dead_air": 0.41376,
+			"movement": 6049.50639855955,
+			"overlap_peak": 2,
+			"path_queries": 4116,
+			"player_projectile_peak": 30,
+			"reinforcement_with_survivors": 34,
+			"seconds": 45.023,
+			"shots": 761,
+			"simple_ratio": 0.692857142857143,
+			"spawn_path_queries": 560,
+			"spawn_rate": 12.4380871998756,
+			"stage": 27,
+			"stuck_seconds_peak": 0.625,
+			"vfx_peak": 4
+		},
+		{
+			"alive": {
+				"mean": 30.8571428571429,
+				"median": 32,
+				"p90": 47,
+				"p95": 51,
+				"p99": 55,
+				"peak": 56
+			},
+			"arrival_sides": {
+				"0": 97,
+				"1": 125,
+				"2": 245,
+				"3": 193
+			},
+			"below_five_seconds": 1.862356,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 2.61059907834101,
+				"median": 2,
+				"p90": 6,
+				"p95": 8,
+				"p99": 12,
+				"peak": 14
+			},
+			"cpu_ms": {
+				"mean": 1.88543788053307,
+				"median": 1.9,
+				"p90": 2.374,
+				"p95": 2.469,
+				"p99": 2.72,
+				"peak": 2.72
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 35.0617613080958,
+			"enemy_projectile_peak": 11,
+			"engagement200_rate": 11.9523682573536,
+			"frame_ms": {
+				"mean": 6.90132631232515,
+				"median": 6.899,
+				"p90": 9.4,
+				"p95": 9.856,
+				"p99": 10.769,
+				"peak": 28.613
+			},
+			"hp_loss": 10.815,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 28.613,
+			"kill_rate": 13.6408068959389,
+			"longest_dead_air": 0.414196,
+			"movement": 6057.06504053576,
+			"overlap_peak": 3,
+			"path_queries": 6507,
+			"player_projectile_peak": 32,
+			"reinforcement_with_survivors": 37,
+			"seconds": 45.012,
+			"shots": 761,
+			"simple_ratio": 0.686363636363636,
+			"spawn_path_queries": 660,
+			"spawn_rate": 14.6627565982405,
+			"stage": 28,
+			"stuck_seconds_peak": 3.20664,
+			"vfx_peak": 6
+		},
+		{
+			"alive": {
+				"mean": 58.016091954023,
+				"median": 60,
+				"p90": 92,
+				"p95": 95,
+				"p99": 101,
+				"peak": 103
+			},
+			"arrival_sides": {
+				"0": 129,
+				"1": 214,
+				"2": 449,
+				"3": 230
+			},
+			"below_five_seconds": 1.65504,
+			"build": "C",
+			"clear": true,
+			"close120": {
+				"mean": 3.46666666666667,
+				"median": 3,
+				"p90": 8,
+				"p95": 11,
+				"p99": 13,
+				"peak": 16
+			},
+			"cpu_ms": {
+				"mean": 2.2052152023692,
+				"median": 2.079,
+				"p90": 3.184,
+				"p95": 3.289,
+				"p99": 3.906,
+				"peak": 3.906
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 46.8806218767354,
+			"enemy_projectile_peak": 20,
+			"engagement200_rate": 17.3459189339256,
+			"frame_ms": {
+				"mean": 6.90082741033235,
+				"median": 6.89,
+				"p90": 11.067,
+				"p95": 11.726,
+				"p99": 13.137,
+				"peak": 18.45
+			},
+			"hp_loss": 0.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 18.45,
+			"kill_rate": 20.58856191005,
+			"longest_dead_air": 0.41376,
+			"movement": 6127.51760172844,
+			"overlap_peak": 3,
+			"path_queries": 12058,
+			"player_projectile_peak": 32,
+			"reinforcement_with_survivors": 43,
+			"seconds": 45.025,
+			"shots": 767,
+			"simple_ratio": 0.721135029354207,
+			"spawn_path_queries": 1022,
+			"spawn_rate": 22.6985008328706,
+			"stage": 29,
+			"stuck_seconds_peak": 10.144016,
+			"vfx_peak": 5
+		}
+	]
+}

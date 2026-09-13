@@ -1,0 +1,647 @@
+{
+	"build": {
+		"failures": [],
+		"gold_spent": 3050,
+		"id": "A",
+		"points_spent": 15,
+		"save": {
+			"build_profile": "experience_demo",
+			"campaign_complete": false,
+			"equipped": "117",
+			"exp": 0,
+			"gold": 3450,
+			"hp": 10.5,
+			"hp_max": 10.5,
+			"legacy": [
+				"12",
+				"17",
+				"18",
+				"22"
+			],
+			"legacy_state": {
+				"12": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"17": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"18": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				},
+				"22": {
+					"armed": false,
+					"cooldown": 0.0,
+					"hits": 0,
+					"kills": 0,
+					"move_time": 0.0,
+					"moving_buff": false
+				}
+			},
+			"level": 8,
+			"next_stage": 1,
+			"owned_global_upgrades": [
+				"0",
+				"1",
+				"110",
+				"117"
+			],
+			"points": 5,
+			"reserve_magazines": 100,
+			"schema_version": 6,
+			"selected_stage": 1,
+			"talent_payments": [
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T01",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T01",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T02",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T03",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T07",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T07",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T08",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T08",
+					"level": 2
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T11",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T19",
+					"level": 1
+				},
+				{
+					"amount": 1,
+					"currency": "points",
+					"id": "T24",
+					"level": 1
+				}
+			],
+			"talents": {
+				"T01": 2,
+				"T02": 1,
+				"T03": 1,
+				"T07": 2,
+				"T08": 2,
+				"T11": 1,
+				"T19": 1,
+				"T24": 1
+			},
+			"weapons": [
+				{
+					"ammo": 10,
+					"id": "117"
+				}
+			]
+		},
+		"spec": {
+			"gold": 6500,
+			"gun": 117,
+			"level": 8,
+			"points": 20,
+			"rewards": {
+				"12": 1,
+				"17": 1,
+				"18": 1,
+				"22": 1
+			},
+			"talents": {
+				"T01": 2,
+				"T02": 1,
+				"T03": 1,
+				"T07": 2,
+				"T08": 2,
+				"T11": 1,
+				"T19": 1,
+				"T24": 1
+			},
+			"upgrades": [
+				0,
+				1,
+				110,
+				117
+			]
+		}
+	},
+	"checks": 36,
+	"failures": 0,
+	"rows": [
+		{
+			"alive": {
+				"mean": 2.03464203233256,
+				"median": 0,
+				"p90": 12,
+				"p95": 15,
+				"p99": 16,
+				"peak": 16
+			},
+			"arrival_sides": {
+				"0": 5,
+				"1": 5,
+				"2": 13,
+				"3": 4
+			},
+			"below_five_seconds": 37.8347399682538,
+			"build": "A",
+			"clear": true,
+			"close120": {
+				"mean": 1.01385681293303,
+				"median": 0,
+				"p90": 5,
+				"p95": 9,
+				"p99": 13,
+				"peak": 13
+			},
+			"cpu_ms": {
+				"mean": 0.917652960526287,
+				"median": 0.945,
+				"p90": 1.265,
+				"p95": 1.348,
+				"p99": 1.373,
+				"peak": 1.524
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 1.22729395024123,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 0.578073237432466,
+			"frame_ms": {
+				"mean": 6.89993667763163,
+				"median": 6.9,
+				"p90": 7.165,
+				"p95": 7.363,
+				"p99": 7.866,
+				"peak": 9.19
+			},
+			"hp_loss": 3.325,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 136.205,
+			"kill_rate": 0.60030682348756,
+			"longest_dead_air": 36.8453279999999,
+			"movement": 699.456522591412,
+			"overlap_peak": 0,
+			"path_queries": 469,
+			"player_projectile_peak": 2,
+			"reinforcement_with_survivors": 0,
+			"seconds": 44.977,
+			"shots": 15,
+			"simple_ratio": 0.62962962962963,
+			"spawn_path_queries": 27,
+			"spawn_rate": 0.60030682348756,
+			"stage": 18,
+			"stuck_seconds_peak": 0.623874666666667,
+			"vfx_peak": 7
+		},
+		{
+			"alive": {
+				"mean": 22.1650943396226,
+				"median": 14,
+				"p90": 49,
+				"p95": 52,
+				"p99": 57,
+				"peak": 58
+			},
+			"arrival_sides": {
+				"0": 19,
+				"1": 15,
+				"2": 33,
+				"3": 24
+			},
+			"below_five_seconds": 1.86192,
+			"build": "A",
+			"clear": false,
+			"close120": {
+				"mean": 12.4433962264151,
+				"median": 5,
+				"p90": 38,
+				"p95": 41,
+				"p99": 46,
+				"peak": 46
+			},
+			"cpu_ms": {
+				"mean": 1.3247110058309,
+				"median": 1.299,
+				"p90": 1.847,
+				"p95": 2.432,
+				"p99": 2.432,
+				"peak": 2.432
+			},
+			"death": true,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 5.09677419354839,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 3.96391470749043,
+			"frame_ms": {
+				"mean": 6.90008965014576,
+				"median": 6.898,
+				"p90": 8.533,
+				"p95": 9.462,
+				"p99": 10.517,
+				"peak": 11.244
+			},
+			"hp_loss": 12.2,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 13.932,
+			"kill_rate": 1.50355385456534,
+			"longest_dead_air": 0.5172,
+			"movement": 1955.32097162551,
+			"overlap_peak": 1,
+			"path_queries": 2075,
+			"player_projectile_peak": 2,
+			"reinforcement_with_survivors": 10,
+			"seconds": 21.948,
+			"shots": 39,
+			"simple_ratio": 0.637362637362637,
+			"spawn_path_queries": 91,
+			"spawn_rate": 4.14616365955896,
+			"stage": 21,
+			"stuck_seconds_peak": 2.07296622222222,
+			"vfx_peak": 14
+		},
+		{
+			"alive": {
+				"mean": 48.4787234042553,
+				"median": 45,
+				"p90": 72,
+				"p95": 72,
+				"p99": 72,
+				"peak": 72
+			},
+			"arrival_sides": {
+				"0": 32,
+				"1": 35,
+				"2": 59,
+				"3": 48
+			},
+			"below_five_seconds": 0.932582555555553,
+			"build": "A",
+			"clear": false,
+			"close120": {
+				"mean": 12.0398936170213,
+				"median": 9,
+				"p90": 24,
+				"p95": 26,
+				"p99": 29,
+				"peak": 29
+			},
+			"cpu_ms": {
+				"mean": 1.33090280985375,
+				"median": 1.315,
+				"p90": 1.683,
+				"p95": 1.844,
+				"p99": 1.972,
+				"peak": 1.972
+			},
+			"death": true,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 5.58125192722787,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 4.31699044094974,
+			"frame_ms": {
+				"mean": 6.90003791377983,
+				"median": 6.906,
+				"p90": 10.224,
+				"p95": 10.801,
+				"p99": 11.613,
+				"peak": 13.803
+			},
+			"hp_loss": 14.85,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 13.803,
+			"kill_rate": 2.82660088395519,
+			"longest_dead_air": 0.207848888888889,
+			"movement": 3980.22727553174,
+			"overlap_peak": 1,
+			"path_queries": 9013,
+			"player_projectile_peak": 2,
+			"reinforcement_with_survivors": 19,
+			"seconds": 38.916,
+			"shots": 70,
+			"simple_ratio": 0.695402298850575,
+			"spawn_path_queries": 174,
+			"spawn_rate": 4.47116867098366,
+			"stage": 24,
+			"stuck_seconds_peak": 3.523856,
+			"vfx_peak": 10
+		},
+		{
+			"alive": {
+				"mean": 33.3498098859316,
+				"median": 33,
+				"p90": 54,
+				"p95": 55,
+				"p99": 61,
+				"peak": 62
+			},
+			"arrival_sides": {
+				"0": 20,
+				"1": 47,
+				"2": 33,
+				"3": 61
+			},
+			"below_five_seconds": 1.34225777777778,
+			"build": "A",
+			"clear": false,
+			"close120": {
+				"mean": 12.9315589353612,
+				"median": 13,
+				"p90": 22,
+				"p95": 25,
+				"p99": 30,
+				"peak": 31
+			},
+			"cpu_ms": {
+				"mean": 1.46410562180581,
+				"median": 1.326,
+				"p90": 2.085,
+				"p95": 2.145,
+				"p99": 2.16,
+				"peak": 2.16
+			},
+			"death": true,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 6.99751134533743,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 5.78246230420143,
+			"frame_ms": {
+				"mean": 6.90002640545146,
+				"median": 6.905,
+				"p90": 9.19,
+				"p95": 9.847,
+				"p99": 10.884,
+				"peak": 12.115
+			},
+			"hp_loss": 14.25,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 13.159,
+			"kill_rate": 3.87937344459084,
+			"longest_dead_air": 0.307857777777778,
+			"movement": 2327.24228676886,
+			"overlap_peak": 1,
+			"path_queries": 4368,
+			"player_projectile_peak": 2,
+			"reinforcement_with_survivors": 14,
+			"seconds": 27.324,
+			"shots": 49,
+			"simple_ratio": 0.68944099378882,
+			"spawn_path_queries": 161,
+			"spawn_rate": 5.89225589225589,
+			"stage": 26,
+			"stuck_seconds_peak": 2.17224,
+			"vfx_peak": 9
+		},
+		{
+			"alive": {
+				"mean": 82.2597701149425,
+				"median": 101,
+				"p90": 110,
+				"p95": 110,
+				"p99": 110,
+				"peak": 110
+			},
+			"arrival_sides": {
+				"0": 23,
+				"1": 14,
+				"2": 29,
+				"3": 129
+			},
+			"below_five_seconds": 1.45220722222222,
+			"build": "A",
+			"clear": true,
+			"close120": {
+				"mean": 21.8459770114943,
+				"median": 26,
+				"p90": 28,
+				"p95": 29,
+				"p99": 30,
+				"peak": 30
+			},
+			"cpu_ms": {
+				"mean": 1.88080476973687,
+				"median": 1.782,
+				"p90": 2.335,
+				"p95": 2.618,
+				"p99": 3.594,
+				"peak": 3.594
+			},
+			"death": false,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 4.04237833995958,
+			"enemy_projectile_peak": 0,
+			"engagement200_rate": 3.90911311996091,
+			"frame_ms": {
+				"mean": 6.90018437500002,
+				"median": 6.894,
+				"p90": 13.276,
+				"p95": 13.905,
+				"p99": 15.045,
+				"peak": 17.506
+			},
+			"hp_loss": 13.3,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 17.506,
+			"kill_rate": 1.9101348199809,
+			"longest_dead_air": 0.518863111111111,
+			"movement": 1341.44762797118,
+			"overlap_peak": 2,
+			"path_queries": 17958,
+			"player_projectile_peak": 2,
+			"reinforcement_with_survivors": 21,
+			"seconds": 45.023,
+			"shots": 81,
+			"simple_ratio": 0.702564102564103,
+			"spawn_path_queries": 195,
+			"spawn_rate": 4.33111964995669,
+			"stage": 27,
+			"stuck_seconds_peak": 36.6394149999999,
+			"vfx_peak": 8
+		},
+		{
+			"alive": {
+				"mean": 46.5669291338583,
+				"median": 49,
+				"p90": 82,
+				"p95": 86,
+				"p99": 92,
+				"peak": 92
+			},
+			"arrival_sides": {
+				"0": 21,
+				"1": 6,
+				"2": 22,
+				"3": 65
+			},
+			"below_five_seconds": 1.34643244444444,
+			"build": "A",
+			"clear": false,
+			"close120": {
+				"mean": 13.6771653543307,
+				"median": 18,
+				"p90": 23,
+				"p95": 25,
+				"p99": 25,
+				"peak": 26
+			},
+			"cpu_ms": {
+				"mean": 1.69211284840243,
+				"median": 1.656,
+				"p90": 2.297,
+				"p95": 2.37,
+				"p99": 2.37,
+				"peak": 2.37
+			},
+			"death": true,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 2.47379138698243,
+			"enemy_projectile_peak": 26,
+			"engagement200_rate": 7.76830831887774,
+			"frame_ms": {
+				"mean": 6.90729367777022,
+				"median": 6.903,
+				"p90": 10.707,
+				"p95": 11.387,
+				"p99": 12.573,
+				"peak": 31.07
+			},
+			"hp_loss": 12.35,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 31.07,
+			"kill_rate": 1.65925032053699,
+			"longest_dead_air": 0.415472444444444,
+			"movement": 1116.37825646997,
+			"overlap_peak": 2,
+			"path_queries": 2856,
+			"player_projectile_peak": 2,
+			"reinforcement_with_survivors": 7,
+			"seconds": 13.259,
+			"shots": 23,
+			"simple_ratio": 0.657894736842105,
+			"spawn_path_queries": 114,
+			"spawn_rate": 8.59793347914624,
+			"stage": 28,
+			"stuck_seconds_peak": 1.24128,
+			"vfx_peak": 8
+		},
+		{
+			"alive": {
+				"mean": 83.9230769230769,
+				"median": 91,
+				"p90": 145,
+				"p95": 145,
+				"p99": 145,
+				"peak": 145
+			},
+			"arrival_sides": {
+				"0": 19,
+				"1": 7,
+				"2": 46,
+				"3": 106
+			},
+			"below_five_seconds": 1.34472,
+			"build": "A",
+			"clear": false,
+			"close120": {
+				"mean": 20.585798816568,
+				"median": 23,
+				"p90": 34,
+				"p95": 36,
+				"p99": 38,
+				"peak": 39
+			},
+			"cpu_ms": {
+				"mean": 2.31570756062761,
+				"median": 2.242,
+				"p90": 3.288,
+				"p95": 3.365,
+				"p99": 3.365,
+				"peak": 3.365
+			},
+			"death": true,
+			"draw_calls": 0.0,
+			"effective_hp_dps": 3.00068197317572,
+			"enemy_projectile_peak": 33,
+			"engagement200_rate": 8.41100250056831,
+			"frame_ms": {
+				"mean": 6.90126248216833,
+				"median": 6.862,
+				"p90": 13.314,
+				"p95": 14.755,
+				"p99": 16.666,
+				"peak": 18.446
+			},
+			"hp_loss": 13.0,
+			"illegal_spawns": 0,
+			"including_cold_max_ms": 18.446,
+			"kill_rate": 1.87542623323483,
+			"longest_dead_air": 0.31032,
+			"movement": 1163.37410043273,
+			"overlap_peak": 3,
+			"path_queries": 7038,
+			"player_projectile_peak": 3,
+			"reinforcement_with_survivors": 10,
+			"seconds": 17.596,
+			"shots": 32,
+			"simple_ratio": 0.696629213483146,
+			"spawn_path_queries": 178,
+			"spawn_rate": 10.1159354398727,
+			"stage": 29,
+			"stuck_seconds_peak": 4.870387,
+			"vfx_peak": 6
+		}
+	]
+}

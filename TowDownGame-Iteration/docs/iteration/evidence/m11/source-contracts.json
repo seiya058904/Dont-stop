@@ -1,0 +1,22 @@
+{
+  "ENEMIES_unchanged": true,
+  "BOSSES_unchanged": true,
+  "REGIONS_unchanged": true,
+  "WALLS_unchanged": true,
+  "early_and_boss_encounters_unchanged": true,
+  "game/config/WeaponCatalog.gd_unchanged": true,
+  "game/config/AttachmentCatalog.gd_unchanged": true,
+  "game/config/DemoConfig.gd_unchanged": true,
+  "autoload/server/RewardServer.gd_unchanged": true,
+  "counts": {
+    "weapons": 24,
+    "enemies": 12,
+    "bosses": 3,
+    "regions": 6,
+    "encounters": 30
+  },
+  "counts_preserved": true,
+  "upgrades_24": true,
+  "talents_24": true,
+  "rewards_24": true
+}

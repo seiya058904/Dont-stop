@@ -1,6 +1,19 @@
 # TowDownGame Experience Demo
 
-## M10 内容扩展与最终难度调整（当前工程候选）
+## M11 尸潮压力与玩家说明（当前工程候选）
+
+**M11 DIFFICULTY & CLARITY COMPLETE / READY FOR FINAL HUMAN ACCEPTANCE**
+
+H1_STATUS = FOURTH_FEEDBACK_ADDRESSED
+HUMAN_ACCEPTED = false
+
+- 起点 `928db1c`，继续 `feat/towdown-experience-upgrade`；产品提交 `abd93ec`、回归工具提交 `cf8186e`，证据/文档为后续独立提交。内容数量保持。21–29 重叠增援，27–29 简单追击敌人到场速度 +20%，HP/武器成长数值保持。
+- 三档有限预算合法构筑 × 七关真实开火对照。成熟 B 的 29 关平均存活敌人 11.71→64.28，最长空场约 0.31 秒；站桩仍能生存 45 秒，真人容错和尸潮手感未验收。
+- Level 每级伤害 +0.3、最大/当前 HP 各 +0.5、奖励点 +1；HUD 精确 EXP 与奖励通知。营地和暂停可打开同源有效属性/来源面板；HUD 只保留时效状态。
+- 紫色巨卵真实碰撞触发 0.45 秒束缚，角色前景 FX 与 HUD 同步；营地“束缚教学”提供确定复现路线。真实 M10 存档连续三次加载，138 项检查通过。
+- 回归、原生截图、性能实测、首轮失败及复测分别记录；最终自动门禁见 [summary.json](evidence/m11/summary.json)，完整内容见 [M11 报告](M11-HORDE-CLARITY.md)。只推送当前 feature；不 merge main、不 Release、不进入 M12，等待真人体验。
+
+## M10 内容扩展与最终难度调整（历史工程候选）
 
 **M10 CONTENT EXPANSION COMPLETE / READY FOR FINAL HUMAN REVIEW**
 

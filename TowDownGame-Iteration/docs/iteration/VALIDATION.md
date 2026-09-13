@@ -1,6 +1,14 @@
-# 验证记录（M8 当前，M0—M7 历史）
+# 验证记录（M11 当前，旧轮次历史保留）
 
-> 当前 M8 证据见 [M8 验证记录](evidence/m8/README.md)，状态以 [STATUS](STATUS.md) 为准。本文 M0—M7 记录保留为历史，不能视为当前全部验证结论。
+## M11 当前验证
+
+- **Automated verified**：冻结数量/HP/品阶合同；A/B/C 三档有限预算真实购买、各七关 active fire；Level 单级与跨多级、低 HP 不回满、24 枪输出/发射数量与面板对齐、来源类型/顺序、HUD 状态、重叠到场与安全路径。最终结果和每项检查数见 [M11 测量索引](evidence/m11/README.md)。
+- **Save verified**：真实 M10 冻结源码运行导出的 schema6 fixture，经 M11 正式加载三次，全部保存字段与 effective 数值 138 项通过，不把新版本自存自读充当旧版本迁移。
+- **Regression verified**：32 个旧回归运行及独立高档 Boss 30 复测记录在 [resolution](evidence/m11/regression-resolution.json)。首场 Boss 死亡原样保留；未改变 Boss 平衡绕过检查。只有精确已知的 Cephalopod.mp3 两对象退出问题单独分类。
+- **Runtime verified**：原生 1366×768 实际游戏 SubViewport 绘制；Camp/暂停属性入口、等级通知、来源展开、HUD 与真实 B02 巨卵 Root，截图位于 `evidence/m11/clarity-source-final/m11/`。Root 测试点击实际“束缚教学”按钮。
+- **Performance measured**：八类旧性能场景，加同批 C 的 M10/M11 与 B 的 M11 七关原生开火。CPU/帧分位、冷启动 max、弹体/VFX/寻路数据见 [performance](evidence/m11/performance.json)。保留 M9 55.126 ms、M10 38.785 ms 历史尖峰；不声称跨硬件稳定帧率。
+- **Human not yet accepted**：成熟 B 29 关平均存活 64.28 个；站桩机器人仍能生存 45 秒。敌群持续存在不能证明必须移动，也不能替代尸潮手感、状态审美、音效及真人容错判断。`HUMAN_ACCEPTED = false`。
+- 当前完成门禁以 [summary.json](evidence/m11/summary.json) 为准，完整方法和限制见 [M11 报告](M11-HORDE-CLARITY.md)。下面旧里程碑的状态/停止点仅为历史。
 
 ## M8 最终记录 · 2026-09-13
 
