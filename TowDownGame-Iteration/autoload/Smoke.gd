@@ -50,9 +50,11 @@ func _e2e_stream() -> void:
 	await _wait_until(func(): return Demo.pause_stack.is_empty(), 30000)
 	print("[e2e] ready")
 	print("[e2e] loop-armed")
-	var deadline := Time.get_ticks_msec() + 300000
+	var deadline := Time.get_ticks_msec() + 1800000
 	var tick := 0
 	while Time.get_ticks_msec() < deadline:
+		if Time.get_ticks_msec() > deadline - 1000:
+			print("[e2e] stream-expired")
 		await get_tree().create_timer(0.25).timeout
 		tick += 1
 		if tick % 4 == 0:
