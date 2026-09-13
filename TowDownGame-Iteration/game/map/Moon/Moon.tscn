@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://game/map/Moon/Moon.gd" id="1_0j57y"]
 [ext_resource type="Texture2D" uid="uid://cm2w5aptjejj0" path="res://game/map/Moon/tileset.png" id="1_u6m6o"]
 [ext_resource type="PackedScene" uid="uid://b8fluhc5dx881" path="res://ui/ControlUI.tscn" id="2_nibbf"]
-[ext_resource type="AudioStream" uid="uid://dd8rqtd44vwn1" path="res://audio/bgm/Cephalopod.mp3" id="3_xmmcd"]
+[ext_resource type="AudioStream" path="res://audio/bgm/Cephalopod.ogg" id="3_xmmcd"]
 [ext_resource type="Script" path="res://game/hero/Camera2D.gd" id="6_el8gj"]
 [ext_resource type="Texture2D" uid="uid://mxlhw72f364v" path="res://Sprites/light2.png" id="7_bycil"]
 

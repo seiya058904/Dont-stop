@@ -2,9 +2,16 @@
 
 [Play in Browser](https://seiya058904.github.io/game-prototype-lab/) · [Download Windows x64](https://github.com/seiya058904/game-prototype-lab/releases/latest)
 
-正式版本：**v1.0.0**
+正式版本：**v1.0.1**
 
 TowDownGame 是一款俯视角 2D 生存射击游戏：移动、瞄准、射击、换弹与冲刺，完成遭遇后回到营地购买武器和永久强化。
+
+## v1.0.1 发行要点
+
+- **Windows 恢复 Forward+/Vulkan 原生桌面渲染**，并针对“首次进战斗/切枪/开火”的冷路径卡顿加入加载期预热（VFX、粒子、音频 voice）。
+- **Web 版重做**：TowDownGame 自定义加载页（真实下载进度、点击开始、无默认 Godot 启动画面）、Pointer Lock 鼠标瞄准、Compatibility 渲染单独适配、中文字体修复（自带 fusion-pixel 全量回退，不再显示为数字/码框）、BGM 转 OGG 减小包体。
+- **存档命名空间隔离**：Windows 正式版使用 `%APPDATA%\TowDownGame\`，与 Godot 编辑器开发存档（`TowDownGame-Iteration\`）完全隔离；v1.0.0 旧存档不会自动迁移。Web 使用浏览器 IndexedDB。
+- **CI**：Pages 部署前强制 Playwright 浏览器 Smoke（加载、Pointer Lock、WASD/切枪/开火、无 404、无阻塞 console error、存档隔离审计），部署后再对线上 Pages 跑一次在线 Smoke；Windows ZIP 由 tag 触发的独立 workflow 从同一 commit 构建并附 SHA-256。
 
 ## 正式试玩
 

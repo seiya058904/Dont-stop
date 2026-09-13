@@ -1,0 +1,94 @@
+name: Build Windows Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.7.2-stable
+  GODOT_RELEASE_BASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install pinned Godot and Windows export template
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tplDir = "$env:APPDATA\Godot\export_templates\4.7.2.stable"
+          New-Item -ItemType Directory -Force -Path $tplDir, "$env:RUNNER_TEMP\godot" | Out-Null
+          Invoke-WebRequest -Retry 3 "$env:GODOT_RELEASE_BASE/Godot_v$($env:GODOT_VERSION)_win64.exe.zip" -OutFile "$env:RUNNER_TEMP\godot\godot.zip"
+          Expand-Archive "$env:RUNNER_TEMP\godot\godot.zip" -DestinationPath "$env:RUNNER_TEMP\godot\bin" -Force
+          Invoke-WebRequest -Retry 3 "$env:GODOT_RELEASE_BASE/Godot_v$($env:GODOT_VERSION)_export_templates.tpz" -OutFile "$env:RUNNER_TEMP\godot\templates.tpz"
+          $tpz = "$env:RUNNER_TEMP\godot\templates.tpz"
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zip = [System.IO.Compression.ZipFile]::OpenRead($tpz)
+          foreach ($name in @('version.txt', 'windows_release_x86_64.exe', 'windows_debug_x86_64.exe')) {
+            $entry = $zip.GetEntry("templates/$name")
+            if ($null -eq $entry) { continue }
+            [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, "$tplDir\$name", $true)
+          }
+          $zip.Dispose()
+          echo "GODOT=$env:RUNNER_TEMP\godot\bin\Godot_v$($env:GODOT_VERSION)_win64.exe" >> $env:GITHUB_ENV
+
+      - name: Import project
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Export Windows x64 release
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path TowDownGame-Iteration/build/windows | Out-Null
+          & "$env:GODOT" --headless --path TowDownGame-Iteration --export-release "Windows x64 Release" build/windows/TowDownGame-Windows-x64.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $exe = 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.exe'
+          $pck = 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.pck'
+          if (-not ((Test-Path $exe) -and (Test-Path $pck))) { throw 'export output missing' }
+
+      - name: Package ZIP and SHA-256
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $stage = "$env:RUNNER_TEMP\stage\TowDownGame"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.exe' $stage
+          Copy-Item 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.pck' $stage
+          $zip = "$env:RUNNER_TEMP\TowDownGame-Windows-x64.zip"
+          Compress-Archive -Path "$stage\*" -DestinationPath $zip -Force
+          $sha = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+          "$sha  TowDownGame-Windows-x64.zip" | Out-File "$env:RUNNER_TEMP\TowDownGame-Windows-x64.zip.sha256" -Encoding ascii
+          Move-Item $zip 'TowDownGame-Windows-x64.zip'
+          Move-Item "$env:RUNNER_TEMP\TowDownGame-Windows-x64.zip.sha256" 'TowDownGame-Windows-x64.zip.sha256'
+          Get-Item 'TowDownGame-Windows-x64.zip' | Select-Object Name, Length
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TowDownGame-Windows-x64
+          path: |
+            TowDownGame-Windows-x64.zip
+            TowDownGame-Windows-x64.zip.sha256
+          retention-days: 14
+
+      - name: Attach to GitHub Release (tag builds only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "${GITHUB_REF_NAME}" \
+            TowDownGame-Windows-x64.zip TowDownGame-Windows-x64.zip.sha256 \
+            --repo "$GITHUB_REPOSITORY" --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}

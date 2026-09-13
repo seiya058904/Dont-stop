@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cpxf3dlhf1dai" path="res://game/map/SnowWorld/sprites/ISO_Tile_Snow_01.png" id="1_j778j"]
 [ext_resource type="Script" path="res://game/map/SnowWorld/SnowWorld.gd" id="1_l60ml"]
-[ext_resource type="AudioStream" uid="uid://dd8rqtd44vwn1" path="res://audio/bgm/Cephalopod.mp3" id="2_3wxy5"]
+[ext_resource type="AudioStream" path="res://audio/bgm/Cephalopod.ogg" id="2_3wxy5"]
 [ext_resource type="Texture2D" uid="uid://mte5uma3uhf3" path="res://game/map/SnowWorld/sprites/ISO_Tile_Ice_01-06.png" id="2_281bt"]
 [ext_resource type="PackedScene" uid="uid://b8fluhc5dx881" path="res://ui/ControlUI.tscn" id="2_scm80"]
 [ext_resource type="Texture2D" uid="uid://cguqxsucvcxyd" path="res://game/map/SnowWorld/sprites/ISO_Tile_Water_01.png" id="3_57np8"]

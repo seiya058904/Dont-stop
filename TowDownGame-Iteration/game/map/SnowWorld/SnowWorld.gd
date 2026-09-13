@@ -15,6 +15,23 @@ func _ready() -> void:
 	Utils.gameStart()
 	Utils.crosshairChange(false)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_apply_web_environment()
+
+func _apply_web_environment() -> void:
+	# Compatibility (Web) renders glow differently from Forward+: normalized glow
+	# is not honoured and additive build-up blows out or vanishes. Use a flatter,
+	# cheaper profile that keeps the snowy scene readable in WebGL 2.
+	if not OS.has_feature("web"):
+		return
+	var world_env: WorldEnvironment = $WorldEnvironment
+	if world_env == null or world_env.environment == null:
+		return
+	var env := world_env.environment
+	env.glow_normalized = false
+	env.glow_intensity = 0.9
+	env.set("glow_levels/1", 1.0)
+	env.set("glow_levels/2", 0.0)
+	env.set("glow_levels/4", 0.0)
 
 func onGameStart():
 	$ControlUI.visible = true

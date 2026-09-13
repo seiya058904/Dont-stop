@@ -3,7 +3,7 @@ extends Node
 func _ready():
 	Demo.test_mode = true
 	var voice = AudioStreamPlayer.new(); add_child(voice)
-	voice.stream = load("res://audio/bgm/Cephalopod.mp3")
+	voice.stream = load("res://audio/bgm/Cephalopod.ogg")
 	for cycle in 12:
 		voice.play(); await get_tree().create_timer(0.15).timeout
 		voice.stop(); await get_tree().create_timer(0.15).timeout

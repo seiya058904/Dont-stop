@@ -17,6 +17,8 @@ concurrency:
 env:
   GODOT_VERSION: 4.7.2-stable
   GODOT_RELEASE_BASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
+  PLAYWRIGHT_VERSION: 1.60.0
+  PAGES_URL: https://seiya058904.github.io/game-prototype-lab/index.html
 
 jobs:
   build:
@@ -57,6 +59,8 @@ jobs:
           test -s TowDownGame-Iteration/build/web/index.pck
           test -s TowDownGame-Iteration/build/web/index.wasm
           test -s TowDownGame-Iteration/build/web/index.js
+          # Branding asset referenced by the custom loader / favicon.
+          cp TowDownGame-Iteration/game-icon.png TowDownGame-Iteration/build/web/game-icon.png
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -66,13 +70,102 @@ jobs:
         with:
           path: TowDownGame-Iteration/build/web
 
+      - name: Upload Web build for smoke jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: TowDownGame-Iteration/build/web
+          retention-days: 3
+
+  browser-smoke:
+    name: Browser smoke (Playwright)
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Check out source (smoke scripts)
+        uses: actions/checkout@v4
+
+      - name: Download Web build
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: build/web
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          npx "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
+
+      - name: Serve build and run browser smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p smoke-evidence
+          python3 -m http.server 8788 --directory build/web &
+          sleep 2
+          curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
+          node TowDownGame-Iteration/tools/smoke-web.js \
+            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
+          node TowDownGame-Iteration/tools/save-audit-web.js \
+            http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
+
+      - name: Upload smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-smoke-evidence
+          path: smoke-evidence
+          retention-days: 14
+
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04
-    needs: build
+    needs: [build, browser-smoke]
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  online-smoke:
+    name: Online smoke (deployed Pages)
+    runs-on: ubuntu-24.04
+    needs: deploy
+    steps:
+      - name: Check out source (smoke scripts)
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          npx "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
+
+      - name: Run online smoke against production Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p online-evidence
+          curl --fail --silent --show-error "$PAGES_URL" -o /dev/null
+          node TowDownGame-Iteration/tools/smoke-web.js \
+            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-smoke.log
+
+      - name: Upload online smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: online-smoke-evidence
+          path: online-evidence
+          retention-days: 14

@@ -105,12 +105,59 @@ var is_inv_show = false #是否展示背包
 
 var crosshair_position = Vector2.ZERO
 
+# Web Pointer Lock: browser capture replaces the desktop confined-cursor mode.
+var _web_cursor_layer: CanvasLayer
+var _web_cursor_sprite: Sprite2D
+var _web_had_capture := false
+var _web_cursor_visible := false
+
 var temp_am_list = []
 
 signal onGameStart()
 
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
+	if OS.has_feature("web"):
+		_web_cursor_layer = CanvasLayer.new()
+		_web_cursor_layer.layer = 100
+		_web_cursor_sprite = Sprite2D.new()
+		_web_cursor_sprite.texture = load("res://Sprites/1 cursor.png")
+		_web_cursor_sprite.visible = false
+		_web_cursor_sprite.z_index = 2000
+		_web_cursor_layer.add_child(_web_cursor_sprite)
+		add_child(_web_cursor_layer)
+
+func _process(_delta: float) -> void:
+	if not OS.has_feature("web"): return
+	# Draw a software cursor while the OS pointer is captured/hidden.
+	var gameplay = is_gameplay_mouse_mode()
+	_web_cursor_sprite.visible = gameplay
+	_web_cursor_visible = gameplay
+	if gameplay:
+		_web_cursor_sprite.position = get_viewport().get_mouse_position()
+	# Pointer Lock was lost (Esc / browser focus change): open the pause panel,
+	# matching desktop behaviour where Esc opens the menu.
+	if is_game_start and _web_had_capture and not gameplay and Demo.pause_stack.is_empty():
+		_web_had_capture = false
+		Demo.open_panel()
+	if gameplay:
+		_web_had_capture = true
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not OS.has_feature("web"): return
+	if is_game_start and Demo.pause_stack.is_empty() and not is_gameplay_mouse_mode() \
+			and event is InputEventMouseButton and event.pressed:
+		# Re-request Pointer Lock after it was lost; the click provides the gesture.
+		set_gameplay_mouse_mode()
+
+func set_gameplay_mouse_mode() -> void:
+	# Web browsers only support real capture (Pointer Lock), not confined mode.
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN
+
+func is_gameplay_mouse_mode() -> bool:
+	if OS.has_feature("web"):
+		return Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	return Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN
 
 func reloadTempAmList():
 	temp_am_list.clear()
@@ -130,13 +177,6 @@ func getTempAmList():
 func gameStart():
 	is_game_start = true
 	emit_signal("onGameStart")
-
-func set_gameplay_mouse_mode() -> void:
-	# Web browsers do not implement Godot's confined mouse mode.
-	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN
-
-func is_gameplay_mouse_mode() -> bool:
-	return Input.mouse_mode == (Input.MOUSE_MODE_HIDDEN if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN)
 
 #伤害数字
 func showHitLabel(num,traget:Node2D):
