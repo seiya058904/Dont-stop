@@ -30,9 +30,12 @@ func _ready() -> void:
 			print("[smoke] save_state none")
 	else:
 		print("[smoke] save_state none")
+	var stutter := "--stutter" in args
 	_run.call_deferred()
 	if e2e:
 		_e2e_stream.call_deferred()
+	if stutter:
+		_stutter_run.call_deferred()
 
 func e2e_invincible() -> bool:
 	return e2e
@@ -66,6 +69,71 @@ func _e2e_stream() -> void:
 			PlayerData.player_hp if Utils.player != null else 0.0,
 			str(not Demo.pause_stack.is_empty()),
 			Demo.pause_stack.size()])
+
+## Windows cold-path probe: first fire per weapon class + steady-state stats.
+func _stutter_run() -> void:
+	await _wait_until(func(): return LevelServer.state == "COMBAT", 300000)
+	await _wait_until(func(): return get_tree().get_nodes_in_group("monsters").size() > 0, 60000)
+	print("[stutter] combat-ready monsters=%d" % get_tree().get_nodes_in_group("monsters").size())
+	var classes := ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "112", "114", "123"]
+	for id in classes:
+		if not Utils.weapon_list.has(id):
+			continue
+		if not PlayerData.player_weapon_list.has(int(id)):
+			PlayerData.add_weapon(Utils.weapon_list[id].instantiate())
+		PlayerData.changeWeapon(int(id), true)
+		await get_tree().create_timer(0.9).timeout
+		# Clearing a round can open the reward panel (paused); close it so the
+		# probe can re-enter combat.
+		if not Demo.pause_stack.is_empty():
+			for menu in Demo.pause_stack.duplicate():
+				menu.queue_free()
+				Demo.pop_pause(menu)
+			await get_tree().create_timer(0.5).timeout
+		if LevelServer.state == "CAMP":
+			LevelServer.town.depart(1, true)
+			await _wait_until(func(): return LevelServer.state == "COMBAT", 60000)
+		if not Demo.pause_stack.is_empty():
+			for menu in Demo.pause_stack.duplicate():
+				menu.queue_free()
+				Demo.pop_pause(menu)
+		_mark_frames()
+		Input.action_press("shoot")
+		await get_tree().create_timer(0.35).timeout
+		Input.action_release("shoot")
+		_report_frames("firstshot-gun" + id, 40)
+		await get_tree().create_timer(0.25).timeout
+	# Reload cold path with the current gun.
+	_mark_frames()
+	Input.action_press("reload")
+	await get_tree().create_timer(0.1).timeout
+	Input.action_release("reload")
+	await get_tree().create_timer(2.5).timeout
+	_report_frames("first-reload", 60)
+	# Steady-state window with periodic firing.
+	var sample: Array[float] = []
+	var t_end := Time.get_ticks_msec() + 15000
+	while Time.get_ticks_msec() < t_end:
+		sample.append(get_process_delta_time() * 1000.0)
+		if randi() % 40 == 0:
+			Input.action_press("shoot")
+		if randi() % 37 == 0:
+			Input.action_release("shoot")
+		if not Demo.pause_stack.is_empty():
+			for menu in Demo.pause_stack.duplicate():
+				menu.queue_free()
+				Demo.pop_pause(menu)
+		if LevelServer.state == "CAMP":
+			LevelServer.town.depart(1, true)
+		await get_tree().process_frame
+	var srt := sample.duplicate(); srt.sort()
+	var sum := 0.0
+	for v in sample: sum += v
+	print("[stutter] steady n=%d p50=%.1f p95=%.1f p99=%.1f max=%.1f avg=%.1f" % [
+		srt.size(), srt[int(srt.size() * 0.50)], srt[int(srt.size() * 0.95)],
+		srt[int(srt.size() * 0.99)], srt.back(), sum / sample.size()])
+	print("[stutter] done")
+	get_tree().quit(0)
 
 func _wait_until(predicate: Callable, timeout_ms: int) -> void:
 	var deadline := Time.get_ticks_msec() + timeout_ms
@@ -168,6 +236,10 @@ func _run() -> void:
 	# E2E driver mode: the external Playwright script performs all real inputs
 	# (pointer lock, aim sweeps, shots, pause/resume, WASD). Do not interfere.
 	if e2e:
+		print("[smoke] result=", "PASS" if ok_depart and combat_ok else "FAIL")
+		return
+	# Stutter probe mode: _stutter_run takes over from here.
+	if "--stutter" in OS.get_cmdline_args() or "--stutter" in OS.get_cmdline_user_args():
 		print("[smoke] result=", "PASS" if ok_depart and combat_ok else "FAIL")
 		return
 

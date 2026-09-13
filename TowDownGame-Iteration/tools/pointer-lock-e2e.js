@@ -139,16 +139,18 @@ function token(name, ok, extra = '') {
 	token('AIM_360', accumulated >= 360, `accumulated=${accumulated.toFixed(0)}deg`);
 
 	// ---- Real shots follow the aim direction (velocity of fresh projectile).
+	// Clear any stuck pointer/button state, chamber a round, then fire real LMB.
 	async function fireDirection(name, dx, dy, cmp) {
 		for (let attempt = 0; attempt < 3; attempt++) {
 			lines.length = 0;
 			await sweep(dx, dy);
 			await page.waitForTimeout(300);
+			await page.mouse.up();          // clear a possibly-lost previous release
 			lines.length = 0;
 			await page.mouse.down();
-			await page.waitForTimeout(450);
+			await page.waitForTimeout(900);
 			await page.mouse.up();
-			await page.waitForTimeout(400);
+			await page.waitForTimeout(600);
 			const projLine = lines.find(l => l.includes('[e2e] proj'));
 			if (projLine) {
 				const m = projLine.match(/proj vx=(-?[\d.]+) vy=(-?[\d.]+)/);
@@ -158,7 +160,7 @@ function token(name, ok, extra = '') {
 			}
 			// Magazine ran dry (capture clicks also fire): reload and retry.
 			await page.keyboard.press('r');
-			await page.waitForTimeout(2600);
+			await page.waitForTimeout(3000);
 		}
 		token(name, false, 'no projectile spawned');
 	}
@@ -187,15 +189,24 @@ function token(name, ok, extra = '') {
 	token('PAUSE_MOUSE_VISIBLE', escState?.paused === true, 'pause panel open, OS cursor restored');
 
 	// ---- Resume: closing the pause panel re-captures the pointer.
-	await page.keyboard.press('Escape'); // CampPanel closes on ui_cancel
-	await page.waitForTimeout(1200);
-	if (!(await locked())) { await page.mouse.click(640, 400); await waitFor(locked, 8000); }
-	const resumed = await waitFor(async () => (await locked()) && latest()?.paused === false, 10000);
-	token('RESUME_RECAPTURES_POINTER_LOCK', resumed, `paused=${latest()?.paused}`);
+	// The browser enforces a ~1.3s pointer-lock cooldown after ESC; wait it out
+	// before clicking so the re-capture gesture cannot be rejected.
+	async function resumeFromPause() {
+		for (let attempt = 0; attempt < 3; attempt++) {
+			if (latest()?.paused === true) { await page.keyboard.press('Escape'); }
+			await page.waitForTimeout(1700);
+			if (!(await locked())) await page.mouse.click(640, 400);
+			const ok = await waitFor(async () => (await locked()) && latest()?.paused === false, 6000);
+			if (ok) return true;
+		}
+		return false;
+	}
+	token('RESUME_RECAPTURES_POINTER_LOCK', await resumeFromPause(), `paused=${latest()?.paused}`);
 
 	// ---- Real WASD movement while locked.
-	await waitFor(() => latest()?.paused === false, 8000);
-	if (!(await locked())) { await page.mouse.click(640, 400); await waitFor(locked, 8000); }
+	if (latest()?.paused === true || !(await locked())) {
+		await resumeFromPause();
+	}
 	lines.length = 0;
 	const before = await aimLine();
 	token('WASD_PREPARED', !!before && before.paused === false && !!(await locked()), `paused=${before?.paused}`);

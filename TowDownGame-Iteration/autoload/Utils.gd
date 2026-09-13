@@ -153,7 +153,7 @@ func _process(_delta: float) -> void:
 	# Grace window: right after a capture request (e.g. closing the pause panel)
 	# the browser may take a moment (or reject during its post-ESC cooldown);
 	# do not interpret that brief loss as "player pressed ESC" and re-pause.
-	if is_game_start and _web_had_capture and not gameplay and Demo.pause_stack.is_empty() 			and Time.get_ticks_msec() - _web_capture_request_ms > 2000:
+	if is_game_start and _web_had_capture and not gameplay and Demo.pause_stack.is_empty() 			and Time.get_ticks_msec() - _web_capture_request_ms > 4000:
 		_web_had_capture = false
 		Demo.open_panel()
 	if gameplay:
