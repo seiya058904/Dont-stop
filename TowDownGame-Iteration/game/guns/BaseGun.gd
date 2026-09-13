@@ -173,7 +173,7 @@ func _process(delta):
 	var mouse_pos = get_global_mouse_position()
 	direction = (mouse_pos - gun_tip.global_position).normalized()
 
-	if is_use and not player.is_dead and Demo.fire_released and Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN && Input.is_action_pressed("shoot") and can_shoot and !is_reloading:
+	if is_use and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() && Input.is_action_pressed("shoot") and can_shoot and !is_reloading:
 		can_shoot = false
 		timer.start()
 		if bullets_count > 0:

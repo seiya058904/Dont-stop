@@ -10,7 +10,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	Utils.crosshairChange(true)
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	Utils.set_gameplay_mouse_mode()
 
 func _ready() -> void:
 	var guns = Utils.weapon_list.keys().duplicate()

@@ -196,7 +196,7 @@ func pop_pause(owner_node):
 	get_tree().paused = not pause_stack.is_empty()
 	if pause_stack.is_empty() and Utils.is_game_start:
 		fire_released = false
-		Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+		Utils.set_gameplay_mouse_mode()
 
 func top_pause(owner_node) -> bool:
 	return not pause_stack.is_empty() and pause_stack.back() == owner_node

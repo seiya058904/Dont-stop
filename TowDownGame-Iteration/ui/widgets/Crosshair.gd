@@ -9,7 +9,7 @@ func _ready() -> void:
 
 func onGameStart():
 	set_process(true)
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	Utils.set_gameplay_mouse_mode()
 
 func _process(delta: float) -> void:
 	rotation += rotation_speed * delta

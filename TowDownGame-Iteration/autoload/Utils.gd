@@ -131,6 +131,13 @@ func gameStart():
 	is_game_start = true
 	emit_signal("onGameStart")
 
+func set_gameplay_mouse_mode() -> void:
+	# Web browsers do not implement Godot's confined mouse mode.
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN
+
+func is_gameplay_mouse_mode() -> bool:
+	return Input.mouse_mode == (Input.MOUSE_MODE_HIDDEN if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN)
+
 #伤害数字
 func showHitLabel(num,traget:Node2D):
 	if get_tree().get_nodes_in_group("damage_labels").size() >= 90: return

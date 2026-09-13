@@ -70,7 +70,7 @@ func onPlayerLevelChange(level):
 func choose_select():
 	level_choose_bg.visible = false
 	Utils.crosshairChange(true)
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	Utils.set_gameplay_mouse_mode()
 	Utils.pause_state = false
 	for item in choose_box.get_children():
 		item.queue_free()

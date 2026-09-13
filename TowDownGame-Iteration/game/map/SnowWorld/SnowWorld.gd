@@ -27,7 +27,7 @@ func onGameStart():
 
 func onMonsterJoin():
 	Utils.crosshairChange(true)
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+	Utils.set_gameplay_mouse_mode()
 	builder.start()
 
 	EquipServer.addEquipOnFloor(preload("res://game/equip/High-Energy Particle Cannon.tscn").instantiate(),Utils.player.global_position)

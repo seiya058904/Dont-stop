@@ -18,8 +18,8 @@ config/name="TowDownGame Iteration Demo"
 run/main_scene="res://game/map/Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="TowDownGame-Iteration"
-config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://game-icon.png"
 
 [autoload]
 
@@ -167,6 +167,8 @@ locale/translations=PackedStringArray("res://translation/text.en.translation", "
 
 [rendering]
 
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 textures/canvas_textures/default_texture_filter=3
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)

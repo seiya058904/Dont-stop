@@ -39,7 +39,7 @@ func _process(delta):
 		if is_use and Input.is_action_pressed("reload"): reload_ammo()
 	elif spec.mode == "rail":
 		direction = (get_global_mouse_position()-gun_tip.global_position).normalized()
-		var allowed = is_use and not player.is_dead and Demo.fire_released and Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN and not get_tree().paused
+		var allowed = is_use and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() and not get_tree().paused
 		handle_charge(allowed and Input.is_action_pressed("shoot"),delta)
 		if Input.is_action_pressed("reload"): reload_ammo()
 	else:
@@ -50,7 +50,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	if WeaponCatalog.definition(weapon_id).mode != "thermal": return
-	var allowed = is_use and not player.is_dead and Demo.fire_released and Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN and not get_tree().paused
+	var allowed = is_use and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() and not get_tree().paused
 	handle_thermal(allowed and Input.is_action_pressed("shoot"),delta)
 
 func handle_thermal(pressed: bool, delta: float):

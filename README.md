@@ -1,12 +1,23 @@
-# game-prototype-lab
+# TowDownGame
+
+[Play in Browser](https://seiya058904.github.io/game-prototype-lab/) · [Download Windows x64](https://github.com/seiya058904/game-prototype-lab/releases/latest)
+
+正式版本：**v1.0.0**
+
+TowDownGame 是一款俯视角 2D 生存射击游戏：移动、瞄准、射击、换弹与冲刺，完成遭遇后回到营地购买武器和永久强化。
+
+## 正式试玩
+
+- **浏览器**：打开上面的 GitHub Pages 链接即可游玩桌面版 Web 构建。
+- **Windows x64**：从 [GitHub Releases](https://github.com/seiya058904/game-prototype-lab/releases/latest) 下载独立 ZIP，解压后运行其中的 `TowDownGame.exe`。
+
+## 开发环境
+
+开发者可以双击 [`TowDownGame-Iteration/PLAY_GAME.bat`](TowDownGame-Iteration/PLAY_GAME.bat) 启动本地试玩；它依赖工作区内的 Godot 4.7.2 portable runtime，不是普通用户的发行入口。
 
 这是一个基于原始 TowDownGame 项目的独立迭代改进版本。原始项目作为玩法、资源和工程结构的基线保留在本地归档中；所有本轮体验、系统和可玩性改进都在 `TowDownGame-Iteration/` 中完成，不直接修改原始项目。
 
 本迭代重点围绕核心循环进行收敛：移动与射击手感、武器和强化构筑、敌人与 Boss 战斗压力、营地与商店信息呈现、成长与存档流程，以及从战斗到结算再回到营地的完整体验。
-
-## 可玩入口
-
-双击 [`TowDownGame-Iteration/PLAY_GAME.bat`](TowDownGame-Iteration/PLAY_GAME.bat) 启动。入口依赖本机保留的 Godot 4.7.2 portable runtime，本仓库不是独立发行包。
 
 ## 仓库结构
 

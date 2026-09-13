@@ -26,7 +26,7 @@ func open_reward():
 	if $Button.visible && !is_add && Demo.pause_stack.is_empty():
 		var ins = reward_shop_pre.instantiate()
 		ins.tree_exited.connect(func tree_exited():
-			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+			Utils.set_gameplay_mouse_mode()
 			Utils.crosshairChange(true)
 			is_add = false)
 		ins.tree_entered.connect(func tree_entered():
