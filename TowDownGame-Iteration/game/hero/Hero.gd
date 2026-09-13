@@ -122,9 +122,9 @@ func _physics_process(delta):
 	var direction = Input.get_vector("left", "right", "up", "down")
 	if is_knockback:
 		if direction != Vector2.ZERO && SPEED < knockback_speed:
-			velocity = (SPEED - knockback_speed) * global_position.direction_to(get_global_mouse_position())
+			velocity = (SPEED - knockback_speed) * global_position.direction_to(Utils.get_aim_world_position())
 		else:
-			velocity = -knockback_speed * global_position.direction_to(get_global_mouse_position())
+			velocity = -knockback_speed * global_position.direction_to(Utils.get_aim_world_position())
 	else:
 		velocity = direction * SPEED
 	if is_dash:
@@ -132,10 +132,10 @@ func _physics_process(delta):
 	if root_remaining > 0: velocity = Vector2.ZERO
 	move_and_slide()
 	changeAnim(direction)
-	$PointLight2D2.look_at(get_global_mouse_position())
+	$PointLight2D2.look_at(Utils.get_aim_world_position())
 	if gun:
-		gun.look_at(get_global_mouse_position())
-		setGunLookat(get_global_mouse_position())
+		gun.look_at(Utils.get_aim_world_position())
+		setGunLookat(Utils.get_aim_world_position())
 
 func set_knockback(knockback_speed):
 	self.knockback_speed = knockback_speed
@@ -186,6 +186,9 @@ func gunAnim():
 signal incoming_hit(raw: float, applied: float, boss: bool)
 
 func onHit(hurt, attacker = null, minimum_pressure = 1.0):
+	# E2E driver mode keeps the test character alive so real inputs can be
+	# asserted against; gated behind the --e2e cmdline flag only.
+	if "--e2e" in OS.get_cmdline_args() or "--e2e" in OS.get_cmdline_user_args(): return
 	if is_dead or LevelServer.state != "COMBAT" or get_tree().paused: return
 	if Demo.shield_hit(hurt):
 		Utils.showHitLabel("护盾",self)

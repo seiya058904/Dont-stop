@@ -4,13 +4,22 @@ extends Node
 ## argument (web loader maps ?smoke=1 to engine args). Drives camp -> combat,
 ## a weapon switch and a real shot, printing machine-readable markers that the
 ## Playwright smoke script asserts on. Touches no save file.
+##
+## `--e2e` additionally enters a driver-friendly mode used by
+## tools/pointer-lock-e2e.js: the player is invincible (real inputs are tested
+## against a live character) and the game streams aim/gun/projectile state so
+## the external script can assert on real Pointer Lock behaviour.
+
+var e2e := false
+var _transients := 0
 
 func _ready() -> void:
 	var args := OS.get_cmdline_args()
 	args.append_array(OS.get_cmdline_user_args())
 	if not ("--smoke" in args):
-		queue_free()
+		# Stay instantiated (inert) so autoload cross-references stay valid.
 		return
+	e2e = "--e2e" in args
 	print("[smoke] user_dir=", OS.get_user_data_dir())
 	print("[smoke] renderer=", ProjectSettings.get_setting("rendering/renderer/rendering_method"))
 	if FileAccess.file_exists("user://camp-v1.json"):
@@ -22,6 +31,41 @@ func _ready() -> void:
 	else:
 		print("[smoke] save_state none")
 	_run.call_deferred()
+	if e2e:
+		_e2e_stream.call_deferred()
+
+func e2e_invincible() -> bool:
+	return e2e
+
+## Track combat transients; report new projectile velocity to the E2E driver.
+func _e2e_stream() -> void:
+	print("[e2e] mode=on")
+	# The external driver starts clicking once it sees "ready"; make sure the
+	# camp -> combat transition (and its pause-panel blink) is fully done.
+	await _wait_until(func(): return LevelServer.state == "COMBAT", 300000)
+	await _wait_until(func(): return get_tree().get_nodes_in_group("monsters").size() > 0, 60000)
+	await _wait_until(func(): return Demo.pause_stack.is_empty(), 30000)
+	print("[e2e] ready")
+	print("[e2e] loop-armed")
+	var deadline := Time.get_ticks_msec() + 300000
+	var tick := 0
+	while Time.get_ticks_msec() < deadline:
+		await get_tree().create_timer(0.25).timeout
+		tick += 1
+		if tick % 4 == 0:
+			print("[e2e] alive tick=%d" % tick)
+		var gunrot := 999.0
+		var gunid := -1
+		if Utils.player != null and Utils.player.gun != null:
+			gunrot = rad_to_deg(Utils.player.gun.rotation)
+			gunid = Utils.player.gun.weapon_id
+		print("[e2e] mousemode=%d aimvp=%s aimworld=%s gunrot=%.1f gunid=%d playerpos=%s hp=%.1f paused=%s panels=%d" % [
+			Input.mouse_mode, Utils.get_aim_viewport_position(), Utils.get_aim_world_position(),
+			gunrot, gunid,
+			Utils.player.global_position if Utils.player != null else Vector2.ZERO,
+			PlayerData.player_hp if Utils.player != null else 0.0,
+			str(not Demo.pause_stack.is_empty()),
+			Demo.pause_stack.size()])
 
 func _wait_until(predicate: Callable, timeout_ms: int) -> void:
 	var deadline := Time.get_ticks_msec() + timeout_ms
@@ -43,8 +87,26 @@ func _enter_camp_from_title() -> void:
 var _frame_times: Array[float] = []
 var _mark := -1
 
+var _last_mode := -1
 func _process(_delta: float) -> void:
 	_frame_times.append(get_process_delta_time() * 1000.0)
+	if e2e:
+		_track_transients()
+		if Input.mouse_mode != _last_mode:
+			_last_mode = Input.mouse_mode
+			print("[e2e] mode-change mousemode=%d paused=%s t=%.1f" % [
+				_last_mode, str(not Demo.pause_stack.is_empty()),
+				Time.get_ticks_msec() / 1000.0])
+
+func _track_transients() -> void:
+	var nodes := get_tree().get_nodes_in_group("combat_transient")
+	if nodes.size() > _transients:
+		for node in nodes:
+			if "velocity" in node and is_instance_valid(node) and not node.has_meta("e2e_reported"):
+				node.set_meta("e2e_reported", true)
+				var v: Vector2 = node.velocity
+				print("[e2e] proj vx=%.1f vy=%.1f speed=%.1f" % [v.x, v.y, v.length()])
+	_transients = nodes.size()
 
 func _mark_frames() -> void:
 	_mark = _frame_times.size()
@@ -71,13 +133,20 @@ func _run() -> void:
 		print("[smoke] FAIL boot-timeout"); get_tree().quit(1); return
 	print("[smoke] stage=camp state=", LevelServer.state)
 
-	# Ensure at least two weapons so the switch is real.
-	if PlayerData.player_weapon_list.size() < 2:
+	# Ensure at least two weapons so the switch is real (scripted mode only;
+	# the E2E driver keeps the default gun so projectile direction is known).
+	if not e2e and PlayerData.player_weapon_list.size() < 2:
 		for id in ["0", "1"]:
 			if not PlayerData.player_weapon_list.has(int(id)):
 				PlayerData.add_weapon(Utils.weapon_list[id].instantiate())
 	var ids := PlayerData.player_weapon_list.keys()
 	var other: int = ids[0] if Utils.player != null and Utils.player.gun != null and ids[0] != Utils.player.gun.weapon_id else (ids[1] if ids.size() > 1 else ids[0])
+
+	# E2E keeps the default gun; a fresh profile restores no weapon at all,
+	# which makes LevelServer.can_start() (and therefore depart) fail.
+	if e2e and Utils.player.gun == null:
+		PlayerData.add_weapon(Utils.weapon_list["0"].instantiate())
+		PlayerData.changeWeapon(0, true)
 
 	# Click-to-capture gesture (web): release then re-request gameplay mouse mode.
 	Utils.set_gameplay_mouse_mode()
@@ -95,6 +164,12 @@ func _run() -> void:
 	var monsters := get_tree().get_nodes_in_group("monsters").size()
 	print("[smoke] stage=combat state=", LevelServer.state, " monsters=", monsters)
 	var combat_ok := LevelServer.state == "COMBAT" and monsters > 0
+
+	# E2E driver mode: the external Playwright script performs all real inputs
+	# (pointer lock, aim sweeps, shots, pause/resume, WASD). Do not interfere.
+	if e2e:
+		print("[smoke] result=", "PASS" if ok_depart and combat_ok else "FAIL")
+		return
 
 	var ok_switch: bool = PlayerData.changeWeapon(other, true)
 	_mark_frames()

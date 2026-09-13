@@ -35,10 +35,10 @@ func drive_spin(pressed: bool, delta: float):
 func _process(delta):
 	var spec = WeaponCatalog.definition(weapon_id)
 	if spec.mode == "thermal":
-		direction = (get_global_mouse_position()-gun_tip.global_position).normalized()
+		direction = (Utils.get_aim_world_position()-gun_tip.global_position).normalized()
 		if is_use and Input.is_action_pressed("reload"): reload_ammo()
 	elif spec.mode == "rail":
-		direction = (get_global_mouse_position()-gun_tip.global_position).normalized()
+		direction = (Utils.get_aim_world_position()-gun_tip.global_position).normalized()
 		var allowed = is_use and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() and not get_tree().paused
 		handle_charge(allowed and Input.is_action_pressed("shoot"),delta)
 		if Input.is_action_pressed("reload"): reload_ammo()

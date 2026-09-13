@@ -6,12 +6,12 @@ func _process(delta):
 	queue_redraw()
 
 func _draw():
-	var point = $GunTip.position + Vector2($GunTip.global_position.distance_to(get_global_mouse_position()),0)
+	var point = $GunTip.position + Vector2($GunTip.global_position.distance_to(Utils.get_aim_world_position()),0)
 	draw_line($GunTip.position+Vector2(5,0),point-Vector2(5,0),Color.WHITE,1)
 
 func _shoot():
 	super._shoot()
-	var mouse_pos = get_global_mouse_position()
+	var mouse_pos = Utils.get_aim_world_position()
 	var direction = (mouse_pos - gun_tip.global_position).normalized()
 	gun_tip.rotation = direction.angle()
 	var b = bullet_scene.instantiate()

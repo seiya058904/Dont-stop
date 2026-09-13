@@ -47,4 +47,4 @@ func _exit_tree():
 		EquipServer.removeUI(equip_texture_ins)
 
 func openFire():
-	get_node("Root").look_at(get_global_mouse_position())
+	get_node("Root").look_at(Utils.get_aim_world_position())

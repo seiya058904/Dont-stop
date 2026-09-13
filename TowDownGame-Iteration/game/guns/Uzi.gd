@@ -6,7 +6,7 @@ func _process(delta):
 
 func _shoot():
 	super._shoot()
-	var mouse_pos = get_global_mouse_position()
+	var mouse_pos = Utils.get_aim_world_position()
 	var direction = (mouse_pos - gun_tip.global_position).normalized()
 	gun_tip.rotation = direction.angle()
 	var b = bullet_scene.instantiate()

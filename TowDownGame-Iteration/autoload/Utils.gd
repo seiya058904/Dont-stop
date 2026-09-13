@@ -105,11 +105,15 @@ var is_inv_show = false #是否展示背包
 
 var crosshair_position = Vector2.ZERO
 
-# Web Pointer Lock: browser capture replaces the desktop confined-cursor mode.
-var _web_cursor_layer: CanvasLayer
-var _web_cursor_sprite: Sprite2D
+# Web Pointer Lock aim state. The OS cursor is captured, so absolute mouse
+# positions are frozen at the lock point; the real cursor movement only arrives
+# as InputEventMouseMotion.relative. Gameplay aiming must go through
+# get_aim_world_position() / get_aim_viewport_position(), never through
+# get_global_mouse_position().
+var web_aim_viewport_position: Vector2
+var web_aim_sensitivity := 1.0
 var _web_had_capture := false
-var _web_cursor_visible := false
+var _web_capture_request_ms := -10000
 
 var temp_am_list = []
 
@@ -118,26 +122,38 @@ signal onGameStart()
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
 	if OS.has_feature("web"):
-		_web_cursor_layer = CanvasLayer.new()
-		_web_cursor_layer.layer = 100
-		_web_cursor_sprite = Sprite2D.new()
-		_web_cursor_sprite.texture = load("res://Sprites/1 cursor.png")
-		_web_cursor_sprite.visible = false
-		_web_cursor_sprite.z_index = 2000
-		_web_cursor_layer.add_child(_web_cursor_sprite)
-		add_child(_web_cursor_layer)
+		web_aim_viewport_position = get_viewport().get_visible_rect().size / 2
+
+func _input(event: InputEvent) -> void:
+	if not OS.has_feature("web"): return
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED: return
+	if event is InputEventMouseMotion:
+		# Pointer Lock: only relative deltas describe real cursor movement.
+		var vport := get_viewport()
+		web_aim_viewport_position += (event as InputEventMouseMotion).relative * web_aim_sensitivity
+		web_aim_viewport_position = web_aim_viewport_position.clamp(
+			Vector2.ZERO, vport.get_visible_rect().size)
+
+func _notification(what: int) -> void:
+	if not OS.has_feature("web"): return
+	# Browser/tab lost focus: release held combat input so nothing stays stuck,
+	# and pause (Pointer Lock is dropped by the browser anyway).
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		Input.action_release("shoot")
+		for action in ["up", "down", "left", "right", "dash", "reload"]:
+			Input.action_release(action)
+		if is_game_start and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			Demo.open_panel()
 
 func _process(_delta: float) -> void:
 	if not OS.has_feature("web"): return
-	# Draw a software cursor while the OS pointer is captured/hidden.
 	var gameplay = is_gameplay_mouse_mode()
-	_web_cursor_sprite.visible = gameplay
-	_web_cursor_visible = gameplay
-	if gameplay:
-		_web_cursor_sprite.position = get_viewport().get_mouse_position()
 	# Pointer Lock was lost (Esc / browser focus change): open the pause panel,
 	# matching desktop behaviour where Esc opens the menu.
-	if is_game_start and _web_had_capture and not gameplay and Demo.pause_stack.is_empty():
+	# Grace window: right after a capture request (e.g. closing the pause panel)
+	# the browser may take a moment (or reject during its post-ESC cooldown);
+	# do not interpret that brief loss as "player pressed ESC" and re-pause.
+	if is_game_start and _web_had_capture and not gameplay and Demo.pause_stack.is_empty() 			and Time.get_ticks_msec() - _web_capture_request_ms > 2000:
 		_web_had_capture = false
 		Demo.open_panel()
 	if gameplay:
@@ -153,11 +169,26 @@ func _unhandled_input(event: InputEvent) -> void:
 func set_gameplay_mouse_mode() -> void:
 	# Web browsers only support real capture (Pointer Lock), not confined mode.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN
+	if OS.has_feature("web"):
+		_web_capture_request_ms = Time.get_ticks_msec()
 
 func is_gameplay_mouse_mode() -> bool:
 	if OS.has_feature("web"):
 		return Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 	return Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN
+
+## Unified gameplay aim provider.
+## Windows: native absolute mouse (unchanged behaviour).
+## Web (Pointer Lock): virtual viewport cursor driven by relative mouse motion.
+func get_aim_viewport_position() -> Vector2:
+	var vport := get_viewport()
+	if OS.has_feature("web") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return web_aim_viewport_position
+	return vport.get_mouse_position()
+
+func get_aim_world_position() -> Vector2:
+	var vport := get_viewport()
+	return vport.get_canvas_transform().affine_inverse() * get_aim_viewport_position()
 
 func reloadTempAmList():
 	temp_am_list.clear()

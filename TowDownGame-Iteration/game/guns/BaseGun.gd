@@ -170,7 +170,7 @@ func setOwner(player):
 func _process(delta):
 	if Utils.freeze_frame:
 		delta = 0.0
-	var mouse_pos = get_global_mouse_position()
+	var mouse_pos = Utils.get_aim_world_position()
 	direction = (mouse_pos - gun_tip.global_position).normalized()
 
 	if is_use and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() && Input.is_action_pressed("shoot") and can_shoot and !is_reloading:

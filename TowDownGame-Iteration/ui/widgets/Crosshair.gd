@@ -13,4 +13,4 @@ func onGameStart():
 
 func _process(delta: float) -> void:
 	rotation += rotation_speed * delta
-	global_position = get_global_mouse_position() - size  / 2
+	global_position = Utils.get_aim_viewport_position() - size / 2

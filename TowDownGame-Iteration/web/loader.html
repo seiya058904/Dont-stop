@@ -70,8 +70,10 @@
 		if (new URLSearchParams(location.search).has('smoke')) {
 			GODOT_CONFIG.args = ['--smoke'];
 			if (new URLSearchParams(location.search).has('nw')) GODOT_CONFIG.args.push('--no-warmup');
+			if (new URLSearchParams(location.search).has('e2e')) GODOT_CONFIG.args.push('--e2e');
 		}
 
+		console.log('[loader] args=' + JSON.stringify(GODOT_CONFIG.args || null));
 		const engine = new Engine(GODOT_CONFIG);
 		engine.startGame({
 			onProgress: function (current, total) {

@@ -18,4 +18,4 @@ func openFire():
 	var ins = pre.instantiate()
 	ins.global_position = gun.global_position
 	get_tree().root.add_child(ins)
-	ins.launch(get_global_mouse_position())
+	ins.launch(Utils.get_aim_world_position())
