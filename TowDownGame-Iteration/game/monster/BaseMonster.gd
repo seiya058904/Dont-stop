@@ -17,6 +17,16 @@ var movement_delta: float
 var burns: Dictionary = {}
 var slow_time = 0.0
 var slow_amount = 0.0
+var slows: Dictionary = {}
+func apply_slow(source: String, amount: float, seconds: float):
+	slows[source] = {"amount":amount,"seconds":seconds}
+	refresh_slow()
+func refresh_slow():
+	slow_amount = 0.0; slow_time = 0.0
+	for status in slows.values():
+		slow_amount += status.amount
+		slow_time = maxf(slow_time,status.seconds)
+	slow_amount = minf(0.4,slow_amount)*(0.25 if is_boss else 1.0)
 var is_elite = false
 var displayed_flash = -1.0
 
@@ -63,7 +73,11 @@ func setData(data):
 	knockback_def = 5
 
 func _process(delta):
-	slow_time = maxf(0,slow_time-delta)
+	for source in slows.keys():
+		slows[source].seconds -= delta
+		if slows[source].seconds <= 0: slows.erase(source)
+	if not slows.is_empty(): refresh_slow()
+	else: slow_time = maxf(0,slow_time-delta)
 	if not is_die:
 		for source in burns.keys():
 			var burn = burns[source]

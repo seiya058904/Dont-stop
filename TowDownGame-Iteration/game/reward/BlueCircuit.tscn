@@ -11,7 +11,7 @@ func afterAtk(monster:BaseMonster,hit_num):#怪物收到伤害后触发
 	if randi()% 100 < 20:
 		var ins = vfx.instantiate()
 		monster.add_child(ins)
-		var num = snappedf(hit_num * (count * 0.25),0.01)
+		var num = snappedf(hit_num * (mini(count,4) * 0.25),0.01)
 		monster.onHit(num,false)
 		Utils.showHitLabelMore(num,monster,Vector2(2,2),Color.YELLOW)
 "

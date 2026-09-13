@@ -8,4 +8,4 @@ am_name = "扩爆引信"
 am_image = ExtResource("2")
 am_type = "WEAPON_AMMUNITION"
 am_info = "爆炸武器：爆炸半径 +20%，外圈与伤害同步"
-money = 40
+money = 900

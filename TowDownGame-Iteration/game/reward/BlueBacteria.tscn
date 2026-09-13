@@ -11,7 +11,7 @@ func _on_timer_timeout():
 	pass
 
 func onKill(monster:BaseMonster):
-	if kill_count < 1000:
+	if kill_count < 100:
 		kill_count += 1
 		PlayerData.player_hp_max += 0.1
 "

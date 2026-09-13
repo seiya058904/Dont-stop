@@ -8,4 +8,4 @@ am_name = "补偿枪口"
 am_image = ExtResource("2")
 am_type = "WEAPON_MUZZLE"
 am_info = "散布实体枪：散布角 -25%"
-money = 40
+money = 650

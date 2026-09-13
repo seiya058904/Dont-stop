@@ -15,7 +15,7 @@ func setData(id):
 	self.id = id
 	ins = RewardServer.reward_list[id].instantiate()
 	image.texture = ins.reward_image
-	rw_name.text = ins.reward_name
+	rw_name.text = ins.reward_name.get_slice(" ",0) if ins.id>=12 else ins.reward_name
 
 func _exit_tree() -> void:
 	if ins:

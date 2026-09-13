@@ -52,7 +52,19 @@ static func validate(data) -> bool:
 	var state = data.get("legacy_state",{})
 	if not state is Dictionary: return false
 	for id in state:
-		if id != "10" or not counts.has(id) or not number(state[id],true) or state[id] > 1000: return false
+		if not counts.has(id): return false
+		if id == "10":
+			if not number(state[id],true) or state[id] > 1000: return false
+		elif id in ["8","9"]:
+			if not state[id] is Dictionary or not number(state[id].get("remaining",-1),false) or state[id].remaining>6: return false
+			if id == "8" and (not number(state[id].get("kills",-1),true) or not number(state[id].get("window",-1),false) or state[id].window>1): return false
+			if id == "9" and not state[id].get("charged",null) is bool: return false
+		elif id in ["12","13","14","15","16","17","18","19","20","21","22","23"]:
+			if not state[id] is Dictionary or not state[id].has_all(["hits","kills","cooldown","armed","move_time","moving_buff"]): return false
+			for key in ["hits","kills","cooldown","move_time"]:
+				if not number(state[id][key],key in ["hits","kills"]) or state[id][key] > 100: return false
+			if not state[id].armed is bool or not state[id].moving_buff is bool: return false
+		else: return false
 	if data.schema_version >= 2 and counts.has("10") and not state.has("10"): return false
 	var guns = {}
 	var items = []

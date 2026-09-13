@@ -58,7 +58,8 @@ func reset_talents(revision: int) -> Dictionary:
 	talent_cooldowns.clear()
 	for target in get_tree().get_nodes_in_group("monsters"):
 		target.burns.erase("T15")
-		target.slow_time = 0.0
+		target.slows.erase("T17")
+		target.refresh_slow()
 	PlayerData.gold += refund.gold
 	PlayerData.reward_point += refund.points
 	refresh()
@@ -150,7 +151,7 @@ func refresh():
 			PlayerData.player_hp_max += delta_hp
 			PlayerData.player_hp = minf(PlayerData.player_hp_max,PlayerData.player_hp+maxf(0,delta_hp))
 		var boots = Utils.player.reward_root.get_node_or_null("REWARD BLUE BOOTS")
-		Utils.player.SPEED = 100*PlayerData.player_speed+100*DemoConfig.talent_value("T08",rank("T08"))+(5*boots.count if boots else 0)
+		Utils.player.SPEED = 100*PlayerData.player_speed+100*DemoConfig.talent_value("T08",rank("T08"))+(5*mini(boots.count,6) if boots else 0)+100*RewardServer.momentum()
 	for gun in PlayerData.player_weapon_list.values():
 		if gun.is_node_ready(): gun.updateGun()
 	changed.emit()
@@ -313,6 +314,7 @@ func legacy_state() -> Dictionary:
 	if is_instance_valid(Utils.player):
 		for reward in Utils.player.reward_root.get_children():
 			if reward.id == 10: result["10"] = reward.kill_count
+			if reward.has_method("saved_state"): result[str(reward.id)] = reward.saved_state()
 	return result
 
 func save_camp() -> Dictionary:
@@ -370,6 +372,7 @@ func load_camp() -> bool:
 		else: RewardServer.addReward(reward)
 	for reward in Utils.player.reward_root.get_children():
 		if reward.id == 10: reward.kill_count = int(data.legacy_state.get("10",0))
+		if reward.has_method("restore_state"): reward.restore_state(data.legacy_state.get(str(reward.id),{}))
 	campaign_complete = data.get("campaign_complete",false)
 	next_stage = int(data.next_stage)
 	selected_stage = int(data.selected_stage)

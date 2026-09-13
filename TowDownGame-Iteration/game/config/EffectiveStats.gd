@@ -11,18 +11,18 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionar
 	var damage_percent = PlayerData.base_bullet_damage + DemoConfig.talent_value("T01",int(ranks.get("T01",0)))
 	var crit = PlayerData.base_aim_enh * 0.01
 	var spread = 1.0
-	var impulse = 1.0
+	var impulse = 1.0+0.15*RewardServer.rank(20)
 	var radius = 1.0
 	var jumps = 3
 	var spec = WeaponCatalog.definition(gun.weapon_id)
 	var extras = {"range":spec.get("range",320.0),"width":spec.get("width",6.0),"angle":spec.get("angle",0.4),"pierce":spec.get("pierce",0),"bounces":spec.get("bounces",0),"shards":spec.get("shards",0),"shard_ratio":0.35,"bounce_retention":1.0,"turn":spec.get("turn",0.0),"lock_angle":spec.get("lock_angle",0.0),"warmup":spec.get("charge",spec.get("warmup",0.0)),"recovery":1.0,"refill":0}
 	var damage_mul = 1.0
 	crit += DemoConfig.talent_value("T06",int(ranks.get("T06",0)))
-	impulse *= 1.0+DemoConfig.talent_value("T18",int(ranks.get("T18",0)))
+	impulse += DemoConfig.talent_value("T18",int(ranks.get("T18",0)))
 	extras.range *= 1.0+DemoConfig.talent_value("T05",int(ranks.get("T05",0)))
 	if gun.weapon_id == 6: extras.range *= 1000.0/320.0
 	if "straight" in gun.tags: extras.pierce += int(ranks.get("T13",0))
-	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))
+	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))+RewardServer.momentum()+PlayerData.player_fire_rate-1.0
 	if "continuous" in gun.tags: damage_mul *= cycle
 	var applied = {}
 	for upgrade in upgrades:
@@ -36,7 +36,7 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionar
 			damage_mul *= d.get("damage_mul",1.0)
 			reload_mul *= d.get("reload_mul",1.0)
 			spread *= d.get("spread_mul",1.0)
-			impulse *= d.get("impulse_mul",1.0)
+			impulse += d.get("impulse_mul",1.0)-1.0
 			radius *= d.get("radius_mul",1.0)
 			jumps += d.get("jumps",0)
 			for key in ["range","width","angle","turn"]: extras[key] *= d.get(key+"_mul",1.0)
@@ -51,7 +51,7 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionar
 		"tags":gun.tags, "damage": (b.damage + level_damage) * WeaponCatalog.power(gun.weapon_id) * (1.0 + damage_percent)*damage_mul,
 		"magazine": maxi(1, int((b.magazine * magazine_mul) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
 		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
-		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle * PlayerData.player_fire_rate * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 24.0 if "rotary" in gun.tags else 60.0),
+		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 24.0 if "rotary" in gun.tags else 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,
 		"impulse": b.impulse * impulse, "radius":WeaponCatalog.definition(gun.weapon_id).get("radius",32.0) * radius, "jumps":jumps
 	}

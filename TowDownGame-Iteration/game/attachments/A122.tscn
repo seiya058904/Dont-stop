@@ -8,4 +8,4 @@ am_name = "电弧中继"
 am_image = ExtResource("2")
 am_type = "WEAPON_TACTICAL"
 am_info = "链电武器：额外跳跃1个不同目标；每跳伤害衰减25%"
-money = 60
+money = 1200

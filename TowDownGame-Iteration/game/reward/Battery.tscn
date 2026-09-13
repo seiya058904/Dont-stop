@@ -10,11 +10,17 @@ var is_time_out = false
 func beforeAtk(monster:BaseMonster,hit_num):#怪物收到伤害前触发
 	if is_time_out:
 		is_time_out = false
-		return (count * 0.5) * hit_num
+		return (mini(count,3) * 0.5) * hit_num
 	return 0
 
 func _on_timer_timeout() -> void:
 	is_time_out = true
+
+func saved_state() -> Dictionary:
+	return {\"charged\":is_time_out,\"remaining\":$Timer.time_left}
+func restore_state(state: Dictionary):
+	is_time_out = state.get(\"charged\",false)
+	if state.get(\"remaining\",0)>0: $Timer.start(state.remaining)
 "
 
 [node name="HpReward" type="Node2D"]

@@ -10,6 +10,29 @@ const level_up_effect = preload("res://game/hero/effect/LevelUpEffect.tscn")
 
 var gun = null
 
+var root_remaining = 0.0
+var cc_immunity = 0.0
+var root_epoch = -1
+var incoming_percentage = false
+
+func apply_root(seconds = 0.45) -> bool:
+	if is_dead or LevelServer.state != "COMBAT" or root_remaining > 0 or cc_immunity > 0: return false
+	root_remaining = clampf(seconds,0.4,0.5); root_epoch = LevelServer.epoch
+	is_dash = false; dash_part.emitting = false
+	Utils.showHitLabel("束缚",self)
+	return true
+
+func _draw():
+	if root_remaining > 0:
+		draw_arc(Vector2(0,4),12,0,TAU,24,Color(0.65,0.8,1),2)
+		draw_line(Vector2(-9,4),Vector2(9,4),Color(0.65,0.8,1),1)
+
+func on_percentage_hit(fraction: float, attacker = null):
+	# Percentage is resolved from current maximum HP and follows defense/rewards.
+	incoming_percentage = true
+	onHit(PlayerData.player_hp_max*clampf(fraction,0,0.35),attacker,0.0)
+	incoming_percentage = false
+
 var SPEED = 100.0
 var is_run = false
 var is_dead = false #是否死亡
@@ -74,7 +97,7 @@ func playerWeaponListChange():
 
 func _input(event: InputEvent) -> void:
 	if get_tree().paused or is_dead or not Utils.is_game_start: return
-	if Input.is_action_just_pressed("dash") && !is_dash:
+	if Input.is_action_just_pressed("dash") && !is_dash and root_remaining <= 0:
 		is_dash = true
 		dash_part.emitting = true
 		anim.play("dash")
@@ -83,6 +106,12 @@ func _input(event: InputEvent) -> void:
 		dash_part.emitting = false
 
 func _physics_process(delta):
+	if root_epoch != LevelServer.epoch: root_remaining = 0.0; cc_immunity = 0.0
+	cc_immunity = maxf(0,cc_immunity-delta)
+	if root_remaining > 0:
+		root_remaining = maxf(0,root_remaining-delta)
+		if root_remaining == 0: cc_immunity = 1.2
+	queue_redraw()
 	if is_dead:
 		return
 	if Utils.freeze_frame:
@@ -97,6 +126,7 @@ func _physics_process(delta):
 		velocity = direction * SPEED
 	if is_dash:
 		velocity = direction * 600
+	if root_remaining > 0: velocity = Vector2.ZERO
 	move_and_slide()
 	changeAnim(direction)
 	$PointLight2D2.look_at(get_global_mouse_position())
@@ -157,21 +187,25 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0):
 	if Demo.shield_hit(hurt):
 		Utils.showHitLabel("护盾",self)
 		return
+	hurt = maxf(minimum_pressure,hurt)
 	var nodes = get_tree().get_nodes_in_group("reward")
 	var temp_hurt = 0
 	for node in nodes:
 		if node.connect_beforePlayerHit:
 			var num = node.call("beforePlayerHit",hurt)
 			temp_hurt += num
+	for node in nodes:
+		if node.has_method("incoming"): temp_hurt += node.incoming(hurt,incoming_percentage)
 	hurt += temp_hurt
-	if hurt < minimum_pressure:
-		hurt = minimum_pressure
+	hurt = maxf(0,hurt)
 	var raw_pressure = hurt
 	var boss_source = is_instance_valid(attacker) and attacker.get("is_boss") == true
-	if is_instance_valid(attacker):
+	if is_instance_valid(attacker) and not incoming_percentage:
 		hurt *= DemoConfig.BOSS_INCOMING if boss_source else DemoConfig.NORMAL_INCOMING
 	incoming_hit.emit(raw_pressure,hurt,boss_source)
 	PlayerData.player_hp -= hurt
+	for node in nodes:
+		if node.has_method("received"): node.received()
 	Utils.showHitLabel(hurt,self)
 	get_tree().call_group("control","hit")
 	#Utils.freeze_frame = true

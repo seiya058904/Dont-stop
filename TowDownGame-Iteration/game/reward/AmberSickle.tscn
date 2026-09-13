@@ -37,6 +37,15 @@ func _on_buff_timeout():
 
 func onRewardRemove():
 	_on_buff_timeout()
+
+func saved_state() -> Dictionary:
+	return {\"kills\":kill_count,\"remaining\":$Buff.time_left,\"window\":$Timer.time_left}
+func restore_state(state: Dictionary):
+	kill_count = int(state.get(\"kills\",0))
+	var remaining = float(state.get(\"remaining\",0))
+	if remaining>0:
+		buff_active = true; PlayerData.player_fire_rate += 0.2; fire.show(); $Buff.start(remaining)
+	if state.get(\"window\",0)>0: $Timer.start(state.window)
 "
 
 [node name="HpReward" type="Node2D"]

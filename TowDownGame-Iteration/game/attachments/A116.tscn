@@ -8,4 +8,4 @@ am_name = "抑震枪托"
 am_image = ExtResource("2")
 am_type = "WEAPON_STOCK"
 am_info = "抑震枪托：详情读取统一机制目录"
-money = 50
+money = 450

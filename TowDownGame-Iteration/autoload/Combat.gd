@@ -58,6 +58,9 @@ func hit(target, context: Dictionary) -> bool:
 	if depth == 0:
 		for reward in rewards:
 			if reward.connect_beforeAtk: amount += reward.beforeAtk(target,amount)
+	if depth == 0:
+		for reward in rewards:
+			if reward.has_method("modify_direct"): amount += reward.modify_direct(target,amount)
 	amount = snappedf(amount,0.01)
 	damage_events += 1
 	target.receive_damage(amount, critical, context)
@@ -65,12 +68,14 @@ func hit(target, context: Dictionary) -> bool:
 		if not target.is_die:
 			if context.get("burn_talent",0.0) > 0: target.apply_burn("T15",context.burn_talent,DemoConfig.TALENTS.T15.seconds,context)
 			if context.get("slow",0.0) > 0:
-				target.slow_amount = minf(0.24,context.slow)*(0.25 if target.is_boss else 1.0)
-				target.slow_time = DemoConfig.TALENTS.T17.seconds
+				target.apply_slow("T17",context.slow,DemoConfig.TALENTS.T17.seconds)
 		if context.get("static_chance",0.0) > 0 and randf() < context.static_chance:
 			secondary_hit(target,context,amount*DemoConfig.TALENTS.T14.damage,"T14")
 		if critical and context.get("echo",0.0) > 0:
 			secondary_hit(target,context,amount*context.echo,"T23")
+	if depth == 0:
+		for reward in rewards:
+			if reward.has_method("after_direct"): reward.after_direct(target,amount,critical,context)
 	if depth == 0 and not target.is_die:
 		for reward in rewards:
 			if reward.connect_afterAtk: reward.afterAtk(target,amount)

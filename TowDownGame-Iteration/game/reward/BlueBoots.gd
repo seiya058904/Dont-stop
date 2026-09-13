@@ -1,7 +1,7 @@
 extends BaseReward
 
 func onRewardStart():
-	Utils.player.SPEED += 5
+	Demo.refresh()
 
 func onCountChange():
-	Utils.player.SPEED += 5
+	Demo.refresh()

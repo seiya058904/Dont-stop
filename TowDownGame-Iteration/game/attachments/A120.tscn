@@ -8,4 +8,4 @@ am_name = "裂片弹头"
 am_image = ExtResource("2")
 am_type = "WEAPON_AMMUNITION"
 am_info = "裂片弹头：详情读取统一机制目录"
-money = 50
+money = 1400

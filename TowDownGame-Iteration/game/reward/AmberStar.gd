@@ -20,7 +20,7 @@ func onKill(monster:BaseMonster): #击杀后触发
 		mark_dict.erase(monster.get_instance_id())
 
 func doBoom(monster:BaseMonster):
-	var hurt = count * 5
+	var hurt = mini(count,6) * 5
 	monster.onHit(hurt,false)
 	Utils.showHitLabelMore(hurt,monster,Vector2(0,-5),Color.TOMATO)
 

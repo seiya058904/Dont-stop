@@ -260,6 +260,15 @@ func show_weapon(id: String, gun):
 	clear_box(detail)
 	var owned = PlayerData.player_weapon_list.has(int(id))
 	if owned: gun = PlayerData.player_weapon_list[int(id)]
+	var preview = TextureRect.new()
+	preview.name = "WeaponPreview"
+	preview.custom_minimum_size = Vector2(120,60)
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	preview.texture = gun.image
+	assert(preview.texture != null,"Missing weapon preview: "+id)
+	detail.add_child(preview)
 	label(detail,tr(gun.weapon_name),10)
 	label(detail,"TIER %s · %s · %d金币" % [["I","II","III","IV","V"][WeaponCatalog.tier(int(id))-1],WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],8)
 	var stats = gun.effective if owned else {}

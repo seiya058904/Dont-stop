@@ -8,4 +8,4 @@ am_name = "制导模块"
 am_image = ExtResource("2")
 am_type = "WEAPON_TACTICAL"
 am_info = "制导模块：详情读取统一机制目录"
-money = 50
+money = 850

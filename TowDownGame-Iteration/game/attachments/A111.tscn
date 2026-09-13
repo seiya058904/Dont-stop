@@ -8,4 +8,4 @@ am_name = "束流聚焦镜"
 am_image = ExtResource("2")
 am_type = "WEAPON_OPTICS"
 am_info = "束流聚焦镜：详情读取统一机制目录"
-money = 50
+money = 850

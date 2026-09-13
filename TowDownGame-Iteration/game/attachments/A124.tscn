@@ -8,4 +8,4 @@ am_name = "击杀回填器"
 am_image = ExtResource("2")
 am_type = "WEAPON_PERKS"
 am_info = "击杀回填器：详情读取统一机制目录"
-money = 50
+money = 1500

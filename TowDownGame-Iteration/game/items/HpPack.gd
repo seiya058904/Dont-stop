@@ -3,7 +3,7 @@ extends Node2D
 var hp = 0
 var collected = false
 func _physics_process(_delta):
-	if Demo.rank("T09") > 0 and is_instance_valid(Utils.player) and global_position.distance_to(Utils.player.global_position) <= 20*(1.0+DemoConfig.talent_value("T09",Demo.rank("T09"))) and Combat.clear_line(global_position,Utils.player.global_position):
+	if RewardServer.pickup_bonus() > 0 and is_instance_valid(Utils.player) and global_position.distance_to(Utils.player.global_position) <= 20*(1.0+RewardServer.pickup_bonus()) and Combat.clear_line(global_position,Utils.player.global_position):
 		_on_area_2d_body_entered(Utils.player)
 
 func _ready() -> void:

@@ -8,4 +8,4 @@ am_name = "精准瞄具"
 am_image = ExtResource("2")
 am_type = "WEAPON_OPTICS"
 am_info = "非持续攻击：暴击率 +8个百分点；不兼容持续激光"
-money = 40
+money = 700
