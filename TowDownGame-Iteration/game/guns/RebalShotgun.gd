@@ -4,7 +4,7 @@ extends "res://game/guns/BaseGun.gd"
 func _shoot():
 	super._shoot()
 	gun_tip.rotation = direction.angle()
-	for i in 5:
+	for i in projectile_count():
 		var b = bullet_scene.instantiate()
 		b.setOnwer(player)
 		b.knockback_speed = knockback_speed
@@ -27,3 +27,5 @@ func _shootAnim():
 
 func _on_timer_timeout():
 	can_shoot = true
+
+func projectile_count() -> int: return 5

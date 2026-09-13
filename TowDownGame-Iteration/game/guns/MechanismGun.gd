@@ -7,6 +7,10 @@ var spin = 0.0
 var thermal_clock = 0.0
 var resting_position = Vector2.ZERO
 
+func projectile_count() -> int:
+	var spec=WeaponCatalog.definition(weapon_id)
+	return 3 if spec.mode=="prism" else int(spec.get("count",1))
+
 func _ready():
 	resting_position = position
 	var spec = WeaponCatalog.definition(weapon_id)
@@ -108,7 +112,7 @@ func _shoot():
 	Combat.attacks += 1
 	if spec.mode in ["prism","rail","cone","thermal"]:
 		if spec.mode == "prism":
-			for angle in [-0.10,0.0,0.10]: Combat.beam(self,gun_tip.global_position,direction.rotated(angle),context,1)
+			for i in projectile_count(): Combat.beam(self,gun_tip.global_position,direction.rotated((i-(projectile_count()-1)*0.5)*0.1),context,1)
 		elif spec.mode == "rail":
 			context.damage *= 1.0+1.5*minf(1.0,charge_time/effective.warmup)
 			Combat.beam(self,gun_tip.global_position,direction,context,mini(8,effective.pierce+1))
@@ -120,7 +124,7 @@ func _shoot():
 		audio.play()
 		_shootAnim()
 		return
-	var count = int(spec.get("count",1))
+	var count = projectile_count()
 	for i in count:
 		var angle = (i-(count-1)*0.5)*spec.get("fan",0.0)*effective.spread
 		var shot_direction = direction.rotated(angle)

@@ -103,6 +103,8 @@ func _ready():
 		message.text = Demo.save_camp().reason
 		if Demo.save_blocked: Demo.show_save_dialog(true))
 	button(top,"设置",func(): Demo.open_settings())
+	button(top,"角色属性",Demo.open_stats)
+	button(top,"束缚教学",Demo.root_lesson)
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)

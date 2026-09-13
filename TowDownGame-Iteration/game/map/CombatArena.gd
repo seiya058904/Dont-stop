@@ -1,5 +1,7 @@
 extends Node2D
 var region_id = "R2"
+var path_queries = 0
+var spawn_path_queries = 0
 var grid = AStarGrid2D.new()
 var cells: Array[Vector2i] = []
 var obstacles: Array = []
@@ -29,6 +31,7 @@ func nearest(point: Vector2) -> Vector2i:
 		if distance < best: best = distance; result = candidate
 	return result
 func path_step(from: Vector2, target: Vector2) -> Vector2:
+	path_queries+=1
 	var a = cell(from); var b = cell(target)
 	if not grid.is_in_boundsv(a) or grid.is_point_solid(a): a = nearest(from)
 	if not grid.is_in_boundsv(b) or grid.is_point_solid(b): b = nearest(target)
@@ -36,12 +39,15 @@ func path_step(from: Vector2, target: Vector2) -> Vector2:
 	return to_global(path[1]) if path.size()>1 else to_global(grid.get_point_position(b))
 func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1) -> Vector2:
 	var target = cell(Utils.player.global_position)
-	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): return Vector2.INF
+	# Player collision permits wall-adjacent positions outside the conservative AI grid.
+	# Use the closest reachable target cell, never cancel all reinforcement there.
+	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): target=nearest(Utils.player.global_position)
 	var offset = randi()%cells.size()
 	for i in cells.size():
 		var candidate = cells[(offset+i)%cells.size()]; var point = to_global(grid.get_point_position(candidate)); var relative = point-center
 		if relative.length() < minimum or relative.length() > maximum or point.distance_to(Utils.player.global_position)<55: continue
 		if side >= 0 and relative.dot(Vector2.RIGHT.rotated(side*PI/2)) < relative.length()*0.35: continue
+		spawn_path_queries+=1
 		if grid.get_id_path(candidate,target).size()>1: return point
 	return Vector2.INF
 func _draw():

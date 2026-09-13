@@ -8,7 +8,7 @@ func _shoot():
 	var generation = action_generation
 	can_shoot = false
 	timer.stop()
-	for shot in 3:
+	for shot in projectile_count():
 		if generation != action_generation or not is_use or player.is_dead or get_tree().paused or bullets_count <= 0: break
 		var bullet = bullet_scene.instantiate()
 		get_tree().current_scene.add_child(bullet)
@@ -20,3 +20,5 @@ func _shoot():
 		if shot < 2: await get_tree().create_timer(0.08,false).timeout
 	if generation == action_generation:
 		timer.start()
+
+func projectile_count() -> int: return 3

@@ -22,6 +22,8 @@ func _ready():
 	var heading = Label.new()
 	heading.text = "设置 · 调整后立即保存"
 	box.add_child(heading)
+	if is_instance_valid(Utils.player):
+		var stats=Button.new(); stats.text="角色属性"; stats.pressed.connect(Demo.open_stats); box.add_child(stats)
 	for bus in ["Master","Music","SFX","UI"]:
 		var text = Label.new()
 		text.text = {"Master":"总音量","Music":"音乐","SFX":"战斗音效","UI":"界面音效"}[bus]

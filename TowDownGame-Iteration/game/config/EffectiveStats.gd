@@ -1,11 +1,11 @@
 extends RefCounted
 class_name EffectiveStats
 
-static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionary:
+static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = null) -> Dictionary:
 	if upgrades == null: upgrades = Demo.owned_global_upgrades if saved.is_empty() else saved.get("owned_global_upgrades",[])
 	var b = gun.base_stats
 	var ranks = Demo.talents if saved.is_empty() else saved.talents
-	var level_damage = PlayerData.player_damage if saved.is_empty() else 0.3 * saved.level
+	var level_damage = PlayerData.player_damage if saved.is_empty() else PlayerData.PROGRESSION.damage(saved.level)
 	var magazine_mul = 1.0
 	var reload_mul = 1.0
 	var damage_percent = PlayerData.base_bullet_damage + DemoConfig.talent_value("T01",int(ranks.get("T01",0)))
@@ -23,13 +23,38 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionar
 	if gun.weapon_id == 6: extras.range *= 1000.0/320.0
 	if "straight" in gun.tags: extras.pierce += int(ranks.get("T13",0))
 	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))+RewardServer.momentum()+PlayerData.player_fire_rate-1.0
-	if "continuous" in gun.tags: damage_mul *= cycle
+	if ledger:
+		for stat in ["damage","magazine","reload","rate","impulse"]: ledger.add(stat,"base","weapon",TranslationServer.translate(gun.weapon_name),"flat",b[stat])
+		ledger.add("damage","level","level","等级成长","flat",level_damage)
+		ledger.add("damage","base","power","武器品阶强度","multiplier",WeaponCatalog.power(gun.weapon_id))
+		for row in [["damage",PlayerData.base_bullet_damage],["magazine",PlayerData.base_magazine_count],["reload",-PlayerData.base_reload_speed]]:
+			ledger.add(row[0],"legacy","legacy_base","原型全局成长","additive_percentage",row[1])
+		ledger.add("crit","base","weapon","原型基础暴击","percentage_point",PlayerData.base_aim_enh*0.01)
+		ledger.add("range","base","weapon","武器基础射程","flat",spec.get("range",320.0))
+		ledger.add("spread","base","weapon","基础散布倍率","flat",1.0)
+		for row in [["damage","T01"],["rate","T02"],["reload","T03"],["magazine","T04"],["range","T05"],["crit","T06"],["impulse","T18"]]:
+			var value=DemoConfig.talent_value(row[1],int(ranks.get(row[1],0)))
+			if row[0]=="reload": value=-value
+			ledger.add(row[0],"talent",row[1],DemoConfig.TALENTS[row[1]].name,"percentage_point" if row[0]=="crit" else "additive_percentage",value,ranks.get(row[1],0)>0)
+		ledger.add("rate","reward","8","琥珀镰刀","additive_percentage",PlayerData.player_fire_rate-1.0,PlayerData.player_fire_rate>1,"限时连杀增益")
+		ledger.add("rate","reward","22","动量环","additive_percentage",RewardServer.momentum(),RewardServer.momentum()>0,"连续移动2秒")
+		ledger.add("impulse","reward","20","冲量弹簧","additive_percentage",0.15*RewardServer.rank(20),RewardServer.rank(20)>0,"仅普通敌人")
+		ledger.add("rate","condition","T10",DemoConfig.TALENTS.T10.name,"multiplier",1.0+Demo.kill_stacks*DemoConfig.talent_value("T10",int(ranks.get("T10",0))),Demo.kill_stacks>0,"有效击杀后限时层数")
+		if gun.weapon_id==6: ledger.add("range","base","laser","原型激光距离换算","multiplier",1000.0/320.0)
+	if "continuous" in gun.tags:
+		damage_mul *= cycle
+		if ledger: ledger.add("damage","condition","thermal_cycle","热流射速转每tick伤害","multiplier",cycle,true,"固定0.1秒tick；射速来源在射频项展开")
 	var applied = {}
 	for upgrade in upgrades:
 		var id = int(upgrade) if upgrade is String or upgrade is StringName or upgrade is int else upgrade.am_id
 		if AttachmentCatalog.DEFINITIONS.has(id) and not applied.has(id):
 			applied[id] = true
 			var d = AttachmentCatalog.DEFINITIONS[id]
+			if ledger:
+				for key in d:
+					var mapping={"damage":["damage","additive_percentage"],"damage_mul":["damage","multiplier"],"crit":["crit","percentage_point"],"magazine_mul":["magazine","multiplier"],"reload_mul":["reload","multiplier"],"range_mul":["range","multiplier"],"spread_mul":["spread","multiplier"],"impulse_mul":["impulse","additive_percentage"],"shards":["shards","flat"],"pierce":["pierce","flat"]}
+					if mapping.has(key):
+						ledger.add(mapping[key][0],"upgrade",str(id),upgrade_name(id),mapping[key][1],d[key]-1 if key=="impulse_mul" else d[key])
 			magazine_mul *= d.get("magazine_mul",1.0)
 			crit += d.get("crit",0.0)
 			damage_percent += d.get("damage",0.0)
@@ -62,6 +87,66 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}) -> Dictionar
 		result.projectile_speed = gun.bullet_speed*2.0
 		result.projectile_path_limit = result.projectile_speed*result.projectile_seconds
 	return result
+
+static func upgrade_name(id: int) -> String:
+	var item=Utils.am_dict[str(id)].instantiate()
+	var title=TranslationServer.translate(item.am_name)
+	item.free()
+	return title+"（永久配件）"
+
+static func player_values() -> Dictionary:
+	var boots=Utils.player.reward_root.get_node_or_null("REWARD BLUE BOOTS") if is_instance_valid(Utils.player) else null
+	return {"speed":100*PlayerData.player_speed+100*DemoConfig.talent_value("T08",Demo.rank("T08"))+(5*mini(boots.count,6) if boots else 0)+100*RewardServer.momentum(),"max_hp":PlayerData.player_hp_max,"hp":PlayerData.player_hp,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"exp_max":PlayerData.getMaxExp(),"points":PlayerData.reward_point,"normal_incoming":DemoConfig.NORMAL_INCOMING,"boss_incoming":DemoConfig.BOSS_INCOMING}
+
+static func inspect(gun) -> Dictionary:
+	var ledger=preload("res://game/config/StatLedger.gd").new()
+	var final=calculate(gun,null,{},ledger)
+	var player=player_values()
+	player.shield_unlocked=Demo.rank("T19")>0
+	player.shield_cooldown=Demo.cooldown("T19")
+	player.pickup_multiplier=1.0+RewardServer.pickup_bonus()
+	player.reserve_magazines=PlayerData.reserve_magazines
+	ledger.add("speed","base","base","基础移动","flat",100*PlayerData.player_speed)
+	ledger.add("speed","talent","T08",DemoConfig.TALENTS.T08.name,"flat",100*DemoConfig.talent_value("T08",Demo.rank("T08")),Demo.rank("T08")>0)
+	ledger.add("speed","reward","5","蓝靴","flat",5*mini(RewardServer.rank(5),6),RewardServer.rank(5)>0)
+	ledger.add("speed","reward","22","动量环","flat",100*RewardServer.momentum(),RewardServer.momentum()>0,"连续移动2秒")
+	var level_hp=PlayerData.PROGRESSION.HP_PER_LEVEL*(PlayerData.player_level-1)
+	var talent_hp=DemoConfig.talent_value("T07",Demo.rank("T07"))
+	ledger.add("max_hp","base","base","初始生命","flat",5)
+	ledger.add("max_hp","level","level","等级生命","flat",level_hp)
+	ledger.add("max_hp","talent","T07",DemoConfig.TALENTS.T07.name,"flat",talent_hp,Demo.rank("T07")>0)
+	# Old saves preserve historical HP; do not fabricate purchases that were never recorded.
+	var helmet=3*mini(RewardServer.rank(2),4)
+	ledger.add("max_hp","reward","2","头盔（当前有效层）","flat",helmet,helmet>0)
+	ledger.add("max_hp","history","saved_hp","已保存的原型成长/历史差额","flat",player.max_hp-5-level_hp-talent_hp-helmet,true,"含细菌击杀成长及旧档历史；不重复授予")
+	ledger.add("damage","condition","T22",DemoConfig.TALENTS.T22.name,"multiplier",1.0+DemoConfig.talent_value("T22",Demo.rank("T22")),Demo.crowd_active,"100范围至少3敌")
+	var first_shot=gun.first_round or gun.boosted_frame==Engine.get_process_frames()
+	var first_multiplier=1.0+DemoConfig.talent_value("T12",Demo.rank("T12")) if gun.first_round else gun.volley_boost
+	ledger.add("damage","condition","T12",DemoConfig.TALENTS.T12.name,"multiplier",first_multiplier,first_shot,"实际装填后的下一次发射；同次齐射共享")
+	final.damage=gun.preview_damage_context().damage
+	final.maximum_rate=final.rate
+	if "rotary" in gun.tags:
+		final.rate=1.0/gun.timer.wait_time
+		ledger.add("rate","condition","spin","当前转管转速","multiplier",final.rate/final.maximum_rate,true,"实际计时器；满转上限 %.1f/s" % final.maximum_rate)
+	final.rpm=final.rate*60
+	final.projectile_count=gun.projectile_count()
+	ledger.add("projectile_count","base","weapon","当前武器发射机制","flat",final.projectile_count,true,"每次发射；连续束流显示1条，后续裂片另列")
+	ledger.add("shards","base","weapon","武器基础裂片","flat",WeaponCatalog.definition(gun.weapon_id).get("shards",0))
+	ledger.add("pierce","base","weapon","武器基础贯穿","flat",WeaponCatalog.definition(gun.weapon_id).get("pierce",0))
+	ledger.add("pierce","talent","T13",DemoConfig.TALENTS.T13.name,"flat",Demo.rank("T13"),"straight" in gun.tags,"仅直射")
+	for stat in ["magazine","reload","rate","crit"]:
+		ledger.add(stat,"rule","bounds","运行时边界/取整","rule",{"magazine":"取整，至少1发","reload":"至少%.2f秒" % DemoConfig.MIN_RELOAD_SECONDS,"rate":"热流10 tick/s；转管至多24，其余60","crit":"0–100%"}[stat])
+	return {"weapon":final,"player":player,"ledger":ledger,"conditions":conditions(gun)}
+
+static func conditions(gun) -> Array:
+	var rows=[]
+	for id in Demo.talents:
+		if id in ["T01","T02","T03","T04","T05","T06","T07","T08","T18"]: continue
+		rows.append({"name":DemoConfig.TALENTS[id].name,"source":"天赋","info":DemoConfig.talent_info(id),"status":Demo.talent_status(id)})
+	for reward in Utils.player.reward_root.get_children():
+		rows.append({"name":TranslationServer.translate(reward.reward_name),"source":"奖励 NPC · %d层" % reward.count,"info":TranslationServer.translate(reward.reward_info),"status":"生效" if reward.id==22 and reward.get("moving_buff")==true else "按条件触发 / 效果上限见说明"})
+	rows.append({"name":"全局强化与 Attachment","source":"永久配件","info":"当前设计中两者是同一组全枪强化，购买一次，无装备槽；来源不会重复计算。","status":"%d / 24" % Demo.owned_global_upgrades.size()})
+	return rows
 
 static func describe(s: Dictionary) -> String:
 	var text = "伤害 %.2f %s · %.2f次/秒\n弹匣 %d · 装填 %.2f秒 · 暴击 %.0f%%" % [s.damage,damage_unit(s),s.rate,s.magazine,s.reload,s.crit*100]

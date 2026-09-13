@@ -1,8 +1,11 @@
 extends Label
 var elapsed = 0.0
+var root_icon: TextureRect
 func _ready():
 	position = Vector2(8,174)
-	size = Vector2(345,20)
+	size = Vector2(345,30)
+	autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	root_icon=TextureRect.new(); root_icon.texture=load("res://Sprites/All_Icons/Blue Specs.png"); root_icon.position=Vector2(0,-15); root_icon.size=Vector2(12,12); root_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE; root_icon.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; add_child(root_icon)
 	add_theme_font_override("font",load("res://fonts/fusion-pixel.otf"))
 	add_theme_font_size_override("font_size",6)
 	add_theme_color_override("font_shadow_color",Color.BLACK)
@@ -21,18 +24,5 @@ func _process(delta):
 	update_text()
 
 func update_text():
-	if not Utils.player.gun:
-		text = "Tab 配置 · 枪械页可找到全部24把武器"
-		return
-	var gun = Utils.player.gun
-	var names = []
-	for id in Demo.owned_global_upgrades: names.append(id)
-	text = "%s · %d / %d MAGS | 全局强化 %s / 24 · Tab全部武器/详情\n火力%d 装填%d 携弹%d | 连杀 %d层 %.1fs · 爆破%s 修复%d" % [tr(gun.weapon_name),gun.bullets_count,PlayerData.reserve_magazines,str(names.size()),Demo.rank("T01"),Demo.rank("T03"),Demo.rank("T04"),Demo.kill_stacks,maxf(0,Demo.stack_time),"开" if Demo.rank("T16") else "关",Demo.rank("T24")]
-
-	if Demo.rank("T19") > 0: text += " · 盾%.1fs" % Demo.cooldown("T19")
-	if Demo.crowd_active: text += " · 火网生效"
-	if LevelServer.state == "CAMP":
-		for target in get_tree().get_nodes_in_group("monsters"):
-			if target.training:
-				text += "\n练枪 · "+EffectiveStats.damage_unit(gun.effective)+" · 不结算奖励；Tab清理"
-				break
+	text=preload("res://game/config/CombatStatus.gd").display()
+	root_icon.visible=is_instance_valid(Utils.player) and (Utils.player.root_remaining>0 or Utils.player.cc_immunity>0)

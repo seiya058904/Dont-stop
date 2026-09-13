@@ -103,6 +103,16 @@ var rush_active = false
 var rush_clock = 0.0
 var rush_side = 0
 var elite_spawned = false
+var horde_jobs: Array = []
+var horde_clock = 0.0
+var horde_since = 0.0
+var horde_last_kills = 0
+var horde_index = 0
+var horde_active = false
+var horde_side = 0
+var horde_role = "E02"
+var horde_overlap_peak = 0
+var horde_while_alive = 0
 
 func _ready() -> void:
 	timer.wait_time = 0.1
@@ -124,6 +134,7 @@ func roundStart() -> bool:
 	boss_instance = 0
 	boss_victory_epoch = -1
 	rush_remaining = 0; rush_used = false; rush_active = false; rush_clock = 0
+	horde_jobs.clear(); horde_clock=1.0; horde_since=0; horde_last_kills=Combat.kill_events; horde_index=0; horde_active=false; horde_overlap_peak=0; horde_while_alive=0
 	elite_spawned = false
 	wait_time_temp = 0
 	level_time = DemoConfig.ENCOUNTERS[level].seconds
@@ -169,6 +180,7 @@ func onMonsterCreate():
 	wait_time_temp += 0.1
 	var config = DemoConfig.ENCOUNTERS[level]
 	if config.has("boss"): return
+	tick_horde(config)
 	if level>=16 and not rush_used and level_info.time>=config.seconds*0.5:
 		rush_used = true; rush_remaining = 8 if level>=26 else (6 if level>=21 else 4)
 		rush_side = spawn_index % M5Content.REGIONS[config.region].sides.size()
@@ -188,6 +200,27 @@ func onMonsterCreate():
 		if level>=16 and spawn_index%4==0:
 			# A second existing roster member arrives from the next side. Each emission obeys the encounter cap.
 			monsterCreate.emit()
+
+func tick_horde(config: Dictionary):
+	if not M5Content.HORDES.has(level): return
+	var h=M5Content.HORDES[level]
+	horde_clock-=0.1; horde_since+=0.1
+	var alive=get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die and not m.training).size()
+	var thinning=Combat.kill_events-horde_last_kills>=ceili(h.batch*0.6)
+	if horde_jobs.size()<h.windows and alive<config.cap and (horde_clock<=0 or (horde_since>=h.window*0.55 and (thinning or alive<h.floor))):
+		horde_jobs.append({"remaining":h.batch,"next":0.0,"side":horde_index%M5Content.REGIONS[config.region].sides.size()})
+		horde_clock=h.window; horde_since=0; horde_last_kills=Combat.kill_events
+		if alive>0: horde_while_alive+=1
+	horde_overlap_peak=maxi(horde_overlap_peak,horde_jobs.size())
+	var specials=config.roles.filter(func(id): return id not in ["E01","E02"])
+	for job in horde_jobs:
+		job.next-=0.1
+		if job.next>0: continue
+		horde_active=true; horde_side=(job.side+horde_index)%M5Content.REGIONS[config.region].sides.size()
+		horde_role=("E02" if horde_index%2==0 else "E01") if horde_index%10<7 else specials[horde_index%specials.size()]
+		monsterCreate.emit(); horde_active=false
+		horde_index+=1; job.remaining-=1; job.next=h.step
+	horde_jobs=horde_jobs.filter(func(job): return job.remaining>0)
 
 func victory() -> bool:
 	if DemoConfig.ENCOUNTERS[level].has("boss"):
@@ -211,6 +244,7 @@ func victory() -> bool:
 	return true
 
 func return_to_camp():
+	horde_jobs.clear(); horde_active=false
 	if state == "CAMP": return
 	state = "RESOLVING"
 	timerStop()

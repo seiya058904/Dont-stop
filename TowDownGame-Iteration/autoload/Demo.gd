@@ -83,7 +83,7 @@ func talent_status(id: String) -> String:
 	if id == "T24": return "冷却剩余 %.1f秒" % heal_cooldown
 	if id == "T22": return "当前生效" if crowd_active else "当前未满足：近距至少3敌"
 	if id == "T13": return "当前枪生效" if Utils.player.gun and "straight" in Utils.player.gun.tags else "当前枪不兼容"
-	if id == "T21": return "条件生效：显式精英（当前R1无新增精英）；Boss不适用"
+	if id == "T21": return "仅对精英生效；Boss不适用"
 	if id == "T11": return "进度 %d / %d 次直接击杀" % [ammo_kills,DemoConfig.TALENTS.T11.kills]
 	if id == "T12": return "首发已就绪" if Utils.player.gun and Utils.player.gun.first_round else "等待真实装填完成"
 	if DemoConfig.TALENTS[id].has("cooldown"): return "冷却剩余 %.1f秒" % cooldown(id)
@@ -150,8 +150,7 @@ func refresh():
 		if delta_hp != 0:
 			PlayerData.player_hp_max += delta_hp
 			PlayerData.player_hp = minf(PlayerData.player_hp_max,PlayerData.player_hp+maxf(0,delta_hp))
-		var boots = Utils.player.reward_root.get_node_or_null("REWARD BLUE BOOTS")
-		Utils.player.SPEED = 100*PlayerData.player_speed+100*DemoConfig.talent_value("T08",rank("T08"))+(5*mini(boots.count,6) if boots else 0)+100*RewardServer.momentum()
+		Utils.player.SPEED = EffectiveStats.player_values().speed
 	for gun in PlayerData.player_weapon_list.values():
 		if gun.is_node_ready(): gun.updateGun()
 	changed.emit()
@@ -436,6 +435,31 @@ func open_settings():
 	settings.set_script(load("res://ui/DemoSettings.gd"))
 	Utils.canvasLayer.add_child(settings)
 	Demo.push_pause(settings)
+
+func open_stats():
+	var panel=load("res://ui/StatPanel.gd").new()
+	Utils.canvasLayer.add_child(panel)
+
+func root_lesson():
+	# Explicit playtest lesson uses the production B02 projectile and collision.
+	for menu in pause_stack.duplicate(): menu.queue_free(); pop_pause(menu)
+	LevelServer.return_to_camp()
+	await get_tree().create_timer(0.3).timeout
+	for menu in pause_stack.duplicate(): menu.queue_free(); pop_pause(menu)
+	if not LevelServer.town.depart(20,true): return
+	LevelServer.timerStop()
+	PlayerData.player_hp=PlayerData.player_hp_max
+	var boss=instance_from_id(LevelServer.boss_instance)
+	var center=LevelServer.town.arena.global_position
+	Utils.player.global_position=center+Vector2(-40,0)
+	boss.global_position=center+Vector2(40,0)
+	boss.set_physics_process(false); boss.phase_two=true; boss.HP=boss.max_hp*0.49; boss.ultimate_cooldown=0
+	var lesson_epoch=LevelServer.epoch
+	Utils.showToast("束缚教学：不要移动或射击，站在紫色路径上等巨卵触碰。8秒后自动回营。",4)
+	await get_tree().create_timer(2).timeout
+	if is_instance_valid(boss) and not boss.is_die and LevelServer.state=="COMBAT": boss.choose_attack()
+	await get_tree().create_timer(6,false).timeout
+	if LevelServer.epoch==lesson_epoch and LevelServer.state=="COMBAT": LevelServer.return_to_camp()
 
 func quit_game():
 	if quitting_game: return

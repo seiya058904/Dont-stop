@@ -141,6 +141,16 @@ func shot_context() -> Dictionary:
 	if boosted_frame == frame: context.damage *= volley_boost
 	return context
 
+func preview_damage_context() -> Dictionary:
+	var context=damage_context()
+	if first_round: context.damage*=1.0+DemoConfig.talent_value("T12",Demo.rank("T12"))
+	elif boosted_frame==Engine.get_process_frames(): context.damage*=volley_boost
+	return context
+
+func projectile_count() -> int:
+	var definition=WeaponCatalog.definition(weapon_id)
+	return int(definition.get("pellets",definition.get("count",1)))
+
 #子弹装填完毕
 func reload_over():
 	if not is_reloading or not is_use: return

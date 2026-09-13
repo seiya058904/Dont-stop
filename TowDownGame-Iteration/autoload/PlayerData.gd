@@ -1,4 +1,6 @@
 extends Node
+const PROGRESSION = preload("res://game/config/LevelProgression.gd")
+signal level_rewards_applied(rewards)
 
 signal playerWeaponListChange() #武器列表改变
 signal onWeaponChanged() #切换武器
@@ -57,18 +59,22 @@ var reward_point = DemoConfig.INITIAL_TALENT_POINTS:
 var player_level = 1:
 	set(value):
 		player_level = maxi(1,int(value))
-		player_damage = 0.3 * player_level
+		player_damage = PROGRESSION.damage(player_level)
 		onPlayerLevelChange.emit(player_level)
 
 var player_exp = 0.0:
 	set(value):
 		if value < 0: return
 		player_exp = value
+		var before = player_level
 		while player_exp >= getMaxExp():
 			player_exp -= getMaxExp()
 			player_level += 1
-			player_hp_max += 0.5
-			reward_point += 1
+			var growth = PROGRESSION.rewards(player_level-1,player_level)
+			player_hp_max += growth.max_hp
+			player_hp += growth.heal
+			reward_point += growth.points
+		if player_level>before: level_rewards_applied.emit(PROGRESSION.rewards(before,player_level))
 		onPlayerExpChange.emit(player_exp,getMaxExp())
 
 #设置血量
@@ -129,4 +135,4 @@ func _physics_process(_delta: float) -> void:
 	is_change_weapon = switch_remaining > 0
 
 func getMaxExp():
-	return pow(player_level,2.2) + 15
+	return PROGRESSION.threshold(player_level)

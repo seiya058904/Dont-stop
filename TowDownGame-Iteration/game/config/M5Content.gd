@@ -1,6 +1,19 @@
 extends RefCounted
 class_name M5Content
 
+# Additional timed arrivals overlap living cohorts; HP and the roster remain frozen.
+const HORDES = {
+	21:{"batch":4,"window":4.0,"step":0.3,"floor":6,"windows":2},
+	22:{"batch":4,"window":3.8,"step":0.3,"floor":6,"windows":2},
+	23:{"batch":4,"window":3.7,"step":0.3,"floor":7,"windows":2},
+	24:{"batch":5,"window":3.4,"step":0.25,"floor":9,"windows":2},
+	25:{"batch":5,"window":3.1,"step":0.25,"floor":9,"windows":2},
+	26:{"batch":6,"window":3.0,"step":0.25,"floor":10,"windows":2},
+	27:{"batch":12,"window":2.2,"step":0.18,"floor":14,"windows":3},
+	28:{"batch":14,"window":2.0,"step":0.18,"floor":16,"windows":3},
+	29:{"batch":16,"window":1.8,"step":0.18,"floor":18,"windows":3}
+}
+
 const ENEMIES = {
 	"E01":{"name":"追击者","hp":2.0,"speed":90.0,"role":"近战追击"},
 	"E02":{"name":"轻型蜂群","hp":1.2,"speed":105.0,"role":"成群接触"},
@@ -38,6 +51,7 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	actor.position = parent.to_local(point)
 	if is_instance_valid(LevelServer.town): actor.setDeathCallBack(LevelServer.town.onMonsterDeath)
 	parent.add_child(actor)
+	if LevelServer.level in [27,28,29] and id in ["E01","E02"]: actor.SPEED*=1.2
 	return actor
 
 const REGIONS = {
@@ -77,14 +91,14 @@ static func encounters() -> Dictionary:
 		18:{"name":"R4 · 18 载能连爆","region":"R4","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E12","E02","E11","E01","E02","E12","E02","E11"],"cap":70,"interval":0.39,"rhythm":"脉冲"},
 		19:{"name":"R4 · 19 再生压迫","region":"R4","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E07","E02","E08","E01","E02","E06","E02","E07"],"cap":52,"interval":0.49,"rhythm":"协同"},
 		20:{"name":"R4 · 20 蜂巢聚合体","region":"R4","info":"击败Boss；无倒计时自动胜利；Boss；敌群 ","seconds":0,"roles":[],"cap":20,"interval":1.6,"rhythm":"Boss","boss":"B02"},
-		21:{"name":"R5 · 21 双重防线","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E03","E02","E09","E01","E02","E06","E02","E03"],"cap":65,"interval":0.42,"rhythm":"协同"},
-		22:{"name":"R5 · 22 走廊射界","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E09","E02","E10","E01","E02","E11","E02","E09"],"cap":55,"interval":0.4,"rhythm":"交替"},
-		23:{"name":"R5 · 23 纵向追猎","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E04","E02","E11","E01","E02","E06","E02","E04"],"cap":72,"interval":0.37,"rhythm":"轮换"},
-		24:{"name":"R5 · 24 分裂连锁","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E12","E02","E07","E01","E02","E11","E02","E12"],"cap":72,"interval":0.39,"rhythm":"脉冲"},
-		25:{"name":"R5 · 25 能源精英","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E03","E02","E05","E01","E02","E08","E02","E06"],"cap":68,"interval":0.39,"rhythm":"精英"},
-		26:{"name":"R6 · 26 四面清场","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E12","E02","E11","E01","E02","E06","E02","E12"],"cap":93,"interval":0.29,"rhythm":"轮换"},
-		27:{"name":"R6 · 27 核心护卫","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E09","E02","E08","E01","E02","E11","E02","E06"],"cap":69,"interval":0.37,"rhythm":"协同"},
-		28:{"name":"R6 · 28 交替封路","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E04","E02","E10","E01","E02","E09","E02","E11"],"cap":74,"interval":0.37,"rhythm":"交替"},
-		29:{"name":"R6 · 29 平台高潮","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；中段同方向有限突袭","seconds":45,"roles":["E01","E02","E07","E02","E05","E01","E02","E11","E02","E06"],"cap":98,"interval":0.27,"rhythm":"三段"},
+		21:{"name":"R5 · 21 双重防线","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E03","E02","E09","E01","E02","E06","E02","E03"],"cap":65,"interval":0.42,"rhythm":"协同"},
+		22:{"name":"R5 · 22 走廊射界","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E09","E02","E10","E01","E02","E11","E02","E09"],"cap":55,"interval":0.4,"rhythm":"交替"},
+		23:{"name":"R5 · 23 纵向追猎","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E04","E02","E11","E01","E02","E06","E02","E04"],"cap":72,"interval":0.37,"rhythm":"轮换"},
+		24:{"name":"R5 · 24 分裂连锁","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E12","E02","E07","E01","E02","E11","E02","E12"],"cap":72,"interval":0.39,"rhythm":"脉冲"},
+		25:{"name":"R5 · 25 能源精英","region":"R5","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E03","E02","E05","E01","E02","E08","E02","E06"],"cap":68,"interval":0.39,"rhythm":"精英"},
+		26:{"name":"R6 · 26 四面清场","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E12","E02","E11","E01","E02","E06","E02","E12"],"cap":93,"interval":0.29,"rhythm":"轮换"},
+		27:{"name":"R6 · 27 核心护卫","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E09","E02","E08","E01","E02","E11","E02","E06"],"cap":110,"interval":0.37,"rhythm":"协同"},
+		28:{"name":"R6 · 28 交替封路","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E04","E02","E10","E01","E02","E09","E02","E11"],"cap":125,"interval":0.37,"rhythm":"交替"},
+		29:{"name":"R6 · 29 平台高潮","region":"R6","info":"生存45秒；高速追击群为主，保留特殊协同；多方向分批进入，增援可重叠","seconds":45,"roles":["E01","E02","E07","E02","E05","E01","E02","E11","E02","E06"],"cap":145,"interval":0.27,"rhythm":"三段"},
 		30:{"name":"R6 · 30 棱镜核心","region":"R6","info":"击败Boss；无倒计时自动胜利；Boss；敌群 ","seconds":0,"roles":[],"cap":20,"interval":1.6,"rhythm":"Boss","boss":"B03"},
 	}

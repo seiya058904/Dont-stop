@@ -60,6 +60,7 @@ func _physics_process(delta):
 func _draw():
 	var active = elapsed>=warning
 	var color = Color(1,0.36,0.64,0.8) if active else Color(1,0.73,0.25,0.9)
+	if role=="B02": color=Color(0.85,0.45,1,1) if active else Color(0.65,0.8,1,1)
 	if role == "B03":
 		for i in 4:
 			var end = direction.rotated(i*PI/2)*lengths[i]

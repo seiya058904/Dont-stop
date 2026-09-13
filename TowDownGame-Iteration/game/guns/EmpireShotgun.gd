@@ -9,7 +9,7 @@ func _shoot():
 func createBullet(generation):
 	for index in 2:
 		if generation != action_generation or not is_use or player.is_dead or get_tree().paused: return
-		for i in 2:
+		for i in int(projectile_count()/2):
 			var b = bullet_scene.instantiate()
 			b.setOnwer(player)
 			b.knockback_speed = knockback_speed
@@ -28,3 +28,5 @@ func _shootAnim():
 
 func _on_timer_timeout():
 	can_shoot = true
+
+func projectile_count() -> int: return 4

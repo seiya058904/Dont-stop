@@ -24,8 +24,17 @@ const rw_top = preload("res://ui/widgets/RewardTopItem.tscn")
 
 var weapon_feedback_tween: Tween
 var inv_ui
+var exp_text: Label
+var level_notice: Label
+var notice_tween: Tween
 
 func _ready() -> void:
+	PlayerData.level_rewards_applied.connect(show_level_rewards)
+	level_bar.show_percentage=false
+	exp_text=Label.new(); exp_text.position=level_bar.position; exp_text.size=level_bar.size; exp_text.add_theme_font_size_override("font_size",5); box_top.add_child(exp_text)
+	for child in level_panel.get_children(): child.hide()
+	level_panel.size=Vector2(180,48)
+	level_notice=Label.new(); level_notice.position=Vector2(4,3); level_notice.size=Vector2(172,44); level_notice.add_theme_font_size_override("font_size",7); level_panel.add_child(level_notice)
 	change_audio.bus = "UI"
 	Demo.restored.connect(on_restore)
 	Utils.onGameStart.connect(self.onGameStart)
@@ -42,7 +51,7 @@ func _ready() -> void:
 		hp_bar.max_value = max_hp;hp_bar.value = hp)
 
 func onGameStart():
-	level_label.text = tr("LEVEL") + str(PlayerData.player_level)
+	level_label.text = "Lv. " + str(PlayerData.player_level)
 	onPlayerExpChange(PlayerData.player_exp,PlayerData.getMaxExp())
 	onGoldChange(PlayerData.gold)
 	onRewardChange(PlayerData.reward_point)
@@ -126,18 +135,19 @@ func onRewardAdd(rw:BaseReward):
 		ins.setData(rw)
 
 func onPlayerLevelChange(level):
-	level_label.text = tr("LEVEL") + str(level)
-	if !level_panel.visible :
-		level_panel.visible = true
-		var tween = create_tween()
-		tween.tween_property(level_panel,"position:x",8,0.5)
-		tween.tween_property(level_panel,"position:x",-level_panel.size.x - 5,0.5).set_delay(1)
-		tween.tween_callback(func callback():
-			level_panel.visible = false)
+	level_label.text = "Lv. " + str(level)
+
+func show_level_rewards(rewards: Dictionary):
+	if Demo.loading: return
+	level_notice.text=PlayerData.PROGRESSION.notice(rewards)
+	level_panel.position=Vector2(8,65); level_panel.show()
+	if notice_tween: notice_tween.kill()
+	notice_tween=create_tween(); notice_tween.tween_interval(3.0); notice_tween.tween_callback(level_panel.hide)
 
 func onPlayerExpChange(exp,max_exp):
 	level_bar.max_value = max_exp
 	level_bar.value = exp
+	if is_instance_valid(exp_text): exp_text.text="EXP %.1f / %.1f" % [exp,max_exp]
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("inv") and Utils.is_game_start and Demo.pause_stack.is_empty():
