@@ -43,8 +43,13 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          # Fresh runners can quit the first import pass before every asset is
+          # generated; the second pass is a cheap no-op when everything exists.
           & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
+          $count = (Get-ChildItem "TowDownGame-Iteration/.godot/imported" -ErrorAction SilentlyContinue | Measure-Object).Count
+          echo "imported assets: $count"
+          if ($count -lt 50) { throw "import produced only $count assets" }
 
       - name: Export Windows x64 release
         shell: pwsh
@@ -53,6 +58,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path TowDownGame-Iteration/build/windows | Out-Null
           & "$env:GODOT" --headless --path TowDownGame-Iteration --export-release "Windows x64 Release" build/windows/TowDownGame-Windows-x64.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-ChildItem TowDownGame-Iteration/build/windows | Format-Table Name, Length
           $exe = 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.exe'
           $pck = 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.pck'
           if (-not ((Test-Path $exe) -and (Test-Path $pck))) { throw 'export output missing' }
