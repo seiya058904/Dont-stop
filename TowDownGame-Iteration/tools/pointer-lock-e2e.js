@@ -280,7 +280,8 @@ function token(name, ok, extra = '') {
 	// The browser enforces a ~1.3s pointer-lock cooldown after ESC; wait it out
 	// before clicking so the re-capture gesture cannot be rejected.
 	async function resumeFromPause() {
-		for (let attempt = 0; attempt < 3; attempt++) {
+		for (let attempt = 0; attempt < 4; attempt++) {
+			await page.bringToFront().catch(() => {});
 			const pausedNow = latest()?.paused === true;
 			lines.length = 0;
 			if (pausedNow) { await page.keyboard.press('Escape'); }
