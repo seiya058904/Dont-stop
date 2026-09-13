@@ -23,6 +23,15 @@ function token(name, ok, extra = '') {
 	const lines = [];
 	page.on('console', m => { const t = m.text(); if (t.includes('[e2e]')) lines.push(t); });
 	const locked = () => page.evaluate(() => document.pointerLockElement === document.querySelector('#canvas-host canvas'));
+	// xvfb/CI drops Pointer Lock after a few minutes; keep re-taking it.
+	async function keepAlive() {
+		if (!(await locked())) {
+			await page.mouse.move(640, 400);
+			await page.mouse.click(640, 400);
+			await waitFor(locked, 8000);
+		}
+		return locked();
+	}
 	const aimLines = () => lines.filter(l => l.includes('gunrot='));
 	const latest = () => {
 		for (let i = lines.length - 1; i >= 0; i--) {
@@ -128,8 +137,62 @@ function token(name, ok, extra = '') {
 	token('WASD_POSITION_CHANGED', afterD && Math.abs(dxProof) > 2,
 		`key=${dKey} dx=${dxProof.toFixed(1)}`);
 
+	// ---- Real shots follow the aim direction (velocity of fresh projectile).
+	// Clear any stuck pointer/button state, chamber a round, then fire real LMB.
+	async function fireDirection(name, dx, dy, cmp) {
+		await keepAlive();
+		for (let attempt = 0; attempt < 3; attempt++) {
+			// Self-heal: xvfb/CI can drop Pointer Lock after a while, which the
+			// game treats as ESC (pause). Re-acquire before asserting a shot.
+			if (!(await locked()) || latest()?.paused === true) {
+				console.log('[e2e] re-acquire before ' + name + ' (locked=' + await locked() + ' paused=' + (latest()?.paused) + ')');
+				const ok = await resumeFromPause();
+				if (!ok) { token(name, false, 'pointer lock not recoverable'); return; }
+			}
+			lines.length = 0;
+			await sweep(dx, dy);
+			await page.mouse.up();          // clear a possibly-lost previous release
+			lines.length = 0;
+			await page.mouse.down();
+			// Slow software-GL runners may need several frames to start a shot.
+			let projLine = await waitForLine(l => l.includes('[e2e] proj'), 12000);
+			await page.mouse.up();
+			if (!projLine) projLine = await waitForLine(l => l.includes('[e2e] proj'), 6000);
+			if (projLine) {
+				const m = projLine.match(/proj vx=(-?[\d.]+) vy=(-?[\d.]+)/);
+				const vx = parseFloat(m[1]), vy = parseFloat(m[2]);
+				token(name, cmp(vx, vy), `vx=${vx.toFixed(1)} vy=${vy.toFixed(1)} attempt=${attempt}`);
+				return;
+			}
+			const st = await aimLine();
+			console.log(`[e2e] fire-debug ${name} attempt=${attempt} ` + (st ? st.raw.slice(0, 220) : 'no-state-line'));
+			// Magazine ran dry (capture clicks also fire): reload and retry.
+			await page.keyboard.press('r');
+			await page.waitForTimeout(3000);
+		}
+		token(name, false, 'no projectile spawned');
+	}
+	// Warm-up shot on slow software-GL runners: the very first real fire can
+	// straddle frame boundaries; discard it and re-chamber before asserting.
+	{
+		await page.mouse.move(640, 400);
+		await page.mouse.up();
+		await page.mouse.down();
+		await page.waitForTimeout(1500);
+		await page.mouse.up();
+		await page.waitForTimeout(900);
+		await page.keyboard.press('r');
+		await page.waitForTimeout(3000);
+	}
+	await fireDirection('PROJECTILE_FOLLOWS_AIM_RIGHT', 300, 0, (vx) => vx > 5);
+	await fireDirection('PROJECTILE_FOLLOWS_AIM_LEFT', -300, 0, (vx) => vx < -5);
+	await fireDirection('PROJECTILE_FOLLOWS_AIM_DOWN', 0, 260, (vx, vy) => vy > 5);
+	await fireDirection('PROJECTILE_FOLLOWS_AIM_UP', 0, -260, (vx, vy) => vy < -5);
+
+
 
 	// ---- Aim follows real relative mouse movement.
+	await keepAlive();
 	// Each direction is measured after re-baselining the aim at the screen
 	// centre so the expected angle delta is unambiguous.
 	async function recenter() {
@@ -194,58 +257,8 @@ function token(name, ok, extra = '') {
 	}
 	token('AIM_360', accumulated >= 360, `accumulated=${accumulated.toFixed(0)}deg`);
 
-	// ---- Real shots follow the aim direction (velocity of fresh projectile).
-	// Clear any stuck pointer/button state, chamber a round, then fire real LMB.
-	async function fireDirection(name, dx, dy, cmp) {
-		for (let attempt = 0; attempt < 3; attempt++) {
-			// Self-heal: xvfb/CI can drop Pointer Lock after a while, which the
-			// game treats as ESC (pause). Re-acquire before asserting a shot.
-			if (!(await locked()) || latest()?.paused === true) {
-				console.log('[e2e] re-acquire before ' + name + ' (locked=' + await locked() + ' paused=' + (latest()?.paused) + ')');
-				const ok = await resumeFromPause();
-				if (!ok) { token(name, false, 'pointer lock not recoverable'); return; }
-			}
-			lines.length = 0;
-			await sweep(dx, dy);
-			await page.mouse.up();          // clear a possibly-lost previous release
-			lines.length = 0;
-			await page.mouse.down();
-			// Slow software-GL runners may need several frames to start a shot.
-			let projLine = await waitForLine(l => l.includes('[e2e] proj'), 12000);
-			await page.mouse.up();
-			if (!projLine) projLine = await waitForLine(l => l.includes('[e2e] proj'), 6000);
-			if (projLine) {
-				const m = projLine.match(/proj vx=(-?[\d.]+) vy=(-?[\d.]+)/);
-				const vx = parseFloat(m[1]), vy = parseFloat(m[2]);
-				token(name, cmp(vx, vy), `vx=${vx.toFixed(1)} vy=${vy.toFixed(1)} attempt=${attempt}`);
-				return;
-			}
-			const st = await aimLine();
-			console.log(`[e2e] fire-debug ${name} attempt=${attempt} ` + (st ? st.raw.slice(0, 220) : 'no-state-line'));
-			// Magazine ran dry (capture clicks also fire): reload and retry.
-			await page.keyboard.press('r');
-			await page.waitForTimeout(3000);
-		}
-		token(name, false, 'no projectile spawned');
-	}
-	// Warm-up shot on slow software-GL runners: the very first real fire can
-	// straddle frame boundaries; discard it and re-chamber before asserting.
-	{
-		await page.mouse.move(640, 400);
-		await page.mouse.up();
-		await page.mouse.down();
-		await page.waitForTimeout(1500);
-		await page.mouse.up();
-		await page.waitForTimeout(900);
-		await page.keyboard.press('r');
-		await page.waitForTimeout(3000);
-	}
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_RIGHT', 300, 0, (vx) => vx > 5);
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_LEFT', -300, 0, (vx) => vx < -5);
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_DOWN', 0, 260, (vx, vy) => vy > 5);
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_UP', 0, -260, (vx, vy) => vy < -5);
-
 	// ---- ESC releases Pointer Lock and opens the pause panel (mouse visible).
+	await keepAlive();
 	let escState = null;
 	for (let attempt = 0; attempt < 2; attempt++) {
 		lines.length = 0;
