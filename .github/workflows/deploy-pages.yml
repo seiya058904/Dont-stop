@@ -51,7 +51,7 @@ jobs:
             --log-file "$RUNNER_TEMP/godot/import.log"
           mkdir -p TowDownGame-Iteration/build/web
           "$GODOT" --headless --path TowDownGame-Iteration \
-            --export-release "Web Release" TowDownGame-Iteration/build/web/index.html \
+            --export-release "Web Release" build/web/index.html \
             --log-file "$RUNNER_TEMP/godot/export.log"
           test -s TowDownGame-Iteration/build/web/index.html
           test -s TowDownGame-Iteration/build/web/index.pck
