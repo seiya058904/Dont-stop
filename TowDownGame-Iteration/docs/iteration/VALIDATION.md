@@ -1,5 +1,14 @@
 # 验证记录（M11 当前，旧轮次历史保留）
 
+## M12 当前验证
+
+- 清理前 246 个运行副本，30,093,538,453 逻辑字节；三个目标目录已不存在，Godot `_tools` 保留。清理记录：`evidence/m12/cleanup.json`。
+- 新 runner 已验证成功和失败结束后副本均删除、所有者目录和越界路径拒绝删除。Git `928db1c` 重建基线后 52 项 M8Contracts 通过。
+- 最终通过40个游戏用例、2247项断言及4项生命周期检查；汇总见 [summary.json](evidence/m12/summary.json)。统一复跑命令：`python tools/verify-m12.py`；汇总输出到 `evidence/m12`，保留历史 M11 汇总文件。加 `--visible` 可运行可见的 1366×768 原生窗口专项。
+- 视口鼠标事件回归覆盖所有持有项和 tooltip 边界；原生窗口截图与训练流程另有证据。OS 鼠标工具两次初始化失败，因此真实 OS 鼠标检查仍待确认，`HUMAN_ACCEPTED = false`。
+- 原始失败及修复后的证据均保留；[M12 报告](M12-FINAL-UX-POLISH.md) 区分失败、复测和未执行项目。
+
+
 ## M11 当前验证
 
 - **Automated verified**：冻结数量/HP/品阶合同；A/B/C 三档有限预算真实购买、各七关 active fire；Level 单级与跨多级、低 HP 不回满、24 枪输出/发射数量与面板对齐、来源类型/顺序、HUD 状态、重叠到场与安全路径。最终结果和每项检查数见 [M11 测量索引](evidence/m11/README.md)。

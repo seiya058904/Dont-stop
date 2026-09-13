@@ -23,6 +23,10 @@ var tier_box: OptionButton
 var sort_box: OptionButton
 var tab_state: Dictionary = {}
 var search_box: LineEdit
+var weapon_preview: TextureRect
+var weapon_heading: Label
+var weapon_badge: Label
+var weapon_header: HBoxContainer
 var category_box: OptionButton
 
 func switch_tab(next_tab: String):
@@ -104,7 +108,7 @@ func _ready():
 		if Demo.save_blocked: Demo.show_save_dialog(true))
 	button(top,"设置",func(): Demo.open_settings())
 	button(top,"角色属性",Demo.open_stats)
-	button(top,"束缚教学",Demo.root_lesson)
+	button(top,"束缚攻击训练",Demo.root_lesson).tooltip_text="学习如何识别并应对 Boss 的紫色束缚攻击"
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)
@@ -152,6 +156,13 @@ func _ready():
 	var right = VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
+	weapon_header=HBoxContainer.new(); right.add_child(weapon_header)
+	weapon_preview=TextureRect.new(); weapon_preview.name="WeaponPreview"
+	weapon_preview.custom_minimum_size=Vector2(70,24); weapon_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	weapon_preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED; weapon_preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+	weapon_header.add_child(weapon_preview)
+	var titles=VBoxContainer.new(); titles.size_flags_horizontal=Control.SIZE_EXPAND_FILL; weapon_header.add_child(titles)
+	weapon_heading=label(titles,"",9); weapon_badge=label(titles,"",7)
 	var detail_scroll = ScrollContainer.new()
 	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -159,7 +170,7 @@ func _ready():
 	right.add_child(detail_scroll)
 	detail = VBoxContainer.new()
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail.add_theme_constant_override("separation",4)
+	detail.add_theme_constant_override("separation",2)
 	detail_scroll.add_child(detail)
 	action_bar = VBoxContainer.new()
 	right.add_child(action_bar)
@@ -177,7 +188,7 @@ func request_refresh():
 
 func entry(text: String, key: String, action: Callable):
 	detail_actions[key] = action
-	button(listing,text,func(): selection = key; action.call())
+	return button(listing,text,func(): selection = key; action.call())
 
 func update_wallet():
 	wallet.text = "营地整备  |  金币 %d  天赋点 %d" % [PlayerData.gold,PlayerData.reward_point]
@@ -191,6 +202,7 @@ func clear_box(box):
 
 func render():
 	refresh_pending = false
+	weapon_header.visible=tab=="weapon"
 	var scroll_position = listing_scroll.scroll_vertical
 	detail_actions.clear()
 	update_wallet()
@@ -222,7 +234,10 @@ func render():
 				if int(id) >= 111: categories.append("特殊")
 				if not matches(tr(gun.weapon_name)+id+WeaponCatalog.definition(int(id)).get("plan","")+DemoConfig.weapon_info(int(id)),categories): continue
 				if owned_only and not PlayerData.player_weapon_list.has(int(id)): continue
-				entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
+				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
+				weapon_card.icon=gun.image; weapon_card.expand_icon=true; weapon_card.add_theme_constant_override("icon_max_width",36)
+				weapon_card.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; weapon_card.custom_minimum_size.y=31
+				tier_style(weapon_card,WeaponCatalog.tier(int(id)))
 		"attachment":
 			for id in Utils.am_dict:
 				var am = Utils.am_dict[id].instantiate()
@@ -262,23 +277,26 @@ func show_weapon(id: String, gun):
 	clear_box(detail)
 	var owned = PlayerData.player_weapon_list.has(int(id))
 	if owned: gun = PlayerData.player_weapon_list[int(id)]
-	var preview = TextureRect.new()
-	preview.name = "WeaponPreview"
-	preview.custom_minimum_size = Vector2(120,60)
-	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	preview.texture = gun.image
-	assert(preview.texture != null,"Missing weapon preview: "+id)
-	detail.add_child(preview)
-	label(detail,tr(gun.weapon_name),10)
-	label(detail,"TIER %s · %s · %d金币" % [["I","II","III","IV","V"][WeaponCatalog.tier(int(id))-1],WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],8)
+	weapon_preview.texture=weapon_art(gun.image)
+	assert(weapon_preview.texture!=null,"Missing weapon preview: "+id)
+	weapon_heading.text=tr(gun.weapon_name)
+	weapon_badge.text="TIER %s · %s · %d金币" % [["I","II","III","IV","V"][WeaponCatalog.tier(int(id))-1],WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]]
+	weapon_badge.add_theme_color_override("font_color",tier_color(WeaponCatalog.tier(int(id))))
 	var stats = gun.effective if owned else {}
 	if stats.is_empty():
 		gun.tags = DemoConfig.weapon_tags(int(id))
 		gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
 		stats = EffectiveStats.calculate(gun)
-	label(detail,"伤害 %.2f · 射速 %.1f次/秒\n弹匣 %d · 换弹 %.2f秒" % [stats.damage,stats.rate,stats.magazine,stats.reload],8)
+	if Utils.player.gun and Utils.player.gun.weapon_id!=int(id):
+		label(detail,"当前 → 候选（同一构筑，武器基础发射）",7)
+		var current=EffectiveStats.calculate(Utils.player.gun)
+		var comparisons=GridContainer.new(); comparisons.columns=2; detail.add_child(comparisons)
+		for stat in ["damage","rate","magazine","reload","crit","range"]:
+			var line=comparison(stat,current[stat],stats[stat]); var first=line.find("  ")
+			line=line.substr(0,first)+"\n"+line.substr(first+2)
+			var cell=label(comparisons,line,7); cell.custom_minimum_size.x=100; cell.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	else:
+		label(detail,"Damage %.2f · RPM %.0f\nMagazine %d · Reload %.2fs\nCrit %.1f%% · Range %.0f" % [stats.damage,stats.rate*60,stats.magazine,stats.reload,stats.crit*100,stats.range],8)
 	label(detail,WeaponCatalog.short_info(int(id)))
 	label(detail," / ".join(WeaponCatalog.labels(int(id))))
 	var more = CheckButton.new()
@@ -405,3 +423,24 @@ func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel") and Demo.top_pause(self):
 		get_viewport().set_input_as_handled()
 		queue_free()
+
+func tier_color(tier: int) -> Color:
+	return [Color("a8bac2"),Color("8ed8b0"),Color("79c6ef"),Color("c6a0ee"),Color("ffd47d")][clampi(tier,1,5)-1]
+func weapon_art(texture: Texture2D) -> Texture2D:
+	var image=texture.get_image()
+	if not image or image.get_used_rect().size==Vector2i.ZERO: return texture
+	var cropped=AtlasTexture.new(); cropped.atlas=texture; cropped.region=image.get_used_rect()
+	return cropped
+func tier_style(item: Button,tier: int):
+	for state in ["normal","hover","pressed","focus"]:
+		var style=StyleBoxFlat.new(); style.bg_color=Color("233743") if state=="normal" else Color("3a535d")
+		style.border_color=tier_color(tier); style.set_border_width_all(1); style.border_width_left=2 if tier<4 else 3
+		style.set_content_margin_all(3)
+		if tier==5: style.shadow_color=Color(1,0.74,0.3,0.15); style.shadow_size=2
+		item.add_theme_stylebox_override(state,style)
+func comparison(stat: String,current: float,candidate: float) -> String:
+	var names={"damage":"Damage","rate":"RPM","magazine":"Magazine","reload":"Reload","crit":"Crit","range":"Range"}
+	var delta=candidate-current
+	var change="%+.0f" % delta if stat=="magazine" else ("%+.1fpp" % (delta*100) if stat=="crit" else ("%+.0f%%" % (delta/current*100) if current!=0 else "%+.1f" % delta))
+	var factor=60.0 if stat=="rate" else (100.0 if stat=="crit" else 1.0)
+	return "%s  %.1f → %.1f  %s%s" % [names[stat],current*factor,candidate*factor,"▲" if delta>0 else ("▼" if delta<0 else "="),change]

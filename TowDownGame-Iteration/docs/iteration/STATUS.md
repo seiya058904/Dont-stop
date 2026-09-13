@@ -1,6 +1,20 @@
 # TowDownGame Experience Demo
 
-## M11 尸潮压力与玩家说明（当前工程候选）
+## M12 最终 UX 与测试快照清理（当前候选）
+
+**M12 FINAL UX POLISH IMPLEMENTED / OS MOUSE VERIFICATION PENDING**
+
+H1_STATUS = FIFTH_FEEDBACK_ADDRESSED
+HUMAN_ACCEPTED = false
+
+- 起点 `8be5eb4`，当前 feature 分支；不改内容数量、尸潮曲线、经济或武器平衡。
+- 三类持有物概览、正式图标与统一 tooltip；最终属性和贡献继续读取 runtime 来源。商店固定枪图/Tier 页头、两列属性对比、固定 CTA。
+- 束缚攻击训练先说明，正式巨卵命中并解除后才完成，由返回营地按钮结束。未命中不会自动算完成。
+- 246 个历史副本已删除，逻辑体积 28.03 GiB → 0；磁盘可用空间净增约 13.98 GiB。保留 `_tools`、正式源码和证据；新 runner 成功/失败均导出证据后删除副本，基线从 Git 重建。
+- 自动回归通过：40个游戏用例、2247项断言，另有4项生命周期检查。原生鼠标工具重置重试仍无法初始化，OS 鼠标逐项验收暂缺；不得将视口输入测试冒称为 OS 鼠标测试，也暂不声明全部 M12 EXIT GATE 完成。
+- 详见 [M12 报告](M12-FINAL-UX-POLISH.md)。停在 M12，等待最终真人验收；不进入 M13、不 merge main、不 Release。
+
+## M11 尸潮压力与玩家说明（历史工程候选）
 
 **M11 DIFFICULTY & CLARITY COMPLETE / READY FOR FINAL HUMAN ACCEPTANCE**
 

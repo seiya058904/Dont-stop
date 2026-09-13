@@ -114,3 +114,5 @@ M9 历史 55.126 ms、M10 历史 38.785 ms spike 保留。更密敌群可能产�
 在迭代目录使用工作区已有 Python/Godot：`python tools/run-m11.py 新标签 M11Clarity --render`；`python tools/run-m11.py 新标签 M11SaveMigration`；`python tools/run-m11.py 新标签 M11Navigation`；`python tools/benchmark-m11.py 新前缀`。标签不能覆盖原证据。`--baseline` 需要本工作区保留的 `archive/workspace-support/m11-runs/anchor-m10/TowDownGame-Iteration` 冻结 M10 快照；这份运行支持不提交远程，源码锚点仍在 Git 的 `928db1c`。新环境重建基线时必须使用该锚点并核对源码，不能以当前 M11 冒充基线。
 
 `python tools/report-m11.py` 汇总本次固定标签；缺少运行、错误未解决或原生实际 draw 缺失时返回失败。原始执行日志和失败标签不由汇总工具改写。原生性能测量须串行独占，功能 headless 结果不与原生帧时间混用。
+
+> M12 更新：上述本地 `m11-runs/anchor-m10` 历史副本已按授权清理。当前 `tools/run-m11.py --baseline` 从 Git `928db1c` 重建临时基线，导出证据后清理；无需旧目录。历史 M11 测量和正式 fixture 保留。

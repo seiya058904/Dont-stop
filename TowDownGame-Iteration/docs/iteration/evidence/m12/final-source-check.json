@@ -1,0 +1,28 @@
+{
+  "hashes": {
+    "autoload/Demo.gd": "a317bf7f6ba85f81eb164e20224260b38fd5fe7319aae29be8b65c04c492310f",
+    "game/config/EffectiveStats.gd": "5ea7580edd666ba77f0eadd22dfce76e02457a34ca01099956c0d304bb510918",
+    "ui/StatPanel.gd": "080f6efdc9afde7ac9e344a40cf030cf4144e14a43641cc779d417825c3b2ac3",
+    "ui/CampPanel.gd": "9cfaed4dd1e9307473f428bd47b6ae3e4925e3cec6472a6f0b487ae3dce4cc60",
+    "ui/BuildIcon.gd": "abe1ff6e3cb0adda2334beac4d925fb739c58d3d729ec4b27e78da9bbd5c5e76",
+    "ui/RootLessonPanel.gd": "798d4128c5bd91a42885ee357b7a3f9fa754a782dc1e68ece22d70bee6b16aa0"
+  },
+  "proof": [
+    {
+      "label": "m12-20260913-170041-M11Clarity",
+      "mismatches": []
+    },
+    {
+      "label": "m12-20260913-170041-M12UX",
+      "mismatches": []
+    },
+    {
+      "label": "m12-lesson-final",
+      "mismatches": []
+    },
+    {
+      "label": "m12-native-final-v2",
+      "mismatches": []
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "runner": "m9",
+    "passed": true,
+    "execution": "../m9/m12-git-baseline-smoke/execution.json",
+    "errors": [],
+    "snapshot_removed": true
+  },
+  {
+    "runner": "m10",
+    "passed": true,
+    "execution": "../m10/m12-git-baseline-smoke/execution.json",
+    "errors": [],
+    "snapshot_removed": true
+  }
+]

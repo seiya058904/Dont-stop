@@ -1,0 +1,41 @@
+.\README.md:12:| `archive\workspace-support\` | 工作区支持资料 | 运行时、官方二进制、缓存/临时目录和候选评审资料；仍保留在本工作区内，详见其下的 `README.md` |
+.\README.md:19:已删除候选 (SOURCE REMOVED AFTER PLAYTEST): top-down-pew-pew / WarZone_2 / Hypersomnia / cdogs-sdl / quiver tiny-wizard-demo / top-down-shooter-core / Godot-Top-down-Shooter-Tutorial。评分与淘汰结论见 `archive\workspace-support\candidate-review\`。
+.\README.md:62:3 个当前保留游戏的原始仓库根目录都有 `PLAY_GAME.bat`，双击即可启动。`TowDownGame-Iteration/PLAY_GAME.bat` 是体验版独立启动入口；`archive\workspace-support\candidate-review\launchers\` 下的旧入口现在只是兼容包装器。
+.\README.md:78:- 候选试玩记录和历史评审仍保留在 `archive\workspace-support\candidate-review\`
+.\README.md:80:是否保留候选由用户试玩决定；历史评分见 `archive\workspace-support\candidate-review\PLAYTEST_FEEDBACK.md`。
+.\README.md:84:> 根目录顶层只保留游戏仓库和统一的 `archive\` 容器；依赖和评审资料仍保留在本工作区的 `archive\workspace-support\` 内。
+.\README.md:86:- `archive\workspace-support\_tools\` = Godot 运行时和候选官方二进制
+.\README.md:87:- `archive\workspace-support\candidate-review\` = 试玩记录、评审资料、截图和兼容启动包装器
+.\README.md:88:- `archive\workspace-support\_downloads\`、`_cache\`、`_tmp\` = 仍保留在工作区内的支持目录
+.\TowDownGame-Iteration\docs\iteration\VALIDATION.md:135:& '.\archive\workspace-support\_tools\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe' --headless --max-fps 160 --path '.\TowDownGame-Iteration' res://tests/R1LongRun.tscn
+.\TowDownGame-Iteration\docs\iteration\plan\CODEX-START-PROMPT.md:5:先从当前工作目录、根README、AGENTS和已有PLAY_GAME.bat确认真实工作区。用户给过的路径线索是 `D:\xia zai\AI project\8.30 Backup game\`，参考项目在其中的 `Godot-GameTemplate`；不要假定你的cwd或路径已被验证。计划库可能在工作区 `archive\workspace-support\TowDownGame-Codex-Upgrade-Plan\`，也可能作为附件提供。
+.\TowDownGame-Iteration\docs\iteration\plan\03-SYSTEM-CONTRACTS.md:13:根目录只允许为纳入迭代副本而做必要的README、忽略规则和资源追踪规则调整；游戏代码只进入副本。工具、临时试玩比较副本、下载和重型证据留在现有 `archive/workspace-support/`，不全局安装。
+.\TowDownGame-Iteration\docs\iteration\M11-HORDE-CLARITY.md:114:在迭代目录使用工作区已有 Python/Godot：`python tools/run-m11.py 新标签 M11Clarity --render`；`python tools/run-m11.py 新标签 M11SaveMigration`；`python tools/run-m11.py 新标签 M11Navigation`；`python tools/benchmark-m11.py 新前缀`。标签不能覆盖原证据。`--baseline` 需要本工作区保留的 `archive/workspace-support/m11-runs/anchor-m10/TowDownGame-Iteration` 冻结 M10 快照；这份运行支持不提交远程，源码锚点仍在 Git 的 `928db1c`。新环境重建基线时必须使用该锚点并核对源码，不能以当前 M11 冒充基线。
+.\TowDownGame-Iteration\PLAY_GAME.bat:4:set "GODOT=%~dp0..\archive\workspace-support\_tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe"
+.\TowDownGame-Iteration\tools\report-m8.py:78:修改游戏前保存了独立的 M7 源码副本（工作区 archive/workspace-support/m8-baseline），比对见 baseline-source.json。基线行为测试先跑原型和 M5 的 12 类敌人、3 个 Boss，定点与接近响应各有记录；高生命、静止角色仅用于这个诊断，不用于 Boss TTK。
+.\TowDownGame-Iteration\tools\report-m8.py:178:baseline-behavior.txt 与 final-import.txt 仅规范化终端行末空白和重复空白尾行；错误和事件文本完整保留。原始字节已归档在工作区 archive/workspace-support/m8-raw-terminal-logs，原始/发布 SHA256 见 text-normalization.json。
+.\TowDownGame-Iteration\tools\benchmark-m7.py:7:engine=root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\report-m8-r1.py:152:    text+='\n发布的新增终端日志仅规范化行末空白与重复空白尾行；原始字节留在 archive/workspace-support/m8-r1-raw-terminal-logs，原始/发布 SHA256 见 r1-text-normalization.json。错误、失败和原始测量数值均保留。\n'
+.\TowDownGame-Iteration\tools\benchmark-m6.py:11:engine = root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\benchmark-m8-r1.py:13:        folder=root.parent/('archive/workspace-support/m8-baseline' if version=='M7' else 'archive/workspace-support/m8-r1-baseline')/'TowDownGame-Iteration/docs/iteration/evidence/m8'
+.\TowDownGame-Iteration\tools\profile-m6.py:10:engine = root.parent / 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'
+.\TowDownGame-Iteration\tools\render-isolation.py:5:    support=pathlib.Path(__file__).resolve().parents[2]/'archive/workspace-support'
+.\TowDownGame-Iteration\tools\benchmark-m8.py:5:baseline=root.parent/'archive/workspace-support/m8-baseline/TowDownGame-Iteration/docs/iteration/evidence/m8'
+.\TowDownGame-Iteration\tools\profile-m7-pressure.py:5:engine=root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\run-m7-render.py:4:engine=root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\freeze-m8-r1.py:4:target = root.parent/'archive/workspace-support/m8-r1-baseline/TowDownGame-Iteration'
+.\TowDownGame-Iteration\tools\run-m8.py:6:engine = root.parent / 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\run-m8.py:12:    baseline = root.parent/('archive/workspace-support/m8-baseline/TowDownGame-Iteration' if flag=='--baseline' else 'archive/workspace-support/m8-r1-baseline/TowDownGame-Iteration')
+.\TowDownGame-Iteration\tools\run-m7-background.py:4:engine = root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\run-m9.py:20:support = root.parent / 'archive/workspace-support'
+.\TowDownGame-Iteration\tools\freeze-m8-baseline.py:4:target = root.parent/'archive/workspace-support/m8-baseline/TowDownGame-Iteration'
+.\TowDownGame-Iteration\tools\run-m6-background.py:4:engine = root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\run-m10.py:20:support = root.parent / 'archive/workspace-support'
+.\TowDownGame-Iteration\tools\run-m11.py:20:support = root.parent / 'archive/workspace-support'
+.\TowDownGame-Iteration\tools\verify-m7.py:6:engine = root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'
+.\TowDownGame-Iteration\tools\verify-m34.ps1:4:$godotPath = Join-Path $workspaceRoot 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'
+.\TowDownGame-Iteration\tools\verify.ps1:4:$godotPath = Join-Path $workspaceRoot 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'
+.\TowDownGame-Iteration\tools\verify-m5.ps1:4:$godotPath = Join-Path $workspaceRoot 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'
+.\TowDownGame-Iteration\tools\verify-m6.py:6:engine = root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'
+.\TowDownGame-Iteration\tools\verify-m8.py:4:engine=root.parent/'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
+.\TowDownGame-Iteration\tools\verify-r1.ps1:5:$godotPath = Join-Path $workspaceRoot 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64_console.exe'

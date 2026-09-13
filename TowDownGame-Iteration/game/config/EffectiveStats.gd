@@ -105,6 +105,10 @@ static func inspect(gun) -> Dictionary:
 	player.shield_unlocked=Demo.rank("T19")>0
 	player.shield_cooldown=Demo.cooldown("T19")
 	player.pickup_multiplier=1.0+RewardServer.pickup_bonus()
+	player.pickup=player.pickup_multiplier
+	ledger.add("pickup","base","base","基础拾取范围","flat",1.0)
+	ledger.add("pickup","talent","T09",DemoConfig.TALENTS.T09.name,"additive_percentage",DemoConfig.talent_value("T09",Demo.rank("T09")),Demo.rank("T09")>0)
+	ledger.add("pickup","reward","23","拾取奖励","additive_percentage",RewardServer.pickup_bonus()-DemoConfig.talent_value("T09",Demo.rank("T09")),RewardServer.rank(23)>0)
 	player.reserve_magazines=PlayerData.reserve_magazines
 	ledger.add("speed","base","base","基础移动","flat",100*PlayerData.player_speed)
 	ledger.add("speed","talent","T08",DemoConfig.TALENTS.T08.name,"flat",100*DemoConfig.talent_value("T08",Demo.rank("T08")),Demo.rank("T08")>0)
@@ -136,12 +140,21 @@ static func inspect(gun) -> Dictionary:
 	ledger.add("pierce","talent","T13",DemoConfig.TALENTS.T13.name,"flat",Demo.rank("T13"),"straight" in gun.tags,"仅直射")
 	for stat in ["magazine","reload","rate","crit"]:
 		ledger.add(stat,"rule","bounds","运行时边界/取整","rule",{"magazine":"取整，至少1发","reload":"至少%.2f秒" % DemoConfig.MIN_RELOAD_SECONDS,"rate":"热流10 tick/s；转管至多24，其余60","crit":"0–100%"}[stat])
-	return {"weapon":final,"player":player,"ledger":ledger,"conditions":conditions(gun)}
+	var upgrade_deltas={}
+	var current=calculate(gun)
+	for id in Demo.owned_global_upgrades:
+		var without=calculate(gun,Demo.owned_global_upgrades.filter(func(other): return str(other)!=str(id)))
+		var delta={}
+		for stat in ["damage","crit","magazine","reload","range","spread","impulse","shards","pierce"]:
+			var contribution=float(current[stat])-float(without[stat])
+			if not is_zero_approx(contribution): delta[stat]=contribution
+		upgrade_deltas[str(id)]=delta
+	return {"weapon":final,"player":player,"ledger":ledger,"conditions":conditions(gun),"upgrade_deltas":upgrade_deltas}
 
 static func conditions(gun) -> Array:
 	var rows=[]
 	for id in Demo.talents:
-		if id in ["T01","T02","T03","T04","T05","T06","T07","T08","T18"]: continue
+		if id in ["T01","T02","T03","T04","T05","T06","T07","T08","T09","T18"]: continue
 		rows.append({"name":DemoConfig.TALENTS[id].name,"source":"天赋","info":DemoConfig.talent_info(id),"status":Demo.talent_status(id)})
 	for reward in Utils.player.reward_root.get_children():
 		rows.append({"name":TranslationServer.translate(reward.reward_name),"source":"奖励 NPC · %d层" % reward.count,"info":TranslationServer.translate(reward.reward_info),"status":"生效" if reward.id==22 and reward.get("moving_buff")==true else "按条件触发 / 效果上限见说明"})

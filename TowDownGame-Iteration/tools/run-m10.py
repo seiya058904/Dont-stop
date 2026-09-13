@@ -8,6 +8,8 @@ import shutil
 import subprocess
 import sys
 import time
+sys.dont_write_bytecode = True
+from snapshot_lifecycle import allocate, git_baseline, remove_owned_tree
 
 root = pathlib.Path(__file__).resolve().parents[1]
 label, scene, *args = sys.argv[1:]
@@ -17,14 +19,17 @@ render = '--render' in args
 if render:
     args.remove('--render')
 support = root.parent / 'archive/workspace-support'
+out = root / 'docs/iteration/evidence/m10' / label
+if out.exists():
+    raise SystemExit('Evidence label already exists; use a new label')
+run_root = allocate(support, 'm10', label)
 source_root = root
+baseline_revision = None
 if '--baseline' in args:
     args.remove('--baseline')
-    source_root = support / 'm9-runs/m10-anchor-launch' / root.name
-snapshot = support / 'm10-runs' / label / root.name
-out = root / 'docs/iteration/evidence/m10' / label
-if snapshot.exists() or out.exists():
-    raise SystemExit('Evidence label already exists; use a new label')
+    baseline_revision = '3946250'
+    source_root = git_baseline(root, run_root / 'baseline', baseline_revision)
+snapshot = run_root / root.name
 
 def copy_asset(src, dst):
     if pathlib.Path(src).suffix.lower() in ['.png', '.jpg', '.ogg', '.mp3', '.wav', '.ctex', '.ttf', '.otf']:
@@ -55,7 +60,7 @@ if render:
         if updated != content:
             path.write_text(updated, encoding='utf-8')
             substitutions.append(path.relative_to(snapshot).as_posix())
-for milestone in ['m8', 'm9', 'm10']:
+for milestone in ['m12', 'm11', 'm8', 'm9', 'm10']:
     (snapshot / 'docs/iteration/evidence' / milestone).mkdir(parents=True, exist_ok=True)
 # This retained fixture writes a temporary res:// save and assumes its directory
 # already exists in the original checkout. Snapshotting intentionally omits old saves.
@@ -85,7 +90,8 @@ for path in (snapshot / 'docs/iteration/evidence').rglob('*'):
         destination = out / path.relative_to(snapshot / 'docs/iteration/evidence')
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, destination)
-record = dict(code=code, seconds=time.time()-started, errors=errors, source=source,
+remove_owned_tree(run_root, support / "test-temp")
+record = dict(snapshot_retained=False, baseline_revision=baseline_revision, code=code, seconds=time.time()-started, errors=errors, source=source,
               snapshot=str(snapshot), command=command, render_input_substitutions=substitutions)
 (out / 'execution.json').write_text(json.dumps(record, indent=2), encoding='utf-8')
 print(json.dumps({k: v for k, v in record.items() if k not in ['source', 'command']}), flush=True)

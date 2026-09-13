@@ -1,0 +1,48 @@
+{
+	"checks": 32,
+	"failures": 0,
+	"rows": [
+		{
+			"activated": 1,
+			"applied": 1.5,
+			"fraction": 0.3,
+			"max_hp": 5.0,
+			"role": "B01"
+		},
+		{
+			"activated": 1,
+			"applied": 6.0,
+			"fraction": 0.3,
+			"max_hp": 20.0,
+			"role": "B01"
+		},
+		{
+			"activated": 1,
+			"applied": 1.4,
+			"fraction": 0.28,
+			"max_hp": 5.0,
+			"role": "B02"
+		},
+		{
+			"activated": 1,
+			"applied": 5.6,
+			"fraction": 0.28,
+			"max_hp": 20.0,
+			"role": "B02"
+		},
+		{
+			"activated": 1,
+			"applied": 1.65,
+			"fraction": 0.33,
+			"max_hp": 5.0,
+			"role": "B03"
+		},
+		{
+			"activated": 1,
+			"applied": 6.6,
+			"fraction": 0.33,
+			"max_hp": 20.0,
+			"role": "B03"
+		}
+	]
+}

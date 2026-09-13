@@ -1,0 +1,308 @@
+[
+  {
+    "scene": "BaselineRegression",
+    "args": [],
+    "passed": true,
+    "checks": 4,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-00-BaselineRegression/execution.json"
+  },
+  {
+    "scene": "M3Weapons",
+    "args": [],
+    "passed": true,
+    "checks": 72,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "m12-post-cleanup-01-M3Weapons/execution.json"
+  },
+  {
+    "scene": "M3Energy",
+    "args": [],
+    "passed": true,
+    "checks": 16,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "m12-post-cleanup-02-M3Energy/execution.json"
+  },
+  {
+    "scene": "M3Special",
+    "args": [],
+    "passed": true,
+    "checks": 14,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "m12-post-cleanup-03-M3Special/execution.json"
+  },
+  {
+    "scene": "M4ThermalClock",
+    "args": [],
+    "passed": true,
+    "checks": 9,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-04-M4ThermalClock/execution.json"
+  },
+  {
+    "scene": "M4Talents",
+    "args": [],
+    "passed": true,
+    "checks": 233,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "m12-post-cleanup-05-M4Talents/execution.json"
+  },
+  {
+    "scene": "M6Cross",
+    "args": [],
+    "passed": true,
+    "checks": 117,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-06-M6Cross/execution.json"
+  },
+  {
+    "scene": "M6BossStops",
+    "args": [],
+    "passed": true,
+    "checks": 24,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-07-M6BossStops/execution.json"
+  },
+  {
+    "scene": "M6Contracts",
+    "args": [],
+    "passed": true,
+    "checks": 109,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-08-M6Contracts/execution.json"
+  },
+  {
+    "scene": "R1RecoveryUI",
+    "args": [],
+    "passed": true,
+    "checks": 9,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-09-R1RecoveryUI/execution.json"
+  },
+  {
+    "scene": "R1LegacyRestore",
+    "args": [],
+    "passed": true,
+    "checks": 6,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-10-R1LegacyRestore/execution.json"
+  },
+  {
+    "scene": "M8Mechanics",
+    "args": [],
+    "passed": true,
+    "checks": 11,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "m12-post-cleanup-11-M8Mechanics/execution.json"
+  },
+  {
+    "scene": "M8Contracts",
+    "args": [
+      "--r1"
+    ],
+    "passed": true,
+    "checks": 52,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-12-M8Contracts/execution.json"
+  },
+  {
+    "scene": "M8UI",
+    "args": [],
+    "passed": true,
+    "checks": 79,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-13-M8UI/execution.json"
+  },
+  {
+    "scene": "M8Supply",
+    "args": [],
+    "passed": true,
+    "checks": 147,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-14-M8Supply/execution.json"
+  },
+  {
+    "scene": "M8R1Telegraphs",
+    "args": [],
+    "passed": true,
+    "checks": 75,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-15-M8R1Telegraphs/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "camp"
+    ],
+    "passed": true,
+    "checks": 3,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-16-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "menu"
+    ],
+    "passed": true,
+    "checks": 2,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-17-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "combat"
+    ],
+    "passed": true,
+    "checks": 5,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-18-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "restore"
+    ],
+    "passed": true,
+    "checks": 6,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-19-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "window"
+    ],
+    "passed": true,
+    "checks": 3,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-20-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7MainExit",
+    "args": [],
+    "passed": true,
+    "checks": 1,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-21-M7MainExit/execution.json"
+  },
+  {
+    "scene": "M10Growth",
+    "args": [],
+    "passed": true,
+    "checks": 233,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "m12-post-cleanup-22-M10Growth/execution.json"
+  },
+  {
+    "scene": "M10RewardAudit",
+    "args": [],
+    "passed": true,
+    "checks": 52,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-23-M10RewardAudit/execution.json"
+  },
+  {
+    "scene": "M10RewardMatrix",
+    "args": [],
+    "passed": true,
+    "checks": 49,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-24-M10RewardMatrix/execution.json"
+  },
+  {
+    "scene": "M10Interaction",
+    "args": [],
+    "passed": true,
+    "checks": 11,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-25-M10Interaction/execution.json"
+  },
+  {
+    "scene": "M10Ultimate",
+    "args": [],
+    "passed": true,
+    "checks": 32,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-26-M10Ultimate/execution.json"
+  },
+  {
+    "scene": "M10Barrage",
+    "args": [],
+    "passed": true,
+    "checks": 9,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-27-M10Barrage/execution.json"
+  },
+  {
+    "scene": "M10Bosses",
+    "args": [
+      "high"
+    ],
+    "passed": true,
+    "checks": 21,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-28-M10Bosses/execution.json"
+  },
+  {
+    "scene": "M10Bosses",
+    "args": [
+      "full"
+    ],
+    "passed": true,
+    "checks": 21,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-29-M10Bosses/execution.json"
+  },
+  {
+    "scene": "M10Density",
+    "args": [],
+    "passed": true,
+    "checks": 9,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-30-M10Density/execution.json"
+  },
+  {
+    "scene": "M10Density",
+    "args": [
+      "probe"
+    ],
+    "passed": true,
+    "checks": 12,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "m12-post-cleanup-31-M10Density/execution.json"
+  }
+]

@@ -27,9 +27,9 @@ func _ready():
 	Demo.open_panel(); Demo.ui.switch_tab("weapon")
 	for id in Utils.weapon_list:
 		Demo.ui.detail_actions[id].call()
-		var preview = Demo.ui.detail.get_node("WeaponPreview")
+		var preview = Demo.ui.weapon_preview
 		var gun = Utils.weapon_list[id].instantiate()
-		check(preview.texture==gun.image and preview.custom_minimum_size==Vector2(120,60),"actual preview "+id)
+		check((preview.texture==gun.image or preview.texture.atlas==gun.image) and preview.custom_minimum_size==Vector2(70,24) and not Demo.ui.detail.is_ancestor_of(preview),"fixed actual preview outside scrolling detail "+id)
 		gun.free()
 		seen[id] = true
 	dismiss(); await wait(0.1)

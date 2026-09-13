@@ -1,0 +1,74 @@
+[
+  {
+    "scene": "M11Clarity",
+    "passed": true,
+    "checks": 147,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11Clarity/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  },
+  {
+    "scene": "M11SaveMigration",
+    "passed": true,
+    "checks": 138,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11SaveMigration/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": true
+  },
+  {
+    "scene": "M11Navigation",
+    "passed": true,
+    "checks": 25,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11Navigation/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  },
+  {
+    "scene": "M11Spawn",
+    "passed": true,
+    "checks": 4,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11Spawn/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  },
+  {
+    "scene": "M11HordeContracts",
+    "passed": true,
+    "checks": 6,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11HordeContracts/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  },
+  {
+    "scene": "M12Lesson",
+    "passed": true,
+    "checks": 7,
+    "errors": [],
+    "execution": "../m11/m12-lesson-final/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  },
+  {
+    "scene": "M12UX",
+    "passed": true,
+    "checks": 473,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M12UX/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  },
+  {
+    "scene": "M12Native",
+    "passed": true,
+    "checks": 1,
+    "errors": [],
+    "execution": "../m11/m12-native-final-v2/execution.json",
+    "snapshot_removed": true,
+    "known_audio_teardown": false
+  }
+]

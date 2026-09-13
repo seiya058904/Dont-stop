@@ -1,0 +1,70 @@
+[
+  {
+    "scene": "M11Clarity",
+    "passed": true,
+    "checks": 147,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11Clarity/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M11SaveMigration",
+    "passed": false,
+    "checks": 138,
+    "errors": [
+      "ERROR: 1 resources still in use at exit."
+    ],
+    "execution": "../m11/m12-20260913-170041-M11SaveMigration/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M11Navigation",
+    "passed": true,
+    "checks": 25,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11Navigation/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M11Spawn",
+    "passed": true,
+    "checks": 4,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11Spawn/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M11HordeContracts",
+    "passed": true,
+    "checks": 6,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M11HordeContracts/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M12Lesson",
+    "passed": false,
+    "checks": 5,
+    "errors": [
+      "FAIL retry real egg hit completes lesson"
+    ],
+    "execution": "../m11/m12-20260913-170041-M12Lesson/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M12UX",
+    "passed": true,
+    "checks": 473,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M12UX/execution.json",
+    "snapshot_removed": true
+  },
+  {
+    "scene": "M12Native",
+    "passed": true,
+    "checks": 1,
+    "errors": [],
+    "execution": "../m11/m12-20260913-170041-M12Native/execution.json",
+    "snapshot_removed": true
+  }
+]

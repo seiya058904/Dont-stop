@@ -1,0 +1,11 @@
+{
+  "owner_and_escape_rejected": [
+    true,
+    true
+  ],
+  "success_and_failure_removed": [
+    true,
+    true
+  ],
+  "passed": true
+}

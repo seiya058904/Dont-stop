@@ -1,0 +1,31 @@
+{
+  "before": [
+    {
+      "path": "D:\\xia zai\\AI project\\8.30 Backup game\\archive\\workspace-support\\m9-runs",
+      "runs": 65,
+      "files": 312647,
+      "bytes": 7945401351
+    },
+    {
+      "path": "D:\\xia zai\\AI project\\8.30 Backup game\\archive\\workspace-support\\m10-runs",
+      "runs": 102,
+      "files": 494254,
+      "bytes": 12477059968
+    },
+    {
+      "path": "D:\\xia zai\\AI project\\8.30 Backup game\\archive\\workspace-support\\m11-runs",
+      "runs": 79,
+      "files": 384916,
+      "bytes": 9671077134
+    }
+  ],
+  "before_bytes": 30093538453,
+  "free_bytes_before": 309753335808,
+  "free_bytes_at_deletion": 309693132800,
+  "after_bytes": 0,
+  "freed_logical_bytes": 30093538453,
+  "free_bytes_after": 324707069952,
+  "remaining_targets": [],
+  "tools_preserved": true,
+  "disk_free_delta_bytes": 15013937152
+}

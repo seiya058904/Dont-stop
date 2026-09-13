@@ -1,0 +1,13 @@
+{
+  "automated_pass": true,
+  "core_cases": 32,
+  "core_checks": 1446,
+  "specialized_cases": 8,
+  "specialized_checks": 801,
+  "lifecycle_checks": 4,
+  "os_mouse_verified": false,
+  "exit_gate_complete": false,
+  "H1_STATUS": "FIFTH_FEEDBACK_ADDRESSED",
+  "HUMAN_ACCEPTED": false,
+  "remaining": "OS mouse verification unavailable; no human acceptance inferred"
+}
