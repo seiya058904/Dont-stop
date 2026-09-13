@@ -198,6 +198,13 @@ function token(name, ok, extra = '') {
 	// Clear any stuck pointer/button state, chamber a round, then fire real LMB.
 	async function fireDirection(name, dx, dy, cmp) {
 		for (let attempt = 0; attempt < 3; attempt++) {
+			// Self-heal: xvfb/CI can drop Pointer Lock after a while, which the
+			// game treats as ESC (pause). Re-acquire before asserting a shot.
+			if (!(await locked()) || latest()?.paused === true) {
+				console.log('[e2e] re-acquire before ' + name + ' (locked=' + await locked() + ' paused=' + (latest()?.paused) + ')');
+				const ok = await resumeFromPause();
+				if (!ok) { token(name, false, 'pointer lock not recoverable'); return; }
+			}
 			lines.length = 0;
 			await sweep(dx, dy);
 			await page.mouse.up();          // clear a possibly-lost previous release
