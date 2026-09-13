@@ -23,6 +23,13 @@ func _ready() -> void:
 		print("[smoke] save_state none")
 	_run.call_deferred()
 
+func _wait_until(predicate: Callable, timeout_ms: int) -> void:
+	var deadline := Time.get_ticks_msec() + timeout_ms
+	while Time.get_ticks_msec() < deadline:
+		if predicate.call():
+			return
+		await get_tree().create_timer(0.5).timeout
+
 func _enter_camp_from_title() -> void:
 	# Reproduce the title screen "开始游戏" behaviour (ui/MainUI.gd) without UI.
 	if not Utils.is_game_start:
@@ -79,7 +86,11 @@ func _run() -> void:
 	var ok_depart: bool = LevelServer.town.depart(1, true)
 	_mark_frames()
 	print("[smoke] depart=", ok_depart)
-	await get_tree().create_timer(3.0).timeout
+	# Software-GL CI runners can spend minutes compiling the first combat
+	# shaders; poll instead of sleeping a fixed window.
+	await _wait_until(func(): return LevelServer.state == "COMBAT", 300000)
+	# Round start spawns monsters asynchronously; give them a moment.
+	await _wait_until(func(): return get_tree().get_nodes_in_group("monsters").size() > 0, 60000)
 	_report_frames("first-combat")
 	var monsters := get_tree().get_nodes_in_group("monsters").size()
 	print("[smoke] stage=combat state=", LevelServer.state, " monsters=", monsters)

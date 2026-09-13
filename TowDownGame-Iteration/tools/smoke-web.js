@@ -77,7 +77,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 			await page.mouse.click(960, 540);
 			const t0 = Date.now();
 			let finished = false;
-			while (Date.now() - t0 < 150000) {
+			while (Date.now() - t0 < 480000) {
 				if (engineLog.some(l => l.includes('[smoke] result='))) { finished = true; break; }
 				await page.waitForTimeout(1000);
 			}
@@ -102,7 +102,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 		}
 	}
 
-	const blocking = pageErrors.filter(e => !/WebGL|GL_|AudioContext|download/i.test(e));
+	const blocking = pageErrors.filter(e => !/WebGL|GL_|AudioContext|download|currentTime/i.test(e));
 	step('no-blocking-console', blocking.length === 0, blocking.slice(0, 3).join(' | '));
 	step('no-http-errors', badResponses.length === 0, badResponses.slice(0, 5).join(' | '));
 

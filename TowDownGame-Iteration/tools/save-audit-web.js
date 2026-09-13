@@ -18,7 +18,7 @@ const step = (name, ok, extra = '') => {
 	if (!ok && !fail) fail = name;
 };
 
-async function smokeRun(page, maxMs = 120000) {
+async function smokeRun(page, maxMs = 480000) {
 	const log = [];
 	page.on('console', m => { const t = m.text(); if (t.includes('[smoke]')) log.push(t); });
 	await page.goto(url + '?smoke=1', { waitUntil: 'domcontentloaded' });
