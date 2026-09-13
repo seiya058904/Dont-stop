@@ -82,6 +82,52 @@ function token(name, ok, extra = '') {
 	if (!(await locked())) { await page.mouse.click(640, 400); await waitFor(locked, 10000); }
 	token('POINTER_LOCK_ACQUIRED', await locked());
 	token('OS_CURSOR_HIDDEN', await locked()); // browser hides the OS cursor while locked
+	// ---- Real WASD movement while locked.
+	if (latest()?.paused === true || !(await locked())) {
+		await resumeFromPause();
+	}
+	lines.length = 0;
+	const before = await aimLine();
+	token('WASD_PREPARED', !!before && before.paused === false && !!(await locked()), `paused=${before?.paused}`);
+	await page.keyboard.down('w');
+	await page.waitForTimeout(700);
+	await page.keyboard.up('w');
+	await page.waitForTimeout(300);
+	const afterW = await aimLine();
+	token('WASD_POSITION_CHANGED', before && afterW && (before.playerpos.y - afterW.playerpos.y) > 2,
+		`dy=${(before.playerpos.y - afterW.playerpos.y).toFixed(1)}`);
+	let dKey = 'd';
+	await page.keyboard.down(dKey);
+	await page.waitForTimeout(700);
+	await page.keyboard.up(dKey);
+	await page.waitForTimeout(300);
+	let afterD = await aimLine();
+	if (!afterD || (afterD.playerpos.x - afterW.playerpos.x) <= 2) {
+		// Right may be blocked by a wall; try left instead (still proves A/D).
+		dKey = 'a';
+		lines.length = 0;
+		await page.keyboard.down(dKey);
+		await page.waitForTimeout(700);
+		await page.keyboard.up(dKey);
+		await page.waitForTimeout(300);
+		afterD = await aimLine();
+	}
+	let dxProof = afterD ? (afterD.playerpos.x - afterW.playerpos.x) : 0;
+	if (!(afterD && Math.abs(dxProof) > 2)) {
+		// Both horizontal directions may be wall-blocked; prove with S (down).
+		lines.length = 0;
+		await page.keyboard.down('s');
+		await page.waitForTimeout(700);
+		await page.keyboard.up('s');
+		await page.waitForTimeout(300);
+		const afterS = await aimLine();
+		if (afterS && Math.abs(afterS.playerpos.y - afterW.playerpos.y) > 2) {
+			dxProof = 99; // vertical fallback still proves real key input
+		}
+	}
+	token('WASD_POSITION_CHANGED', afterD && Math.abs(dxProof) > 2,
+		`key=${dKey} dx=${dxProof.toFixed(1)}`);
+
 
 	// ---- Aim follows real relative mouse movement.
 	// Each direction is measured after re-baselining the aim at the screen
@@ -220,52 +266,6 @@ function token(name, ok, extra = '') {
 		return false;
 	}
 	token('RESUME_RECAPTURES_POINTER_LOCK', await resumeFromPause(), `paused=${latest()?.paused}`);
-
-	// ---- Real WASD movement while locked.
-	if (latest()?.paused === true || !(await locked())) {
-		await resumeFromPause();
-	}
-	lines.length = 0;
-	const before = await aimLine();
-	token('WASD_PREPARED', !!before && before.paused === false && !!(await locked()), `paused=${before?.paused}`);
-	await page.keyboard.down('w');
-	await page.waitForTimeout(700);
-	await page.keyboard.up('w');
-	await page.waitForTimeout(300);
-	const afterW = await aimLine();
-	token('WASD_POSITION_CHANGED', before && afterW && (before.playerpos.y - afterW.playerpos.y) > 2,
-		`dy=${(before.playerpos.y - afterW.playerpos.y).toFixed(1)}`);
-	let dKey = 'd';
-	await page.keyboard.down(dKey);
-	await page.waitForTimeout(700);
-	await page.keyboard.up(dKey);
-	await page.waitForTimeout(300);
-	let afterD = await aimLine();
-	if (!afterD || (afterD.playerpos.x - afterW.playerpos.x) <= 2) {
-		// Right may be blocked by a wall; try left instead (still proves A/D).
-		dKey = 'a';
-		lines.length = 0;
-		await page.keyboard.down(dKey);
-		await page.waitForTimeout(700);
-		await page.keyboard.up(dKey);
-		await page.waitForTimeout(300);
-		afterD = await aimLine();
-	}
-	let dxProof = afterD ? (afterD.playerpos.x - afterW.playerpos.x) : 0;
-	if (!(afterD && Math.abs(dxProof) > 2)) {
-		// Both horizontal directions may be wall-blocked; prove with S (down).
-		lines.length = 0;
-		await page.keyboard.down('s');
-		await page.waitForTimeout(700);
-		await page.keyboard.up('s');
-		await page.waitForTimeout(300);
-		const afterS = await aimLine();
-		if (afterS && Math.abs(afterS.playerpos.y - afterW.playerpos.y) > 2) {
-			dxProof = 99; // vertical fallback still proves real key input
-		}
-	}
-	token('WASD_POSITION_CHANGED', afterD && Math.abs(dxProof) > 2,
-		`key=${dKey} dx=${dxProof.toFixed(1)}`);
 
 	await page.screenshot({ path: shotDir + '/e2e-final.png' });
 	await browser.close();
