@@ -1,0 +1,161 @@
+{
+	"build_profile": "experience_demo",
+	"campaign_complete": false,
+	"equipped": "0",
+	"exp": 0.0,
+	"gold": 99760,
+	"hp": 14.0,
+	"hp_max": 20.0,
+	"legacy": [
+		"5",
+		"20",
+		"22",
+		"2",
+		"15",
+		"12",
+		"12",
+		"12",
+		"12",
+		"13",
+		"13",
+		"13",
+		"13",
+		"23",
+		"17",
+		"19",
+		"14",
+		"16",
+		"18",
+		"21"
+	],
+	"legacy_state": {
+		"12": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"13": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"14": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"15": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 2,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"16": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"17": {
+			"armed": false,
+			"cooldown": 4.10000000000001,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"18": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"19": {
+			"armed": false,
+			"cooldown": 18.1000000000001,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"20": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"21": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		},
+		"22": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": true
+		},
+		"23": {
+			"armed": false,
+			"cooldown": 0.0,
+			"hits": 0,
+			"kills": 0,
+			"move_time": 0.0,
+			"moving_buff": false
+		}
+	},
+	"level": 1,
+	"next_stage": 1,
+	"owned_global_upgrades": [
+		"0",
+		"1",
+		"110",
+		"111",
+		"117"
+	],
+	"points": 9999,
+	"reserve_magazines": 100,
+	"schema_version": 6,
+	"selected_stage": 1,
+	"talent_payments": [],
+	"talents": {
+		"T01": 1.0,
+		"T02": 1.0,
+		"T03": 1.0,
+		"T04": 1.0,
+		"T05": 1.0,
+		"T06": 1.0,
+		"T07": 1.0,
+		"T08": 1.0,
+		"T09": 1.0,
+		"T18": 1.0
+	},
+	"weapons": [
+		{
+			"ammo": 25,
+			"id": "0"
+		}
+	]
+}

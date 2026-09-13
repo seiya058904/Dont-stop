@@ -1,0 +1,987 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+Loading resource: res://translation/text.en.translation remapped: res://translation/text.en.translation
+Completed load for: 'res://translation/text.en.translation' remapped 'res://translation/text.en.translation' at thread -1
+Loading resource: res://translation/text.zh_CN.translation remapped: res://translation/text.zh_CN.translation
+Completed load for: 'res://translation/text.zh_CN.translation' remapped 'res://translation/text.zh_CN.translation' at thread -1
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://Sprites/1 cursor.png remapped: res://Sprites/1 cursor.png
+Loading resource: res://.godot/imported/1 cursor.png-317cb4dcdb6adcf1850ceaf7b7647c59.ctex remapped: res://.godot/imported/1 cursor.png-317cb4dcdb6adcf1850ceaf7b7647c59.ctex
+Completed load for: 'res://Sprites/1 cursor.png' remapped 'res://Sprites/1 cursor.png' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://autoload/Demo.gd remapped: res://autoload/Demo.gd
+Loading resource: res://game/guns/ArcCaster.tscn remapped: res://game/guns/ArcCaster.tscn
+Loading resource: res://game/guns/ArcCaster.gd remapped: res://game/guns/ArcCaster.gd
+Loading resource: res://game/hero/gpu_particles_2d.tscn remapped: res://game/hero/gpu_particles_2d.tscn
+Completed load for: 'res://game/hero/gpu_particles_2d.tscn' remapped 'res://game/hero/gpu_particles_2d.tscn' at thread -1
+Loading resource: res://game/hero/DashObj.tscn remapped: res://game/hero/DashObj.tscn
+Completed load for: 'res://game/hero/DashObj.tscn' remapped 'res://game/hero/DashObj.tscn' at thread -1
+Loading resource: res://game/hero/effect/LevelUpEffect.tscn remapped: res://game/hero/effect/LevelUpEffect.tscn
+Loading resource: res://Sprites/effect/vfx_energy-Sheet.png remapped: res://Sprites/effect/vfx_energy-Sheet.png
+Loading resource: res://.godot/imported/vfx_energy-Sheet.png-833bbc948ecdc6d9620a092931722b90.ctex remapped: res://.godot/imported/vfx_energy-Sheet.png-833bbc948ecdc6d9620a092931722b90.ctex
+Completed load for: 'res://Sprites/effect/vfx_energy-Sheet.png' remapped 'res://Sprites/effect/vfx_energy-Sheet.png' at thread -1
+Completed load for: 'res://game/hero/effect/LevelUpEffect.tscn' remapped 'res://game/hero/effect/LevelUpEffect.tscn' at thread -1
+Loading resource: res://ui/widgets/Scoreboard.tscn remapped: res://ui/widgets/Scoreboard.tscn
+Loading resource: res://Sprites/top.png remapped: res://Sprites/top.png
+Loading resource: res://.godot/imported/top.png-3a9b9d2c18346516862025af1f8b78ca.ctex remapped: res://.godot/imported/top.png-3a9b9d2c18346516862025af1f8b78ca.ctex
+Completed load for: 'res://Sprites/top.png' remapped 'res://Sprites/top.png' at thread -1
+Loading resource: res://ui/widgets/Scoreboard.gd remapped: res://ui/widgets/Scoreboard.gd
+Completed load for: 'res://ui/widgets/Scoreboard.gd' remapped 'res://ui/widgets/Scoreboard.gd' at thread -1
+Loading resource: res://Sprites/menu_left.png remapped: res://Sprites/menu_left.png
+Loading resource: res://.godot/imported/menu_left.png-d8298e60aa0e867976ccdc35af007cac.ctex remapped: res://.godot/imported/menu_left.png-d8298e60aa0e867976ccdc35af007cac.ctex
+Completed load for: 'res://Sprites/menu_left.png' remapped 'res://Sprites/menu_left.png' at thread -1
+Completed load for: 'res://ui/widgets/Scoreboard.tscn' remapped 'res://ui/widgets/Scoreboard.tscn' at thread -1
+Loading resource: res://game/guns/PlasmaOrb.tscn remapped: res://game/guns/PlasmaOrb.tscn
+Loading resource: res://game/guns/PlasmaOrb.gd remapped: res://game/guns/PlasmaOrb.gd
+Completed load for: 'res://game/guns/PlasmaOrb.gd' remapped 'res://game/guns/PlasmaOrb.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun7.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun7.png
+Loading resource: res://.godot/imported/gun7.png-2c7d44e264e364e4cd633d86094ef50a.ctex remapped: res://.godot/imported/gun7.png-2c7d44e264e364e4cd633d86094ef50a.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun7.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun7.png' at thread -1
+Loading resource: res://game/bullets/SmpBullet.tscn remapped: res://game/bullets/SmpBullet.tscn
+Loading resource: res://game/bullets/SmpBullet.gd remapped: res://game/bullets/SmpBullet.gd
+Loading resource: res://game/bullets/BulletShell.tscn remapped: res://game/bullets/BulletShell.tscn
+Loading resource: res://game/bullets/BulletShell.gd remapped: res://game/bullets/BulletShell.gd
+Completed load for: 'res://game/bullets/BulletShell.gd' remapped 'res://game/bullets/BulletShell.gd' at thread -1
+Loading resource: res://Sprites/shell_case.png remapped: res://Sprites/shell_case.png
+Loading resource: res://.godot/imported/shell_case.png-18aeb63d43b7ffe90ceba5b8b9eabb69.ctex remapped: res://.godot/imported/shell_case.png-18aeb63d43b7ffe90ceba5b8b9eabb69.ctex
+Completed load for: 'res://Sprites/shell_case.png' remapped 'res://Sprites/shell_case.png' at thread -1
+Completed load for: 'res://game/bullets/BulletShell.tscn' remapped 'res://game/bullets/BulletShell.tscn' at thread -1
+Loading resource: res://game/reward/Reward12.tscn remapped: res://game/reward/Reward12.tscn
+Loading resource: res://game/reward/CombatReward.gd remapped: res://game/reward/CombatReward.gd
+Completed load for: 'res://game/reward/CombatReward.gd' remapped 'res://game/reward/CombatReward.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Orange Core.png remapped: res://Sprites/All_Icons/Orange Core.png
+Loading resource: res://.godot/imported/Orange Core.png-60446190eee7687f50df78c2cf273f07.ctex remapped: res://.godot/imported/Orange Core.png-60446190eee7687f50df78c2cf273f07.ctex
+Completed load for: 'res://Sprites/All_Icons/Orange Core.png' remapped 'res://Sprites/All_Icons/Orange Core.png' at thread -1
+Completed load for: 'res://game/reward/Reward12.tscn' remapped 'res://game/reward/Reward12.tscn' at thread -1
+Loading resource: res://game/reward/Reward13.tscn remapped: res://game/reward/Reward13.tscn
+Loading resource: res://Sprites/All_Icons/Blue Specs.png remapped: res://Sprites/All_Icons/Blue Specs.png
+Loading resource: res://.godot/imported/Blue Specs.png-70153cef9f4e58d0a356ea994b0023d2.ctex remapped: res://.godot/imported/Blue Specs.png-70153cef9f4e58d0a356ea994b0023d2.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Specs.png' remapped 'res://Sprites/All_Icons/Blue Specs.png' at thread -1
+Completed load for: 'res://game/reward/Reward13.tscn' remapped 'res://game/reward/Reward13.tscn' at thread -1
+Loading resource: res://game/reward/Reward14.tscn remapped: res://game/reward/Reward14.tscn
+Loading resource: res://Sprites/All_Icons/Green Necklace.png remapped: res://Sprites/All_Icons/Green Necklace.png
+Loading resource: res://.godot/imported/Green Necklace.png-8a274f3d52cf9759592da4f979daca32.ctex remapped: res://.godot/imported/Green Necklace.png-8a274f3d52cf9759592da4f979daca32.ctex
+Completed load for: 'res://Sprites/All_Icons/Green Necklace.png' remapped 'res://Sprites/All_Icons/Green Necklace.png' at thread -1
+Completed load for: 'res://game/reward/Reward14.tscn' remapped 'res://game/reward/Reward14.tscn' at thread -1
+Loading resource: res://game/reward/Reward15.tscn remapped: res://game/reward/Reward15.tscn
+Loading resource: res://Sprites/All_Icons/Blue Chip.png remapped: res://Sprites/All_Icons/Blue Chip.png
+Loading resource: res://.godot/imported/Blue Chip.png-76f3a67e37623fcbf19f824f5ff31f35.ctex remapped: res://.godot/imported/Blue Chip.png-76f3a67e37623fcbf19f824f5ff31f35.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Chip.png' remapped 'res://Sprites/All_Icons/Blue Chip.png' at thread -1
+Completed load for: 'res://game/reward/Reward15.tscn' remapped 'res://game/reward/Reward15.tscn' at thread -1
+Loading resource: res://game/reward/Reward16.tscn remapped: res://game/reward/Reward16.tscn
+Loading resource: res://Sprites/All_Icons/Light Star Shards.png remapped: res://Sprites/All_Icons/Light Star Shards.png
+Loading resource: res://.godot/imported/Light Star Shards.png-29036aa5c1aaf4638fe5af9874f55fd6.ctex remapped: res://.godot/imported/Light Star Shards.png-29036aa5c1aaf4638fe5af9874f55fd6.ctex
+Completed load for: 'res://Sprites/All_Icons/Light Star Shards.png' remapped 'res://Sprites/All_Icons/Light Star Shards.png' at thread -1
+Completed load for: 'res://game/reward/Reward16.tscn' remapped 'res://game/reward/Reward16.tscn' at thread -1
+Loading resource: res://game/reward/Reward17.tscn remapped: res://game/reward/Reward17.tscn
+Loading resource: res://Sprites/All_Icons/Metal Plating.png remapped: res://Sprites/All_Icons/Metal Plating.png
+Loading resource: res://.godot/imported/Metal Plating.png-a77a9b4b6b8f1dba4207f48c984261eb.ctex remapped: res://.godot/imported/Metal Plating.png-a77a9b4b6b8f1dba4207f48c984261eb.ctex
+Completed load for: 'res://Sprites/All_Icons/Metal Plating.png' remapped 'res://Sprites/All_Icons/Metal Plating.png' at thread -1
+Completed load for: 'res://game/reward/Reward17.tscn' remapped 'res://game/reward/Reward17.tscn' at thread -1
+Loading resource: res://game/reward/Reward18.tscn remapped: res://game/reward/Reward18.tscn
+Loading resource: res://Sprites/All_Icons/Green Corner Potion.png remapped: res://Sprites/All_Icons/Green Corner Potion.png
+Loading resource: res://.godot/imported/Green Corner Potion.png-0ca0be107c8bcf01af0167ae59db873c.ctex remapped: res://.godot/imported/Green Corner Potion.png-0ca0be107c8bcf01af0167ae59db873c.ctex
+Completed load for: 'res://Sprites/All_Icons/Green Corner Potion.png' remapped 'res://Sprites/All_Icons/Green Corner Potion.png' at thread -1
+Completed load for: 'res://game/reward/Reward18.tscn' remapped 'res://game/reward/Reward18.tscn' at thread -1
+Loading resource: res://game/reward/Reward19.tscn remapped: res://game/reward/Reward19.tscn
+Loading resource: res://Sprites/All_Icons/Big Battery.png remapped: res://Sprites/All_Icons/Big Battery.png
+Loading resource: res://.godot/imported/Big Battery.png-2b14bd9e840d3a2e9b30b1c1ca26769f.ctex remapped: res://.godot/imported/Big Battery.png-2b14bd9e840d3a2e9b30b1c1ca26769f.ctex
+Completed load for: 'res://Sprites/All_Icons/Big Battery.png' remapped 'res://Sprites/All_Icons/Big Battery.png' at thread -1
+Completed load for: 'res://game/reward/Reward19.tscn' remapped 'res://game/reward/Reward19.tscn' at thread -1
+Loading resource: res://game/reward/Reward20.tscn remapped: res://game/reward/Reward20.tscn
+Loading resource: res://Sprites/All_Icons/Bolt.png remapped: res://Sprites/All_Icons/Bolt.png
+Loading resource: res://.godot/imported/Bolt.png-48001d05eca3f8d4e047623b687861b0.ctex remapped: res://.godot/imported/Bolt.png-48001d05eca3f8d4e047623b687861b0.ctex
+Completed load for: 'res://Sprites/All_Icons/Bolt.png' remapped 'res://Sprites/All_Icons/Bolt.png' at thread -1
+Completed load for: 'res://game/reward/Reward20.tscn' remapped 'res://game/reward/Reward20.tscn' at thread -1
+Loading resource: res://game/reward/Reward21.tscn remapped: res://game/reward/Reward21.tscn
+Loading resource: res://Sprites/All_Icons/Green Ammo.png remapped: res://Sprites/All_Icons/Green Ammo.png
+Loading resource: res://.godot/imported/Green Ammo.png-7c3f73610f7a1f255b5c515c5f2db382.ctex remapped: res://.godot/imported/Green Ammo.png-7c3f73610f7a1f255b5c515c5f2db382.ctex
+Completed load for: 'res://Sprites/All_Icons/Green Ammo.png' remapped 'res://Sprites/All_Icons/Green Ammo.png' at thread -1
+Completed load for: 'res://game/reward/Reward21.tscn' remapped 'res://game/reward/Reward21.tscn' at thread -1
+Loading resource: res://game/reward/Reward22.tscn remapped: res://game/reward/Reward22.tscn
+Loading resource: res://Sprites/All_Icons/Blue Cosmic Ring.png remapped: res://Sprites/All_Icons/Blue Cosmic Ring.png
+Loading resource: res://.godot/imported/Blue Cosmic Ring.png-ad327e27e9c7737118f9adb902f91a67.ctex remapped: res://.godot/imported/Blue Cosmic Ring.png-ad327e27e9c7737118f9adb902f91a67.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Cosmic Ring.png' remapped 'res://Sprites/All_Icons/Blue Cosmic Ring.png' at thread -1
+Completed load for: 'res://game/reward/Reward22.tscn' remapped 'res://game/reward/Reward22.tscn' at thread -1
+Loading resource: res://game/reward/Reward23.tscn remapped: res://game/reward/Reward23.tscn
+Loading resource: res://Sprites/All_Icons/Green Data Ring.png remapped: res://Sprites/All_Icons/Green Data Ring.png
+Loading resource: res://.godot/imported/Green Data Ring.png-471053e8dfc12ea855f1d65e9dddd16f.ctex remapped: res://.godot/imported/Green Data Ring.png-471053e8dfc12ea855f1d65e9dddd16f.ctex
+Completed load for: 'res://Sprites/All_Icons/Green Data Ring.png' remapped 'res://Sprites/All_Icons/Green Data Ring.png' at thread -1
+Completed load for: 'res://game/reward/Reward23.tscn' remapped 'res://game/reward/Reward23.tscn' at thread -1
+Loading resource: res://game/reward/GoldReward.tscn remapped: res://game/reward/GoldReward.tscn
+Loading resource: res://game/reward/GoldReward.gd remapped: res://game/reward/GoldReward.gd
+Completed load for: 'res://game/reward/GoldReward.gd' remapped 'res://game/reward/GoldReward.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Orange Chip.png remapped: res://Sprites/All_Icons/Orange Chip.png
+Loading resource: res://.godot/imported/Orange Chip.png-ff441484b8a68f280ccb3914317b4d75.ctex remapped: res://.godot/imported/Orange Chip.png-ff441484b8a68f280ccb3914317b4d75.ctex
+Completed load for: 'res://Sprites/All_Icons/Orange Chip.png' remapped 'res://Sprites/All_Icons/Orange Chip.png' at thread -1
+Completed load for: 'res://game/reward/GoldReward.tscn' remapped 'res://game/reward/GoldReward.tscn' at thread -1
+Loading resource: res://game/reward/HpReward.tscn remapped: res://game/reward/HpReward.tscn
+Loading resource: res://game/reward/HpReward.gd remapped: res://game/reward/HpReward.gd
+Completed load for: 'res://game/reward/HpReward.gd' remapped 'res://game/reward/HpReward.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Medkit.png remapped: res://Sprites/All_Icons/Medkit.png
+Loading resource: res://.godot/imported/Medkit.png-16a064b848de52a0075fccf282fe615c.ctex remapped: res://.godot/imported/Medkit.png-16a064b848de52a0075fccf282fe615c.ctex
+Completed load for: 'res://Sprites/All_Icons/Medkit.png' remapped 'res://Sprites/All_Icons/Medkit.png' at thread -1
+Completed load for: 'res://game/reward/HpReward.tscn' remapped 'res://game/reward/HpReward.tscn' at thread -1
+Loading resource: res://game/reward/AlienHelmentReward.tscn remapped: res://game/reward/AlienHelmentReward.tscn
+Loading resource: res://game/reward/AlienHelmentReward.gd remapped: res://game/reward/AlienHelmentReward.gd
+Completed load for: 'res://game/reward/AlienHelmentReward.gd' remapped 'res://game/reward/AlienHelmentReward.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Alien Blue Helmet.png remapped: res://Sprites/All_Icons/Alien Blue Helmet.png
+Loading resource: res://.godot/imported/Alien Blue Helmet.png-2ae6afeba8d42a4b9f0e296e02dbe83b.ctex remapped: res://.godot/imported/Alien Blue Helmet.png-2ae6afeba8d42a4b9f0e296e02dbe83b.ctex
+Completed load for: 'res://Sprites/All_Icons/Alien Blue Helmet.png' remapped 'res://Sprites/All_Icons/Alien Blue Helmet.png' at thread -1
+Completed load for: 'res://game/reward/AlienHelmentReward.tscn' remapped 'res://game/reward/AlienHelmentReward.tscn' at thread -1
+Loading resource: res://game/reward/WarningShield.tscn remapped: res://game/reward/WarningShield.tscn
+Loading resource: res://game/reward/WarningShield.gd remapped: res://game/reward/WarningShield.gd
+Completed load for: 'res://game/reward/WarningShield.gd' remapped 'res://game/reward/WarningShield.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Alert Shield.png remapped: res://Sprites/All_Icons/Alert Shield.png
+Loading resource: res://.godot/imported/Alert Shield.png-9304427ccc91f146e21bb34470df70e1.ctex remapped: res://.godot/imported/Alert Shield.png-9304427ccc91f146e21bb34470df70e1.ctex
+Completed load for: 'res://Sprites/All_Icons/Alert Shield.png' remapped 'res://Sprites/All_Icons/Alert Shield.png' at thread -1
+Completed load for: 'res://game/reward/WarningShield.tscn' remapped 'res://game/reward/WarningShield.tscn' at thread -1
+Loading resource: res://game/reward/BlueAxe.tscn remapped: res://game/reward/BlueAxe.tscn
+Loading resource: res://game/reward/BlueAxe.gd remapped: res://game/reward/BlueAxe.gd
+Completed load for: 'res://game/reward/BlueAxe.gd' remapped 'res://game/reward/BlueAxe.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Blue Axe.png remapped: res://Sprites/All_Icons/Blue Axe.png
+Loading resource: res://.godot/imported/Blue Axe.png-8a9a649fd35e8ca0fbed549e3199c66d.ctex remapped: res://.godot/imported/Blue Axe.png-8a9a649fd35e8ca0fbed549e3199c66d.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Axe.png' remapped 'res://Sprites/All_Icons/Blue Axe.png' at thread -1
+Completed load for: 'res://game/reward/BlueAxe.tscn' remapped 'res://game/reward/BlueAxe.tscn' at thread -1
+Loading resource: res://game/reward/BlueBoots.tscn remapped: res://game/reward/BlueBoots.tscn
+Loading resource: res://game/reward/BlueBoots.gd remapped: res://game/reward/BlueBoots.gd
+Completed load for: 'res://game/reward/BlueBoots.gd' remapped 'res://game/reward/BlueBoots.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Blue Boots.png remapped: res://Sprites/All_Icons/Blue Boots.png
+Loading resource: res://.godot/imported/Blue Boots.png-efd340cc34b1153fe256cf70ebde5720.ctex remapped: res://.godot/imported/Blue Boots.png-efd340cc34b1153fe256cf70ebde5720.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Boots.png' remapped 'res://Sprites/All_Icons/Blue Boots.png' at thread -1
+Completed load for: 'res://game/reward/BlueBoots.tscn' remapped 'res://game/reward/BlueBoots.tscn' at thread -1
+Loading resource: res://game/reward/AmberStar.tscn remapped: res://game/reward/AmberStar.tscn
+Loading resource: res://game/reward/AmberStar.gd remapped: res://game/reward/AmberStar.gd
+Completed load for: 'res://game/reward/AmberStar.gd' remapped 'res://game/reward/AmberStar.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Amber Star Crystal.png remapped: res://Sprites/All_Icons/Amber Star Crystal.png
+Loading resource: res://.godot/imported/Amber Star Crystal.png-8f3c93a28e1bf5026d26daef2de8d757.ctex remapped: res://.godot/imported/Amber Star Crystal.png-8f3c93a28e1bf5026d26daef2de8d757.ctex
+Completed load for: 'res://Sprites/All_Icons/Amber Star Crystal.png' remapped 'res://Sprites/All_Icons/Amber Star Crystal.png' at thread -1
+Completed load for: 'res://game/reward/AmberStar.tscn' remapped 'res://game/reward/AmberStar.tscn' at thread -1
+Loading resource: res://game/reward/HeathPack.tscn remapped: res://game/reward/HeathPack.tscn
+Loading resource: res://game/reward/HeathPack.gd remapped: res://game/reward/HeathPack.gd
+Loading resource: res://game/items/HpPack.tscn remapped: res://game/items/HpPack.tscn
+Loading resource: res://game/items/HpPack.gd remapped: res://game/items/HpPack.gd
+Completed load for: 'res://game/items/HpPack.gd' remapped 'res://game/items/HpPack.gd' at thread -1
+Loading resource: res://Sprites/16x16 spritesheet.png remapped: res://Sprites/16x16 spritesheet.png
+Loading resource: res://.godot/imported/16x16 spritesheet.png-4a00b6fa1b13a760e94ce1c3a8ce2374.ctex remapped: res://.godot/imported/16x16 spritesheet.png-4a00b6fa1b13a760e94ce1c3a8ce2374.ctex
+Completed load for: 'res://Sprites/16x16 spritesheet.png' remapped 'res://Sprites/16x16 spritesheet.png' at thread -1
+Completed load for: 'res://game/items/HpPack.tscn' remapped 'res://game/items/HpPack.tscn' at thread -1
+Completed load for: 'res://game/reward/HeathPack.gd' remapped 'res://game/reward/HeathPack.gd' at thread -1
+Loading resource: res://Sprites/All_Icons/Health Pack.png remapped: res://Sprites/All_Icons/Health Pack.png
+Loading resource: res://.godot/imported/Health Pack.png-785fca548bbb626d986442d232fe80c5.ctex remapped: res://.godot/imported/Health Pack.png-785fca548bbb626d986442d232fe80c5.ctex
+Completed load for: 'res://Sprites/All_Icons/Health Pack.png' remapped 'res://Sprites/All_Icons/Health Pack.png' at thread -1
+Completed load for: 'res://game/reward/HeathPack.tscn' remapped 'res://game/reward/HeathPack.tscn' at thread -1
+Loading resource: res://game/reward/AmberSickle.tscn remapped: res://game/reward/AmberSickle.tscn
+Loading resource: res://Sprites/All_Icons/Amber Sickle.png remapped: res://Sprites/All_Icons/Amber Sickle.png
+Loading resource: res://.godot/imported/Amber Sickle.png-4690a51f840eebed001f85574a48fc23.ctex remapped: res://.godot/imported/Amber Sickle.png-4690a51f840eebed001f85574a48fc23.ctex
+Completed load for: 'res://Sprites/All_Icons/Amber Sickle.png' remapped 'res://Sprites/All_Icons/Amber Sickle.png' at thread -1
+Loading resource: res://game/other/FireEffect.tscn remapped: res://game/other/FireEffect.tscn
+Loading resource: res://Sprites/effect/00 Yellow-Orange FX/FX_Fire00_Flame_Big_6x6.png remapped: res://Sprites/effect/00 Yellow-Orange FX/FX_Fire00_Flame_Big_6x6.png
+Loading resource: res://.godot/imported/FX_Fire00_Flame_Big_6x6.png-072e31f3a9c9a7ddb99a166505540297.ctex remapped: res://.godot/imported/FX_Fire00_Flame_Big_6x6.png-072e31f3a9c9a7ddb99a166505540297.ctex
+Completed load for: 'res://Sprites/effect/00 Yellow-Orange FX/FX_Fire00_Flame_Big_6x6.png' remapped 'res://Sprites/effect/00 Yellow-Orange FX/FX_Fire00_Flame_Big_6x6.png' at thread -1
+Completed load for: 'res://game/other/FireEffect.tscn' remapped 'res://game/other/FireEffect.tscn' at thread -1
+Completed load for: 'res://game/reward/AmberSickle.tscn' remapped 'res://game/reward/AmberSickle.tscn' at thread -1
+Loading resource: res://game/reward/Battery.tscn remapped: res://game/reward/Battery.tscn
+Loading resource: res://Sprites/All_Icons/Battery.png remapped: res://Sprites/All_Icons/Battery.png
+Loading resource: res://.godot/imported/Battery.png-6db35f345613ca69444bc341e576026d.ctex remapped: res://.godot/imported/Battery.png-6db35f345613ca69444bc341e576026d.ctex
+Completed load for: 'res://Sprites/All_Icons/Battery.png' remapped 'res://Sprites/All_Icons/Battery.png' at thread -1
+Completed load for: 'res://game/reward/Battery.tscn' remapped 'res://game/reward/Battery.tscn' at thread -1
+Loading resource: res://game/reward/BlueBacteria.tscn remapped: res://game/reward/BlueBacteria.tscn
+Loading resource: res://Sprites/All_Icons/Blue Bacteria.png remapped: res://Sprites/All_Icons/Blue Bacteria.png
+Loading resource: res://.godot/imported/Blue Bacteria.png-7b02ac83ba47dce3af25d619fcc990a2.ctex remapped: res://.godot/imported/Blue Bacteria.png-7b02ac83ba47dce3af25d619fcc990a2.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Bacteria.png' remapped 'res://Sprites/All_Icons/Blue Bacteria.png' at thread -1
+Completed load for: 'res://game/reward/BlueBacteria.tscn' remapped 'res://game/reward/BlueBacteria.tscn' at thread -1
+Loading resource: res://game/reward/BlueCircuit.tscn remapped: res://game/reward/BlueCircuit.tscn
+Loading resource: res://Sprites/All_Icons/Blue Circuit.png remapped: res://Sprites/All_Icons/Blue Circuit.png
+Loading resource: res://.godot/imported/Blue Circuit.png-92f0cb168ef758bf72e307663dc7886d.ctex remapped: res://.godot/imported/Blue Circuit.png-92f0cb168ef758bf72e307663dc7886d.ctex
+Completed load for: 'res://Sprites/All_Icons/Blue Circuit.png' remapped 'res://Sprites/All_Icons/Blue Circuit.png' at thread -1
+Loading resource: res://game/items/vfxThunder.tscn remapped: res://game/items/vfxThunder.tscn
+Loading resource: res://Sprites/effect/vfx_free_pack_1-Sheet.png remapped: res://Sprites/effect/vfx_free_pack_1-Sheet.png
+Loading resource: res://.godot/imported/vfx_free_pack_1-Sheet.png-6a72e507bebbb0af53fc72ac752e5330.ctex remapped: res://.godot/imported/vfx_free_pack_1-Sheet.png-6a72e507bebbb0af53fc72ac752e5330.ctex
+Completed load for: 'res://Sprites/effect/vfx_free_pack_1-Sheet.png' remapped 'res://Sprites/effect/vfx_free_pack_1-Sheet.png' at thread -1
+Completed load for: 'res://game/items/vfxThunder.tscn' remapped 'res://game/items/vfxThunder.tscn' at thread -1
+Completed load for: 'res://game/reward/BlueCircuit.tscn' remapped 'res://game/reward/BlueCircuit.tscn' at thread -1
+Completed load for: 'res://game/bullets/SmpBullet.gd' remapped 'res://game/bullets/SmpBullet.gd' at thread -1
+Loading resource: res://game/bullets/BulletImpact.tscn remapped: res://game/bullets/BulletImpact.tscn
+Loading resource: res://game/bullets/assets/collision.png remapped: res://game/bullets/assets/collision.png
+Loading resource: res://.godot/imported/collision.png-7af40484fe81a60619b65b4933cd1ede.ctex remapped: res://.godot/imported/collision.png-7af40484fe81a60619b65b4933cd1ede.ctex
+Completed load for: 'res://game/bullets/assets/collision.png' remapped 'res://game/bullets/assets/collision.png' at thread -1
+Loading resource: res://game/bullets/assets/lights1.png remapped: res://game/bullets/assets/lights1.png
+Loading resource: res://.godot/imported/lights1.png-c8d69bd9c52ddcc5a9795146f1fb583d.ctex remapped: res://.godot/imported/lights1.png-c8d69bd9c52ddcc5a9795146f1fb583d.ctex
+Completed load for: 'res://game/bullets/assets/lights1.png' remapped 'res://game/bullets/assets/lights1.png' at thread -1
+Loading resource: res://game/bullets/assets/lights2.png remapped: res://game/bullets/assets/lights2.png
+Loading resource: res://.godot/imported/lights2.png-6cf2b23664a90239fa2a1fd9f1aaba9d.ctex remapped: res://.godot/imported/lights2.png-6cf2b23664a90239fa2a1fd9f1aaba9d.ctex
+Completed load for: 'res://game/bullets/assets/lights2.png' remapped 'res://game/bullets/assets/lights2.png' at thread -1
+Loading resource: res://game/bullets/assets/lights3.png remapped: res://game/bullets/assets/lights3.png
+Loading resource: res://.godot/imported/lights3.png-476104d7e481cae1c2cf8ec648120e60.ctex remapped: res://.godot/imported/lights3.png-476104d7e481cae1c2cf8ec648120e60.ctex
+Completed load for: 'res://game/bullets/assets/lights3.png' remapped 'res://game/bullets/assets/lights3.png' at thread -1
+Loading resource: res://game/bullets/assets/lights4.png remapped: res://game/bullets/assets/lights4.png
+Loading resource: res://.godot/imported/lights4.png-345d05b5266e819abc576d989aca6bec.ctex remapped: res://.godot/imported/lights4.png-345d05b5266e819abc576d989aca6bec.ctex
+Completed load for: 'res://game/bullets/assets/lights4.png' remapped 'res://game/bullets/assets/lights4.png' at thread -1
+Loading resource: res://game/bullets/assets/lights5.png remapped: res://game/bullets/assets/lights5.png
+Loading resource: res://.godot/imported/lights5.png-64c0538e05086ed101475a8313af9e6c.ctex remapped: res://.godot/imported/lights5.png-64c0538e05086ed101475a8313af9e6c.ctex
+Completed load for: 'res://game/bullets/assets/lights5.png' remapped 'res://game/bullets/assets/lights5.png' at thread -1
+Completed load for: 'res://game/bullets/BulletImpact.tscn' remapped 'res://game/bullets/BulletImpact.tscn' at thread -1
+Loading resource: res://game/bullets/BulletSmoke.tscn remapped: res://game/bullets/BulletSmoke.tscn
+Loading resource: res://game/bullets/assets/debris.png remapped: res://game/bullets/assets/debris.png
+Loading resource: res://.godot/imported/debris.png-0aec57671d9d9a610d4773694e0a938b.ctex remapped: res://.godot/imported/debris.png-0aec57671d9d9a610d4773694e0a938b.ctex
+Completed load for: 'res://game/bullets/assets/debris.png' remapped 'res://game/bullets/assets/debris.png' at thread -1
+Completed load for: 'res://game/bullets/BulletSmoke.tscn' remapped 'res://game/bullets/BulletSmoke.tscn' at thread -1
+Loading resource: res://Sprites/Bullet_11.png remapped: res://Sprites/Bullet_11.png
+Loading resource: res://.godot/imported/Bullet_11.png-f4242ed929a7e15fc184c779e4f8cd3d.ctex remapped: res://.godot/imported/Bullet_11.png-f4242ed929a7e15fc184c779e4f8cd3d.ctex
+Completed load for: 'res://Sprites/Bullet_11.png' remapped 'res://Sprites/Bullet_11.png' at thread -1
+Completed load for: 'res://game/bullets/SmpBullet.tscn' remapped 'res://game/bullets/SmpBullet.tscn' at thread -1
+Loading resource: res://game/guns/anim/reload.anim remapped: res://game/guns/anim/reload.anim
+Completed load for: 'res://game/guns/anim/reload.anim' remapped 'res://game/guns/anim/reload.anim' at thread -1
+Loading resource: res://audio/GUNAuto_Assault Rifle B Fire_01.wav remapped: res://audio/GUNAuto_Assault Rifle B Fire_01.wav
+Loading resource: res://.godot/imported/GUNAuto_Assault Rifle B Fire_01.wav-f23f3dabbf09a05641ffa8733af28bd8.sample remapped: res://.godot/imported/GUNAuto_Assault Rifle B Fire_01.wav-f23f3dabbf09a05641ffa8733af28bd8.sample
+Completed load for: 'res://audio/GUNAuto_Assault Rifle B Fire_01.wav' remapped 'res://audio/GUNAuto_Assault Rifle B Fire_01.wav' at thread -1
+Completed load for: 'res://game/guns/PlasmaOrb.tscn' remapped 'res://game/guns/PlasmaOrb.tscn' at thread -1
+Loading resource: res://game/guns/BurstCarbine.tscn remapped: res://game/guns/BurstCarbine.tscn
+Loading resource: res://game/guns/BurstCarbine.gd remapped: res://game/guns/BurstCarbine.gd
+Completed load for: 'res://game/guns/BurstCarbine.gd' remapped 'res://game/guns/BurstCarbine.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun2.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun2.png
+Loading resource: res://.godot/imported/gun2.png-adc66c3c540a5eb575583379ec8cb6c6.ctex remapped: res://.godot/imported/gun2.png-adc66c3c540a5eb575583379ec8cb6c6.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun2.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun2.png' at thread -1
+Loading resource: res://audio/GUNAuto_Assault Rifle A Fire_01.wav remapped: res://audio/GUNAuto_Assault Rifle A Fire_01.wav
+Loading resource: res://.godot/imported/GUNAuto_Assault Rifle A Fire_01.wav-8ad447793aa03f203c5c4305644120fa.sample remapped: res://.godot/imported/GUNAuto_Assault Rifle A Fire_01.wav-8ad447793aa03f203c5c4305644120fa.sample
+Completed load for: 'res://audio/GUNAuto_Assault Rifle A Fire_01.wav' remapped 'res://audio/GUNAuto_Assault Rifle A Fire_01.wav' at thread -1
+Completed load for: 'res://game/guns/BurstCarbine.tscn' remapped 'res://game/guns/BurstCarbine.tscn' at thread -1
+Loading resource: res://game/guns/GunSprite.tscn remapped: res://game/guns/GunSprite.tscn
+Completed load for: 'res://game/guns/GunSprite.tscn' remapped 'res://game/guns/GunSprite.tscn' at thread -1
+Loading resource: res://game/guns/ShotgunBlaster.tscn remapped: res://game/guns/ShotgunBlaster.tscn
+Loading resource: res://game/guns/ShotgunBlaster.gd remapped: res://game/guns/ShotgunBlaster.gd
+Completed load for: 'res://game/guns/ShotgunBlaster.gd' remapped 'res://game/guns/ShotgunBlaster.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun1.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun1.png
+Loading resource: res://.godot/imported/gun1.png-df1b9d1192df1fd6a10b4cb237f5ab2f.ctex remapped: res://.godot/imported/gun1.png-df1b9d1192df1fd6a10b4cb237f5ab2f.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun1.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun1.png' at thread -1
+Loading resource: res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_02.wav remapped: res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_02.wav
+Loading resource: res://.godot/imported/GUNTech_Sci Fi Shotgun Fire Heavy_02.wav-82add42461cccfb442d8b5c07c838260.sample remapped: res://.godot/imported/GUNTech_Sci Fi Shotgun Fire Heavy_02.wav-82add42461cccfb442d8b5c07c838260.sample
+Completed load for: 'res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_02.wav' remapped 'res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_02.wav' at thread -1
+Completed load for: 'res://game/guns/ShotgunBlaster.tscn' remapped 'res://game/guns/ShotgunBlaster.tscn' at thread -1
+Loading resource: res://game/guns/Sniper.tscn remapped: res://game/guns/Sniper.tscn
+Loading resource: res://game/guns/Sniper.gd remapped: res://game/guns/Sniper.gd
+Completed load for: 'res://game/guns/Sniper.gd' remapped 'res://game/guns/Sniper.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun4.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun4.png
+Loading resource: res://.godot/imported/gun4.png-4989a8d6751b266198e98465029801bd.ctex remapped: res://.godot/imported/gun4.png-4989a8d6751b266198e98465029801bd.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun4.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun4.png' at thread -1
+Loading resource: res://audio/SCIMisc_Sniper Cannon_01.wav remapped: res://audio/SCIMisc_Sniper Cannon_01.wav
+Loading resource: res://.godot/imported/SCIMisc_Sniper Cannon_01.wav-a712f6ad6e7006008ee9cf606695dd85.sample remapped: res://.godot/imported/SCIMisc_Sniper Cannon_01.wav-a712f6ad6e7006008ee9cf606695dd85.sample
+Completed load for: 'res://audio/SCIMisc_Sniper Cannon_01.wav' remapped 'res://audio/SCIMisc_Sniper Cannon_01.wav' at thread -1
+Completed load for: 'res://game/guns/Sniper.tscn' remapped 'res://game/guns/Sniper.tscn' at thread -1
+Loading resource: res://game/guns/BabyZapZap.tscn remapped: res://game/guns/BabyZapZap.tscn
+Loading resource: res://game/guns/BabyZapZap.gd remapped: res://game/guns/BabyZapZap.gd
+Completed load for: 'res://game/guns/BabyZapZap.gd' remapped 'res://game/guns/BabyZapZap.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun3.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun3.png
+Loading resource: res://.godot/imported/gun3.png-d9da53e0ceeabb170da2bd80073d60a4.ctex remapped: res://.godot/imported/gun3.png-d9da53e0ceeabb170da2bd80073d60a4.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun3.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun3.png' at thread -1
+Loading resource: res://game/bullets/BabyBullet.tscn remapped: res://game/bullets/BabyBullet.tscn
+Completed load for: 'res://game/bullets/BabyBullet.tscn' remapped 'res://game/bullets/BabyBullet.tscn' at thread -1
+Loading resource: res://audio/GUNPis_Pistol Fire_01.wav remapped: res://audio/GUNPis_Pistol Fire_01.wav
+Loading resource: res://.godot/imported/GUNPis_Pistol Fire_01.wav-2cfd78365a9e61feb6963ea6614a5c76.sample remapped: res://.godot/imported/GUNPis_Pistol Fire_01.wav-2cfd78365a9e61feb6963ea6614a5c76.sample
+Completed load for: 'res://audio/GUNPis_Pistol Fire_01.wav' remapped 'res://audio/GUNPis_Pistol Fire_01.wav' at thread -1
+Completed load for: 'res://game/guns/BabyZapZap.tscn' remapped 'res://game/guns/BabyZapZap.tscn' at thread -1
+Loading resource: res://game/guns/AlienRifle.tscn remapped: res://game/guns/AlienRifle.tscn
+Loading resource: res://game/guns/AlienRifle.gd remapped: res://game/guns/AlienRifle.gd
+Completed load for: 'res://game/guns/AlienRifle.gd' remapped 'res://game/guns/AlienRifle.gd' at thread -1
+Completed load for: 'res://game/guns/AlienRifle.tscn' remapped 'res://game/guns/AlienRifle.tscn' at thread -1
+Loading resource: res://game/guns/EmpireShotgun.tscn remapped: res://game/guns/EmpireShotgun.tscn
+Loading resource: res://game/guns/EmpireShotgun.gd remapped: res://game/guns/EmpireShotgun.gd
+Completed load for: 'res://game/guns/EmpireShotgun.gd' remapped 'res://game/guns/EmpireShotgun.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun13.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun13.png
+Loading resource: res://.godot/imported/gun13.png-d57573378bdfa34ebc4fc3542b85c80d.ctex remapped: res://.godot/imported/gun13.png-d57573378bdfa34ebc4fc3542b85c80d.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun13.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun13.png' at thread -1
+Loading resource: res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav remapped: res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav
+Loading resource: res://.godot/imported/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav-a2c34ed260ef9fc5922d452f492f23bc.sample remapped: res://.godot/imported/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav-a2c34ed260ef9fc5922d452f492f23bc.sample
+Completed load for: 'res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav' remapped 'res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav' at thread -1
+Completed load for: 'res://game/guns/EmpireShotgun.tscn' remapped 'res://game/guns/EmpireShotgun.tscn' at thread -1
+Loading resource: res://game/guns/BoomBoi.tscn remapped: res://game/guns/BoomBoi.tscn
+Loading resource: res://game/guns/BoomBoi.gd remapped: res://game/guns/BoomBoi.gd
+Completed load for: 'res://game/guns/BoomBoi.gd' remapped 'res://game/guns/BoomBoi.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun5.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun5.png
+Loading resource: res://.godot/imported/gun5.png-aa6005527003138dbd43a344ea5652b7.ctex remapped: res://.godot/imported/gun5.png-aa6005527003138dbd43a344ea5652b7.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun5.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun5.png' at thread -1
+Loading resource: res://game/bullets/Bullet.tscn remapped: res://game/bullets/Bullet.tscn
+Completed load for: 'res://game/bullets/Bullet.tscn' remapped 'res://game/bullets/Bullet.tscn' at thread -1
+Loading resource: res://audio/bullet/SCIMisc_Reload Alien Tech_05.wav remapped: res://audio/bullet/SCIMisc_Reload Alien Tech_05.wav
+Loading resource: res://.godot/imported/SCIMisc_Reload Alien Tech_05.wav-a778c82880afc1905d4dbb23d5d7717c.sample remapped: res://.godot/imported/SCIMisc_Reload Alien Tech_05.wav-a778c82880afc1905d4dbb23d5d7717c.sample
+Completed load for: 'res://audio/bullet/SCIMisc_Reload Alien Tech_05.wav' remapped 'res://audio/bullet/SCIMisc_Reload Alien Tech_05.wav' at thread -1
+Loading resource: res://audio/LASRGun_Electron Impeller Fire_01.wav remapped: res://audio/LASRGun_Electron Impeller Fire_01.wav
+Loading resource: res://.godot/imported/LASRGun_Electron Impeller Fire_01.wav-a22e84ae80efb727e366d2a3c4bfb284.sample remapped: res://.godot/imported/LASRGun_Electron Impeller Fire_01.wav-a22e84ae80efb727e366d2a3c4bfb284.sample
+Completed load for: 'res://audio/LASRGun_Electron Impeller Fire_01.wav' remapped 'res://audio/LASRGun_Electron Impeller Fire_01.wav' at thread -1
+Completed load for: 'res://game/guns/BoomBoi.tscn' remapped 'res://game/guns/BoomBoi.tscn' at thread -1
+Loading resource: res://game/guns/AlienMachine.tscn remapped: res://game/guns/AlienMachine.tscn
+Loading resource: res://game/guns/AlienMachine.gd remapped: res://game/guns/AlienMachine.gd
+Completed load for: 'res://game/guns/AlienMachine.gd' remapped 'res://game/guns/AlienMachine.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun8.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun8.png
+Loading resource: res://.godot/imported/gun8.png-632369efb13a94bda623c83222c6c4c5.ctex remapped: res://.godot/imported/gun8.png-632369efb13a94bda623c83222c6c4c5.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun8.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun8.png' at thread -1
+Loading resource: res://audio/GUNAuto_Plasmid Machinegun Single_01.wav remapped: res://audio/GUNAuto_Plasmid Machinegun Single_01.wav
+Loading resource: res://.godot/imported/GUNAuto_Plasmid Machinegun Single_01.wav-fdfff8fd0010359e77abdf0f5d66470b.sample remapped: res://.godot/imported/GUNAuto_Plasmid Machinegun Single_01.wav-fdfff8fd0010359e77abdf0f5d66470b.sample
+Completed load for: 'res://audio/GUNAuto_Plasmid Machinegun Single_01.wav' remapped 'res://audio/GUNAuto_Plasmid Machinegun Single_01.wav' at thread -1
+Completed load for: 'res://game/guns/AlienMachine.tscn' remapped 'res://game/guns/AlienMachine.tscn' at thread -1
+Loading resource: res://game/guns/RebalShotgun.tscn remapped: res://game/guns/RebalShotgun.tscn
+Loading resource: res://game/guns/RebalShotgun.gd remapped: res://game/guns/RebalShotgun.gd
+Completed load for: 'res://game/guns/RebalShotgun.gd' remapped 'res://game/guns/RebalShotgun.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun19.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun19.png
+Loading resource: res://.godot/imported/gun19.png-219f85b4271a65ee09faa4d628b698e1.ctex remapped: res://.godot/imported/gun19.png-219f85b4271a65ee09faa4d628b698e1.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun19.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun19.png' at thread -1
+Loading resource: res://audio/bullet/GUNMech_Reload_10.wav remapped: res://audio/bullet/GUNMech_Reload_10.wav
+Loading resource: res://.godot/imported/GUNMech_Reload_10.wav-39699639b49600f80fad274939996d43.sample remapped: res://.godot/imported/GUNMech_Reload_10.wav-39699639b49600f80fad274939996d43.sample
+Completed load for: 'res://audio/bullet/GUNMech_Reload_10.wav' remapped 'res://audio/bullet/GUNMech_Reload_10.wav' at thread -1
+Loading resource: res://audio/GUNTech_Tormentor Shotgun Fire_01.wav remapped: res://audio/GUNTech_Tormentor Shotgun Fire_01.wav
+Loading resource: res://.godot/imported/GUNTech_Tormentor Shotgun Fire_01.wav-7d563515dfec050ee3a89dd226c8e1b8.sample remapped: res://.godot/imported/GUNTech_Tormentor Shotgun Fire_01.wav-7d563515dfec050ee3a89dd226c8e1b8.sample
+Completed load for: 'res://audio/GUNTech_Tormentor Shotgun Fire_01.wav' remapped 'res://audio/GUNTech_Tormentor Shotgun Fire_01.wav' at thread -1
+Completed load for: 'res://game/guns/RebalShotgun.tscn' remapped 'res://game/guns/RebalShotgun.tscn' at thread -1
+Loading resource: res://game/guns/Uzi.tscn remapped: res://game/guns/Uzi.tscn
+Loading resource: res://game/guns/Uzi.gd remapped: res://game/guns/Uzi.gd
+Completed load for: 'res://game/guns/Uzi.gd' remapped 'res://game/guns/Uzi.gd' at thread -1
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun14.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun14.png
+Loading resource: res://.godot/imported/gun14.png-07b141597341df2a13aeb2ea1a4c2693.ctex remapped: res://.godot/imported/gun14.png-07b141597341df2a13aeb2ea1a4c2693.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun14.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun14.png' at thread -1
+Loading resource: res://audio/GUNSupr_Silenced Pistol Fire Reflections_01.wav remapped: res://audio/GUNSupr_Silenced Pistol Fire Reflections_01.wav
+Loading resource: res://.godot/imported/GUNSupr_Silenced Pistol Fire Reflections_01.wav-75f3a0793401bae829631a8095157509.sample remapped: res://.godot/imported/GUNSupr_Silenced Pistol Fire Reflections_01.wav-75f3a0793401bae829631a8095157509.sample
+Completed load for: 'res://audio/GUNSupr_Silenced Pistol Fire Reflections_01.wav' remapped 'res://audio/GUNSupr_Silenced Pistol Fire Reflections_01.wav' at thread -1
+Completed load for: 'res://game/guns/Uzi.tscn' remapped 'res://game/guns/Uzi.tscn' at thread -1
+Loading resource: res://game/attachments/A110.tscn remapped: res://game/attachments/A110.tscn
+Completed load for: 'res://game/attachments/A110.tscn' remapped 'res://game/attachments/A110.tscn' at thread -1
+Loading resource: res://game/attachments/A112.tscn remapped: res://game/attachments/A112.tscn
+Completed load for: 'res://game/attachments/A112.tscn' remapped 'res://game/attachments/A112.tscn' at thread -1
+Loading resource: res://game/attachments/A114.tscn remapped: res://game/attachments/A114.tscn
+Completed load for: 'res://game/attachments/A114.tscn' remapped 'res://game/attachments/A114.tscn' at thread -1
+Loading resource: res://game/attachments/A117.tscn remapped: res://game/attachments/A117.tscn
+Completed load for: 'res://game/attachments/A117.tscn' remapped 'res://game/attachments/A117.tscn' at thread -1
+Loading resource: res://game/attachments/A121.tscn remapped: res://game/attachments/A121.tscn
+Completed load for: 'res://game/attachments/A121.tscn' remapped 'res://game/attachments/A121.tscn' at thread -1
+Loading resource: res://game/attachments/A122.tscn remapped: res://game/attachments/A122.tscn
+Completed load for: 'res://game/attachments/A122.tscn' remapped 'res://game/attachments/A122.tscn' at thread -1
+Loading resource: res://game/attachments/QuickdrawMagazine.tscn remapped: res://game/attachments/QuickdrawMagazine.tscn
+Loading resource: res://game/attachments/QuickdrawMagazine.gd remapped: res://game/attachments/QuickdrawMagazine.gd
+Completed load for: 'res://game/attachments/QuickdrawMagazine.gd' remapped 'res://game/attachments/QuickdrawMagazine.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon4.png remapped: res://Sprites/icon/Icon4.png
+Loading resource: res://.godot/imported/Icon4.png-cfba254a60571c0030a1723ec4ce94e0.ctex remapped: res://.godot/imported/Icon4.png-cfba254a60571c0030a1723ec4ce94e0.ctex
+Completed load for: 'res://Sprites/icon/Icon4.png' remapped 'res://Sprites/icon/Icon4.png' at thread -1
+Completed load for: 'res://game/attachments/QuickdrawMagazine.tscn' remapped 'res://game/attachments/QuickdrawMagazine.tscn' at thread -1
+Loading resource: res://game/attachments/UniversalExtendedMagazines.tscn remapped: res://game/attachments/UniversalExtendedMagazines.tscn
+Loading resource: res://game/attachments/UniversalExtendedMagazines.gd remapped: res://game/attachments/UniversalExtendedMagazines.gd
+Completed load for: 'res://game/attachments/UniversalExtendedMagazines.gd' remapped 'res://game/attachments/UniversalExtendedMagazines.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon1.png remapped: res://Sprites/icon/Icon1.png
+Loading resource: res://.godot/imported/Icon1.png-4dd2f9f3e6309f7036b1dd0f7c014626.ctex remapped: res://.godot/imported/Icon1.png-4dd2f9f3e6309f7036b1dd0f7c014626.ctex
+Completed load for: 'res://Sprites/icon/Icon1.png' remapped 'res://Sprites/icon/Icon1.png' at thread -1
+Completed load for: 'res://game/attachments/UniversalExtendedMagazines.tscn' remapped 'res://game/attachments/UniversalExtendedMagazines.tscn' at thread -1
+Loading resource: res://game/attachments/ExtendedRifleMagazine.tscn remapped: res://game/attachments/ExtendedRifleMagazine.tscn
+Loading resource: res://game/attachments/ExtendedRifleMagazine.gd remapped: res://game/attachments/ExtendedRifleMagazine.gd
+Completed load for: 'res://game/attachments/ExtendedRifleMagazine.gd' remapped 'res://game/attachments/ExtendedRifleMagazine.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon3.png remapped: res://Sprites/icon/Icon3.png
+Loading resource: res://.godot/imported/Icon3.png-3e23bf5d535fedaa65a56479656e62d0.ctex remapped: res://.godot/imported/Icon3.png-3e23bf5d535fedaa65a56479656e62d0.ctex
+Completed load for: 'res://Sprites/icon/Icon3.png' remapped 'res://Sprites/icon/Icon3.png' at thread -1
+Completed load for: 'res://game/attachments/ExtendedRifleMagazine.tscn' remapped 'res://game/attachments/ExtendedRifleMagazine.tscn' at thread -1
+Loading resource: res://game/attachments/QuickExpansionMagazine.tscn remapped: res://game/attachments/QuickExpansionMagazine.tscn
+Loading resource: res://game/attachments/QuickExpansionMagazine.gd remapped: res://game/attachments/QuickExpansionMagazine.gd
+Completed load for: 'res://game/attachments/QuickExpansionMagazine.gd' remapped 'res://game/attachments/QuickExpansionMagazine.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon2.png remapped: res://Sprites/icon/Icon2.png
+Loading resource: res://.godot/imported/Icon2.png-0df6d70fe3d5248ed7083f24217a7523.ctex remapped: res://.godot/imported/Icon2.png-0df6d70fe3d5248ed7083f24217a7523.ctex
+Completed load for: 'res://Sprites/icon/Icon2.png' remapped 'res://Sprites/icon/Icon2.png' at thread -1
+Completed load for: 'res://game/attachments/QuickExpansionMagazine.tscn' remapped 'res://game/attachments/QuickExpansionMagazine.tscn' at thread -1
+Loading resource: res://game/attachments/ShotgunShellPouch.tscn remapped: res://game/attachments/ShotgunShellPouch.tscn
+Loading resource: res://game/attachments/ShotgunShellPouch.gd remapped: res://game/attachments/ShotgunShellPouch.gd
+Completed load for: 'res://game/attachments/ShotgunShellPouch.gd' remapped 'res://game/attachments/ShotgunShellPouch.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon5.png remapped: res://Sprites/icon/Icon5.png
+Loading resource: res://.godot/imported/Icon5.png-16d1f4aa448c33b288a30e67d5748124.ctex remapped: res://.godot/imported/Icon5.png-16d1f4aa448c33b288a30e67d5748124.ctex
+Completed load for: 'res://Sprites/icon/Icon5.png' remapped 'res://Sprites/icon/Icon5.png' at thread -1
+Completed load for: 'res://game/attachments/ShotgunShellPouch.tscn' remapped 'res://game/attachments/ShotgunShellPouch.tscn' at thread -1
+Loading resource: res://game/attachments/MachineGunMagazine.tscn remapped: res://game/attachments/MachineGunMagazine.tscn
+Loading resource: res://game/attachments/MachineGunMagazine.gd remapped: res://game/attachments/MachineGunMagazine.gd
+Completed load for: 'res://game/attachments/MachineGunMagazine.gd' remapped 'res://game/attachments/MachineGunMagazine.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon6.png remapped: res://Sprites/icon/Icon6.png
+Loading resource: res://.godot/imported/Icon6.png-3714fa78e1c28be247af29fbb6321f04.ctex remapped: res://.godot/imported/Icon6.png-3714fa78e1c28be247af29fbb6321f04.ctex
+Completed load for: 'res://Sprites/icon/Icon6.png' remapped 'res://Sprites/icon/Icon6.png' at thread -1
+Completed load for: 'res://game/attachments/MachineGunMagazine.tscn' remapped 'res://game/attachments/MachineGunMagazine.tscn' at thread -1
+Loading resource: res://game/attachments/SubmachineGunMagazine.tscn remapped: res://game/attachments/SubmachineGunMagazine.tscn
+Loading resource: res://game/attachments/SubmachineGunMagazine.gd remapped: res://game/attachments/SubmachineGunMagazine.gd
+Completed load for: 'res://game/attachments/SubmachineGunMagazine.gd' remapped 'res://game/attachments/SubmachineGunMagazine.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon7.png remapped: res://Sprites/icon/Icon7.png
+Loading resource: res://.godot/imported/Icon7.png-8cd643d79954601b9d3e91541767dca8.ctex remapped: res://.godot/imported/Icon7.png-8cd643d79954601b9d3e91541767dca8.ctex
+Completed load for: 'res://Sprites/icon/Icon7.png' remapped 'res://Sprites/icon/Icon7.png' at thread -1
+Completed load for: 'res://game/attachments/SubmachineGunMagazine.tscn' remapped 'res://game/attachments/SubmachineGunMagazine.tscn' at thread -1
+Loading resource: res://game/attachments/SuperUniversalMagazine.tscn remapped: res://game/attachments/SuperUniversalMagazine.tscn
+Loading resource: res://Sprites/icon/Icon9.png remapped: res://Sprites/icon/Icon9.png
+Loading resource: res://.godot/imported/Icon9.png-58aaef26c5a134e504bad5474e39e1fe.ctex remapped: res://.godot/imported/Icon9.png-58aaef26c5a134e504bad5474e39e1fe.ctex
+Completed load for: 'res://Sprites/icon/Icon9.png' remapped 'res://Sprites/icon/Icon9.png' at thread -1
+Completed load for: 'res://game/attachments/SuperUniversalMagazine.tscn' remapped 'res://game/attachments/SuperUniversalMagazine.tscn' at thread -1
+Loading resource: res://game/attachments/GrenadeLauncher.tscn remapped: res://game/attachments/GrenadeLauncher.tscn
+Loading resource: res://game/attachments/GrenadeLauncher.gd remapped: res://game/attachments/GrenadeLauncher.gd
+Loading resource: res://game/other/Grenade.tscn remapped: res://game/other/Grenade.tscn
+Loading resource: res://game/other/Grenade.gd remapped: res://game/other/Grenade.gd
+Completed load for: 'res://game/other/Grenade.gd' remapped 'res://game/other/Grenade.gd' at thread -1
+Loading resource: res://audio/bullet/EXPLDsgn_Explosion Impact_10.wav remapped: res://audio/bullet/EXPLDsgn_Explosion Impact_10.wav
+Loading resource: res://.godot/imported/EXPLDsgn_Explosion Impact_10.wav-f936a52a5697580dae2a72b82fe1bc34.sample remapped: res://.godot/imported/EXPLDsgn_Explosion Impact_10.wav-f936a52a5697580dae2a72b82fe1bc34.sample
+Completed load for: 'res://audio/bullet/EXPLDsgn_Explosion Impact_10.wav' remapped 'res://audio/bullet/EXPLDsgn_Explosion Impact_10.wav' at thread -1
+Completed load for: 'res://game/other/Grenade.tscn' remapped 'res://game/other/Grenade.tscn' at thread -1
+Completed load for: 'res://game/attachments/GrenadeLauncher.gd' remapped 'res://game/attachments/GrenadeLauncher.gd' at thread -1
+Loading resource: res://Sprites/icon/Icon8.png remapped: res://Sprites/icon/Icon8.png
+Loading resource: res://.godot/imported/Icon8.png-4b2efd7d9bbd1c20fcf67e473a2c4731.ctex remapped: res://.godot/imported/Icon8.png-4b2efd7d9bbd1c20fcf67e473a2c4731.ctex
+Completed load for: 'res://Sprites/icon/Icon8.png' remapped 'res://Sprites/icon/Icon8.png' at thread -1
+Loading resource: res://audio/bullet/GUNArtl_Grenade Launcher Fire_01.wav remapped: res://audio/bullet/GUNArtl_Grenade Launcher Fire_01.wav
+Loading resource: res://.godot/imported/GUNArtl_Grenade Launcher Fire_01.wav-8a6ab7ca8cbe7dee74218f170a6f73ec.sample remapped: res://.godot/imported/GUNArtl_Grenade Launcher Fire_01.wav-8a6ab7ca8cbe7dee74218f170a6f73ec.sample
+Completed load for: 'res://audio/bullet/GUNArtl_Grenade Launcher Fire_01.wav' remapped 'res://audio/bullet/GUNArtl_Grenade Launcher Fire_01.wav' at thread -1
+Completed load for: 'res://game/attachments/GrenadeLauncher.tscn' remapped 'res://game/attachments/GrenadeLauncher.tscn' at thread -1
+Loading resource: res://ui/widgets/HitLabel.tscn remapped: res://ui/widgets/HitLabel.tscn
+Loading resource: res://ui/widgets/HitLabel.gd remapped: res://ui/widgets/HitLabel.gd
+Completed load for: 'res://ui/widgets/HitLabel.gd' remapped 'res://ui/widgets/HitLabel.gd' at thread -1
+Loading resource: res://fonts/px.ttf remapped: res://fonts/px.ttf
+Loading resource: res://.godot/imported/px.ttf-d21b579429d758e2509fb5131d932d52.fontdata remapped: res://.godot/imported/px.ttf-d21b579429d758e2509fb5131d932d52.fontdata
+Completed load for: 'res://fonts/px.ttf' remapped 'res://fonts/px.ttf' at thread -1
+Completed load for: 'res://ui/widgets/HitLabel.tscn' remapped 'res://ui/widgets/HitLabel.tscn' at thread -1
+Loading resource: res://game/equip/EquipOnFloor.tscn remapped: res://game/equip/EquipOnFloor.tscn
+Loading resource: res://game/equip/EquipOnFloor.gd remapped: res://game/equip/EquipOnFloor.gd
+Loading resource: res://ui/snow/EquipTexture.tscn remapped: res://ui/snow/EquipTexture.tscn
+Loading resource: res://ui/snow/EquipTexture.gd remapped: res://ui/snow/EquipTexture.gd
+Completed load for: 'res://ui/snow/EquipTexture.gd' remapped 'res://ui/snow/EquipTexture.gd' at thread -1
+Loading resource: res://Sprites/equip/Slice 10.png remapped: res://Sprites/equip/Slice 10.png
+Loading resource: res://.godot/imported/Slice 10.png-b962fc73b9541b90c7f5e5aec5f2f09a.ctex remapped: res://.godot/imported/Slice 10.png-b962fc73b9541b90c7f5e5aec5f2f09a.ctex
+Completed load for: 'res://Sprites/equip/Slice 10.png' remapped 'res://Sprites/equip/Slice 10.png' at thread -1
+Loading resource: res://Sprites/equip_bg.png remapped: res://Sprites/equip_bg.png
+Loading resource: res://.godot/imported/equip_bg.png-97ec21a665afc4d0b69452d873683a5b.ctex remapped: res://.godot/imported/equip_bg.png-97ec21a665afc4d0b69452d873683a5b.ctex
+Completed load for: 'res://Sprites/equip_bg.png' remapped 'res://Sprites/equip_bg.png' at thread -1
+Loading resource: res://Sprites/ui/key/tile_0235.png remapped: res://Sprites/ui/key/tile_0235.png
+Loading resource: res://.godot/imported/tile_0235.png-95a1825f90232ab78bba8c7b2f9a160e.ctex remapped: res://.godot/imported/tile_0235.png-95a1825f90232ab78bba8c7b2f9a160e.ctex
+Completed load for: 'res://Sprites/ui/key/tile_0235.png' remapped 'res://Sprites/ui/key/tile_0235.png' at thread -1
+Completed load for: 'res://ui/snow/EquipTexture.tscn' remapped 'res://ui/snow/EquipTexture.tscn' at thread -1
+Completed load for: 'res://game/equip/EquipOnFloor.gd' remapped 'res://game/equip/EquipOnFloor.gd' at thread -1
+Loading resource: res://Sprites/light.png remapped: res://Sprites/light.png
+Loading resource: res://.godot/imported/light.png-bf179afb193a5d6b9a4b9af8792c7faf.ctex remapped: res://.godot/imported/light.png-bf179afb193a5d6b9a4b9af8792c7faf.ctex
+Completed load for: 'res://Sprites/light.png' remapped 'res://Sprites/light.png' at thread -1
+Loading resource: res://game/hero/undead_shadow.png remapped: res://game/hero/undead_shadow.png
+Loading resource: res://.godot/imported/undead_shadow.png-86252c38a90b47ff2db4c4b0fd660221.ctex remapped: res://.godot/imported/undead_shadow.png-86252c38a90b47ff2db4c4b0fd660221.ctex
+Completed load for: 'res://game/hero/undead_shadow.png' remapped 'res://game/hero/undead_shadow.png' at thread -1
+Completed load for: 'res://game/equip/EquipOnFloor.tscn' remapped 'res://game/equip/EquipOnFloor.tscn' at thread -1
+Completed load for: 'res://game/guns/ArcCaster.gd' remapped 'res://game/guns/ArcCaster.gd' at thread -1
+Completed load for: 'res://game/guns/ArcCaster.tscn' remapped 'res://game/guns/ArcCaster.tscn' at thread -1
+Completed load for: 'res://autoload/Demo.gd' remapped 'res://autoload/Demo.gd' at thread -1
+Loading resource: res://ui/CampPanel.tscn remapped: res://ui/CampPanel.tscn
+Loading resource: res://ui/CampPanel.gd remapped: res://ui/CampPanel.gd
+Completed load for: 'res://ui/CampPanel.gd' remapped 'res://ui/CampPanel.gd' at thread -1
+Completed load for: 'res://ui/CampPanel.tscn' remapped 'res://ui/CampPanel.tscn' at thread -1
+Loading resource: res://game/guns/W21.tscn remapped: res://game/guns/W21.tscn
+Loading resource: res://game/guns/MechanismGun.gd remapped: res://game/guns/MechanismGun.gd
+Completed load for: 'res://game/guns/MechanismGun.gd' remapped 'res://game/guns/MechanismGun.gd' at thread -1
+Completed load for: 'res://game/guns/W21.tscn' remapped 'res://game/guns/W21.tscn' at thread -1
+Loading resource: res://game/guns/W22.tscn remapped: res://game/guns/W22.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun20.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun20.png
+Loading resource: res://.godot/imported/gun20.png-f6c51e07dd398a6cf890885d1413e336.ctex remapped: res://.godot/imported/gun20.png-f6c51e07dd398a6cf890885d1413e336.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun20.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun20.png' at thread -1
+Completed load for: 'res://game/guns/W22.tscn' remapped 'res://game/guns/W22.tscn' at thread -1
+Loading resource: res://game/guns/W24.tscn remapped: res://game/guns/W24.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun10.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun10.png
+Loading resource: res://.godot/imported/gun10.png-ac42d69c5edc1d4a8646a2cf33d22bb3.ctex remapped: res://.godot/imported/gun10.png-ac42d69c5edc1d4a8646a2cf33d22bb3.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun10.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun10.png' at thread -1
+Completed load for: 'res://game/guns/W24.tscn' remapped 'res://game/guns/W24.tscn' at thread -1
+Loading resource: res://game/guns/W11.tscn remapped: res://game/guns/W11.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun15.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun15.png
+Loading resource: res://.godot/imported/gun15.png-3cca7ab174605989ec00b1fdeef050e3.ctex remapped: res://.godot/imported/gun15.png-3cca7ab174605989ec00b1fdeef050e3.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun15.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun15.png' at thread -1
+Completed load for: 'res://game/guns/W11.tscn' remapped 'res://game/guns/W11.tscn' at thread -1
+Loading resource: res://game/guns/W13.tscn remapped: res://game/guns/W13.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun16.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun16.png
+Loading resource: res://.godot/imported/gun16.png-ecda0c47ea1adb093465879018a26c60.ctex remapped: res://.godot/imported/gun16.png-ecda0c47ea1adb093465879018a26c60.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun16.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun16.png' at thread -1
+Completed load for: 'res://game/guns/W13.tscn' remapped 'res://game/guns/W13.tscn' at thread -1
+Loading resource: res://game/guns/W15.tscn remapped: res://game/guns/W15.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun17.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun17.png
+Loading resource: res://.godot/imported/gun17.png-1c999d2672a51ce42b363d56daf5d659.ctex remapped: res://.godot/imported/gun17.png-1c999d2672a51ce42b363d56daf5d659.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun17.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun17.png' at thread -1
+Completed load for: 'res://game/guns/W15.tscn' remapped 'res://game/guns/W15.tscn' at thread -1
+Loading resource: res://game/guns/W16.tscn remapped: res://game/guns/W16.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun18.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun18.png
+Loading resource: res://.godot/imported/gun18.png-3c694c686b4a0a86a80908e19633f511.ctex remapped: res://.godot/imported/gun18.png-3c694c686b4a0a86a80908e19633f511.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun18.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun18.png' at thread -1
+Completed load for: 'res://game/guns/W16.tscn' remapped 'res://game/guns/W16.tscn' at thread -1
+Loading resource: res://game/guns/W17.tscn remapped: res://game/guns/W17.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun11.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun11.png
+Loading resource: res://.godot/imported/gun11.png-5e6d2e75bf303aca375be31a799188ee.ctex remapped: res://.godot/imported/gun11.png-5e6d2e75bf303aca375be31a799188ee.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun11.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun11.png' at thread -1
+Completed load for: 'res://game/guns/W17.tscn' remapped 'res://game/guns/W17.tscn' at thread -1
+Loading resource: res://game/guns/W18.tscn remapped: res://game/guns/W18.tscn
+Loading resource: res://Sprites/The Tiny Alchemist - Guns/gun12.png remapped: res://Sprites/The Tiny Alchemist - Guns/gun12.png
+Loading resource: res://.godot/imported/gun12.png-13396750cd59a1bd2323770186e05017.ctex remapped: res://.godot/imported/gun12.png-13396750cd59a1bd2323770186e05017.ctex
+Completed load for: 'res://Sprites/The Tiny Alchemist - Guns/gun12.png' remapped 'res://Sprites/The Tiny Alchemist - Guns/gun12.png' at thread -1
+Completed load for: 'res://game/guns/W18.tscn' remapped 'res://game/guns/W18.tscn' at thread -1
+Loading resource: res://game/guns/W19.tscn remapped: res://game/guns/W19.tscn
+Completed load for: 'res://game/guns/W19.tscn' remapped 'res://game/guns/W19.tscn' at thread -1
+Loading resource: res://game/guns/W20.tscn remapped: res://game/guns/W20.tscn
+Completed load for: 'res://game/guns/W20.tscn' remapped 'res://game/guns/W20.tscn' at thread -1
+Loading resource: res://game/attachments/A111.tscn remapped: res://game/attachments/A111.tscn
+Completed load for: 'res://game/attachments/A111.tscn' remapped 'res://game/attachments/A111.tscn' at thread -1
+Loading resource: res://game/attachments/A113.tscn remapped: res://game/attachments/A113.tscn
+Completed load for: 'res://game/attachments/A113.tscn' remapped 'res://game/attachments/A113.tscn' at thread -1
+Loading resource: res://game/attachments/A115.tscn remapped: res://game/attachments/A115.tscn
+Completed load for: 'res://game/attachments/A115.tscn' remapped 'res://game/attachments/A115.tscn' at thread -1
+Loading resource: res://game/attachments/A116.tscn remapped: res://game/attachments/A116.tscn
+Completed load for: 'res://game/attachments/A116.tscn' remapped 'res://game/attachments/A116.tscn' at thread -1
+Loading resource: res://game/attachments/A118.tscn remapped: res://game/attachments/A118.tscn
+Completed load for: 'res://game/attachments/A118.tscn' remapped 'res://game/attachments/A118.tscn' at thread -1
+Loading resource: res://game/attachments/A119.tscn remapped: res://game/attachments/A119.tscn
+Completed load for: 'res://game/attachments/A119.tscn' remapped 'res://game/attachments/A119.tscn' at thread -1
+Loading resource: res://game/attachments/A120.tscn remapped: res://game/attachments/A120.tscn
+Completed load for: 'res://game/attachments/A120.tscn' remapped 'res://game/attachments/A120.tscn' at thread -1
+Loading resource: res://game/attachments/A123.tscn remapped: res://game/attachments/A123.tscn
+Completed load for: 'res://game/attachments/A123.tscn' remapped 'res://game/attachments/A123.tscn' at thread -1
+Loading resource: res://game/attachments/A124.tscn remapped: res://game/attachments/A124.tscn
+Completed load for: 'res://game/attachments/A124.tscn' remapped 'res://game/attachments/A124.tscn' at thread -1
+Loading resource: res://autoload/server/PlayerServer.gd remapped: res://autoload/server/PlayerServer.gd
+Loading resource: res://game/hero/Hero.tscn remapped: res://game/hero/Hero.tscn
+Loading resource: res://shader/SmoothPixel.tres remapped: res://shader/SmoothPixel.tres
+Loading resource: res://game/map/test.gdshader remapped: res://game/map/test.gdshader
+Completed load for: 'res://game/map/test.gdshader' remapped 'res://game/map/test.gdshader' at thread -1
+Completed load for: 'res://shader/SmoothPixel.tres' remapped 'res://shader/SmoothPixel.tres' at thread -1
+Loading resource: res://game/hero/Tiny Alchemist Sprite Sheet 48x32.png remapped: res://game/hero/Tiny Alchemist Sprite Sheet 48x32.png
+Loading resource: res://.godot/imported/Tiny Alchemist Sprite Sheet 48x32.png-8a56ca04d24293b90921711e6e963238.ctex remapped: res://.godot/imported/Tiny Alchemist Sprite Sheet 48x32.png-8a56ca04d24293b90921711e6e963238.ctex
+Completed load for: 'res://game/hero/Tiny Alchemist Sprite Sheet 48x32.png' remapped 'res://game/hero/Tiny Alchemist Sprite Sheet 48x32.png' at thread -1
+Loading resource: res://game/hero/Light (1).png remapped: res://game/hero/Light (1).png
+Loading resource: res://.godot/imported/Light (1).png-a52338431621b82ff5efa7c07dc1699e.ctex remapped: res://.godot/imported/Light (1).png-a52338431621b82ff5efa7c07dc1699e.ctex
+Completed load for: 'res://game/hero/Light (1).png' remapped 'res://game/hero/Light (1).png' at thread -1
+Completed load for: 'res://game/hero/Hero.tscn' remapped 'res://game/hero/Hero.tscn' at thread -1
+Completed load for: 'res://autoload/server/PlayerServer.gd' remapped 'res://autoload/server/PlayerServer.gd' at thread -1
+Loading resource: res://autoload/server/MapServer.gd remapped: res://autoload/server/MapServer.gd
+Completed load for: 'res://autoload/server/MapServer.gd' remapped 'res://autoload/server/MapServer.gd' at thread -1
+Loading resource: res://addons/scene_manager/SceneManager.tscn remapped: res://addons/scene_manager/SceneManager.tscn
+Loading resource: res://addons/scene_manager/SceneManager.gd remapped: res://addons/scene_manager/SceneManager.gd
+Completed load for: 'res://addons/scene_manager/SceneManager.gd' remapped 'res://addons/scene_manager/SceneManager.gd' at thread -1
+Loading resource: res://addons/scene_manager/Dissolve2d.gdshader remapped: res://addons/scene_manager/Dissolve2d.gdshader
+Completed load for: 'res://addons/scene_manager/Dissolve2d.gdshader' remapped 'res://addons/scene_manager/Dissolve2d.gdshader' at thread -1
+Loading resource: res://addons/scene_manager/ShaderFade.tres remapped: res://addons/scene_manager/ShaderFade.tres
+Completed load for: 'res://addons/scene_manager/ShaderFade.tres' remapped 'res://addons/scene_manager/ShaderFade.tres' at thread -1
+Completed load for: 'res://addons/scene_manager/SceneManager.tscn' remapped 'res://addons/scene_manager/SceneManager.tscn' at thread -1
+MbedTLS: Some X509 certificates could not be parsed (1 certificates skipped).
+Loaded system CA certificates
+Loading resource: res://tests/M10Growth.tscn remapped: res://tests/M10Growth.tscn
+Loading resource: res://tests/M10Growth.gd remapped: res://tests/M10Growth.gd
+Completed load for: 'res://tests/M10Growth.gd' remapped 'res://tests/M10Growth.gd' at thread -1
+Completed load for: 'res://tests/M10Growth.tscn' remapped 'res://tests/M10Growth.tscn' at thread -1
+Loading resource: res://audio/bullet/GUNMech_Insert Clip_01.wav remapped: res://audio/bullet/GUNMech_Insert Clip_01.wav
+Loading resource: res://.godot/imported/GUNMech_Insert Clip_01.wav-8eb9130e400cd52a150d11a48dfa18a3.sample remapped: res://.godot/imported/GUNMech_Insert Clip_01.wav-8eb9130e400cd52a150d11a48dfa18a3.sample
+Completed load for: 'res://audio/bullet/GUNMech_Insert Clip_01.wav' remapped 'res://audio/bullet/GUNMech_Insert Clip_01.wav' at thread -1
+Loading resource: res://game/map/Main.tscn remapped: res://game/map/Main.tscn
+Loading resource: res://game/map/test.gd remapped: res://game/map/test.gd
+Loading resource: res://game/monster/Monster 2/Monster2.tscn remapped: res://game/monster/Monster 2/Monster2.tscn
+Loading resource: res://game/monster/Monster 2/Monster2.gd remapped: res://game/monster/Monster 2/Monster2.gd
+Completed load for: 'res://game/monster/Monster 2/Monster2.gd' remapped 'res://game/monster/Monster 2/Monster2.gd' at thread -1
+Loading resource: res://game/monster/Monster 2/50x31 Monster 2 spritesheet without shadows.png remapped: res://game/monster/Monster 2/50x31 Monster 2 spritesheet without shadows.png
+Loading resource: res://.godot/imported/50x31 Monster 2 spritesheet without shadows.png-5e324067c998386d064ef056dfcbfe0f.ctex remapped: res://.godot/imported/50x31 Monster 2 spritesheet without shadows.png-5e324067c998386d064ef056dfcbfe0f.ctex
+Completed load for: 'res://game/monster/Monster 2/50x31 Monster 2 spritesheet without shadows.png' remapped 'res://game/monster/Monster 2/50x31 Monster 2 spritesheet without shadows.png' at thread -1
+Completed load for: 'res://game/monster/Monster 2/Monster2.tscn' remapped 'res://game/monster/Monster 2/Monster2.tscn' at thread -1
+Completed load for: 'res://game/map/test.gd' remapped 'res://game/map/test.gd' at thread -1
+Loading resource: res://ui/ControlUI.tscn remapped: res://ui/ControlUI.tscn
+Loading resource: res://ui/ControlUI.gd remapped: res://ui/ControlUI.gd
+Completed load for: 'res://ui/ControlUI.gd' remapped 'res://ui/ControlUI.gd' at thread -1
+Loading resource: res://ui/theme.tres remapped: res://ui/theme.tres
+Completed load for: 'res://ui/theme.tres' remapped 'res://ui/theme.tres' at thread -1
+Loading resource: res://ui/GameUI.gd remapped: res://ui/GameUI.gd
+Loading resource: res://ui/widgets/WeaponListItem.tscn remapped: res://ui/widgets/WeaponListItem.tscn
+Loading resource: res://Sprites/item_box_no_shader.png remapped: res://Sprites/item_box_no_shader.png
+Loading resource: res://.godot/imported/item_box_no_shader.png-bf800bca8d9dc4c9fa34ef7351051bfd.ctex remapped: res://.godot/imported/item_box_no_shader.png-bf800bca8d9dc4c9fa34ef7351051bfd.ctex
+Completed load for: 'res://Sprites/item_box_no_shader.png' remapped 'res://Sprites/item_box_no_shader.png' at thread -1
+Loading resource: res://ui/widgets/WeaponListItem.gd remapped: res://ui/widgets/WeaponListItem.gd
+Completed load for: 'res://ui/widgets/WeaponListItem.gd' remapped 'res://ui/widgets/WeaponListItem.gd' at thread -1
+Loading resource: res://fonts/CCOverbyteOn.ttf remapped: res://fonts/CCOverbyteOn.ttf
+Loading resource: res://.godot/imported/CCOverbyteOn.ttf-8d1c492eefb8c2dac3babb767b125d00.fontdata remapped: res://.godot/imported/CCOverbyteOn.ttf-8d1c492eefb8c2dac3babb767b125d00.fontdata
+Completed load for: 'res://fonts/CCOverbyteOn.ttf' remapped 'res://fonts/CCOverbyteOn.ttf' at thread -1
+Completed load for: 'res://ui/widgets/WeaponListItem.tscn' remapped 'res://ui/widgets/WeaponListItem.tscn' at thread -1
+Loading resource: res://ui/widgets/BulletCountItem.tscn remapped: res://ui/widgets/BulletCountItem.tscn
+Loading resource: res://ui/widgets/BulletCountItem.gd remapped: res://ui/widgets/BulletCountItem.gd
+Completed load for: 'res://ui/widgets/BulletCountItem.gd' remapped 'res://ui/widgets/BulletCountItem.gd' at thread -1
+Completed load for: 'res://ui/widgets/BulletCountItem.tscn' remapped 'res://ui/widgets/BulletCountItem.tscn' at thread -1
+Loading resource: res://ui/widgets/RewardTopItem.tscn remapped: res://ui/widgets/RewardTopItem.tscn
+Loading resource: res://ui/widgets/RewardTopItem.gd remapped: res://ui/widgets/RewardTopItem.gd
+Completed load for: 'res://ui/widgets/RewardTopItem.gd' remapped 'res://ui/widgets/RewardTopItem.gd' at thread -1
+Completed load for: 'res://ui/widgets/RewardTopItem.tscn' remapped 'res://ui/widgets/RewardTopItem.tscn' at thread -1
+Completed load for: 'res://ui/GameUI.gd' remapped 'res://ui/GameUI.gd' at thread -1
+Loading resource: res://ui/MainUI.gd remapped: res://ui/MainUI.gd
+Loading resource: res://ui/ModeSelect.tscn remapped: res://ui/ModeSelect.tscn
+Loading resource: res://ui/ModeSelect.gd remapped: res://ui/ModeSelect.gd
+Completed load for: 'res://ui/ModeSelect.gd' remapped 'res://ui/ModeSelect.gd' at thread -1
+Completed load for: 'res://ui/ModeSelect.tscn' remapped 'res://ui/ModeSelect.tscn' at thread -1
+Completed load for: 'res://ui/MainUI.gd' remapped 'res://ui/MainUI.gd' at thread -1
+Loading resource: res://ui/widgets/Crosshair.tscn remapped: res://ui/widgets/Crosshair.tscn
+Loading resource: res://Sprites/crosshair186.png remapped: res://Sprites/crosshair186.png
+Loading resource: res://.godot/imported/crosshair186.png-07ada5046798866a0baa809bd7d298e9.ctex remapped: res://.godot/imported/crosshair186.png-07ada5046798866a0baa809bd7d298e9.ctex
+Completed load for: 'res://Sprites/crosshair186.png' remapped 'res://Sprites/crosshair186.png' at thread -1
+Loading resource: res://ui/widgets/Crosshair.gd remapped: res://ui/widgets/Crosshair.gd
+Completed load for: 'res://ui/widgets/Crosshair.gd' remapped 'res://ui/widgets/Crosshair.gd' at thread -1
+Completed load for: 'res://ui/widgets/Crosshair.tscn' remapped 'res://ui/widgets/Crosshair.tscn' at thread -1
+Loading resource: res://ui/SettingUI.gd remapped: res://ui/SettingUI.gd
+Completed load for: 'res://ui/SettingUI.gd' remapped 'res://ui/SettingUI.gd' at thread -1
+Loading resource: res://audio/CLOTHMvmt_Clothing Rustle Arm_01.wav remapped: res://audio/CLOTHMvmt_Clothing Rustle Arm_01.wav
+Loading resource: res://.godot/imported/CLOTHMvmt_Clothing Rustle Arm_01.wav-39f188b18fd95f20c7b61c572330faea.sample remapped: res://.godot/imported/CLOTHMvmt_Clothing Rustle Arm_01.wav-39f188b18fd95f20c7b61c572330faea.sample
+Completed load for: 'res://audio/CLOTHMvmt_Clothing Rustle Arm_01.wav' remapped 'res://audio/CLOTHMvmt_Clothing Rustle Arm_01.wav' at thread -1
+Loading resource: res://ui/ModUI.tscn remapped: res://ui/ModUI.tscn
+Loading resource: res://ui/ModUI.gd remapped: res://ui/ModUI.gd
+Completed load for: 'res://ui/ModUI.gd' remapped 'res://ui/ModUI.gd' at thread -1
+Loading resource: res://Sprites/ui/Assets-1-恢复的_03.png remapped: res://Sprites/ui/Assets-1-恢复的_03.png
+Loading resource: res://.godot/imported/Assets-1-恢复的_03.png-564e08ee3ca1269fdbd9e0d6ecaae278.ctex remapped: res://.godot/imported/Assets-1-恢复的_03.png-564e08ee3ca1269fdbd9e0d6ecaae278.ctex
+Completed load for: 'res://Sprites/ui/Assets-1-恢复的_03.png' remapped 'res://Sprites/ui/Assets-1-恢复的_03.png' at thread -1
+Completed load for: 'res://ui/ModUI.tscn' remapped 'res://ui/ModUI.tscn' at thread -1
+Loading resource: res://Sprites/ui/title.png remapped: res://Sprites/ui/title.png
+Loading resource: res://.godot/imported/title.png-13070e0a41e06da83883b74b9e934fc9.ctex remapped: res://.godot/imported/title.png-13070e0a41e06da83883b74b9e934fc9.ctex
+Completed load for: 'res://Sprites/ui/title.png' remapped 'res://Sprites/ui/title.png' at thread -1
+Loading resource: res://icon.svg remapped: res://icon.svg
+Loading resource: res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex remapped: res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex
+Completed load for: 'res://icon.svg' remapped 'res://icon.svg' at thread -1
+Completed load for: 'res://ui/ControlUI.tscn' remapped 'res://ui/ControlUI.tscn' at thread -1
+Loading resource: res://game/map/mapTown/Town.tscn remapped: res://game/map/mapTown/Town.tscn
+Loading resource: res://game/map/top down tileset.png remapped: res://game/map/top down tileset.png
+Loading resource: res://.godot/imported/top down tileset.png-6499a464dba811d884965325d03678a0.ctex remapped: res://.godot/imported/top down tileset.png-6499a464dba811d884965325d03678a0.ctex
+Completed load for: 'res://game/map/top down tileset.png' remapped 'res://game/map/top down tileset.png' at thread -1
+Loading resource: res://game/map/mapTown/Town.gd remapped: res://game/map/mapTown/Town.gd
+Loading resource: res://game/items/Gold.tscn remapped: res://game/items/Gold.tscn
+Loading resource: res://game/items/Gold.gd remapped: res://game/items/Gold.gd
+Completed load for: 'res://game/items/Gold.gd' remapped 'res://game/items/Gold.gd' at thread -1
+Completed load for: 'res://game/items/Gold.tscn' remapped 'res://game/items/Gold.tscn' at thread -1
+Loading resource: res://ui/widgets/WeaponChoose.tscn remapped: res://ui/widgets/WeaponChoose.tscn
+Loading resource: res://fonts/fusion-pixel.otf remapped: res://fonts/fusion-pixel.otf
+Loading resource: res://.godot/imported/fusion-pixel.otf-0c150381e4e25acae32963b08796cc37.fontdata remapped: res://.godot/imported/fusion-pixel.otf-0c150381e4e25acae32963b08796cc37.fontdata
+Completed load for: 'res://fonts/fusion-pixel.otf' remapped 'res://fonts/fusion-pixel.otf' at thread -1
+Loading resource: res://ui/widgets/WeaponChoose.gd remapped: res://ui/widgets/WeaponChoose.gd
+Loading resource: res://ui/widgets/WeaponChooseItem.tscn remapped: res://ui/widgets/WeaponChooseItem.tscn
+Loading resource: res://ui/widgets/WeaponChooseItem.gd remapped: res://ui/widgets/WeaponChooseItem.gd
+Completed load for: 'res://ui/widgets/WeaponChooseItem.gd' remapped 'res://ui/widgets/WeaponChooseItem.gd' at thread -1
+Completed load for: 'res://ui/widgets/WeaponChooseItem.tscn' remapped 'res://ui/widgets/WeaponChooseItem.tscn' at thread -1
+Completed load for: 'res://ui/widgets/WeaponChoose.gd' remapped 'res://ui/widgets/WeaponChoose.gd' at thread -1
+Completed load for: 'res://ui/widgets/WeaponChoose.tscn' remapped 'res://ui/widgets/WeaponChoose.tscn' at thread -1
+Loading resource: res://ui/widgets/DeathBoard.tscn remapped: res://ui/widgets/DeathBoard.tscn
+Loading resource: res://ui/widgets/DeathBoard.gd remapped: res://ui/widgets/DeathBoard.gd
+Completed load for: 'res://ui/widgets/DeathBoard.gd' remapped 'res://ui/widgets/DeathBoard.gd' at thread -1
+Completed load for: 'res://ui/widgets/DeathBoard.tscn' remapped 'res://ui/widgets/DeathBoard.tscn' at thread -1
+Completed load for: 'res://game/map/mapTown/Town.gd' remapped 'res://game/map/mapTown/Town.gd' at thread -1
+Loading resource: res://game/map/victorian tileset.png remapped: res://game/map/victorian tileset.png
+Loading resource: res://.godot/imported/victorian tileset.png-b10ab92a9ee91959987f8fc7eade5fce.ctex remapped: res://.godot/imported/victorian tileset.png-b10ab92a9ee91959987f8fc7eade5fce.ctex
+Completed load for: 'res://game/map/victorian tileset.png' remapped 'res://game/map/victorian tileset.png' at thread -1
+Loading resource: res://game/map/Moon/tileset.png remapped: res://game/map/Moon/tileset.png
+Loading resource: res://.godot/imported/tileset.png-42e86f4941b22f66ddc40d06f778c059.ctex remapped: res://.godot/imported/tileset.png-42e86f4941b22f66ddc40d06f778c059.ctex
+Completed load for: 'res://game/map/Moon/tileset.png' remapped 'res://game/map/Moon/tileset.png' at thread -1
+Loading resource: res://game/hero/Camera2D.gd remapped: res://game/hero/Camera2D.gd
+Completed load for: 'res://game/hero/Camera2D.gd' remapped 'res://game/hero/Camera2D.gd' at thread -1
+Loading resource: res://Sprites/light2.png remapped: res://Sprites/light2.png
+Loading resource: res://.godot/imported/light2.png-112cec5a0336cc353b960fdfb6e7b1f1.ctex remapped: res://.godot/imported/light2.png-112cec5a0336cc353b960fdfb6e7b1f1.ctex
+Completed load for: 'res://Sprites/light2.png' remapped 'res://Sprites/light2.png' at thread -1
+Loading resource: res://game/map/Pre-built house 3.png remapped: res://game/map/Pre-built house 3.png
+Loading resource: res://.godot/imported/Pre-built house 3.png-ee8a2397a65bd6ff02494b6989aa5aa7.ctex remapped: res://.godot/imported/Pre-built house 3.png-ee8a2397a65bd6ff02494b6989aa5aa7.ctex
+Completed load for: 'res://game/map/Pre-built house 3.png' remapped 'res://game/map/Pre-built house 3.png' at thread -1
+Loading resource: res://game/map/next.png remapped: res://game/map/next.png
+Loading resource: res://.godot/imported/next.png-e72d23050fd1260dfda62a872d6381e0.ctex remapped: res://.godot/imported/next.png-e72d23050fd1260dfda62a872d6381e0.ctex
+Completed load for: 'res://game/map/next.png' remapped 'res://game/map/next.png' at thread -1
+Loading resource: res://game/other/Portal.tscn remapped: res://game/other/Portal.tscn
+Loading resource: res://game/other/Portal.gd remapped: res://game/other/Portal.gd
+Completed load for: 'res://game/other/Portal.gd' remapped 'res://game/other/Portal.gd' at thread -1
+Loading resource: res://Sprites/particle/effect_4.png remapped: res://Sprites/particle/effect_4.png
+Loading resource: res://.godot/imported/effect_4.png-55b3c3a9dba3fb3a9a1db9a18c96e312.ctex remapped: res://.godot/imported/effect_4.png-55b3c3a9dba3fb3a9a1db9a18c96e312.ctex
+Completed load for: 'res://Sprites/particle/effect_4.png' remapped 'res://Sprites/particle/effect_4.png' at thread -1
+Completed load for: 'res://game/other/Portal.tscn' remapped 'res://game/other/Portal.tscn' at thread -1
+Loading resource: res://game/map/tip.png remapped: res://game/map/tip.png
+Loading resource: res://.godot/imported/tip.png-191aa20792a657fc5ef25cfaef0a3a51.ctex remapped: res://.godot/imported/tip.png-191aa20792a657fc5ef25cfaef0a3a51.ctex
+Completed load for: 'res://game/map/tip.png' remapped 'res://game/map/tip.png' at thread -1
+Loading resource: res://audio/DSGNMisc_Kill Confirm Metallic_01.wav remapped: res://audio/DSGNMisc_Kill Confirm Metallic_01.wav
+Loading resource: res://.godot/imported/DSGNMisc_Kill Confirm Metallic_01.wav-fff81bcf8b8fa76ce8dc86bef846c065.sample remapped: res://.godot/imported/DSGNMisc_Kill Confirm Metallic_01.wav-fff81bcf8b8fa76ce8dc86bef846c065.sample
+Completed load for: 'res://audio/DSGNMisc_Kill Confirm Metallic_01.wav' remapped 'res://audio/DSGNMisc_Kill Confirm Metallic_01.wav' at thread -1
+Loading resource: res://game/npc/RewardNpc.tscn remapped: res://game/npc/RewardNpc.tscn
+Loading resource: res://Sprites/2 - Power & Electricity.png remapped: res://Sprites/2 - Power & Electricity.png
+Loading resource: res://.godot/imported/2 - Power & Electricity.png-08a9c8bd3c2ca257d11c3f3bed1844ae.ctex remapped: res://.godot/imported/2 - Power & Electricity.png-08a9c8bd3c2ca257d11c3f3bed1844ae.ctex
+Completed load for: 'res://Sprites/2 - Power & Electricity.png' remapped 'res://Sprites/2 - Power & Electricity.png' at thread -1
+Loading resource: res://game/npc/RewardNpc.gd remapped: res://game/npc/RewardNpc.gd
+Loading resource: res://ui/widgets/RewardChoose.tscn remapped: res://ui/widgets/RewardChoose.tscn
+Loading resource: res://ui/widgets/RewardChoose.gd remapped: res://ui/widgets/RewardChoose.gd
+Loading resource: res://ui/widgets/RewardShopItem.tscn remapped: res://ui/widgets/RewardShopItem.tscn
+Loading resource: res://ui/widgets/RewardShopItem.gd remapped: res://ui/widgets/RewardShopItem.gd
+Completed load for: 'res://ui/widgets/RewardShopItem.gd' remapped 'res://ui/widgets/RewardShopItem.gd' at thread -1
+Completed load for: 'res://ui/widgets/RewardShopItem.tscn' remapped 'res://ui/widgets/RewardShopItem.tscn' at thread -1
+Completed load for: 'res://ui/widgets/RewardChoose.gd' remapped 'res://ui/widgets/RewardChoose.gd' at thread -1
+Loading resource: res://audio/bullet/BLLTShel_Reload Ammo_01.wav remapped: res://audio/bullet/BLLTShel_Reload Ammo_01.wav
+Loading resource: res://.godot/imported/BLLTShel_Reload Ammo_01.wav-9c05c767ab0717a1c11671c005f068c5.sample remapped: res://.godot/imported/BLLTShel_Reload Ammo_01.wav-9c05c767ab0717a1c11671c005f068c5.sample
+Completed load for: 'res://audio/bullet/BLLTShel_Reload Ammo_01.wav' remapped 'res://audio/bullet/BLLTShel_Reload Ammo_01.wav' at thread -1
+Loading resource: res://audio/DSGNMisc_Kill Confirm Metallic_03.wav remapped: res://audio/DSGNMisc_Kill Confirm Metallic_03.wav
+Loading resource: res://.godot/imported/DSGNMisc_Kill Confirm Metallic_03.wav-feb36f5711034c9c1132920fc91fdc5f.sample remapped: res://.godot/imported/DSGNMisc_Kill Confirm Metallic_03.wav-feb36f5711034c9c1132920fc91fdc5f.sample
+Completed load for: 'res://audio/DSGNMisc_Kill Confirm Metallic_03.wav' remapped 'res://audio/DSGNMisc_Kill Confirm Metallic_03.wav' at thread -1
+Completed load for: 'res://ui/widgets/RewardChoose.tscn' remapped 'res://ui/widgets/RewardChoose.tscn' at thread -1
+Completed load for: 'res://game/npc/RewardNpc.gd' remapped 'res://game/npc/RewardNpc.gd' at thread -1
+Completed load for: 'res://game/npc/RewardNpc.tscn' remapped 'res://game/npc/RewardNpc.tscn' at thread -1
+Loading resource: res://game/npc/MapNpc.tscn remapped: res://game/npc/MapNpc.tscn
+Loading resource: res://game/npc/MapNpc.gd remapped: res://game/npc/MapNpc.gd
+Completed load for: 'res://game/npc/MapNpc.gd' remapped 'res://game/npc/MapNpc.gd' at thread -1
+Loading resource: res://Sprites/1 - Fire & Bugs.png remapped: res://Sprites/1 - Fire & Bugs.png
+Loading resource: res://.godot/imported/1 - Fire & Bugs.png-bb68601f41e63658b16dfcc9b076fa2c.ctex remapped: res://.godot/imported/1 - Fire & Bugs.png-bb68601f41e63658b16dfcc9b076fa2c.ctex
+Completed load for: 'res://Sprites/1 - Fire & Bugs.png' remapped 'res://Sprites/1 - Fire & Bugs.png' at thread -1
+Completed load for: 'res://game/npc/MapNpc.tscn' remapped 'res://game/npc/MapNpc.tscn' at thread -1
+Completed load for: 'res://game/map/mapTown/Town.tscn' remapped 'res://game/map/mapTown/Town.tscn' at thread -1
+Loading resource: res://audio/bgm/Cephalopod.mp3 remapped: res://audio/bgm/Cephalopod.mp3
+Loading resource: res://.godot/imported/Cephalopod.mp3-c7ecc00862d085a963865211f563d88f.mp3str remapped: res://.godot/imported/Cephalopod.mp3-c7ecc00862d085a963865211f563d88f.mp3str
+Completed load for: 'res://audio/bgm/Cephalopod.mp3' remapped 'res://audio/bgm/Cephalopod.mp3' at thread -1
+Completed load for: 'res://game/map/Main.tscn' remapped 'res://game/map/Main.tscn' at thread -1
+Loading resource: res://ui/DemoHUD.gd remapped: res://ui/DemoHUD.gd
+Completed load for: 'res://ui/DemoHUD.gd' remapped 'res://ui/DemoHUD.gd' at thread -1
+Loading resource: res://ui/BossHUD.gd remapped: res://ui/BossHUD.gd
+Completed load for: 'res://ui/BossHUD.gd' remapped 'res://ui/BossHUD.gd' at thread -1
+PASS 24 rewards
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS unique mixed choices
+PASS reward icon 12
+PASS reward icon 13
+PASS reward icon 14
+PASS reward icon 15
+PASS reward icon 16
+PASS reward icon 17
+PASS reward icon 18
+PASS reward icon 19
+PASS reward icon 20
+PASS reward icon 21
+PASS reward icon 22
+PASS reward icon 23
+PASS reward icon 0
+PASS reward icon 1
+PASS reward icon 2
+PASS reward icon 3
+PASS reward icon 4
+PASS reward icon 5
+PASS reward icon 6
+PASS reward icon 7
+PASS reward icon 8
+PASS reward icon 9
+PASS reward icon 10
+PASS reward icon 11
+PASS upgrade price 111
+PASS upgrade price 113
+PASS upgrade price 115
+PASS upgrade price 116
+PASS upgrade price 118
+PASS upgrade price 119
+PASS upgrade price 120
+PASS upgrade price 123
+PASS upgrade price 124
+PASS upgrade price 110
+PASS upgrade price 112
+PASS upgrade price 114
+PASS upgrade price 117
+PASS upgrade price 121
+PASS upgrade price 122
+PASS upgrade price 0
+PASS upgrade price 1
+PASS upgrade price 2
+PASS upgrade price 3
+PASS upgrade price 5
+PASS upgrade price 6
+PASS upgrade price 7
+PASS upgrade price 8
+PASS upgrade price 9
+PASS upgrade total 20300
+PASS actual preview 121
+PASS actual preview 122
+PASS actual preview 124
+PASS actual preview 111
+PASS actual preview 113
+PASS actual preview 115
+PASS actual preview 116
+PASS actual preview 117
+PASS actual preview 118
+PASS actual preview 119
+PASS actual preview 120
+PASS actual preview 112
+PASS actual preview 114
+PASS actual preview 123
+PASS actual preview 0
+PASS actual preview 1
+PASS actual preview 2
+PASS actual preview 3
+PASS actual preview 4
+PASS actual preview 5
+PASS actual preview 6
+PASS actual preview 7
+PASS actual preview 8
+PASS actual preview 9
+PASS crit additive pp
+PASS A+B damage
+PASS A+B magazine
+PASS A+B range
+PASS A+B impulse
+PASS A+B reload
+PASS add reward 5
+PASS add reward 20
+PASS add reward 22
+PASS talent plus boots plus momentum
+PASS three-layer impulse
+PASS add reward 2
+PASS talent and helmet coexist
+PASS add reward 15
+Loading resource: res://shader/HitFlash.gdshader remapped: res://shader/HitFlash.gdshader
+Completed load for: 'res://shader/HitFlash.gdshader' remapped 'res://shader/HitFlash.gdshader' at thread -1
+Loading resource: res://audio/body_hit_finisher_52.wav remapped: res://audio/body_hit_finisher_52.wav
+Loading resource: res://.godot/imported/body_hit_finisher_52.wav-5af60e76c83696b8243b09d1123261ef.sample remapped: res://.godot/imported/body_hit_finisher_52.wav-5af60e76c83696b8243b09d1123261ef.sample
+Completed load for: 'res://audio/body_hit_finisher_52.wav' remapped 'res://audio/body_hit_finisher_52.wav' at thread -1
+PASS pulse seventh direct hit actual damage
+PASS pulse resets
+PASS derived no proc
+PASS add reward 12
+PASS add reward 12
+PASS add reward 12
+PASS add reward 12
+PASS add reward 13
+PASS add reward 13
+PASS add reward 13
+PASS add reward 13
+PASS two burn sources survive
+PASS two slows add
+PASS add reward 23
+PASS magnet reward
+PASS magnet talent plus reward
+PASS add reward 17
+PASS reactive next ordinary hit
+PASS add reward 19
+PASS emergency cell actual hit
+PASS percentage current max independent from flat pressure
+PASS root starts
+PASS root cannot refresh
+PASS post root immunity
+PASS immunity blocks chain
+PASS root expires normally
+PASS add reward 14
+PASS add reward 16
+PASS add reward 18
+PASS add reward 21
+PASS add reward 8
+PASS add reward 9
+PASS save full growth
+PASS load growth 0
+SAVE DIFF legacy_state before {"12":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"13":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"14":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"15":{"armed":false,"cooldown":0.0,"hits":2.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"16":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"17":{"armed":false,"cooldown":4.10000000000001,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"18":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"19":{"armed":false,"cooldown":18.1000000000001,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"20":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"21":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"22":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":true},"23":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"8":{"kills":0.0,"remaining":2.0,"window":1.0},"9":{"charged":true,"remaining":3.0}} after {"12":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"13":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"14":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"15":{"armed":false,"cooldown":0.0,"hits":2,"kills":0,"move_time":0.0,"moving_buff":false},"16":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"17":{"armed":false,"cooldown":4.10000000000001,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"18":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"19":{"armed":false,"cooldown":18.1000000000001,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"20":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"21":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"22":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":true},"23":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"8":{"kills":0,"remaining":2.0,"window":1.0},"9":{"charged":true,"remaining":3.0}}
+SAVE DIFF weapons before [{"ammo":25.0,"id":"0"}] after [{"ammo":25,"id":"0"}]
+PASS idempotent graph 0
+PASS idempotent attributes 0
+PASS repeat save
+PASS load growth 1
+SAVE DIFF legacy_state before {"12":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"13":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"14":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"15":{"armed":false,"cooldown":0.0,"hits":2.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"16":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"17":{"armed":false,"cooldown":4.10000000000001,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"18":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"19":{"armed":false,"cooldown":18.1000000000001,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"20":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"21":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"22":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":true},"23":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"8":{"kills":0.0,"remaining":2.0,"window":1.0},"9":{"charged":true,"remaining":3.0}} after {"12":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"13":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"14":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"15":{"armed":false,"cooldown":0.0,"hits":2,"kills":0,"move_time":0.0,"moving_buff":false},"16":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"17":{"armed":false,"cooldown":4.10000000000001,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"18":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"19":{"armed":false,"cooldown":18.1000000000001,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"20":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"21":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"22":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":true},"23":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"8":{"kills":0,"remaining":2.0,"window":1.0},"9":{"charged":true,"remaining":3.0}}
+SAVE DIFF weapons before [{"ammo":25.0,"id":"0"}] after [{"ammo":25,"id":"0"}]
+PASS idempotent graph 1
+PASS idempotent attributes 1
+PASS repeat save
+PASS load growth 2
+SAVE DIFF legacy_state before {"12":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"13":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"14":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"15":{"armed":false,"cooldown":0.0,"hits":2.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"16":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"17":{"armed":false,"cooldown":4.10000000000001,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"18":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"19":{"armed":false,"cooldown":18.1000000000001,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"20":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"21":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"22":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":true},"23":{"armed":false,"cooldown":0.0,"hits":0.0,"kills":0.0,"move_time":0.0,"moving_buff":false},"8":{"kills":0.0,"remaining":2.0,"window":1.0},"9":{"charged":true,"remaining":3.0}} after {"12":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"13":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"14":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"15":{"armed":false,"cooldown":0.0,"hits":2,"kills":0,"move_time":0.0,"moving_buff":false},"16":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"17":{"armed":false,"cooldown":4.10000000000001,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"18":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"19":{"armed":false,"cooldown":18.1000000000001,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"20":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"21":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"22":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":true},"23":{"armed":false,"cooldown":0.0,"hits":0,"kills":0,"move_time":0.0,"moving_buff":false},"8":{"kills":0,"remaining":2.0,"window":1.0},"9":{"charged":true,"remaining":3.0}}
+SAVE DIFF weapons before [{"ammo":25.0,"id":"0"}] after [{"ammo":25,"id":"0"}]
+PASS idempotent graph 2
+PASS idempotent attributes 2
+PASS repeat save
+M10_GROWTH_CHECKS 233 FAILURES 0
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Leaked instance: AudioStreamMP3:9223372215347579136 - Reference count: 1
+Leaked instance: AudioStreamPlaybackMP3:9223372220716289210 - Reference count: 1
+Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).
+Resource still in use: res://audio/bgm/Cephalopod.mp3 (AudioStreamMP3)
+Orphan StringName: Music (static: 0, total: 2)
+StringName: 1 unclaimed string names at exit.
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit.
+   at: clear (core/io/resource.cpp:817)

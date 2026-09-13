@@ -1,0 +1,23 @@
+{
+  "ENEMIES_unchanged": true,
+  "BOSSES_unchanged": true,
+  "WALLS_unchanged": true,
+  "REGIONS_unchanged": true,
+  "stages_1_5_unchanged": true,
+  "POWER_unchanged": true,
+  "TIERS_unchanged": true,
+  "counts": {
+    "weapons": 24,
+    "enemies": 12,
+    "bosses": 3,
+    "regions": 6,
+    "encounters": 30
+  },
+  "counts_preserved": true,
+  "upgrade_prices": {
+    "count": 24,
+    "minimum": 350,
+    "total": 20300
+  },
+  "price_contract": true
+}

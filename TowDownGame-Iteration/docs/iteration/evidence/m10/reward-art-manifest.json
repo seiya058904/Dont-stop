@@ -1,0 +1,218 @@
+[
+  {
+    "id": 0,
+    "icon": "Sprites/All_Icons/Orange Chip.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 1,
+    "icon": "Sprites/All_Icons/Medkit.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 2,
+    "icon": "Sprites/All_Icons/Alien Blue Helmet.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 3,
+    "icon": "Sprites/All_Icons/Alert Shield.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 4,
+    "icon": "Sprites/All_Icons/Blue Axe.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 5,
+    "icon": "Sprites/All_Icons/Blue Boots.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 6,
+    "icon": "Sprites/All_Icons/Amber Star Crystal.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 7,
+    "icon": "Sprites/All_Icons/Health Pack.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 8,
+    "icon": "Sprites/All_Icons/Amber Sickle.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 9,
+    "icon": "Sprites/All_Icons/Battery.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 10,
+    "icon": "Sprites/All_Icons/Blue Bacteria.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 11,
+    "icon": "Sprites/All_Icons/Blue Circuit.png",
+    "source": "existing",
+    "previously_referenced": true
+  },
+  {
+    "id": 12,
+    "name": "火核 Ember Core",
+    "icon": "Sprites/All_Icons/Orange Core.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "attack",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 13,
+    "name": "霜镜 Frost Lens",
+    "icon": "Sprites/All_Icons/Blue Specs.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "utility",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 14,
+    "name": "猎手徽记 Hunter Seal",
+    "icon": "Sprites/All_Icons/Green Necklace.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "attack",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 15,
+    "name": "脉冲电容 Pulse Capacitor",
+    "icon": "Sprites/All_Icons/Blue Chip.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "attack",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 16,
+    "name": "裂光棱镜 Split Prism",
+    "icon": "Sprites/All_Icons/Light Star Shards.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "attack",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 17,
+    "name": "反应装甲 Reactive Plating",
+    "icon": "Sprites/All_Icons/Metal Plating.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "defense",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 18,
+    "name": "再生凝胶 Recovery Gel",
+    "icon": "Sprites/All_Icons/Green Corner Potion.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "defense",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 19,
+    "name": "应急电池 Emergency Cell",
+    "icon": "Sprites/All_Icons/Big Battery.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "defense",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 20,
+    "name": "冲量弹簧 Impact Spring",
+    "icon": "Sprites/All_Icons/Bolt.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "utility",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 21,
+    "name": "余弹卡扣 Magazine Latch",
+    "icon": "Sprites/All_Icons/Green Ammo.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "utility",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 22,
+    "name": "动量环 Momentum Ring",
+    "icon": "Sprites/All_Icons/Blue Cosmic Ring.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "utility",
+    "size": [
+      16,
+      16
+    ]
+  },
+  {
+    "id": 23,
+    "name": "拾荒磁环 Scavenger Magnet",
+    "icon": "Sprites/All_Icons/Green Data Ring.png",
+    "source": "existing",
+    "previously_referenced": false,
+    "category": "utility",
+    "size": [
+      16,
+      16
+    ]
+  }
+]

@@ -1,6 +1,19 @@
 # TowDownGame Experience Demo
 
-## M8-R1 云端复审整改（当前工程候选）
+## M10 内容扩展与最终难度调整（当前工程候选）
+
+**M10 CONTENT EXPANSION COMPLETE / READY FOR FINAL HUMAN REVIEW**
+
+H1_STATUS = THIRD_FEEDBACK_ADDRESSED
+HUMAN_ACCEPTED = false
+
+- M9 独立提交并推送 `3946250`，M10 成长与奖励 `b0381d7`，后期战斗与大招 `8296a21`。
+- Reward 12→24；三层成长与保存幂等；24 强化最低 350 / 总价 20300；24 枪真实 sprite preview。内容数量与敌人/Boss HP 保持，后期密度、弹幕及三个 Phase II 大招加强，正式束缚 0.45 秒并附免控。
+- 22 旧回归最终通过；233 成长、52 实际射击、49 奖励首满层、11 NPC 交互、32 大招专项及原生视觉证据。旧 buff 保存合同和普通攻击预警夹具随 M10 更新，失败及补跑记录保留。
+- 8 类原生 M9/M10 性能对照共 16 次；M10 本批最大 38.785 ms，M9 历史 55.126 ms spike 保留。中等构筑 22/29 关自动试玩死亡，满构筑清关，最终难度仍需真人复核。
+- 完整数值、证据、限制及最短路线见 [M10 报告](M10-CONTENT-EXPANSION.md)。停止等待最终真人反馈，不进入 M11、不 merge main、不 Release。
+
+## M8-R1 云端复审整改（历史工程候选）
 
 **M8-R1 REVIEW FIXES COMPLETE / READY FOR THIRD HUMAN REVIEW**
 
@@ -51,7 +64,7 @@ HUMAN_ACCEPTED = false
 - 音频固定退出引用沿用M6分类，GPU历史残留未复现。真人音画、审美、手感与其他硬件仍待第二次试玩。
 - 三个原项目未改，用户ZIP未提交，仅上传现有开发分支；不合并main、不Release、不进入M8。完成后停止等待真人反馈。
 
-以下均为历史阶段记录；当前状态以本文顶部 M8-R1 为准。
+以下均为历史阶段记录；当前状态以本文顶部 M10 为准。
 
 ## M6 最终工程候选（覆盖以下历史阶段门）
 

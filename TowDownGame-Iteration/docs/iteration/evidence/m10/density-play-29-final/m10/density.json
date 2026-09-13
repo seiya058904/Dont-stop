@@ -1,0 +1,18 @@
+[
+	{
+		"alive_peak": 12,
+		"clear": true,
+		"illegal_near_spawns": 0,
+		"mean_alive": 4.86896551724138,
+		"movement": 21767.6666359901,
+		"near80_peak": 2,
+		"probe": false,
+		"seconds": 45.038,
+		"shots": 800,
+		"simple_ratio": 0.674757281553398,
+		"simple_spawns": 139,
+		"spawns": 206,
+		"stage": 29,
+		"typical": false
+	}
+]

@@ -1,0 +1,147 @@
+[
+	{
+		"action": "charge",
+		"boss": "B01",
+		"cleanup": 0,
+		"modes": [
+			"charge"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "cleave",
+		"boss": "B01",
+		"cleanup": 0,
+		"modes": [
+			"cone"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "slam",
+		"boss": "B01",
+		"cleanup": 0,
+		"modes": [
+			"circle"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "charge",
+		"boss": "B01",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "cleave",
+		"boss": "B01",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "slam",
+		"boss": "B01",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "brood",
+		"boss": "B02",
+		"cleanup": 0,
+		"modes": [
+			"summon"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "lockdown",
+		"boss": "B02",
+		"cleanup": 0,
+		"modes": [
+			"circle",
+			"circle"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "pulse",
+		"boss": "B02",
+		"cleanup": 0,
+		"modes": [
+			"cone"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "brood",
+		"boss": "B02",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "lockdown",
+		"boss": "B02",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "pulse",
+		"boss": "B02",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "dash",
+		"boss": "B03",
+		"cleanup": 1,
+		"modes": [
+			"charge"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "sweep",
+		"boss": "B03",
+		"cleanup": 1,
+		"modes": [
+			"line"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "burst",
+		"boss": "B03",
+		"cleanup": 1,
+		"modes": [
+			"cone"
+		],
+		"phase_two": false
+	},
+	{
+		"action": "dash",
+		"boss": "B03",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "sweep",
+		"boss": "B03",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	},
+	{
+		"action": "burst",
+		"boss": "B03",
+		"cleanup": 0,
+		"modes": [],
+		"phase_two": true
+	}
+]

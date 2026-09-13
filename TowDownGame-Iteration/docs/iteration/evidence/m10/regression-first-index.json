@@ -1,0 +1,90 @@
+[
+  {
+    "label": "regression-00-BaselineRegression",
+    "execution": "regression-00-BaselineRegression/execution.json"
+  },
+  {
+    "label": "regression-01-M3Weapons",
+    "execution": "regression-01-M3Weapons/execution.json"
+  },
+  {
+    "label": "regression-02-M3Energy",
+    "execution": "regression-02-M3Energy/execution.json"
+  },
+  {
+    "label": "regression-03-M3Special",
+    "execution": "regression-03-M3Special/execution.json"
+  },
+  {
+    "label": "regression-04-M4ThermalClock",
+    "execution": "regression-04-M4ThermalClock/execution.json"
+  },
+  {
+    "label": "regression-05-M4Talents",
+    "execution": "regression-05-M4Talents/execution.json"
+  },
+  {
+    "label": "regression-06-M6Cross",
+    "execution": "regression-06-M6Cross/execution.json"
+  },
+  {
+    "label": "regression-07-M6BossStops",
+    "execution": "regression-07-M6BossStops/execution.json"
+  },
+  {
+    "label": "regression-08-M6Contracts",
+    "execution": "regression-08-M6Contracts/execution.json"
+  },
+  {
+    "label": "regression-09-R1RecoveryUI",
+    "execution": "regression-09-R1RecoveryUI/execution.json"
+  },
+  {
+    "label": "regression-10-R1LegacyRestore",
+    "execution": "regression-10-R1LegacyRestore/execution.json"
+  },
+  {
+    "label": "regression-11-M8Mechanics",
+    "execution": "regression-11-M8Mechanics/execution.json"
+  },
+  {
+    "label": "regression-12-M8Contracts",
+    "execution": "regression-12-M8Contracts/execution.json"
+  },
+  {
+    "label": "regression-13-M8UI",
+    "execution": "regression-13-M8UI/execution.json"
+  },
+  {
+    "label": "regression-14-M8Supply",
+    "execution": "regression-14-M8Supply/execution.json"
+  },
+  {
+    "label": "regression-15-M8R1Telegraphs",
+    "execution": "regression-15-M8R1Telegraphs/execution.json"
+  },
+  {
+    "label": "regression-16-M7ExitWallet",
+    "execution": "regression-16-M7ExitWallet/execution.json"
+  },
+  {
+    "label": "regression-17-M7ExitWallet",
+    "execution": "regression-17-M7ExitWallet/execution.json"
+  },
+  {
+    "label": "regression-18-M7ExitWallet",
+    "execution": "regression-18-M7ExitWallet/execution.json"
+  },
+  {
+    "label": "regression-19-M7ExitWallet",
+    "execution": "regression-19-M7ExitWallet/execution.json"
+  },
+  {
+    "label": "regression-20-M7ExitWallet",
+    "execution": "regression-20-M7ExitWallet/execution.json"
+  },
+  {
+    "label": "regression-21-M7MainExit",
+    "execution": "regression-21-M7MainExit/execution.json"
+  }
+]

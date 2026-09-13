@@ -1,0 +1,152 @@
+{
+	"checks": 231,
+	"failures": 12,
+	"previews": 24,
+	"rewards": [
+		{
+			"id": "12",
+			"info": "直接命中10/13/16/19%附加1秒灼烧，总伤害为本次50%；同源刷新，不递归。",
+			"max_count": 4,
+			"persistent": true
+		},
+		{
+			"id": "13",
+			"info": "直接命中10/14/18/22%减速20%持续1秒；Boss效果四分之一，与低温天赋相加上限40%。",
+			"max_count": 4,
+			"persistent": true
+		},
+		{
+			"id": "14",
+			"info": "对精英及Boss，每层独立伤害+5%。",
+			"max_count": 4,
+			"persistent": true
+		},
+		{
+			"id": "15",
+			"info": "每第7/6/5次直接命中，该次伤害+35%。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "16",
+			"info": "直接暴击15/20/25%向85范围另一目标放出25%伤害裂光；墙阻挡，仅一代。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "17",
+			"info": "受伤后，下一次普通攻击伤害-20%；激活冷却6/5/4秒，不减百分比大招。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "18",
+			"info": "每12/10/8次直接击杀恢复0.5HP；派生和假人不计。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "19",
+			"info": "受伤后生命低于30%且存活，恢复1/1.5/2HP；冷却20秒。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "20",
+			"info": "对普通敌人击退每层+15%，与天赋及强化普通百分比相加；Boss免推。",
+			"max_count": 4,
+			"persistent": true
+		},
+		{
+			"id": "21",
+			"info": "每15/12/10次直接击杀获得1个备用弹匣；不填当前弹匣。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "22",
+			"info": "连续移动2秒后移速及射速每层+3%；停止即消失。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "23",
+			"info": "金币和回血拾取范围每层+40%；与天赋相加，隔墙无效，金币价值不变。",
+			"max_count": 3,
+			"persistent": true
+		},
+		{
+			"id": "0",
+			"info": "REWARD_GOLD_INFO",
+			"max_count": 99,
+			"persistent": false
+		},
+		{
+			"id": "1",
+			"info": "REWARD_HP_INFO",
+			"max_count": 99,
+			"persistent": false
+		},
+		{
+			"id": "2",
+			"info": "REWARD_ALIEN_HELMENT_INFO",
+			"max_count": 99,
+			"persistent": true
+		},
+		{
+			"id": "3",
+			"info": "REWARD_WARING_SHIELD_INFO",
+			"max_count": 99,
+			"persistent": true
+		},
+		{
+			"id": "4",
+			"info": "REWARD BLUE AXE INFO",
+			"max_count": 10,
+			"persistent": true
+		},
+		{
+			"id": "5",
+			"info": "REWARD BLUE BOOTS INFO",
+			"max_count": 99,
+			"persistent": true
+		},
+		{
+			"id": "6",
+			"info": "REWARD AMBER STAR INFO",
+			"max_count": 99,
+			"persistent": true
+		},
+		{
+			"id": "7",
+			"info": "REWARD HEALTH PACK INFO",
+			"max_count": 99,
+			"persistent": true
+		},
+		{
+			"id": "8",
+			"info": "REWARD AMBER SICKLE INFO",
+			"max_count": 5,
+			"persistent": true
+		},
+		{
+			"id": "9",
+			"info": "REWARD BATTERY INFO",
+			"max_count": 99,
+			"persistent": true
+		},
+		{
+			"id": "10",
+			"info": "REWARD BLUE BACTERIA INFO",
+			"max_count": 1,
+			"persistent": true
+		},
+		{
+			"id": "11",
+			"info": "REWARD BLUE CIRCUIT INFO",
+			"max_count": 99,
+			"persistent": true
+		}
+	],
+	"upgrade_total": 14860
+}

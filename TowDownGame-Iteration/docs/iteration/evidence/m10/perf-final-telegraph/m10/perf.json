@@ -1,0 +1,23 @@
+{
+	"display": "Windows",
+	"draw_calls": 698,
+	"enemy_projectile_peak": 6,
+	"frames": 2444,
+	"global_draw_calls": 713.0,
+	"hostile_vfx_peak": 32,
+	"max": 30.043,
+	"monsters_peak": 27,
+	"mouse_mode": 0,
+	"mouse_passthrough": true,
+	"p50": 6.178,
+	"p95": 11.836,
+	"p99": 13.57,
+	"renderer": "AMD Radeon RX 7900 XT",
+	"replenishments": 985,
+	"scenario": "telegraph",
+	"telegraph_target": 60,
+	"transients_peak": 100,
+	"unfocusable": true,
+	"viewport_draw_calls": 0,
+	"zones_peak": 63
+}

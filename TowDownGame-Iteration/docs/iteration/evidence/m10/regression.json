@@ -1,0 +1,216 @@
+[
+  {
+    "scene": "BaselineRegression",
+    "args": [],
+    "passed": true,
+    "checks": 4,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-00-BaselineRegression/execution.json"
+  },
+  {
+    "scene": "M3Weapons",
+    "args": [],
+    "passed": true,
+    "checks": 72,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "regression-final-01-M3Weapons/execution.json"
+  },
+  {
+    "scene": "M3Energy",
+    "args": [],
+    "passed": true,
+    "checks": 16,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "regression-final-02-M3Energy/execution.json"
+  },
+  {
+    "scene": "M3Special",
+    "args": [],
+    "passed": true,
+    "checks": 14,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "regression-final-03-M3Special/execution.json"
+  },
+  {
+    "scene": "M4ThermalClock",
+    "args": [],
+    "passed": true,
+    "checks": 9,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "regression-final-04-M4ThermalClock/execution.json"
+  },
+  {
+    "scene": "M4Talents",
+    "args": [],
+    "passed": true,
+    "checks": 233,
+    "errors": [],
+    "known_audio_teardown": true,
+    "execution": "regression-final-05-M4Talents/execution.json"
+  },
+  {
+    "scene": "M6Cross",
+    "args": [],
+    "passed": true,
+    "checks": 117,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "cross-review/execution.json",
+    "previous_execution": "regression-final-06-M6Cross/execution.json"
+  },
+  {
+    "scene": "M6BossStops",
+    "args": [],
+    "passed": true,
+    "checks": 24,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-07-M6BossStops/execution.json"
+  },
+  {
+    "scene": "M6Contracts",
+    "args": [],
+    "passed": true,
+    "checks": 109,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-08-M6Contracts/execution.json"
+  },
+  {
+    "scene": "R1RecoveryUI",
+    "args": [],
+    "passed": true,
+    "checks": 9,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-09-R1RecoveryUI/execution.json"
+  },
+  {
+    "scene": "R1LegacyRestore",
+    "args": [],
+    "passed": true,
+    "checks": 6,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "legacy-review/execution.json",
+    "previous_execution": "regression-final-10-R1LegacyRestore/execution.json"
+  },
+  {
+    "scene": "M8Mechanics",
+    "args": [],
+    "passed": true,
+    "checks": 11,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-11-M8Mechanics/execution.json"
+  },
+  {
+    "scene": "M8Contracts",
+    "args": [
+      "--r1"
+    ],
+    "passed": true,
+    "checks": 52,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-12-M8Contracts/execution.json"
+  },
+  {
+    "scene": "M8UI",
+    "args": [],
+    "passed": true,
+    "checks": 79,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-13-M8UI/execution.json"
+  },
+  {
+    "scene": "M8Supply",
+    "args": [],
+    "passed": true,
+    "checks": 147,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "supply-review/execution.json",
+    "previous_execution": "regression-final-14-M8Supply/execution.json"
+  },
+  {
+    "scene": "M8R1Telegraphs",
+    "args": [],
+    "passed": true,
+    "checks": 75,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "telegraph-review/execution.json",
+    "previous_execution": "regression-final-15-M8R1Telegraphs/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "camp"
+    ],
+    "passed": true,
+    "checks": 3,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-16-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "menu"
+    ],
+    "passed": true,
+    "checks": 2,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-17-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "combat"
+    ],
+    "passed": true,
+    "checks": 5,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-18-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "restore"
+    ],
+    "passed": true,
+    "checks": 6,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-19-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "window"
+    ],
+    "passed": true,
+    "checks": 3,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-20-M7ExitWallet/execution.json"
+  },
+  {
+    "scene": "M7MainExit",
+    "args": [],
+    "passed": true,
+    "checks": 1,
+    "errors": [],
+    "known_audio_teardown": false,
+    "execution": "regression-final-21-M7MainExit/execution.json"
+  }
+]

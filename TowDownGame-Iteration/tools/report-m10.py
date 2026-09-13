@@ -101,7 +101,7 @@ def table(headers, rows):
     return '| ' + ' | '.join(headers) + ' |\n|' + '|'.join(['---']*len(headers)) + '|\n' + ''.join('| ' + ' | '.join(str(v).replace('|', '/') for v in row) + ' |\n' for row in rows)
 
 lines = ['# M10 — CONTENT EXPANSION & FINAL DIFFICULTY TUNING', '', summary['status'], '',
-         '`H1_STATUS = '+summary['H1_STATUS']+'`  ', '`HUMAN_ACCEPTED = false`', '',
+         '`H1_STATUS = '+summary['H1_STATUS']+'`', '', '`HUMAN_ACCEPTED = false`', '',
          '工程与原生渲染证据已完成；手感、声音、美术观感和最终难度仍等待真人反馈。本报告不把自动移动射击、强制技能采样或高生命压力场景当作真人验收。', '',
          '## Git 与范围', '',
          f'M9 先独立提交并推送：`{anchor}`。最小原生启动 `m10-anchor-launch` 50 项通过后才开始 M10。M10 第一批 `b0381d7` 保存奖励、成长叠加、价格及存档改动；后续战斗和证据分别提交。最终精确 HEAD 与远端同步结果见交付消息。', '',
