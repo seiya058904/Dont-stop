@@ -114,6 +114,8 @@ jobs:
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
           node TowDownGame-Iteration/tools/save-audit-web.js \
             http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
+          xvfb-run -a node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
+            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/pointer-lock-e2e.log
 
       - name: Upload smoke evidence
         if: always()
@@ -161,6 +163,8 @@ jobs:
           curl --fail --silent --show-error "$PAGES_URL" -o /dev/null
           node TowDownGame-Iteration/tools/smoke-web.js \
             "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-smoke.log
+          xvfb-run -a node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
+            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-pointer-lock-e2e.log
 
       - name: Upload online smoke evidence
         if: always()
