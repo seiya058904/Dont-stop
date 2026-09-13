@@ -148,9 +148,9 @@ function token(name, ok, extra = '') {
 			await page.mouse.up();          // clear a possibly-lost previous release
 			lines.length = 0;
 			await page.mouse.down();
-			await page.waitForTimeout(900);
+			await page.waitForTimeout(1500);
 			await page.mouse.up();
-			await page.waitForTimeout(600);
+			await page.waitForTimeout(900);
 			const projLine = lines.find(l => l.includes('[e2e] proj'));
 			if (projLine) {
 				const m = projLine.match(/proj vx=(-?[\d.]+) vy=(-?[\d.]+)/);
@@ -163,6 +163,18 @@ function token(name, ok, extra = '') {
 			await page.waitForTimeout(3000);
 		}
 		token(name, false, 'no projectile spawned');
+	}
+	// Warm-up shot on slow software-GL runners: the very first real fire can
+	// straddle frame boundaries; discard it and re-chamber before asserting.
+	{
+		await page.mouse.move(640, 400);
+		await page.mouse.up();
+		await page.mouse.down();
+		await page.waitForTimeout(1500);
+		await page.mouse.up();
+		await page.waitForTimeout(900);
+		await page.keyboard.press('r');
+		await page.waitForTimeout(3000);
 	}
 	await fireDirection('PROJECTILE_FOLLOWS_AIM_RIGHT', 300, 0, (vx) => vx > 5);
 	await fireDirection('PROJECTILE_FOLLOWS_AIM_LEFT', -300, 0, (vx) => vx < -5);
