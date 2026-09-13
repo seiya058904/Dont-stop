@@ -1,0 +1,5237 @@
+{
+  "gates": {
+    "frozen_contracts": true,
+    "beam": true,
+    "presentation": true,
+    "secondary_paths": true,
+    "power": true,
+    "barrage": true,
+    "bosses": true,
+    "regions": true,
+    "catalog": true,
+    "regression": true,
+    "performance": true
+  },
+  "ready": true,
+  "human_accepted": false,
+  "bosses": [
+    {
+      "boss": {
+        "actions": {
+          "armor_break": 1,
+          "armor_hit": 1,
+          "attack": 27,
+          "barrage_projectiles": 157,
+          "barrage_wave": 13,
+          "charge": 20,
+          "circle": 9,
+          "cleave": 9,
+          "cone": 9,
+          "contact": 1,
+          "dash_end": 10,
+          "phase_two": 1,
+          "shot": 157,
+          "slam": 8,
+          "summon": 2,
+          "windup_charge": 10,
+          "windup_cleave": 9,
+          "windup_slam": 9
+        },
+        "phase_two": true,
+        "remaining_hp": 163.420500000005,
+        "travel": 3005.95578086376
+      },
+      "boss_successful_hits": 5,
+      "clear": true,
+      "damage_received": 2.4638,
+      "death": false,
+      "effective": {
+        "angle": 0.54,
+        "bounce_retention": 0.85,
+        "bounces": 1,
+        "crit": 0.23,
+        "damage": 65.48256,
+        "impulse": 156.6,
+        "jumps": 4,
+        "lock_angle": 0.0,
+        "magazine": 54,
+        "pierce": 7,
+        "radius": 38.4,
+        "range": 655.2,
+        "rate": 1.416,
+        "recovery": 0.8,
+        "refill": 1,
+        "reload": 0.65919744,
+        "shard_ratio": 0.25,
+        "shards": 2,
+        "spread": 0.75,
+        "tags": [
+          "beam",
+          "energy",
+          "charged",
+          "straight"
+        ],
+        "turn": 0.0,
+        "warmup": 1.08,
+        "width": 2.295
+      },
+      "gun": 113,
+      "observed_warnings": {
+        "charge": "charge",
+        "cleave": "cone",
+        "slam": "circle"
+      },
+      "player_movement": 4975.30503797531,
+      "projectile_peak": 26,
+      "seconds": 40.57,
+      "shots": 22,
+      "stage": 10,
+      "successful_hits": 5,
+      "tier": "high"
+    },
+    {
+      "boss": {
+        "actions": {
+          "attack": 33,
+          "barrage_projectiles": 1040,
+          "barrage_wave": 56,
+          "brood": 11,
+          "circle": 31,
+          "cone": 11,
+          "lockdown": 11,
+          "phase_two": 1,
+          "pulse": 11,
+          "shot": 1040,
+          "summon": 22,
+          "windup_brood": 12,
+          "windup_lockdown": 12,
+          "windup_pulse": 11
+        },
+        "phase_two": true,
+        "remaining_hp": 89.929999999987,
+        "travel": 2553.02790117264
+      },
+      "boss_successful_hits": 21,
+      "clear": true,
+      "damage_received": 6.8482,
+      "death": false,
+      "effective": {
+        "angle": 0.54,
+        "bounce_retention": 0.85,
+        "bounces": 1,
+        "crit": 0.23,
+        "damage": 65.48256,
+        "impulse": 156.6,
+        "jumps": 4,
+        "lock_angle": 0.0,
+        "magazine": 54,
+        "pierce": 7,
+        "radius": 38.4,
+        "range": 655.2,
+        "rate": 1.416,
+        "recovery": 0.8,
+        "refill": 1,
+        "reload": 0.65919744,
+        "shard_ratio": 0.25,
+        "shards": 2,
+        "spread": 0.75,
+        "tags": [
+          "beam",
+          "energy",
+          "charged",
+          "straight"
+        ],
+        "turn": 0.0,
+        "warmup": 1.08,
+        "width": 2.295
+      },
+      "gun": 113,
+      "observed_warnings": {
+        "brood": "summon",
+        "lockdown": "circle",
+        "pulse": "cone"
+      },
+      "player_movement": 6835.7566678524,
+      "projectile_peak": 110,
+      "seconds": 58.335,
+      "shots": 31,
+      "stage": 20,
+      "successful_hits": 21,
+      "tier": "high"
+    },
+    {
+      "boss": {
+        "actions": {
+          "attack": 41,
+          "barrage_projectiles": 381,
+          "barrage_wave": 33,
+          "burst": 13,
+          "charge": 14,
+          "cone": 13,
+          "dash": 14,
+          "dash_end": 14,
+          "line": 14,
+          "phase_two": 1,
+          "shot": 381,
+          "sweep": 14,
+          "windup_burst": 13,
+          "windup_dash": 14,
+          "windup_sweep": 14
+        },
+        "phase_two": true,
+        "remaining_hp": 40.7699999999868,
+        "travel": 4831.68388092518
+      },
+      "boss_successful_hits": 8,
+      "clear": true,
+      "damage_received": 2.9876,
+      "death": false,
+      "effective": {
+        "angle": 0.54,
+        "bounce_retention": 0.85,
+        "bounces": 1,
+        "crit": 0.23,
+        "damage": 65.48256,
+        "impulse": 156.6,
+        "jumps": 4,
+        "lock_angle": 0.0,
+        "magazine": 54,
+        "pierce": 7,
+        "radius": 38.4,
+        "range": 655.2,
+        "rate": 1.416,
+        "recovery": 0.8,
+        "refill": 1,
+        "reload": 0.65919744,
+        "shard_ratio": 0.25,
+        "shards": 2,
+        "spread": 0.75,
+        "tags": [
+          "beam",
+          "energy",
+          "charged",
+          "straight"
+        ],
+        "turn": 0.0,
+        "warmup": 1.08,
+        "width": 2.295
+      },
+      "gun": 113,
+      "observed_warnings": {
+        "burst": "cone",
+        "dash": "charge",
+        "sweep": "line"
+      },
+      "player_movement": 7496.56453609467,
+      "projectile_peak": 39,
+      "seconds": 62.302,
+      "shots": 34,
+      "stage": 30,
+      "successful_hits": 8,
+      "tier": "high"
+    },
+    {
+      "boss": {
+        "actions": {
+          "armor_break": 1,
+          "armor_hit": 17,
+          "attack": 23,
+          "barrage_projectiles": 118,
+          "barrage_wave": 10,
+          "charge": 16,
+          "circle": 8,
+          "cleave": 8,
+          "cone": 8,
+          "contact": 1,
+          "dash_end": 8,
+          "phase_two": 1,
+          "shot": 118,
+          "slam": 7,
+          "summon": 2,
+          "windup_charge": 8,
+          "windup_cleave": 8,
+          "windup_slam": 8
+        },
+        "phase_two": true,
+        "remaining_hp": 6.06299999998248,
+        "travel": 2314.21894550323
+      },
+      "boss_successful_hits": 3,
+      "clear": true,
+      "damage_received": 2.91,
+      "death": false,
+      "effective": {
+        "angle": 0.54,
+        "bounce_retention": 0.85,
+        "bounces": 1,
+        "crit": 0.23,
+        "damage": 7.3359,
+        "impulse": 156.6,
+        "jumps": 4,
+        "lock_angle": 0.0,
+        "magazine": 906,
+        "pierce": 2,
+        "projectile_path_limit": 1372.8,
+        "projectile_seconds": 3.12,
+        "projectile_speed": 440.0,
+        "radius": 38.4,
+        "range": 499.2,
+        "rate": 24.0,
+        "recovery": 0.8,
+        "refill": 1,
+        "reload": 0.7324416,
+        "shard_ratio": 0.25,
+        "shards": 2,
+        "spread": 0.75,
+        "tags": [
+          "projectile",
+          "rotary",
+          "straight"
+        ],
+        "turn": 0.0,
+        "warmup": 1.08,
+        "width": 6.885
+      },
+      "gun": 124,
+      "observed_warnings": {
+        "charge": "charge",
+        "cleave": "cone",
+        "slam": "circle"
+      },
+      "player_movement": 4093.97754752636,
+      "projectile_peak": 26,
+      "seconds": 34.96,
+      "shots": 636,
+      "stage": 10,
+      "successful_hits": 3,
+      "tier": "full"
+    },
+    {
+      "boss": {
+        "actions": {
+          "attack": 23,
+          "barrage_projectiles": 706,
+          "barrage_wave": 38,
+          "brood": 8,
+          "circle": 20,
+          "cone": 7,
+          "lockdown": 8,
+          "phase_two": 1,
+          "pulse": 7,
+          "shot": 706,
+          "summon": 32,
+          "windup_brood": 8,
+          "windup_lockdown": 8,
+          "windup_pulse": 7
+        },
+        "phase_two": true,
+        "remaining_hp": 5.97999999994105,
+        "travel": 1779.68726122379
+      },
+      "boss_successful_hits": 14,
+      "clear": true,
+      "damage_received": 3.2398,
+      "death": false,
+      "effective": {
+        "angle": 0.54,
+        "bounce_retention": 0.85,
+        "bounces": 1,
+        "crit": 0.23,
+        "damage": 8.80308,
+        "impulse": 156.6,
+        "jumps": 4,
+        "lock_angle": 0.0,
+        "magazine": 906,
+        "pierce": 2,
+        "projectile_path_limit": 1372.8,
+        "projectile_seconds": 3.12,
+        "projectile_speed": 440.0,
+        "radius": 38.4,
+        "range": 499.2,
+        "rate": 24.0,
+        "recovery": 0.8,
+        "refill": 1,
+        "reload": 0.7324416,
+        "shard_ratio": 0.25,
+        "shards": 2,
+        "spread": 0.75,
+        "tags": [
+          "projectile",
+          "rotary",
+          "straight"
+        ],
+        "turn": 0.0,
+        "warmup": 1.08,
+        "width": 6.885
+      },
+      "gun": 124,
+      "observed_warnings": {
+        "brood": "summon",
+        "lockdown": "circle",
+        "pulse": "cone"
+      },
+      "player_movement": 4844.5017067194,
+      "projectile_peak": 95,
+      "seconds": 40.706,
+      "shots": 736,
+      "stage": 20,
+      "successful_hits": 14,
+      "tier": "full"
+    },
+    {
+      "boss": {
+        "actions": {
+          "attack": 36,
+          "barrage_projectiles": 303,
+          "barrage_wave": 27,
+          "burst": 11,
+          "charge": 13,
+          "cone": 12,
+          "contact": 1,
+          "dash": 13,
+          "dash_end": 13,
+          "line": 13,
+          "phase_two": 1,
+          "shot": 303,
+          "sweep": 12,
+          "windup_burst": 12,
+          "windup_dash": 13,
+          "windup_sweep": 13
+        },
+        "phase_two": true,
+        "remaining_hp": 3.55999999994259,
+        "travel": 4359.46562695503
+      },
+      "boss_successful_hits": 6,
+      "clear": true,
+      "damage_received": 1.843,
+      "death": false,
+      "effective": {
+        "angle": 0.54,
+        "bounce_retention": 0.85,
+        "bounces": 1,
+        "crit": 0.23,
+        "damage": 7.3359,
+        "impulse": 156.6,
+        "jumps": 4,
+        "lock_angle": 0.0,
+        "magazine": 906,
+        "pierce": 2,
+        "projectile_path_limit": 1372.8,
+        "projectile_seconds": 3.12,
+        "projectile_speed": 440.0,
+        "radius": 38.4,
+        "range": 499.2,
+        "rate": 24.0,
+        "recovery": 0.8,
+        "refill": 1,
+        "reload": 0.7324416,
+        "shard_ratio": 0.25,
+        "shards": 2,
+        "spread": 0.75,
+        "tags": [
+          "projectile",
+          "rotary",
+          "straight"
+        ],
+        "turn": 0.0,
+        "warmup": 1.08,
+        "width": 6.885
+      },
+      "gun": 124,
+      "observed_warnings": {
+        "burst": "cone",
+        "dash": "charge",
+        "sweep": "line"
+      },
+      "player_movement": 6762.69058251381,
+      "projectile_peak": 39,
+      "seconds": 58.646,
+      "shots": 1044,
+      "stage": 30,
+      "successful_hits": 6,
+      "tier": "full"
+    }
+  ],
+  "patterns": [
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "B01",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 23
+        },
+        {
+          "active": 0,
+          "ms": 51
+        },
+        {
+          "active": 0,
+          "ms": 107
+        },
+        {
+          "active": 0,
+          "ms": 162
+        },
+        {
+          "active": 0,
+          "ms": 217
+        },
+        {
+          "active": 0,
+          "ms": 272
+        },
+        {
+          "active": 0,
+          "ms": 327
+        },
+        {
+          "active": 0,
+          "ms": 382
+        },
+        {
+          "active": 0,
+          "ms": 437
+        },
+        {
+          "active": 0,
+          "ms": 493
+        },
+        {
+          "active": 0,
+          "ms": 548
+        },
+        {
+          "active": 0,
+          "ms": 603
+        },
+        {
+          "active": 0,
+          "ms": 658
+        },
+        {
+          "active": 0,
+          "ms": 714
+        },
+        {
+          "active": 0,
+          "ms": 769
+        },
+        {
+          "active": 0,
+          "ms": 824
+        },
+        {
+          "active": 0,
+          "ms": 879
+        },
+        {
+          "active": 0,
+          "ms": 934
+        },
+        {
+          "active": 0,
+          "ms": 990
+        },
+        {
+          "active": 0,
+          "ms": 1045
+        },
+        {
+          "active": 0,
+          "ms": 1100
+        },
+        {
+          "active": 0,
+          "ms": 1155
+        },
+        {
+          "active": 0,
+          "ms": 1210
+        },
+        {
+          "active": 0,
+          "ms": 1265
+        },
+        {
+          "active": 0,
+          "ms": 1321
+        },
+        {
+          "active": 0,
+          "ms": 1376
+        },
+        {
+          "active": 0,
+          "ms": 1431
+        },
+        {
+          "active": 0,
+          "ms": 1486
+        },
+        {
+          "active": 0,
+          "ms": 1542
+        },
+        {
+          "active": 0,
+          "ms": 1597
+        },
+        {
+          "active": 0,
+          "ms": 1652
+        }
+      ],
+      "shots": 0,
+      "warning": 0.65
+    },
+    {
+      "attack": "cleave",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "B01",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 54
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 220
+        },
+        {
+          "active": 0,
+          "ms": 275
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 496
+        },
+        {
+          "active": 0,
+          "ms": 551
+        },
+        {
+          "active": 0,
+          "ms": 606
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 772
+        },
+        {
+          "active": 0,
+          "ms": 827
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1048
+        },
+        {
+          "active": 0,
+          "ms": 1103
+        },
+        {
+          "active": 0,
+          "ms": 1158
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1324
+        },
+        {
+          "active": 0,
+          "ms": 1379
+        },
+        {
+          "active": 0,
+          "ms": 1434
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1600
+        },
+        {
+          "active": 0,
+          "ms": 1655
+        }
+      ],
+      "shots": 0,
+      "warning": 0.65
+    },
+    {
+      "attack": "slam",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 9,
+      "role": "B01",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 1
+        },
+        {
+          "active": 9,
+          "ms": 56
+        },
+        {
+          "active": 9,
+          "ms": 111
+        },
+        {
+          "active": 9,
+          "ms": 166
+        },
+        {
+          "active": 9,
+          "ms": 221
+        },
+        {
+          "active": 9,
+          "ms": 276
+        },
+        {
+          "active": 9,
+          "ms": 332
+        },
+        {
+          "active": 9,
+          "ms": 387
+        },
+        {
+          "active": 9,
+          "ms": 442
+        },
+        {
+          "active": 9,
+          "ms": 497
+        },
+        {
+          "active": 9,
+          "ms": 552
+        },
+        {
+          "active": 9,
+          "ms": 608
+        },
+        {
+          "active": 9,
+          "ms": 663
+        },
+        {
+          "active": 9,
+          "ms": 718
+        },
+        {
+          "active": 9,
+          "ms": 773
+        },
+        {
+          "active": 9,
+          "ms": 828
+        },
+        {
+          "active": 9,
+          "ms": 884
+        },
+        {
+          "active": 9,
+          "ms": 939
+        },
+        {
+          "active": 9,
+          "ms": 994
+        },
+        {
+          "active": 9,
+          "ms": 1049
+        },
+        {
+          "active": 9,
+          "ms": 1104
+        },
+        {
+          "active": 9,
+          "ms": 1160
+        },
+        {
+          "active": 9,
+          "ms": 1215
+        },
+        {
+          "active": 9,
+          "ms": 1270
+        },
+        {
+          "active": 9,
+          "ms": 1325
+        },
+        {
+          "active": 9,
+          "ms": 1381
+        },
+        {
+          "active": 9,
+          "ms": 1436
+        },
+        {
+          "active": 9,
+          "ms": 1491
+        },
+        {
+          "active": 9,
+          "ms": 1546
+        },
+        {
+          "active": 9,
+          "ms": 1601
+        },
+        {
+          "active": 9,
+          "ms": 1656
+        }
+      ],
+      "shots": 9,
+      "warning": 0.65
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "B01",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 111
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 496
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 773
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1048
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1325
+        },
+        {
+          "active": 0,
+          "ms": 1380
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1601
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.5
+    },
+    {
+      "attack": "cleave",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "B01",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 496
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 773
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1048
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1325
+        },
+        {
+          "active": 0,
+          "ms": 1380
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1600
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.5
+    },
+    {
+      "attack": "slam",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 26,
+      "role": "B01",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 13,
+          "ms": 56
+        },
+        {
+          "active": 13,
+          "ms": 111
+        },
+        {
+          "active": 13,
+          "ms": 166
+        },
+        {
+          "active": 26,
+          "ms": 222
+        },
+        {
+          "active": 26,
+          "ms": 277
+        },
+        {
+          "active": 26,
+          "ms": 332
+        },
+        {
+          "active": 26,
+          "ms": 387
+        },
+        {
+          "active": 26,
+          "ms": 442
+        },
+        {
+          "active": 26,
+          "ms": 497
+        },
+        {
+          "active": 26,
+          "ms": 553
+        },
+        {
+          "active": 26,
+          "ms": 608
+        },
+        {
+          "active": 26,
+          "ms": 663
+        },
+        {
+          "active": 26,
+          "ms": 718
+        },
+        {
+          "active": 26,
+          "ms": 773
+        },
+        {
+          "active": 26,
+          "ms": 828
+        },
+        {
+          "active": 26,
+          "ms": 884
+        },
+        {
+          "active": 26,
+          "ms": 939
+        },
+        {
+          "active": 26,
+          "ms": 994
+        },
+        {
+          "active": 26,
+          "ms": 1050
+        },
+        {
+          "active": 26,
+          "ms": 1105
+        },
+        {
+          "active": 26,
+          "ms": 1160
+        },
+        {
+          "active": 26,
+          "ms": 1215
+        },
+        {
+          "active": 26,
+          "ms": 1270
+        },
+        {
+          "active": 26,
+          "ms": 1326
+        },
+        {
+          "active": 26,
+          "ms": 1380
+        },
+        {
+          "active": 26,
+          "ms": 1436
+        },
+        {
+          "active": 26,
+          "ms": 1491
+        },
+        {
+          "active": 26,
+          "ms": 1546
+        },
+        {
+          "active": 26,
+          "ms": 1601
+        },
+        {
+          "active": 26,
+          "ms": 1657
+        }
+      ],
+      "shots": 26,
+      "warning": 0.5
+    },
+    {
+      "attack": "brood",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 34,
+      "role": "B02",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 17,
+          "ms": 55
+        },
+        {
+          "active": 17,
+          "ms": 110
+        },
+        {
+          "active": 17,
+          "ms": 166
+        },
+        {
+          "active": 34,
+          "ms": 222
+        },
+        {
+          "active": 34,
+          "ms": 276
+        },
+        {
+          "active": 34,
+          "ms": 331
+        },
+        {
+          "active": 34,
+          "ms": 387
+        },
+        {
+          "active": 34,
+          "ms": 442
+        },
+        {
+          "active": 34,
+          "ms": 497
+        },
+        {
+          "active": 34,
+          "ms": 552
+        },
+        {
+          "active": 34,
+          "ms": 608
+        },
+        {
+          "active": 34,
+          "ms": 662
+        },
+        {
+          "active": 34,
+          "ms": 717
+        },
+        {
+          "active": 34,
+          "ms": 773
+        },
+        {
+          "active": 34,
+          "ms": 828
+        },
+        {
+          "active": 34,
+          "ms": 883
+        },
+        {
+          "active": 34,
+          "ms": 939
+        },
+        {
+          "active": 34,
+          "ms": 993
+        },
+        {
+          "active": 34,
+          "ms": 1049
+        },
+        {
+          "active": 34,
+          "ms": 1104
+        },
+        {
+          "active": 34,
+          "ms": 1159
+        },
+        {
+          "active": 34,
+          "ms": 1214
+        },
+        {
+          "active": 34,
+          "ms": 1270
+        },
+        {
+          "active": 34,
+          "ms": 1325
+        },
+        {
+          "active": 34,
+          "ms": 1380
+        },
+        {
+          "active": 34,
+          "ms": 1435
+        },
+        {
+          "active": 34,
+          "ms": 1491
+        },
+        {
+          "active": 34,
+          "ms": 1546
+        },
+        {
+          "active": 34,
+          "ms": 1601
+        },
+        {
+          "active": 34,
+          "ms": 1656
+        }
+      ],
+      "shots": 34,
+      "warning": 0.65
+    },
+    {
+      "attack": "lockdown",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "B02",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 166
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 442
+        },
+        {
+          "active": 0,
+          "ms": 497
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 718
+        },
+        {
+          "active": 0,
+          "ms": 773
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 994
+        },
+        {
+          "active": 0,
+          "ms": 1049
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1270
+        },
+        {
+          "active": 0,
+          "ms": 1325
+        },
+        {
+          "active": 0,
+          "ms": 1380
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1546
+        },
+        {
+          "active": 0,
+          "ms": 1601
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.95
+    },
+    {
+      "attack": "pulse",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 30,
+      "role": "B02",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 15,
+          "ms": 55
+        },
+        {
+          "active": 15,
+          "ms": 110
+        },
+        {
+          "active": 15,
+          "ms": 165
+        },
+        {
+          "active": 30,
+          "ms": 221
+        },
+        {
+          "active": 30,
+          "ms": 276
+        },
+        {
+          "active": 30,
+          "ms": 331
+        },
+        {
+          "active": 30,
+          "ms": 387
+        },
+        {
+          "active": 30,
+          "ms": 441
+        },
+        {
+          "active": 30,
+          "ms": 497
+        },
+        {
+          "active": 30,
+          "ms": 552
+        },
+        {
+          "active": 30,
+          "ms": 607
+        },
+        {
+          "active": 30,
+          "ms": 662
+        },
+        {
+          "active": 30,
+          "ms": 718
+        },
+        {
+          "active": 30,
+          "ms": 773
+        },
+        {
+          "active": 30,
+          "ms": 828
+        },
+        {
+          "active": 30,
+          "ms": 883
+        },
+        {
+          "active": 30,
+          "ms": 939
+        },
+        {
+          "active": 30,
+          "ms": 993
+        },
+        {
+          "active": 30,
+          "ms": 1049
+        },
+        {
+          "active": 30,
+          "ms": 1104
+        },
+        {
+          "active": 30,
+          "ms": 1159
+        },
+        {
+          "active": 30,
+          "ms": 1214
+        },
+        {
+          "active": 30,
+          "ms": 1270
+        },
+        {
+          "active": 30,
+          "ms": 1325
+        },
+        {
+          "active": 30,
+          "ms": 1380
+        },
+        {
+          "active": 30,
+          "ms": 1435
+        },
+        {
+          "active": 30,
+          "ms": 1491
+        },
+        {
+          "active": 30,
+          "ms": 1545
+        },
+        {
+          "active": 30,
+          "ms": 1601
+        },
+        {
+          "active": 29,
+          "ms": 1657
+        }
+      ],
+      "shots": 30,
+      "warning": 0.65
+    },
+    {
+      "attack": "brood",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 63,
+      "role": "B02",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 21,
+          "ms": 56
+        },
+        {
+          "active": 21,
+          "ms": 110
+        },
+        {
+          "active": 21,
+          "ms": 166
+        },
+        {
+          "active": 42,
+          "ms": 222
+        },
+        {
+          "active": 42,
+          "ms": 276
+        },
+        {
+          "active": 42,
+          "ms": 331
+        },
+        {
+          "active": 42,
+          "ms": 387
+        },
+        {
+          "active": 63,
+          "ms": 442
+        },
+        {
+          "active": 63,
+          "ms": 497
+        },
+        {
+          "active": 63,
+          "ms": 553
+        },
+        {
+          "active": 63,
+          "ms": 607
+        },
+        {
+          "active": 63,
+          "ms": 662
+        },
+        {
+          "active": 63,
+          "ms": 718
+        },
+        {
+          "active": 63,
+          "ms": 774
+        },
+        {
+          "active": 63,
+          "ms": 828
+        },
+        {
+          "active": 63,
+          "ms": 883
+        },
+        {
+          "active": 63,
+          "ms": 939
+        },
+        {
+          "active": 63,
+          "ms": 994
+        },
+        {
+          "active": 63,
+          "ms": 1049
+        },
+        {
+          "active": 63,
+          "ms": 1105
+        },
+        {
+          "active": 63,
+          "ms": 1159
+        },
+        {
+          "active": 63,
+          "ms": 1214
+        },
+        {
+          "active": 63,
+          "ms": 1270
+        },
+        {
+          "active": 63,
+          "ms": 1325
+        },
+        {
+          "active": 63,
+          "ms": 1380
+        },
+        {
+          "active": 63,
+          "ms": 1436
+        },
+        {
+          "active": 63,
+          "ms": 1491
+        },
+        {
+          "active": 63,
+          "ms": 1546
+        },
+        {
+          "active": 63,
+          "ms": 1602
+        },
+        {
+          "active": 63,
+          "ms": 1657
+        }
+      ],
+      "shots": 63,
+      "warning": 0.5
+    },
+    {
+      "attack": "lockdown",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "B02",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 56
+        },
+        {
+          "active": 0,
+          "ms": 111
+        },
+        {
+          "active": 0,
+          "ms": 166
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 387
+        },
+        {
+          "active": 0,
+          "ms": 442
+        },
+        {
+          "active": 0,
+          "ms": 497
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 608
+        },
+        {
+          "active": 0,
+          "ms": 663
+        },
+        {
+          "active": 0,
+          "ms": 718
+        },
+        {
+          "active": 0,
+          "ms": 773
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 939
+        },
+        {
+          "active": 0,
+          "ms": 994
+        },
+        {
+          "active": 0,
+          "ms": 1049
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1215
+        },
+        {
+          "active": 0,
+          "ms": 1270
+        },
+        {
+          "active": 0,
+          "ms": 1325
+        },
+        {
+          "active": 0,
+          "ms": 1380
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1491
+        },
+        {
+          "active": 0,
+          "ms": 1546
+        },
+        {
+          "active": 0,
+          "ms": 1601
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.95
+    },
+    {
+      "attack": "pulse",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 57,
+      "role": "B02",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 19,
+          "ms": 56
+        },
+        {
+          "active": 19,
+          "ms": 111
+        },
+        {
+          "active": 19,
+          "ms": 166
+        },
+        {
+          "active": 38,
+          "ms": 222
+        },
+        {
+          "active": 38,
+          "ms": 276
+        },
+        {
+          "active": 38,
+          "ms": 332
+        },
+        {
+          "active": 38,
+          "ms": 387
+        },
+        {
+          "active": 57,
+          "ms": 442
+        },
+        {
+          "active": 57,
+          "ms": 497
+        },
+        {
+          "active": 57,
+          "ms": 553
+        },
+        {
+          "active": 57,
+          "ms": 608
+        },
+        {
+          "active": 57,
+          "ms": 663
+        },
+        {
+          "active": 57,
+          "ms": 719
+        },
+        {
+          "active": 57,
+          "ms": 774
+        },
+        {
+          "active": 57,
+          "ms": 828
+        },
+        {
+          "active": 57,
+          "ms": 884
+        },
+        {
+          "active": 57,
+          "ms": 939
+        },
+        {
+          "active": 57,
+          "ms": 994
+        },
+        {
+          "active": 57,
+          "ms": 1049
+        },
+        {
+          "active": 57,
+          "ms": 1105
+        },
+        {
+          "active": 57,
+          "ms": 1160
+        },
+        {
+          "active": 57,
+          "ms": 1215
+        },
+        {
+          "active": 57,
+          "ms": 1271
+        },
+        {
+          "active": 57,
+          "ms": 1325
+        },
+        {
+          "active": 57,
+          "ms": 1380
+        },
+        {
+          "active": 57,
+          "ms": 1436
+        },
+        {
+          "active": 57,
+          "ms": 1492
+        },
+        {
+          "active": 57,
+          "ms": 1546
+        },
+        {
+          "active": 57,
+          "ms": 1601
+        },
+        {
+          "active": 56,
+          "ms": 1657
+        }
+      ],
+      "shots": 57,
+      "warning": 0.5
+    },
+    {
+      "attack": "dash",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "B03",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 496
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 773
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1049
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1324
+        },
+        {
+          "active": 0,
+          "ms": 1380
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1601
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.65
+    },
+    {
+      "attack": "sweep",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "B03",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 497
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 772
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1049
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1324
+        },
+        {
+          "active": 0,
+          "ms": 1380
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1601
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.9
+    },
+    {
+      "attack": "burst",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 18,
+      "role": "B03",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 9,
+          "ms": 49
+        },
+        {
+          "active": 9,
+          "ms": 97
+        },
+        {
+          "active": 9,
+          "ms": 157
+        },
+        {
+          "active": 9,
+          "ms": 200
+        },
+        {
+          "active": 18,
+          "ms": 255
+        },
+        {
+          "active": 18,
+          "ms": 311
+        },
+        {
+          "active": 18,
+          "ms": 366
+        },
+        {
+          "active": 18,
+          "ms": 422
+        },
+        {
+          "active": 18,
+          "ms": 476
+        },
+        {
+          "active": 18,
+          "ms": 531
+        },
+        {
+          "active": 18,
+          "ms": 587
+        },
+        {
+          "active": 18,
+          "ms": 642
+        },
+        {
+          "active": 18,
+          "ms": 697
+        },
+        {
+          "active": 18,
+          "ms": 760
+        },
+        {
+          "active": 18,
+          "ms": 808
+        },
+        {
+          "active": 18,
+          "ms": 864
+        },
+        {
+          "active": 18,
+          "ms": 918
+        },
+        {
+          "active": 18,
+          "ms": 979
+        },
+        {
+          "active": 18,
+          "ms": 1029
+        },
+        {
+          "active": 18,
+          "ms": 1084
+        },
+        {
+          "active": 18,
+          "ms": 1141
+        },
+        {
+          "active": 18,
+          "ms": 1195
+        },
+        {
+          "active": 18,
+          "ms": 1250
+        },
+        {
+          "active": 17,
+          "ms": 1305
+        },
+        {
+          "active": 17,
+          "ms": 1361
+        },
+        {
+          "active": 17,
+          "ms": 1408
+        },
+        {
+          "active": 17,
+          "ms": 1457
+        },
+        {
+          "active": 17,
+          "ms": 1505
+        },
+        {
+          "active": 17,
+          "ms": 1560
+        },
+        {
+          "active": 17,
+          "ms": 1615
+        },
+        {
+          "active": 17,
+          "ms": 1671
+        }
+      ],
+      "shots": 18,
+      "warning": 0.65
+    },
+    {
+      "attack": "dash",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "B03",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 168
+        },
+        {
+          "active": 0,
+          "ms": 220
+        },
+        {
+          "active": 0,
+          "ms": 275
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 387
+        },
+        {
+          "active": 0,
+          "ms": 442
+        },
+        {
+          "active": 0,
+          "ms": 497
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 664
+        },
+        {
+          "active": 0,
+          "ms": 713
+        },
+        {
+          "active": 0,
+          "ms": 768
+        },
+        {
+          "active": 0,
+          "ms": 823
+        },
+        {
+          "active": 0,
+          "ms": 879
+        },
+        {
+          "active": 0,
+          "ms": 934
+        },
+        {
+          "active": 0,
+          "ms": 989
+        },
+        {
+          "active": 0,
+          "ms": 1044
+        },
+        {
+          "active": 0,
+          "ms": 1099
+        },
+        {
+          "active": 0,
+          "ms": 1157
+        },
+        {
+          "active": 0,
+          "ms": 1212
+        },
+        {
+          "active": 0,
+          "ms": 1267
+        },
+        {
+          "active": 0,
+          "ms": 1323
+        },
+        {
+          "active": 0,
+          "ms": 1378
+        },
+        {
+          "active": 0,
+          "ms": 1433
+        },
+        {
+          "active": 0,
+          "ms": 1488
+        },
+        {
+          "active": 0,
+          "ms": 1543
+        },
+        {
+          "active": 0,
+          "ms": 1599
+        },
+        {
+          "active": 0,
+          "ms": 1654
+        }
+      ],
+      "shots": 0,
+      "warning": 0.5
+    },
+    {
+      "attack": "sweep",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "B03",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 58
+        },
+        {
+          "active": 0,
+          "ms": 111
+        },
+        {
+          "active": 0,
+          "ms": 166
+        },
+        {
+          "active": 0,
+          "ms": 230
+        },
+        {
+          "active": 0,
+          "ms": 285
+        },
+        {
+          "active": 0,
+          "ms": 340
+        },
+        {
+          "active": 0,
+          "ms": 396
+        },
+        {
+          "active": 0,
+          "ms": 474
+        },
+        {
+          "active": 0,
+          "ms": 516
+        },
+        {
+          "active": 0,
+          "ms": 565
+        },
+        {
+          "active": 0,
+          "ms": 613
+        },
+        {
+          "active": 0,
+          "ms": 667
+        },
+        {
+          "active": 0,
+          "ms": 726
+        },
+        {
+          "active": 0,
+          "ms": 776
+        },
+        {
+          "active": 0,
+          "ms": 830
+        },
+        {
+          "active": 0,
+          "ms": 885
+        },
+        {
+          "active": 0,
+          "ms": 965
+        },
+        {
+          "active": 0,
+          "ms": 1001
+        },
+        {
+          "active": 0,
+          "ms": 1057
+        },
+        {
+          "active": 0,
+          "ms": 1111
+        },
+        {
+          "active": 0,
+          "ms": 1167
+        },
+        {
+          "active": 0,
+          "ms": 1221
+        },
+        {
+          "active": 0,
+          "ms": 1276
+        },
+        {
+          "active": 0,
+          "ms": 1331
+        },
+        {
+          "active": 0,
+          "ms": 1386
+        },
+        {
+          "active": 0,
+          "ms": 1448
+        },
+        {
+          "active": 0,
+          "ms": 1497
+        },
+        {
+          "active": 0,
+          "ms": 1552
+        },
+        {
+          "active": 0,
+          "ms": 1607
+        },
+        {
+          "active": 0,
+          "ms": 1662
+        }
+      ],
+      "shots": 0,
+      "warning": 0.9
+    },
+    {
+      "attack": "burst",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 39,
+      "role": "B03",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 13,
+          "ms": 49
+        },
+        {
+          "active": 13,
+          "ms": 103
+        },
+        {
+          "active": 13,
+          "ms": 159
+        },
+        {
+          "active": 13,
+          "ms": 214
+        },
+        {
+          "active": 26,
+          "ms": 267
+        },
+        {
+          "active": 26,
+          "ms": 315
+        },
+        {
+          "active": 26,
+          "ms": 370
+        },
+        {
+          "active": 26,
+          "ms": 425
+        },
+        {
+          "active": 39,
+          "ms": 480
+        },
+        {
+          "active": 39,
+          "ms": 535
+        },
+        {
+          "active": 39,
+          "ms": 591
+        },
+        {
+          "active": 39,
+          "ms": 647
+        },
+        {
+          "active": 39,
+          "ms": 702
+        },
+        {
+          "active": 39,
+          "ms": 758
+        },
+        {
+          "active": 39,
+          "ms": 813
+        },
+        {
+          "active": 39,
+          "ms": 869
+        },
+        {
+          "active": 39,
+          "ms": 925
+        },
+        {
+          "active": 39,
+          "ms": 992
+        },
+        {
+          "active": 39,
+          "ms": 1034
+        },
+        {
+          "active": 39,
+          "ms": 1089
+        },
+        {
+          "active": 39,
+          "ms": 1147
+        },
+        {
+          "active": 39,
+          "ms": 1206
+        },
+        {
+          "active": 39,
+          "ms": 1259
+        },
+        {
+          "active": 38,
+          "ms": 1315
+        },
+        {
+          "active": 38,
+          "ms": 1369
+        },
+        {
+          "active": 38,
+          "ms": 1424
+        },
+        {
+          "active": 38,
+          "ms": 1481
+        },
+        {
+          "active": 38,
+          "ms": 1547
+        },
+        {
+          "active": 37,
+          "ms": 1596
+        },
+        {
+          "active": 37,
+          "ms": 1652
+        }
+      ],
+      "shots": 39,
+      "warning": 0.5
+    },
+    {
+      "attack": "beam",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "E10",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 179
+        },
+        {
+          "active": 0,
+          "ms": 223
+        },
+        {
+          "active": 0,
+          "ms": 272
+        },
+        {
+          "active": 0,
+          "ms": 320
+        },
+        {
+          "active": 0,
+          "ms": 368
+        },
+        {
+          "active": 0,
+          "ms": 423
+        },
+        {
+          "active": 0,
+          "ms": 479
+        },
+        {
+          "active": 0,
+          "ms": 534
+        },
+        {
+          "active": 0,
+          "ms": 590
+        },
+        {
+          "active": 0,
+          "ms": 644
+        },
+        {
+          "active": 0,
+          "ms": 699
+        },
+        {
+          "active": 0,
+          "ms": 755
+        },
+        {
+          "active": 0,
+          "ms": 810
+        },
+        {
+          "active": 0,
+          "ms": 865
+        },
+        {
+          "active": 0,
+          "ms": 920
+        },
+        {
+          "active": 0,
+          "ms": 975
+        },
+        {
+          "active": 0,
+          "ms": 1031
+        },
+        {
+          "active": 0,
+          "ms": 1086
+        },
+        {
+          "active": 0,
+          "ms": 1141
+        },
+        {
+          "active": 0,
+          "ms": 1196
+        },
+        {
+          "active": 0,
+          "ms": 1251
+        },
+        {
+          "active": 0,
+          "ms": 1306
+        },
+        {
+          "active": 0,
+          "ms": 1362
+        },
+        {
+          "active": 0,
+          "ms": 1417
+        },
+        {
+          "active": 0,
+          "ms": 1472
+        },
+        {
+          "active": 0,
+          "ms": 1527
+        },
+        {
+          "active": 0,
+          "ms": 1583
+        },
+        {
+          "active": 0,
+          "ms": 1638
+        },
+        {
+          "active": 0,
+          "ms": 1693
+        }
+      ],
+      "shots": 0,
+      "warning": 0.85
+    },
+    {
+      "attack": "artillery",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 5,
+      "role": "E10",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 5,
+          "ms": 55
+        },
+        {
+          "active": 5,
+          "ms": 110
+        },
+        {
+          "active": 5,
+          "ms": 165
+        },
+        {
+          "active": 5,
+          "ms": 220
+        },
+        {
+          "active": 5,
+          "ms": 276
+        },
+        {
+          "active": 5,
+          "ms": 331
+        },
+        {
+          "active": 5,
+          "ms": 386
+        },
+        {
+          "active": 5,
+          "ms": 441
+        },
+        {
+          "active": 5,
+          "ms": 497
+        },
+        {
+          "active": 5,
+          "ms": 552
+        },
+        {
+          "active": 5,
+          "ms": 607
+        },
+        {
+          "active": 5,
+          "ms": 662
+        },
+        {
+          "active": 5,
+          "ms": 717
+        },
+        {
+          "active": 5,
+          "ms": 772
+        },
+        {
+          "active": 5,
+          "ms": 828
+        },
+        {
+          "active": 5,
+          "ms": 883
+        },
+        {
+          "active": 5,
+          "ms": 938
+        },
+        {
+          "active": 5,
+          "ms": 993
+        },
+        {
+          "active": 5,
+          "ms": 1048
+        },
+        {
+          "active": 5,
+          "ms": 1103
+        },
+        {
+          "active": 5,
+          "ms": 1159
+        },
+        {
+          "active": 5,
+          "ms": 1214
+        },
+        {
+          "active": 5,
+          "ms": 1269
+        },
+        {
+          "active": 5,
+          "ms": 1324
+        },
+        {
+          "active": 5,
+          "ms": 1379
+        },
+        {
+          "active": 5,
+          "ms": 1435
+        },
+        {
+          "active": 5,
+          "ms": 1490
+        },
+        {
+          "active": 5,
+          "ms": 1545
+        },
+        {
+          "active": 5,
+          "ms": 1600
+        },
+        {
+          "active": 5,
+          "ms": 1656
+        }
+      ],
+      "shots": 5,
+      "warning": 0.95
+    },
+    {
+      "attack": "beam",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 0,
+      "role": "E10",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 276
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 496
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 772
+        },
+        {
+          "active": 0,
+          "ms": 828
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1048
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1324
+        },
+        {
+          "active": 0,
+          "ms": 1379
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1600
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.85
+    },
+    {
+      "attack": "beam",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "E10",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 0,
+          "ms": 55
+        },
+        {
+          "active": 0,
+          "ms": 110
+        },
+        {
+          "active": 0,
+          "ms": 165
+        },
+        {
+          "active": 0,
+          "ms": 220
+        },
+        {
+          "active": 0,
+          "ms": 275
+        },
+        {
+          "active": 0,
+          "ms": 331
+        },
+        {
+          "active": 0,
+          "ms": 386
+        },
+        {
+          "active": 0,
+          "ms": 441
+        },
+        {
+          "active": 0,
+          "ms": 496
+        },
+        {
+          "active": 0,
+          "ms": 551
+        },
+        {
+          "active": 0,
+          "ms": 607
+        },
+        {
+          "active": 0,
+          "ms": 662
+        },
+        {
+          "active": 0,
+          "ms": 717
+        },
+        {
+          "active": 0,
+          "ms": 772
+        },
+        {
+          "active": 0,
+          "ms": 827
+        },
+        {
+          "active": 0,
+          "ms": 883
+        },
+        {
+          "active": 0,
+          "ms": 938
+        },
+        {
+          "active": 0,
+          "ms": 993
+        },
+        {
+          "active": 0,
+          "ms": 1048
+        },
+        {
+          "active": 0,
+          "ms": 1103
+        },
+        {
+          "active": 0,
+          "ms": 1159
+        },
+        {
+          "active": 0,
+          "ms": 1214
+        },
+        {
+          "active": 0,
+          "ms": 1269
+        },
+        {
+          "active": 0,
+          "ms": 1324
+        },
+        {
+          "active": 0,
+          "ms": 1379
+        },
+        {
+          "active": 0,
+          "ms": 1435
+        },
+        {
+          "active": 0,
+          "ms": 1490
+        },
+        {
+          "active": 0,
+          "ms": 1545
+        },
+        {
+          "active": 0,
+          "ms": 1600
+        },
+        {
+          "active": 0,
+          "ms": 1655
+        }
+      ],
+      "shots": 0,
+      "warning": 0.85
+    },
+    {
+      "attack": "artillery",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 5,
+      "role": "E10",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 5,
+          "ms": 54
+        },
+        {
+          "active": 5,
+          "ms": 109
+        },
+        {
+          "active": 5,
+          "ms": 165
+        },
+        {
+          "active": 5,
+          "ms": 220
+        },
+        {
+          "active": 5,
+          "ms": 275
+        },
+        {
+          "active": 5,
+          "ms": 330
+        },
+        {
+          "active": 5,
+          "ms": 386
+        },
+        {
+          "active": 5,
+          "ms": 441
+        },
+        {
+          "active": 5,
+          "ms": 496
+        },
+        {
+          "active": 5,
+          "ms": 551
+        },
+        {
+          "active": 5,
+          "ms": 606
+        },
+        {
+          "active": 5,
+          "ms": 661
+        },
+        {
+          "active": 5,
+          "ms": 717
+        },
+        {
+          "active": 5,
+          "ms": 772
+        },
+        {
+          "active": 5,
+          "ms": 827
+        },
+        {
+          "active": 5,
+          "ms": 882
+        },
+        {
+          "active": 5,
+          "ms": 937
+        },
+        {
+          "active": 5,
+          "ms": 993
+        },
+        {
+          "active": 5,
+          "ms": 1048
+        },
+        {
+          "active": 5,
+          "ms": 1103
+        },
+        {
+          "active": 5,
+          "ms": 1158
+        },
+        {
+          "active": 5,
+          "ms": 1214
+        },
+        {
+          "active": 5,
+          "ms": 1269
+        },
+        {
+          "active": 5,
+          "ms": 1324
+        },
+        {
+          "active": 5,
+          "ms": 1379
+        },
+        {
+          "active": 5,
+          "ms": 1434
+        },
+        {
+          "active": 5,
+          "ms": 1489
+        },
+        {
+          "active": 5,
+          "ms": 1545
+        },
+        {
+          "active": 5,
+          "ms": 1600
+        },
+        {
+          "active": 5,
+          "ms": 1655
+        }
+      ],
+      "shots": 5,
+      "warning": 0.95
+    },
+    {
+      "attack": "beam",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 0,
+      "role": "E10",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 1
+        },
+        {
+          "active": 0,
+          "ms": 56
+        },
+        {
+          "active": 0,
+          "ms": 111
+        },
+        {
+          "active": 0,
+          "ms": 166
+        },
+        {
+          "active": 0,
+          "ms": 221
+        },
+        {
+          "active": 0,
+          "ms": 277
+        },
+        {
+          "active": 0,
+          "ms": 332
+        },
+        {
+          "active": 0,
+          "ms": 387
+        },
+        {
+          "active": 0,
+          "ms": 442
+        },
+        {
+          "active": 0,
+          "ms": 497
+        },
+        {
+          "active": 0,
+          "ms": 552
+        },
+        {
+          "active": 0,
+          "ms": 608
+        },
+        {
+          "active": 0,
+          "ms": 663
+        },
+        {
+          "active": 0,
+          "ms": 718
+        },
+        {
+          "active": 0,
+          "ms": 773
+        },
+        {
+          "active": 0,
+          "ms": 829
+        },
+        {
+          "active": 0,
+          "ms": 884
+        },
+        {
+          "active": 0,
+          "ms": 939
+        },
+        {
+          "active": 0,
+          "ms": 994
+        },
+        {
+          "active": 0,
+          "ms": 1049
+        },
+        {
+          "active": 0,
+          "ms": 1104
+        },
+        {
+          "active": 0,
+          "ms": 1160
+        },
+        {
+          "active": 0,
+          "ms": 1215
+        },
+        {
+          "active": 0,
+          "ms": 1270
+        },
+        {
+          "active": 0,
+          "ms": 1325
+        },
+        {
+          "active": 0,
+          "ms": 1381
+        },
+        {
+          "active": 0,
+          "ms": 1436
+        },
+        {
+          "active": 0,
+          "ms": 1491
+        },
+        {
+          "active": 0,
+          "ms": 1546
+        },
+        {
+          "active": 0,
+          "ms": 1601
+        },
+        {
+          "active": 0,
+          "ms": 1656
+        }
+      ],
+      "shots": 0,
+      "warning": 0.85
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 3,
+      "role": "E11",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 3,
+          "ms": 56
+        },
+        {
+          "active": 3,
+          "ms": 111
+        },
+        {
+          "active": 3,
+          "ms": 166
+        },
+        {
+          "active": 3,
+          "ms": 221
+        },
+        {
+          "active": 3,
+          "ms": 277
+        },
+        {
+          "active": 3,
+          "ms": 332
+        },
+        {
+          "active": 3,
+          "ms": 387
+        },
+        {
+          "active": 3,
+          "ms": 442
+        },
+        {
+          "active": 3,
+          "ms": 497
+        },
+        {
+          "active": 3,
+          "ms": 552
+        },
+        {
+          "active": 3,
+          "ms": 608
+        },
+        {
+          "active": 3,
+          "ms": 663
+        },
+        {
+          "active": 3,
+          "ms": 718
+        },
+        {
+          "active": 3,
+          "ms": 773
+        },
+        {
+          "active": 3,
+          "ms": 828
+        },
+        {
+          "active": 3,
+          "ms": 884
+        },
+        {
+          "active": 3,
+          "ms": 939
+        },
+        {
+          "active": 3,
+          "ms": 994
+        },
+        {
+          "active": 3,
+          "ms": 1049
+        },
+        {
+          "active": 3,
+          "ms": 1104
+        },
+        {
+          "active": 3,
+          "ms": 1160
+        },
+        {
+          "active": 3,
+          "ms": 1215
+        },
+        {
+          "active": 3,
+          "ms": 1270
+        },
+        {
+          "active": 3,
+          "ms": 1325
+        },
+        {
+          "active": 3,
+          "ms": 1381
+        },
+        {
+          "active": 3,
+          "ms": 1436
+        },
+        {
+          "active": 3,
+          "ms": 1491
+        },
+        {
+          "active": 3,
+          "ms": 1546
+        },
+        {
+          "active": 3,
+          "ms": 1601
+        },
+        {
+          "active": 3,
+          "ms": 1656
+        }
+      ],
+      "shots": 3,
+      "warning": 0.65
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 3,
+      "role": "E11",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 3,
+          "ms": 54
+        },
+        {
+          "active": 3,
+          "ms": 110
+        },
+        {
+          "active": 3,
+          "ms": 165
+        },
+        {
+          "active": 3,
+          "ms": 220
+        },
+        {
+          "active": 3,
+          "ms": 275
+        },
+        {
+          "active": 3,
+          "ms": 331
+        },
+        {
+          "active": 3,
+          "ms": 386
+        },
+        {
+          "active": 3,
+          "ms": 441
+        },
+        {
+          "active": 3,
+          "ms": 496
+        },
+        {
+          "active": 3,
+          "ms": 551
+        },
+        {
+          "active": 3,
+          "ms": 606
+        },
+        {
+          "active": 3,
+          "ms": 662
+        },
+        {
+          "active": 3,
+          "ms": 717
+        },
+        {
+          "active": 3,
+          "ms": 772
+        },
+        {
+          "active": 3,
+          "ms": 827
+        },
+        {
+          "active": 3,
+          "ms": 883
+        },
+        {
+          "active": 3,
+          "ms": 938
+        },
+        {
+          "active": 3,
+          "ms": 993
+        },
+        {
+          "active": 3,
+          "ms": 1048
+        },
+        {
+          "active": 3,
+          "ms": 1103
+        },
+        {
+          "active": 3,
+          "ms": 1158
+        },
+        {
+          "active": 3,
+          "ms": 1214
+        },
+        {
+          "active": 3,
+          "ms": 1269
+        },
+        {
+          "active": 3,
+          "ms": 1324
+        },
+        {
+          "active": 3,
+          "ms": 1379
+        },
+        {
+          "active": 3,
+          "ms": 1435
+        },
+        {
+          "active": 3,
+          "ms": 1490
+        },
+        {
+          "active": 3,
+          "ms": 1545
+        },
+        {
+          "active": 3,
+          "ms": 1600
+        },
+        {
+          "active": 3,
+          "ms": 1655
+        }
+      ],
+      "shots": 3,
+      "warning": 0.65
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": false,
+      "projectile_peak": 3,
+      "role": "E11",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 3,
+          "ms": 55
+        },
+        {
+          "active": 3,
+          "ms": 110
+        },
+        {
+          "active": 3,
+          "ms": 165
+        },
+        {
+          "active": 3,
+          "ms": 220
+        },
+        {
+          "active": 3,
+          "ms": 276
+        },
+        {
+          "active": 3,
+          "ms": 331
+        },
+        {
+          "active": 3,
+          "ms": 386
+        },
+        {
+          "active": 3,
+          "ms": 441
+        },
+        {
+          "active": 3,
+          "ms": 497
+        },
+        {
+          "active": 3,
+          "ms": 551
+        },
+        {
+          "active": 3,
+          "ms": 607
+        },
+        {
+          "active": 3,
+          "ms": 662
+        },
+        {
+          "active": 3,
+          "ms": 717
+        },
+        {
+          "active": 3,
+          "ms": 772
+        },
+        {
+          "active": 3,
+          "ms": 828
+        },
+        {
+          "active": 3,
+          "ms": 883
+        },
+        {
+          "active": 3,
+          "ms": 938
+        },
+        {
+          "active": 3,
+          "ms": 993
+        },
+        {
+          "active": 3,
+          "ms": 1048
+        },
+        {
+          "active": 3,
+          "ms": 1103
+        },
+        {
+          "active": 3,
+          "ms": 1159
+        },
+        {
+          "active": 3,
+          "ms": 1214
+        },
+        {
+          "active": 3,
+          "ms": 1269
+        },
+        {
+          "active": 3,
+          "ms": 1324
+        },
+        {
+          "active": 3,
+          "ms": 1380
+        },
+        {
+          "active": 3,
+          "ms": 1435
+        },
+        {
+          "active": 3,
+          "ms": 1490
+        },
+        {
+          "active": 3,
+          "ms": 1545
+        },
+        {
+          "active": 3,
+          "ms": 1600
+        },
+        {
+          "active": 3,
+          "ms": 1655
+        }
+      ],
+      "shots": 3,
+      "warning": 0.65
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 3,
+      "role": "E11",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 3,
+          "ms": 55
+        },
+        {
+          "active": 3,
+          "ms": 110
+        },
+        {
+          "active": 3,
+          "ms": 165
+        },
+        {
+          "active": 3,
+          "ms": 220
+        },
+        {
+          "active": 3,
+          "ms": 276
+        },
+        {
+          "active": 3,
+          "ms": 331
+        },
+        {
+          "active": 3,
+          "ms": 386
+        },
+        {
+          "active": 3,
+          "ms": 441
+        },
+        {
+          "active": 3,
+          "ms": 497
+        },
+        {
+          "active": 3,
+          "ms": 552
+        },
+        {
+          "active": 3,
+          "ms": 607
+        },
+        {
+          "active": 3,
+          "ms": 662
+        },
+        {
+          "active": 3,
+          "ms": 717
+        },
+        {
+          "active": 3,
+          "ms": 772
+        },
+        {
+          "active": 3,
+          "ms": 828
+        },
+        {
+          "active": 3,
+          "ms": 883
+        },
+        {
+          "active": 3,
+          "ms": 938
+        },
+        {
+          "active": 3,
+          "ms": 993
+        },
+        {
+          "active": 3,
+          "ms": 1049
+        },
+        {
+          "active": 3,
+          "ms": 1104
+        },
+        {
+          "active": 3,
+          "ms": 1159
+        },
+        {
+          "active": 3,
+          "ms": 1214
+        },
+        {
+          "active": 3,
+          "ms": 1269
+        },
+        {
+          "active": 3,
+          "ms": 1324
+        },
+        {
+          "active": 3,
+          "ms": 1380
+        },
+        {
+          "active": 3,
+          "ms": 1435
+        },
+        {
+          "active": 3,
+          "ms": 1490
+        },
+        {
+          "active": 3,
+          "ms": 1545
+        },
+        {
+          "active": 3,
+          "ms": 1600
+        },
+        {
+          "active": 3,
+          "ms": 1656
+        }
+      ],
+      "shots": 3,
+      "warning": 0.5
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 3,
+      "role": "E11",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 3,
+          "ms": 55
+        },
+        {
+          "active": 3,
+          "ms": 110
+        },
+        {
+          "active": 3,
+          "ms": 165
+        },
+        {
+          "active": 3,
+          "ms": 220
+        },
+        {
+          "active": 3,
+          "ms": 276
+        },
+        {
+          "active": 3,
+          "ms": 331
+        },
+        {
+          "active": 3,
+          "ms": 386
+        },
+        {
+          "active": 3,
+          "ms": 441
+        },
+        {
+          "active": 3,
+          "ms": 497
+        },
+        {
+          "active": 3,
+          "ms": 552
+        },
+        {
+          "active": 3,
+          "ms": 607
+        },
+        {
+          "active": 3,
+          "ms": 662
+        },
+        {
+          "active": 3,
+          "ms": 717
+        },
+        {
+          "active": 3,
+          "ms": 772
+        },
+        {
+          "active": 3,
+          "ms": 828
+        },
+        {
+          "active": 3,
+          "ms": 883
+        },
+        {
+          "active": 3,
+          "ms": 938
+        },
+        {
+          "active": 3,
+          "ms": 993
+        },
+        {
+          "active": 3,
+          "ms": 1048
+        },
+        {
+          "active": 3,
+          "ms": 1104
+        },
+        {
+          "active": 3,
+          "ms": 1159
+        },
+        {
+          "active": 3,
+          "ms": 1214
+        },
+        {
+          "active": 3,
+          "ms": 1269
+        },
+        {
+          "active": 3,
+          "ms": 1324
+        },
+        {
+          "active": 3,
+          "ms": 1380
+        },
+        {
+          "active": 3,
+          "ms": 1435
+        },
+        {
+          "active": 3,
+          "ms": 1490
+        },
+        {
+          "active": 3,
+          "ms": 1545
+        },
+        {
+          "active": 3,
+          "ms": 1600
+        },
+        {
+          "active": 3,
+          "ms": 1656
+        }
+      ],
+      "shots": 3,
+      "warning": 0.5
+    },
+    {
+      "attack": "charge",
+      "fixture": "forced attack selection and phase, production warning/action/projectile execution; not survival acceptance",
+      "phase_two": true,
+      "projectile_peak": 3,
+      "role": "E11",
+      "samples": [
+        {
+          "active": 0,
+          "ms": 0
+        },
+        {
+          "active": 3,
+          "ms": 55
+        },
+        {
+          "active": 3,
+          "ms": 110
+        },
+        {
+          "active": 3,
+          "ms": 165
+        },
+        {
+          "active": 3,
+          "ms": 220
+        },
+        {
+          "active": 3,
+          "ms": 276
+        },
+        {
+          "active": 3,
+          "ms": 331
+        },
+        {
+          "active": 3,
+          "ms": 386
+        },
+        {
+          "active": 3,
+          "ms": 441
+        },
+        {
+          "active": 3,
+          "ms": 497
+        },
+        {
+          "active": 3,
+          "ms": 552
+        },
+        {
+          "active": 3,
+          "ms": 607
+        },
+        {
+          "active": 3,
+          "ms": 662
+        },
+        {
+          "active": 3,
+          "ms": 717
+        },
+        {
+          "active": 3,
+          "ms": 772
+        },
+        {
+          "active": 3,
+          "ms": 828
+        },
+        {
+          "active": 3,
+          "ms": 883
+        },
+        {
+          "active": 3,
+          "ms": 938
+        },
+        {
+          "active": 3,
+          "ms": 993
+        },
+        {
+          "active": 3,
+          "ms": 1048
+        },
+        {
+          "active": 3,
+          "ms": 1104
+        },
+        {
+          "active": 3,
+          "ms": 1159
+        },
+        {
+          "active": 3,
+          "ms": 1214
+        },
+        {
+          "active": 3,
+          "ms": 1269
+        },
+        {
+          "active": 3,
+          "ms": 1325
+        },
+        {
+          "active": 3,
+          "ms": 1380
+        },
+        {
+          "active": 3,
+          "ms": 1435
+        },
+        {
+          "active": 3,
+          "ms": 1490
+        },
+        {
+          "active": 3,
+          "ms": 1545
+        },
+        {
+          "active": 3,
+          "ms": 1600
+        },
+        {
+          "active": 3,
+          "ms": 1656
+        }
+      ],
+      "shots": 3,
+      "warning": 0.5
+    }
+  ],
+  "regression": [
+    {
+      "scene": "BaselineRegression",
+      "args": [],
+      "passed": true,
+      "checks": 4,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-00-BaselineRegression/execution.json"
+    },
+    {
+      "scene": "M3Weapons",
+      "args": [],
+      "passed": true,
+      "checks": 72,
+      "errors": [],
+      "known_audio_teardown": true,
+      "execution": "regression-01-M3Weapons/execution.json"
+    },
+    {
+      "scene": "M3Energy",
+      "args": [],
+      "passed": true,
+      "checks": 16,
+      "errors": [],
+      "known_audio_teardown": true,
+      "execution": "regression-02-M3Energy/execution.json"
+    },
+    {
+      "scene": "M3Special",
+      "args": [],
+      "passed": true,
+      "checks": 14,
+      "errors": [],
+      "known_audio_teardown": true,
+      "execution": "regression-03-M3Special/execution.json"
+    },
+    {
+      "scene": "M4ThermalClock",
+      "args": [],
+      "passed": true,
+      "checks": 9,
+      "errors": [],
+      "known_audio_teardown": true,
+      "execution": "regression-04-M4ThermalClock/execution.json"
+    },
+    {
+      "scene": "M4Talents",
+      "args": [],
+      "passed": true,
+      "checks": 233,
+      "errors": [],
+      "known_audio_teardown": true,
+      "execution": "regression-05-M4Talents/execution.json"
+    },
+    {
+      "scene": "M6Cross",
+      "args": [],
+      "passed": true,
+      "checks": 117,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-06-M6Cross/execution.json"
+    },
+    {
+      "scene": "M6BossStops",
+      "args": [],
+      "passed": true,
+      "checks": 24,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-07-M6BossStops/execution.json"
+    },
+    {
+      "scene": "M6Contracts",
+      "args": [],
+      "passed": true,
+      "checks": 109,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-08-M6Contracts/execution.json"
+    },
+    {
+      "scene": "R1RecoveryUI",
+      "args": [],
+      "passed": true,
+      "checks": 9,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-09-R1RecoveryUI/execution.json"
+    },
+    {
+      "scene": "R1LegacyRestore",
+      "args": [],
+      "passed": true,
+      "checks": 5,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-10-R1LegacyRestore-recheck/execution.json",
+      "initial_execution": "regression-10-R1LegacyRestore/execution.json",
+      "resolved_harness_issue": "Immutable copy omitted the fixture temporary-save directory; no product save change."
+    },
+    {
+      "scene": "M8Mechanics",
+      "args": [],
+      "passed": true,
+      "checks": 11,
+      "errors": [],
+      "known_audio_teardown": true,
+      "execution": "regression-11-M8Mechanics/execution.json"
+    },
+    {
+      "scene": "M8Contracts",
+      "args": [
+        "--r1"
+      ],
+      "passed": true,
+      "checks": 52,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-12-M8Contracts/execution.json"
+    },
+    {
+      "scene": "M8UI",
+      "args": [],
+      "passed": true,
+      "checks": 79,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-13-M8UI/execution.json"
+    },
+    {
+      "scene": "M8Supply",
+      "args": [],
+      "passed": true,
+      "checks": 147,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-14-M8Supply/execution.json"
+    },
+    {
+      "scene": "M8R1Telegraphs",
+      "args": [],
+      "passed": true,
+      "checks": 75,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-15-M8R1Telegraphs/execution.json"
+    },
+    {
+      "scene": "M7ExitWallet",
+      "args": [
+        "camp"
+      ],
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-16-M7ExitWallet/execution.json"
+    },
+    {
+      "scene": "M7ExitWallet",
+      "args": [
+        "menu"
+      ],
+      "passed": true,
+      "checks": 2,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-17-M7ExitWallet/execution.json"
+    },
+    {
+      "scene": "M7ExitWallet",
+      "args": [
+        "combat"
+      ],
+      "passed": true,
+      "checks": 5,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-18-M7ExitWallet/execution.json"
+    },
+    {
+      "scene": "M7ExitWallet",
+      "args": [
+        "restore"
+      ],
+      "passed": true,
+      "checks": 6,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-19-M7ExitWallet/execution.json"
+    },
+    {
+      "scene": "M7ExitWallet",
+      "args": [
+        "window"
+      ],
+      "passed": true,
+      "checks": 3,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-20-M7ExitWallet/execution.json"
+    },
+    {
+      "scene": "M7MainExit",
+      "args": [],
+      "passed": true,
+      "checks": 1,
+      "errors": [],
+      "known_audio_teardown": false,
+      "execution": "regression-21-M7MainExit/execution.json"
+    }
+  ],
+  "performance": [
+    {
+      "scenario": "normal",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 58,
+        "frames": 2465,
+        "global_draw_calls": 73.0,
+        "hostile_vfx_peak": 5,
+        "max": 9.069,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.9,
+        "p95": 7.826,
+        "p99": 8.532,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "normal",
+        "telegraph_target": 0,
+        "transients_peak": 6,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 178,
+        "frames": 2463,
+        "global_draw_calls": 193.0,
+        "hostile_vfx_peak": 5,
+        "max": 33.068,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.9,
+        "p95": 8.068,
+        "p99": 8.995,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "normal",
+        "telegraph_target": 0,
+        "transients_peak": 11,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": null
+    },
+    {
+      "scenario": "late",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 254,
+        "frames": 2465,
+        "global_draw_calls": 269.0,
+        "hostile_vfx_peak": 20,
+        "max": 11.121,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.9,
+        "p95": 9.676,
+        "p99": 10.23,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "late",
+        "telegraph_target": 0,
+        "transients_peak": 29,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 420,
+        "frames": 2465,
+        "global_draw_calls": 435.0,
+        "hostile_vfx_peak": 21,
+        "max": 13.118,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.901,
+        "p95": 10.389,
+        "p99": 11.039,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "late",
+        "telegraph_target": 0,
+        "transients_peak": 43,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": null
+    },
+    {
+      "scenario": "boss",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 53,
+        "frames": 2464,
+        "global_draw_calls": 68.0,
+        "hostile_vfx_peak": 5,
+        "max": 26.584,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.9,
+        "p95": 7.258,
+        "p99": 7.445,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "boss",
+        "telegraph_target": 0,
+        "transients_peak": 9,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 196,
+        "frames": 2463,
+        "global_draw_calls": 211.0,
+        "hostile_vfx_peak": 4,
+        "max": 30.768,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.899,
+        "p95": 7.577,
+        "p99": 7.803,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "boss",
+        "telegraph_target": 0,
+        "transients_peak": 18,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": null
+    },
+    {
+      "scenario": "projectile",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 96,
+        "frames": 2376,
+        "global_draw_calls": 111.0,
+        "hostile_vfx_peak": 8,
+        "max": 34.936,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 7.608,
+        "p95": 19.409,
+        "p99": 24.492,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "projectile",
+        "telegraph_target": 0,
+        "transients_peak": 471,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 230,
+        "frames": 1411,
+        "global_draw_calls": 245.0,
+        "hostile_vfx_peak": 5,
+        "max": 55.126,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.104,
+        "p95": 17.498,
+        "p99": 24.333,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "projectile",
+        "telegraph_target": 0,
+        "transients_peak": 459,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": {
+        "baseline": [
+          {
+            "display": "Windows",
+            "draw_calls": 96,
+            "frames": 2376,
+            "global_draw_calls": 111.0,
+            "hostile_vfx_peak": 8,
+            "max": 26.924,
+            "mouse_mode": 0,
+            "mouse_passthrough": true,
+            "p50": 5.462,
+            "p95": 15.412,
+            "p99": 21.643,
+            "renderer": "AMD Radeon RX 7900 XT",
+            "replenishments": 0,
+            "scenario": "projectile",
+            "telegraph_target": 0,
+            "transients_peak": 471,
+            "unfocusable": true,
+            "viewport_draw_calls": 0,
+            "zones_peak": 0
+          },
+          {
+            "display": "Windows",
+            "draw_calls": 113,
+            "frames": 2011,
+            "global_draw_calls": 128.0,
+            "hostile_vfx_peak": 9,
+            "max": 33.899,
+            "mouse_mode": 0,
+            "mouse_passthrough": true,
+            "p50": 7.608,
+            "p95": 19.491,
+            "p99": 25.015,
+            "renderer": "AMD Radeon RX 7900 XT",
+            "replenishments": 0,
+            "scenario": "projectile",
+            "telegraph_target": 0,
+            "transients_peak": 458,
+            "unfocusable": true,
+            "viewport_draw_calls": 0,
+            "zones_peak": 0
+          },
+          {
+            "display": "Windows",
+            "draw_calls": 104,
+            "frames": 2021,
+            "global_draw_calls": 119.0,
+            "hostile_vfx_peak": 6,
+            "max": 34.936,
+            "mouse_mode": 0,
+            "mouse_passthrough": true,
+            "p50": 7.64,
+            "p95": 19.409,
+            "p99": 24.492,
+            "renderer": "AMD Radeon RX 7900 XT",
+            "replenishments": 0,
+            "scenario": "projectile",
+            "telegraph_target": 0,
+            "transients_peak": 468,
+            "unfocusable": true,
+            "viewport_draw_calls": 0,
+            "zones_peak": 0
+          }
+        ],
+        "final": [
+          {
+            "display": "Windows",
+            "draw_calls": 230,
+            "frames": 1411,
+            "global_draw_calls": 245.0,
+            "hostile_vfx_peak": 5,
+            "max": 55.126,
+            "mouse_mode": 0,
+            "mouse_passthrough": true,
+            "p50": 11.242,
+            "p95": 25.843,
+            "p99": 39.885,
+            "renderer": "AMD Radeon RX 7900 XT",
+            "replenishments": 0,
+            "scenario": "projectile",
+            "telegraph_target": 0,
+            "transients_peak": 459,
+            "unfocusable": true,
+            "viewport_draw_calls": 0,
+            "zones_peak": 0
+          },
+          {
+            "display": "Windows",
+            "draw_calls": 212,
+            "frames": 2161,
+            "global_draw_calls": 227.0,
+            "hostile_vfx_peak": 8,
+            "max": 36.285,
+            "mouse_mode": 0,
+            "mouse_passthrough": true,
+            "p50": 5.907,
+            "p95": 17.162,
+            "p99": 24.333,
+            "renderer": "AMD Radeon RX 7900 XT",
+            "replenishments": 0,
+            "scenario": "projectile",
+            "telegraph_target": 0,
+            "transients_peak": 465,
+            "unfocusable": true,
+            "viewport_draw_calls": 0,
+            "zones_peak": 0
+          },
+          {
+            "display": "Windows",
+            "draw_calls": 255,
+            "frames": 2158,
+            "global_draw_calls": 270.0,
+            "hostile_vfx_peak": 8,
+            "max": 37.276,
+            "mouse_mode": 0,
+            "mouse_passthrough": true,
+            "p50": 6.104,
+            "p95": 17.498,
+            "p99": 22.969,
+            "renderer": "AMD Radeon RX 7900 XT",
+            "replenishments": 0,
+            "scenario": "projectile",
+            "telegraph_target": 0,
+            "transients_peak": 470,
+            "unfocusable": true,
+            "viewport_draw_calls": 0,
+            "zones_peak": 0
+          }
+        ],
+        "baseline_labels": [
+          "perf-baseline-projectile",
+          "perf-confirm-baseline-projectile",
+          "perf-third-baseline-projectile"
+        ],
+        "final_labels": [
+          "perf-final-projectile",
+          "perf-confirm-final-projectile",
+          "perf-third-final-projectile"
+        ],
+        "method": "Three paired samples; median percentiles and worst observed max. No samples discarded."
+      }
+    },
+    {
+      "scenario": "telegraph",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 583,
+        "frames": 2464,
+        "global_draw_calls": 598.0,
+        "hostile_vfx_peak": 32,
+        "max": 16.189,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.883,
+        "p95": 11.529,
+        "p99": 13.427,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 987,
+        "scenario": "telegraph",
+        "telegraph_target": 60,
+        "transients_peak": 95,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 63
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 730,
+        "frames": 2360,
+        "global_draw_calls": 745.0,
+        "hostile_vfx_peak": 32,
+        "max": 39.504,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 5.949,
+        "p95": 12.915,
+        "p99": 15.364,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 986,
+        "scenario": "telegraph",
+        "telegraph_target": 60,
+        "transients_peak": 99,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 63
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": null
+    },
+    {
+      "scenario": "particle",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 143,
+        "frames": 2465,
+        "global_draw_calls": 158.0,
+        "hostile_vfx_peak": 8,
+        "max": 11.39,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.9,
+        "p95": 9.122,
+        "p99": 9.95,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "particle",
+        "telegraph_target": 0,
+        "transients_peak": 25,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 290,
+        "frames": 2464,
+        "global_draw_calls": 305.0,
+        "hostile_vfx_peak": 13,
+        "max": 16.614,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.901,
+        "p95": 10.057,
+        "p99": 11.797,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "particle",
+        "telegraph_target": 0,
+        "transients_peak": 31,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": null
+    },
+    {
+      "scenario": "boss-barrage",
+      "baseline": {
+        "display": "Windows",
+        "draw_calls": 208,
+        "frames": 2465,
+        "global_draw_calls": 223.0,
+        "hostile_vfx_peak": 32,
+        "max": 13.722,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 6.19,
+        "p95": 11.948,
+        "p99": 12.671,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "boss-barrage",
+        "telegraph_target": 0,
+        "transients_peak": 192,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "final": {
+        "display": "Windows",
+        "draw_calls": 359,
+        "frames": 2451,
+        "global_draw_calls": 374.0,
+        "hostile_vfx_peak": 32,
+        "max": 14.537,
+        "mouse_mode": 0,
+        "mouse_passthrough": true,
+        "p50": 5.845,
+        "p95": 12.094,
+        "p99": 13.123,
+        "renderer": "AMD Radeon RX 7900 XT",
+        "replenishments": 0,
+        "scenario": "boss-barrage",
+        "telegraph_target": 0,
+        "transients_peak": 192,
+        "unfocusable": true,
+        "viewport_draw_calls": 0,
+        "zones_peak": 0
+      },
+      "within_review_budget": true,
+      "identical_pressure_fixture": true,
+      "paired_samples": null
+    }
+  ],
+  "tier_summary": [
+    {
+      "tier": 1,
+      "weapons": 3,
+      "mean_single_dps": 4.199879711723247
+    },
+    {
+      "tier": 2,
+      "weapons": 6,
+      "mean_single_dps": 7.68668533949041
+    },
+    {
+      "tier": 3,
+      "weapons": 2,
+      "mean_single_dps": 16.19942670489215
+    },
+    {
+      "tier": 4,
+      "weapons": 7,
+      "mean_single_dps": 21.244550934702744
+    },
+    {
+      "tier": 5,
+      "weapons": 6,
+      "mean_single_dps": 28.5816025273409
+    }
+  ]
+}

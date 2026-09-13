@@ -1814,6 +1814,7 @@ script = ExtResource("1_wn3qf")
 position = Vector2(264, 117)
 
 [node name="TileMap3" type="TileMap" parent="."]
+z_index = -4
 y_sort_enabled = true
 tile_set = SubResource("TileSet_x5l4n")
 rendering_quadrant_size = 32

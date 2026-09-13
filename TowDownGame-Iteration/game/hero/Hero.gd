@@ -152,7 +152,7 @@ func gunAnim():
 
 signal incoming_hit(raw: float, applied: float, boss: bool)
 
-func onHit(hurt, attacker = null):
+func onHit(hurt, attacker = null, minimum_pressure = 1.0):
 	if is_dead or LevelServer.state != "COMBAT" or get_tree().paused: return
 	if Demo.shield_hit(hurt):
 		Utils.showHitLabel("护盾",self)
@@ -164,8 +164,8 @@ func onHit(hurt, attacker = null):
 			var num = node.call("beforePlayerHit",hurt)
 			temp_hurt += num
 	hurt += temp_hurt
-	if hurt < 1:
-		hurt = 1
+	if hurt < minimum_pressure:
+		hurt = minimum_pressure
 	var raw_pressure = hurt
 	var boss_source = is_instance_valid(attacker) and attacker.get("is_boss") == true
 	if is_instance_valid(attacker):

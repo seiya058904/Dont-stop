@@ -1,0 +1,134 @@
+[
+	{
+		"actual_hit": true,
+		"distance": 100,
+		"end_particle": "(103.0069, -2002.855)",
+		"endpoint_error": 7.14494657516479,
+		"line_end": "(104.1449, -2001.855)",
+		"particle_length_local": 97.8671035766602,
+		"range": 1000.0,
+		"ray_end": "(97.0, -2001.862)",
+		"wall": false
+	},
+	{
+		"actual_hit": true,
+		"distance": 100,
+		"end_particle": "(103.0069, -2003.518)",
+		"endpoint_error": 6.48157072067261,
+		"line_end": "(103.4816, -2002.518)",
+		"particle_length_local": 98.5304183959961,
+		"range": 1000.0,
+		"ray_end": "(97.0, -2002.525)",
+		"wall": true
+	},
+	{
+		"actual_hit": true,
+		"distance": 250,
+		"end_particle": "(253.0, -2004.18)",
+		"endpoint_error": 144.18034362793,
+		"line_end": "(102.8197, -2003.18)",
+		"particle_length_local": 249.182357788086,
+		"range": 1000.0,
+		"ray_end": "(247.0, -2003.18)",
+		"wall": false
+	},
+	{
+		"actual_hit": true,
+		"distance": 250,
+		"end_particle": "(253.0, -2004.842)",
+		"endpoint_error": 144.842239379883,
+		"line_end": "(102.1578, -2003.842)",
+		"particle_length_local": 249.84423828125,
+		"range": 1000.0,
+		"ray_end": "(247.0, -2003.842)",
+		"wall": true
+	},
+	{
+		"actual_hit": true,
+		"distance": 500,
+		"end_particle": "(503.0241, -2005.504)",
+		"endpoint_error": 395.521362304688,
+		"line_end": "(101.4959, -2004.504)",
+		"particle_length_local": 500.529266357422,
+		"range": 1000.0,
+		"ray_end": "(497.0172, -2004.511)",
+		"wall": false
+	},
+	{
+		"actual_hit": true,
+		"distance": 500,
+		"end_particle": "(503.1136, -2006.166)",
+		"endpoint_error": 396.265869140625,
+		"line_end": "(100.834, -2005.166)",
+		"particle_length_local": 501.280670166016,
+		"range": 1000.0,
+		"ray_end": "(497.0999, -2005.18)",
+		"wall": true
+	},
+	{
+		"actual_hit": true,
+		"distance": 750,
+		"end_particle": "(753.2462, -2006.828)",
+		"endpoint_error": 647.074157714844,
+		"line_end": "(100.1721, -2005.828)",
+		"particle_length_local": 752.074829101563,
+		"range": 1000.0,
+		"ray_end": "(747.2462, -2005.828)",
+		"wall": false
+	},
+	{
+		"actual_hit": true,
+		"distance": 750,
+		"end_particle": "(753.4702, -2007.49)",
+		"endpoint_error": 647.953063964844,
+		"line_end": "(99.51018, -2006.49)",
+		"particle_length_local": 752.960632324219,
+		"range": 1000.0,
+		"ray_end": "(747.4633, -2006.497)",
+		"wall": true
+	},
+	{
+		"actual_hit": true,
+		"distance": 950,
+		"end_particle": "(953.7624, -2008.151)",
+		"endpoint_error": 848.9072265625,
+		"line_end": "(98.84828, -2007.151)",
+		"particle_length_local": 953.914611816406,
+		"range": 1000.0,
+		"ray_end": "(947.7555, -2007.158)",
+		"wall": false
+	},
+	{
+		"actual_hit": true,
+		"distance": 950,
+		"end_particle": "(954.1288, -2008.813)",
+		"endpoint_error": 849.9423828125,
+		"line_end": "(98.18639, -2007.813)",
+		"particle_length_local": 954.94287109375,
+		"range": 1000.0,
+		"ray_end": "(948.1288, -2007.813)",
+		"wall": true
+	},
+	{
+		"actual_hit": false,
+		"distance": 1050,
+		"end_particle": "(998.5245, -2008.475)",
+		"endpoint_error": 899.0,
+		"line_end": "(97.52449, -2008.475)",
+		"particle_length_local": 1000.0,
+		"range": 1000.0,
+		"ray_end": "(996.5245, -2008.475)",
+		"wall": false
+	},
+	{
+		"actual_hit": false,
+		"distance": 1050,
+		"end_particle": "(997.8626, -2009.137)",
+		"endpoint_error": 899.0,
+		"line_end": "(96.86259, -2009.137)",
+		"particle_length_local": 1000.0,
+		"range": 1000.0,
+		"ray_end": "(995.8626, -2009.137)",
+		"wall": true
+	}
+]

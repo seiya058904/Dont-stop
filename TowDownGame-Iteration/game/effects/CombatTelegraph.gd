@@ -58,6 +58,7 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 			canvas.draw_polyline(PackedVector2Array([turn-tangent*7-turn.normalized()*4,turn,turn-tangent*7+turn.normalized()*4]),edge,1.8,true)
 	elif kind == "cone":
 		canvas.draw_colored_polygon(shape.cone,fill)
+		canvas.draw_polyline(shape.cone_edge,Color(0.12,0.04,0.02,0.8),4,true)
 		canvas.draw_polyline(shape.cone_edge,edge,1.6,true)
 		canvas.draw_arc(Vector2.ZERO,radius*p,direction.angle()-angle,direction.angle()+angle,segments(radius*p,angle*2),edge*Color(1,1,1,0.55),2,true)
 		canvas.draw_line(direction*radius*0.3,direction*radius*0.55,edge,1.2,true)

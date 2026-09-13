@@ -45,13 +45,4 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1) -> V
 		if grid.get_id_path(candidate,target).size()>1: return point
 	return Vector2.INF
 func _draw():
-	var floor_color = {"R2":Color(0.23,0.25,0.27),"R3":Color(0.18,0.26,0.3),"R4":Color(0.24,0.25,0.2),"R5":Color(0.24,0.22,0.28),"R6":Color(0.2,0.23,0.29)}[region_id]
-	draw_rect(bounds,floor_color)
-	for x in range(-384,385,32): draw_line(Vector2(x,-288),Vector2(x,288),floor_color.lightened(0.045))
-	for y in range(-288,289,32): draw_line(Vector2(-384,y),Vector2(384,y),floor_color.lightened(0.045))
-	if region_id == "R6": draw_arc(Vector2.ZERO,210,0,TAU,64,Color(0.4,0.55,0.65),3)
-	elif region_id == "R5":
-		for x in [-240,0,240]: draw_line(Vector2(x,-260),Vector2(x,260),Color(0.45,0.4,0.3),2)
-	for rect in obstacles:
-		draw_rect(rect,Color(0.11,0.13,0.15)); draw_rect(rect.grow(-3),Color(0.37,0.4,0.42)); draw_line(rect.position,rect.position+Vector2(rect.size.x,0),Color(0.62,0.66,0.68),2)
-	draw_rect(bounds,Color(0.55,0.65,0.7),false,3)
+	preload("res://game/map/RegionTheme.gd").draw_arena(self,region_id,bounds,obstacles)

@@ -1,0 +1,135 @@
+[
+	{
+		"actions": {
+			"attack": 4,
+			"charge": 8,
+			"contact": 1,
+			"dash_end": 4,
+			"windup_charge": 4
+		},
+		"attack_seconds": 3.2,
+		"cooldown_motion": 91.9372765002772,
+		"final_distance": 15.9973497390747,
+		"first_distance": 180.0,
+		"id": "E03",
+		"minimum_distance": 15.9973497390747,
+		"pursuit_seconds": 2.4,
+		"travel": 280.244361819699
+	},
+	{
+		"actions": {
+			"attack": 1,
+			"circle": 1,
+			"detonate": 1,
+			"windup_detonate": 1
+		},
+		"attack_seconds": 0.8,
+		"cooldown_motion": 0.0,
+		"final_distance": 30.3493518829346,
+		"first_distance": 180.0,
+		"id": "E06",
+		"minimum_distance": 30.3493518829346,
+		"pursuit_seconds": 2.4,
+		"travel": 276.872010279447
+	},
+	{
+		"actions": {
+			"attack": 2,
+			"summon": 2,
+			"windup_summon": 2
+		},
+		"attack_seconds": 1.2,
+		"cooldown_motion": 281.524168491364,
+		"final_distance": 66.9993515014648,
+		"first_distance": 180.0,
+		"id": "E07",
+		"minimum_distance": 57.0773315429688,
+		"pursuit_seconds": 4.2,
+		"travel": 347.762357950211
+	},
+	{
+		"actions": {
+			"attack": 2,
+			"heal": 3,
+			"windup_heal": 3
+		},
+		"attack_seconds": 1.9,
+		"cooldown_motion": 283.37953722477,
+		"final_distance": 80.5117263793945,
+		"first_distance": 180.0,
+		"id": "E08",
+		"minimum_distance": 53.0785255432129,
+		"pursuit_seconds": 3.2,
+		"travel": 384.167278409004
+	},
+	{
+		"actions": {
+			"attack": 3,
+			"cone": 6,
+			"contact": 1,
+			"windup_cone": 3
+		},
+		"attack_seconds": 2.0,
+		"cooldown_motion": 132.891019582748,
+		"final_distance": 25.3013381958008,
+		"first_distance": 180.0,
+		"id": "E09",
+		"minimum_distance": 17.7256546020508,
+		"pursuit_seconds": 4.1,
+		"travel": 313.285729169846
+	},
+	{
+		"actions": {
+			"artillery": 1,
+			"attack": 3,
+			"barrage_projectiles": 5,
+			"barrage_wave": 1,
+			"beam": 2,
+			"circle": 1,
+			"line": 2,
+			"shot": 5,
+			"windup_artillery": 1,
+			"windup_beam": 2
+		},
+		"attack_seconds": 2.6,
+		"cooldown_motion": 190.606536149979,
+		"final_distance": 94.0737457275391,
+		"first_distance": 180.0,
+		"id": "E10",
+		"minimum_distance": 50.0000038146973,
+		"pursuit_seconds": 2.7,
+		"travel": 272.028155684471
+	},
+	{
+		"actions": {
+			"attack": 4,
+			"charge": 8,
+			"dash_end": 4,
+			"windup_charge": 4
+		},
+		"attack_seconds": 2.8,
+		"cooldown_motion": 251.952574253082,
+		"final_distance": 39.0152740478516,
+		"first_distance": 180.0,
+		"id": "E11",
+		"minimum_distance": 34.6164398193359,
+		"pursuit_seconds": 3.0,
+		"travel": 478.260883331299
+	},
+	{
+		"actions": {
+			"attack": 3,
+			"cone": 6,
+			"contact": 1,
+			"windup_cone": 3
+		},
+		"attack_seconds": 1.8,
+		"cooldown_motion": 75.4331491524354,
+		"final_distance": 16.2400569915771,
+		"first_distance": 180.0,
+		"id": "E12",
+		"minimum_distance": 16.2400569915771,
+		"pursuit_seconds": 3.5,
+		"travel": 296.060224824585
+	}
+]

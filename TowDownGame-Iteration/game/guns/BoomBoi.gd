@@ -34,19 +34,24 @@ func _on_timer_timeout():
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	cast.target_position = Vector2(effective.range,0)
-	var cast_point = cast.target_position
+	var endpoint = cast.to_global(cast.target_position)
 	cast.force_raycast_update()
 	if is_cast:
 		if cast.is_colliding():
 			var coller = cast.get_collider()
-			cast_point = to_local(cast.get_collision_point())
+			endpoint = cast.get_collision_point()
 			particles_end.global_rotation = cast.get_collision_normal().angle()
 			if coller is BaseMonster && one_bullet_array.size() < cast_count:
 				bulletHurt(coller)
-	line_2d.points[1] = cast_point
-	particles_box.position = cast_point * 0.5
-	particles_box.process_material.emission_box_extents.x = cast_point.length() * 0.5
-	particles_end.position = cast_point + Vector2(2,0)
+	# PackedVector2Array property indexing edits a copy; use the Line2D setter.
+	var start = line_2d.to_local(cast.global_position)
+	var end = line_2d.to_local(endpoint)
+	line_2d.set_point_position(0, start)
+	line_2d.set_point_position(1, end)
+	particles_box.position = (start + end) * 0.5
+	particles_box.rotation = (end - start).angle()
+	particles_box.process_material.emission_box_extents.x = start.distance_to(end) * 0.5
+	particles_end.global_position = endpoint
 
 func bulletHurt(coller):
 	if one_bullet_array.has(coller):

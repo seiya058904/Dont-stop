@@ -1,0 +1,22 @@
+{
+  "autoload/Demo.gd": true,
+  "autoload/PlayerData.gd": true,
+  "game/config/DemoConfig.gd": true,
+  "game/config/CampSnapshot.gd": true,
+  "game/guns/BaseGun.gd": true,
+  "ui/CampPanel.gd": true,
+  "ui/MainUI.gd": true,
+  "ui/ControlUI.tscn": true,
+  "ENEMIES_unchanged": true,
+  "BOSSES_unchanged": true,
+  "WALLS_unchanged": true,
+  "POWER_unchanged": true,
+  "content_counts": {
+    "weapons": 24,
+    "enemies": 12,
+    "bosses": 3,
+    "regions": 6,
+    "encounters": 30
+  },
+  "counts_preserved": true
+}

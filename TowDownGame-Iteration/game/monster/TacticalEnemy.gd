@@ -56,11 +56,21 @@ func zone(kind: String, point: Vector2, reach: float, delay: float, time = 0.12)
 	owned_attacks.append(weakref(node))
 	remember(kind)
 	return node
-func shot(dir: Vector2, speed_value = 100.0):
+func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true) -> bool:
+	if get_tree().get_nodes_in_group("enemy_projectiles").size() >= 180: return false
 	var node = CharacterBody2D.new(); node.set_script(load("res://game/monster/EnemyShot.gd"))
 	node.position = global_position; node.velocity = dir*speed_value; node.owner_ref = weakref(self)
+	node.damage = damage_value
 	get_tree().current_scene.add_child(node); owned_attacks.append(weakref(node)); remember("shot")
-	preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,12,dir)
+	if muzzle_flash: preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,12,dir)
+	return true
+func barrage(kind: String, count: int, waves: int, speed_value: float, spread_value = 0.85):
+	var pattern = preload("res://game/monster/EnemyBarrage.gd").new()
+	pattern.owner_ref = weakref(self); pattern.heading = locked_direction
+	pattern.kind = kind; pattern.count = count; pattern.waves = waves
+	pattern.speed = speed_value; pattern.spread = spread_value
+	pattern.shift = 0.12*orbit_side
+	get_tree().current_scene.add_child(pattern); owned_attacks.append(weakref(pattern))
 func fan(count: int, spread: float, speed_value = 85.0):
 	for i in count: shot(locked_direction.rotated(lerpf(-spread,spread,i/float(maxi(1,count-1)))),speed_value)
 func summon(count: int, id = "E02"):
@@ -137,7 +147,9 @@ func perform_attack():
 	preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,24 if is_boss else 12,locked_direction)
 	phase = "recover"; phase_time = 0.75 if not phase_two else 0.45
 	match role:
-		"E03","E11": phase = "dash"; phase_time = dash_seconds
+		"E03","E11":
+			phase = "dash"; phase_time = dash_seconds
+			if role == "E11" and is_elite: barrage("fan",3,1,110,0.65)
 		"E06":
 			if global_position.distance_to(Utils.player.global_position)<=42 and Combat.clear_line(global_position,Utils.player.global_position): Utils.player.onHit(1,self)
 			last_context = {"depth":1}; onDie()
@@ -155,15 +167,21 @@ func perform_attack():
 				Combat.trace([global_position,other.global_position],Color(0.3,1,0.6)); healed += 1
 				if healed == 2: break
 			phase_time = 1.7
-		"E10": phase_time = 0.9
+		"E10":
+			phase_time = 0.9
+			if attack_kind == "artillery": barrage("fan",5,1,100,0.8)
 		"B01":
 			if attack_kind == "charge": phase = "dash"; phase_time = dash_seconds
+			elif attack_kind == "slam": barrage("ring",16 if phase_two else 12,2 if phase_two else 1,95)
 		"B02":
-			if attack_kind == "brood": summon(3,"E06" if phase_two else "E02")
+			if attack_kind == "brood":
+				summon(3,"E06" if phase_two else "E02")
+				barrage("ring",24 if phase_two else 20,3 if phase_two else 2,100)
+			elif attack_kind == "pulse": barrage("fan",19 if phase_two else 15,3 if phase_two else 2,115,1.25)
 			phase_time = 1.0 if not phase_two else 0.65
 		"B03":
 			if attack_kind == "dash": phase = "dash"; phase_time = dash_seconds
-			elif attack_kind == "burst": fan(5 if phase_two else 3,0.65,150)
+			elif attack_kind == "burst": barrage("fan",13 if phase_two else 9,3 if phase_two else 2,145,0.9)
 
 func _physics_process(delta):
 	if is_die: return

@@ -112,12 +112,14 @@ func explosion(position: Vector2, radius: float, damage: float, gun = null, dept
 
 func explosion_context(position: Vector2, radius: float, context: Dictionary):
 	if context.get("depth",0) > DemoConfig.MAX_DERIVATION: return
+	var footprint = preload("res://game/effects/CombatFootprint.gd").polygon(position,radius)
 	for target in get_tree().get_nodes_in_group("monsters"):
-		if not target.is_die and position.distance_to(target.global_position) <= radius and clear_line(position,target.global_position):
+		if not target.is_die and Geometry2D.is_point_in_polygon(target.global_position,footprint) and clear_line(position,target.global_position):
 			hit(target,context)
 	var effect = Node2D.new()
 	effect.set_script(load("res://game/effects/CombatEffect.gd"))
 	effect.radius = radius
+	for point in footprint: effect.footprint.append(point-position)
 	effect.global_position = position
 	get_tree().current_scene.add_child(effect)
 	sound(load("res://audio/body_hit_finisher_52.wav"),position)
@@ -157,14 +159,14 @@ func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: i
 func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 	var length = gun.effective.range
 	var angle = gun.effective.angle
+	var footprint = preload("res://game/effects/CombatFootprint.gd").polygon(start,length,direction,angle)
 	for target in get_tree().get_nodes_in_group("monsters"):
 		var point = target.global_position+Vector2(0,-8)
 		var offset = point-start
-		if offset.length() <= length and absf(direction.angle_to(offset)) <= angle and clear_line(start,point):
+		if Geometry2D.is_point_in_polygon(point,footprint) and clear_line(start,point):
 			hit(target,context)
 			if context.has("burn") and not target.is_die: target.apply_burn("thermal",context.burn,1.0,context)
-	var edge = [start]
-	for i in 9: edge.append(start+direction.rotated(lerpf(-angle,angle,i/8.0))*length)
+	var edge = Array(footprint)
 	edge.append(start)
 	trace(edge,Color(1,0.5,0.2) if context.has("burn") else Color(0.4,0.9,1),1.0)
 
