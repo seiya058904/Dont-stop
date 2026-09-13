@@ -20,6 +20,8 @@ func _ready() -> void:
 		# Stay instantiated (inert) so autoload cross-references stay valid.
 		return
 	e2e = "--e2e" in args
+	if e2e:
+		Utils.set("web_e2e_driver", true)
 	print("[smoke] user_dir=", OS.get_user_data_dir())
 	print("[smoke] renderer=", ProjectSettings.get_setting("rendering/renderer/rendering_method"))
 	if FileAccess.file_exists("user://camp-v1.json"):

@@ -18,13 +18,19 @@ function token(name, ok, extra = '') {
 }
 
 (async () => {
-	const browser = await chromium.launch({ headless: false, args: ['--window-size=1400,900'] });
+	// Headless-new supports Pointer Lock and is stable in CI (no WM drops);
+	// headed works locally. Override with E2E_HEADED=1 for debugging.
+	const headed = process.env.E2E_HEADED === '1';
+	const browser = await chromium.launch(headed
+		? { headless: false, args: ['--window-size=1400,900'] }
+		: { headless: true, args: ['--enable-unsafe-swiftshader'] });
 	const page = await (await browser.newContext({ viewport: { width: 1280, height: 800 } })).newPage();
 	const lines = [];
 	page.on('console', m => { const t = m.text(); if (t.includes('[e2e]')) lines.push(t); });
 	const locked = () => page.evaluate(() => document.pointerLockElement === document.querySelector('#canvas-host canvas'));
 	// xvfb/CI drops Pointer Lock after a few minutes; keep re-taking it.
 	async function keepAlive() {
+		await page.bringToFront().catch(() => {});
 		if (!(await locked())) {
 			await page.mouse.move(640, 400);
 			await page.mouse.click(640, 400);
