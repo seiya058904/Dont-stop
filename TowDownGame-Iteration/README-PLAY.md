@@ -1,6 +1,10 @@
 # TowDownGame Iteration — 试玩说明
 
-双击 `PLAY_GAME.bat` 启动。当前为 M12 最终 UX 候选，`H1_STATUS = FIFTH_FEEDBACK_ADDRESSED`，`HUMAN_ACCEPTED = false`。操作系统真实鼠标逐项检查尚待确认。
+双击 `PLAY_GAME.bat` 启动。当前状态：**M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**，`H1_STATUS = FIFTH_FEEDBACK_ADDRESSED`，`HUMAN_ACCEPTED = true`。接受依据是用户本次实际试玩反馈；用户接受少量体验瑕疵，不要求继续迭代，本轮不进入 M13。
+
+`PLAY_GAME.bat` 依赖本机工作区保留的 portable Godot 4.7.2 运行时；本次不是独立发行包。
+
+OS 鼠标逐项自动验收因工具初始化失败而未执行。该检查缺口不再阻断本轮收尾，但绝不标记为 PASS；不宣称零 Bug、所有原始验收门槛均已实测通过或所有硬件均已验证。
 
 ## 最终真人复测短路线
 
@@ -28,4 +32,4 @@ schema 1—5 旧档中合法拥有的配件，无论安装还是放在背包，�
 
 内容为 24 枪、24 全局强化、24 持久天赋、24 Reward（其中 2 个一次性）、12 普通敌人、3 Boss、6 区域、30 遭遇。普通关仍生存 45 秒，Boss 关击杀后结束；敌人和 Boss HP 不变，Boss 普通伤害 +15%，大招独立按最大 HP 比例进入防御流程。
 
-当前实现、回归与待确认项目见 [M12 报告](docs/iteration/M12-FINAL-UX-POLISH.md)。尸潮主曲线保持 M11；停在 M12 等待最终真人验收，不进入 M13、不合并 main、不创建 Release。
+当前实现、回归与已知限制见 [M12 报告](docs/iteration/M12-FINAL-UX-POLISH.md)。尸潮主曲线保持 M11；本轮停止在 M12，不进入 M13、不创建 Release。已有音频退出诊断仍作为已知限制保留，未声称已经修复。

@@ -91,4 +91,4 @@
 
 ## TowDownGame 体验增强版
 
-迭代源码由外层仓库以普通文件跟踪。启动 `TowDownGame-Iteration/PLAY_GAME.bat`；当前进度、验证及 H1 真人关口见 `TowDownGame-Iteration/docs/iteration/STATUS.md`。
+迭代源码由外层仓库以普通文件跟踪。启动 `TowDownGame-Iteration/PLAY_GAME.bat`；当前状态为 **M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**，最终接受依据与限制见 `TowDownGame-Iteration/docs/iteration/STATUS.md`。入口依赖本机保留的 Godot 运行时，本次不是独立发行包。

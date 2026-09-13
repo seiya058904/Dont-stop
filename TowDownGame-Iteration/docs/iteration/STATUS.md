@@ -1,18 +1,26 @@
 # TowDownGame Experience Demo
 
-## M12 最终 UX 与测试快照清理（当前候选）
+## M12 最终 UX 与测试快照清理（当前状态）
 
-**M12 FINAL UX POLISH IMPLEMENTED / OS MOUSE VERIFICATION PENDING**
+**M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**
 
 H1_STATUS = FIFTH_FEEDBACK_ADDRESSED
-HUMAN_ACCEPTED = false
+HUMAN_ACCEPTED = true
+
+### 最终接受记录（本轮收尾）
+
+- 接受依据是用户本次实际试玩反馈：整体完成度已达到收尾要求。
+- 用户接受当前少量体验瑕疵，不要求继续迭代；本轮停止在 M12，不进入 M13，不新增功能、玩法或平衡调整。
+- OS 鼠标逐项自动验收因工具初始化失败而未执行。该检查缺口不再作为本轮收尾阻断，但绝不标记为 PASS，也不以视口输入测试替代 OS 鼠标验收。
+- 本记录不宣称零 Bug、所有原始验收门槛均已实测通过，或所有硬件均已验证。历史测试 JSON、失败日志及此前 `HUMAN_ACCEPTED=false` 的历史记录保持原样。
 
 - 起点 `8be5eb4`，当前 feature 分支；不改内容数量、尸潮曲线、经济或武器平衡。
 - 三类持有物概览、正式图标与统一 tooltip；最终属性和贡献继续读取 runtime 来源。商店固定枪图/Tier 页头、两列属性对比、固定 CTA。
 - 束缚攻击训练先说明，正式巨卵命中并解除后才完成，由返回营地按钮结束。未命中不会自动算完成。
 - 246 个历史副本已删除，逻辑体积 28.03 GiB → 0；磁盘可用空间净增约 13.98 GiB。保留 `_tools`、正式源码和证据；新 runner 成功/失败均导出证据后删除副本，基线从 Git 重建。
-- 自动回归通过：40个游戏用例、2247项断言，另有4项生命周期检查。原生鼠标工具重置重试仍无法初始化，OS 鼠标逐项验收暂缺；不得将视口输入测试冒称为 OS 鼠标测试，也暂不声明全部 M12 EXIT GATE 完成。
-- 详见 [M12 报告](M12-FINAL-UX-POLISH.md)。停在 M12，等待最终真人验收；不进入 M13、不 merge main、不 Release。
+- 自动回归通过：40个游戏用例、2247项断言，另有4项生命周期检查。原生鼠标工具重置重试仍无法初始化；OS 鼠标逐项自动验收缺口已记录为已知限制，不标记为 PASS。
+- `PLAY_GAME.bat` 依赖本机工作区保留的 Godot 4.7.2 运行时；本次不是独立发行包。固定 MP3 音频退出诊断等已有已知限制继续保留，未写成已修复。
+- 详见 [M12 报告](M12-FINAL-UX-POLISH.md)。本轮收尾后停止，不进入 M13、不创建 Release。
 
 ## M11 尸潮压力与玩家说明（历史工程候选）
 
@@ -147,7 +155,7 @@ HUMAN_ACCEPTED = false
 
 ## 可玩入口
 
-双击 `TowDownGame-Iteration/PLAY_GAME.bat`。使用当前工作区已有 portable Godot 4.7.2；相对路径，无个人绝对路径。首次启动导入素材。试玩路线见副本根目录 README-PLAY.md。
+双击 `TowDownGame-Iteration/PLAY_GAME.bat`。该入口依赖当前工作区保留的 portable Godot 4.7.2 运行时；本次不是独立发行包。相对路径，无个人绝对路径。首次启动导入素材。试玩路线见副本根目录 README-PLAY.md。
 
 新档金币/天赋点均9999，集中在 game/config/DemoConfig.gd；营地可补充到至少9999。装备/天赋/关卡和已花资源会保存，存档目录独立于原版。当前机器已有本次GUI检查产生的独立体验档，资源已补充；不会重置它来伪装新档。新档初值另经独立测试确认。
 

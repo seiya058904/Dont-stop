@@ -2,11 +2,19 @@
 
 起点：`feat/towdown-experience-upgrade@8be5eb4`。第五轮真人反馈要求的 UI 与清理改动已经实现；本报告不把自动输入或截图视为真人验收。
 
-**M12 FINAL UX POLISH IMPLEMENTED / OS MOUSE VERIFICATION PENDING**
+**M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**
 
 `H1_STATUS = FIFTH_FEEDBACK_ADDRESSED`
 
-`HUMAN_ACCEPTED = false`
+`HUMAN_ACCEPTED = true`
+
+## 当前状态：最终接受记录
+
+- 接受依据是用户本次实际试玩反馈：整体完成度已达到收尾要求。
+- 用户接受当前少量体验瑕疵，不要求继续迭代；本轮开发在 M12 结束，不进入 M13，不增加功能，不调整玩法或平衡。
+- OS 鼠标逐项自动验收因工具初始化失败而未执行。该检查缺口不再作为本轮收尾阻断，但绝不标记为 PASS，也不把视口输入测试写成 OS 鼠标验收。
+- 本报告不宣称零 Bug、所有原始验收门槛均已实测通过或所有硬件均已验证。历史测试 JSON、历史失败日志及此前 `HUMAN_ACCEPTED=false` 的历史记录原样保留。
+- `PLAY_GAME.bat` 依赖本机工作区保留的 portable Godot 4.7.2 运行时；本次不是独立发行包。已有 Cephalopod MP3 音频退出诊断等已知限制继续保留，未声称已经修复。
 
 ## 清理
 
@@ -67,6 +75,4 @@ FREED 逻辑体积：30,093,538,453 bytes（28.03 GiB）。删除期间磁盘可
 
 [最终原生商店截图](evidence/m11/m12-native-final-v2/m12/native-shop-comparison.png)。已实际运行1366×768原生窗口并保存游戏 framebuffer；为保持410:230比例，内容区为1366×766。自动视口事件检查覆盖所有70项持有物的鼠标进入、来源、边界和离开；它与操作系统真实鼠标不同。
 
-**待确认：操作系统真实鼠标逐项验收。** Computer Use 的 node_repl 两次初始化（含重置重试）均报 `failed to write kernel assets: 系统找不到指定的路径。 (os error 3)`。因此没有冒称执行了 OS 鼠标逐项/快速切换检查。已请求用户补充实际试玩结果；没有回复不能视为通过。
-
-在该项确认前，不能诚实宣称全部 M12 EXIT GATE 满足，也不写入 `M12 FINAL UX POLISH COMPLETE`。提交/推送会保持当前 feature 分支；不 merge main、不 Release、不进入 M13。最终真人接受始终单独等待。
+**已知限制：操作系统真实鼠标逐项验收缺口。** Computer Use 的 node_repl 两次初始化（含重置重试）均报 `failed to write kernel assets: 系统找不到指定的路径。 (os error 3)`，因此该项未执行且不标记为 PASS。用户本次实际试玩接受当前版本后，该缺口不再阻断 M12 收尾；它不改变本报告对自动检查、硬件覆盖或零 Bug 的表述边界。
