@@ -1,0 +1,24 @@
+[
+  {
+    "version": "M7",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 200.0,
+      "frames": 2721,
+      "hostile_vfx_peak": 0,
+      "max": 11.358,
+      "p50": 6.171,
+      "p95": 8.886,
+      "p99": 10.157,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "replenishments": 1001,
+      "scenario": "telegraph",
+      "telegraph_target": 60,
+      "transients_peak": 62,
+      "zones_peak": 62
+    },
+    "log": "r1-perf-00-M7-final.txt"
+  }
+]

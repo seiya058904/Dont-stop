@@ -8,6 +8,10 @@ var movement = 0.0
 var bot_clock = 0.0
 var last_position = Vector2.ZERO
 var dash_cooldown = 0.0
+func _enter_tree():
+	if DisplayServer.get_name()!="headless":
+		get_window().unfocusable = true
+		get_window().mouse_passthrough = true
 func boot():
 	Demo.test_mode = true; seed(808)
 	play_view = SubViewport.new(); play_view.size = Vector2i(410,230); play_view.world_2d = get_viewport().world_2d
@@ -52,6 +56,9 @@ func fire_at(point: Vector2, delta: float):
 			else: gun._shoot(); gun.can_shoot = false; gun.timer.start()
 	if gun.bullets_count < before: shots_fired += 1
 func _process(delta):
+	# A truly minimized non-focusable window suppresses automatic drawing.
+	# Keep the native game viewport rendered without presenting or taking focus.
+	if DisplayServer.get_name()!="headless": RenderingServer.force_draw(false)
 	if not driving or get_tree().paused or not is_instance_valid(Utils.player) or Utils.player.is_dead or LevelServer.state != "COMBAT": return
 	dash_cooldown = maxf(0,dash_cooldown-delta)
 	var actors = get_tree().get_nodes_in_group("monsters").filter(func(a): return not a.is_die and not a.is_queued_for_deletion())

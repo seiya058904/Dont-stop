@@ -1,0 +1,224 @@
+[
+  {
+    "scene": "BaselineRegression",
+    "args": [],
+    "code": 0,
+    "checks": 4,
+    "seconds": 4.005566120147705,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M3Weapons",
+    "args": [],
+    "code": 0,
+    "checks": 72,
+    "seconds": 39.34500527381897,
+    "errors": [],
+    "known_audio_teardown": true,
+    "passed": true
+  },
+  {
+    "scene": "M3Energy",
+    "args": [],
+    "code": 0,
+    "checks": 16,
+    "seconds": 7.918188571929932,
+    "errors": [],
+    "known_audio_teardown": true,
+    "passed": true
+  },
+  {
+    "scene": "M3Special",
+    "args": [],
+    "code": 0,
+    "checks": 14,
+    "seconds": 10.876670360565186,
+    "errors": [],
+    "known_audio_teardown": true,
+    "passed": true
+  },
+  {
+    "scene": "M4ThermalClock",
+    "args": [],
+    "code": 0,
+    "checks": 9,
+    "seconds": 10.035354137420654,
+    "errors": [],
+    "known_audio_teardown": true,
+    "passed": true
+  },
+  {
+    "scene": "M4Talents",
+    "args": [],
+    "code": 0,
+    "checks": 233,
+    "seconds": 9.57243013381958,
+    "errors": [],
+    "known_audio_teardown": true,
+    "passed": true
+  },
+  {
+    "scene": "M6Cross",
+    "args": [],
+    "code": 0,
+    "checks": 117,
+    "seconds": 84.1443202495575,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M6BossStops",
+    "args": [],
+    "code": 0,
+    "checks": 24,
+    "seconds": 11.227261781692505,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M6Contracts",
+    "args": [],
+    "code": 0,
+    "checks": 109,
+    "seconds": 30.97490382194519,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "R1RecoveryUI",
+    "args": [],
+    "code": 0,
+    "checks": 9,
+    "seconds": 4.491083860397339,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "R1LegacyRestore",
+    "args": [],
+    "code": 0,
+    "checks": 5,
+    "seconds": 4.088939666748047,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M8Mechanics",
+    "args": [],
+    "code": 0,
+    "checks": 11,
+    "seconds": 7.6202614307403564,
+    "errors": [],
+    "known_audio_teardown": true,
+    "passed": true
+  },
+  {
+    "scene": "M8Contracts",
+    "args": [
+      "--r1"
+    ],
+    "code": 0,
+    "checks": 52,
+    "seconds": 64.25639724731445,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M8UI",
+    "args": [],
+    "code": 0,
+    "checks": 79,
+    "seconds": 6.139837026596069,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M8Supply",
+    "args": [],
+    "code": 0,
+    "checks": 147,
+    "seconds": 65.49309921264648,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "camp"
+    ],
+    "code": 0,
+    "checks": 3,
+    "seconds": 4.389048337936401,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "menu"
+    ],
+    "code": 0,
+    "checks": 2,
+    "seconds": 4.391621351242065,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "combat"
+    ],
+    "code": 0,
+    "checks": 5,
+    "seconds": 4.285874843597412,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "restore"
+    ],
+    "code": 0,
+    "checks": 6,
+    "seconds": 4.290592908859253,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M7ExitWallet",
+    "args": [
+      "window"
+    ],
+    "code": 0,
+    "checks": 3,
+    "seconds": 4.103631496429443,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  },
+  {
+    "scene": "M7MainExit",
+    "args": [],
+    "code": 0,
+    "checks": 1,
+    "seconds": 4.002950668334961,
+    "errors": [],
+    "known_audio_teardown": false,
+    "passed": true
+  }
+]

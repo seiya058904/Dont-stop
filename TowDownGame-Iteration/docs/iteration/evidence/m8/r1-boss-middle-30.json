@@ -1,0 +1,72 @@
+[
+	{
+		"boss": {
+			"actions": {
+				"attack": 69,
+				"burst": 23,
+				"charge": 23,
+				"cone": 23,
+				"dash": 23,
+				"dash_end": 23,
+				"line": 23,
+				"phase_two": 1,
+				"shot": 93,
+				"sweep": 23,
+				"windup_burst": 23,
+				"windup_dash": 23,
+				"windup_sweep": 23
+			},
+			"phase_two": true,
+			"remaining_hp": 39.6399999999526,
+			"travel": 8267.60367894173
+		},
+		"boss_successful_hits": 5,
+		"clear": true,
+		"damage_received": 4.85,
+		"death": false,
+		"effective": {
+			"angle": 0.54,
+			"bounce_retention": 0.85,
+			"bounces": 3,
+			"crit": 0.23,
+			"damage": 27.6705,
+			"impulse": 156.6,
+			"jumps": 4,
+			"lock_angle": 0.0,
+			"magazine": 90,
+			"pierce": 2,
+			"projectile_path_limit": 936.0,
+			"projectile_seconds": 3.12,
+			"projectile_speed": 300.0,
+			"radius": 38.4,
+			"range": 499.2,
+			"rate": 2.36,
+			"recovery": 0.8,
+			"refill": 1,
+			"reload": 0.51270912,
+			"shard_ratio": 0.25,
+			"shards": 2,
+			"spread": 0.75,
+			"tags": [
+				"projectile",
+				"ricochet",
+				"straight"
+			],
+			"turn": 0.0,
+			"warmup": 0.0,
+			"width": 6.885
+		},
+		"gun": 117,
+		"observed_warnings": {
+			"burst": "cone",
+			"dash": "charge",
+			"sweep": "line"
+		},
+		"player_movement": 12457.1179425716,
+		"seconds": 105.115,
+		"shots": 240,
+		"stage": 30,
+		"successful_hits": 5,
+		"tier": "middle"
+	}
+]

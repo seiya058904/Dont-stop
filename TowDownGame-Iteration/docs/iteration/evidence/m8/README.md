@@ -1,3 +1,7 @@
+# 当前状态：M8-R1 REVIEW FIXES COMPLETE / READY FOR THIRD HUMAN REVIEW
+
+`HUMAN_ACCEPTED=false`。整改及同批对照见 [M8-R1 evidence](R1.md)。以下保留原 M8 数字与历史过程。
+
 # M8 — Combat Content Quality Revision
 
 **M8 IMPLEMENTED / READY FOR THIRD HUMAN REVIEW**
@@ -120,7 +124,7 @@ visuals-final 在原生 OpenGL 兼容渲染器保存 38 张 1366×768 图片：2
 | telegraph | 37.45 | 48.54 | 38.67 | 50.46 | 40.08 | 53.34 |
 | particle | 36.98 | 37.25 | 38.00 | 38.25 | 39.15 | 38.70 |
 
-这批测量没有触发新的严重回退信号。极端压力的长尾 spike 仍以原始数据为准，不能解释为稳定高帧率，也不能外推到其他硬件或 Vulkan。
+按 M8-R1 修正规则，历史 telegraph 数据触发 review_needed=true：p95/p99 绝对增加 >8ms，或增加 >20% 且 >2ms，任一即要求复审。旧版 max(×1.35,+8ms) 同时要求两阈值，漏报了本次退化；旧规则说明仅保留为历史记录。极端压力的长尾 spike 仍以原始数据为准，不能解释为稳定高帧率，也不能外推到其他硬件或 Vulkan。
 
 ## 失败、证据边界与复跑
 

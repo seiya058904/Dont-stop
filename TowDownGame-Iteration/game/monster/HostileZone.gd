@@ -21,7 +21,19 @@ var sweep = 0.0
 var initial_direction = Vector2.RIGHT
 var maximum_length = 210.0
 var activated = false
+static var profile_stats = {"physics_calls":0,"physics_usec":0,"raycasts":0,"draw_calls":0,"draw_usec":0,"redraw_requests":0}
+var profiling = false
+var geometry_cache: Dictionary = {}
+var visual_clock = 0.0
+var ray_clock = 0.0
+var previous_active = false
+var last_ray_origin = Vector2.INF
+static var budget_frame = -1
+static var full_detail = true
+static func profile_snapshot():
+	return profile_stats.duplicate()
 func _ready():
+	profiling = "--telegraph-profile" in OS.get_cmdline_user_args()
 	epoch = LevelServer.epoch
 	initial_direction = direction
 	maximum_length = length
@@ -29,15 +41,34 @@ func _ready():
 	add_to_group("hostile_zone")
 	z_index = -1
 func _physics_process(delta):
+	var started = Time.get_ticks_usec() if profiling else 0
+	step(delta)
+	if profiling:
+		profile_stats.physics_calls += 1
+		profile_stats.physics_usec += Time.get_ticks_usec()-started
+func step(delta):
 	if epoch != LevelServer.epoch or LevelServer.state != "COMBAT": queue_free(); return
 	if owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die): queue_free(); return
 	elapsed += delta
 	if mode in ["line","charge"]:
 		direction = initial_direction.rotated(clampf((elapsed-warning)/maxf(duration,0.01),0,1)*sweep)
-		var query = PhysicsRayQueryParameters2D.create(global_position,global_position+direction*maximum_length,2147483648)
-		var hit = get_world_2d().direct_space_state.intersect_ray(query)
-		length = global_position.distance_to(hit.position) if not hit.is_empty() else maximum_length
-	queue_redraw()
+		ray_clock -= delta
+		# The warning is locked. Refresh moving origins immediately and retain full-rate
+		# collision clipping on activation / throughout the actual attack and sweep.
+		if ray_clock <= 0 or elapsed >= warning or global_position != last_ray_origin:
+			var query = PhysicsRayQueryParameters2D.create(global_position,global_position+direction*maximum_length,2147483648)
+			var hit = get_world_2d().direct_space_state.intersect_ray(query)
+			if profiling: profile_stats.raycasts += 1
+			length = global_position.distance_to(hit.position) if not hit.is_empty() else maximum_length
+			last_ray_origin = global_position; ray_clock = 0.1
+	visual_clock -= delta
+	var active = elapsed >= warning
+	# Only decorative warning motion is sampled at 30 Hz; the final 150 ms,
+	# activation edge and damaging/sweeping geometry keep the physics cadence.
+	if visual_clock <= 0 or active != previous_active or elapsed >= warning-0.15:
+		queue_redraw(); visual_clock = 1.0/30.0
+		if profiling: profile_stats.redraw_requests += 1
+	previous_active = active
 	if elapsed < warning: return
 	if not activated:
 		activated = true
@@ -56,4 +87,14 @@ func _physics_process(delta):
 	active_clock -= delta
 	if elapsed >= warning+duration: queue_free()
 func _draw():
-	preload("res://game/effects/CombatTelegraph.gd").paint(self,mode,direction,radius,length,width,angle,elapsed/maxf(0.01,warning),elapsed>=warning,sweep)
+	var started = Time.get_ticks_usec() if profiling else 0
+	var frame = Engine.get_physics_frames()/6
+	if budget_frame != frame:
+		budget_frame = frame
+		full_detail = get_tree().get_nodes_in_group("hostile_zone").size() <= 32
+	# Under load omit only the redundant origin halo. Footprints, contrast edges,
+	# timing rings, directional arrows and the summon symbol always remain.
+	preload("res://game/effects/CombatTelegraph.gd").paint(self,mode,direction,radius,length,width,angle,elapsed/maxf(0.01,warning),elapsed>=warning,sweep,geometry_cache,full_detail)
+	if profiling:
+		profile_stats.draw_calls += 1
+		profile_stats.draw_usec += Time.get_ticks_usec()-started

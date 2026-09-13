@@ -1,0 +1,71 @@
+[
+	{
+		"boss": {
+			"actions": {
+				"attack": 30,
+				"brood": 11,
+				"circle": 24,
+				"cone": 10,
+				"contact": 2,
+				"lockdown": 10,
+				"phase_two": 1,
+				"pulse": 9,
+				"summon": 35,
+				"windup_brood": 11,
+				"windup_lockdown": 10,
+				"windup_pulse": 10
+			},
+			"phase_two": true,
+			"remaining_hp": 6.93999999993546,
+			"travel": 2470.12566483021
+		},
+		"boss_successful_hits": 2,
+		"clear": true,
+		"damage_received": 1.94,
+		"death": false,
+		"effective": {
+			"angle": 0.54,
+			"bounce_retention": 0.85,
+			"bounces": 1,
+			"crit": 0.23,
+			"damage": 8.80308,
+			"impulse": 156.6,
+			"jumps": 4,
+			"lock_angle": 0.0,
+			"magazine": 906,
+			"pierce": 2,
+			"projectile_path_limit": 1372.8,
+			"projectile_seconds": 3.12,
+			"projectile_speed": 440.0,
+			"radius": 38.4,
+			"range": 499.2,
+			"rate": 24.0,
+			"recovery": 0.8,
+			"refill": 1,
+			"reload": 0.7324416,
+			"shard_ratio": 0.25,
+			"shards": 2,
+			"spread": 0.75,
+			"tags": [
+				"projectile",
+				"rotary",
+				"straight"
+			],
+			"turn": 0.0,
+			"warmup": 1.08,
+			"width": 6.885
+		},
+		"gun": 124,
+		"observed_warnings": {
+			"brood": "summon",
+			"lockdown": "circle",
+			"pulse": "cone"
+		},
+		"player_movement": 6561.77780246735,
+		"seconds": 55.191,
+		"shots": 984,
+		"stage": 20,
+		"successful_hits": 2,
+		"tier": "full"
+	}
+]

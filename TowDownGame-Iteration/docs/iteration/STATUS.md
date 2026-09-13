@@ -1,6 +1,21 @@
 # TowDownGame Experience Demo
 
-## M8 Combat Content Quality Revision（当前工程候选）
+## M8-R1 云端复审整改（当前工程候选）
+
+**M8-R1 REVIEW FIXES COMPLETE / READY FOR THIRD HUMAN REVIEW**
+
+H1_STATUS = SECOND_FEEDBACK_ADDRESSED
+HUMAN_ACCEPTED = false
+
+- 起点 `feat/towdown-experience-upgrade@c8e168e`；仅补齐 Boss 2 brood 正式召唤预警、收敛 CombatTelegraph 性能和修正性能判定。
+- brood 使用共享橙红范围、倒计时及孵化标记；九种核心攻击 × 两阶段均检查实际 warn 节点、原生绘制、无提前伤害、结束与中断清理。未改攻击、召唤数量、伤害、预警时长或冻结内容。
+- 稳定几何缓存、适配弧线段数、批量边界/箭头、30Hz 非关键预警装饰、锁定预警 raycast 缓存；攻击和扫射仍按 physics tick 更新。60 并发时仅省略重复中心光环。
+- 21 个 M8 关键回归进程、921 项检查通过。三档九场必要 Boss 验证补齐；保留中档 Boss 3 首场死亡及独立复测、完整配置 Boss 2 首场 60.681 秒与独立复测 55.191 秒，不声称每场机器人 TTK 都稳定落在预算。
+- 同批真实离屏 60-telegraph：p99 中位 M7 10.8585ms / M8 14.1700ms / M8-R1 12.5965ms，M8-R1 比整改前降低约 11.1%。三版统一禁止测试窗口捕获鼠标和获取焦点，每帧显式离屏绘制并检查 CANVAS draw calls >0。
+- 性能规则改为 p95/p99 增加 >8ms，或增加 >20% 且 >2ms，任一即需复审。历史 M7/M8 38.6655/50.4590ms 原样保留且 review_needed=true；新同批结果通过规则，不等于零开销或跨硬件保证。
+- 详见 [M8-R1 evidence](evidence/m8/R1.md)。HUMAN_ACCEPTED=false；只提交推送当前 feature branch，不 merge main、不 Release、不进入 M9，停止等待第三次真人试玩。
+
+## M8 Combat Content Quality Revision（历史工程候选）
 
 **M8 IMPLEMENTED / READY FOR THIRD HUMAN REVIEW**
 
@@ -36,7 +51,7 @@ HUMAN_ACCEPTED = false
 - 音频固定退出引用沿用M6分类，GPU历史残留未复现。真人音画、审美、手感与其他硬件仍待第二次试玩。
 - 三个原项目未改，用户ZIP未提交，仅上传现有开发分支；不合并main、不Release、不进入M8。完成后停止等待真人反馈。
 
-以下均为历史阶段记录；当前状态以本文顶部 M8 为准。
+以下均为历史阶段记录；当前状态以本文顶部 M8-R1 为准。
 
 ## M6 最终工程候选（覆盖以下历史阶段门）
 

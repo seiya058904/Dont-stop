@@ -1,5 +1,6 @@
 """Build the review tables from final raw engine evidence; fail on incomplete gates."""
 import json, pathlib, re, statistics
+from performance_rule import regression_details
 
 root = pathlib.Path(__file__).resolve().parents[1]
 out = root/'docs/iteration/evidence/m8'
@@ -47,9 +48,12 @@ performance=[]
 for scenario in ['normal','late','boss','projectile','telegraph','particle']:
     pair={version:{key:statistics.median(r['metrics'][key] for r in perf if r['scenario']==scenario and r['version']==version) for key in ['p50','p95','p99','max']} for version in ['M7','M8']}
     pair.update(scenario=scenario)
-    pair['review_needed']=any(pair['M8'][key]>max(pair['M7'][key]*1.35,pair['M7'][key]+8) for key in ['p95','p99'])
+    pair['review_reasons']=regression_details(pair['M7'],pair['M8'])
+    pair['review_needed']=bool(pair['review_reasons'])
     performance.append(pair)
-assert not any(r['review_needed'] for r in performance), 'Paired performance regression requires diagnosis/retest'
+# Persist diagnosis even when a gate fails. R1 is reported separately; never
+# silently replace historical M7/M8 measurements with a new measurement batch.
+(out/'performance-review.json').write_text(json.dumps(performance,indent=2),encoding='utf-8')
 
 groups=[]
 for name,all_rows in [('M7',baseline),('M8',encounters)]:
@@ -181,5 +185,16 @@ baseline-behavior.txt 与 final-import.txt 仅规范化终端行末空白和重�
 
 真人短路线见 [README-PLAY](../../../../README-PLAY.md)。工程完成后停止，等待第三次真人试玩。
 '''
+text=text.replace('这批测量没有触发新的严重回退信号。','按 M8-R1 修正规则，历史 telegraph 数据触发 review_needed=true：p95/p99 绝对增加 >8ms，或增加 >20% 且 >2ms，任一即要求复审。旧版 max(×1.35,+8ms) 同时要求两阈值，漏报了本次退化；旧规则说明仅保留为历史记录。')
+if (out/'r1-summary.json').exists():
+    # Revalidate evidence; a stale success file is not a gate.
+    import runpy
+    runpy.run_path(str(root/'tools/report-m8-r1.py'))
+    r1=read('r1-summary.json')
+    summary['historical_status']=summary['status']; summary['status']=r1['status']; summary['r1']=r1
+    (out/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
+    text='# 当前状态：'+r1['status']+'\n\n`HUMAN_ACCEPTED=false`。整改及同批对照见 [M8-R1 evidence](R1.md)。以下保留原 M8 数字与历史过程。\n\n'+text
 (out/'README.md').write_text(text,encoding='utf-8')
 print(json.dumps({k:v for k,v in summary.items() if k not in ['groups','performance','bosses']},ensure_ascii=False))
+if not (out/'r1-summary.json').exists():
+    assert not any(r['review_needed'] for r in performance), 'Paired performance regression requires diagnosis/retest; raw numbers and flags saved'

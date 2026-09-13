@@ -106,7 +106,10 @@ func choose_attack():
 				0: zone("circle",global_position,100 if phase_two else 85,delay); attack_kind = "slam"
 		"B02":
 			match attack_index%3:
-				1: attack_kind = "brood"
+				1:
+					# A summon signal, not a damaging AoE or a promise of exact spawn positions.
+					zone("summon",global_position,42 if phase_two else 34,delay).damage = 0
+					attack_kind = "brood"
 				2:
 					zone("circle",locked_point,65,0.95)
 					zone("circle",locked_point+Utils.player.velocity.limit_length(85)*0.7,48,1.35)

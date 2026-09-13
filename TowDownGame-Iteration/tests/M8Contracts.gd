@@ -37,7 +37,8 @@ func _ready():
 			behavior.append({"id":id,"travel":travel,"pursuit_seconds":pursuit,"attack_seconds":attack_time,"cooldown_motion":recover_motion,"first_distance":first_distance,"minimum_distance":minimum,"final_distance":final_distance,"actions":actor.actions.duplicate()})
 		LevelServer.return_to_camp(); dismiss(); await wait(0.7)
 		check(get_tree().get_nodes_in_group("monsters").is_empty() and get_tree().get_nodes_in_group("combat_transient").is_empty(),"restart clears actors and attacks "+id)
-	var f = FileAccess.open("res://docs/iteration/evidence/m8/enemy-contracts.json",FileAccess.WRITE); f.store_string(JSON.stringify(behavior,"\t")); f.close()
+	var evidence_name = "r1-enemy-contracts.json" if "--r1" in OS.get_cmdline_user_args() else "enemy-contracts.json"
+	var f = FileAccess.open("res://docs/iteration/evidence/m8/"+evidence_name,FileAccess.WRITE); f.store_string(JSON.stringify(behavior,"\t")); f.close()
 	# Every warning is harmless until its authored deadline, then actually hits.
 	for mode in ["circle","cone","line","charge"]:
 		LevelServer.state = "COMBAT"; Utils.player.global_position = origin+Vector2(20,0)

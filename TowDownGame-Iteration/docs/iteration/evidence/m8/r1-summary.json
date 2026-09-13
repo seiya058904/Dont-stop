@@ -1,0 +1,182 @@
+{
+  "status": "M8-R1 REVIEW FIXES COMPLETE / READY FOR THIRD HUMAN REVIEW",
+  "HUMAN_ACCEPTED": false,
+  "base_commit": "c8e168e",
+  "historical": {
+    "M7": {
+      "p50": 34.985,
+      "p95": 37.453,
+      "p99": 38.6655,
+      "max": 40.0775,
+      "draw_calls": 195.5
+    },
+    "M8": {
+      "p50": 45.294,
+      "p95": 48.543,
+      "p99": 50.459,
+      "max": 53.3395,
+      "draw_calls": 694.5
+    },
+    "review_reasons": [
+      {
+        "metric": "p95",
+        "absolute_ms": 11.089999999999996,
+        "relative": 0.29610445091180937
+      },
+      {
+        "metric": "p99",
+        "absolute_ms": 11.793500000000002,
+        "relative": 0.3050135133387646
+      }
+    ],
+    "review_needed": true
+  },
+  "performance": {
+    "M7": {
+      "p50": 6.8995,
+      "p95": 9.5485,
+      "p99": 10.8585,
+      "max": 12.7965,
+      "draw_calls": 178.0
+    },
+    "M8": {
+      "p50": 5.473000000000001,
+      "p95": 12.5405,
+      "p99": 14.17,
+      "max": 18.2835,
+      "draw_calls": 709.0
+    },
+    "M8-R1": {
+      "p50": 6.8975,
+      "p95": 11.23,
+      "p99": 12.596499999999999,
+      "max": 15.754000000000001,
+      "draw_calls": 548.0
+    }
+  },
+  "review_needed": false,
+  "review_reasons": [],
+  "vs_pre_r1_reasons": [],
+  "regression_processes": 21,
+  "regression_checks": 921,
+  "bosses": [
+    {
+      "tier": "middle",
+      "stage": 10,
+      "seconds": 73.739,
+      "damage_received": 3.88,
+      "observed_warnings": {
+        "charge": "charge",
+        "cleave": "cone",
+        "slam": "circle"
+      }
+    },
+    {
+      "tier": "middle",
+      "stage": 20,
+      "seconds": 119.308,
+      "damage_received": 2.91,
+      "observed_warnings": {
+        "brood": "summon",
+        "lockdown": "circle",
+        "pulse": "cone"
+      }
+    },
+    {
+      "tier": "middle",
+      "stage": 30,
+      "seconds": 105.115,
+      "damage_received": 4.85,
+      "observed_warnings": {
+        "burst": "cone",
+        "dash": "charge",
+        "sweep": "line"
+      }
+    },
+    {
+      "tier": "high",
+      "stage": 10,
+      "seconds": 40.83,
+      "damage_received": 0.97,
+      "observed_warnings": {
+        "charge": "charge",
+        "cleave": "cone",
+        "slam": "circle"
+      }
+    },
+    {
+      "tier": "high",
+      "stage": 20,
+      "seconds": 66.841,
+      "damage_received": 2.91,
+      "observed_warnings": {
+        "brood": "summon",
+        "lockdown": "circle",
+        "pulse": "cone"
+      }
+    },
+    {
+      "tier": "high",
+      "stage": 30,
+      "seconds": 62.303,
+      "damage_received": 3.88,
+      "observed_warnings": {
+        "burst": "cone",
+        "dash": "charge",
+        "sweep": "line"
+      }
+    },
+    {
+      "tier": "full",
+      "stage": 10,
+      "seconds": 35.709,
+      "damage_received": 0.0,
+      "observed_warnings": {
+        "charge": "charge",
+        "cleave": "cone",
+        "slam": "circle"
+      }
+    },
+    {
+      "tier": "full",
+      "stage": 20,
+      "seconds": 55.191,
+      "damage_received": 1.94,
+      "observed_warnings": {
+        "brood": "summon",
+        "lockdown": "circle",
+        "pulse": "cone"
+      }
+    },
+    {
+      "tier": "full",
+      "stage": 30,
+      "seconds": 48.223,
+      "damage_received": 0.0,
+      "observed_warnings": {
+        "burst": "cone",
+        "dash": "charge",
+        "sweep": "line"
+      }
+    }
+  ],
+  "boss_attempts_requiring_retest": [
+    {
+      "tier": "middle",
+      "stage": 30,
+      "seconds": 67.878,
+      "death": true,
+      "damage_received": 8.73,
+      "retest_reason": "robot_death"
+    },
+    {
+      "tier": "full",
+      "stage": 20,
+      "seconds": 60.681,
+      "death": false,
+      "damage_received": 1.94,
+      "retest_reason": "TTK above 60 seconds"
+    }
+  ],
+  "telegraph_contracts": 18
+}

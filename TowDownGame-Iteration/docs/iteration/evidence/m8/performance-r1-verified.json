@@ -1,0 +1,29 @@
+[
+  {
+    "version": "M7",
+    "scenario": "telegraph",
+    "code": 1,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 0,
+      "frames": 2465,
+      "global_draw_calls": 0.0,
+      "hostile_vfx_peak": 0,
+      "max": 12.102,
+      "mouse_mode": 0,
+      "mouse_passthrough": true,
+      "p50": 6.9,
+      "p95": 9.408,
+      "p99": 10.653,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "replenishments": 1001,
+      "scenario": "telegraph",
+      "telegraph_target": 60,
+      "transients_peak": 62,
+      "unfocusable": true,
+      "viewport_draw_calls": 0,
+      "zones_peak": 62
+    },
+    "log": "r1-perf-00-M7-verified.txt"
+  }
+]

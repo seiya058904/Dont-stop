@@ -1,0 +1,77 @@
+[
+  {
+    "version": "M7",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 0.0,
+      "frames": 2456,
+      "hostile_vfx_peak": 0,
+      "max": 83.13,
+      "mouse_mode": 0,
+      "mouse_passthrough": true,
+      "p50": 6.899,
+      "p95": 9.151,
+      "p99": 10.632,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "replenishments": 533,
+      "scenario": "telegraph",
+      "telegraph_target": 60,
+      "transients_peak": 62,
+      "unfocusable": true,
+      "zones_peak": 62
+    },
+    "log": "r1-perf-00-M7-isolated.txt"
+  },
+  {
+    "version": "M8",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 0.0,
+      "frames": 2465,
+      "hostile_vfx_peak": 32,
+      "max": 18.138,
+      "mouse_mode": 0,
+      "mouse_passthrough": true,
+      "p50": 6.899,
+      "p95": 13.112,
+      "p99": 14.415,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "replenishments": 987,
+      "scenario": "telegraph",
+      "telegraph_target": 60,
+      "transients_peak": 95,
+      "unfocusable": true,
+      "zones_peak": 63
+    },
+    "log": "r1-perf-01-M8-isolated.txt"
+  },
+  {
+    "version": "M8-R1",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 0.0,
+      "frames": 2465,
+      "hostile_vfx_peak": 32,
+      "max": 15.052,
+      "mouse_mode": 0,
+      "mouse_passthrough": true,
+      "p50": 6.899,
+      "p95": 11.163,
+      "p99": 12.728,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "replenishments": 987,
+      "scenario": "telegraph",
+      "telegraph_target": 60,
+      "transients_peak": 95,
+      "unfocusable": true,
+      "zones_peak": 63
+    },
+    "log": "r1-perf-02-M8-R1-isolated.txt"
+  }
+]

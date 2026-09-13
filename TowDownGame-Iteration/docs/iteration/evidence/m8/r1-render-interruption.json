@@ -1,0 +1,7 @@
+{
+  "status": "interrupted",
+  "reason": "User reported the minimized render window confined the OS mouse. Stopped the benchmark and its known child processes immediately. This incomplete batch is excluded from final comparisons.",
+  "partial_results": "performance-r1-final.json",
+  "replacement": "performance-r1-isolated.json",
+  "isolation": "Render-only copies replace mouse confinement and cursor warp, with unfocusable and mouse_passthrough windows; no production mouse changes."
+}

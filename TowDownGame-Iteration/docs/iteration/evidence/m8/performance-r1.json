@@ -1,0 +1,116 @@
+[
+  {
+    "version": "M7",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 198.0,
+      "frames": 2721,
+      "hostile_vfx_peak": 0,
+      "max": 11.369,
+      "p50": 6.133,
+      "p95": 8.7,
+      "p99": 10.106,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "scenario": "telegraph",
+      "transients_peak": 62
+    },
+    "log": "r1-perf-00-M7.txt"
+  },
+  {
+    "version": "M8",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 738.0,
+      "frames": 2670,
+      "hostile_vfx_peak": 32,
+      "max": 15.711,
+      "p50": 4.749,
+      "p95": 11.782,
+      "p99": 13.381,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "scenario": "telegraph",
+      "transients_peak": 95
+    },
+    "log": "r1-perf-01-M8.txt"
+  },
+  {
+    "version": "M8-R1",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 705.0,
+      "frames": 2698,
+      "hostile_vfx_peak": 32,
+      "max": 15.015,
+      "p50": 5.26,
+      "p95": 11.024,
+      "p99": 12.69,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "scenario": "telegraph",
+      "transients_peak": 95
+    },
+    "log": "r1-perf-02-M8-R1.txt"
+  },
+  {
+    "version": "M8-R1",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 747.0,
+      "frames": 2710,
+      "hostile_vfx_peak": 32,
+      "max": 14.181,
+      "p50": 5.3,
+      "p95": 10.913,
+      "p99": 12.484,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "scenario": "telegraph",
+      "transients_peak": 95
+    },
+    "log": "r1-perf-03-M8-R1.txt"
+  },
+  {
+    "version": "M8",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 693.0,
+      "frames": 2662,
+      "hostile_vfx_peak": 32,
+      "max": 16.904,
+      "p50": 4.754,
+      "p95": 11.864,
+      "p99": 13.683,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "scenario": "telegraph",
+      "transients_peak": 95
+    },
+    "log": "r1-perf-04-M8.txt"
+  },
+  {
+    "version": "M7",
+    "scenario": "telegraph",
+    "code": 0,
+    "metrics": {
+      "display": "Windows",
+      "draw_calls": 198.0,
+      "frames": 2721,
+      "hostile_vfx_peak": 0,
+      "max": 12.071,
+      "p50": 6.178,
+      "p95": 8.85,
+      "p99": 10.174,
+      "renderer": "AMD Radeon RX 7900 XT",
+      "scenario": "telegraph",
+      "transients_peak": 62
+    },
+    "log": "r1-perf-05-M7.txt"
+  }
+]
