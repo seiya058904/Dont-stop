@@ -1,308 +1,555 @@
-// TowDownGame Web REAL Pointer Lock E2E (Playwright).
-// Usage: node pointer-lock-e2e.js <url> [shotDir]
-// Drives REAL browser input (pointer lock, relative mouse motion, real clicks,
-// real keys) against the in-game E2E harness (?smoke=1&e2e=1) and asserts the
-// full aiming chain: real mouse -> virtual aim -> gun rotation -> projectile
-// velocity. Prints one token per acceptance assertion; any FAIL exits 1 so CI
-// cannot deploy a broken web build.
+// TowDownGame Web Pointer Lock / aim acceptance E2E (Playwright, real browser).
+//
+// Usage: node pointer-lock-e2e.js <url> [evidenceDir]
+//   E2E_HEADED=1   run a real windowed Chromium (required for the OS focus phases)
+//
+// What it is:
+//   An acceptance test that drives ONLY real browser input - Pointer Lock, real
+//   relative mouse deltas, real mouse buttons, real keys, real tab focus changes -
+//   and asserts the whole chain end to end:
+//
+//     browser relative motion
+//       -> Godot mouse_mode CAPTURED
+//         -> Utils aim provider (virtual cursor)
+//           -> product crosshair position
+//             -> gun / gun-tip rotation
+//               -> real projectile velocity
+//
+// What it is NOT:
+//   A substitute for human play. It proves the input plumbing is coherent; whether
+//   the game *feels* right is a human judgement (see RELEASE_NOTES).
+//
+// Design rules this script follows, learned from the v1.0.1/v1.0.2 history:
+//   * Never assert on a value that the test itself moved. Aim deltas are measured
+//     on the game's own virtual cursor, with each sweep followed by its exact
+//     inverse, so a sweep cannot pass because of an unrelated recenter move.
+//   * Never assert a direction without asserting the perpendicular axis stayed
+//     put, so an axis swap or a scale bug cannot pass as a "correct" direction.
+//   * Never let a test-side side effect (an empty magazine, a round victory, a
+//     reward panel, a monster shoving the player) be reported as an input bug.
+//   * Never treat "the game says it is captured" as proof: the game's mouse_mode
+//     is cross-checked against document.pointerLockElement at every phase.
+
+const fs = require('fs');
+const path = require('path');
 const { chromium } = require('playwright');
 
 const url = process.argv[2];
-const shotDir = process.argv[3] || '.';
-if (!url) { console.error('usage: node pointer-lock-e2e.js <url> [shotDir]'); process.exit(2); }
+const outDir = process.argv[3] || '.';
+if (!url) {
+	console.error('usage: node pointer-lock-e2e.js <url> [evidenceDir]');
+	process.exit(2);
+}
+fs.mkdirSync(outDir, { recursive: true });
+
+const headed = process.env.E2E_HEADED === '1';
+const VIEW = { w: 1280, h: 800 };
+const CENTRE = { x: 640, y: 400 };
 
 const tokens = {};
+const notes = [];
 function token(name, ok, extra = '') {
 	tokens[name] = !!ok;
-	console.log(`[e2e] ${ok ? 'ok' : 'FAIL'} ${name}${extra ? ' ' + extra : ''}`);
+	console.log(`[e2e] ${ok ? 'ok  ' : 'FAIL'} ${name}${extra ? ' ' + extra : ''}`);
 }
+function note(text) {
+	notes.push(text);
+	console.log('[e2e] note ' + text);
+}
+const deg = r => r * 180 / Math.PI;
+const wrap = a => { while (a > 180) a -= 360; while (a <= -180) a += 360; return a; };
 
 (async () => {
-	// Headless-new supports Pointer Lock and is stable in CI (no WM drops);
-	// headed works locally. Override with E2E_HEADED=1 for debugging.
-	const headed = process.env.E2E_HEADED === '1';
 	const browser = await chromium.launch(headed
 		? { headless: false, args: ['--window-size=1400,900'] }
 		: { headless: true, args: ['--enable-unsafe-swiftshader'] });
-	const page = await (await browser.newContext({ viewport: { width: 1280, height: 800 } })).newPage();
-	const lines = [];
-	page.on('console', m => { const t = m.text(); if (t.includes('[e2e]')) lines.push(t); });
-	const locked = () => page.evaluate(() => document.pointerLockElement === document.querySelector('#canvas-host canvas'));
-	// xvfb/CI drops Pointer Lock after a few minutes; keep re-taking it.
-	async function keepAlive() {
-		await page.bringToFront().catch(() => {});
-		if (!(await locked())) {
-			await page.mouse.move(640, 400);
-			await page.mouse.click(640, 400);
-			await waitFor(locked, 8000);
-		}
-		return locked();
+	const context = await browser.newContext({ viewport: { width: VIEW.w, height: VIEW.h } });
+	const page = await context.newPage();
+
+	const gameLines = [];
+	const consoleErrors = [];
+	const consoleWarnings = [];
+	const badResponses = [];
+	const failedRequests = [];
+	page.on('console', m => {
+		const t = m.text();
+		if (m.type() === 'error') consoleErrors.push(t);
+		else if (m.type() === 'warning') consoleWarnings.push(t);
+		if (t.includes('[e2e]')) gameLines.push(t);
+	});
+	page.on('pageerror', e => consoleErrors.push('pageerror: ' + e.message));
+	page.on('response', r => { if (r.status() >= 400) badResponses.push(r.status() + ' ' + r.url()); });
+	page.on('requestfailed', r => failedRequests.push(r.url() + ' :: ' + ((r.failure() && r.failure().errorText) || '?')));
+
+	const locked = () => page.evaluate(() =>
+		!!document.pointerLockElement && document.pointerLockElement === document.querySelector('#canvas-host canvas'));
+
+	async function waitFor(pred, ms, step = 150) {
+		const t0 = Date.now();
+		while (Date.now() - t0 < ms) { if (await pred()) return true; await page.waitForTimeout(step); }
+		return false;
 	}
-	const aimLines = () => lines.filter(l => l.includes('gunrot='));
-	const latest = () => {
-		for (let i = lines.length - 1; i >= 0; i--) {
-			const l = lines[i];
-			if (l.includes('gunrot=')) return parseState(l);
-		}
-		return null;
-	};
+
+	// ------------------------------------------------------------------ state feed
 	const parseState = l => {
 		const num = re => { const m = l.match(re); return m ? parseFloat(m[1]) : NaN; };
 		const vec = re => { const m = l.match(re); return m ? { x: parseFloat(m[1]), y: parseFloat(m[2]) } : null; };
+		const bl = l.match(/bullets=(-?\d+)\/(-?\d+)/);
 		return {
-			mousemode: num(/mousemode=(\d+)/),
-			aimvp: vec(/aimvp=\(([-\d.]+), ([-\d.]+)\)/),
-			aimworld: vec(/aimworld=\(([-\d.]+), ([-\d.]+)\)/),
-			gunrot: num(/gunrot=(-?[\d.]+)/),
-			gunid: num(/gunid=(-?\d+)/),
-			playerpos: vec(/playerpos=\(([-\d.]+), ([-\d.]+)\)/),
-			paused: l.includes('paused=true'),
 			raw: l,
+			state: (l.match(/state=(\w+)/) || [])[1] || '',
+			mousemode: num(/mousemode=(\d+)/),
+			vp: vec(/vp=\((-?[\d.]+), (-?[\d.]+)\)/),
+			aimvp: vec(/aimvp=\((-?[\d.]+), (-?[\d.]+)\)/),
+			aimworld: vec(/aimworld=\((-?[\d.]+), (-?[\d.]+)\)/),
+			crh: vec(/crh=\((-?[\d.]+), (-?[\d.]+)\)/),
+			gunrot: num(/gunrot=(-?[\d.]+)/),
+			guntiprot: num(/guntiprot=(-?[\d.]+)/),
+			gunid: num(/gunid=(-?\d+)/),
+			playerpos: vec(/playerpos=\((-?[\d.]+), (-?[\d.]+)\)/),
+			paused: /paused=(true|false)/.test(l) && /paused=true/.test(l),
+			fireReleased: /fr=(true|false)/.test(l) && /fr=true/.test(l),
+			bullets: bl ? parseInt(bl[1], 10) : NaN,
+			bulletsMax: bl ? parseInt(bl[2], 10) : NaN,
 		};
 	};
-	const aimAngle = st => Math.atan2(st.aimworld.y - st.playerpos.y, st.aimworld.x - st.playerpos.x) * 180 / Math.PI;
-	const shortestDelta = (a, b) => { let d = (b - a) % 360; if (d > 180) d -= 360; if (d < -180) d += 360; return d; };
-	async function waitForLine(match, ms) {
-		const t0 = Date.now();
-		while (Date.now() - t0 < ms) {
-			const l = [...lines].reverse().find(match);
-			if (l) return l;
-			await page.waitForTimeout(300);
+	const lastState = () => {
+		for (let i = gameLines.length - 1; i >= 0; i--) {
+			if (gameLines[i].includes('gunrot=')) return parseState(gameLines[i]);
 		}
 		return null;
+	};
+	// Read a state line emitted AFTER the caller's last action, so a stale line
+	// cannot be mistaken for the effect of that action.
+	async function freshState() {
+		gameLines.length = 0;
+		if (!(await waitFor(async () => gameLines.some(l => l.includes('gunrot=')), 6000, 100))) return lastState();
+		return lastState();
 	}
-	async function waitFor(pred, ms) {
-		const t0 = Date.now();
-		while (Date.now() - t0 < ms) { if (pred()) return true; await page.waitForTimeout(250); }
+	const liveState = async () => (await freshState()) || lastState();
+
+	// ------------------------------------------------------- logical cursor model
+	// Playwright dispatches absolute coordinates; under Pointer Lock only the
+	// delta between consecutive dispatches matters. We track that logical cursor
+	// ourselves so every delta below is exact and reversible.
+	let lx = CENTRE.x, ly = CENTRE.y;
+	async function rel(dx, dy) {
+		lx += dx; ly += dy;
+		await page.mouse.move(lx, ly);
+		await page.waitForTimeout(180);
+	}
+	async function home() {
+		lx = CENTRE.x; ly = CENTRE.y;
+		await page.mouse.move(lx, ly);
+		await page.waitForTimeout(250);
+	}
+
+	async function lockCount() { return (await locked()) ? 1 : 0; }
+	// The one invariant that stops the game from faking capture: the engine's
+	// mouse mode must follow the browser's real Pointer Lock state.
+	async function captureConsistent(st) {
+		const l = await locked();
+		if (st.mousemode === 2) return l;
+		if (st.mousemode === 0) return !l;
 		return false;
 	}
-	async function sweep(dx, dy) {
-		const cx = 640, cy = 400;
-		await page.mouse.move(cx, cy);
-		for (let i = 0; i < 12; i++) await page.mouse.move(cx + dx * (i + 1) / 12, cy + dy * (i + 1) / 12);
-		await page.waitForTimeout(600);
+
+	async function clickCanvas() { await page.mouse.click(CENTRE.x, CENTRE.y); await page.waitForTimeout(400); }
+	async function acquireLock(ms = 15000) {
+		if (await locked()) return true;
+		await page.bringToFront().catch(() => {});
+		await clickCanvas();
+		if (await waitFor(locked, ms)) return true;
+		await clickCanvas();
+		return waitFor(locked, ms);
+	}
+	async function holdKey(key, ms) {
+		await page.keyboard.down(key);
+		await page.waitForTimeout(ms);
+		await page.keyboard.up(key);
+	}
+	// A tap can fall between frames; BaseGun samples the action in _process.
+	async function chamber(ms = 3000) {
+		for (let i = 0; i < 4; i++) {
+			const st = await liveState();
+			if (st && st.bullets > 0) return true;
+			await holdKey('r', 250);
+			await page.waitForTimeout(ms);
+		}
+		const st = await liveState();
+		return !!(st && st.bullets > 0);
+	}
+	// Keep the virtual cursor away from the clamp wall it is about to sweep into,
+	// otherwise a clipped sweep would be reported as "aim did not move".
+	async function ensureRoom(dirX, dirY, needDesign) {
+		const st = await liveState();
+		if (!st || !st.aimvp || !st.vp) return;
+		const scale = await unitScale();
+		let dx = 0, dy = 0;
+		if (dirX > 0 && st.vp.x - st.aimvp.x < needDesign) dx = -(needDesign - (st.vp.x - st.aimvp.x) + 25) / scale;
+		if (dirX < 0 && st.aimvp.x < needDesign) dx = (needDesign - st.aimvp.x + 25) / scale;
+		if (dirY > 0 && st.vp.y - st.aimvp.y < needDesign) dy = -(needDesign - (st.vp.y - st.aimvp.y) + 25) / scale;
+		if (dirY < 0 && st.aimvp.y < needDesign) dy = (needDesign - st.aimvp.y + 25) / scale;
+		if (dx || dy) { await rel(dx, dy); }
+	}
+	let _scale = null;
+	let _worldPerDesign = null;
+	async function unitScale() { return _scale || 1; }
+
+	// Park the aim in an unambiguous quadrant relative to the PLAYER, not merely
+	// "to the right of where it was". A one-axis nudge is not enough: after
+	// earlier phases the aim can sit almost on top of the player, where the
+	// resulting shot direction is dominated by the other axis and a correct
+	// implementation would be reported as an input failure.
+	const OFFSET_WORLD = 90;   // comfortably inside the 410x230 design viewport
+	function quadrantOk(d, u) {
+		const along = d.x * u.x + d.y * u.y;
+		const across = Math.abs(d.x * -u.y + d.y * u.x);
+		return along > 50 && across < 0.5 * along;
+	}
+	async function aimToward(dirX, dirY, tries = 10) {
+		const u = { x: dirX, y: dirY };
+		for (let i = 0; i < tries; i++) {
+			const st = await liveState();
+			if (!st || !st.aimworld || !st.playerpos) return null;
+			const d = { x: st.aimworld.x - st.playerpos.x, y: st.aimworld.y - st.playerpos.y };
+			if (quadrantOk(d, u)) return st;
+			const target = { x: st.playerpos.x + dirX * OFFSET_WORLD, y: st.playerpos.y + dirY * OFFSET_WORLD };
+			const perCss = (await unitScale()) * (_worldPerDesign || 1);
+			let css = { x: (target.x - st.aimworld.x) / perCss, y: (target.y - st.aimworld.y) / perCss };
+			// Never ask for a delta larger than the design viewport; the next
+			// iteration re-measures and continues from there.
+			css.x = Math.max(-320, Math.min(320, css.x));
+			css.y = Math.max(-320, Math.min(320, css.y));
+			await rel(css.x, css.y);
+		}
+		const st = await liveState();
+		if (st && st.aimworld) {
+			const d = { x: st.aimworld.x - st.playerpos.x, y: st.aimworld.y - st.playerpos.y };
+			note(`aimToward(${dirX},${dirY}) did not reach the quadrant: d=(${d.x.toFixed(1)}, ${d.y.toFixed(1)})`);
+		}
+		return st;
 	}
 
-	await page.goto(url + (url.includes('?') ? '&' : '?') + 'smoke=1&e2e=1', { waitUntil: 'domcontentloaded' });
-	await page.locator('#start').waitFor({ state: 'visible', timeout: 300000 });
+	// ------------------------------------------------------------------ boot game
+	const sep = url.includes('?') ? '&' : '?';
+	await page.goto(url + sep + 'smoke=1&e2e=1', { waitUntil: 'domcontentloaded' });
+	const bootStart = Date.now();
+	const startVisible = await page.locator('#start')
+		.waitFor({ state: 'visible', timeout: 300000 }).then(() => true).catch(() => false);
+	token('LOADER_READY', startVisible);
+	if (!startVisible) throw new Error('loader never became ready');
 	await page.locator('#start').click();
 	await page.waitForSelector('#canvas-host canvas', { timeout: 60000 });
+	const ready = await waitFor(() => Promise.resolve(gameLines.some(l => l.includes('[e2e] ready'))), 360000);
+	token('GAME_ENTERED_COMBAT', ready, 't=+' + (((Date.now() - bootStart) / 1000) | 0) + 's');
+	if (!ready) throw new Error('in-game harness never became ready');
 
-	// The in-game harness reports readiness once combat is live.
-	const ready = await waitFor(() => lines.some(l => l.includes('[e2e] ready')), 360000);
-	if (!ready) { console.log('[e2e] FATAL harness-not-ready'); await browser.close(); process.exit(1); }
-	// User gesture click: the game requests Pointer Lock on gameplay click.
-	await page.mouse.click(640, 400);
-	await waitFor(locked, 10000);
-	if (!(await locked())) { await page.mouse.click(640, 400); await waitFor(locked, 10000); }
+	const frozen = gameLines.find(l => l.includes('[e2e] round-frozen'));
+	token('TEST_ARENA_FROZEN', !!frozen && /state=COMBAT/.test(frozen || ''), (frozen || '').replace('[e2e] ', ''));
+	const soft = frozen ? parseInt((frozen.match(/softcursor=(\d+)/) || [])[1], 10) : NaN;
+	token('NO_SOFTWARE_CURSOR_SPRITE', soft === 0, 'tree sprites using res://Sprites/1 cursor.png = ' + soft);
+
+	// ------------------------------------------------------------- pointer lock
+	await acquireLock();
 	token('POINTER_LOCK_ACQUIRED', await locked());
-	token('OS_CURSOR_HIDDEN', await locked()); // browser hides the OS cursor while locked
-	// ---- Real WASD movement while locked.
-	if (latest()?.paused === true || !(await locked())) {
-		await resumeFromPause();
+	if (!(await locked())) {
+		// Distinguish "this environment cannot test Pointer Lock" from "the game
+		// failed an assertion". An environment that never grants the lock proves
+		// nothing either way, so it must not be reported as a pass: the distinct
+		// exit code lets CI say so out loud instead of hiding it behind `|| true`.
+		token('OS_CURSOR_HIDDEN', false, 'no pointer lock, so nothing to hide');
+		fs.writeFileSync(path.join(outDir, 'pointer-lock-e2e.json'), JSON.stringify({
+			url, headed, outcome: 'ENVIRONMENT_CANNOT_ACQUIRE_POINTER_LOCK',
+			tokens, notes, console_errors: consoleErrors,
+			http_errors: badResponses, failed_requests: failedRequests,
+		}, null, 2));
+		console.log('[e2e] RESULT=ENVIRONMENT_CANNOT_ACQUIRE_POINTER_LOCK');
+		await browser.close();
+		process.exit(3);
 	}
-	lines.length = 0;
-	const before = await aimLine();
-	token('WASD_PREPARED', !!before && before.paused === false && !!(await locked()), `paused=${before?.paused}`);
-	await page.keyboard.down('w');
-	await page.waitForTimeout(700);
-	await page.keyboard.up('w');
-	await page.waitForTimeout(300);
-	const afterW = await aimLine();
-	token('WASD_POSITION_CHANGED', before && afterW && (before.playerpos.y - afterW.playerpos.y) > 2,
-		`dy=${(before.playerpos.y - afterW.playerpos.y).toFixed(1)}`);
-	let dKey = 'd';
-	await page.keyboard.down(dKey);
-	await page.waitForTimeout(700);
-	await page.keyboard.up(dKey);
-	await page.waitForTimeout(300);
-	let afterD = await aimLine();
-	if (!afterD || (afterD.playerpos.x - afterW.playerpos.x) <= 2) {
-		// Right may be blocked by a wall; try left instead (still proves A/D).
-		dKey = 'a';
-		lines.length = 0;
-		await page.keyboard.down(dKey);
-		await page.waitForTimeout(700);
-		await page.keyboard.up(dKey);
-		await page.waitForTimeout(300);
-		afterD = await aimLine();
-	}
-	let dxProof = afterD ? (afterD.playerpos.x - afterW.playerpos.x) : 0;
-	if (!(afterD && Math.abs(dxProof) > 2)) {
-		// Both horizontal directions may be wall-blocked; prove with S (down).
-		lines.length = 0;
-		await page.keyboard.down('s');
-		await page.waitForTimeout(700);
-		await page.keyboard.up('s');
-		await page.waitForTimeout(300);
-		const afterS = await aimLine();
-		if (afterS && Math.abs(afterS.playerpos.y - afterW.playerpos.y) > 2) {
-			dxProof = 99; // vertical fallback still proves real key input
-		}
-	}
-	token('WASD_POSITION_CHANGED', afterD && Math.abs(dxProof) > 2,
-		`key=${dKey} dx=${dxProof.toFixed(1)}`);
+	token('OS_CURSOR_HIDDEN', await locked(), 'browser hides the OS pointer while locked');
+	let st = await liveState();
+	token('GAME_MOUSEMODE_CAPTURED', st && st.mousemode === 2, `mousemode=${st && st.mousemode}`);
+	token('CROSSHAIR_PRESENT', !!(st && st.crh && isFinite(st.crh.x) && isFinite(st.crh.y)),
+		st && st.crh ? `crh=(${st.crh.x.toFixed(1)}, ${st.crh.y.toFixed(1)}) vp=${st.vp.x}x${st.vp.y}` : 'no crosshair');
+	const design = st && st.vp ? st.vp : { x: 410, y: 230 };
 
-	// ---- Real shots follow the aim direction (velocity of fresh projectile).
-	// Clear any stuck pointer/button state, chamber a round, then fire real LMB.
-	async function fireDirection(name, dx, dy, cmp) {
-		await keepAlive();
-		for (let attempt = 0; attempt < 3; attempt++) {
-			// Self-heal: xvfb/CI can drop Pointer Lock after a while, which the
-			// game treats as ESC (pause). Re-acquire before asserting a shot.
-			if (!(await locked()) || latest()?.paused === true) {
-				console.log('[e2e] re-acquire before ' + name + ' (locked=' + await locked() + ' paused=' + (latest()?.paused) + ')');
-				const ok = await resumeFromPause();
-				if (!ok) { token(name, false, 'pointer lock not recoverable'); return; }
-			}
-			lines.length = 0;
-			await sweep(dx, dy);
-			await page.mouse.up();          // clear a possibly-lost previous release
-			lines.length = 0;
-			await page.mouse.down();
-			// Slow software-GL runners may need several frames to start a shot.
-			let projLine = await waitForLine(l => l.includes('[e2e] proj'), 12000);
-			await page.mouse.up();
-			if (!projLine) projLine = await waitForLine(l => l.includes('[e2e] proj'), 6000);
-			if (projLine) {
-				const m = projLine.match(/proj vx=(-?[\d.]+) vy=(-?[\d.]+)/);
-				const vx = parseFloat(m[1]), vy = parseFloat(m[2]);
-				token(name, cmp(vx, vy), `vx=${vx.toFixed(1)} vy=${vy.toFixed(1)} attempt=${attempt}`);
-				return;
-			}
-			const st = await aimLine();
-			console.log(`[e2e] fire-debug ${name} attempt=${attempt} ` + (st ? st.raw.slice(0, 220) : 'no-state-line'));
-			// Magazine ran dry (capture clicks also fire): reload and retry.
-			await page.keyboard.press('r');
-			await page.waitForTimeout(3000);
-		}
-		token(name, false, 'no projectile spawned');
-	}
-	// Warm-up shot on slow software-GL runners: the very first real fire can
-	// straddle frame boundaries; discard it and re-chamber before asserting.
+	// ------------------------------------- relative motion: magnitude and axes
+	await home();
+	const base = await liveState();
+	const STEP = 240;                       // CSS pixels
+	await rel(STEP, 0);
+	const right = await liveState();
+	const dR = { x: right.aimvp.x - base.aimvp.x, y: right.aimvp.y - base.aimvp.y };
+	_scale = dR.x / STEP;
 	{
-		await page.mouse.move(640, 400);
-		await page.mouse.up();
-		await page.mouse.down();
-		await page.waitForTimeout(1500);
-		await page.mouse.up();
-		await page.waitForTimeout(900);
-		await page.keyboard.press('r');
-		await page.waitForTimeout(3000);
+		const dW = { x: right.aimworld.x - base.aimworld.x, y: right.aimworld.y - base.aimworld.y };
+		_worldPerDesign = dR.x !== 0 ? dW.x / dR.x : 1;
 	}
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_RIGHT', 300, 0, (vx) => vx > 5);
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_LEFT', -300, 0, (vx) => vx < -5);
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_DOWN', 0, 260, (vx, vy) => vy > 5);
-	await fireDirection('PROJECTILE_FOLLOWS_AIM_UP', 0, -260, (vx, vy) => vy < -5);
+	token('MOUSE_RELATIVE_DELIVERED', Math.abs(dR.x) > 5,
+		`${STEP}css px -> dvp=(${dR.x.toFixed(2)}, ${dR.y.toFixed(2)}) scale=${_scale.toFixed(4)} design/css`);
+	token('AIM_MOVES_RIGHT', dR.x > 5, `dx=${dR.x.toFixed(2)}`);
+	token('AIM_AXIS_ISOLATION_X', Math.abs(dR.y) < 2, `perpendicular dy=${dR.y.toFixed(2)}`);
+	token('GUN_ROTATION_FOLLOWS_AIM', Math.abs(wrap(right.gunrot - base.gunrot)) > 3,
+		`gunrot ${base.gunrot.toFixed(1)} -> ${right.gunrot.toFixed(1)}`);
+	await rel(-STEP, 0);
+	const back = await liveState();
+	token('SWEEP_IS_REVERSIBLE',
+		Math.hypot(back.aimvp.x - base.aimvp.x, back.aimvp.y - base.aimvp.y) < 2,
+		`dvp=(${(back.aimvp.x - base.aimvp.x).toFixed(2)}, ${(back.aimvp.y - base.aimvp.y).toFixed(2)})`);
 
+	await rel(-STEP, 0);
+	const left = await liveState();
+	token('AIM_MOVES_LEFT', left.aimvp.x - base.aimvp.x < -5, `dx=${(left.aimvp.x - base.aimvp.x).toFixed(2)}`);
+	await rel(STEP, 0);
 
+	await rel(0, STEP);
+	const down = await liveState();
+	const dD = { x: down.aimvp.x - base.aimvp.x, y: down.aimvp.y - base.aimvp.y };
+	token('AIM_MOVES_DOWN', dD.y > 5, `dy=${dD.y.toFixed(2)}`);
+	token('AIM_AXIS_ISOLATION_Y', Math.abs(dD.x) < 2, `perpendicular dx=${dD.x.toFixed(2)}`);
+	await rel(0, -STEP);
+	await rel(0, -STEP);
+	const up = await liveState();
+	token('AIM_MOVES_UP', up.aimvp.y - base.aimvp.y < -5, `dy=${(up.aimvp.y - base.aimvp.y).toFixed(2)}`);
+	await rel(0, STEP);
 
-	// ---- Aim follows real relative mouse movement.
-	await keepAlive();
-	// Each direction is measured after re-baselining the aim at the screen
-	// centre so the expected angle delta is unambiguous.
-	async function recenter() {
-		// park the OS cursor at the canvas centre; under Pointer Lock this has
-		// no absolute meaning, it only normalises the next deltas.
-		await page.mouse.move(640, 400);
-		await page.waitForTimeout(400);
-	}
-	async function aimLine() {
-		for (let i = 0; i < 40; i++) {
-			const st = latest();
-			if (st && !isNaN(st.gunrot) && st.aimworld && st.aimvp) return st;
-			await page.waitForTimeout(300);
-		}
-		return latest();
-	}
-	async function sweepAngle(dx, dy) {
-		lines.length = 0;
-		await recenter();
-		const before = await aimLine();
-		lines.length = 0;
-		await sweep(dx, dy);
-		const after = await aimLine();
-		if (!before || !after) return NaN;
-		return shortestDelta(aimAngle(before), aimAngle(after));
-	}
+	// ---------------------------------------------- crosshair tracks the aim
+	// The crosshair is a Control updated in its own _process pass, so a state line
+	// read while the aim is still moving can legitimately lag it by one frame.
+	// Coherence is therefore asserted once input has settled, which is the
+	// property that matters: no drift, no second/software cursor.
+	await page.waitForTimeout(900);
+	const chk = await liveState();
+	token('CROSSHAIR_FOLLOWS_AIM', Math.hypot(chk.crh.x - chk.aimvp.x, chk.crh.y - chk.aimvp.y) < 1.5,
+		`crh=(${chk.crh.x.toFixed(2)}, ${chk.crh.y.toFixed(2)}) aimvp=(${chk.aimvp.x.toFixed(2)}, ${chk.aimvp.y.toFixed(2)})`);
 
-	const dRight = await sweepAngle(360, 0);
-	token('AIM_MOVES_RIGHT', !isNaN(dRight) && dRight > 15, `dAngle=${dRight?.toFixed(1)}`);
-
-	const dLeft = await sweepAngle(-360, 0);
-	token('AIM_MOVES_LEFT', !isNaN(dLeft) && dLeft < -15, `dAngle=${dLeft?.toFixed(1)}`);
-
-	// From the right-hand side (angle ~0), moving down increases the angle.
-	await sweepAngle(360, 0);
-	const dDown = await sweepAngle(0, 320);
-	token('AIM_MOVES_DOWN', !isNaN(dDown) && dDown > 10, `dAngle=${dDown?.toFixed(1)}`);
-
-	// From the right-hand side (angle ~0), moving up decreases the angle.
-	await sweepAngle(360, 0);
-	const dUp = await sweepAngle(0, -320);
-	token('AIM_MOVES_UP', !isNaN(dUp) && dUp < -10, `dAngle=${dUp?.toFixed(1)}`);
-
-	// ---- 360° continuous aim: keep sweeping in one direction and accumulate.
-	lines.length = 0;
-	await recenter();
-	const start360 = await aimLine();
+	// ------------------------------------------------------- 360 degree aim sweep
+	await home();
 	let accumulated = 0;
-	let prev = start360 ? aimAngle(start360) : NaN;
-	for (let i = 0; i < 6; i++) {
-		for (const [dx, dy] of [[400, 0], [400, 0], [0, 400], [0, 400]]) {
-			await page.mouse.move(640, 400);
-			for (let k = 0; k < 10; k++) await page.mouse.move(640 + dx * (k + 1) / 10, 400 + dy * (k + 1) / 10);
-			await page.waitForTimeout(150);
-			const st = latest();
-			if (st) {
-				const cur = aimAngle(st);
-				if (!isNaN(cur) && !isNaN(prev)) accumulated += Math.abs(shortestDelta(prev, cur));
-				prev = cur;
+	let prev = await liveState();
+	for (let i = 0; i < 8; i++) {
+		for (const [dx, dy] of [[STEP, 0], [0, STEP], [-STEP, 0], [0, -STEP]]) {
+			await ensureRoom(dx, dy, 40);
+			await rel(dx, dy);
+			const s = await liveState();
+			if (s && prev) {
+				const a0 = Math.atan2(prev.aimworld.y - prev.playerpos.y, prev.aimworld.x - prev.playerpos.x);
+				const a1 = Math.atan2(s.aimworld.y - s.playerpos.y, s.aimworld.x - s.playerpos.x);
+				accumulated += Math.abs(wrap(deg(a1) - deg(a0)));
 			}
+			prev = s;
 		}
 	}
 	token('AIM_360', accumulated >= 360, `accumulated=${accumulated.toFixed(0)}deg`);
 
-	// ---- ESC releases Pointer Lock and opens the pause panel (mouse visible).
-	await keepAlive();
-	let escState = null;
-	for (let attempt = 0; attempt < 2; attempt++) {
-		lines.length = 0;
-		await page.keyboard.press('Escape');
-		const l = await waitForLine(l => l.includes('mousemode=0') && l.includes('paused=true'), 20000);
-		if (l) { escState = parseState(l); break; }
-		await page.waitForTimeout(1000);
+	// ----------------------------------------------------- projectile direction
+	// Four directions from real LMB, with the barrel chambered first so an empty
+	// magazine can never be reported as an aim failure.
+	async function fire(name, dirX, dirY, cmp) {
+		await acquireLock();
+		const aimed = await aimToward(dirX, dirY);
+		if (!aimed || !quadrantOk({ x: aimed.aimworld.x - aimed.playerpos.x, y: aimed.aimworld.y - aimed.playerpos.y },
+			{ x: dirX, y: dirY })) {
+			token(name, false, 'could not place the aim in the tested quadrant (test precondition, not input)');
+			token(name + '_MATCHES_AIM', false, 'aim quadrant unreachable');
+			return;
+		}
+		const haveAmmo = await chamber();
+		if (!haveAmmo) { token(name, false, 'magazine never refilled (test precondition)'); token(name + '_MATCHES_AIM', false, 'no ammo'); return; }
+		for (let attempt = 0; attempt < 3; attempt++) {
+			gameLines.length = 0;
+			await page.mouse.down();
+			let projLine = null;
+			await waitFor(() => { projLine = gameLines.find(l => l.includes('[e2e] proj ')); return Promise.resolve(!!projLine); }, 8000, 100);
+			await page.mouse.up();
+			if (projLine) {
+				const m = projLine.match(/vx=(-?[\d.]+) vy=(-?[\d.]+) speed=(-?[\d.]+) aim=(-?[\d.]+)/);
+				const vx = parseFloat(m[1]), vy = parseFloat(m[2]), aim = parseFloat(m[4]);
+				const got = Math.atan2(vy, vx) * 180 / Math.PI;
+				const want = Math.atan2(dirY, dirX) * 180 / Math.PI;
+				token(name, cmp(vx, vy), `vx=${vx.toFixed(1)} vy=${vy.toFixed(1)} angle=${got.toFixed(1)} wanted~${want.toFixed(1)}`);
+				token(name + '_MATCHES_AIM', Math.abs(wrap(got - aim)) < 8,
+					`proj=${got.toFixed(1)} provider_aim=${aim.toFixed(1)} delta=${wrap(got - aim).toFixed(1)}`);
+				return;
+			}
+			const stalled = gameLines.some(l => l.includes('proj-stalled'));
+			note(`${name} attempt ${attempt}: no projectile line (stalled=${stalled})`);
+			if (!(await locked())) await acquireLock();
+			await chamber();
+		}
+		token(name, false, 'no projectile spawned');
+		token(name + '_MATCHES_AIM', false, 'no projectile spawned');
 	}
-	token('ESC_RELEASES_POINTER_LOCK', escState != null && !(await locked()), `mousemode=${escState?.mousemode}`);
-	token('PAUSE_MOUSE_VISIBLE', escState?.paused === true, 'pause panel open, OS cursor restored');
+	await fire('PROJECTILE_FOLLOWS_AIM_RIGHT', 1, 0, vx => vx > 5);
+	await fire('PROJECTILE_FOLLOWS_AIM_LEFT', -1, 0, vx => vx < -5);
+	await fire('PROJECTILE_FOLLOWS_AIM_DOWN', 0, 1, (vx, vy) => vy > 5);
+	await fire('PROJECTILE_FOLLOWS_AIM_UP', 0, -1, (vx, vy) => vy < -5);
 
-	// ---- Resume: closing the pause panel re-captures the pointer.
-	// The browser enforces a ~1.3s pointer-lock cooldown after ESC; wait it out
-	// before clicking so the re-capture gesture cannot be rejected.
+	// ------------------------------------------------------------------- WASD
+	await acquireLock();
+	const w0 = await liveState();
+	await holdKey('w', 700);
+	await page.waitForTimeout(300);
+	const w1 = await liveState();
+	token('WASD_POSITION_CHANGED', w0.playerpos.y - w1.playerpos.y > 2,
+		`w dy=${(w0.playerpos.y - w1.playerpos.y).toFixed(1)}`);
+	// Horizontal fallback: a wall may block either side, so try both.
+	let dxProof = 0, usedKey = 'd';
+	for (const key of ['d', 'a']) {
+		const a0 = await liveState();
+		await holdKey(key, 700);
+		await page.waitForTimeout(300);
+		const a1 = await liveState();
+		dxProof = a1.playerpos.x - a0.playerpos.x;
+		if (Math.abs(dxProof) > 2) { usedKey = key; break; }
+	}
+	token('WASD_HORIZONTAL_CHANGED', Math.abs(dxProof) > 2, `key=${usedKey} dx=${dxProof.toFixed(1)}`);
+
+	// -------------------------------------------------- ESC: release + pause + cursor
+	await acquireLock();
+	// Hold real input across the pause so a stuck key/button would be detectable
+	// after resuming: the player must not drift on its own.
+	await page.keyboard.down('w');
+	await page.mouse.down();
+	await page.waitForTimeout(400);
+	await page.keyboard.press('Escape');
+	const pausedLine = await waitFor(async () => {
+		const s = lastState();
+		return !!s && s.paused === true && s.mousemode === 0;
+	}, 20000, 200);
+	await page.mouse.up();
+	await page.keyboard.up('w');
+	await page.waitForTimeout(400);
+	const escState = await liveState();
+	token('ESC_RELEASES_POINTER_LOCK', !(await locked()), `pointerLockElement=${await locked()}`);
+	token('PAUSE_CURSOR_VISIBLE', escState.paused === true && escState.mousemode === 0,
+		`paused=${escState.paused} mousemode=${escState.mousemode}`);
+	token('ESC_PAUSED_THE_GAME', pausedLine);
+	token('COMMANDS_ARE_NOT_STUCK_WHILE_PAUSED', escState.fireReleased === true,
+		`fire_released=${escState.fireReleased}`);
+
+	// ------------------------------------------------------------- resume by gesture
+	// The product resume path is a REAL user gesture that closes the top pause
+	// panel (ui/CampPanel.gd closes itself on ui_cancel); pop_pause() then
+	// re-requests Pointer Lock inside that gesture, which is the only way a
+	// browser will grant it. A bare click on the canvas cannot work while a
+	// panel is open, so the helper walks the real flow.
 	async function resumeFromPause() {
-		for (let attempt = 0; attempt < 4; attempt++) {
+		for (let attempt = 0; attempt < 5; attempt++) {
 			await page.bringToFront().catch(() => {});
-			const pausedNow = latest()?.paused === true;
-			lines.length = 0;
-			if (pausedNow) { await page.keyboard.press('Escape'); }
-			await page.waitForTimeout(1700);
-			if (!(await locked())) await page.mouse.click(640, 400);
-			const l = await waitForLine(l => l.includes('mousemode=2') && l.includes('paused=false'), 20000);
-			if (l) return true;
+			const st = await liveState();
+			if (await locked() && st && st.mousemode === 2 && st.paused === false) return true;
+			if (st && st.paused === true) {
+				// Real key gesture: closes the topmost panel.
+				await page.keyboard.press('Escape');
+			} else if (!(await locked())) {
+				// No panel in the way: the game's own click-to-recapture path.
+				await clickCanvas();
+			}
+			// Honour the browser's post-ESC lock cooldown instead of reporting it
+			// as an input failure.
+			await page.waitForTimeout(1600);
+			await acquireLock(8000);
+			const after = await liveState();
+			if (await locked() && after && after.mousemode === 2 && after.paused === false) return true;
 		}
 		return false;
 	}
-	token('RESUME_RECAPTURES_POINTER_LOCK', await resumeFromPause(), `paused=${latest()?.paused}`);
+	token('RESUME_RECAPTURES_POINTER_LOCK', await resumeFromPause(), `paused=${(lastState() || {}).paused}`);
+	// Prove the held W/click really was released: after resuming nothing may move
+	// until we press a key again.
+	const r0 = await liveState();
+	await page.waitForTimeout(1200);
+	const r1 = await liveState();
+	const drift = Math.hypot(r1.playerpos.x - r0.playerpos.x, r1.playerpos.y - r0.playerpos.y);
+	token('INPUT_NOT_STUCK_AFTER_RESUME', drift < 2, `drift=${drift.toFixed(2)}`);
+	token('SHOOT_RELEASED_AFTER_RESUME', r1.fireReleased === true, `fire_released=${r1.fireReleased}`);
 
-	await page.screenshot({ path: shotDir + '/e2e-final.png' });
+	// ------------------------------------------------------------- focus loss
+	// A real second tab steals focus; the browser drops Pointer Lock and the game
+	// must release held input and pause. Refocusing must NOT re-capture the
+	// pointer without a new user gesture.
+	if (headed) {
+		const other = await context.newPage();
+		await other.goto('about:blank');
+		await other.bringToFront();
+		await page.waitForTimeout(1500);
+		const lostLock = !(await locked());
+		const blurred = await waitFor(async () => (lastState() || {}).paused === true, 15000, 200);
+		await page.bringToFront();
+		await page.waitForTimeout(1500);
+		const selfRecaptured = await locked();
+		const afterRefocus = await liveState();
+		token('FOCUS_LOSS_RELEASES_AND_PAUSES', lostLock && blurred,
+			`pointerLockReleased=${lostLock} paused=${blurred}`);
+		token('REGAIN_FOCUS_NEEDS_A_GESTURE', !selfRecaptured && afterRefocus.mousemode !== 2,
+			`selfRecaptured=${selfRecaptured} mousemode=${afterRefocus.mousemode}`);
+		token('RESUME_AFTER_FOCUS_LOSS', await resumeFromPause(), `paused=${(lastState() || {}).paused}`);
+		await other.close();
+	} else {
+		note('focus phases skipped: headless Chromium has no OS focus to lose (run with E2E_HEADED=1)');
+	}
+
+	// ------------------------------------------- engine mode tracks browser lock
+	const pairs = [];
+	for (let i = 0; i < 3; i++) {
+		pairs.push(await captureConsistent(await liveState()));
+		await page.waitForTimeout(300);
+	}
+	token('MOUSEMODE_TRACKS_BROWSER_LOCK', pairs.every(Boolean), `samples=${JSON.stringify(pairs)}`);
+	token('NO_ENGINE_ERRORS', consoleErrors.length === 0, `${consoleErrors.length} console/page errors`);
+	token('NO_NETWORK_ERRORS', badResponses.length === 0 && failedRequests.length === 0,
+		`http>=400 ${badResponses.length}, failed requests ${failedRequests.length}`);
+
+	// ------------------------------------------------------------------ evidence
+	await page.screenshot({ path: path.join(outDir, 'e2e-after-resume.png') });
+	const evidence = {
+		url, headed, viewport: VIEW, design_viewport: design,
+		scale_design_per_css_px: _scale,
+		logical_cursor: { x: lx, y: ly },
+		tokens,
+		notes,
+		console_errors: consoleErrors,
+		console_warnings: consoleWarnings.slice(0, 20),
+		http_errors: badResponses,
+		failed_requests: failedRequests,
+		sample_state_line: (lastState() || {}).raw || null,
+	};
+	fs.writeFileSync(path.join(outDir, 'pointer-lock-e2e.json'), JSON.stringify(evidence, null, 2));
+	console.log('[e2e] evidence -> ' + path.join(outDir, 'pointer-lock-e2e.json'));
+
 	await browser.close();
 
-	const required = ['POINTER_LOCK_ACQUIRED', 'OS_CURSOR_HIDDEN', 'AIM_MOVES_LEFT', 'AIM_MOVES_RIGHT',
-		'AIM_MOVES_UP', 'AIM_MOVES_DOWN', 'AIM_360', 'PROJECTILE_FOLLOWS_AIM_RIGHT', 'PROJECTILE_FOLLOWS_AIM_LEFT',
-		'PROJECTILE_FOLLOWS_AIM_DOWN', 'PROJECTILE_FOLLOWS_AIM_UP', 'ESC_RELEASES_POINTER_LOCK',
-		'PAUSE_MOUSE_VISIBLE', 'RESUME_RECAPTURES_POINTER_LOCK', 'WASD_POSITION_CHANGED'];
+	// Tokens that must pass for the input chain to be considered proven. The focus
+	// tokens only exist in headed runs.
+	const required = [
+		'LOADER_READY', 'GAME_ENTERED_COMBAT', 'TEST_ARENA_FROZEN', 'NO_SOFTWARE_CURSOR_SPRITE',
+		'POINTER_LOCK_ACQUIRED', 'OS_CURSOR_HIDDEN', 'GAME_MOUSEMODE_CAPTURED', 'CROSSHAIR_PRESENT',
+		'MOUSE_RELATIVE_DELIVERED', 'AIM_MOVES_RIGHT', 'AIM_MOVES_LEFT', 'AIM_MOVES_UP', 'AIM_MOVES_DOWN',
+		'AIM_AXIS_ISOLATION_X', 'AIM_AXIS_ISOLATION_Y', 'SWEEP_IS_REVERSIBLE',
+		'GUN_ROTATION_FOLLOWS_AIM', 'CROSSHAIR_FOLLOWS_AIM', 'AIM_360',
+		'PROJECTILE_FOLLOWS_AIM_RIGHT', 'PROJECTILE_FOLLOWS_AIM_LEFT',
+		'PROJECTILE_FOLLOWS_AIM_DOWN', 'PROJECTILE_FOLLOWS_AIM_UP',
+		'PROJECTILE_FOLLOWS_AIM_RIGHT_MATCHES_AIM', 'PROJECTILE_FOLLOWS_AIM_LEFT_MATCHES_AIM',
+		'PROJECTILE_FOLLOWS_AIM_DOWN_MATCHES_AIM', 'PROJECTILE_FOLLOWS_AIM_UP_MATCHES_AIM',
+		'WASD_POSITION_CHANGED', 'WASD_HORIZONTAL_CHANGED',
+		'ESC_RELEASES_POINTER_LOCK', 'PAUSE_CURSOR_VISIBLE', 'ESC_PAUSED_THE_GAME',
+		'COMMANDS_ARE_NOT_STUCK_WHILE_PAUSED', 'RESUME_RECAPTURES_POINTER_LOCK',
+		'INPUT_NOT_STUCK_AFTER_RESUME', 'SHOOT_RELEASED_AFTER_RESUME',
+		'MOUSEMODE_TRACKS_BROWSER_LOCK', 'NO_ENGINE_ERRORS', 'NO_NETWORK_ERRORS',
+	];
+	if (headed) required.push('FOCUS_LOSS_RELEASES_AND_PAUSES', 'REGAIN_FOCUS_NEEDS_A_GESTURE', 'RESUME_AFTER_FOCUS_LOSS');
+
 	const failed = required.filter(k => !tokens[k]);
 	for (const k of required) console.log(`[e2e] token ${k}=${tokens[k] ? 'true' : 'false'}`);
-	if (failed.length) { console.log(`[e2e] RESULT=FAIL (${failed.join(',')})`); process.exit(1); }
+	if (failed.length) {
+		console.log(`[e2e] RESULT=FAIL (${failed.join(',')})`);
+		process.exit(1);
+	}
 	console.log('[e2e] RESULT=PASS');
-})().catch(e => { console.error('[e2e] FATAL', e); process.exit(1); });
+})().catch(async e => {
+	console.error('[e2e] FATAL', e && e.stack ? e.stack : e);
+	process.exit(1);
+});

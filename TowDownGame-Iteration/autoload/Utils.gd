@@ -114,10 +114,6 @@ var web_aim_viewport_position: Vector2
 var web_aim_sensitivity := 1.0
 var _web_had_capture := false
 var _web_capture_request_ms := -10000
-# E2E harness flag (set via Utils.set() to avoid autoload parse cycles):
-# driver-driven runs ignore OS focus-loss auto-pause, they manage pause
-# explicitly through real ESC input.
-var web_e2e_driver := false
 
 var temp_am_list = []
 
@@ -142,8 +138,9 @@ func _notification(what: int) -> void:
 	if not OS.has_feature("web"): return
 	# Browser/tab lost focus: release held combat input so nothing stays stuck,
 	# and pause (Pointer Lock is dropped by the browser anyway).
+	# Deliberately NOT suppressed for the E2E driver flag: the focus-loss
+	# contract has to be exercised exactly as it ships.
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
-		if web_e2e_driver: return
 		Input.action_release("shoot")
 		for action in ["up", "down", "left", "right", "dash", "reload"]:
 			Input.action_release(action)

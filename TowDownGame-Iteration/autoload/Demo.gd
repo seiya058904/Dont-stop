@@ -530,4 +530,4 @@ func fire_global_grenade(point: Vector2) -> bool:
 
 func _unhandled_input(event):
 	if event.is_action_pressed("mouse_right") and pause_stack.is_empty() and is_instance_valid(Utils.player):
-		if fire_global_grenade(Utils.player.Utils.get_aim_world_position()): get_viewport().set_input_as_handled()
+		if fire_global_grenade(Utils.get_aim_world_position()): get_viewport().set_input_as_handled()

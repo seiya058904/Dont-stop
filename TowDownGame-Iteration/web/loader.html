@@ -67,10 +67,13 @@
 		GODOT_CONFIG.canvasResizePolicy = 2;
 		// CI smoke mode: index.html?smoke=1 passes --smoke to the game.
 		// ?nw=1 additionally skips VFX warm-up (A/B cold-path measurement).
+		// ?e2e=1 arms the real-input Pointer Lock harness, ?tour=1 walks the
+		// product screens for visual evidence. All are test-only flags.
 		if (new URLSearchParams(location.search).has('smoke')) {
 			GODOT_CONFIG.args = ['--smoke'];
 			if (new URLSearchParams(location.search).has('nw')) GODOT_CONFIG.args.push('--no-warmup');
 			if (new URLSearchParams(location.search).has('e2e')) GODOT_CONFIG.args.push('--e2e');
+			if (new URLSearchParams(location.search).has('tour')) GODOT_CONFIG.args.push('--tour');
 		}
 
 		console.log('[loader] args=' + JSON.stringify(GODOT_CONFIG.args || null));

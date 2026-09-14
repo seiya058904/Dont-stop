@@ -1,0 +1,49 @@
+# Exported production build: build/windows/TowDownGame-Windows-x64.exe -- --smoke (windowed)
+# Saved as .txt because *.log is gitignored. Windowed on purpose: a headless run
+# cannot hold a mouse mode and reports 'fire transient=0->0', i.e. no shots at all.
+
+[smoke] user_dir=C:/Users/admin/AppData/Roaming/TowDownGame
+[smoke] renderer=forward_plus
+[smoke] save_state gold="9999.0" equipped=""
+[warmup] starting
+[warmup] instantiated 32 scenes
+[smoke] stage=camp state=CAMP
+[smoke] depart=true
+[smoke-frames] first-combat first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] stage=combat state=COMBAT monsters=1
+[smoke-frames] first-switch first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] switch=true gun=1
+[smoke-frames] first-shot first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] fire transient=0->11
+[smoke-frames] second-switch first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] second-shot first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-perf] n=1601 p50=6.3 p95=6.3 p99=6.3 max=6.3 fps=160.0 enemies=6
+[smoke] done pass=true
+[smoke] result=PASS
+[smoke] user_dir=C:/Users/admin/AppData/Roaming/TowDownGame
+[smoke] renderer=forward_plus
+[smoke] save_state gold="9999.0" equipped=""
+[warmup] starting
+[warmup] instantiated 32 scenes
+[smoke] stage=camp state=CAMP
+[smoke] depart=true
+[smoke-frames] first-combat first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] stage=combat state=COMBAT monsters=1
+[smoke] result=PASS
+[stutter] combat-ready monsters=1
+[smoke-frames] firstshot-gun0 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun1 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun2 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun3 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun4 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun5 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun6 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun7 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun8 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun9 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun112 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun114 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] firstshot-gun123 first40 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] first-reload first60 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[stutter] steady n=2401 p50=6.3 p95=6.3 p99=6.3 max=6.3 avg=6.3
+[stutter] done

@@ -1,0 +1,344 @@
+{
+  "url": "http://127.0.0.1:8791/index.html",
+  "headed": true,
+  "resolutions": [
+    {
+      "label": "1920x1080",
+      "screens": {
+        "title": {
+          "frames": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "p99_ms": null,
+          "max_ms": null,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "camp": {
+          "frames": 944,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 137.5,
+          "over_33ms": 2,
+          "over_50ms": 2
+        },
+        "shop": {
+          "frames": 719,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 100,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "upgrades": {
+          "frames": 666,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 56.2,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "talents": {
+          "frames": 635,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 25,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "stats": {
+          "frames": 921,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 25,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "training": {
+          "frames": 952,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 125,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "combat": {
+          "frames": 39454,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 93.8,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "shooting": {
+          "frames": 612,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 93.8,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "pause": {
+          "frames": 928,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 100,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "boss": {
+          "frames": 10832,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 1000,
+          "max_ms": 1006.4,
+          "over_33ms": 168,
+          "over_50ms": 168
+        }
+      },
+      "missing": [],
+      "console_errors": 3,
+      "http_errors": 0,
+      "scripted_gesture_lock_rejections": 0
+    },
+    {
+      "label": "2560x1440",
+      "screens": {
+        "title": {
+          "frames": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "p99_ms": null,
+          "max_ms": null,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "camp": {
+          "frames": 958,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 143.6,
+          "over_33ms": 2,
+          "over_50ms": 2
+        },
+        "shop": {
+          "frames": 673,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 150,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "upgrades": {
+          "frames": 674,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 43.7,
+          "over_33ms": 1,
+          "over_50ms": 0
+        },
+        "talents": {
+          "frames": 677,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 31.2,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "stats": {
+          "frames": 927,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 31.4,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "training": {
+          "frames": 933,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 12.4,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "combat": {
+          "frames": 39444,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 150,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "shooting": {
+          "frames": 610,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 156.2,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "pause": {
+          "frames": 921,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 156.3,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "boss": {
+          "frames": 30632,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 31.2,
+          "over_33ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "missing": [],
+      "console_errors": 2,
+      "http_errors": 0,
+      "scripted_gesture_lock_rejections": 0
+    },
+    {
+      "label": "3840x2160",
+      "screens": {
+        "title": {
+          "frames": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "p99_ms": null,
+          "max_ms": null,
+          "over_33ms": 0,
+          "over_50ms": 0
+        },
+        "camp": {
+          "frames": 935,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 225.1,
+          "over_33ms": 2,
+          "over_50ms": 2
+        },
+        "shop": {
+          "frames": 721,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 249.9,
+          "over_33ms": 1,
+          "over_50ms": 1
+        },
+        "upgrades": {
+          "frames": 648,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 162.5,
+          "over_33ms": 2,
+          "over_50ms": 2
+        },
+        "talents": {
+          "frames": 628,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 87.5,
+          "over_33ms": 2,
+          "over_50ms": 2
+        },
+        "stats": {
+          "frames": 926,
+          "p50_ms": 6.2,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 50.1,
+          "over_33ms": 2,
+          "over_50ms": 1
+        },
+        "training": {
+          "frames": 924,
+          "p50_ms": 6.3,
+          "p95_ms": 6.3,
+          "p99_ms": 6.4,
+          "max_ms": 37.6,
+          "over_33ms": 1,
+          "over_50ms": 0
+        },
+        "combat": {
+          "frames": 6906,
+          "p50_ms": 6.3,
+          "p95_ms": 6.4,
+          "p99_ms": 1006.2,
+          "max_ms": 1006.4,
+          "over_33ms": 222,
+          "over_50ms": 222
+        },
+        "shooting": {
+          "frames": 35,
+          "p50_ms": 1000.1,
+          "p95_ms": 1006.3,
+          "p99_ms": 1006.4,
+          "max_ms": 1006.4,
+          "over_33ms": 31,
+          "over_50ms": 31
+        },
+        "pause": {
+          "frames": 50,
+          "p50_ms": 1000,
+          "p95_ms": 1006.3,
+          "p99_ms": 1006.3,
+          "max_ms": 1006.3,
+          "over_33ms": 46,
+          "over_50ms": 46
+        },
+        "boss": {
+          "frames": 272,
+          "p50_ms": 1000.1,
+          "p95_ms": 1006.3,
+          "p99_ms": 1006.3,
+          "max_ms": 1006.4,
+          "over_33ms": 268,
+          "over_50ms": 268
+        }
+      },
+      "missing": [],
+      "console_errors": 4,
+      "http_errors": 0,
+      "scripted_gesture_lock_rejections": 0
+    }
+  ],
+  "screens": [
+    "title",
+    "camp",
+    "shop",
+    "upgrades",
+    "talents",
+    "stats",
+    "training",
+    "combat",
+    "shooting",
+    "pause",
+    "boss",
+    "done"
+  ]
+}

@@ -17,11 +17,21 @@ func _ready() -> void:
 	var args := OS.get_cmdline_args()
 	args.append_array(OS.get_cmdline_user_args())
 	if not ("--smoke" in args):
-		# Stay instantiated (inert) so autoload cross-references stay valid.
+		# Stay instantiated (inert) so autoload cross-references stay valid, but
+		# take the node out of idle processing: _process appends a frame sample
+		# every frame and nothing reads it in a real launch, so leaving it on
+		# would grow an Array for the whole session.
+		set_process(false)
 		return
 	e2e = "--e2e" in args
 	if e2e:
-		Utils.set("web_e2e_driver", true)
+		# Track projectile spawns even while the tree is paused (round restarts).
+		process_mode = Node.PROCESS_MODE_ALWAYS
+		get_tree().node_added.connect(func(node: Node) -> void:
+			if node is CharacterBody2D and "velocity" in node and node.get_script() != null:
+				var path: String = (node.get_script() as Script).resource_path
+				if path.contains("bullets/") or path.contains("other/"):
+					_pending_proj.append(node))
 	print("[smoke] user_dir=", OS.get_user_data_dir())
 	print("[smoke] renderer=", ProjectSettings.get_setting("rendering/renderer/rendering_method"))
 	if FileAccess.file_exists("user://camp-v1.json"):
@@ -33,11 +43,14 @@ func _ready() -> void:
 	else:
 		print("[smoke] save_state none")
 	var stutter := "--stutter" in args
+	var tour := "--tour" in args
 	_run.call_deferred()
 	if e2e:
 		_e2e_stream.call_deferred()
 	if stutter:
 		_stutter_run.call_deferred()
+	if tour:
+		_tour_run.call_deferred()
 
 func e2e_invincible() -> bool:
 	return e2e
@@ -50,6 +63,18 @@ func _e2e_stream() -> void:
 	await _wait_until(func(): return LevelServer.state == "COMBAT", 300000)
 	await _wait_until(func(): return get_tree().get_nodes_in_group("monsters").size() > 0, 60000)
 	await _wait_until(func(): return Demo.pause_stack.is_empty(), 30000)
+	# Freeze the round into a deterministic sandbox, only AFTER a real combat
+	# round was observed. The countdown is the only way a normal round ends and
+	# victory raises the reward scoreboard, which pauses the tree and drops
+	# Pointer Lock mid-assertion; live monsters additionally shove the test
+	# character around during the WASD and aim sweeps.
+	LevelServer.timerStop()
+	for monster in get_tree().get_nodes_in_group("monsters"):
+		monster.queue_free()
+	for transient in get_tree().get_nodes_in_group("combat_transient"):
+		transient.queue_free()
+	await get_tree().process_frame
+	print("[e2e] round-frozen state=%s softcursor=%d" % [LevelServer.state, _e2e_software_cursor_count()])
 	print("[e2e] ready")
 	print("[e2e] loop-armed")
 	var deadline := Time.get_ticks_msec() + 1800000
@@ -59,22 +84,49 @@ func _e2e_stream() -> void:
 			print("[e2e] stream-expired")
 		await get_tree().create_timer(0.25).timeout
 		tick += 1
-		if tick % 4 == 0:
-			print("[e2e] alive tick=%d" % tick)
 		var gunrot := 999.0
+		var guntiprot := 999.0
 		var gunid := -1
+		var bullets := -1
 		if Utils.player != null and Utils.player.gun != null:
-			gunrot = rad_to_deg(Utils.player.gun.rotation)
+			# GLOBAL rotation: the gun hangs under body/GunRoot and the hero flips
+			# body.scale.x to face left, so the local rotation is mirrored.
+			gunrot = rad_to_deg(Utils.player.gun.global_rotation)
+			guntiprot = rad_to_deg(Utils.player.gun.gun_tip.global_rotation)
 			gunid = Utils.player.gun.weapon_id
-		print("[e2e] mousemode=%d aimvp=%s aimworld=%s gunrot=%.1f gunid=%d playerpos=%s hp=%.1f paused=%s panels=%d fr=%s bullets=%d" % [
-			Input.mouse_mode, Utils.get_aim_viewport_position(), Utils.get_aim_world_position(),
-			gunrot, gunid,
+			bullets = Utils.player.gun.bullets_count
+		var bullets_max: int = Utils.player.gun.bullets_max_count if Utils.player != null and Utils.player.gun != null else -1
+		print("[e2e] state=%s mousemode=%d vp=%s aimvp=%s aimworld=%s crh=%s gunrot=%.1f guntiprot=%.1f gunid=%d playerpos=%s hp=%.1f paused=%s panels=%d fr=%s bullets=%d/%d" % [
+			LevelServer.state, Input.mouse_mode,
+			get_viewport().get_visible_rect().size,
+			Utils.get_aim_viewport_position(), Utils.get_aim_world_position(),
+			_e2e_crosshair_centre(),
+			gunrot, guntiprot, gunid,
 			Utils.player.global_position if Utils.player != null else Vector2.ZERO,
 			PlayerData.player_hp if Utils.player != null else 0.0,
 			str(not Demo.pause_stack.is_empty()),
 			Demo.pause_stack.size(),
 			str(Demo.fire_released),
-			Utils.player.gun.bullets_count if Utils.player != null and Utils.player.gun != null else -1])
+			bullets, bullets_max])
+
+## The product crosshair is the only cursor the player may see during Pointer
+## Lock. Report where it actually sits so the driver can prove it agrees with
+## the aim provider instead of trusting a comment.
+func _e2e_crosshair_centre() -> Vector2:
+	if not is_instance_valid(Utils.canvasLayer): return Vector2.INF
+	var crosshair = Utils.canvasLayer.get_node_or_null("TextureRect")
+	if crosshair == null: return Vector2.INF
+	return crosshair.global_position + crosshair.size / 2.0
+
+## Count scene-tree sprites still faking an OS pointer with the desktop cursor
+## texture. v1.0.1 drew one on Web; the driver asserts this is zero.
+func _e2e_software_cursor_count() -> int:
+	var found := 0
+	for node in get_tree().root.find_children("*", "Sprite2D", true, false):
+		var texture = node.get("texture")
+		if texture != null and (texture as Texture2D).resource_path == "res://Sprites/1 cursor.png":
+			found += 1
+	return found
 
 ## Windows cold-path probe: first fire per weapon class + steady-state stats.
 func _stutter_run() -> void:
@@ -141,6 +193,104 @@ func _stutter_run() -> void:
 	print("[stutter] done")
 	get_tree().quit(0)
 
+## `--tour`: walk the product screens so an external driver can capture Web
+## visual evidence and attribute frame time per screen. Test-only (--smoke --tour).
+## Each step prints a marker and then dwells long enough for a screenshot.
+func _tour_mark(name: String) -> void:
+	print("[tour] screen=%s" % name)
+
+func _tour_dwell(seconds: float) -> void:
+	await get_tree().create_timer(seconds).timeout
+
+func _tour_close_panels() -> void:
+	for menu in Demo.pause_stack.duplicate():
+		menu.queue_free()
+		Demo.pop_pause(menu)
+
+func _tour_run() -> void:
+	_tour_mark("title")
+	await _tour_dwell(4.0)
+	await _enter_camp_from_title()
+	await _wait_until(func(): return LevelServer.state == "CAMP", 180000)
+	await _wait_until(func(): return Demo.pause_stack.is_empty(), 60000)
+	await _tour_dwell(1.5)
+	_tour_mark("camp")
+	await _tour_dwell(3.0)
+
+	# Camp panel: CJK text, numbers, icon and tooltip scaling.
+	Demo.open_panel()
+	await _wait_until(func(): return is_instance_valid(Demo.ui) and Demo.ui.is_node_ready(), 60000)
+	await _tour_dwell(1.5)
+	_tour_mark("shop")
+	await _tour_dwell(3.0)
+	Demo.ui.switch_tab("attachment")
+	await _tour_dwell(1.2)
+	_tour_mark("upgrades")
+	await _tour_dwell(3.0)
+	Demo.ui.switch_tab("talent")
+	await _tour_dwell(1.2)
+	_tour_mark("talents")
+	await _tour_dwell(3.0)
+	_tour_close_panels()
+	await _tour_dwell(0.8)
+
+	Demo.open_stats()
+	await _tour_dwell(2.0)
+	_tour_mark("stats")
+	await _tour_dwell(3.0)
+	_tour_close_panels()
+	await _tour_dwell(0.8)
+
+	# Training dummies (camp practice targets).
+	if is_instance_valid(LevelServer.town):
+		LevelServer.town.practice(3)
+	await _tour_dwell(2.0)
+	_tour_mark("training")
+	await _tour_dwell(3.0)
+	if is_instance_valid(LevelServer.town):
+		LevelServer.town.clear_practice()
+	await _tour_dwell(0.8)
+
+	# Normal combat, then a burst that produces muzzle VFX and damage numbers.
+	Utils.set_gameplay_mouse_mode()
+	LevelServer.town.depart(1, true)
+	await _wait_until(func(): return LevelServer.state == "COMBAT", 180000)
+	await _wait_until(func(): return get_tree().get_nodes_in_group("monsters").size() > 0, 60000)
+	await _tour_dwell(2.5)
+	_tour_mark("combat")
+	await _tour_dwell(3.0)
+	Input.action_press("shoot")
+	await _tour_dwell(1.0)
+	_tour_mark("shooting")
+	await _tour_dwell(3.0)
+	Input.action_release("shoot")
+	await _tour_dwell(0.8)
+
+	Demo.open_panel()
+	await _tour_dwell(2.0)
+	_tour_mark("pause")
+	await _tour_dwell(3.0)
+	_tour_close_panels()
+	await _tour_dwell(1.0)
+
+	# Boss encounter (stage 10 = B01).
+	LevelServer.return_to_camp()
+	await _wait_until(func(): return LevelServer.state == "CAMP", 60000)
+	await _tour_dwell(1.2)
+	Utils.set_gameplay_mouse_mode()
+	LevelServer.town.depart(10, true)
+	await _wait_until(func(): return LevelServer.state == "COMBAT", 180000)
+	await _tour_dwell(3.0)
+	Input.action_press("shoot")
+	await _tour_dwell(1.5)
+	Input.action_release("shoot")
+	await _tour_dwell(1.5)
+	_tour_mark("boss")
+	await _tour_dwell(4.0)
+	_tour_mark("done")
+	print("[tour] complete")
+	get_tree().quit(0)
+
 func _wait_until(predicate: Callable, timeout_ms: int) -> void:
 	var deadline := Time.get_ticks_msec() + timeout_ms
 	while Time.get_ticks_msec() < deadline:
@@ -158,12 +308,18 @@ func _enter_camp_from_title() -> void:
 			menu.queue_free()
 			Demo.pop_pause(menu)
 
+## Frame sampling is armed only for the duration of one measurement window.
+## Keeping a session-long array made the probe itself an allocator (and skewed
+## the very frame times it was reporting), so sampling is bounded to one
+## window + the comparison window that follows it.
 var _frame_times: Array[float] = []
-var _mark := -1
+var _sampling := false
 
+var _pending_proj: Array = []
 var _last_mode := -1
 func _process(_delta: float) -> void:
-	_frame_times.append(get_process_delta_time() * 1000.0)
+	if _sampling:
+		_frame_times.append(get_process_delta_time() * 1000.0)
 	if e2e:
 		_track_transients()
 		if Input.mouse_mode != _last_mode:
@@ -173,23 +329,38 @@ func _process(_delta: float) -> void:
 				Time.get_ticks_msec() / 1000.0])
 
 func _track_transients() -> void:
-	var nodes := get_tree().get_nodes_in_group("combat_transient")
-	if nodes.size() > _transients:
-		for node in nodes:
-			if "velocity" in node and is_instance_valid(node) and not node.has_meta("e2e_reported"):
-				node.set_meta("e2e_reported", true)
-				var v: Vector2 = node.velocity
-				print("[e2e] proj vx=%.1f vy=%.1f speed=%.1f" % [v.x, v.y, v.length()])
-	_transients = nodes.size()
+	# Bullet.fire() assigns velocity one frame after the node enters the tree, so
+	# report on the first frame the projectile is actually moving. A projectile
+	# that never moves is reported as stalled instead of being fed to the driver
+	# as a zero-velocity "direction".
+	var still: Array = []
+	for node in _pending_proj:
+		if not is_instance_valid(node): continue
+		if node.velocity.length() > 0.1:
+			# `aim` is the provider's aim angle towards the gun tip on the frame
+			# the projectile is reported, so the driver can prove the projectile
+			# really left along the unified aim instead of merely "somewhere".
+			var aim := 999.0
+			if Utils.player != null and Utils.player.gun != null:
+				aim = rad_to_deg((Utils.get_aim_world_position() - Utils.player.gun.gun_tip.global_position).angle())
+			print("[e2e] proj vx=%.1f vy=%.1f speed=%.1f aim=%.1f" % [
+				node.velocity.x, node.velocity.y, node.velocity.length(), aim])
+		elif node.get_meta("e2e_waited", 0) < 40:
+			node.set_meta("e2e_waited", node.get_meta("e2e_waited", 0) + 1)
+			still.append(node)
+		else:
+			print("[e2e] proj-stalled")
+	_pending_proj = still
 
 func _mark_frames() -> void:
-	_mark = _frame_times.size()
+	_frame_times.clear()
+	_sampling = true
 
 func _report_frames(label: String, window := 30) -> void:
-	if _mark < 0: return
-	var start := maxi(0, _mark)
-	var recent := _frame_times.slice(start, mini(_frame_times.size(), start + window))
-	var later := _frame_times.slice(mini(_frame_times.size(), start + window), mini(_frame_times.size(), start + window + 60))
+	_sampling = false
+	if _frame_times.is_empty(): return
+	var recent := _frame_times.slice(0, mini(_frame_times.size(), window))
+	var later := _frame_times.slice(mini(_frame_times.size(), window), mini(_frame_times.size(), window + 60))
 	if recent.is_empty(): return
 	var sorted := recent.duplicate(); sorted.sort()
 	var lsort := later.duplicate(); lsort.sort()
@@ -200,6 +371,10 @@ func _report_frames(label: String, window := 30) -> void:
 		lsort[int(lsort.size() * 0.95) - 1] if lsort.size() > 2 else (lsort[0] if not lsort.is_empty() else 0.0)])
 
 func _run() -> void:
+	# The visual tour drives the product screens itself; the scripted smoke
+	# sequence would fight it over rounds and panels.
+	if "--tour" in OS.get_cmdline_args() or "--tour" in OS.get_cmdline_user_args():
+		return
 	await get_tree().create_timer(3.0).timeout
 	await _enter_camp_from_title()
 	await get_tree().create_timer(1.5).timeout
@@ -292,5 +467,9 @@ func _run() -> void:
 		1000.0 / (s.reduce(func(a,b): return a+b) / s.size()), enemies])
 	print("[smoke] done pass=", passed)
 	print("[smoke] result=", "PASS" if passed else "FAIL")
-	if not passed:
-		get_tree().quit(1)
+	# A standalone run would otherwise sit at the title screen forever after a
+	# PASS, which makes the exported binary useless to any caller. In a browser the
+	# driver owns the page lifecycle (it keeps interacting with the live page after
+	# the markers), so the Web build must stay running.
+	if not OS.has_feature("web"):
+		get_tree().quit(0 if passed else 1)

@@ -114,11 +114,24 @@ jobs:
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
           node TowDownGame-Iteration/tools/save-audit-web.js \
             http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
-          # Virtual displays drop Pointer Lock at random minutes (browser exits on
-          # blur; no WM to restore focus). Evidence-only here; the blocking
-          # pointer-lock acceptance is the real-browser E2E pre-tag and online.
-          xvfb-run -a node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
-            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/pointer-lock-e2e.log || true
+          # Pointer Lock E2E. Exit 0 = every input assertion passed. Exit 3 = this
+          # environment never granted Pointer Lock at all, which proves nothing
+          # either way and is published as UNTESTED instead of being hidden.
+          # Any other non-zero exit is a real assertion failure and blocks deploy.
+          # Chromium's own headless mode is used (no xvfb): a virtual display with
+          # no window manager blurs the page and drops the lock at random minutes.
+          set +e
+          node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
+            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/pointer-lock-e2e.log
+          lock_code=${PIPESTATUS[0]}
+          set -e
+          summary="${GITHUB_STEP_SUMMARY:-/dev/null}"
+          case "$lock_code" in
+            0) echo "POINTER_LOCK_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" | tee -a "$summary" ;;
+            3) echo "POINTER_LOCK_E2E=UNTESTED_IN_CI (environment never acquired Pointer Lock; NOT a product verdict)" | tee -a "$summary" ;;
+            *) echo "POINTER_LOCK_E2E=FAIL exit=$lock_code" | tee -a "$summary"; exit 1 ;;
+          esac
+          echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" | tee -a "$summary"
 
       - name: Upload smoke evidence
         if: always()

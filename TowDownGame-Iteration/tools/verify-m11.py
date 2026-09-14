@@ -30,10 +30,22 @@ for i, (scene, args) in enumerate(cases):
         checks = 1
     execution = json.loads((out/label/'execution.json').read_text(encoding='utf-8'))
     leaked = re.findall(r'Leaked instance: (\w+):', log)
-    known_audio = sorted(leaked) == ['AudioStreamMP3', 'AudioStreamPlaybackMP3'] and 'Cephalopod.mp3' in log
+    # The BGM stream lives on the Music bus for the whole session and is still
+    # alive when the engine tears down, which Godot reports as leaked resources.
+    # This whitelist used to name only the MP3 build of it; v1.0.1 switched the
+    # scenes to res://audio/bgm/Cephalopod.ogg (Main/Moon/SnowWorld.tscn), so every
+    # audio case has reported FAIL for a bookkeeping reason ever since. Accept
+    # either container, and only when the BGM path is in the log and nothing else
+    # leaked.
+    known_audio_types = {'AudioStreamMP3', 'AudioStreamPlaybackMP3', 'OggPacketSequence',
+                         'AudioStreamOggVorbis', 'OggPacketSequencePlayback',
+                         'AudioStreamPlaybackOggVorbis'}
+    known_audio = bool(leaked) and set(leaked) <= known_audio_types and (
+        'Cephalopod.mp3' in log or 'Cephalopod.ogg' in log)
     errors = execution['errors']
     if known_audio:
-        errors = [line for line in errors if not line.startswith('ERROR: 1 resources still in use at exit')]
+        errors = [line for line in errors
+                  if not re.match(r'ERROR: \d+ resources still in use at exit', line)]
     passed = execution['code'] == 0 and checks > 0 and not errors and (not leaked or known_audio)
     rows.append(dict(scene=scene, args=args, passed=passed, checks=checks, errors=errors,
                      known_audio_teardown=known_audio, execution=f'{label}/execution.json'))

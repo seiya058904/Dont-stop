@@ -1,0 +1,131 @@
+{
+  "release": "v1.0.2",
+  "previous_release": "v1.0.1",
+  "previous_release_commit": "a068ca7c53b5fc20c0e5e660a700dd3a4c25acbf",
+  "takeover_origin_main": "89feb25ea171ce6962f89edcdb3a8cdb321451f1",
+  "takeover_local_head": "89feb25ea171ce6962f89edcdb3a8cdb321451f1",
+  "initial_worktree_dirty": true,
+  "recovered_uncommitted_files": [
+    "TowDownGame-Iteration/autoload/Smoke.gd",
+    "TowDownGame-Iteration/tools/pointer-lock-e2e.js"
+  ],
+  "corrected_previous_ai_changes": [
+    "autoload/Demo.gd right-click grenade lob read Utils.player.Utils (no such member) - SCRIPT ERROR, lob dead since 6d12c76",
+    "autoload/Smoke.gd accumulated a frame sample every frame in every production launch (unbounded Array)",
+    "autoload/Smoke.gd --e2e round-restart closed panels and teleported the player out of the arena mid-test",
+    "autoload/Smoke.gd frame probe kept a session-long array, skewing the frame times it reported",
+    "tools/pointer-lock-e2e.js AIM_MOVES_UP/DOWN were measured across an unrelated recenter move (false positive risk)",
+    "tools/pointer-lock-e2e.js resume path pressed neither real resume gesture (Escape) nor the panel close",
+    "tools/verify-m11.py + verify-m12.py known-audio whitelist still named Cephalopod.mp3 after v1.0.1 moved the scenes to Cephalopod.ogg",
+    "tests/AimWeaponCoverage.gd authored during takeover had a parse error and a spread-weapon false negative - both fixed before it was trusted"
+  ],
+  "rejected_previous_ai_changes": [
+    "autoload/Utils.gd web_e2e_driver flag: it suppressed the focus-loss input release in tests, so the shipped focus contract could not be observed. Removed."
+  ],
+  "aim_provider": {
+    "desktop_parity_proof": "tests/AimProvider.tscn - get_aim_world_position() equals Player and Gun get_global_mouse_position() at 3 camera states, 3/3",
+    "crosshair_rewrite_desktop_neutral": true,
+    "absolute_gameplay_mouse_calls_remaining": 0,
+    "ui_only_absolute_mouse_kept": ["ui/Inventory.gd", "ui/BuildIcon.gd"],
+    "software_cursor_removed": true,
+    "software_cursor_sprites_at_runtime": 0,
+    "weapon_classes_reading_provider": "24/24",
+    "weapon_classes_projectile_follows_provider": "24/24"
+  },
+  "real_browser_e2e_headed": {
+    "result": "PASS",
+    "required_tokens_passed": 43,
+    "required_tokens_total": 43,
+    "scale_design_units_per_css_px": 0.3206,
+    "aim_sweep_240csspx_design_units": 76.94,
+    "perpendicular_axis_movement": 0.0,
+    "sweep_reversibility_error": 0.0,
+    "aim_360_accumulated_deg": 1606,
+    "crosshair_offset_design_units": 0.1,
+    "projectile_angles_deg": [1.5, 176.1, 94.0, -90.1],
+    "projectile_vs_provider_aim_max_delta_deg": 0.5,
+    "pointer_lock_acquired": true,
+    "engine_mousemode_tracks_browser_lock": true,
+    "esc_releases_lock_and_pauses": true,
+    "resume_requires_gesture": true,
+    "focus_loss_releases_and_pauses": true,
+    "console_errors": 0,
+    "http_errors": 0
+  },
+  "real_browser_e2e_headless": {
+    "note": "run before the crosshair sample was made settle-aware; superseded by the headed run on the frozen build"
+  },
+  "web_performance": {
+    "gpu": "AMD Radeon RX 7900 XT, 160 Hz",
+    "renderer": "gl_compatibility (Web)",
+    "1080p": {"p50_ms": 6.3, "p95_ms": 6.3, "p99_ms": 6.4, "max_ms": 137.5, "verdict": "vsync-capped, healthy"},
+    "1440p": {"p50_ms": 6.3, "p95_ms": 6.3, "p99_ms": 6.4, "max_ms": 150.0, "verdict": "vsync-capped, healthy"},
+    "2160p": {"verdict": "INVALID - Chromium background rAF throttling (~1000 ms period) once the headed window was occluded", "p50_ms": 1000.1},
+    "anomaly": "one 1080p run showed the same ~1000 ms pattern during the boss phase and it did not reproduce at 1440p; reported as an environment artefact, not a product spike"
+  },
+  "web_package": {
+    "pck_bytes": 40564384,
+    "wasm_bytes": 39514754,
+    "total_bytes": 82186401,
+    "first_load_s": 3.9,
+    "cached_load_s": 3.7,
+    "load_measurement_note": "served from localhost, so download time is excluded",
+    "leakage_audit": "tools/pck-audit.py - 2623 entries, 38.42 MiB payload, no leakage patterns matched"
+  },
+  "windows": {
+    "renderer": "forward_plus",
+    "standalone_smoke": "PASS",
+    "standalone_smoke_evidence": "public_release user dir C:/Users/admin/AppData/Roaming/TowDownGame",
+    "shots_really_fired": true,
+    "stutter_probe": "NOT_REPRODUCED_IN_AUTOMATION",
+    "stutter_probe_classes": 13,
+    "first_combat_max_ms": 6.3,
+    "first_shot_max_ms": 6.3,
+    "first_reload_max_ms": 6.3,
+    "steady_p50_ms": 6.3,
+    "steady_p95_ms": 6.3,
+    "steady_p99_ms": 6.3,
+    "steady_max_ms": 6.3,
+    "human_state": "PASS_WITH_MINOR_INTERMITTENT_STUTTER (carried over from v1.0.1)"
+  },
+  "save_isolation": {
+    "development_dir": "%APPDATA%/TowDownGame-Iteration",
+    "windows_production_dir": "%APPDATA%/TowDownGame",
+    "web": "browser IndexedDB in an ephemeral profile",
+    "release_contains_personal_save": false,
+    "appdata_backed_up_and_restored": true
+  },
+  "regression": {
+    "command": "python tools/verify-m12.py  (runs verify-m11.py then 8 specialized cases)",
+    "core_cases": 32,
+    "specialized_cases": 8,
+    "after_harness_fix": "audio-only teardown bookkeeping no longer fails the suite",
+    "remaining_failure": "M10RewardAudit: 7 'real firing' assertions - reproduced identically at HEAD with the v1.0.2 changes stashed, so pre-existing and not caused by this release",
+    "flaky_cases_rerun_clean": ["M10Density", "M10Bosses high"],
+    "verdict": "NO_REGRESSION_FROM_V1_0_2"
+  },
+  "gates": {
+    "WEB_BUILD_PASS": true,
+    "WEB_BOOT_PASS": true,
+    "WEB_CONSOLE_PASS": true,
+    "WEB_NETWORK_PASS": true,
+    "WEB_POINTER_LOCK_PASS": true,
+    "WEB_MOUSE_RELATIVE_PASS": true,
+    "WEB_AIM_LEFT_PASS": true,
+    "WEB_AIM_RIGHT_PASS": true,
+    "WEB_AIM_UP_PASS": true,
+    "WEB_AIM_DOWN_PASS": true,
+    "WEB_AIM_360_PASS": true,
+    "WEB_PROJECTILE_DIRECTION_PASS": true,
+    "WEB_ESC_RELEASE_PASS": true,
+    "WEB_PAUSE_CURSOR_PASS": true,
+    "WEB_RESUME_CAPTURE_PASS": true,
+    "WEB_FOCUS_LOSS_PASS": true,
+    "WEB_WASD_PASS": true,
+    "WEB_VISUAL_PASS": "PARTIAL - loader/camp/HUD/shop/stats confirmed by eye; other captures exist but marker alignment was unreliable",
+    "WEB_SAVE_ISOLATION_PASS": true,
+    "CI_POINTER_LOCK_GATE": "no longer silently swallowed: exit 3 = UNTESTED_IN_CI, any other non-zero exit blocks deploy",
+    "READY_FOR_HUMAN_WEB_ACCEPTANCE": true,
+    "WEB_HUMAN_ACCEPTED": false
+  }
+}

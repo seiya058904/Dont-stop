@@ -36,10 +36,18 @@ for scene in ['M11Clarity', 'M11SaveMigration', 'M11Navigation', 'M11Spawn',
     log = (folder/'run.txt').read_text(encoding='utf-8')
     checks = len(re.findall(r'^PASS ', log, re.M))
     leaked = re.findall(r'Leaked instance: (\w+):', log)
-    known_audio = sorted(leaked)==['AudioStreamMP3', 'AudioStreamPlaybackMP3'] and 'Cephalopod.mp3' in log
+    # Same bookkeeping whitelist as verify-m11.py: the BGM stream is retained on
+    # the Music bus and reported at teardown. Since v1.0.1 the scenes load
+    # res://audio/bgm/Cephalopod.ogg, not the MP3 build this list used to name.
+    known_audio_types = {'AudioStreamMP3', 'AudioStreamPlaybackMP3', 'OggPacketSequence',
+                         'AudioStreamOggVorbis', 'OggPacketSequencePlayback',
+                         'AudioStreamPlaybackOggVorbis'}
+    known_audio = bool(leaked) and set(leaked) <= known_audio_types and (
+        'Cephalopod.mp3' in log or 'Cephalopod.ogg' in log)
     errors = execution['errors']
     if known_audio:
-        errors = [line for line in errors if not line.startswith('ERROR: 1 resources still in use at exit')]
+        errors = [line for line in errors
+                  if not re.match(r'ERROR: \d+ resources still in use at exit', line)]
     passed = execution['code'] == 0 and checks > 0 and not errors and (not leaked or known_audio) and not pathlib.Path(execution['snapshot']).exists()
     rows.append(dict(scene=scene, passed=passed, checks=checks, errors=errors, known_audio_teardown=known_audio,
                      execution='../m11/'+label+'/execution.json', snapshot_removed=not pathlib.Path(execution['snapshot']).exists()))
