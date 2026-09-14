@@ -37,6 +37,14 @@ static func definition(id: String) -> Dictionary:
 	return ENEMIES.get(id,BOSSES.get(id,{}))
 static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	if definition(id).is_empty(): return null
+	# Shared guard for every spawn path. Callers are supposed to validate their
+	# candidate first, but a missed check used to create the actor at whatever
+	# sentinel came back (Vector2.INF), which the player sees as an enemy stuck
+	# outside the map. Refusing here turns that into a logged skip instead of a
+	# monster in an unreachable place.
+	if not point.is_finite():
+		push_warning("[spawn] %s refused: non-finite point %s" % [id, str(point)])
+		return null
 	var actor = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
 	if id in ["E02","E04","E05"]:
 		actor.set_script(load("res://game/monster/DemoEnemy.gd")); actor.role = id

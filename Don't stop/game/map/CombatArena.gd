@@ -37,7 +37,7 @@ func path_step(from: Vector2, target: Vector2) -> Vector2:
 	if not grid.is_in_boundsv(b) or grid.is_point_solid(b): b = nearest(target)
 	var path = grid.get_point_path(a,b)
 	return to_global(path[1]) if path.size()>1 else to_global(grid.get_point_position(b))
-func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1) -> Vector2:
+func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radius := 7.0) -> Vector2:
 	var target = cell(Utils.player.global_position)
 	# Player collision permits wall-adjacent positions outside the conservative AI grid.
 	# Use the closest reachable target cell, never cancel all reinforcement there.
@@ -47,8 +47,26 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1) -> V
 		var candidate = cells[(offset+i)%cells.size()]; var point = to_global(grid.get_point_position(candidate)); var relative = point-center
 		if relative.length() < minimum or relative.length() > maximum or point.distance_to(Utils.player.global_position)<55: continue
 		if side >= 0 and relative.dot(Vector2.RIGHT.rotated(side*PI/2)) < relative.length()*0.35: continue
+		# The grid above is built from two rectangle tests on the cell CENTRE, with a
+		# fixed 13 px margin that has nothing to do with how big the actor really is.
+		# Ask the physics world instead, using the actor's own radius, so a large
+		# elite or boss is not placed with its collider inside a wall.
+		if not _is_clear(point,radius): continue
 		spawn_path_queries+=1
 		if grid.get_id_path(candidate,target).size()>1: return point
 	return Vector2.INF
+
+## Reuses the same approach the town navigation builder uses (a circle cast against
+## the wall layers) rather than inventing a second, movement-decoupled rule.
+func _is_clear(point: Vector2, radius: float) -> bool:
+	var space := get_world_2d().direct_space_state
+	if space == null: return true
+	var shape := CircleShape2D.new()
+	shape.radius = radius
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.collision_mask = 2147483649
+	query.transform = Transform2D(0,point)
+	return space.intersect_shape(query,1).is_empty()
 func _draw():
 	preload("res://game/map/RegionTheme.gd").draw_arena(self,region_id,bounds,obstacles)

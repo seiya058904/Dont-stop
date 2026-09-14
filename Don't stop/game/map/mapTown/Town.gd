@@ -260,10 +260,34 @@ func depart(stage: int, is_trial: bool) -> bool:
 		return false
 	prepare_region(DemoConfig.ENCOUNTERS[target_stage].region)
 	if DemoConfig.ENCOUNTERS[target_stage].has("boss"):
-		var point = spawn_near(Utils.player.global_position,160,220)
+		# Bosses are the largest actors, so they need a larger clearance than the
+		# default the wave spawner uses.
+		var point = spawn_near(Utils.player.global_position,160,220,12.0)
+		if point == Vector2.INF:
+			# spawn_near() returns this sentinel when no validated point exists.
+			# Spawning anyway used to place the boss at an infinite coordinate,
+			# which the player sees as a monster stuck outside the map wall.
+			# Defer instead: the encounter keeps running and retries next tick.
+			_boss_pending = DemoConfig.ENCOUNTERS[target_stage].boss
+			push_warning("[spawn] no legal boss spawn point for stage %d; deferring" % target_stage)
+			return true
 		var boss = M5Content.spawn(DemoConfig.ENCOUNTERS[target_stage].boss,monster_root,point)
 		LevelServer.boss_instance = boss.get_instance_id()
 	return true
+
+## A deferred boss (see depart()) is retried here once a validated point exists,
+## instead of being created at an unvalidated coordinate.
+var _boss_pending := ""
+
+func _process(_delta: float) -> void:
+	if _boss_pending == "" or LevelServer.state != "COMBAT": return
+	if not is_instance_valid(Utils.player): return
+	var point = spawn_near(Utils.player.global_position,160,220)
+	if point == Vector2.INF: return
+	var boss = M5Content.spawn(_boss_pending,monster_root,point)
+	if boss == null: return
+	LevelServer.boss_instance = boss.get_instance_id()
+	_boss_pending = ""
 
 func clear_practice():
 	if LevelServer.state != "CAMP": return
@@ -287,8 +311,8 @@ func practice(count = 3):
 		label.position = Vector2(-12,-25)
 		dummy.add_child(label)
 
-func spawn_near(center: Vector2, minimum: float, maximum: float) -> Vector2:
-	if is_instance_valid(arena): return arena.spawn_near(center,minimum,maximum)
+func spawn_near(center: Vector2, minimum: float, maximum: float, radius := 7.0) -> Vector2:
+	if is_instance_valid(arena): return arena.spawn_near(center,minimum,maximum,-1,radius)
 	if not nav_ready: return Vector2.INF
 	var offset = randi()%walkable.size()
 	for attempt in walkable.size():
