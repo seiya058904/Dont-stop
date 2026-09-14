@@ -1,6 +1,6 @@
-# TowDownGame Iteration — 试玩说明
+# Don't stop — 试玩说明
 
-正式试玩入口：[GitHub Pages 浏览器版](https://seiya058904.github.io/game-prototype-lab/) · [Windows x64 Release](https://github.com/seiya058904/game-prototype-lab/releases/latest)。
+正式试玩入口：[GitHub Pages 浏览器版](https://seiya058904.github.io/Dont-stop/) · [Windows x64 Release](https://github.com/seiya058904/Dont-stop/releases/latest)。
 
 双击 `PLAY_GAME.bat` 仅用于开发环境试玩。当前状态：**M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**，`H1_STATUS = FIFTH_FEEDBACK_ADDRESSED`，`HUMAN_ACCEPTED = true`。接受依据是用户本次实际试玩反馈；用户接受少量体验瑕疵，不要求继续迭代，本轮不进入 M13。
 

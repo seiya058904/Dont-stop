@@ -1,6 +1,6 @@
-# TowDownGame Iteration
+# Don't stop
 
-当前唯一公开的 TowDownGame 迭代项目，使用 Godot 4。源码、资源、测试、工具和正式迭代文档均保留在本目录内；本次整理不删除游戏内容。
+当前唯一公开的 Don't stop 游戏工程（2026-09-14 由 TowDownGame-Iteration 原地改名），使用 Godot 4。源码、资源、测试、工具和正式迭代文档均保留在本目录内；本次整理不删除游戏内容。
 
 ## 启动
 

@@ -11,6 +11,12 @@ permissions:
 env:
   GODOT_VERSION: 4.7.2-stable
   GODOT_RELEASE_BASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
+  # The project directory really is named "Don't stop" (apostrophe and space
+  # included), so every path that reaches a shell is quoted explicitly.
+  PROJECT_PATH: "Don't stop"
+  EXE_NAME: "Don't stop.exe"
+  PCK_NAME: "Don't stop.pck"
+  ZIP_NAME: "Don't stop-Windows-x64.zip"
 
 jobs:
   build-windows:
@@ -46,9 +52,9 @@ jobs:
           # Use the console wrapper so pwsh waits for the editor process
           # (the plain exe detaches). Fresh runners can quit the first import
           # pass early; the second pass is a no-op when everything exists.
-          & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
-          & "$env:GODOT" --headless --path TowDownGame-Iteration --editor --import --quit
-          $count = (Get-ChildItem "TowDownGame-Iteration/.godot/imported" -ErrorAction SilentlyContinue | Measure-Object).Count
+          & "$env:GODOT" --headless --path "$env:PROJECT_PATH" --editor --import --quit
+          & "$env:GODOT" --headless --path "$env:PROJECT_PATH" --editor --import --quit
+          $count = (Get-ChildItem -LiteralPath (Join-Path $env:PROJECT_PATH '.godot/imported') -ErrorAction SilentlyContinue | Measure-Object).Count
           echo "imported assets: $count"
           if ($count -lt 50) { throw "import produced only $count assets" }
 
@@ -56,37 +62,39 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Force -Path TowDownGame-Iteration/build/windows | Out-Null
-          & "$env:GODOT" --headless --path TowDownGame-Iteration --export-release "Windows x64 Release" build/windows/TowDownGame-Windows-x64.exe
+          $winDir = Join-Path $env:PROJECT_PATH 'build/windows'
+          New-Item -ItemType Directory -Force -Path $winDir | Out-Null
+          $exe = Join-Path $winDir $env:EXE_NAME
+          & "$env:GODOT" --headless --path "$env:PROJECT_PATH" --export-release "Windows x64 Release" $exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          Get-ChildItem TowDownGame-Iteration/build/windows | Format-Table Name, Length
-          $exe = 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.exe'
-          $pck = 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.pck'
-          if (-not ((Test-Path $exe) -and (Test-Path $pck))) { throw 'export output missing' }
+          Get-ChildItem -LiteralPath $winDir | Format-Table Name, Length
+          $pck = Join-Path $winDir $env:PCK_NAME
+          if (-not ((Test-Path -LiteralPath $exe) -and (Test-Path -LiteralPath $pck))) { throw 'export output missing' }
+          if ((Get-Item -LiteralPath $exe).Length -lt 1MB) { throw 'exported exe looks empty' }
 
       - name: Package ZIP and SHA-256
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $stage = "$env:RUNNER_TEMP\stage\TowDownGame"
+          $stage = Join-Path $env:RUNNER_TEMP 'stage/DontStop'
           New-Item -ItemType Directory -Force -Path $stage | Out-Null
-          Copy-Item 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.exe' $stage
-          Copy-Item 'TowDownGame-Iteration/build/windows/TowDownGame-Windows-x64.pck' $stage
-          $zip = "$env:RUNNER_TEMP\TowDownGame-Windows-x64.zip"
+          Copy-Item -LiteralPath (Join-Path $env:PROJECT_PATH ('build/windows/' + $env:EXE_NAME)) $stage
+          Copy-Item -LiteralPath (Join-Path $env:PROJECT_PATH ('build/windows/' + $env:PCK_NAME)) $stage
+          $zip = Join-Path $env:RUNNER_TEMP $env:ZIP_NAME
           Compress-Archive -Path "$stage\*" -DestinationPath $zip -Force
-          $sha = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
-          "$sha  TowDownGame-Windows-x64.zip" | Out-File "$env:RUNNER_TEMP\TowDownGame-Windows-x64.zip.sha256" -Encoding ascii
-          Move-Item $zip 'TowDownGame-Windows-x64.zip'
-          Move-Item "$env:RUNNER_TEMP\TowDownGame-Windows-x64.zip.sha256" 'TowDownGame-Windows-x64.zip.sha256'
-          Get-Item 'TowDownGame-Windows-x64.zip' | Select-Object Name, Length
+          $sha = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLower()
+          "$sha  $env:ZIP_NAME" | Out-File "$zip.sha256" -Encoding ascii
+          Move-Item -LiteralPath $zip "$env:ZIP_NAME"
+          Move-Item -LiteralPath "$zip.sha256" "$env:ZIP_NAME.sha256"
+          Get-Item -LiteralPath "$env:ZIP_NAME" | Select-Object Name, Length
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TowDownGame-Windows-x64
+          name: DontStop-Windows-x64
           path: |
-            TowDownGame-Windows-x64.zip
-            TowDownGame-Windows-x64.zip.sha256
+            Don't stop-Windows-x64.zip
+            Don't stop-Windows-x64.zip.sha256
           retention-days: 14
 
       - name: Attach to GitHub Release (tag builds only)
@@ -95,7 +103,7 @@ jobs:
         run: |
           set -euo pipefail
           gh release upload "${GITHUB_REF_NAME}" \
-            TowDownGame-Windows-x64.zip TowDownGame-Windows-x64.zip.sha256 \
+            "Don't stop-Windows-x64.zip" "Don't stop-Windows-x64.zip.sha256" \
             --repo "$GITHUB_REPOSITORY" --clobber
         env:
           GH_TOKEN: ${{ github.token }}

@@ -14,8 +14,8 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="TowDownGame Iteration Demo"
-run/main_scene="res://game/map/Main.tscn"
+config/name="Don't stop"
+run/main_scene="res://boot/Boot.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="TowDownGame-Iteration"
 config/custom_user_dir_name.public_release="TowDownGame"

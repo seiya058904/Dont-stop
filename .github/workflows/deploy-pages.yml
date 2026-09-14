@@ -18,7 +18,7 @@ env:
   GODOT_VERSION: 4.7.2-stable
   GODOT_RELEASE_BASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
   PLAYWRIGHT_VERSION: 1.60.0
-  PAGES_URL: https://seiya058904.github.io/game-prototype-lab/index.html
+  PAGES_URL: https://seiya058904.github.io/Dont-stop/index.html
 
 jobs:
   build:
@@ -49,18 +49,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          "$GODOT" --headless --path TowDownGame-Iteration --editor --import --quit \
+          "$GODOT" --headless --path "Don't stop" --editor --import --quit \
             --log-file "$RUNNER_TEMP/godot/import.log"
-          mkdir -p TowDownGame-Iteration/build/web
-          "$GODOT" --headless --path TowDownGame-Iteration \
+          mkdir -p "Don't stop"/build/web
+          "$GODOT" --headless --path "Don't stop" \
             --export-release "Web Release" build/web/index.html \
             --log-file "$RUNNER_TEMP/godot/export.log"
-          test -s TowDownGame-Iteration/build/web/index.html
-          test -s TowDownGame-Iteration/build/web/index.pck
-          test -s TowDownGame-Iteration/build/web/index.wasm
-          test -s TowDownGame-Iteration/build/web/index.js
-          # Branding asset referenced by the custom loader / favicon.
-          cp TowDownGame-Iteration/game-icon.png TowDownGame-Iteration/build/web/game-icon.png
+          test -s "Don't stop"/build/web/index.html
+          test -s "Don't stop"/build/web/index.pck
+          test -s "Don't stop"/build/web/index.wasm
+          test -s "Don't stop"/build/web/index.js
+          # Branding asset referenced by the custom loader / favicon. It is
+          # produced by the exporter itself (index.icon.png), so this only
+          # asserts it is really there instead of copying a second copy in.
+          test -s "Don't stop"/build/web/index.icon.png
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -68,13 +70,13 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: TowDownGame-Iteration/build/web
+          path: "Don't stop"/build/web
 
       - name: Upload Web build for smoke jobs
         uses: actions/upload-artifact@v4
         with:
           name: web-build
-          path: TowDownGame-Iteration/build/web
+          path: "Don't stop"/build/web
           retention-days: 3
 
   browser-smoke:
@@ -110,30 +112,20 @@ jobs:
           python3 -m http.server 8788 --directory build/web &
           sleep 2
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
-          node TowDownGame-Iteration/tools/smoke-web.js \
+          node "Don't stop"/tools/smoke-web.js \
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
-          node TowDownGame-Iteration/tools/save-audit-web.js \
+          node "Don't stop"/tools/save-audit-web.js \
             http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
-          # Pointer Lock E2E. Exit 0 = every input assertion passed on CI hardware.
-          # Exit 3 = this environment cannot exercise the relative-motion path at
-          # all (measured exactly-zero aim delta AND a DOM witness recording what
-          # the page itself received), which is published as UNTESTED rather than
-          # hidden behind `|| true` or faked as a pass. Any other non-zero exit is
-          # a real assertion failure and blocks deploy.
-          # Chromium's own headless mode is used (no xvfb): a virtual display with
-          # no window manager blurs the page and drops the lock at random minutes.
-          set +e
-          node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
-            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/pointer-lock-e2e.log
-          lock_code=${PIPESTATUS[0]}
-          set -e
-          summary="${GITHUB_STEP_SUMMARY:-/dev/null}"
-          case "$lock_code" in
-            0) echo "POINTER_LOCK_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" | tee -a "$summary" ;;
-            3) echo "POINTER_LOCK_E2E=UNTESTED_RELATIVE_MOTION (CI browser cannot exercise Godot's relative-motion path; the real-browser headed run is the authority. NOT a product verdict.)" | tee -a "$summary" ;;
-            *) echo "POINTER_LOCK_E2E=FAIL exit=$lock_code" | tee -a "$summary"; exit 1 ;;
-          esac
-          echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" | tee -a "$summary"
+          # Web mouse-aim E2E. Phase A drives the REAL entry point (no query
+          # flags) the way a player would, then Phase B adds state streaming to
+          # assert cursor -> aim -> crosshair -> gun -> projectile. There is no
+          # environment escape hatch any more: absolute mouse positions work in
+          # headless Chromium, so any non-zero exit is a real failure and blocks
+          # deploy.
+          node "Don't stop"/tools/web-aim-e2e.js \
+            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/aim-e2e.log
+          echo "WEB_AIM_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload smoke evidence
         if: always()
@@ -179,22 +171,13 @@ jobs:
           set -euo pipefail
           mkdir -p online-evidence
           curl --fail --silent --show-error "$PAGES_URL" -o /dev/null
-          node TowDownGame-Iteration/tools/smoke-web.js \
+          node "Don't stop"/tools/smoke-web.js \
             "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-smoke.log
-          # Same contract against the deployed site: a real assertion failure here
-          # fails the job, an environment that cannot exercise relative motion is
-          # published as UNTESTED instead of being swallowed by `|| true`.
-          set +e
-          node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
-            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-pointer-lock-e2e.log
-          lock_code=${PIPESTATUS[0]}
-          set -e
-          summary="${GITHUB_STEP_SUMMARY:-/dev/null}"
-          case "$lock_code" in
-            0) echo "ONLINE_POINTER_LOCK_E2E=PASS_CI_CHROMIUM" | tee -a "$summary" ;;
-            3) echo "ONLINE_POINTER_LOCK_E2E=UNTESTED_RELATIVE_MOTION (CI browser cannot exercise Godot's relative-motion path; NOT a product verdict.)" | tee -a "$summary" ;;
-            *) echo "ONLINE_POINTER_LOCK_E2E=FAIL exit=$lock_code" | tee -a "$summary"; exit 1 ;;
-          esac
+          # Same contract against the deployed site: the real entry point first,
+          # then the measured aim chain. Any non-zero exit fails the job.
+          node "Don't stop"/tools/web-aim-e2e.js \
+            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-aim-e2e.log
+          echo "ONLINE_WEB_AIM_E2E=PASS_CI_CHROMIUM" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload online smoke evidence
         if: always()

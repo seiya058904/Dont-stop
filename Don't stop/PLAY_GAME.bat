@@ -4,7 +4,7 @@ for %%I in ("%~dp0.") do set "GAME_DIR=%%~fI"
 set "GODOT=%~dp0..\archive\workspace-support\_tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe"
 if not exist "%GODOT%" (
     echo The workspace portable Godot 4.7.2 runtime is missing.
-    echo See README-PLAY.md in this iteration folder.
+    echo See README-PLAY.md in this project folder.
     pause
     exit /b 1
 )
@@ -23,5 +23,5 @@ if not exist "%GAME_DIR%\.godot\global_script_class_cache.cfg" (
         exit /b 1
     )
 )
-start "TowDownGame Experience Demo" "%GODOT%" --path "%GAME_DIR%" --log-file "%GAME_DIR%\preview.log"
+start "Don't stop" "%GODOT%" --path "%GAME_DIR%" --log-file "%GAME_DIR%\preview.log"
 exit /b 0

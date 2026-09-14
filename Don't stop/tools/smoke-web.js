@@ -1,7 +1,13 @@
-// TowDownGame Web browser smoke test (Playwright).
+// Don't stop — Web browser smoke test (Playwright).
 // Usage: node smoke-web.js <url> [screenshotDir]
-// Fails (exit 1) on: HTTP errors/404s, page errors, default Godot branding,
-// stuck loading, missing canvas, dead page, or failed in-game smoke markers.
+//
+// Fails (exit 1) on: HTTP errors/404s, page errors, default Godot branding, a
+// loader shell that never goes away, a second "start" button in the shell,
+// missing canvas, dead page, or failed in-game smoke markers.
+//
+// The shell (web/loader.html) no longer has a click-to-start button: it removes
+// itself once the game reports the title menu is ready, and the player's first
+// click is the game's own menu button.
 const { chromium } = require('playwright');
 
 const url = process.argv[2];
@@ -30,18 +36,18 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 		page.on('pageerror', e => pageErrors.push(String(e.message).slice(0, 300)));
 		page.on('console', m => {
 			const t = m.text();
-			if (t.includes('[smoke]') || t.includes('[warmup]')) engineLog.push(t);
+			if (t.includes('[smoke]') || t.includes('[warmup]') || t.includes('[boot]')) engineLog.push(t);
 		});
 		await page.goto(url + query, { waitUntil: 'domcontentloaded', timeout: 60000 });
-		const startBtn = page.locator('#start');
-		const appeared = await startBtn.waitFor({ state: 'visible', timeout: maxLoadMs })
-			.then(() => true).catch(() => false);
+		const appeared = await page.waitForFunction(() => {
+			const f = document.getElementById('frame');
+			return !f || f.style.display === 'none' || f.classList.contains('gone');
+		}, { timeout: maxLoadMs }).then(() => true).catch(() => false);
 		if (!appeared) {
 			step('loading-completes', false, 'status=' + await page.locator('#status').innerText().catch(() => '?'));
 			return null;
 		}
 		step('loading-completes', true);
-		await startBtn.click();
 		await page.waitForSelector('#canvas-host canvas', { timeout: 30000 });
 		await page.waitForTimeout(5000);
 		return page;
@@ -51,10 +57,11 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 	{
 		const page = await context.newPage();
 		await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-		step('custom-loader', (await page.locator('#start').count()) === 1);
-		step('towdown-title', (await page.title()).includes('TowDownGame'));
+		step('no-shell-start-button', (await page.locator('#start').count()) === 0);
+		step('dont-stop-title', (await page.title()).includes("Don't stop"));
 		const frameText = await page.locator('#frame').innerText().catch(() => '');
 		step('no-godot-branding', !/godot/i.test(frameText));
+		step('no-second-start-prompt', !/点击开始|立即开始|点击任意|click to start/i.test(frameText));
 		await page.close();
 	}
 	{
@@ -74,7 +81,6 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 	{
 		const page = await newGamePage('?smoke=1', 300000);
 		if (page) {
-			await page.mouse.click(960, 540);
 			const t0 = Date.now();
 			let finished = false;
 			while (Date.now() - t0 < 480000) {
@@ -94,6 +100,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 			await page.waitForTimeout(800);
 			await page.keyboard.press('2');
 			await page.waitForTimeout(800);
+			await page.mouse.move(960, 540);
 			await page.mouse.down(); await page.waitForTimeout(400); await page.mouse.up();
 			await page.waitForTimeout(500);
 			await page.screenshot({ path: shotDir + '/04-fire.png' });
