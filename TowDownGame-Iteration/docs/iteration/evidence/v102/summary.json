@@ -70,7 +70,10 @@
     "first_load_s": 3.9,
     "cached_load_s": 3.7,
     "load_measurement_note": "served from localhost, so download time is excluded",
-    "leakage_audit": "tools/pck-audit.py - 2623 entries, 38.42 MiB payload, no leakage patterns matched"
+    "leakage_audit": "tools/pck-audit.py - web 2623 entries 38.42 MiB clean; windows 2631 entries 39.03 MiB clean",
+    "leakage_found_and_fixed": "the Windows pack had been shipping 1.78 MB of build output (build/web/index.png, build/web/index.icon.png and three .import companions) because --editor --import scans build/ and the export filters did not exclude it; both presets now exclude build/*",
+    "windows_pck_bytes_after_fix": 41201828,
+    "windows_pck_bytes_before_fix": 42788384
   },
   "windows": {
     "renderer": "forward_plus",

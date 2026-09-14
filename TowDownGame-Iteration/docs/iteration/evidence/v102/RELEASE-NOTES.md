@@ -126,7 +126,14 @@ v1.0.1; the Windows feel was not re-judged by a human in this round.
 ## Artifacts
 
 * `TowDownGame-Windows-x64.exe` — SHA-256 `AA325EAEFB48D2307E5F49C9108305B66D062A0C0BC8991EF91588B11872B84F`
-* `TowDownGame-Windows-x64.pck` — SHA-256 `5F38936368AB27BCBC7AE060D9FD53F969E49A93F7F1F695066995CE41C69F90`
+* `TowDownGame-Windows-x64.pck` — SHA-256 `DCA7E35C886F640E9A69D81D4CA0179A0D622CE602B04E5518C743B2EA3FDFD8`
 * Web build: `https://seiya058904.github.io/game-prototype-lab/index.html`
+
+`tools/pck-audit.py` found the Windows pack shipping **1.78 MB of build output**
+(`build/web/index.png`, `build/web/index.icon.png` and three `.import` companions)
+because `--editor --import` picks up whatever is in `build/` at import time and the
+export filters did not exclude it. Both presets now exclude `build/*`, and both
+packs audit clean. This also made the artifact depend on local build state; it is
+deterministic again.
 
 Windows and Web are built from the same source commit as tag `v1.0.2`.
