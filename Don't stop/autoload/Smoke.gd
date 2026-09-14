@@ -468,6 +468,10 @@ func _run() -> void:
 	if e2e and Utils.player.gun == null:
 		PlayerData.add_weapon(Utils.weapon_list["0"].instantiate())
 		PlayerData.changeWeapon(0, true)
+		# Persist it: the acceptance driver uses one browser profile across its
+		# phases, so the normal-entry phase that follows can fire a real shot
+		# without this diagnostic phase having taken part in that assertion.
+		Demo.save_camp()
 
 	# Click-to-capture gesture (web): release then re-request gameplay mouse mode.
 	Utils.set_gameplay_mouse_mode()

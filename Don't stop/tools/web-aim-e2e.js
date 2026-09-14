@@ -25,6 +25,7 @@
 // it - so a random scene flicker cannot pass as "the crosshair follows".
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { chromium } = require('playwright');
 
@@ -54,11 +55,17 @@ const wrap = a => { while (a > 180) a -= 360; while (a <= -180) a += 360; return
 const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 
 (async () => {
-	const browser = await chromium.launch(headed
-		? { headless: false, args: ['--window-size=1400,900'] }
-		: { headless: true, args: ['--enable-unsafe-swiftshader'] });
-	const context = await browser.newContext({ viewport: { width: VIEW.w, height: VIEW.h } });
-	const page = await context.newPage();
+	// One persistent profile for every phase, in a directory this run created and
+	// owns. The diagnostic calibration load leaves a save with one weapon in it,
+	// which is what a returning player has; the normal-entry phase then fires that
+	// weapon without the diagnostic phase doing anything on its behalf.
+	const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dontstop-aim-e2e-'));
+	const context = await chromium.launchPersistentContext(profileDir, {
+		headless: !headed,
+		viewport: { width: VIEW.w, height: VIEW.h },
+		args: headed ? ['--window-size=1400,900'] : ['--enable-unsafe-swiftshader'],
+	});
+	const page = context.pages()[0] || await context.newPage();
 
 	const consoleErrors = [];
 	const pageErrors = [];
@@ -141,6 +148,10 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		note('calibration close button: ' + JSON.stringify(closeButton));
 		token('CALIBRATION_FOUND_CAMP_CLOSE_BUTTON', !!closeButton && /返回/.test(closeButton.text), JSON.stringify(closeButton));
 		if (!closeButton || !/返回/.test(closeButton.text)) throw new Error('could not locate the camp panel close button');
+		// Wait for the diagnostic run to finish granting+persisting a starting
+		// weapon, so the profile the normal-entry phase uses is a usable one.
+		const calibrated = await waitFor(() => Promise.resolve(engineLog.some(l => l.includes('[e2e] ready'))), 360000, 250);
+		token('CALIBRATION_PROFILE_READY', calibrated);
 	}
 
 	// ======================================================== Phase A: real entry
@@ -177,13 +188,31 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 	token('SHELL_READY_NOT_A_FALLBACK', !!st && st.fallbackUsed === false && st.outcome !== 'timeout-fallback',
 		`fallbackUsed=${st && st.fallbackUsed} outcome=${st && st.outcome}`);
 	token('SHELL_READY_NOT_AN_ERROR', !!st && st.outcome !== 'engine-error', `errorMessage=${st && st.errorMessage}`);
-	if (st && st.readyNoticeAt && st.engineStartedAt) {
-		const latency = Math.round(st.readyNoticeAt - st.engineStartedAt);
-		token('READY_NOTICE_ARRIVED_BEFORE_FALLBACK', latency > 0 && latency < 20000,
-			`notice ${latency}ms after the engine started (fallback fires at 20000ms)`);
-	} else {
-		token('READY_NOTICE_ARRIVED_BEFORE_FALLBACK', false, 'no notice timing recorded');
+	// The acceptance window has to be measured from the timer that actually runs.
+	// The watchdog is armed when startGame() resolves, not when the user hit the
+	// page, so charging download + engine bring-up against it would reject a slow
+	// but perfectly healthy start.
+	const fallbackWindow = (st && st.fallbackWindowMs) || 20000;
+	const noticeAfterArm = (st && st.readyNoticeAt && st.fallbackArmedAt) ? Math.round(st.readyNoticeAt - st.fallbackArmedAt) : null;
+	token('READY_NOTICE_ARRIVED_BEFORE_FALLBACK',
+		noticeAfterArm !== null && noticeAfterArm >= 0 && noticeAfterArm < fallbackWindow,
+		`notice ${noticeAfterArm}ms after the fallback timer was armed (window ${fallbackWindow}ms)`);
+	if (st && st.downloadStartedAt && st.engineStartedAt) {
+		note(`download + engine bring-up took ${Math.round(st.engineStartedAt - st.downloadStartedAt)}ms (not part of the fallback window)`);
 	}
+	// Deterministic cover for the origin bug, including the exact counterexample:
+	// a 25 s download with a healthy notice at 30 s must be accepted, and a real
+	// late notice past the window must still be rejected.
+	const withinFallback = t => (t.readyNoticeAt - t.fallbackArmedAt) < 20000;
+	const oldOriginPredicate = t => (t.readyNoticeAt - t.engineStartedAt) < 20000;
+	// engineStartedAt is 0 here because the old code recorded that field BEFORE
+	// startGame(), so a 25 s download was charged against the 20 s window.
+	const slowButHealthy = { engineStartedAt: 0, fallbackArmedAt: 25000, readyNoticeAt: 30000 };
+	const genuinelyLate = { engineStartedAt: 0, fallbackArmedAt: 25000, readyNoticeAt: 46000 };
+	token('SLOW_BUT_HEALTHY_START_ACCEPTED', withinFallback(slowButHealthy), 'download 25s, notice 5s into the window');
+	token('OLD_ORIGIN_WOULD_HAVE_REJECTED_IT', !oldOriginPredicate(slowButHealthy),
+		'measuring from the download start still rejects that healthy start, which is why the origin changed');
+	token('LATE_NOTICE_STILL_REJECTED', !withinFallback(genuinelyLate), 'notice 21s after the timer was armed');
 	const bootLines = engineLog.filter(l => l.includes('[boot]'));
 	note('boot timing: ' + bootLines.map(l => l.replace(/^\[boot\]\s*/, '')).join(' | '));
 
@@ -246,11 +275,58 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		diffReturn > 2 && diffReturn > diffControl2 * 1.2,
 		`after moving away and back the cursor region changed by ${diffReturn.toFixed(1)} vs ${diffControl2.toFixed(1)} at the control region`);
 
-	// A real click must reach the running game (it is the same click that fires).
+	// A real shot from the normal entry must have a real result: the ammo readout
+	// in the bottom-right HUD is a player-visible consequence of firing, and the
+	// crosshair is parked far away from that region so it cannot be the cause.
+	const hudCrop = async () => page.screenshot({
+		clip: {
+			x: rect.x + rect.w * (292 / 410),
+			y: rect.y + rect.h * (203 / 230),
+			width: rect.w * (116 / 410),
+			height: rect.h * (25 / 230),
+		},
+	});
+
+	// Negative control: the product's own pause panel is open, so the identical
+	// click cannot reach the weapon. Ammo must not move.
+	// Noise floor first: the same interval with no input at all.
+	const idleA = await hudCrop();
+	await page.waitForTimeout(4200);
+	const idleB = await hudCrop();
+	const diffIdle = await meanAbsDiff(idleA, idleB);
+
+	const beforeBlocked = await hudCrop();
+	await page.keyboard.press('Tab');
+	await page.waitForTimeout(2500);
+	await page.mouse.click(rect.x + rect.w * (60 / 410), rect.y + rect.h * (120 / 230));
+	await page.waitForTimeout(1200);
+	await page.mouse.move(closeCss.x, closeCss.y);
+	await page.waitForTimeout(300);
+	await page.mouse.click(closeCss.x, closeCss.y);
+	await page.waitForTimeout(2500);
+	const afterBlocked = await hudCrop();
+	const diffBlocked = await meanAbsDiff(beforeBlocked, afterBlocked);
+
+	// Positive: same click, nothing in the way.
+	await page.mouse.move(posA.x, posA.y);
+	await page.waitForTimeout(1200);
+	const beforeShot = await hudCrop();
 	await page.mouse.down();
-	await page.waitForTimeout(500);
+	await page.waitForTimeout(400);
 	await page.mouse.up();
-	await page.waitForTimeout(1500);
+	await page.waitForTimeout(2500);
+	const afterShot = await hudCrop();
+	const diffShot = await meanAbsDiff(beforeShot, afterShot);
+	fs.writeFileSync(path.join(outDir, 'aim-ammo-hud-before-shot.png'), beforeShot);
+	fs.writeFileSync(path.join(outDir, 'aim-ammo-hud-after-shot.png'), afterShot);
+	// The ammo HUD is a small translucent strip over a live animated world, and
+	// opening/closing the panel moves it slightly, so this is a relative control:
+	// the blocked attempt must not reach the effect size the real shot produces.
+	token('BLOCKED_FIRE_DOES_NOT_CONSUME_AMMO', diffBlocked < diffShot - 2,
+		`blocked attempt changed the ammo HUD by ${diffBlocked.toFixed(2)}, an idle interval by ${diffIdle.toFixed(2)}`);
+	token('REAL_FIRE_CONSUMES_AMMO',
+		diffShot > 2 && diffShot > Math.max(diffIdle, diffBlocked) + 2,
+		`ammo HUD changed by ${diffShot.toFixed(2)} after the real click (idle ${diffIdle.toFixed(2)}, blocked ${diffBlocked.toFixed(2)})`);
 	await page.screenshot({ path: path.join(outDir, 'aim-04-fired-from-normal-entry.png') });
 	token('PAGE_ALIVE_AFTER_NORMAL_ENTRY_INPUT', await page.evaluate(() => !!document.querySelector('#canvas-host canvas')));
 	token('NO_POINTER_LOCK_ANYWHERE', await page.evaluate(() => !document.pointerLockElement));
@@ -519,16 +595,19 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		sample_state_line: (lastState() || {}).raw || null,
 	}, null, 2));
 
-	await browser.close();
+	await context.close();
+	fs.rmSync(profileDir, { recursive: true, force: true });
 
 	const required = [
-		'CALIBRATION_FOUND_CAMP_CLOSE_BUTTON',
+		'CALIBRATION_FOUND_CAMP_CLOSE_BUTTON', 'CALIBRATION_PROFILE_READY',
 		'SINGLE_START_ENTRY_POINT', 'LOADING_FEEDBACK_PRESENT', 'SHELL_HIDES_WITHOUT_A_START_CLICK',
 		'SHELL_READY_VIA_GAME_NOTICE', 'SHELL_READY_NOT_A_FALLBACK', 'SHELL_READY_NOT_AN_ERROR',
-		'READY_NOTICE_ARRIVED_BEFORE_FALLBACK',
+		'READY_NOTICE_ARRIVED_BEFORE_FALLBACK', 'SLOW_BUT_HEALTHY_START_ACCEPTED',
+		'OLD_ORIGIN_WOULD_HAVE_REJECTED_IT', 'LATE_NOTICE_STILL_REJECTED',
 		'CANVAS_VISIBLE_AFTER_LOAD', 'ESC_NEVER_PRESSED_BEFORE_AIM', 'NO_POINTER_LOCK_ANYWHERE',
 		'CROSSHAIR_IS_LOCATED_AT_THE_CURSOR', 'CROSSHAIR_STILL_AT_CURSOR_AFTER_RETURN',
 		'PAGE_ALIVE_AFTER_NORMAL_ENTRY_INPUT',
+		'BLOCKED_FIRE_DOES_NOT_CONSUME_AMMO', 'REAL_FIRE_CONSUMES_AMMO',
 		'FAULT_INJECTION_SUPPRESSES_NOTICE', 'FAULT_INJECTION_REVEALED_BY_FALLBACK',
 		'FAULT_INJECTION_FAILS_THE_NORMAL_ASSERTION',
 		'DIAGNOSTIC_ENTRY_READY', 'GAME_ENTERED_COMBAT',

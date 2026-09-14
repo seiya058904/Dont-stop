@@ -86,11 +86,22 @@
 
 		// Everything the acceptance test needs to tell "the game told us it is
 		// ready" apart from "we gave up waiting and showed it anyway".
+		//
+		// The timings have separate origins on purpose: the 20 s watchdog is armed
+		// only once startGame() resolves, so a slow download must not be charged
+		// against that window. Comparing the notice against the download start
+		// would reject a perfectly normal, late-but-healthy start.
 		const state = window.__dontStopState = {
-			contract: 'dontstop-shell/1',
+			contract: 'dontstop-shell/2',
 			hookNames: [HOOK_READY, HOOK_FAILED],
 			navigationStartedAt: performance.now(),
+			downloadStartedAt: null,
+			// When the engine reported that it is up and running.
 			engineStartedAt: null,
+			// When the 20 s last-resort timer was actually armed. This is the only
+			// origin the "did the game tell us in time" question may use.
+			fallbackArmedAt: null,
+			fallbackWindowMs: 20000,
 			readyNoticeAt: null,
 			overlayRemovedAt: null,
 			// pending | game-reported-ready | timeout-fallback | engine-error
@@ -213,8 +224,8 @@
 		}
 
 		engineStarted = true;
-		state.engineStartedAt = performance.now();
 		// Wasm/PCK fetch or engine bring-up failure lands here.
+		state.downloadStartedAt = performance.now();
 		engine.startGame({
 			onProgress: function (current, total) {
 				if (total > 0) {
@@ -228,17 +239,19 @@
 		}).then(function () {
 			// The engine is up. That is NOT the same as "the game is ready": the
 			// title scene still has to build, draw and finish the warm-up pass.
+			state.engineStartedAt = performance.now();
 			setStatus('正在准备游戏内容…', true);
+			state.fallbackArmedAt = performance.now();
 			watchdog = setTimeout(function () {
 				if (!readyReported && !revealed) {
 					// Last resort so a player is never stranded behind the cover.
 					// This is NOT a successful start and says so: the acceptance
 					// test fails on this outcome instead of waiting it out.
-					log('game did not report readiness in 20s; revealing anyway');
+					log('game did not report readiness in ' + (state.fallbackWindowMs / 1000) + 's; revealing anyway');
 					setStatus('', false);
 					reveal('timeout-fallback');
 				}
-			}, 20000);
+			}, state.fallbackWindowMs);
 		}).catch(function (err) {
 			const detail = err && err.message ? ' (' + err.message + ')' : '';
 			showError('游戏加载失败，请重试；若反复失败请检查网络或浏览器设置。' + detail);
