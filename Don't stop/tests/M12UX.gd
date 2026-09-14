@@ -26,9 +26,23 @@ func _ready():
 	reconstruct.free()
 	for key in panel.owned_icons:
 		var icon=panel.owned_icons[key]
-		check(icon.picture!=null and not icon.description.is_empty() and "来源：" in icon.description,"icon and source tooltip "+key)
+		# Product decision for this round: inside the stat sheet the weapon-upgrade
+		# and talent entries are text only. They must have NO icon and still carry
+		# the full source tooltip; every other entry kind keeps its icon. Asserting
+		# both directions keeps this a contract check rather than a relaxed one.
+		var text_only_entry = key.begins_with("upgrade/") or key.begins_with("talent/")
+		if text_only_entry:
+			check(icon.text_only and icon.picture==null and icon.icon==null,"text-only entry has no icon "+key)
+			check(icon.get_theme_constant("icon_max_width")==0 or not icon.expand_icon,"text-only entry reserves no icon space "+key)
+		else:
+			check(not icon.text_only and icon.picture!=null,"icon entry keeps its icon "+key)
+		check(not icon.description.is_empty() and "来源：" in icon.description,"source tooltip "+key)
 		var tooltip=icon._make_custom_tooltip(icon.description)
-		check(tooltip.get_child(0).texture==icon.display_picture and (icon.display_picture==icon.picture or icon.display_picture.atlas==icon.picture),"tooltip reuses official icon "+key); tooltip.free()
+		if text_only_entry:
+			check(tooltip.get_child(0).texture==null,"text-only tooltip draws no icon "+key)
+		else:
+			check(tooltip.get_child(0).texture==icon.display_picture and (icon.display_picture==icon.picture or icon.display_picture.atlas==icon.picture),"tooltip reuses official icon "+key)
+		tooltip.free()
 		var scroll=icon.get_parent().get_parent().get_parent()
 		scroll.ensure_control_visible(icon)
 		await get_tree().create_timer(0.03,true).timeout
