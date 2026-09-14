@@ -241,6 +241,16 @@ const wrap = a => { while (a > 180) a -= 360; while (a <= -180) a += 360; return
 	if (!startVisible) throw new Error('loader never became ready');
 	await page.locator('#start').click();
 	await page.waitForSelector('#canvas-host canvas', { timeout: 60000 });
+	// Independent witness for the environment itself: does this browser deliver
+	// relative deltas to the *page* at all? Without it, "the aim did not move"
+	// cannot be separated from "this machine cannot inject pointer-lock motion".
+	await page.evaluate(() => {
+		window.__move = { count: 0, sum: 0 };
+		document.addEventListener('mousemove', e => {
+			window.__move.count++;
+			window.__move.sum += Math.abs(e.movementX || 0) + Math.abs(e.movementY || 0);
+		}, true);
+	});
 	const ready = await waitFor(() => Promise.resolve(gameLines.some(l => l.includes('[e2e] ready'))), 360000);
 	token('GAME_ENTERED_COMBAT', ready, 't=+' + (((Date.now() - bootStart) / 1000) | 0) + 's');
 	if (!ready) throw new Error('in-game harness never became ready');
@@ -286,6 +296,27 @@ const wrap = a => { while (a > 180) a -= 360; while (a <= -180) a += 360; return
 	{
 		const dW = { x: right.aimworld.x - base.aimworld.x, y: right.aimworld.y - base.aimworld.y };
 		_worldPerDesign = dR.x !== 0 ? dW.x / dR.x : 1;
+	}
+	const domMovement = await page.evaluate(() => window.__move || { count: 0, sum: 0 });
+	const aimMoved = Math.abs(dR.x) >= 0.5 || Math.abs(dR.y) >= 0.5;
+	if (!aimMoved && domMovement.sum === 0) {
+		// The page never saw a relative delta, so no assertion about relative
+		// motion is meaningful here. Report it as untested rather than as a pass
+		// (which would be a lie) or as a failure (which would blame the product).
+		// A real-browser headed run is what proves this chain.
+		fs.writeFileSync(path.join(outDir, 'pointer-lock-e2e.json'), JSON.stringify({
+			url, headed, outcome: 'ENVIRONMENT_CANNOT_INJECT_RELATIVE_MOTION',
+			tokens, notes, dom_movement: domMovement, console_errors: consoleErrors,
+			http_errors: badResponses, failed_requests: failedRequests,
+		}, null, 2));
+		console.log(`[e2e] note page received 0 relative movement for ${STEP}css px of synthetic motion`);
+		console.log('[e2e] RESULT=ENVIRONMENT_CANNOT_INJECT_RELATIVE_MOTION');
+		await browser.close();
+		process.exit(3);
+	}
+	if (!aimMoved) {
+		// The DOM delivered motion but the game ignored it: this is a product bug.
+		note(`DOM delivered ${domMovement.sum} of movement but the aim did not change`);
 	}
 	token('MOUSE_RELATIVE_DELIVERED', Math.abs(dR.x) > 5,
 		`${STEP}css px -> dvp=(${dR.x.toFixed(2)}, ${dR.y.toFixed(2)}) scale=${_scale.toFixed(4)} design/css`);
@@ -509,6 +540,7 @@ const wrap = a => { while (a > 180) a -= 360; while (a <= -180) a += 360; return
 		url, headed, viewport: VIEW, design_viewport: design,
 		scale_design_per_css_px: _scale,
 		logical_cursor: { x: lx, y: ly },
+		dom_movement: domMovement,
 		tokens,
 		notes,
 		console_errors: consoleErrors,
