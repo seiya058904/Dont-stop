@@ -125,9 +125,18 @@ v1.0.1; the Windows feel was not re-judged by a human in this round.
 
 ## Artifacts
 
-* `TowDownGame-Windows-x64.exe` — SHA-256 `AA325EAEFB48D2307E5F49C9108305B66D062A0C0BC8991EF91588B11872B84F`
-* `TowDownGame-Windows-x64.pck` — SHA-256 `DCA7E35C886F640E9A69D81D4CA0179A0D622CE602B04E5518C743B2EA3FDFD8`
+Canonical artifact, matching the v1.0.0/v1.0.1 release convention (a ZIP plus a
+`.sha256` sidecar), built by CI from tag `v1.0.2`:
+
+* `TowDownGame-Windows-x64.zip` — SHA-256 `1155971AE75E41DFFC1961446C642B6533D47AF98D4562BD30E7F17FBCAC209A`
+  * `TowDownGame-Windows-x64.exe` — SHA-256 `AA325EAEFB48D2307E5F49C9108305B66D062A0C0BC8991EF91588B11872B84F`
+  * `TowDownGame-Windows-x64.pck` — SHA-256 `6586CC935767F8E315A941E50BEFB4B058DCFB668327F09C334EBBEFA4170C8F`
 * Web build: `https://seiya058904.github.io/game-prototype-lab/index.html`
+
+The ZIP's `.sha256` sidecar is attached next to it and was re-verified against a
+fresh download. A pck rebuilt locally is 256 bytes larger purely because the local
+`.godot` cache still lists files that the export filter now excludes; the exe is
+byte-identical and both packs contain the same 2631 entries / 39.03 MiB payload.
 
 `tools/pck-audit.py` found the Windows pack shipping **1.78 MB of build output**
 (`build/web/index.png`, `build/web/index.icon.png` and three `.import` companions)
@@ -136,4 +145,5 @@ export filters did not exclude it. Both presets now exclude `build/*`, and both
 packs audit clean. This also made the artifact depend on local build state; it is
 deterministic again.
 
-Windows and Web are built from the same source commit as tag `v1.0.2`.
+Windows and Web are built from the same source commit as tag `v1.0.2`
+(`e1365e06441e879f5a4ea77e4f18a99455378d29`).

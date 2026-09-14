@@ -72,7 +72,7 @@
     "load_measurement_note": "served from localhost, so download time is excluded",
     "leakage_audit": "tools/pck-audit.py - web 2623 entries 38.42 MiB clean; windows 2631 entries 39.03 MiB clean",
     "leakage_found_and_fixed": "the Windows pack had been shipping 1.78 MB of build output (build/web/index.png, build/web/index.icon.png and three .import companions) because --editor --import scans build/ and the export filters did not exclude it; both presets now exclude build/*",
-    "windows_pck_bytes_after_fix": 41201828,
+    "canonical_artifact": "TowDownGame-Windows-x64.zip sha256 1155971AE75E41DFFC1961446C642B6533D47AF98D4562BD30E7F17FBCAC209A (CI build from tag v1.0.2)", "ci_exe_sha256": "AA325EAEFB48D2307E5F49C9108305B66D062A0C0BC8991EF91588B11872B84F", "ci_pck_sha256": "6586CC935767F8E315A941E50BEFB4B058DCFB668327F09C334EBBEFA4170C8F", "local_vs_ci_pck_delta_bytes": 256, "windows_pck_bytes_after_fix": 41201572,
     "windows_pck_bytes_before_fix": 42788384
   },
   "windows": {
@@ -135,3 +135,4 @@
     "WEB_HUMAN_ACCEPTED": false
   }
 }
+
