@@ -66,11 +66,17 @@ func _e2e_camp_probe() -> void:
 	while Time.get_ticks_msec() < deadline:
 		await get_tree().create_timer(0.05).timeout
 		if not is_instance_valid(Demo.ui): continue
+		# The panel is built in _ready() and laid out by the container pass that
+		# follows it, so reading global_position immediately returns the default
+		# (0,0)-ish slot. Let the layout settle, then read.
+		for i in 3:
+			await get_tree().process_frame
 		var button := _find_button(Demo.ui, "返回")
-		if button == null: continue
+		if button == null or button.size.x <= 10.0: continue
 		var rect := Rect2(button.global_position, button.size)
-		print("[e2e] camp-close-button x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
-			rect.position.x, rect.position.y, rect.size.x, rect.size.y, rect.get_center().x, rect.get_center().y])
+		print("[e2e] camp-close-button text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
+			button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
+			rect.get_center().x, rect.get_center().y])
 		return
 
 func _find_button(node: Node, prefix: String) -> Button:

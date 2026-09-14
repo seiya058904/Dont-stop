@@ -133,13 +133,14 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		const got = await waitFor(() => Promise.resolve(engineLog.some(l => l.includes('camp-close-button'))), 300000, 250);
 		const line = engineLog.find(l => l.includes('camp-close-button'));
 		if (got && line) {
-			const m = line.match(/cx=([\d.]+) cy=([\d.]+) w=([\d.]+) h=([\d.]+)/);
-			if (m) closeButton = { cx: parseFloat(m[1]), cy: parseFloat(m[2]), w: parseFloat(m[3]), h: parseFloat(m[4]) };
+			const m = line.match(/text="([^"]*)".*w=([\d.]+) h=([\d.]+) cx=([\d.]+) cy=([\d.]+)/);
+			if (m) closeButton = { text: m[1], w: parseFloat(m[2]), h: parseFloat(m[3]), cx: parseFloat(m[4]), cy: parseFloat(m[5]) };
 		}
 		const st0 = await shellState();
 		note(`calibration shell outcome=${st0 && st0.outcome} readyNotice=${st0 && st0.readyNoticeAt ? Math.round(st0.readyNoticeAt) : null}ms`);
-		token('CALIBRATION_FOUND_CAMP_CLOSE_BUTTON', !!closeButton, JSON.stringify(closeButton));
-		if (!closeButton) throw new Error('could not locate the camp panel close button');
+		note('calibration close button: ' + JSON.stringify(closeButton));
+		token('CALIBRATION_FOUND_CAMP_CLOSE_BUTTON', !!closeButton && /返回/.test(closeButton.text), JSON.stringify(closeButton));
+		if (!closeButton || !/返回/.test(closeButton.text)) throw new Error('could not locate the camp panel close button');
 	}
 
 	// ======================================================== Phase A: real entry
