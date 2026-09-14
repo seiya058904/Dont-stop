@@ -49,12 +49,16 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          # Absolute project directory. `--path` is absolute so Godot never has to
+          # guess, and every other path below is derived from it.
+          $project = Join-Path $env:GITHUB_WORKSPACE $env:PROJECT_PATH
+          if (-not (Test-Path -LiteralPath (Join-Path $project 'project.godot'))) { throw "project.godot not found under $project" }
           # Use the console wrapper so pwsh waits for the editor process
           # (the plain exe detaches). Fresh runners can quit the first import
           # pass early; the second pass is a no-op when everything exists.
-          & "$env:GODOT" --headless --path "$env:PROJECT_PATH" --editor --import --quit
-          & "$env:GODOT" --headless --path "$env:PROJECT_PATH" --editor --import --quit
-          $count = (Get-ChildItem -LiteralPath (Join-Path $env:PROJECT_PATH '.godot/imported') -ErrorAction SilentlyContinue | Measure-Object).Count
+          & "$env:GODOT" --headless --path $project --editor --import --quit
+          & "$env:GODOT" --headless --path $project --editor --import --quit
+          $count = (Get-ChildItem -LiteralPath (Join-Path $project '.godot/imported') -ErrorAction SilentlyContinue | Measure-Object).Count
           echo "imported assets: $count"
           if ($count -lt 50) { throw "import produced only $count assets" }
 
@@ -62,15 +66,26 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $winDir = Join-Path $env:PROJECT_PATH 'build/windows'
+          $project = Join-Path $env:GITHUB_WORKSPACE $env:PROJECT_PATH
+          $winDir = Join-Path $project 'build/windows'
           New-Item -ItemType Directory -Force -Path $winDir | Out-Null
+          # Godot resolves a relative --export-release path against --path, so
+          # passing the project-relative path together with an absolute --path
+          # used to nest a second "Don't stop" level and the check then ran
+          # against a file the exporter never wrote. Absolute here, absolute
+          # everywhere below, so check, package and hash all describe one pair.
           $exe = Join-Path $winDir $env:EXE_NAME
-          & "$env:GODOT" --headless --path "$env:PROJECT_PATH" --export-release "Windows x64 Release" $exe
+          $pck = Join-Path $winDir $env:PCK_NAME
+          Remove-Item -LiteralPath $exe, $pck -Force -ErrorAction SilentlyContinue
+          & "$env:GODOT" --headless --path $project --export-release "Windows x64 Release" $exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Get-ChildItem -LiteralPath $winDir | Format-Table Name, Length
-          $pck = Join-Path $winDir $env:PCK_NAME
-          if (-not ((Test-Path -LiteralPath $exe) -and (Test-Path -LiteralPath $pck))) { throw 'export output missing' }
+          if (-not ((Test-Path -LiteralPath $exe) -and (Test-Path -LiteralPath $pck))) { throw "export output missing: $exe / $pck" }
           if ((Get-Item -LiteralPath $exe).Length -lt 1MB) { throw 'exported exe looks empty' }
+          $nested = Join-Path $project $env:PROJECT_PATH
+          if (Test-Path -LiteralPath $nested) { throw "export nested the project directory inside itself: $nested" }
+          echo "EXE=$exe" >> $env:GITHUB_ENV
+          echo "PCK=$pck" >> $env:GITHUB_ENV
 
       - name: Package ZIP and SHA-256
         shell: pwsh
@@ -78,8 +93,8 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $stage = Join-Path $env:RUNNER_TEMP 'stage/DontStop'
           New-Item -ItemType Directory -Force -Path $stage | Out-Null
-          Copy-Item -LiteralPath (Join-Path $env:PROJECT_PATH ('build/windows/' + $env:EXE_NAME)) $stage
-          Copy-Item -LiteralPath (Join-Path $env:PROJECT_PATH ('build/windows/' + $env:PCK_NAME)) $stage
+          Copy-Item -LiteralPath $env:EXE $stage
+          Copy-Item -LiteralPath $env:PCK $stage
           $zip = Join-Path $env:RUNNER_TEMP $env:ZIP_NAME
           Compress-Archive -Path "$stage\*" -DestinationPath $zip -Force
           $sha = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLower()
@@ -87,6 +102,7 @@ jobs:
           Move-Item -LiteralPath $zip "$env:ZIP_NAME"
           Move-Item -LiteralPath "$zip.sha256" "$env:ZIP_NAME.sha256"
           Get-Item -LiteralPath "$env:ZIP_NAME" | Select-Object Name, Length
+          Get-FileHash -LiteralPath "$env:ZIP_NAME" -Algorithm SHA256 | Format-List
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

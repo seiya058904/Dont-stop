@@ -47,10 +47,39 @@ func _ready() -> void:
 	_run.call_deferred()
 	if e2e:
 		_e2e_stream.call_deferred()
+		_e2e_camp_probe.call_deferred()
 	if stutter:
 		_stutter_run.call_deferred()
 	if tour:
 		_tour_run.call_deferred()
+
+## Locator for the acceptance driver.
+##
+## Phase A of tools/web-aim-e2e.js runs against the REAL entry point with no test
+## flags, so it cannot ask the engine anything. It therefore needs to know where
+## the camp panel's own "返回 [Esc]" button is on screen, in order to close the
+## panel with a genuine mouse click instead of pressing Esc. This prints that
+## rectangle (design/viewport coordinates) once, from a separate diagnostic page
+## load, and performs no action itself.
+func _e2e_camp_probe() -> void:
+	var deadline := Time.get_ticks_msec() + 120000
+	while Time.get_ticks_msec() < deadline:
+		await get_tree().create_timer(0.05).timeout
+		if not is_instance_valid(Demo.ui): continue
+		var button := _find_button(Demo.ui, "返回")
+		if button == null: continue
+		var rect := Rect2(button.global_position, button.size)
+		print("[e2e] camp-close-button x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
+			rect.position.x, rect.position.y, rect.size.x, rect.size.y, rect.get_center().x, rect.get_center().y])
+		return
+
+func _find_button(node: Node, prefix: String) -> Button:
+	if node is Button and (node as Button).text.begins_with(prefix):
+		return node
+	for child in node.get_children():
+		var found := _find_button(child, prefix)
+		if found != null: return found
+	return null
 
 func e2e_invincible() -> bool:
 	return e2e

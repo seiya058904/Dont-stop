@@ -117,6 +117,8 @@ signal onGameStart()
 var _web_boot_menu := false
 var _web_boot_warmup := false
 var _web_boot_reported := false
+var _web_boot_menu_ms := 0
+var _web_boot_warmup_ms := 0
 
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
@@ -173,14 +175,27 @@ func get_aim_world_position() -> Vector2:
 	var vport := get_viewport()
 	return vport.get_canvas_transform().affine_inverse() * get_aim_viewport_position()
 
-## Called by the title UI once the main menu is really on screen.
+## The shell handshake. web/loader.html exposes exactly these two functions on
+## window.__dontStop, and this file is the only caller, so the names live here
+## once and are asserted by tools/web-aim-e2e.js: a mismatch used to mean the
+## shell only revealed itself through its 20 s fallback, which looked like a
+## successful start until the E2E started checking *how* it was revealed.
+const WEB_SHELL_HOOKS := {
+	"ready": "ready",
+	"failed": "failed",
+}
+
+## Called by ui/MainUI.gd once the title menu is really on screen.
 func notify_web_boot_menu_ready() -> void:
 	_web_boot_menu = true
+	_web_boot_menu_ms = Time.get_ticks_msec()
+	print("[boot] title menu drawn t=%d" % _web_boot_menu_ms)
 	_web_report_boot_ready()
 
-## Called by Warmup when the pre-warm pass has completed (or was skipped).
+## Called by autoload/Warmup.gd when the pre-warm pass has completed (or was skipped).
 func notify_web_boot_warmup_done() -> void:
 	_web_boot_warmup = true
+	_web_boot_warmup_ms = Time.get_ticks_msec()
 	_web_report_boot_ready()
 
 func _web_report_boot_ready() -> void:
@@ -191,14 +206,16 @@ func _web_report_boot_ready() -> void:
 	# actually been presented, not merely built.
 	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
-	_web_call_shell("bootReady")
-	print("[boot] web-ready menu=%s warmup=%s" % [str(_web_boot_menu), str(_web_boot_warmup)])
+	_web_call_shell(WEB_SHELL_HOOKS.ready)
+	print("[boot] completion notice sent t=%d (menu=%d warmup=%d)" % [
+		Time.get_ticks_msec(), _web_boot_menu_ms, _web_boot_warmup_ms])
 
 ## Fire-and-forget call into web/loader.html's __dontStop hook.
 ## The bridge is looked up by name because the JavaScriptBridge singleton only
 ## exists in web builds; naming it directly would not even parse on desktop.
 ## The eval is wrapped so a shell without the hook (or a blocked eval) can never
-## take the game down.
+## take the game down - but it also cannot silently look like success: the shell
+## only counts a reveal as "game-reported-ready" when this call arrives.
 func _web_call_shell(hook: String) -> void:
 	if not OS.has_feature("web"): return
 	var bridge = Engine.get_singleton("JavaScriptBridge")

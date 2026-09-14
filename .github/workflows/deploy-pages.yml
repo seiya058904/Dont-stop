@@ -1,9 +1,18 @@
 name: Build and deploy Web release
 
+# Build + browser tests and the production deploy are separate jobs on purpose:
+# dispatching this workflow on a candidate branch must be able to build and test
+# it without ever touching the live Pages site. The `deploy` job is additionally
+# gated on `github.ref == 'refs/heads/main'`.
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Also deploy to production Pages (main branch only)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -19,6 +28,10 @@ env:
   GODOT_RELEASE_BASE: https://github.com/godotengine/godot/releases/download/4.7.2-stable
   PLAYWRIGHT_VERSION: 1.60.0
   PAGES_URL: https://seiya058904.github.io/Dont-stop/index.html
+  # The project directory really is named "Don't stop" (apostrophe and space
+  # included). Bash needs the quotes; YAML must not, because a scalar that opens
+  # with a quote has to close it before anything else follows.
+  PROJECT_PATH: "Don't stop"
 
 jobs:
   build:
@@ -49,34 +62,39 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          "$GODOT" --headless --path "Don't stop" --editor --import --quit \
+          "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit \
             --log-file "$RUNNER_TEMP/godot/import.log"
-          mkdir -p "Don't stop"/build/web
-          "$GODOT" --headless --path "Don't stop" \
+          mkdir -p "$PROJECT_PATH/build/web"
+          # Export path is relative to the project directory (that is how Godot
+          # resolves it), and --path is the project directory, so this stays
+          # inside it instead of nesting "Don't stop/Don't stop".
+          "$GODOT" --headless --path "$PROJECT_PATH" \
             --export-release "Web Release" build/web/index.html \
             --log-file "$RUNNER_TEMP/godot/export.log"
-          test -s "Don't stop"/build/web/index.html
-          test -s "Don't stop"/build/web/index.pck
-          test -s "Don't stop"/build/web/index.wasm
-          test -s "Don't stop"/build/web/index.js
+          test -s "$PROJECT_PATH/build/web/index.html"
+          test -s "$PROJECT_PATH/build/web/index.pck"
+          test -s "$PROJECT_PATH/build/web/index.wasm"
+          test -s "$PROJECT_PATH/build/web/index.js"
           # Branding asset referenced by the custom loader / favicon. It is
           # produced by the exporter itself (index.icon.png), so this only
           # asserts it is really there instead of copying a second copy in.
-          test -s "Don't stop"/build/web/index.icon.png
+          test -s "$PROJECT_PATH/build/web/index.icon.png"
 
       - name: Configure Pages
+        if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "Don't stop"/build/web
+          path: "Don't stop/build/web"
 
       - name: Upload Web build for smoke jobs
         uses: actions/upload-artifact@v4
         with:
           name: web-build
-          path: "Don't stop"/build/web
+          path: "Don't stop/build/web"
           retention-days: 3
 
   browser-smoke:
@@ -112,17 +130,17 @@ jobs:
           python3 -m http.server 8788 --directory build/web &
           sleep 2
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
-          node "Don't stop"/tools/smoke-web.js \
+          node "$PROJECT_PATH"/tools/smoke-web.js \
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
-          node "Don't stop"/tools/save-audit-web.js \
+          node "$PROJECT_PATH"/tools/save-audit-web.js \
             http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
           # Web mouse-aim E2E. Phase A drives the REAL entry point (no query
-          # flags) the way a player would, then Phase B adds state streaming to
+          # flags) the way a player would and asserts the game's own completion
+          # notice is what removed the loading shell; Phase F injects a missing
+          # notice and requires that to fail; Phase B adds state streaming to
           # assert cursor -> aim -> crosshair -> gun -> projectile. There is no
-          # environment escape hatch any more: absolute mouse positions work in
-          # headless Chromium, so any non-zero exit is a real failure and blocks
-          # deploy.
-          node "Don't stop"/tools/web-aim-e2e.js \
+          # environment escape hatch, so any non-zero exit blocks deploy.
+          node "$PROJECT_PATH"/tools/web-aim-e2e.js \
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/aim-e2e.log
           echo "WEB_AIM_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
           echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
@@ -135,7 +153,11 @@ jobs:
           path: smoke-evidence
           retention-days: 14
 
+  # Production only. A workflow_dispatch on a candidate branch builds and tests
+  # but never deploys, and the online smoke never runs against a host that was
+  # not deployed by this same workflow.
   deploy:
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_dispatch' || inputs.deploy == true)
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -147,6 +169,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   online-smoke:
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_dispatch' || inputs.deploy == true)
     name: Online smoke (deployed Pages)
     runs-on: ubuntu-24.04
     needs: deploy

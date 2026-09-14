@@ -74,6 +74,33 @@
 		const frameEl = document.getElementById('frame');
 		const hostEl = document.getElementById('canvas-host');
 
+		// Contract with autoload/Utils.gd (WEB_SHELL_HOOKS). These are the only
+		// hooks the game calls; a rename on one side and not the other used to be
+		// invisible because the shell's fallback timer still removed the overlay.
+		const HOOK_READY = 'ready';
+		const HOOK_FAILED = 'failed';
+		// Fault injection for the acceptance test only: ?noready=1 makes the shell
+		// ignore the game's completion notice, so the test can prove that a broken
+		// handshake FAILS instead of quietly passing through the fallback.
+		const SUPPRESS_READY = params.has('noready');
+
+		// Everything the acceptance test needs to tell "the game told us it is
+		// ready" apart from "we gave up waiting and showed it anyway".
+		const state = window.__dontStopState = {
+			contract: 'dontstop-shell/1',
+			hookNames: [HOOK_READY, HOOK_FAILED],
+			navigationStartedAt: performance.now(),
+			engineStartedAt: null,
+			readyNoticeAt: null,
+			overlayRemovedAt: null,
+			// pending | game-reported-ready | timeout-fallback | engine-error
+			outcome: 'pending',
+			fallbackUsed: false,
+			// true when this page was asked to simulate a missing notice.
+			readyNoticeSuppressed: SUPPRESS_READY,
+			errorMessage: null,
+		};
+
 		let revealed = false;
 		let fatal = false;
 		let engineStarted = false;
@@ -93,11 +120,16 @@
 
 		// The one and only way the game becomes playable. Nothing here fakes a
 		// user gesture: the player's first click is the game's own menu button.
+		// `outcome` records HOW it was reached, and the acceptance test refuses to
+		// treat anything but 'game-reported-ready' as a successful start.
 		function reveal(reason) {
 			if (revealed) return;
 			revealed = true;
 			if (watchdog) { clearTimeout(watchdog); watchdog = null; }
-			log('revealing the running game (' + reason + ')');
+			state.outcome = reason;
+			if (reason === 'timeout-fallback') state.fallbackUsed = true;
+			state.overlayRemovedAt = performance.now();
+			log('revealing the running game (' + reason + ') at ' + Math.round(state.overlayRemovedAt) + 'ms');
 			frameEl.classList.add('gone');
 			setTimeout(function () {
 				if (revealed) frameEl.style.display = 'none';
@@ -109,6 +141,8 @@
 			fatal = true;
 			if (watchdog) { clearTimeout(watchdog); watchdog = null; }
 			log('fatal: ' + message);
+			state.outcome = 'engine-error';
+			state.errorMessage = message;
 			errEl.textContent = message;
 			errEl.style.display = 'block';
 			retryEl.style.display = 'inline-block';
@@ -120,12 +154,19 @@
 			retryEl.addEventListener('click', function () { location.reload(); });
 		}
 
-		// The game calls this from GDScript (see autoload/Utils.gd) once the real
-		// title menu has been drawn and the pre-warm pass has finished. It is the
-		// readiness signal the shell waits for; the engine's startGame() promise
-		// alone is only "the engine booted".
+		// The game calls these from GDScript (autoload/Utils.gd, WEB_SHELL_HOOKS)
+		// once the real title menu has been drawn AND the pre-warm pass has
+		// finished. This is the readiness signal the shell waits for; the engine's
+		// startGame() promise alone only means "the engine booted".
 		window.__dontStop = {
 			ready: function () {
+				state.readyNoticeAt = performance.now();
+				if (SUPPRESS_READY) {
+					// Fault injection: behave exactly as if the game never called
+					// back, so the test can prove the fallback is NOT acceptance.
+					log('completion notice SUPPRESSED by ?noready=1');
+					return;
+				}
 				readyReported = true;
 				setStatus('', false);
 				reveal('game-reported-ready');
@@ -172,6 +213,7 @@
 		}
 
 		engineStarted = true;
+		state.engineStartedAt = performance.now();
 		// Wasm/PCK fetch or engine bring-up failure lands here.
 		engine.startGame({
 			onProgress: function (current, total) {
@@ -189,11 +231,12 @@
 			setStatus('正在准备游戏内容…', true);
 			watchdog = setTimeout(function () {
 				if (!readyReported && !revealed) {
-					// Do not strand the player behind the cover. Say what happened,
-					// show the game anyway, and leave the reason in the console.
+					// Last resort so a player is never stranded behind the cover.
+					// This is NOT a successful start and says so: the acceptance
+					// test fails on this outcome instead of waiting it out.
 					log('game did not report readiness in 20s; revealing anyway');
 					setStatus('', false);
-					reveal('readiness-timeout-fallback');
+					reveal('timeout-fallback');
 				}
 			}, 20000);
 		}).catch(function (err) {
