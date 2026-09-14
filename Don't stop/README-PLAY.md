@@ -1,4 +1,4 @@
-# Don't stop — 试玩说明
+# Don't Stop — 试玩说明
 
 正式试玩入口：[GitHub Pages 浏览器版](https://seiya058904.github.io/Dont-stop/) · [Windows x64 Release](https://github.com/seiya058904/Dont-stop/releases/latest)。
 

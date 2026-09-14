@@ -1,4 +1,4 @@
-// Don't stop — Web browser smoke test (Playwright).
+// Don't Stop — Web browser smoke test (Playwright).
 // Usage: node smoke-web.js <url> [screenshotDir]
 //
 // Fails (exit 1) on: HTTP errors/404s, page errors, default Godot branding, a
@@ -58,7 +58,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 		const page = await context.newPage();
 		await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 		step('no-shell-start-button', (await page.locator('#start').count()) === 0);
-		step('dont-stop-title', (await page.title()).includes("Don't stop"));
+		step('dont-stop-title', (await page.title()).includes("Don't Stop"));
 		const frameText = await page.locator('#frame').innerText().catch(() => '');
 		step('no-godot-branding', !/godot/i.test(frameText));
 		step('no-second-start-prompt', !/点击开始|立即开始|点击任意|click to start/i.test(frameText));

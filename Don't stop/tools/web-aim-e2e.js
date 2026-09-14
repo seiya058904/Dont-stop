@@ -1,4 +1,4 @@
-// Don't stop — Web mouse-aim and launch-handshake acceptance E2E (Playwright).
+// Don't Stop — Web mouse-aim and launch-handshake acceptance E2E (Playwright).
 //
 // Usage: node web-aim-e2e.js <url> [evidenceDir]
 //   E2E_HEADED=1   run a real windowed Chromium (required for the OS focus phase)
