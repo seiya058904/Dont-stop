@@ -114,10 +114,12 @@ jobs:
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
           node TowDownGame-Iteration/tools/save-audit-web.js \
             http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
-          # Pointer Lock E2E. Exit 0 = every input assertion passed. Exit 3 = this
-          # environment never granted Pointer Lock at all, which proves nothing
-          # either way and is published as UNTESTED instead of being hidden.
-          # Any other non-zero exit is a real assertion failure and blocks deploy.
+          # Pointer Lock E2E. Exit 0 = every input assertion passed on CI hardware.
+          # Exit 3 = this environment cannot exercise the relative-motion path at
+          # all (measured exactly-zero aim delta AND a DOM witness recording what
+          # the page itself received), which is published as UNTESTED rather than
+          # hidden behind `|| true` or faked as a pass. Any other non-zero exit is
+          # a real assertion failure and blocks deploy.
           # Chromium's own headless mode is used (no xvfb): a virtual display with
           # no window manager blurs the page and drops the lock at random minutes.
           set +e
@@ -128,7 +130,7 @@ jobs:
           summary="${GITHUB_STEP_SUMMARY:-/dev/null}"
           case "$lock_code" in
             0) echo "POINTER_LOCK_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" | tee -a "$summary" ;;
-            3) echo "POINTER_LOCK_E2E=UNTESTED_IN_CI (environment never acquired Pointer Lock; NOT a product verdict)" | tee -a "$summary" ;;
+            3) echo "POINTER_LOCK_E2E=UNTESTED_RELATIVE_MOTION (CI browser cannot exercise Godot's relative-motion path; the real-browser headed run is the authority. NOT a product verdict.)" | tee -a "$summary" ;;
             *) echo "POINTER_LOCK_E2E=FAIL exit=$lock_code" | tee -a "$summary"; exit 1 ;;
           esac
           echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" | tee -a "$summary"
@@ -179,11 +181,20 @@ jobs:
           curl --fail --silent --show-error "$PAGES_URL" -o /dev/null
           node TowDownGame-Iteration/tools/smoke-web.js \
             "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-smoke.log
-          # Virtual displays drop Pointer Lock at random minutes (browser exits on
-          # blur; no WM to restore focus). Evidence-only here; the blocking
-          # pointer-lock acceptance is the real-browser E2E pre-tag and online.
-          xvfb-run -a node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
-            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-pointer-lock-e2e.log || true
+          # Same contract against the deployed site: a real assertion failure here
+          # fails the job, an environment that cannot exercise relative motion is
+          # published as UNTESTED instead of being swallowed by `|| true`.
+          set +e
+          node TowDownGame-Iteration/tools/pointer-lock-e2e.js \
+            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-pointer-lock-e2e.log
+          lock_code=${PIPESTATUS[0]}
+          set -e
+          summary="${GITHUB_STEP_SUMMARY:-/dev/null}"
+          case "$lock_code" in
+            0) echo "ONLINE_POINTER_LOCK_E2E=PASS_CI_CHROMIUM" | tee -a "$summary" ;;
+            3) echo "ONLINE_POINTER_LOCK_E2E=UNTESTED_RELATIVE_MOTION (CI browser cannot exercise Godot's relative-motion path; NOT a product verdict.)" | tee -a "$summary" ;;
+            *) echo "ONLINE_POINTER_LOCK_E2E=FAIL exit=$lock_code" | tee -a "$summary"; exit 1 ;;
+          esac
 
       - name: Upload online smoke evidence
         if: always()

@@ -15,9 +15,20 @@ unchanged by design.
 **CI green does not mean the mouse is playable.** That is exactly how v1.0.1
 shipped broken: the deploy workflow was green while a human could not aim. In
 v1.0.2 the CI pointer-lock step is no longer wrapped in `|| true`. It now exits
-`3` when the environment never grants Pointer Lock and publishes
-`POINTER_LOCK_E2E=UNTESTED_IN_CI` — an explicit "not tested", never a pass — and
-any other non-zero exit fails the deploy.
+`3` when the environment cannot exercise the relative-motion path and publishes
+`POINTER_LOCK_E2E=UNTESTED_RELATIVE_MOTION` — an explicit "not tested", never a
+pass — and any other non-zero exit fails the deploy.
+
+Measured on CI, that distinction is not hypothetical: the `89feb25` run of the
+*previous* implementation logged `aimvp=(0.0, 0.0)` and `dAngle=0.0` for the same
+sweeps, i.e. the relative-motion assertions have **never** passed on the CI
+runner. The old `|| true` hid a permanently red test rather than a one-off
+virtual-display hiccup. CI still gates plenty: build, export, boot, canvas,
+console, network, in-game smoke, save audit, Pointer Lock *acquisition*, the
+engine-vs-browser lock consistency check, Escape/pause/cursor, resume by real
+gesture, WASD, crosshair coherence. Only the relative-motion family is untested
+there, and `tools/pointer-lock-e2e.js` now records a DOM-level witness of what
+the page itself received so the log says which side dropped the deltas.
 
 ## What was broken in v1.0.1 (`REAL_BROWSER` + `HUMAN`)
 

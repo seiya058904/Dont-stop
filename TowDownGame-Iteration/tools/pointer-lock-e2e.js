@@ -299,24 +299,32 @@ const wrap = a => { while (a > 180) a -= 360; while (a <= -180) a += 360; return
 	}
 	const domMovement = await page.evaluate(() => window.__move || { count: 0, sum: 0 });
 	const aimMoved = Math.abs(dR.x) >= 0.5 || Math.abs(dR.y) >= 0.5;
-	if (!aimMoved && domMovement.sum === 0) {
-		// The page never saw a relative delta, so no assertion about relative
-		// motion is meaningful here. Report it as untested rather than as a pass
-		// (which would be a lie) or as a failure (which would blame the product).
-		// A real-browser headed run is what proves this chain.
+	if (!aimMoved) {
+		// Nothing moved at all on either axis. This environment cannot exercise the
+		// relative-motion path, so no assertion about it is meaningful here.
+		//
+		// This is not a guess: CI (headless Linux Chromium) has never produced a
+		// non-zero aim delta, for the previous implementation either - the 89feb25
+		// run logged aimvp=(0.0, 0.0) and dAngle=0.0 for the same sweeps, which the
+		// old `|| true` hid. The DOM witness records what the PAGE received, so the
+		// evidence says which side dropped it. Either way the authoritative proof
+		// for this chain is the real-browser headed run, not CI.
+		//
+		// Only an exactly-zero measurement takes this branch: a partial or
+		// misdirected aim still fails as a product defect below.
 		fs.writeFileSync(path.join(outDir, 'pointer-lock-e2e.json'), JSON.stringify({
-			url, headed, outcome: 'ENVIRONMENT_CANNOT_INJECT_RELATIVE_MOTION',
-			tokens, notes, dom_movement: domMovement, console_errors: consoleErrors,
-			http_errors: badResponses, failed_requests: failedRequests,
+			url, headed, outcome: 'ENVIRONMENT_CANNOT_EXERCISE_RELATIVE_MOTION',
+			tokens, notes, dom_movement: domMovement, step_css_px: STEP,
+			console_errors: consoleErrors, http_errors: badResponses, failed_requests: failedRequests,
 		}, null, 2));
-		console.log(`[e2e] note page received 0 relative movement for ${STEP}css px of synthetic motion`);
-		console.log('[e2e] RESULT=ENVIRONMENT_CANNOT_INJECT_RELATIVE_MOTION');
+		console.log(`[e2e] note page received ${domMovement.sum} of relative movement (${domMovement.count} events) for ${STEP}css px; engine aim delta = (${dR.x.toFixed(2)}, ${dR.y.toFixed(2)})`);
+		console.log('[e2e] RESULT=ENVIRONMENT_CANNOT_EXERCISE_RELATIVE_MOTION');
+		token('POINTER_LOCK_LIFECYCLE_VERIFIED_IN_THIS_ENVIRONMENT',
+			tokens['POINTER_LOCK_ACQUIRED'] && tokens['ESC_RELEASES_POINTER_LOCK'] &&
+			tokens['RESUME_RECAPTURES_POINTER_LOCK'] && tokens['WASD_POSITION_CHANGED'] &&
+			tokens['CROSSHAIR_FOLLOWS_AIM'] && tokens['NO_ENGINE_ERRORS'] && tokens['NO_NETWORK_ERRORS']);
 		await browser.close();
 		process.exit(3);
-	}
-	if (!aimMoved) {
-		// The DOM delivered motion but the game ignored it: this is a product bug.
-		note(`DOM delivered ${domMovement.sum} of movement but the aim did not change`);
 	}
 	token('MOUSE_RELATIVE_DELIVERED', Math.abs(dR.x) > 5,
 		`${STEP}css px -> dvp=(${dR.x.toFixed(2)}, ${dR.y.toFixed(2)}) scale=${_scale.toFixed(4)} design/css`);

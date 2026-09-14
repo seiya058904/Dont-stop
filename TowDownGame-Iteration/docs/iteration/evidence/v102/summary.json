@@ -124,7 +124,10 @@
     "WEB_WASD_PASS": true,
     "WEB_VISUAL_PASS": "PARTIAL - loader/camp/HUD/shop/stats confirmed by eye; other captures exist but marker alignment was unreliable",
     "WEB_SAVE_ISOLATION_PASS": true,
-    "CI_POINTER_LOCK_GATE": "no longer silently swallowed: exit 3 = UNTESTED_IN_CI, any other non-zero exit blocks deploy",
+    "CI_POINTER_LOCK_GATE": "no longer silently swallowed: exit 3 = UNTESTED_RELATIVE_MOTION, any other non-zero exit blocks deploy",
+    "CI_RELATIVE_MOTION_HISTORY": "the 89feb25 CI run of the previous implementation logged aimvp=(0.0,0.0) and dAngle=0.0, so relative-motion assertions have never passed on the CI runner; the old || true hid a permanently red test",
+    "CI_VERIFIES": ["build", "export", "boot", "canvas", "console", "network", "in-game smoke", "save audit", "pointer lock acquisition", "engine-vs-browser lock consistency", "esc/pause/cursor", "resume by real gesture", "wasd", "crosshair coherence"],
+    "CI_CANNOT_VERIFY": ["relative mouse motion", "aim direction", "projectile direction", "aim 360", "visual appearance", "human feel"],
     "READY_FOR_HUMAN_WEB_ACCEPTANCE": true,
     "WEB_HUMAN_ACCEPTED": false
   }
