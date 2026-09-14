@@ -207,6 +207,24 @@ func _tour_close_panels() -> void:
 		menu.queue_free()
 		Demo.pop_pause(menu)
 
+## Test-only: give the tour the same "everything purchased" state a long-term
+## player would have, so the owned/activated label variants get captured too.
+## Touches no save file (Demo.test_mode is set by the smoke driver).
+func _tour_grant_everything() -> void:
+	if LevelServer.state != "CAMP":
+		LevelServer.state = "CAMP"
+	PlayerData.gold = 999999
+	PlayerData.reward_point = 9999
+	for id in Utils.am_dict:
+		Demo.try_purchase("attachment", id)
+	for id in Utils.weapon_list:
+		Demo.try_purchase("weapon", id)
+	for id in DemoConfig.TALENTS:
+		var guard := 0
+		while Demo.rank(id) < DemoConfig.TALENTS[id].max and guard < 12:
+			Demo.try_purchase("talent", id, "points")
+			guard += 1
+
 func _tour_run() -> void:
 	_tour_mark("title")
 	await _tour_dwell(4.0)
@@ -230,6 +248,25 @@ func _tour_run() -> void:
 	Demo.ui.switch_tab("talent")
 	await _tour_dwell(1.2)
 	_tour_mark("talents")
+	await _tour_dwell(3.0)
+
+	# Owned pass. Half of these labels have an owned/activated variant that a
+	# fresh profile never renders ("activated" markers, equipped markers,
+	# purchased prices), and those variants are exactly where the missing-glyph
+	# boxes used to show up. Buy everything first, then re-shoot the same tabs.
+	_tour_grant_everything()
+	await _tour_dwell(1.2)
+	Demo.ui.switch_tab("weapon")
+	await _tour_dwell(1.2)
+	_tour_mark("shop-owned")
+	await _tour_dwell(3.0)
+	Demo.ui.switch_tab("attachment")
+	await _tour_dwell(1.2)
+	_tour_mark("upgrades-owned")
+	await _tour_dwell(3.0)
+	Demo.ui.switch_tab("talent")
+	await _tour_dwell(1.2)
+	_tour_mark("talents-owned")
 	await _tour_dwell(3.0)
 	_tour_close_panels()
 	await _tour_dwell(0.8)

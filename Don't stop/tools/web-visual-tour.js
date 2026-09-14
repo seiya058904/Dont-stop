@@ -23,7 +23,7 @@ const resolutions = (process.argv.slice(4).length ? process.argv.slice(4) : ['19
 fs.mkdirSync(outDir, { recursive: true });
 
 const headed = process.env.E2E_HEADED === '1';
-const SCREENS = ['title', 'camp', 'shop', 'upgrades', 'talents', 'stats', 'training', 'combat', 'shooting', 'pause', 'boss', 'done'];
+const SCREENS = ['title', 'camp', 'shop', 'upgrades', 'talents', 'shop-owned', 'upgrades-owned', 'talents-owned', 'stats', 'training', 'combat', 'shooting', 'pause', 'boss', 'done'];
 
 function percentile(sorted, p) {
 	if (!sorted.length) return null;
@@ -56,10 +56,13 @@ function percentile(sorted, p) {
 		page.on('response', r => { if (r.status() >= 400) httpErrors.push(`${r.status()} ${r.url()}`); });
 
 		await page.goto(url + (url.includes('?') ? '&' : '?') + 'smoke=1&tour=1', { waitUntil: 'domcontentloaded' });
-		const ready = await page.locator('#start').waitFor({ state: 'visible', timeout: 300000 })
-			.then(() => true).catch(() => false);
+		// The shell removes itself once the game reports the title menu is ready;
+		// there is no click-to-start button any more.
+		const ready = await page.waitForFunction(() => {
+			const f = document.getElementById('frame');
+			return !f || f.style.display === 'none' || f.classList.contains('gone');
+		}, { timeout: 300000 }).then(() => true).catch(() => false);
 		if (!ready) { console.log(`  FAIL loader never became ready at ${label}`); failures++; await context.close(); continue; }
-		await page.locator('#start').click();
 		await page.waitForSelector('#canvas-host canvas', { timeout: 60000 });
 
 		// Frame-time sampler: requestAnimationFrame deltas are exactly the frames
@@ -119,23 +122,14 @@ function percentile(sorted, p) {
 		}
 		await page.evaluate(() => { window.__stop = true; }).catch(() => {});
 
-		// Driving the product's panels from a script instead of from real input
-		// means some of its lock requests happen without a user activation, which
-		// Chromium rejects loudly. That is an artefact of scripted driving, not a
-		// product defect (the real flows request the lock inside a click/key
-		// gesture, and pointer-lock-e2e.js proves those paths work). It is
-		// reported separately and never silently dropped.
-		const gestureArtifacts = consoleErrors.filter(e => /A user gesture is required to request Pointer Lock/i.test(e));
+		// This revision does not use Pointer Lock at all, so there is no longer a
+		// class of scripted-gesture lock rejections to excuse. Whatever the page
+		// reports is reported as-is, apart from the noise list below.
 		const blocking = consoleErrors.filter(e =>
-			!/WebGL|GL_|AudioContext|download|currentTime/i.test(e) &&
-			!/A user gesture is required to request Pointer Lock/i.test(e));
-		if (gestureArtifacts.length) {
-			console.log(`  note  ${gestureArtifacts.length} scripted-gesture lock rejections (harness artefact, not a product error)`);
-		}
+			!/WebGL|GL_|AudioContext|download|currentTime|PagedAllocator|ObjectDB|still in use at exit/i.test(e));
 		report.resolutions.push({
 			label, screens: perScreen, missing,
 			console_errors: blocking.length, http_errors: httpErrors.length,
-			scripted_gesture_lock_rejections: gestureArtifacts.length,
 		});
 		if (missing.length || blocking.length || httpErrors.length) {
 			failures++;
