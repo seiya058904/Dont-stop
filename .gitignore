@@ -13,6 +13,9 @@
 **/.DS_Store
 
 # Iteration generated output and local evidence.
-/TowDownGame-Iteration/*.log
-/TowDownGame-Iteration/build/
-/TowDownGame-Iteration/evidence/
+# gitignore patterns are literal: the apostrophe and the space in the project
+# directory name are part of the path, and quoting it would match a directory
+# whose name really contains quote characters.
+/Don't stop/*.log
+/Don't stop/build/
+/Don't stop/evidence/

@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=3 format=3]
+
+[ext_resource type="FontFile" uid="uid://dy05l0eg8wun5" path="res://fonts/px.ttf" id="1_px"]
+[ext_resource type="FontFile" uid="uid://dhh0t8er20kt8" path="res://fonts/fusion-pixel.otf" id="2_cjk"]
+
+[resource]
+base_font = ExtResource("1_px")
+fallbacks = Array[Font]([ExtResource("2_cjk")])
