@@ -234,7 +234,7 @@ func render():
 				if int(id) >= 111: categories.append("特殊")
 				if not matches(tr(gun.weapon_name)+id+WeaponCatalog.definition(int(id)).get("plan","")+DemoConfig.weapon_info(int(id)),categories): continue
 				if owned_only and not PlayerData.player_weapon_list.has(int(id)): continue
-				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("✓ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
+				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("√ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
 				weapon_card.icon=gun.image; weapon_card.expand_icon=true; weapon_card.add_theme_constant_override("icon_max_width",36)
 				weapon_card.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; weapon_card.custom_minimum_size.y=31
 				tier_style(weapon_card,WeaponCatalog.tier(int(id)))
@@ -245,7 +245,7 @@ func render():
 				var active = id in Demo.owned_global_upgrades
 				if not matches(tr(am.am_name)+AttachmentCatalog.DEFINITIONS[am.am_id].info): continue
 				if owned_only and not active: continue
-				entry(tr(am.am_name)+"\n"+("✓ 已激活" if active else "%d金币 · 未激活" % am.money),id,func(): show_attachment(id,am,active))
+				entry(tr(am.am_name)+"\n"+("√ 已激活" if active else "%d金币 · 未激活" % am.money),id,func(): show_attachment(id,am,active))
 		"magazine": magazine_list()
 		"talent":
 			button(listing,"重置计划天赋 / 查看退款",show_reset)
@@ -334,8 +334,8 @@ func show_attachment(id: String,am,_owned: bool):
 	label(detail,"所有当前和未来武器自动生效",8)
 	label(detail,"价格：%d金币" % am.money,8)
 	var active = id in Demo.owned_global_upgrades
-	label(detail,"✓ 已激活" if active else "未激活",9)
-	var action = button(detail,"✓ 已激活" if active else "%d金币 | 购买" % am.money,func(): purchase("attachment",id))
+	label(detail,"√ 已激活" if active else "未激活",9)
+	var action = button(detail,"√ 已激活" if active else "%d金币 | 购买" % am.money,func(): purchase("attachment",id))
 	action.disabled = active
 
 func show_talent(id: String):

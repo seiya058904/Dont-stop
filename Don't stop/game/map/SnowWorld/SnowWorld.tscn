@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://mte5uma3uhf3" path="res://game/map/SnowWorld/sprites/ISO_Tile_Ice_01-06.png" id="2_281bt"]
 [ext_resource type="PackedScene" uid="uid://b8fluhc5dx881" path="res://ui/ControlUI.tscn" id="2_scm80"]
 [ext_resource type="Texture2D" uid="uid://cguqxsucvcxyd" path="res://game/map/SnowWorld/sprites/ISO_Tile_Water_01.png" id="3_57np8"]
-[ext_resource type="FontFile" uid="uid://dy05l0eg8wun5" path="res://fonts/px.ttf" id="3_fjs06"]
+[ext_resource type="FontVariation" path="res://fonts/ui-font.tres" id="3_fjs06"]
 [ext_resource type="Texture2D" uid="uid://bgommu3oa6qj2" path="res://Sprites/top.png" id="4_0gov8"]
 [ext_resource type="Script" path="res://game/hero/Camera2D.gd" id="5_60uct"]
 [ext_resource type="Texture2D" uid="uid://mxlhw72f364v" path="res://Sprites/light2.png" id="6_7b54p"]
