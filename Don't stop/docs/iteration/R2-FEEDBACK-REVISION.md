@@ -29,8 +29,17 @@
 历史材料（`docs/iteration/evidence/**`、旧哈希、归档快照路径）里的旧名保持原样，因为它们
 记录的是当时真实发生过的事情。
 
-GitHub 仓库改名后，**旧 Pages 项目地址不会自动重定向**，新地址是
-<https://seiya058904.github.io/Dont-stop/>；本轮实测结果见 `R2-VERIFICATION.md`。
+GitHub 仓库改名后，**旧 Pages 项目地址不会自动重定向**。本轮实测：
+
+| 地址 | 实测结果 | 内容 |
+| --- | --- | --- |
+| `https://seiya058904.github.io/game-prototype-lab/` | **HTTP 404** | 已不可用（未自动重定向） |
+| `https://seiya058904.github.io/Dont-stop/` | HTTP 200 | **仍然是旧基线**（`main@25192ee` 部署的 Web 构建，也就是用户判定未通过的那一版） |
+
+也就是说：改名后站点在新地址上仍然可用，但它对应的**不是**本轮候选。本轮 Web 修复只存在于分支
+`feat/dont-stop-revision`，没有推 `main`，也没有更新稳定 Release 或 Pages，避免在真人验收之前
+把未验收版本放到稳定站点上。想试本轮 Web 候选请用 `PLAY_WEB.bat`（本地静态服务 + 打开浏览器），
+Windows 候选是 `build/windows/Don't stop.exe`。
 
 ## 2. Web 开始流程
 

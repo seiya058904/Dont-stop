@@ -22,7 +22,21 @@ Don't stop 是一款俯视角 2D 生存射击游戏：移动、瞄准、射击�
 - **浏览器**：打开上面的 GitHub Pages 链接即可游玩桌面版 Web 构建。
 - **Windows x64**：从 [GitHub Releases](https://github.com/seiya058904/Dont-stop/releases/latest) 下载独立 ZIP，解压后运行其中的 `Don't stop.exe`。
 
-> 仓库从 `game-prototype-lab` 改名为 `Dont-stop` 之后，**旧的 Pages 项目地址不会自动重定向**：请使用上面的新地址。旧地址的实际行为以本轮证据记录为准，不做“旧链接仍可用”的承诺。
+> 仓库从 `game-prototype-lab` 改名为 `Dont-stop` 之后，**旧的 Pages 项目地址不再可用**：
+> 本轮实测 `https://seiya058904.github.io/game-prototype-lab/` 返回 **404**（GitHub 的仓库重定向
+> 不覆盖 Pages 项目网址），新地址 `https://seiya058904.github.io/Dont-stop/` 返回 200。
+> 注意新地址目前仍然服务**旧基线**（`main@25192ee`），也就是用户判定 Web 未通过的那一版；
+> 本轮修复只在分支 `feat/dont-stop-revision` 上，没有推 `main`、没有更新稳定 Release 或 Pages。
+
+## 本轮候选制品（本地试玩入口）
+
+本轮的 Web 与 Windows 候选都还没发布，需要本地试玩：
+
+- Web：双击 [`Don't stop/PLAY_WEB.bat`](Don't%20stop/PLAY_WEB.bat)，它会在 `127.0.0.1` 起一个静态
+  服务并打开浏览器，服务的是 `Don't stop/build/web/` 里这份候选导出。
+- Windows：运行 `Don't stop/build/windows/Don't stop.exe`（同目录的 `Don't stop.pck` 必须一起保留）。
+
+两个制品都来自同一个提交 `feat/dont-stop-revision@890a586`。
 
 ## 开发环境
 
