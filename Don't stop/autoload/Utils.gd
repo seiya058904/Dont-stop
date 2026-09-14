@@ -105,92 +105,107 @@ var is_inv_show = false #是否展示背包
 
 var crosshair_position = Vector2.ZERO
 
-# Web Pointer Lock aim state. The OS cursor is captured, so absolute mouse
-# positions are frozen at the lock point; the real cursor movement only arrives
-# as InputEventMouseMotion.relative. Gameplay aiming must go through
-# get_aim_world_position() / get_aim_viewport_position(), never through
-# get_global_mouse_position().
-var web_aim_viewport_position: Vector2
-var web_aim_sensitivity := 1.0
-var _web_had_capture := false
-var _web_capture_request_ms := -10000
-
 var temp_am_list = []
 
 signal onGameStart()
 
+# --- Web boot handshake -----------------------------------------------------
+# The browser shell (web/loader.html) must not reveal the game until the title
+# menu is really up AND the pre-warm pass has finished. Both are reported here
+# as explicit stages so the shell never treats the engine's startGame() promise
+# as proof that the game is ready.
+var _web_boot_menu := false
+var _web_boot_warmup := false
+var _web_boot_reported := false
+
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
-	if OS.has_feature("web"):
-		web_aim_viewport_position = get_viewport().get_visible_rect().size / 2
-
-func _input(event: InputEvent) -> void:
-	if not OS.has_feature("web"): return
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED: return
-	if event is InputEventMouseMotion:
-		# Pointer Lock: only relative deltas describe real cursor movement.
-		var vport := get_viewport()
-		web_aim_viewport_position += (event as InputEventMouseMotion).relative * web_aim_sensitivity
-		web_aim_viewport_position = web_aim_viewport_position.clamp(
-			Vector2.ZERO, vport.get_visible_rect().size)
+	print("[boot-probe] utils_ready t=%d" % Time.get_ticks_msec())
 
 func _notification(what: int) -> void:
 	if not OS.has_feature("web"): return
 	# Browser/tab lost focus: release held combat input so nothing stays stuck,
-	# and pause (Pointer Lock is dropped by the browser anyway).
+	# and pause so the player does not come back to a firing gun.
 	# Deliberately NOT suppressed for the E2E driver flag: the focus-loss
 	# contract has to be exercised exactly as it ships.
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		Input.action_release("shoot")
 		for action in ["up", "down", "left", "right", "dash", "reload"]:
 			Input.action_release(action)
-		if is_game_start and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		if is_game_start and is_gameplay_mouse_mode() and Demo.pause_stack.is_empty():
 			Demo.open_panel()
-
-func _process(_delta: float) -> void:
-	if not OS.has_feature("web"): return
-	var gameplay = is_gameplay_mouse_mode()
-	# Pointer Lock was lost (Esc / browser focus change): open the pause panel,
-	# matching desktop behaviour where Esc opens the menu.
-	# Grace window: right after a capture request (e.g. closing the pause panel)
-	# the browser may take a moment (or reject during its post-ESC cooldown);
-	# do not interpret that brief loss as "player pressed ESC" and re-pause.
-	if is_game_start and _web_had_capture and not gameplay and Demo.pause_stack.is_empty() 			and Time.get_ticks_msec() - _web_capture_request_ms > 4000:
-		_web_had_capture = false
-		Demo.open_panel()
-	if gameplay:
-		_web_had_capture = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not OS.has_feature("web"): return
-	if is_game_start and Demo.pause_stack.is_empty() and not is_gameplay_mouse_mode() \
-			and event is InputEventMouseButton and event.pressed:
-		# Re-request Pointer Lock after it was lost; the click provides the gesture.
-		set_gameplay_mouse_mode()
+	# Esc opens the pause panel. The browser no longer drops a pointer lock for
+	# us (there is no pointer lock), so the pause key has to be handled here.
+	# When a panel is already on top it consumes ui_cancel itself and this branch
+	# is skipped by the pause_stack guard.
+	if is_game_start and Demo.pause_stack.is_empty() and event.is_action_pressed("ui_cancel"):
+		Demo.open_panel()
+		get_viewport().set_input_as_handled()
 
 func set_gameplay_mouse_mode() -> void:
-	# Web browsers only support real capture (Pointer Lock), not confined mode.
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if OS.has_feature("web") else Input.MOUSE_MODE_CONFINED_HIDDEN
+	# Web gameplay uses an ordinary, un-captured pointer: the aim is the real
+	# absolute cursor position, so the player never has to press Esc (or click a
+	# second "start" button) to be able to aim. The OS arrow is hidden in favour
+	# of the product crosshair, which is the same contract Windows uses with
+	# MOUSE_MODE_CONFINED_HIDDEN. Windows input is untouched.
 	if OS.has_feature("web"):
-		_web_capture_request_ms = Time.get_ticks_msec()
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 
 func is_gameplay_mouse_mode() -> bool:
 	if OS.has_feature("web"):
-		return Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+		return Input.mouse_mode == Input.MOUSE_MODE_HIDDEN
 	return Input.mouse_mode == Input.MOUSE_MODE_CONFINED_HIDDEN
 
 ## Unified gameplay aim provider.
-## Windows: native absolute mouse (unchanged behaviour).
-## Web (Pointer Lock): virtual viewport cursor driven by relative mouse motion.
+## Both platforms use the engine's absolute viewport mouse position: the viewport
+## transform already folds in the canvas CSS size, window stretch/aspect (black
+## bars), page offset, device pixel ratio and the canvas_items scale, so the
+## conversion to world space happens exactly once, in get_aim_world_position().
 func get_aim_viewport_position() -> Vector2:
-	var vport := get_viewport()
-	if OS.has_feature("web") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		return web_aim_viewport_position
-	return vport.get_mouse_position()
+	return get_viewport().get_mouse_position()
 
 func get_aim_world_position() -> Vector2:
 	var vport := get_viewport()
 	return vport.get_canvas_transform().affine_inverse() * get_aim_viewport_position()
+
+## Called by the title UI once the main menu is really on screen.
+func notify_web_boot_menu_ready() -> void:
+	_web_boot_menu = true
+	_web_report_boot_ready()
+
+## Called by Warmup when the pre-warm pass has completed (or was skipped).
+func notify_web_boot_warmup_done() -> void:
+	_web_boot_warmup = true
+	_web_report_boot_ready()
+
+func _web_report_boot_ready() -> void:
+	if not OS.has_feature("web") or _web_boot_reported: return
+	if not (_web_boot_menu and _web_boot_warmup): return
+	_web_boot_reported = true
+	# Two drawn frames: the shell must only drop its overlay once the menu has
+	# actually been presented, not merely built.
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	_web_call_shell("bootReady")
+	print("[boot] web-ready menu=%s warmup=%s" % [str(_web_boot_menu), str(_web_boot_warmup)])
+
+## Fire-and-forget call into web/loader.html's __dontStop hook.
+## The bridge is looked up by name because the JavaScriptBridge singleton only
+## exists in web builds; naming it directly would not even parse on desktop.
+## The eval is wrapped so a shell without the hook (or a blocked eval) can never
+## take the game down.
+func _web_call_shell(hook: String) -> void:
+	if not OS.has_feature("web"): return
+	var bridge = Engine.get_singleton("JavaScriptBridge")
+	if bridge == null: return
+	bridge.call("eval",
+		"try{if(window.__dontStop&&typeof window.__dontStop.%s==='function'){window.__dontStop.%s();}}catch(e){}"
+		% [hook, hook], true)
 
 func reloadTempAmList():
 	temp_am_list.clear()

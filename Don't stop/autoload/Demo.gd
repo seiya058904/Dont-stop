@@ -90,6 +90,7 @@ func talent_status(id: String) -> String:
 	return "已启用；按所列条件触发"
 
 func _ready():
+	print("[boot-probe] demo_ready t=%d" % Time.get_ticks_msec())
 	get_tree().auto_accept_quit = false
 	get_tree().root.close_requested.connect(quit_game)
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -189,7 +190,10 @@ func push_pause(owner_node):
 	pause_stack.append(owner_node)
 	stop_attacks()
 	get_tree().paused = true
+	# While a panel is open the visible pointer is the only cursor: leaving the
+	# product crosshair on screen next to it would show two cursors.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Utils.crosshairChange(false)
 
 func pop_pause(owner_node):
 	pause_stack.erase(owner_node)
@@ -197,6 +201,7 @@ func pop_pause(owner_node):
 	if pause_stack.is_empty() and Utils.is_game_start:
 		fire_released = false
 		Utils.set_gameplay_mouse_mode()
+		Utils.crosshairChange(true)
 
 func top_pause(owner_node) -> bool:
 	return not pause_stack.is_empty() and pause_stack.back() == owner_node

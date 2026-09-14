@@ -6,8 +6,14 @@ const pre = preload("res://ui/ModeSelect.tscn")
 
 func _ready() -> void:
 	Utils.onGameStart.connect(self.onGameStart)
+	# The web shell (web/loader.html) waits for this before it drops its loading
+	# overlay, so what it reveals is the real, already-drawn title menu.
+	Utils.notify_web_boot_menu_ready()
 
 func _on_start_pressed() -> void:
+	# One press = one session. A second press (double click, keyboard repeat) must
+	# not emit onGameStart again, re-create the HUD or re-open the camp panel.
+	if Utils.is_game_start: return
 	Utils.gameStart()
 	Demo.open_panel()
 

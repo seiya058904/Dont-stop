@@ -3,63 +3,146 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<title>TowDownGame</title>
+	<title>Don't stop</title>
 	$GODOT_HEAD_INCLUDE
 	<style>
 		html, body {
 			margin: 0; padding: 0; width: 100%; height: 100%;
+			/* Matches boot_splash/bg_color so the shell, the boot splash and the
+			   loading scene all share one background. */
 			background: #0d0c17; color: #e8e6f0;
 			font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
 			overflow: hidden; user-select: none; -webkit-user-select: none;
 		}
-		#canvas-host { position: absolute; inset: 0; display: none; }
-		#canvas-host canvas { outline: none; }
-		#frame { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+		/* The canvas is mounted and drawing *behind* the shell from the first
+		   frame. The shell never hides the game to "reveal" it later; it only
+		   removes its own opaque cover once the game says the title menu is up,
+		   so what the player sees after loading is the real, already-drawn menu. */
+		#canvas-host { position: absolute; inset: 0; }
+		#canvas-host canvas { outline: none; display: block; }
+		#frame {
+			position: absolute; inset: 0; z-index: 10;
+			display: flex; flex-direction: column; align-items: center; justify-content: center;
+			background: #0d0c17;
+			transition: opacity .25s ease-out;
+		}
+		#frame.gone { opacity: 0; pointer-events: none; }
 		#brand { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 		#brand img { width: 128px; height: 128px; image-rendering: pixelated; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
 		#brand h1 { margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 700; }
 		#status { margin-top: 6px; font-size: 14px; color: #9d9ab5; min-height: 20px; }
-		#bar { width: 320px; height: 10px; margin-top: 14px; border-radius: 6px; background: #1f1d31; overflow: hidden; }
+		#bar { position: relative; width: 320px; height: 10px; margin-top: 14px; border-radius: 6px; background: #1f1d31; overflow: hidden; }
 		#bar-fill { width: 0%; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #7b6cff, #4dc9ff); transition: width .15s ease-out; }
-		#start { display: none; margin-top: 22px; padding: 12px 46px; font-size: 18px; letter-spacing: 4px;
-			color: #fff; background: #5a4fd8; border: none; border-radius: 10px; cursor: pointer; }
-		#start:hover { background: #6c61ee; }
+		/* Stage without a measurable percentage: an honest indeterminate sweep
+		   instead of a fake progress number. */
+		#bar.busy #bar-fill { width: 40% !important; animation: sweep 1.15s ease-in-out infinite; }
+		@keyframes sweep {
+			0%   { transform: translateX(-110%); }
+			100% { transform: translateX(260%); }
+		}
 		#error { display: none; margin-top: 18px; max-width: 420px; padding: 12px 16px; font-size: 14px;
-			color: #ff9d9d; background: #2a1420; border-radius: 8px; text-align: center; }
+			color: #ff9d9d; background: #2a1420; border-radius: 8px; text-align: center; line-height: 1.5; }
+		#retry { display: none; margin-top: 14px; padding: 10px 34px; font-size: 15px; letter-spacing: 2px;
+			color: #fff; background: #5a4fd8; border: none; border-radius: 10px; cursor: pointer; }
+		#retry:hover { background: #6c61ee; }
 		#note { position: absolute; bottom: 12px; font-size: 12px; color: #55516e; }
 	</style>
 </head>
 <body>
+	<div id="canvas-host"><canvas id="canvas"></canvas></div>
 	<div id="frame">
 		<div id="brand">
-			<img src="index.icon.png" alt="TowDownGame" onerror="this.style.display='none'" />
-			<h1>TowDownGame</h1>
+			<img src="index.icon.png" alt="Don't stop" onerror="this.style.display='none'" />
+			<h1>Don't stop</h1>
 			<div id="status">正在准备…</div>
 			<div id="bar"><div id="bar-fill"></div></div>
-			<button id="start">点 击 开 始</button>
 			<div id="error"></div>
+			<button id="retry" type="button">重 试</button>
 		</div>
-		<div id="note">TowDownGame · Don't Stop</div>
+		<div id="note">Don't stop</div>
 	</div>
-	<div id="canvas-host"><canvas id="canvas"></canvas></div>
-	<script src="$GODOT_URL"></script>
+	<script src="$GODOT_URL" onerror="window.__dontStopEngineScriptFailed = true"></script>
 	<script>
 	(function () {
 		const GODOT_CONFIG = $GODOT_CONFIG;
+		const params = new URLSearchParams(location.search);
 		const statusEl = document.getElementById('status');
 		const barEl = document.getElementById('bar');
 		const fillEl = document.getElementById('bar-fill');
-		const startEl = document.getElementById('start');
 		const errEl = document.getElementById('error');
+		const retryEl = document.getElementById('retry');
 		const frameEl = document.getElementById('frame');
 		const hostEl = document.getElementById('canvas-host');
-		let gameReady = false;
 
-		function setStatus(text) { statusEl.textContent = text; }
-		function showError(text) {
-			errEl.textContent = text;
+		let revealed = false;
+		let fatal = false;
+		let engineStarted = false;
+		let readyReported = false;
+		let watchdog = null;
+
+		function setStatus(text, busy) {
+			statusEl.textContent = text;
+			barEl.classList.toggle('busy', !!busy);
+		}
+		function setProgress(pct, text) {
+			barEl.classList.remove('busy');
+			fillEl.style.width = Math.max(0, Math.min(100, pct)) + '%';
+			if (text) statusEl.textContent = text;
+		}
+		function log(message) { console.log('[loader] ' + message); }
+
+		// The one and only way the game becomes playable. Nothing here fakes a
+		// user gesture: the player's first click is the game's own menu button.
+		function reveal(reason) {
+			if (revealed) return;
+			revealed = true;
+			if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+			log('revealing the running game (' + reason + ')');
+			frameEl.classList.add('gone');
+			setTimeout(function () {
+				if (revealed) frameEl.style.display = 'none';
+			}, 300);
+		}
+
+		function showError(message) {
+			if (fatal || revealed) return;
+			fatal = true;
+			if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+			log('fatal: ' + message);
+			errEl.textContent = message;
 			errEl.style.display = 'block';
-			setStatus('加载失败');
+			retryEl.style.display = 'inline-block';
+			statusEl.textContent = '加载失败';
+			barEl.classList.add('busy');
+			// A reload is the only retry that cannot leave a half-initialised
+			// engine with duplicate input hooks behind: the page, the canvas and
+			// the engine all start over together.
+			retryEl.addEventListener('click', function () { location.reload(); });
+		}
+
+		// The game calls this from GDScript (see autoload/Utils.gd) once the real
+		// title menu has been drawn and the pre-warm pass has finished. It is the
+		// readiness signal the shell waits for; the engine's startGame() promise
+		// alone is only "the engine booted".
+		window.__dontStop = {
+			ready: function () {
+				readyReported = true;
+				setStatus('', false);
+				reveal('game-reported-ready');
+			},
+			failed: function (message) {
+				showError(String(message || '游戏在初始化时报告了一个错误。'));
+			}
+		};
+
+		window.addEventListener('unhandledrejection', function (event) {
+			const reason = event && event.reason;
+			showError('游戏加载失败，请重试。' + (reason && reason.message ? ' (' + reason.message + ')' : ''));
+		});
+
+		if (window.__dontStopEngineScriptFailed || typeof Engine === 'undefined') {
+			showError('引擎脚本加载失败。请检查网络后重试；如果反复失败，可能是资源被拦截。');
+			return;
 		}
 
 		GODOT_CONFIG.canvas = document.getElementById('canvas');
@@ -67,51 +150,65 @@
 		GODOT_CONFIG.canvasResizePolicy = 2;
 		// CI smoke mode: index.html?smoke=1 passes --smoke to the game.
 		// ?nw=1 additionally skips VFX warm-up (A/B cold-path measurement).
-		// ?e2e=1 arms the real-input Pointer Lock harness, ?tour=1 walks the
-		// product screens for visual evidence. All are test-only flags.
-		if (new URLSearchParams(location.search).has('smoke')) {
+		// ?e2e=1 arms the real-input aim harness and ?tour=1 walks the product
+		// screens for visual evidence. All are test-only flags; none of them is
+		// needed to play, and none of them changes what a player sees.
+		if (params.has('smoke')) {
 			GODOT_CONFIG.args = ['--smoke'];
-			if (new URLSearchParams(location.search).has('nw')) GODOT_CONFIG.args.push('--no-warmup');
-			if (new URLSearchParams(location.search).has('e2e')) GODOT_CONFIG.args.push('--e2e');
-			if (new URLSearchParams(location.search).has('tour')) GODOT_CONFIG.args.push('--tour');
+			if (params.has('nw')) GODOT_CONFIG.args.push('--no-warmup');
+			if (params.has('e2e')) GODOT_CONFIG.args.push('--e2e');
+			if (params.has('tour')) GODOT_CONFIG.args.push('--tour');
 		}
 
-		console.log('[loader] args=' + JSON.stringify(GODOT_CONFIG.args || null));
-		const engine = new Engine(GODOT_CONFIG);
+		log('args=' + JSON.stringify(GODOT_CONFIG.args || null));
+		setStatus('正在初始化引擎…', true);
+
+		let engine;
+		try {
+			engine = new Engine(GODOT_CONFIG);
+		} catch (err) {
+			showError('引擎初始化失败。' + (err && err.message ? ' (' + err.message + ')' : ''));
+			return;
+		}
+
+		engineStarted = true;
+		// Wasm/PCK fetch or engine bring-up failure lands here.
 		engine.startGame({
 			onProgress: function (current, total) {
 				if (total > 0) {
-					const pct = Math.round(current / total * 100);
-					fillEl.style.width = pct + '%';
-					setStatus('正在下载游戏资源… ' + pct + '%');
+					// The only number shown is the engine's own download count.
+					setProgress(Math.round(current / total * 100), '正在下载游戏资源… ' + Math.round(current / total * 100) + '%');
 				} else {
-					fillEl.style.width = '100%';
-					setStatus('正在加载…');
+					// No measurable total: say so instead of inventing a percentage.
+					setStatus('正在下载游戏资源…', true);
 				}
 			}
 		}).then(function () {
-			gameReady = true;
-			hostEl.style.display = 'block';
-			setStatus('');
-			barEl.style.display = 'none';
-			startEl.style.display = 'inline-block';
+			// The engine is up. That is NOT the same as "the game is ready": the
+			// title scene still has to build, draw and finish the warm-up pass.
+			setStatus('正在准备游戏内容…', true);
+			watchdog = setTimeout(function () {
+				if (!readyReported && !revealed) {
+					// Do not strand the player behind the cover. Say what happened,
+					// show the game anyway, and leave the reason in the console.
+					log('game did not report readiness in 20s; revealing anyway');
+					setStatus('', false);
+					reveal('readiness-timeout-fallback');
+				}
+			}, 20000);
 		}).catch(function (err) {
-			showError('游戏加载失败，请刷新页面重试。' + (err && err.message ? ' (' + err.message + ')' : ''));
+			const detail = err && err.message ? ' (' + err.message + ')' : '';
+			showError('游戏加载失败，请重试；若反复失败请检查网络或浏览器设置。' + detail);
 		});
 
-		// Click-to-start only reveals the running game; the click itself provides the
-		// browser user gesture Godot needs for Pointer Lock and audio playback.
-		startEl.addEventListener('click', function () {
-			if (!gameReady) return;
-			frameEl.style.display = 'none';
-			document.title = 'TowDownGame';
-			try { document.getElementById('canvas').focus(); } catch (e) {}
-			if (engine.rtenv) {
-				// Notify the game that the player has started (gesture available).
-				// The game polls this via JavaScript bridge-free path: see Utils.gd.
-				document.getElementById('canvas').dispatchEvent(new Event('towdown-start'));
+		// Hard ceiling for a startGame() promise that never settles (e.g. a
+		// truncated .wasm or a fetch that hangs forever).
+		setTimeout(function () {
+			if (!engineStarted || fatal || revealed) return;
+			if (!readyReported) {
+				showError('引擎在 5 分钟内没有完成启动。请重试；若反复失败，可能是 .wasm / .pck 未能完整下载。');
 			}
-		});
+		}, 300000);
 	})();
 	</script>
 </body>

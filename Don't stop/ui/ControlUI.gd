@@ -6,6 +6,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	Utils.canvasLayer = self
+	print("[boot-probe] controlui_ready t=%d" % Time.get_ticks_msec())
 
 func crosshairChange(is_show):
 	$TextureRect.visible = is_show
