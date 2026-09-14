@@ -77,7 +77,45 @@ func _e2e_camp_probe() -> void:
 		print("[e2e] camp-close-button text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
 			button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
 			rect.get_center().x, rect.get_center().y])
+		# Second read-only locator: the in-game entry that leaves the session. The
+		# acceptance driver needs its rectangle to click it with a real mouse, since
+		# the normal-entry phase runs without any diagnostic help.
+		await _report_leave_entry()
 		return
+
+func _report_leave_entry() -> void:
+	for menu in Demo.pause_stack.duplicate():
+		Demo.pop_pause(menu)
+		if is_instance_valid(menu): menu.queue_free()
+	await get_tree().create_timer(0.3).timeout
+	Demo.open_settings()
+	await get_tree().create_timer(0.6).timeout
+	# Search the whole canvas layer rather than pause_stack.back(): the stack is not
+	# a reliable handle for "the panel that is on screen right now", and silently
+	# returning there is what made the first version print nothing at all.
+	var root: Node = Utils.canvasLayer if is_instance_valid(Utils.canvasLayer) else null
+	if root == null:
+		print("[e2e] leave-entry none (no canvas layer)")
+		return
+	for prefix in ["结束游戏", "退出游戏", "退出", "返回主菜单"]:
+		var button := _find_button(root, prefix)
+		if button == null or button.size.x <= 10.0: continue
+		var rect := Rect2(button.global_position, button.size)
+		print("[e2e] leave-entry text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
+			button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
+			rect.get_center().x, rect.get_center().y])
+		return
+	# Nothing found: say what IS on screen, so the next iteration does not have to
+	# guess again.
+	var seen: Array = []
+	_collect_button_texts(root, seen)
+	print("[e2e] leave-entry none buttons=%s" % str(seen.slice(0, 12)))
+
+func _collect_button_texts(node: Node, out: Array) -> void:
+	if node is Button and (node as Button).text != "":
+		out.append((node as Button).text)
+	for child in node.get_children():
+		_collect_button_texts(child, out)
 
 func _find_button(node: Node, prefix: String) -> Button:
 	if node is Button and (node as Button).text.begins_with(prefix):
