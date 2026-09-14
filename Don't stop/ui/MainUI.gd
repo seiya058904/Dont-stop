@@ -6,6 +6,11 @@ const pre = preload("res://ui/ModeSelect.tscn")
 
 func _ready() -> void:
 	Utils.onGameStart.connect(self.onGameStart)
+	# A web page is left by closing its tab; a button pretending to end the program
+	# would only freeze the last frame. Native builds keep their quit entry and the
+	# existing save-failure confirmation.
+	if OS.has_feature("web"):
+		$VBoxContainer/quit.visible = false
 	# The web shell (web/loader.html) waits for this before it drops its loading
 	# overlay, so what it reveals is the real, already-drawn title menu.
 	Utils.notify_web_boot_menu_ready()

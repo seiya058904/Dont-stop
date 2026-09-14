@@ -506,7 +506,52 @@ func quit_game():
 	if Utils.is_game_start and not save_camp().success:
 		show_save_dialog(save_blocked,true)
 		return
-	finish_quit()
+	if OS.has_feature("web"):
+		# A browser tab has no process to end: quitting the engine just freezes the
+		# last frame with nothing to take over, which is what the player saw as a
+		# stuck picture. Leaving the site is the tab's job, so "quit" here means
+		# going back to a live main menu instead.
+		return_to_main_menu()
+	else:
+		finish_quit()
+
+## Web replacement for finish_quit(): tears the session down and rebuilds the real
+## main menu. Saving has already been settled by quit_game() before this runs.
+func return_to_main_menu() -> void:
+	if quitting_game: return
+	quitting_game = true
+	stop_attacks()
+	LevelServer.timerStop()
+	# Invalidate delayed callbacks and async work belonging to the session we are
+	# leaving: spawns carry the epoch they were created under.
+	LevelServer.epoch += 1
+	for node in get_tree().get_nodes_in_group("monsters"): node.queue_free()
+	for node in get_tree().get_nodes_in_group("combat_transient"): node.queue_free()
+	for menu in pause_stack.duplicate():
+		pop_pause(menu)
+		if is_instance_valid(menu): menu.queue_free()
+	pause_stack.clear()
+	if is_instance_valid(save_dialog):
+		save_dialog.queue_free()
+		save_dialog = null
+	if is_instance_valid(ui):
+		ui.queue_free()
+	ui = null
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Input.set_custom_mouse_cursor(null)
+	for type in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
+		for node in get_tree().root.find_children("*", type, true, false): node.stop()
+	# Back to the last valid save. Unfinished combat is deliberately dropped rather
+	# than written as a camp snapshot, and a corrupt or write-blocked save keeps its
+	# protection: load_camp() refuses it and leaves the file alone.
+	if FileAccess.file_exists(save_path):
+		load_camp()
+	Utils.is_game_start = false
+	LevelServer.state = "CAMP"
+	quitting_game = false
+	SceneManager.change_scene("res://game/map/Main.tscn",
+		{ "pattern": "scribbles", "pattern_leave": "squares" })
 
 func finish_quit():
 	if quitting_game: return
