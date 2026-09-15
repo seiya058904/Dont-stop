@@ -2,6 +2,15 @@ extends Node
 
 signal changed
 signal restored
+
+## The camp map doubles as the title menu, so leaving a session and returning to
+## the menu are the same scene exchanged for a fresh copy of itself.
+const MAIN_MENU_SCENE := "res://game/map/Main.tscn"
+## How many frames the return waits for the deferred scene swap. The swap is
+## deferred by the engine, so this is a bound, not a timeout: the loop exits as
+## soon as the new scene is identifiable.
+const MENU_SWAP_FRAMES := 30
+
 var talents: Dictionary = {}
 var purchases: Array = []
 var owned_global_upgrades: Array = []
@@ -537,11 +546,21 @@ func leave_after_save() -> void:
 
 ## Web replacement for finish_quit(): tears the session down and rebuilds the real
 ## main menu. Saving has already been settled by quit_game() before this runs.
+##
+## The whole teardown is one idempotent, ordered sequence:
+##   lock the leave -> stop input/combat/async work -> detach every global
+##   reference to the outgoing scene -> swap the scene -> prove the new menu is
+##   the current scene -> unlock.
+##
+## `quitting_game` stays set for the WHOLE sequence. It used to be cleared before
+## the awaited scene swap, so the guard was open while the old scene was still
+## being torn down and a second start could begin on top of it.
 func return_to_main_menu() -> void:
 	if quitting_game: return
 	quitting_game = true
 	print("[leave] returning to the main menu web=%s game_start=%s" % [
 		str(OS.has_feature("web")), str(Utils.is_game_start)])
+
 	stop_attacks()
 	LevelServer.timerStop()
 	# Invalidate delayed callbacks and async work belonging to the session we are
@@ -564,62 +583,117 @@ func return_to_main_menu() -> void:
 	Input.set_custom_mouse_cursor(null)
 	for type in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
 		for node in get_tree().root.find_children("*", type, true, false): node.stop()
-	# Back to the last valid save. Unfinished combat is deliberately dropped rather
-	# than written as a camp snapshot, and a corrupt or write-blocked save keeps its
-	# protection: load_camp() refuses it and leaves the file alone.
-	if FileAccess.file_exists(save_path):
-		load_camp()
+
+	# Detach the globals from the outgoing scene BEFORE the swap. This is the step
+	# whose absence broke the second start: the return used to call load_camp(),
+	# which re-created the player's guns onto the Hero that was about to be
+	# destroyed, so PlayerData was left holding freed nodes and the next session's
+	# load_camp() aborted on its first gun.free() - the menu came back, the start
+	# button did nothing, and the engine logged a script error.
+	#
+	# The unfinished combat is deliberately dropped rather than written as a camp
+	# snapshot: quit_game() has already decided whether the save was taken or
+	# explicitly abandoned, and a corrupt or write-blocked save keeps its
+	# protection because nothing here writes to disk.
+	release_session_nodes()
 	Utils.is_game_start = false
 	LevelServer.state = "CAMP"
-	quitting_game = false
-	# Awaited on purpose. The swap is asynchronous (fade out, replace, fade in), and
-	# a caller - or the browser acceptance driver - must be able to observe when the
-	# menu is really on screen instead of guessing a delay. An earlier version fired
-	# this without awaiting and announced nothing, so a return that had not finished
-	# (or had not happened at all) looked identical to a finished one.
-	# On Web the return does NOT use the addon's dissolve transition. That transition
-	# was the only web-specific machinery in this path, and its full-screen shader
-	# rectangle is what a menu that "came back but could not be clicked" pointed at:
-	# whether it still owned input depended on the animation finishing, which made the
-	# second session start work sometimes and fail other times (measured: the same
-	# driver passed a restart in one run and failed it in the next). A direct scene
-	# change has no such dependency; the dissolve is decoration, not behaviour.
-	if OS.has_feature("web"):
-		get_tree().change_scene_to_file("res://game/map/Main.tscn")
-		# The swap is deferred; wait until the new scene is really current so the
-		# log and the acceptance driver describe a state that exists.
-		for _frame in 5:
+
+	var previous_scene := get_tree().current_scene
+	var previous_id := previous_scene.get_instance_id() if previous_scene != null else 0
+	var previous_path := previous_scene.scene_file_path if previous_scene != null else "<none>"
+
+	var swapped := _swap_to_main_menu()
+	# Awaited on purpose. The swap is deferred, and a caller - or the browser
+	# acceptance driver - must be able to observe when the menu is really on screen
+	# instead of guessing a delay. An earlier version announced a state that did
+	# not exist yet, so a return that had not finished looked identical to one that
+	# had.
+	if swapped:
+		for _frame in MENU_SWAP_FRAMES:
 			await get_tree().process_frame
-			if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == "res://game/map/Main.tscn":
+			var scene := get_tree().current_scene
+			if scene != null and scene.get_instance_id() != previous_id \
+					and scene.scene_file_path == MAIN_MENU_SCENE:
 				break
-	else:
-		await SceneManager.change_scene("res://game/map/Main.tscn",
-			{ "pattern": "scribbles", "pattern_leave": "squares" })
-		# The transition's full-screen blend rectangle only stops taking input when its
-		# animation finishes. If that animation is interrupted the menu is on screen
-		# and cannot be clicked, so the return guarantees an interactive menu instead
-		# of assuming the animation ran.
-		SceneManager.finish_transition()
-	# One diagnostic line, on the real page, of everything that decides whether the
-	# menu can be used: a menu that is drawn but refuses input is otherwise
-	# indistinguishable from a working one in a screenshot.
+	# The addon's full-screen blend rectangle only stops taking input when its
+	# animation finishes, so the return guarantees an interactive menu instead of
+	# assuming the animation ran. Nothing started a transition here, and this stays
+	# because it is the one call that makes "the menu came back but nothing is
+	# clickable" impossible from a leftover cover.
+	SceneManager.finish_transition()
+
 	var canvas_ok := is_instance_valid(Utils.canvasLayer)
 	var menu: Node = Utils.canvasLayer.get_node_or_null("MainUI") if canvas_ok else null
 	var box: Node = menu.get_node_or_null("VBoxContainer") if menu != null else null
 	var start_button: Button = box.get_node_or_null("start") if box != null else null
+	var current := get_tree().current_scene
 	print("[leave] state paused=%s pause_stack=%d canvas=%s menu=%s menu_visible=%s box_visible=%s in_tree=%s transitioning=%s scene=%s" % [
 		str(get_tree().paused), Demo.pause_stack.size(), str(canvas_ok), str(menu != null),
 		str(menu != null and menu.visible), str(box != null and box.visible),
 		str(box != null and box.is_visible_in_tree()), str(SceneManager.is_transitioning),
-		str(get_tree().current_scene.scene_file_path if get_tree().current_scene != null else "<none>")])
+		str(current.scene_file_path if current != null else "<none>")])
 	print("[leave] input viewport=%s canvas_transform=%s mouse_mode=%d start=%s" % [
 		str(get_viewport().get_visible_rect().size),
 		str(Utils.canvasLayer.get_final_transform()) if canvas_ok else "<none>",
 		Input.mouse_mode,
 		str(Rect2(start_button.global_position, start_button.size)) if start_button != null else "<none>"])
-	print("[leave] main menu is up scene=%s game_start=%s" % [
-		str(get_tree().current_scene.scene_file_path if get_tree().current_scene != null else "<none>"),
-		str(Utils.is_game_start)])
+	var menu_ready := canvas_ok and menu != null and box != null and start_button != null \
+		and current != null and current.get_instance_id() != previous_id \
+		and current.scene_file_path == MAIN_MENU_SCENE
+	print("[leave] main menu is up scene=%s swapped=%s ready=%s game_start=%s (from %s)" % [
+		str(current.scene_file_path if current != null else "<none>"),
+		str(swapped), str(menu_ready), str(Utils.is_game_start), previous_path])
+	# Only now is the leave finished, so a start pressed from here on operates on
+	# the new session and nothing else can.
+	quitting_game = false
+
+## Frees nothing and creates nothing: it only drops the global references that
+## point into the outgoing scene.
+##
+## The guns are NOT freed here on purpose. They are children of the outgoing
+## Hero, which is destroyed a frame later by the swap, and the Hero's own physics
+## still runs for that frame - freeing the guns underneath it would trade one
+## dangling reference for another. Clearing the dictionaries first is enough: the
+## next session builds its own guns on the new Hero from the save file.
+##
+## The persistent numbers (gold, level, experience, talents, reserve magazines,
+## progress) live on PlayerData and are deliberately untouched.
+func release_session_nodes() -> void:
+	var outgoing := Utils.player
+	if is_instance_valid(outgoing):
+		# Sever the Hero's own weapon link as well: Utils.player is only one of the
+		# two references to that gun.
+		outgoing.gun = null
+	Utils.player = null
+	PlayerData.player_weapon_list.clear()
+	PlayerData.player_am_list.clear()
+	# The CanvasLayer belongs to the outgoing scene. Leaving it set makes the new
+	# scene's ControlUI indistinguishable from the old one and lets a stale HUD be
+	# found by name.
+	Utils.canvasLayer = null
+	LevelServer.town = null
+
+## The one place the session is exchanged for the main menu.
+##
+## The new scene is built and installed first and the old one is only queued for
+## deletion afterwards, so the tree is never without a current scene and a failed
+## instantiation cannot leave a black screen. Returns false if the menu scene
+## could not be built at all, which the caller reports instead of pretending.
+func _swap_to_main_menu() -> bool:
+	var packed := load(MAIN_MENU_SCENE) as PackedScene
+	if packed == null:
+		push_error("[leave] cannot load the main menu scene: %s" % MAIN_MENU_SCENE)
+		return false
+	var previous := get_tree().current_scene
+	var next := packed.instantiate()
+	if next == null:
+		push_error("[leave] cannot instantiate the main menu scene: %s" % MAIN_MENU_SCENE)
+		return false
+	get_tree().root.add_child(next)
+	get_tree().current_scene = next
+	if previous != null and previous != next: previous.queue_free()
+	return true
 
 func finish_quit():
 	if quitting_game: return

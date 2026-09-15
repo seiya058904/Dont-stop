@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ammobarcoverage01"]
+
+[ext_resource type="Script" path="res://tests/AmmoBarCoverage.gd" id="1_ammocov"]
+
+[node name="AmmoBarCoverage" type="Node"]
+script = ExtResource("1_ammocov")
