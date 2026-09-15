@@ -2,7 +2,7 @@
 
 正式试玩入口：[GitHub Pages 浏览器版](https://seiya058904.github.io/Dont-stop/) · [Windows x64 Release](https://github.com/seiya058904/Dont-stop/releases/latest)。
 
-双击 `PLAY_GAME.bat` 仅用于开发环境试玩。当前状态：**M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**，`H1_STATUS = FIFTH_FEEDBACK_ADDRESSED`，`HUMAN_ACCEPTED = true`。接受依据是用户本次实际试玩反馈；用户接受少量体验瑕疵，不要求继续迭代，本轮不进入 M13。
+双击 `PLAY_GAME.bat` 仅用于开发环境试玩。当前状态：`WEB_DEPLOYED_FOR_HUMAN_REVIEW`；`HUMAN_ACCEPTED = false`、`WEB_HUMAN_ACCEPTED = false`。第五轮真人试玩提出的五项问题已修复并部署到上面的浏览器入口，等待用户复测；自动化通过不等于真人接受。
 
 `PLAY_GAME.bat` 依赖本机工作区保留的 portable Godot 4.7.2 运行时；本次不是独立发行包。
 
@@ -30,7 +30,7 @@ WASD/方向键移动，鼠标瞄准，左键射击，R 换弹，Shift 冲刺；�
 
 schema 1—5 旧档中合法拥有的配件，无论安装还是放在背包，按类型折叠成唯一全局强化；重复实例不叠加、不退款。自动保存为 schema 6 的 `owned_global_upgrades`，再次读档保持不变。schema 1—4 的备用子弹仍按原装备枪容量做一次整弹匣换算。
 
-主界面左下角「退出」、设置页「退出游戏」或窗口关闭均可退出。营地先保存；战斗未结算或保存失败时，可取消退出或明确放弃未保存变化。
+三端的离开方式按平台区分，UI 语义一致：本地源码运行与 Windows 仍是主界面左下角「退出」、设置页「退出游戏」或窗口关闭，营地先保存，战斗未结算或保存失败时可取消或明确放弃未保存变化。浏览器版没有可结束的进程，主界面不再显示「退出」按钮（离开网站靠关闭标签页），游戏中菜单的设置页把该入口改为 **返回主菜单**：营地等允许保存的状态先真实保存成功再返回，未结算的战斗与未保存变化需要确认放弃，返回后是真正可交互的主菜单，可以再次开始、再次进入战斗。
 
 内容为 24 枪、24 全局强化、24 持久天赋、24 Reward（其中 2 个一次性）、12 普通敌人、3 Boss、6 区域、30 遭遇。普通关仍生存 45 秒，Boss 关击杀后结束；敌人和 Boss HP 不变，Boss 普通伤害 +15%，大招独立按最大 HP 比例进入防御流程。
 

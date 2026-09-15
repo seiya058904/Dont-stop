@@ -180,39 +180,38 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 	token('SHELL_HIDES_WITHOUT_A_START_CLICK', shown, shown ? '' : 'shell never hid by itself');
 	if (!shown) throw new Error('loader shell never revealed the game');
 
-	// HOW it was revealed is the actual acceptance: the game's completion notice,
-	// not the shell's last-resort timer.
+	// HOW it was revealed is the actual acceptance. Since this round there is no
+	// timer that can reveal the game at all: the shells' only reveal path is the
+	// game's own completion notice, and `revealedBy` records which one it was.
 	const st = await shellState();
-	token('SHELL_READY_VIA_GAME_NOTICE', !!st && st.outcome === 'game-reported-ready',
-		`outcome=${st && st.outcome} fallbackUsed=${st && st.fallbackUsed}`);
-	token('SHELL_READY_NOT_A_FALLBACK', !!st && st.fallbackUsed === false && st.outcome !== 'timeout-fallback',
-		`fallbackUsed=${st && st.fallbackUsed} outcome=${st && st.outcome}`);
+	token('SHELL_READY_VIA_GAME_NOTICE',
+		!!st && st.outcome === 'game-reported-ready' && st.revealedBy === 'game-reported-ready',
+		`outcome=${st && st.outcome} revealedBy=${st && st.revealedBy}`);
+	token('SHELL_NEVER_REVEALS_ON_A_TIMER', !!st && st.revealedBy === 'game-reported-ready',
+		'the shell has no fallback reveal path left, so this can only be the notice');
 	token('SHELL_READY_NOT_AN_ERROR', !!st && st.outcome !== 'engine-error', `errorMessage=${st && st.errorMessage}`);
-	// The acceptance window has to be measured from the timer that actually runs.
-	// The watchdog is armed when startGame() resolves, not when the user hit the
-	// page, so charging download + engine bring-up against it would reject a slow
-	// but perfectly healthy start.
-	const fallbackWindow = (st && st.fallbackWindowMs) || 20000;
-	const noticeAfterArm = (st && st.readyNoticeAt && st.fallbackArmedAt) ? Math.round(st.readyNoticeAt - st.fallbackArmedAt) : null;
-	token('READY_NOTICE_ARRIVED_BEFORE_FALLBACK',
-		noticeAfterArm !== null && noticeAfterArm >= 0 && noticeAfterArm < fallbackWindow,
-		`notice ${noticeAfterArm}ms after the fallback timer was armed (window ${fallbackWindow}ms)`);
+	// Stage separation, instead of one anonymous wait: download, engine bring-up,
+	// scene preparation and the drawn menu are separately timestamped, which is
+	// what lets the shell tell "slow" from "stalled".
+	const stageNames = st && st.stages ? Object.keys(st.stages) : [];
+	note('shell stages: ' + JSON.stringify(st && st.stages));
+	token('SHELL_TRACKS_LAUNCH_STAGES',
+		['download', 'engine-init', 'scene-prep', 'menu'].every(s => stageNames.includes(s)),
+		`stages=${stageNames.join(',')}`);
+	note(`stall warnings during this healthy start: ${st && st.stallWarnings} ` +
+		'(a warning keeps the cover up and is not a reveal, so it is reported rather than asserted)');
 	if (st && st.downloadStartedAt && st.engineStartedAt) {
-		note(`download + engine bring-up took ${Math.round(st.engineStartedAt - st.downloadStartedAt)}ms (not part of the fallback window)`);
+		note(`download + engine bring-up took ${Math.round(st.engineStartedAt - st.downloadStartedAt)}ms`);
 	}
-	// Deterministic cover for the origin bug, including the exact counterexample:
-	// a 25 s download with a healthy notice at 30 s must be accepted, and a real
-	// late notice past the window must still be rejected.
-	const withinFallback = t => (t.readyNoticeAt - t.fallbackArmedAt) < 20000;
-	const oldOriginPredicate = t => (t.readyNoticeAt - t.engineStartedAt) < 20000;
-	// engineStartedAt is 0 here because the old code recorded that field BEFORE
-	// startGame(), so a 25 s download was charged against the 20 s window.
-	const slowButHealthy = { engineStartedAt: 0, fallbackArmedAt: 25000, readyNoticeAt: 30000 };
-	const genuinelyLate = { engineStartedAt: 0, fallbackArmedAt: 25000, readyNoticeAt: 46000 };
-	token('SLOW_BUT_HEALTHY_START_ACCEPTED', withinFallback(slowButHealthy), 'download 25s, notice 5s into the window');
-	token('OLD_ORIGIN_WOULD_HAVE_REJECTED_IT', !oldOriginPredicate(slowButHealthy),
-		'measuring from the download start still rejects that healthy start, which is why the origin changed');
-	token('LATE_NOTICE_STILL_REJECTED', !withinFallback(genuinelyLate), 'notice 21s after the timer was armed');
+	// Deterministic cover for the defect being replaced. The old shell revealed the
+	// game when a fixed deadline expired; the deployed site was measured reporting
+	// a perfectly healthy notice 20923 ms after that deadline was armed, so the
+	// timer - not the game - decided what the player saw.
+	const oldTimerPredicate = (armedAt, noticeAt, windowMs) => (noticeAt - armedAt) >= windowMs;
+	token('OLD_FIXED_DEADLINE_WOULD_HAVE_MISLABELLED_IT', oldTimerPredicate(0, 20923, 20000),
+		'the measured 20923 ms notice was past the old 20 s deadline, which is why a timer may not decide');
+	token('ACCEPTANCE_IGNORES_ELAPSED_TIME', !!st && st.outcome === 'game-reported-ready',
+		'only the game notice counts, however long the load legitimately took');
 	const bootLines = engineLog.filter(l => l.includes('[boot]'));
 	note('boot timing: ' + bootLines.map(l => l.replace(/^\[boot\]\s*/, '')).join(' | '));
 
@@ -332,23 +331,44 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 	token('NO_POINTER_LOCK_ANYWHERE', await page.evaluate(() => !document.pointerLockElement));
 
 	// ====================================================== Phase F: fault inject
-	// Suppress the game's completion notice on purpose. A start that only happened
-	// because the shell gave up waiting must NOT be accepted.
+	// Suppress the game's completion notice on purpose. Since this round the shell
+	// must NOT reveal the game when nothing ever reports readiness: it keeps the
+	// cover, says the load is stuck, and offers a retry. The old behaviour (reveal
+	// anyway when a deadline expired) is exactly what made the deployed site look
+	// like it had started when the timer had actually given up.
 	engineLog = [];
 	await page.goto(q(url, 'noready=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
-	const faultShown = await waitFor(shellGone, 120000);
+	await waitFor(async () => {
+		const s = await shellState();
+		return !!s && s.stallWarnings >= 1;
+	}, 90000, 500);
 	const faultState = await shellState();
+	const faultShell = await page.evaluate(() => {
+		const f = document.getElementById('frame');
+		const retry = document.getElementById('retry');
+		const err = document.getElementById('error');
+		return {
+			coverVisible: !!f && f.style.display !== 'none' && !f.classList.contains('gone'),
+			coverOpacity: f ? getComputedStyle(f).opacity : null,
+			retryVisible: !!retry && retry.style.display !== 'none',
+			errorText: err ? (err.textContent || '').trim().slice(0, 140) : '',
+		};
+	});
 	token('FAULT_INJECTION_SUPPRESSES_NOTICE',
 		!!faultState && faultState.readyNoticeSuppressed === true,
 		`readyNoticeSuppressed=${faultState && faultState.readyNoticeSuppressed}`);
-	token('FAULT_INJECTION_REVEALED_BY_FALLBACK',
-		faultShown && !!faultState && faultState.outcome === 'timeout-fallback',
-		`outcome=${faultState && faultState.outcome} fallbackUsed=${faultState && faultState.fallbackUsed}`);
+	token('FAULT_INJECTION_KEEPS_THE_COVER',
+		faultShell.coverVisible && faultShell.coverOpacity !== '0',
+		`coverVisible=${faultShell.coverVisible} opacity=${faultShell.coverOpacity}`);
+	token('FAULT_INJECTION_REPORTS_A_RECOVERABLE_STALL',
+		faultShell.retryVisible && faultShell.errorText.length > 0,
+		`retryVisible=${faultShell.retryVisible} message="${faultShell.errorText}"`);
 	// The point of the injection: the Phase A acceptance condition must be FALSE
 	// here, i.e. a missing completion notice fails instead of passing late.
 	token('FAULT_INJECTION_FAILS_THE_NORMAL_ASSERTION',
-		!!faultState && faultState.outcome !== 'game-reported-ready',
-		`outcome=${faultState && faultState.outcome} would not satisfy SHELL_READY_VIA_GAME_NOTICE`);
+		!!faultState && faultState.outcome !== 'game-reported-ready' && faultState.revealedBy === null,
+		`outcome=${faultState && faultState.outcome} revealedBy=${faultState && faultState.revealedBy} would not satisfy SHELL_READY_VIA_GAME_NOTICE`);
+	await page.screenshot({ path: path.join(outDir, 'aim-05-stalled-cover-stays.png') });
 
 	// ==================================================== Phase B: measured chain
 	const gameLines = [];

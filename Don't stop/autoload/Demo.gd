@@ -579,6 +579,11 @@ func return_to_main_menu() -> void:
 	# (or had not happened at all) looked identical to a finished one.
 	await SceneManager.change_scene("res://game/map/Main.tscn",
 		{ "pattern": "scribbles", "pattern_leave": "squares" })
+	# The transition's full-screen blend rectangle only stops taking input when its
+	# animation finishes. On the Web build that animation did not always finish, and
+	# the result was a menu that was on screen but could not be clicked at all. The
+	# return guarantees an interactive menu instead of assuming the animation ran.
+	SceneManager.finish_transition()
 	print("[leave] main menu is up scene=%s game_start=%s" % [
 		str(get_tree().current_scene.scene_file_path if get_tree().current_scene != null else "<none>"),
 		str(Utils.is_game_start)])

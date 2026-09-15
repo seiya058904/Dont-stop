@@ -170,3 +170,18 @@ func fade_in(setted_options: Dictionary = {}) -> void:
 	is_transitioning = false
 	transition_finished.emit()
 	options["on_fade_in"].call()
+
+## Ends a transition that did not complete.
+##
+## The blend rectangle covers the whole screen while it is up, and it only stops
+## taking input when fade_in() finishes. If that animation is interrupted - on the
+## Web build it was, because the dissolve pattern textures were imported as
+## desktop-only VRAM textures - the new scene was already in place while the
+## rectangle stayed on top: the main menu came back and every click after it was
+## swallowed, which the player described as "it just stops". Callers that must
+## guarantee an interactive scene can ask for that here.
+func finish_transition() -> void:
+	is_transitioning = false
+	if _shader_blend_rect != null:
+		_shader_blend_rect.visible = false
+		_shader_blend_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
