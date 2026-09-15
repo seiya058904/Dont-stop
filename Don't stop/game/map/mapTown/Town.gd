@@ -163,9 +163,14 @@ func monsterCreate():
 	for enemy in get_tree().get_nodes_in_group("monsters"):
 		if not enemy.is_die and not enemy.training: active += 1
 	if active >= config.cap or config.roles.is_empty(): return
-	var point = spawn_point()
-	if point == Vector2.INF: return
 	var role = LevelServer.horde_role if LevelServer.horde_active else ("E02" if LevelServer.rush_active else config.roles[LevelServer.spawn_index % config.roles.size()])
+	# The clearance must match the actor that is about to be created: a fixed 7 px
+	# radius is the collider's radius only, and the capsule bodies are larger and
+	# offset from their origin, which let a wave enemy be created inside a wall.
+	var point = spawn_point(M5Content.radius_for(role))
+	if point == Vector2.INF:
+		M5Content.audit_deferred += 1
+		return
 	# Rhythm controls arrival timing, never replaces a mixed roster with one role for 7-15 seconds.
 	LevelServer.spawn_index += 1
 	var ins = M5Content.spawn(role,monster_root,point)
@@ -230,22 +235,48 @@ func path_step(from: Vector2, to: Vector2) -> Vector2:
 	var path = navigation.get_point_path(a,b)
 	return path[1] if path.size() > 1 else from
 
-func spawn_point() -> Vector2:
+func spawn_point(radius := -1.0) -> Vector2:
+	if radius <= 0.0: radius = M5Content.default_radius()
 	if is_instance_valid(arena):
 		var sides = M5Content.REGIONS[arena.region_id].sides
 		var side=LevelServer.horde_side if LevelServer.horde_active else (LevelServer.rush_side if LevelServer.rush_active else LevelServer.spawn_index%sides.size())
-		return arena.spawn_near(Utils.player.global_position,145,280,sides[side])
-	if not nav_ready or walkable.is_empty(): return Vector2.INF
+		return arena.spawn_near(Utils.player.global_position,145,280,sides[side],radius)
+	if not nav_ready or walkable.is_empty():
+		M5Content.audit_deferred += 1
+		return Vector2.INF
 	var player_cell = nav_cell(Utils.player.global_position)
-	if not navigation.is_in_boundsv(player_cell) or navigation.is_point_solid(player_cell): return Vector2.INF
+	if not navigation.is_in_boundsv(player_cell) or navigation.is_point_solid(player_cell):
+		M5Content.audit_deferred += 1
+		return Vector2.INF
 	var offset = randi()%walkable.size()
 	for attempt in walkable.size():
 		var cell = walkable[(offset+attempt)%walkable.size()]
 		var point = navigation.get_point_position(cell)
+		M5Content.audit_candidates += 1
 		var distance = point.distance_to(Utils.player.global_position)
-		if distance < 145 or distance > 280: continue
-		if navigation.get_id_path(cell,player_cell).size() > 1: return point
+		if distance < 145 or distance > 280:
+			M5Content.audit_rejected += 1; continue
+		if navigation.get_id_path(cell,player_cell).size() <= 1:
+			M5Content.audit_rejected += 1; continue
+		# The navigation grid is built once with a 7 px circle, so a larger actor
+		# needs its own clearance check: otherwise the grid would certify a cell that
+		# only fits the smallest enemy.
+		if not _nav_point_clear(point,radius):
+			M5Content.audit_rejected += 1; continue
+		return point
+	M5Content.audit_deferred += 1
 	return Vector2.INF
+
+## Same shape query the arena uses, for the town's navigation branch.
+func _nav_point_clear(point: Vector2, radius: float) -> bool:
+	var shape := CircleShape2D.new()
+	shape.radius = radius
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.collision_mask = 2147483649
+	query.transform = Transform2D(0,point)
+	query.exclude = [Utils.player.get_rid()] if is_instance_valid(Utils.player) else []
+	return get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
 
 func depart(stage: int, is_trial: bool) -> bool:
 	var target_stage = stage if is_trial else Demo.next_stage
@@ -260,15 +291,16 @@ func depart(stage: int, is_trial: bool) -> bool:
 		return false
 	prepare_region(DemoConfig.ENCOUNTERS[target_stage].region)
 	if DemoConfig.ENCOUNTERS[target_stage].has("boss"):
-		# Bosses are the largest actors, so they need a larger clearance than the
-		# default the wave spawner uses.
-		var point = spawn_near(Utils.player.global_position,160,220,12.0)
+		# Bosses are the largest actors, so their clearance is measured from the boss
+		# scene instead of being a fixed constant that only fits a small enemy.
+		var point = spawn_near(Utils.player.global_position,160,220,M5Content.radius_for(DemoConfig.ENCOUNTERS[target_stage].boss))
 		if point == Vector2.INF:
 			# spawn_near() returns this sentinel when no validated point exists.
 			# Spawning anyway used to place the boss at an infinite coordinate,
 			# which the player sees as a monster stuck outside the map wall.
 			# Defer instead: the encounter keeps running and retries next tick.
 			_boss_pending = DemoConfig.ENCOUNTERS[target_stage].boss
+			M5Content.audit_boss_deferred += 1
 			push_warning("[spawn] no legal boss spawn point for stage %d; deferring" % target_stage)
 			return true
 		var boss = M5Content.spawn(DemoConfig.ENCOUNTERS[target_stage].boss,monster_root,point)
@@ -282,7 +314,8 @@ var _boss_pending := ""
 func _process(_delta: float) -> void:
 	if _boss_pending == "" or LevelServer.state != "COMBAT": return
 	if not is_instance_valid(Utils.player): return
-	var point = spawn_near(Utils.player.global_position,160,220)
+	M5Content.audit_boss_retry += 1
+	var point = spawn_near(Utils.player.global_position,160,220,M5Content.radius_for(_boss_pending))
 	if point == Vector2.INF: return
 	var boss = M5Content.spawn(_boss_pending,monster_root,point)
 	if boss == null: return
@@ -311,17 +344,25 @@ func practice(count = 3):
 		label.position = Vector2(-12,-25)
 		dummy.add_child(label)
 
-func spawn_near(center: Vector2, minimum: float, maximum: float, radius := 7.0) -> Vector2:
+func spawn_near(center: Vector2, minimum: float, maximum: float, radius := -1.0) -> Vector2:
+	if radius <= 0.0: radius = M5Content.default_radius()
 	if is_instance_valid(arena): return arena.spawn_near(center,minimum,maximum,-1,radius)
-	if not nav_ready: return Vector2.INF
+	if not nav_ready:
+		M5Content.audit_deferred += 1
+		return Vector2.INF
 	var offset = randi()%walkable.size()
 	for attempt in walkable.size():
 		var cell = walkable[(offset+attempt)%walkable.size()]
 		var point = navigation.get_point_position(cell)
-		if point.distance_to(center) < minimum or point.distance_to(center) > maximum: continue
-		if point.distance_to(Utils.player.global_position) < 50: continue
+		M5Content.audit_candidates += 1
+		if point.distance_to(center) < minimum or point.distance_to(center) > maximum:
+			M5Content.audit_rejected += 1; continue
+		if point.distance_to(Utils.player.global_position) < 50:
+			M5Content.audit_rejected += 1; continue
 		var dest = nav_cell(Utils.player.global_position)
 		if navigation.is_in_boundsv(dest) and not navigation.is_point_solid(dest) and navigation.get_id_path(cell,dest).size() > 1: return point
+		M5Content.audit_rejected += 1
+	M5Content.audit_deferred += 1
 	return Vector2.INF
 
 var arena

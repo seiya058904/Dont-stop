@@ -81,7 +81,7 @@ func summon(count: int, id = "E02"):
 	for i in count:
 		if children_ids.size() >= cap or summon_total >= (24 if is_boss else 3): break
 		if get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die).size() >= DemoConfig.ENCOUNTERS[LevelServer.level].cap: break
-		var point = LevelServer.town.spawn_near(global_position,60.0,95.0)
+		var point = LevelServer.town.spawn_near(global_position,60.0,95.0,M5Content.radius_for(id))
 		if point == Vector2.INF: continue
 		var child = M5Content.spawn(id,get_parent(),point,true)
 		if child:
