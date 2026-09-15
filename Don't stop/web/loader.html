@@ -97,7 +97,7 @@
 		// so the deadline - not the game - decided what the player saw. A stalled
 		// load now keeps the cover up, says so, and offers a retry, and a notice
 		// that arrives later is still honoured.
-		const STALL_WINDOW_MS = 20000;
+		const STALL_WINDOW_MS = 45000;
 		const state = window.__dontStopState = {
 			contract: 'dontstop-shell/3',
 			hookNames: [HOOK_READY, HOOK_FAILED, HOOK_STAGE],
@@ -171,6 +171,15 @@
 			state.stages[stage] = now;
 			state.lastProgressAt = now;
 			log('stage ' + stage + ' at ' + Math.round(now) + 'ms');
+			// Progress resumed: a stall hint from an earlier quiet interval is no
+			// longer true, so it is withdrawn instead of sitting there while the game
+			// is demonstrably still loading.
+			if (state.stallWarnedAt !== null) {
+				errEl.style.display = 'none';
+				retryEl.style.display = 'none';
+				state.outcome = 'pending';
+				setStatus('正在准备…', true);
+			}
 			armStallCheck();
 		}
 
