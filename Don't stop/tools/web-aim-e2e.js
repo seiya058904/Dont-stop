@@ -310,12 +310,36 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 	const afterBlocked = await hudCrop();
 	const diffBlocked = await meanAbsDiff(beforeBlocked, afterBlocked);
 
-	// Positive: same click, nothing in the way.
+	// A paused tree renders byte-identical frames, so the driver has to prove the
+	// session is running again before it can claim anything about firing. The panel
+	// content can raise a modal that swallows the close button (measured on this
+	// build), which left the tree paused here and made both fire tokens measure 0.00
+	// on CI - reading as "firing is broken" when nothing had been fired at all.
+	async function liveAgain(ms = 1600) {
+		const a = await hudCrop();
+		await page.waitForTimeout(ms);
+		const b = await hudCrop();
+		return (await meanAbsDiff(a, b)) > 1.0;
+	}
+	let live = false;
+	for (let attempt = 0; attempt < 4 && !live; attempt++) {
+		if (attempt > 0) { await page.keyboard.press('Escape'); await page.waitForTimeout(1800); }
+		live = await liveAgain();
+	}
+	token('SESSION_RUNNING_AGAIN_AFTER_BLOCKED_ATTEMPT', live,
+		'the HUD region keeps changing, i.e. no panel is holding the tree paused');
+
+	// Positive: same click, nothing in the way - but as the product documents it.
+	// Demo.pop_pause() clears fire_released, so the fire button must be released once
+	// after a menu closes; and some weapons need the button held (spin-up / charge)
+	// before they release a shot, so a 400 ms tap measures nothing at all on those.
 	await page.mouse.move(posA.x, posA.y);
 	await page.waitForTimeout(1200);
+	await page.mouse.up();
+	await page.waitForTimeout(400);
 	const beforeShot = await hudCrop();
 	await page.mouse.down();
-	await page.waitForTimeout(400);
+	await page.waitForTimeout(1400);
 	await page.mouse.up();
 	await page.waitForTimeout(2500);
 	const afterShot = await hudCrop();
@@ -632,6 +656,7 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		'CROSSHAIR_IS_LOCATED_AT_THE_CURSOR', 'CROSSHAIR_STILL_AT_CURSOR_AFTER_RETURN',
 		'PAGE_ALIVE_AFTER_NORMAL_ENTRY_INPUT',
 		'BLOCKED_FIRE_DOES_NOT_CONSUME_AMMO', 'REAL_FIRE_CONSUMES_AMMO',
+		'SESSION_RUNNING_AGAIN_AFTER_BLOCKED_ATTEMPT',
 		'FAULT_INJECTION_SUPPRESSES_NOTICE', 'FAULT_INJECTION_KEEPS_THE_COVER',
 		'FAULT_INJECTION_REPORTS_A_RECOVERABLE_STALL',
 		'FAULT_INJECTION_FAILS_THE_NORMAL_ASSERTION',
