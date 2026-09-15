@@ -187,9 +187,11 @@ node "Don't stop/tools/web-menu-return-e2e.js" http://localhost:8788/index.html 
 | 项 | 值 |
 | --- | --- |
 | 分支 | `feat/dont-stop-revision` |
-| **分支 HEAD** | `ca5129d25ee45004352b65e610e02f101cdfea7c`（短 `ca5129d`） |
+| 代码提交 | `ee3ea1de796154734fdc06d4cdf9adf484e6753f`（短 `ee3ea1d`） |
+| 分支 HEAD（含其后的文档/证据提交） | 以 `git log -1` 为准——沿用本仓库既有惯例，不把 HEAD 自身的哈希写进 HEAD 里的文件，否则每写一次就自我作废一次 |
 | 父提交 / 审阅基线 | `6a9d7895deeca900ae1e514b3a687dbd6f15643f`（当时远端 `main`） |
-| 与基线差异 | 75 files changed, 1796 insertions(+), 170 deletions(-) |
+| 与基线的代码差异 | 74 files changed, 1706 insertions(+), 170 deletions(-) |
+| 与基线的全部差异（含文档/证据） | 75 files changed, 1796 insertions(+), 170 deletions(-) |
 
 本轮的 4 个提交（代码 1 个 + 文档/证据 3 个）：
 
