@@ -227,6 +227,16 @@ Windows 候选（同一工作树导出）：
 | `tools/web-menu-return-e2e.js` 5 轮 | `RESULT=PASS`，exit 0，83 token 全 true |
 
 证据目录：`evidence/r4/browser-smoke/`、`evidence/r4/menu-return/`。
+三个门禁的机器可读结果都在仓库里：`web-aim-e2e.json`（57/57 token 为 true）、
+`menu-return/web-menu-return-e2e.json`（83/83 token 为 true，`cycles=5`，
+`page_errors`/`console_errors`/`http_errors`/`failed_requests` 均为 0，无 renderer crash）、
+`browser-smoke/smoke-result.json`（12/12 检查 ok，`result=PASS`，`[smoke] … pass=true`）。
+三条都在候选构建（本地 `http://127.0.0.1:8788`）上实跑，不是只读历史结论。
+
+`smoke-web.js` 只打印 stdout、不写 JSON，所以 `smoke-result.json` 是由它那次真实运行的 stdout
+转写而来；`Don't stop/.gitignore` 的 `*.log` 规则明确把日志当作本机临时输出，因此原始 `smoke.log`
+按仓库惯例不入库（CI 侧以 artifact 形式保留），入库的是转写结果与截图。
+
 `web-aim-e2e.js` 覆盖「光标 → 瞄准 → 准星 → 枪 → 弹丸」的完整链路，因此武器姿态与枪口的改动
 没有破坏瞄准链。
 
