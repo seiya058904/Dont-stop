@@ -1,8 +1,13 @@
 # R3 — 第六次真人试玩反馈修订（当前状态）
 
 状态：`WEB_DEPLOYED_FOR_HUMAN_REVIEW`；`HUMAN_ACCEPTED = false`，`WEB_HUMAN_ACCEPTED = false`。
-基线：`feat/dont-stop-revision` 分支，起点 `811fc66`（本地）；本轮改动合并进 `main` 后部署到
-<https://seiya058904.github.io/Dont-stop/>。
+部署：`main = feb6b67`，工作流 `Build and deploy Web release`（run 34925829116）build / Browser smoke /
+deploy / Online smoke **四项全部成功**；线上 <https://seiya058904.github.io/Dont-stop/> 已验证
+`<title>Don't Stop</title>` 与 `<meta name="dontstop-build" content="feb6b67…">`，即线上确实是本次合并的
+提交（不是「200 就算成功」）。Windows 候选制品（同一轮源码）：
+`build/windows/Don't stop.exe`（109197312 字节，SHA256 `DDACA81DEF3824832BD659CFDA86E9D78CF2B2317743D58FC99BD545A6151655`）
+与 `Don't stop.pck`（41133540 字节，SHA256 `9CFDEF73C68B728C6698142E1FC4EC78FBC4C70EF750DE81397F48A8ED09B50F`）。
+本轮不创建 Release、不打标签。
 
 用户本次实际测试的是**本地源码运行版**与**已部署的浏览器版**；Windows 正式发行包本次没有真人
 测试，因此本记录不声称 Windows 上这五项问题已获用户确认。
@@ -62,8 +67,10 @@ Boss 左侧 25 px 处向 +X 射击，Boss 出生点因半径变大而改变后�
 （绝不抓桌面），逐帧记录毫秒时间戳与「非背景色像素占比」，因此可以证明脚本运行之前那段没有整屏
 图标；`-SplashProbe` 是反向对照（临时把启动图放回去，证明这个打分器确实能抓到大图）。
 
-**未关闭**：该脚本在本次会话里还没有跑完一轮取数（时间预算用尽），因此“原生启动无巨大闪图”
-本轮只有配置层证据与既有 `--boot-capture` 证据，**没有**新的窗口级帧序列证据。
+**未关闭**：`tools/capture-windows-launch-frames.ps1` 第一次运行抓到的**不是游戏窗口**（我逐帧看图确认，
+抓到的是另一个应用的窗口），因此「原生启动无巨大闪图」本轮仍然**没有**有效的窗口级帧序列证据；
+配置层证据成立（`boot_splash` 图片已移除、只留同色背景、EXE/任务栏/窗口图标与 favicon 保留，
+没有回退到 Godot 默认启动图），取证工具需要修正窗口定位后重跑。
 
 ## 4. 统一正确标题 Don't Stop
 
@@ -92,13 +99,19 @@ Stop 的 S 大写（合成图见 `evidence/r3/work/title-full-dark.png`）。网
   被导入成仅含桌面 VRAM（s3tc）的纹理，Web(gl_compatibility) 上加载失败；已改为无损导入，
   并把过渡图案在 `Boot.gd` 里写成真实依赖，另给 `SceneManager.finish_transition()` 兜底。
 
-**未关闭（关键）**：浏览器里**第一次返回之后，主菜单虽然回来了，却不再接受鼠标点击**，
-所以第二轮开始不了 —— `tools/web-menu-return-e2e.js` 的 `CYCLE2_START_OPENS_CAMP_PANEL`
-稳定失败（区域差值 0.1～0.3，面板根本没开），而同一个序列在原生 `R3ReturnMenu` 里是通过的。
-因此本轮的「连续 5 轮返回并重新开始」验收 **没有通过**，也正因为如此它没有进 CI 门禁；
+**未关闭（关键）**：浏览器里返回之后主菜单虽然会正常回来，但**不是每次都能立刻再开始**：
+`tools/web-menu-return-e2e.js` 在本地实测出现过「第 1、2 轮完全通过（开始/关面板/准星/暂停恢复/
+阻断开火/返回，且游戏自己报告 `[leave] main menu is up`），第 3 轮开始点击无响应、画面静止」的情况，
+间歇出现，并且伴随 `pageerror: null function` 之类的 JS 报错。诊断输出证明返回瞬间状态是正确的
+（`paused=false pause_stack=0 menu_visible=true box_visible=true in_tree=true transitioning=false`，
+开始按钮矩形 `(8,127) 66x18`，点击坐标落在按钮内），因此剩下的是**渲染/输入链路在高频场景重建后失效**
+这一类问题，尚未定位到根因。本轮据此做了两处产品改动：Web 的返回**不再使用 addon 的溶解过渡**
+（它的全屏 shader 矩形正是「菜单回来了却点不动」的嫌疑点，是否仍吃掉输入取决于动画是否播完，
+同一驱动一次通过一次失败），改为直接切换场景；`SceneManager.finish_transition()` 作为原生路径兜底。
+因此「连续 5 轮返回并重新开始」**仍未通过**，没有进 CI 门禁；
 线上入口照常提供给用户复测，但这一项必须继续定位，不能算完成。
-另外，第一轮里的「真实开火消耗弹药」也未通过（同一会话内弹药读数不变），
-`CYCLE1_SETTINGS_PANEL_OPENED` 的判据也偏弱，都需要继续修。
+另外，第一轮里的「真实开火消耗弹药」在本地通过（21.23 vs 空闲 10.22、阻断 18.11），
+但阻断对照的余量很薄（18.11 vs 21.23），判据需要加强。
 
 ## 6. 加载健壮性（与本轮第 3 项直接相关）
 
@@ -110,10 +123,12 @@ shell 没有任何兜底揭盖路径，卡住时保留遮罩、说明情况并�
 
 ## 7. 仍未验证 / 未关闭
 
-- 第 5 项：浏览器里返回后主菜单不接受点击（见上），以及返回后再次开火的判断。
-- 第 3 项：窗口级逐帧启动取证尚未取数。
+- 第 5 项：浏览器里返回后**间歇性**无法立刻再开始（见上）；阻断开火对照的判据余量偏薄。
+- 第 3 项：窗口级逐帧启动取证第一次抓错了窗口，需要修正后重跑。
 - 第 1 项：`M5World` 的 `boss actual weapon hit B03`。
 - 第 2 项的本地/Web 同状态对照截图：本轮未重拍（契约测试通过，但缺少并排截图）。
 - Web 首次开档（无武器）需要走真实 UI 购买/装备武器的那条腿仍未覆盖。
 - 暂停/失焦：无头 Chromium 不产生真实窗口失焦，已如实记为环境限制而不是通过。
 - 自动化通过不等于真人接受；本记录不声称零 Bug 或所有硬件均已验证。
+  CI 的 Browser smoke 与 Online smoke 本轮为绿，但它们只覆盖各自列出的判据，
+  不替代「连续 5 轮返回并重新开始」这条仍未通过的验收。

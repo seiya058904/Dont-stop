@@ -25,8 +25,8 @@ Don't Stop 是一款俯视角 2D 生存射击游戏：移动、瞄准、射击�
 > 仓库从 `game-prototype-lab` 改名为 `Dont-stop` 之后，**旧的 Pages 项目地址不再可用**：
 > 本轮实测 `https://seiya058904.github.io/game-prototype-lab/` 返回 **404**（GitHub 的仓库重定向
 > 不覆盖 Pages 项目网址），新地址 `https://seiya058904.github.io/Dont-stop/` 返回 200。
-> 注意新地址目前仍然服务**旧基线**（`main@25192ee`），也就是用户判定 Web 未通过的那一版；
-> 本轮修复只在分支 `feat/dont-stop-revision` 上，没有推 `main`、没有更新稳定 Release 或 Pages。
+> 新地址当前服务 `main@feb6b67`（本轮修复后的构建，页面内含 `dontstop-build` 提交指纹可供核对）；
+> 本轮已合并 main 并重新部署 Pages；Windows 正式 Release 未改动。
 
 ## 本轮候选制品（本地试玩入口）
 
