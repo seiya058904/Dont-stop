@@ -35,8 +35,76 @@ const BOSSES = {
 }
 static func definition(id: String) -> Dictionary:
 	return ENEMIES.get(id,BOSSES.get(id,{}))
+## Instrumentation for tests/R3SpawnAudit.gd. Counters only - no behaviour change.
+## They live here because M5Content has a class_name; Town.gd and CombatArena.gd do
+## not, so a test cannot reach static state on those two scripts by name.
+## "Candidates rejected" and "deferred" are decisions, not outcomes: they cannot be
+## read off final positions, only counted where the decision is made.
+static var audit_candidates := 0     # candidate points examined by both validators
+static var audit_rejected := 0       # candidate points a validation rule refused
+static var audit_deferred := 0       # wave spawn attempts deferred (no legal point)
+static var audit_boss_deferred := 0  # boss spawns deferred (no legal point)
+static var audit_boss_retry := 0     # retries of a deferred boss
+static var audit_arena_failed := 0   # arena spawn_near() gave up entirely
+static var audit_refused := 0        # spawn() refusals by the shared guard
+
+## Bounding radius of an enemy, in world units, measured from the scene that is
+## actually spawned and cached per id.
+##
+## Why this exists: the spawn-point clearance used to be a fixed 7 px circle, which
+## is the collider's *radius*. The actors use a CapsuleShape2D (radius 7, height 20)
+## that is also offset from the actor's origin by (1,-9), so a candidate could pass
+## the check and still be created with part of the body inside a wall - exactly what
+## the player saw as enemies stuck in walls. Measuring the real collider removes the
+## drift between "this point is legal" and "this body fits", and it is measured from
+## the scene rather than typed into a table, so it cannot rot when a collider is
+## resized.
+static var _radius_cache := {}
+## Clearance used when a caller does not name an actor: the plain monster body, which
+## every enemy id instantiates.
+static func default_radius() -> float:
+	return radius_for("E01")
+
+static func radius_for(id: String) -> float:
+	if _radius_cache.has(id): return _radius_cache[id]
+	var radius := 7.0
+	if not definition(id).is_empty():
+		var actor = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
+		var collider := actor.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if collider != null and collider.shape != null:
+			# The candidate check is a circle centred on the actor's ORIGIN, while the
+			# collider may sit away from it, so both parts count.
+			radius = collider.position.length() + _shape_extent(collider.shape)
+		actor.free()
+	_radius_cache[id] = radius
+	return radius
+
+static func _shape_extent(shape: Shape2D) -> float:
+	if shape is CapsuleShape2D:
+		# A capsule is every point within `radius` of a segment of length
+		# height - 2*radius, so its furthest point is exactly height/2 away.
+		return maxf(shape.radius, shape.height * 0.5)
+	if shape is CircleShape2D:
+		return shape.radius
+	if shape is RectangleShape2D:
+		return shape.size.length() * 0.5
+	if shape is ConvexPolygonShape2D:
+		var extent := 0.0
+		for point in shape.points: extent = maxf(extent, point.length())
+		return extent
+	return 7.0
+
 static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	if definition(id).is_empty(): return null
+	# Shared guard for every spawn path. Callers are supposed to validate their
+	# candidate first, but a missed check used to create the actor at whatever
+	# sentinel came back (Vector2.INF), which the player sees as an enemy stuck
+	# outside the map. Refusing here turns that into a logged skip instead of a
+	# monster in an unreachable place.
+	if not point.is_finite():
+		audit_refused += 1
+		push_warning("[spawn] %s refused: non-finite point %s" % [id, str(point)])
+		return null
 	var actor = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
 	if id in ["E02","E04","E05"]:
 		actor.set_script(load("res://game/monster/DemoEnemy.gd")); actor.role = id

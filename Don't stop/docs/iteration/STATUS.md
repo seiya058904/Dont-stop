@@ -1,6 +1,22 @@
 # TowDownGame Experience Demo
 
-## M12 最终 UX 与测试快照清理（当前状态）
+## R3 第六次真人试玩反馈修订（当前状态）
+
+**WEB_DEPLOYED_FOR_HUMAN_REVIEW**
+
+H1_STATUS = SIXTH_FEEDBACK_ADDRESSED
+HUMAN_ACCEPTED = false
+WEB_HUMAN_ACCEPTED = false
+
+- 用户本次实际测试的是本地源码运行版与已部署的浏览器版；Windows 正式发行包本次没有真人测试，
+  不声称 Windows 上这五项问题已获用户确认。
+- 第 1 项（怪物出界/卡墙）已修到根因并给出采样：37 轮、12 阶段、10 类生成入口、3 个固定种子，
+  非法出生与卡墙从 19/14 降到 0/0。第 2、3、4 项已修（第 3 项的窗口级帧序列取证尚未取数）。
+- 第 5 项**只完成一部分**：退出/保存失败路径改为返回真实主菜单并留下日志与原生契约测试
+  （23/0），但浏览器里返回之后主菜单不再接受点击，连续 5 轮验收未通过，因此没有进 CI 门禁。
+- 详见 [R3 报告](R3-FEEDBACK-REVISION.md)。本轮不创建 Release、不新增标签。
+
+## M12 最终 UX 与测试快照清理（历史记录）
 
 **M12 CLOSED / HUMAN ACCEPTED WITH KNOWN LIMITATIONS**
 

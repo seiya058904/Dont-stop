@@ -18,6 +18,26 @@ extends Control
 
 const MAIN_SCENE := "res://game/map/Main.tscn"
 
+## The SceneManager addon builds its dissolve-pattern paths from a string
+## ("res://addons/scene_manager/shader_patterns/%s.png"), so the exporter's
+## dependency scan cannot see them and the Web build shipped the raw PNGs without
+## their imported textures. Every scene transition then failed with "No loader found
+## for resource" and left the addon's full-screen blend rectangle in place, which
+## swallowed every later click: the player saw the main menu come back and then
+## could not press anything - reported as "clicked leave and the picture stopped".
+## Referencing them here makes them real dependencies of the export, on every
+## platform, without touching the addon.
+const TRANSITION_PATTERNS := [
+	preload("res://addons/scene_manager/shader_patterns/circle.png"),
+	preload("res://addons/scene_manager/shader_patterns/curtains.png"),
+	preload("res://addons/scene_manager/shader_patterns/diagonal.png"),
+	preload("res://addons/scene_manager/shader_patterns/horizontal.png"),
+	preload("res://addons/scene_manager/shader_patterns/radial.png"),
+	preload("res://addons/scene_manager/shader_patterns/scribbles.png"),
+	preload("res://addons/scene_manager/shader_patterns/squares.png"),
+	preload("res://addons/scene_manager/shader_patterns/vertical.png"),
+]
+
 var _status: Label
 var _fill: TextureRect
 var _track: ColorRect
@@ -39,6 +59,9 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_build_ui()
+	# Keeping the transition patterns as a real dependency is the point of the
+	# constant above; touch it so the load cannot be optimised away silently.
+	print("[boot] transition patterns loaded=%d" % TRANSITION_PATTERNS.size())
 	print("[boot] shell drawn at t=%d" % _boot_ms)
 	if OS.has_feature("web"):
 		# The DOM shell already covered the whole engine boot; go straight in.
@@ -46,6 +69,9 @@ func _ready() -> void:
 		# _ready() makes the SceneTree remove a child while it is still adding
 		# one, which the engine reports as "Parent node is busy adding/removing
 		# children" (and which the Web E2E flags as an unexpected engine error).
+		# The stage mark tells the shell that engine bring-up finished and the
+		# synchronous scene load below is a real, expected wait.
+		Utils.notify_web_boot_stage("scene-prep")
 		get_tree().change_scene_to_file.call_deferred(MAIN_SCENE)
 		return
 	_run.call_deferred()

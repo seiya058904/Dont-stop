@@ -438,8 +438,13 @@ func open_panel():
 func open_settings():
 	var settings = Control.new()
 	settings.set_script(load("res://ui/DemoSettings.gd"))
+	print("[e2e] open-settings enter canvas=%s valid=%s" % [
+		str(Utils.canvasLayer), str(is_instance_valid(Utils.canvasLayer))])
 	Utils.canvasLayer.add_child(settings)
+	print("[e2e] open-settings added parent=%s children=%d" % [
+		str(settings.get_parent() != null), Utils.canvasLayer.get_child_count()])
 	Demo.push_pause(settings)
+	print("[e2e] open-settings pause=%d" % Demo.pause_stack.size())
 
 func open_stats():
 	var panel=load("res://ui/StatPanel.gd").new()
@@ -503,10 +508,85 @@ func finish_root_lesson():
 func quit_game():
 	if quitting_game: return
 	stop_attacks()
-	if Utils.is_game_start and not save_camp().success:
-		show_save_dialog(save_blocked,true)
+	# The save question is settled BEFORE any platform branch, and its outcome is
+	# logged because it is the one thing that can turn "leave the game" into "stay
+	# where you are with a dialog": if saving fails the player keeps the session and
+	# the recovery dialog, which is the existing product contract.
+	var save_ok := true
+	if Utils.is_game_start:
+		save_ok = save_camp().success
+		print("[leave] save on the way out success=%s web=%s" % [str(save_ok), str(OS.has_feature("web"))])
+	if Utils.is_game_start and not save_ok:
+		show_save_dialog(save_blocked, true)
 		return
-	finish_quit()
+	leave_after_save()
+
+## Single platform-aware exit: ends the process on native, returns to a live main
+## menu on Web. Every exit entry point routes through here, including the
+## save-failure dialog, so no path can reach get_tree().quit() on a platform that
+## has no process to end - that is what left the browser showing a frozen frame.
+func leave_after_save() -> void:
+	if OS.has_feature("web"):
+		# A browser tab has no process to end: quitting the engine just freezes the
+		# last frame with nothing to take over, which is what the player saw as a
+		# stuck picture. Leaving the site is the tab's job, so "quit" here means
+		# going back to a live main menu instead.
+		return_to_main_menu()
+	else:
+		finish_quit()
+
+## Web replacement for finish_quit(): tears the session down and rebuilds the real
+## main menu. Saving has already been settled by quit_game() before this runs.
+func return_to_main_menu() -> void:
+	if quitting_game: return
+	quitting_game = true
+	print("[leave] returning to the main menu web=%s game_start=%s" % [
+		str(OS.has_feature("web")), str(Utils.is_game_start)])
+	stop_attacks()
+	LevelServer.timerStop()
+	# Invalidate delayed callbacks and async work belonging to the session we are
+	# leaving: spawns carry the epoch they were created under.
+	LevelServer.epoch += 1
+	for node in get_tree().get_nodes_in_group("monsters"): node.queue_free()
+	for node in get_tree().get_nodes_in_group("combat_transient"): node.queue_free()
+	for menu in pause_stack.duplicate():
+		pop_pause(menu)
+		if is_instance_valid(menu): menu.queue_free()
+	pause_stack.clear()
+	if is_instance_valid(save_dialog):
+		save_dialog.queue_free()
+		save_dialog = null
+	if is_instance_valid(ui):
+		ui.queue_free()
+	ui = null
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Input.set_custom_mouse_cursor(null)
+	for type in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
+		for node in get_tree().root.find_children("*", type, true, false): node.stop()
+	# Back to the last valid save. Unfinished combat is deliberately dropped rather
+	# than written as a camp snapshot, and a corrupt or write-blocked save keeps its
+	# protection: load_camp() refuses it and leaves the file alone.
+	if FileAccess.file_exists(save_path):
+		load_camp()
+	Utils.is_game_start = false
+	LevelServer.state = "CAMP"
+	quitting_game = false
+	# Awaited on purpose. The swap is asynchronous (fade out, replace, fade in), and
+	# a caller - or the browser acceptance driver - must be able to observe when the
+	# menu is really on screen instead of guessing a delay. An earlier version fired
+	# this without awaiting and announced nothing, so a return that had not finished
+	# (or had not happened at all) looked identical to a finished one.
+	await SceneManager.change_scene("res://game/map/Main.tscn",
+		{ "pattern": "scribbles", "pattern_leave": "squares" })
+	# The transition's full-screen blend rectangle only stops taking input when its
+	# animation finishes. On the Web build that animation did not always finish, and
+	# the result was a menu that was on screen but could not be clicked at all. The
+	# return guarantees an interactive menu instead of assuming the animation ran.
+	SceneManager.finish_transition()
+	print("[leave] main menu is up scene=%s game_start=%s" % [
+		str(get_tree().current_scene.scene_file_path if get_tree().current_scene != null else "<none>"),
+		str(Utils.is_game_start)])
 
 func finish_quit():
 	if quitting_game: return

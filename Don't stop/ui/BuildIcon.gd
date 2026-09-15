@@ -4,15 +4,20 @@ var picture: Texture2D
 var description = ""
 var popup: PanelContainer
 var display_picture: Texture2D
+## Text-only entries (stat sheet weapon upgrades and talents, by product decision)
+## drop the icon entirely instead of scaling it: no icon, no reserved icon width,
+## no extra left inset. Every other caller keeps its icon.
+var text_only := false
 func _ready():
-	custom_minimum_size=Vector2(25,25)
+	custom_minimum_size=Vector2(0,27) if text_only else Vector2(25,25)
 	texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 	display_picture=picture
 	var source_image=picture.get_image() if picture else null
 	if source_image and source_image.get_used_rect().size!=Vector2i.ZERO:
 		var crop=AtlasTexture.new(); crop.atlas=picture; crop.region=source_image.get_used_rect(); display_picture=crop
-	icon=display_picture; expand_icon=true
-	add_theme_constant_override("icon_max_width",18)
+	if not text_only:
+		icon=display_picture; expand_icon=true
+		add_theme_constant_override("icon_max_width",18)
 	mouse_entered.connect(show_build_tooltip)
 	mouse_exited.connect(hide_build_tooltip)
 	focus_entered.connect(show_build_tooltip)

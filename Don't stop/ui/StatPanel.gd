@@ -108,6 +108,12 @@ func summary(rows: Array) -> String:
 
 func make_owned(grid,kind: String,id: String,picture: Texture2D,title: String,info: String):
 	var item=preload("res://ui/BuildIcon.gd").new()
+	# Product decision: in this panel the weapon upgrade and talent entries are
+	# text only. The icon is removed together with the space it reserved, rather
+	# than scaled to match - and every other entry kind keeps its icon.
+	if kind in ["upgrade","talent"]:
+		item.text_only=true
+		picture=null
 	item.picture=picture; item.description=title+"\n来源："+CATEGORY[kind]+"\n"+info
 	var rows=snapshot.ledger.rows.filter(func(r): return (r.source_type==kind or (kind=="talent" and r.source_type=="condition")) and r.source_id==id and meaningful(r))
 	for row in rows: item.description+="\n"+NAMES.get(row.stat_id,row.stat_id)+"："+LEDGER.text(row)

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dpipc6av3p107"
-path.s3tc="res://.godot/imported/radial.png-45b81257cf212bc197b861ea33052002.s3tc.ctex"
+path="res://.godot/imported/radial.png-45b81257cf212bc197b861ea33052002.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://addons/scene_manager/shader_patterns/radial.png"
-dest_files=["res://.godot/imported/radial.png-45b81257cf212bc197b861ea33052002.s3tc.ctex"]
+dest_files=["res://.godot/imported/radial.png-45b81257cf212bc197b861ea33052002.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

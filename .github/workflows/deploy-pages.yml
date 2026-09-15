@@ -80,6 +80,24 @@ jobs:
           # asserts it is really there instead of copying a second copy in.
           test -s "$PROJECT_PATH/build/web/index.icon.png"
 
+      - name: Stamp the build identity into the page
+        shell: bash
+        run: |
+          set -euo pipefail
+          # A 200 response or a correct <title> does not prove WHICH commit is
+          # live, so the merged commit is written into the deployed page and the
+          # online job compares the two.
+          python3 - <<'PY'
+          import os, pathlib
+          page = pathlib.Path("Don't stop/build/web/index.html")
+          html = page.read_text(encoding="utf-8")
+          assert "dontstop-build" not in html, "page is already stamped"
+          stamp = '<meta name="dontstop-build" content="%s" />' % os.environ["GITHUB_SHA"]
+          html = html.replace("</head>", stamp + "\n</head>", 1)
+          page.write_text(html, encoding="utf-8")
+          print("stamped build identity:", os.environ["GITHUB_SHA"])
+          PY
+
       - name: Configure Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
@@ -143,6 +161,13 @@ jobs:
           node "$PROJECT_PATH"/tools/web-aim-e2e.js \
             http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/aim-e2e.log
           echo "WEB_AIM_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          # tools/web-menu-return-e2e.js exists and is run by hand, but it is NOT a
+          # gate yet: its second iteration still fails (after a return the main menu
+          # is on screen and does not accept the start click in the browser, while
+          # tests/R3ReturnMenu.gd proves the same sequence natively). A known-failing
+          # check is recorded in docs/iteration/R3-FEEDBACK-REVISION.md instead of
+          # being silenced with a tolerated exit code.
+          echo "WEB_MENU_RETURN_E2E=KNOWN_FAILING_TRACKED" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
           echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload smoke evidence
@@ -193,14 +218,23 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p online-evidence
-          curl --fail --silent --show-error "$PAGES_URL" -o /dev/null
+          curl --fail --silent --show-error "$PAGES_URL" -o online-evidence/deployed-index.html
+          # Identity, not availability: the page must carry the commit this run
+          # built. A 200 or a correct title would pass even if Pages were still
+          # serving an older build.
+          grep -o 'name="dontstop-build" content="[0-9a-f]\{40\}"' online-evidence/deployed-index.html | head -1
+          grep -q "name=\"dontstop-build\" content=\"${GITHUB_SHA}\"" online-evidence/deployed-index.html
+          echo "DEPLOYED_BUILD_SHA=${GITHUB_SHA}" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
           node "Don't stop"/tools/smoke-web.js \
             "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-smoke.log
           # Same contract against the deployed site: the real entry point first,
           # then the measured aim chain. Any non-zero exit fails the job.
           node "Don't stop"/tools/web-aim-e2e.js \
             "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-aim-e2e.log
+          # The round's own acceptance is run here by hand, not as a gate: see the
+          # note in the browser-smoke job and docs/iteration/R3-FEEDBACK-REVISION.md.
           echo "ONLINE_WEB_AIM_E2E=PASS_CI_CHROMIUM" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          echo "ONLINE_WEB_MENU_RETURN_E2E=KNOWN_FAILING_TRACKED" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload online smoke evidence
         if: always()

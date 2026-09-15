@@ -23,5 +23,5 @@ if not exist "%GAME_DIR%\.godot\global_script_class_cache.cfg" (
         exit /b 1
     )
 )
-start "Don't stop" "%GODOT%" --path "%GAME_DIR%" --log-file "%GAME_DIR%\preview.log"
+start "Don't Stop" "%GODOT%" --path "%GAME_DIR%" --log-file "%GAME_DIR%\preview.log"
 exit /b 0

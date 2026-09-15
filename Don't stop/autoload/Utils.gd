@@ -183,19 +183,32 @@ func get_aim_world_position() -> Vector2:
 const WEB_SHELL_HOOKS := {
 	"ready": "ready",
 	"failed": "failed",
+	# Stage progress. The shell used to remove its cover on a fixed 20 s timer when
+	# no notice arrived; on the deployed site the notice was measured at 20923 ms,
+	# so the timer - not the game - decided what the player saw. The shell now uses
+	# these marks to tell "slow" from "stalled" and never reveals on a timer.
+	"stage": "stage",
 }
+
+## Reports one launch stage to the browser shell. No-op outside Web builds.
+func notify_web_boot_stage(stage: String) -> void:
+	if not OS.has_feature("web"): return
+	print("[boot] stage %s t=%d" % [stage, Time.get_ticks_msec()])
+	_web_call_shell_arg(WEB_SHELL_HOOKS.stage, stage)
 
 ## Called by ui/MainUI.gd once the title menu is really on screen.
 func notify_web_boot_menu_ready() -> void:
 	_web_boot_menu = true
 	_web_boot_menu_ms = Time.get_ticks_msec()
 	print("[boot] title menu drawn t=%d" % _web_boot_menu_ms)
+	notify_web_boot_stage("menu")
 	_web_report_boot_ready()
 
 ## Called by autoload/Warmup.gd when the pre-warm pass has completed (or was skipped).
 func notify_web_boot_warmup_done() -> void:
 	_web_boot_warmup = true
 	_web_boot_warmup_ms = Time.get_ticks_msec()
+	notify_web_boot_stage("warmup-done")
 	_web_report_boot_ready()
 
 func _web_report_boot_ready() -> void:
@@ -223,6 +236,22 @@ func _web_call_shell(hook: String) -> void:
 	bridge.call("eval",
 		"try{if(window.__dontStop&&typeof window.__dontStop.%s==='function'){window.__dontStop.%s();}}catch(e){}"
 		% [hook, hook], true)
+
+## Same call, with one string argument (stage names). The argument is reduced to
+## word characters before it reaches the eval, so a caller cannot inject script
+## through a stage name even if one is ever built from data.
+func _web_call_shell_arg(hook: String, arg: String) -> void:
+	if not OS.has_feature("web"): return
+	var bridge = Engine.get_singleton("JavaScriptBridge")
+	if bridge == null: return
+	var safe := ""
+	for index in arg.length():
+		var c := arg[index]
+		if (c >= "a" and c <= "z") or (c >= "A" and c <= "Z") or (c >= "0" and c <= "9") or c == "-" or c == "_":
+			safe += c
+	bridge.call("eval",
+		"try{if(window.__dontStop&&typeof window.__dontStop.%s==='function'){window.__dontStop.%s(\"%s\");}}catch(e){}"
+		% [hook, hook, safe], true)
 
 func reloadTempAmList():
 	temp_am_list.clear()
