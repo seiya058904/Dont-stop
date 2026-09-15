@@ -1,12 +1,11 @@
 # R4 — A批修订（返回主菜单 / 图形弹匣 / 武器姿态）
 
-状态：`A_BATCH_FIXED_LOCALLY`（本地已提交、已通过门禁，**未 push / 未合并 main / 未部署**）；
-`HUMAN_ACCEPTED = false`，`WEB_HUMAN_ACCEPTED = false`。
-`WEB_DEPLOYED_FOR_HUMAN_REVIEW` 是本批的**目标终态**，只有在合并 main 并完成 Pages 部署后成立，
-现在还不是。本记录不创建 Release、不打标签，也不把 `HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED` 自行置为 true。
+状态：`WEB_DEPLOYED_FOR_HUMAN_REVIEW`（已 push、已开 PR、已合并 `main`、已完成 Pages 部署，
+线上构建指纹已核对等于合并后的 main SHA）；`HUMAN_ACCEPTED = false`，`WEB_HUMAN_ACCEPTED = false`。
+本记录不创建 Release、不打标签，也不把 `HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED` 自行置为 true。
 
 按 `AI-TASK.zh-CN.md` 分两批交付，本文件只覆盖 **A批**（功能修复）。B批（安全生成地基、1–30 加压、
-31–40 地狱、难度/性能验收）尚未开始，见文末。
+31–40 地狱、难度/性能验收）**尚未开始**，等真人试玩 A批线上版后进入，见文末。
 
 三个问题的共同点：报告的现象是真的，但根因都不在现象所在的位置。因此每项都先复现、再定位到根因，
 最后用可证伪的行为测试锁住，而不是改一行让截图看起来对。
@@ -211,7 +210,7 @@ node "Don't stop/tools/web-menu-return-e2e.js" http://localhost:8788/index.html 
 因此候选 .pck 与提交后的工作树一致。另：Windows 候选 .pck 的导出时间比 Web 晚约 70 分钟，
 两者仍逐字节相同，说明这 70 分钟内源码没有变化。
 
-## 同一源码的候选制品（本轮，未部署、未创建 Release）
+## 同一源码的本机候选制品（未部署；线上产物见上一节）
 
 Web（本地导出，CI 的 `<meta name="dontstop-build">` 指纹由工作流在部署时写入，本地导出没有该指纹）：
 
@@ -228,6 +227,57 @@ Windows 候选（同一工作树导出）：
 | --- | --- | --- |
 | `build/windows/Don't stop.pck` | 41134932 | `610463f6e0c24822dcbed8afcc25eb7a9cd612d5e3b1b9fa649e87219a7c4348` |
 | `build/windows/Don't stop.exe` | 109197312 | `ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655` |
+
+## 外发：PR → 合并 → 部署 → 线上回归（本轮）
+
+| 步骤 | 结果 |
+| --- | --- |
+| push | `feat/dont-stop-revision` 快进 `6167a3c..83ddffa`（推送前先核过：HEAD 的 7 个提交父指针逐条完整、`6a9d789` 是祖先、无 root commit） |
+| PR | [#3](https://github.com/seiya058904/Dont-stop/pull/3)（base `main`） |
+| 合并前门禁 | 在候选分支 `workflow_dispatch` run `34954529853`：build ✅、Browser smoke ✅（`deploy`/`Online smoke` 因 `github.ref != main` 被跳过，线上未被触碰） |
+| 合并 | run `34962338505` 由 push 触发；`main` = **`b6f6fa92e83562e31195cd091843491b97f5ff24`** |
+| 流水线 | build ✅ 45s → Browser smoke ✅ 1h44m30s → **deploy ✅ 13s** → Online smoke ✅ 1h41m6s |
+| 可玩地址 | https://seiya058904.github.io/Dont-stop/ |
+
+**构建指纹（只对身份，不对可用性）**：线上 `<meta name="dontstop-build" content="…">` =
+`b6f6fa92e83562e31195cd091843491b97f5ff24`，**等于合并后的 main SHA**；CI 自己也把抓到的
+`deployed-index.html` 一并归档，内容一致。`<title>Don't Stop</title>`。
+
+**资源确实换了**（HTTP 200 或标题正确都不能证明是哪一版在跑）：
+
+| 资源 | 部署前 | 部署后 |
+| --- | --- | --- |
+| `index.html` sha256 | `51b73346…` | `b7925928…` |
+| `index.pck` sha256 | `d42f2b667fab02de7a180f9ca5ecc9d6159c632df6e05d1dfa752334b1f287d1` | `c13f06203b9ba3fc996ea9dcdecf6a421cf5147be5bd3c71d59d454ca46ac006` |
+| `index.pck` 字节 | 41133284 | 41134724 |
+| `index.pck` Last-Modified | — | `Tue, 15 Sep 2026 13:01:15 GMT`（= 部署时刻） |
+
+注意：CI 在 Linux 上导出的 .pck（41134724 B）与本机导出的候选（41134932 B）**不是同一份字节**，
+两者都来自同一提交；上表「部署后」这一列是**线上实际产物**的身份，候选制品那节列的是本机候选。
+
+**部署后线上回归**（目标都是线上地址；CI 跑一遍，本机再独立跑一遍）：
+
+| 脚本 | CI（Online smoke job） | 本机独立复跑 |
+| --- | --- | --- |
+| `smoke-web.js` | `RESULT=PASS` | `RESULT=PASS`（exit 0） |
+| `save-audit-web.js` | `RESULT=PASS` | `RESULT=PASS`（exit 0） |
+| `web-aim-e2e.js` | `RESULT=PASS`（57/57） | `RESULT=FAIL`，**55/57**——见下 |
+| `web-menu-return-e2e.js` 5 轮 | `RESULT=PASS`（83/83，`cycles=5`） | **`RESULT=PASS`（83/83）**，含 `FIVE_CYCLES_COMPLETED`、`PAUSE_RESUME_EVERY_CYCLE`、`SAVE_READABLE_AFTER_FIVE_RETURNS_AND_A_RELOAD`；四类 error 计数均为 0 |
+
+本机复跑的 `web-aim-e2e.json` 里 55 个 token 为 true（含 `AIM_*`、`CROSSHAIR_*`、`PROJECTILE_FOLLOWS_AIM_*`、
+`NO_POINTER_LOCK_EVER`、`NO_PAGE_ERRORS`/`NO_NETWORK_ERRORS`），只有两个**像素型开火 token**
+为 false；同一份证据的 `sample_state_line` 是 `bullets=20/25`，即弹药**确实被消耗**。
+这与任务书第 2 节点名的「HUD 像素变化大=真实扣弹」判据不可靠完全一致：它在 CI 上偶然通过、
+在本机复跑不通过。**这是缺口，不是绿灯**，未删断言、未调阈值、未加白名单来掩盖。
+
+证据目录：`evidence/r4/online/`（本机独立复跑：`web-menu-return-e2e.json`、`web-aim-e2e.json`、
+各轮 PNG）；CI 的两份证据在 run `34954529853`（候选分支，artifact `browser-smoke-evidence`）与
+run `34962338505`（线上，artifact `online-smoke-evidence`）中，均保留 14 天。
+
+**注意本文件只记录到部署刚完成时的状态。** 为严格保证「线上构建指纹 == 合并后的 main SHA」，
+部署后**没有**再向 `main` 推送任何提交（否则会触发重新构建，指纹会变成新的 main tip 而不等于
+本次合并提交）。因此本报告与 `STATUS.md` 的这份更新提交在 `feat/dont-stop-revision` 上，
+尚未进入 `main`；是否把文档推进 `main`（并接受一次约 3.5 小时的重新构建+重部署）留给用户决定。
 
 ## 既有浏览器门禁的回归（同一构建，本地）
 

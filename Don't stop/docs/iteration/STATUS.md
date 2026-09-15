@@ -2,18 +2,29 @@
 
 ## R4 A批修订（当前状态）
 
-**A批本地修复与验证完成，未合并、未部署（等待明确批准）**
+**WEB_DEPLOYED_FOR_HUMAN_REVIEW — 已合并 main 并完成 Pages 部署，线上指纹已核对**
 
-H1_STATUS = A_BATCH_FIXED_LOCALLY
+H1_STATUS = WEB_DEPLOYED_FOR_HUMAN_REVIEW
 HUMAN_ACCEPTED = false
 WEB_HUMAN_ACCEPTED = false
 
 - 按 `AI-TASK.zh-CN.md` 分 A/B 两批交付；本状态只覆盖 **A批**（返回主菜单 / 图形弹匣 / 武器姿态）。
-  B批（安全生成地基、1–30 加压、31–40 地狱、难度与性能验收）**尚未开始**。
-- **未部署**：`main` 仍是 `feb6b67`；本轮改动已在本地 feature 分支 `feat/dont-stop-revision`
-  提交为 **`ee3ea1d`**（父提交 `6a9d789`，74 files / +1706 / -170），**没有 push / 没有合并 main /
-  没有触发 Pages 部署**。部署属外部不可逆动作，等明确批准后再执行；`HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED`
-  未自行置为 true。`WEB_DEPLOYED_FOR_HUMAN_REVIEW` 是目标终态，部署后才成立。
+  B批（安全生成地基、1–30 加压、31–40 地狱、难度与性能验收）**尚未开始**，等真人试玩 A批线上版后再进入。
+- **已外发**：PR [#3](https://github.com/seiya058904/Dont-stop/pull/3) 合并后的 `main` =
+  `b6f6fa92e83562e31195cd091843491b97f5ff24`（合并提交）。合并前先在候选分支跑通构建+浏览器门禁
+  （run `34954529853`：build 成功、Browser smoke 成功，`deploy`/`Online smoke` 按 ref 规则被跳过，
+  线上未被触碰）；合并推送后的 run `34962338505` 中 build / Browser smoke / deploy / Online smoke
+  **四项全部成功**。
+- **可玩地址**：https://seiya058904.github.io/Dont-stop/
+- **构建指纹**：线上 `index.html` 的 `<meta name="dontstop-build" content=…>` =
+  `b6f6fa92e83562e31195cd091843491b97f5ff24`，**等于合并后的 main SHA**；`<title>Don't Stop</title>`。
+- **资源确实换了**（不是只回 200）：`index.pck` 部署前 `d42f2b66…`／41133284 B → 部署后
+  `c13f0620…`／41134724 B，且 `Last-Modified: Tue, 15 Sep 2026 13:01:15 GMT`（= 部署时刻）；
+  `index.html` sha256 `51b73346…` → `b7925928…`。
+- **部署后线上回归**（工作流 Online smoke + 本机独立复跑，目标都是线上地址）：`web-menu-return-e2e.js`
+  5 轮 + 第 6 次再进入 **RESULT=PASS / 83 个 token 全 true**（含 `FIVE_CYCLES_COMPLETED`、
+  `SAVE_READABLE_AFTER_FIVE_RETURNS_AND_A_RELOAD`）；`smoke-web.js` 与 `save-audit-web.js` 均
+  `RESULT=PASS`；`web-aim-e2e.js` 在 CI 为 57/57，本机独立复跑为 **55/57**（见下方未决项）。
 - A批-1（返回主菜单后无法再次开始）：已定位到根因（返回时把武器重挂到即将销毁的 Hero 上，
   留下已释放节点引用）并修复。原生 5 轮回归 **128/0，exit 0**；浏览器 `web-menu-return-e2e.js`
   5 轮 **`RESULT=PASS` / exit 0 / 83 个 token 全 true**（`FIVE_CYCLES_COMPLETED cycles=5 returns=6`），
@@ -24,9 +35,17 @@ WEB_HUMAN_ACCEPTED = false
 - A批-3（Baby 举过头顶）：根因是每次开火新建 tween 并以「当前坐标」为回位目标（Baby 每扣一次扳机触发 3 次），
   改为稳定锚点 + 单一互斥 tween；原生夹具覆盖全部 24 把枪，**259/0**，60 连发漂移 0.0000，
   Baby 出膛 3 发且都在枪口。Baby 的名称/弹道/音效/伤害未改。
-- 如实记录的未决项：脚本里的「开火像素探针」从未通过且判据方向是反的（blocked 测得比 shot 还大），
-  已降级为记录项而非门禁；弹药消耗由原生夹具与截图（25/25 → 23/25）证明。
-  `tests/ContractRunner.gd` 的配件 `instance_id` 失败自 M8 起即存在，属既有问题。
+- 如实记录的未决项（部署后仍在）：
+  - `web-aim-e2e.js` 里两个**像素型**开火 token（`BLOCKED_FIRE_DOES_NOT_CONSUME_AMMO`、
+    `REAL_FIRE_CONSUMES_AMMO`）**不稳定**：CI 部署前/后两次都是 57/57 通过，本机对同一线上地址
+    独立复跑却是 55/57，而同一份状态行明确显示 `bullets=20/25`（弹药真的被消耗）。
+    这正好印证 `AI-TASK.zh-CN.md` 第 2 节「HUD 像素变化大=真实扣弹 不能继续做主证据」的判断——
+    该判据应从门禁降级，改用只读弹量/弹丸观测。**没有**删断言或调阈值来掩盖。
+  - `web-menu-return-e2e.js` 的同类像素探针已在本轮降级为记录项 `note()`（blocked 测得比 shot 还大，
+    方向是反的）；弹药消耗由原生夹具与截图（25/25 → 23/25）证明。
+  - `tests/ContractRunner.gd` 的配件 `instance_id` 失败自 M8 起即存在，属既有问题，与本批无关。
+  - CI 时长副作用：5 轮返回门禁在软件渲染 CI 上单轮很慢，Browser smoke / Online smoke 各约 100 分钟，
+    整条流水线约 3.5 小时。这是门禁真实运行的代价，不是失败；但值得后续优化。
 - 详见 [R4 报告](R4-FEEDBACK-REVISION.md)。本轮不创建 Release、不新增标签。
 
 ## R3 第六次真人试玩反馈修订（历史）
