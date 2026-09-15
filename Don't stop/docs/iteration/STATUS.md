@@ -1,6 +1,35 @@
 # TowDownGame Experience Demo
 
-## R3 第六次真人试玩反馈修订（当前状态）
+## R4 A批修订（当前状态）
+
+**A批本地修复与验证完成，未合并、未部署（等待明确批准）**
+
+H1_STATUS = A_BATCH_FIXED_LOCALLY
+HUMAN_ACCEPTED = false
+WEB_HUMAN_ACCEPTED = false
+
+- 按 `AI-TASK.zh-CN.md` 分 A/B 两批交付；本状态只覆盖 **A批**（返回主菜单 / 图形弹匣 / 武器姿态）。
+  B批（安全生成地基、1–30 加压、31–40 地狱、难度与性能验收）**尚未开始**。
+- **未部署**：`main` 仍是 `feb6b67`；本轮改动已在本地 feature 分支 `feat/dont-stop-revision`
+  提交为 **`ee3ea1d`**（父提交 `6a9d789`，74 files / +1706 / -170），**没有 push / 没有合并 main /
+  没有触发 Pages 部署**。部署属外部不可逆动作，等明确批准后再执行；`HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED`
+  未自行置为 true。`WEB_DEPLOYED_FOR_HUMAN_REVIEW` 是目标终态，部署后才成立。
+- A批-1（返回主菜单后无法再次开始）：已定位到根因（返回时把武器重挂到即将销毁的 Hero 上，
+  留下已释放节点引用）并修复。原生 5 轮回归 **128/0，exit 0**；浏览器 `web-menu-return-e2e.js`
+  5 轮 **`RESULT=PASS` / exit 0 / 83 个 token 全 true**（`FIVE_CYCLES_COMPLETED cycles=5 returns=6`），
+  另有两次独立整轮跑到 cycle 5 作为可重复性证据。原先的
+  `WEB_MENU_RETURN_E2E=KNOWN_FAILING_TRACKED` 豁免已从工作流删除，改为真正的非零退出阻断门禁。
+- A批-2（图形弹匣与真实弹匣不同步）：比例渲染，最多 40 段；原生夹具覆盖容量
+  1/2/3/21/27/35/40/41/60/100/200，**234/0**，含 `60/100 → 24 段` 的原始 bug 复现点。
+- A批-3（Baby 举过头顶）：根因是每次开火新建 tween 并以「当前坐标」为回位目标（Baby 每扣一次扳机触发 3 次），
+  改为稳定锚点 + 单一互斥 tween；原生夹具覆盖全部 24 把枪，**259/0**，60 连发漂移 0.0000，
+  Baby 出膛 3 发且都在枪口。Baby 的名称/弹道/音效/伤害未改。
+- 如实记录的未决项：脚本里的「开火像素探针」从未通过且判据方向是反的（blocked 测得比 shot 还大），
+  已降级为记录项而非门禁；弹药消耗由原生夹具与截图（25/25 → 23/25）证明。
+  `tests/ContractRunner.gd` 的配件 `instance_id` 失败自 M8 起即存在，属既有问题。
+- 详见 [R4 报告](R4-FEEDBACK-REVISION.md)。本轮不创建 Release、不新增标签。
+
+## R3 第六次真人试玩反馈修订（历史）
 
 **WEB_DEPLOYED_FOR_HUMAN_REVIEW**
 

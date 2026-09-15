@@ -49,6 +49,17 @@ var tags: Array = ["projectile"]
 var attachments_node = Node.new()
 var attachments_dict = {}
 var tween:Tween
+## Stable pose anchor. Recoil is only a temporary offset from this anchor and it
+## always returns to it. The previous version animated towards the *current*
+## position, so an animation that had not finished yet became the next shot's
+## return target and the gun walked away a pixel at a time - fastest on weapons
+## that fire more often than the animation lasts (BabyZapZap plays the recoil
+## four times per trigger pull). Captured once, when the gun enters the tree.
+var resting_position := Vector2.ZERO
+var resting_scale := Vector2.ONE
+var recoil_tween: Tween
+var sprite_tween: Tween
+var pose_captured := false
 var direction:Vector2 #朝向
 var player:Player #使用玩家
 var is_use = false #是否正在使用
@@ -85,8 +96,54 @@ func _ready() -> void:
 	bullets_count = bullets_max_count
 	audio_reload_ammo.stream = reload_stream
 	gun_image.texture = image
+	# The scene values are the grip pose. Capture them before any animation can
+	# move the gun, so every later recoil has a fixed place to come back to.
+	capture_pose()
 	set_use(false)
 	updateGun()
+
+## Records the gun's resting transform. Called from _ready(); safe to call again
+## (for example after a scene has set a different anchor), it only ever stores
+## the transform that is current at that moment.
+func capture_pose() -> void:
+	resting_position = position
+	if is_instance_valid(gun_image): resting_scale = gun_image.scale
+	pose_captured = true
+
+## The single, mutually exclusive recoil animation for a shot.
+##
+## Exactly one tween owns the gun's position at a time: the previous one is
+## killed before the new offset is applied, and the target is always the fixed
+## anchor. Two tweens writing `position` is what made a rapid weapon creep
+## upwards, because each new tween captured the mid-animation position as its
+## own destination.
+##
+## The tween is created on the node (not on the SceneTree) so it is released
+## with the gun - an unbound tween outlived the scene change and kept writing to
+## a freed gun, which is one of the sources of the browser-side JS errors.
+func play_shot_feedback(duration: float, offset := Vector2(-1, -1)) -> void:
+	if not pose_captured: capture_pose()
+	var seconds := maxf(duration, 0.01)
+	if recoil_tween != null and recoil_tween.is_valid(): recoil_tween.kill()
+	position = resting_position + offset
+	recoil_tween = create_tween()
+	recoil_tween.tween_property(self, "position", resting_position, seconds)
+	if is_instance_valid(gun_image):
+		if sprite_tween != null and sprite_tween.is_valid(): sprite_tween.kill()
+		gun_image.scale = resting_scale * Vector2(0.5, 1.1)
+		sprite_tween = create_tween()
+		sprite_tween.tween_property(gun_image, "scale", resting_scale, seconds)
+
+## Puts the gun back on its anchor and cancels any pending recoil. Called
+## whenever an action is interrupted, so switching weapons, reloading, dying,
+## returning to the camp or leaving for the menu cannot leave a partial offset
+## behind for the next shot to build on.
+func restore_pose() -> void:
+	if recoil_tween != null and recoil_tween.is_valid(): recoil_tween.kill()
+	if sprite_tween != null and sprite_tween.is_valid(): sprite_tween.kill()
+	if not pose_captured: return
+	position = resting_position
+	if is_instance_valid(gun_image): gun_image.scale = resting_scale
 
 func onPlayerFireRateChange(_rate):
 	updateGun()
@@ -119,6 +176,7 @@ func cancel_actions():
 	for voice in attachments_node.find_children("*","AudioStreamPlayer2D",true,false): voice.stop()
 	for effect in find_children("*","GPUParticles2D",true,false): effect.emitting = false
 	if is_instance_valid(anim_player): anim_player.stop()
+	restore_pose()
 
 func damage_context(depth = 0) -> Dictionary:
 	var context = {"gun":self,"tier":WeaponCatalog.tier(weapon_id),"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"pierce":effective.get("pierce",0),"shards":effective.get("shards",0),"shard_ratio":effective.get("shard_ratio",0.25),"range_mul":effective.get("range",320.0)/320.0,"refill":effective.get("refill",0),"depth":depth,"epoch":LevelServer.epoch}
@@ -265,7 +323,7 @@ func _shoot() -> void:
 	call_deferred("_shootAnim")
 
 func _shootAnim():
-	if not is_use or player.is_dead or get_tree().paused: return
+	if not is_use or not is_instance_valid(player) or player.is_dead or get_tree().paused: return
 	var tier = WeaponCatalog.tier(weapon_id)
 	tier_muzzle.pulse(tier)
 	player.cameraSnake((shake_vector + Vector2.ONE*maxi(0,tier-3)*0.12) * direction)

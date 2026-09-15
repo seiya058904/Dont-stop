@@ -5,24 +5,24 @@ var charge_time = 0.0
 var sustained = false
 var spin = 0.0
 var thermal_clock = 0.0
-var resting_position = Vector2.ZERO
 
 func projectile_count() -> int:
 	var spec=WeaponCatalog.definition(weapon_id)
 	return 3 if spec.mode=="prism" else int(spec.get("count",1))
 
 func _ready():
-	resting_position = position
 	var spec = WeaponCatalog.definition(weapon_id)
 	damage = spec.damage
 	fire_rate = spec.rate
 	bullets_max_count = spec.magazine
 	change_speed = spec.reload
 	bullet_speed = spec.speed
+	# resting_position is captured by BaseGun._ready() from the scene transform,
+	# which is the same value this used to record by hand.
 	super._ready()
 
 func _shootAnim():
-	if not is_use or player.is_dead or get_tree().paused: return
+	if not is_use or not is_instance_valid(player) or player.is_dead or get_tree().paused: return
 	# Recoil always returns to the scene anchor, not an intermediate tween position.
 	position = resting_position
 	super._shootAnim()

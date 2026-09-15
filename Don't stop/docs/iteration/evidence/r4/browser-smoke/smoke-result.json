@@ -1,0 +1,59 @@
+{
+  "url": "http://localhost:8788/index.html",
+  "build": "build/web (candidate for ee3ea1d / fc50be0)",
+  "result": "PASS",
+  "failed": [],
+  "checks": [
+    {
+      "name": "no-shell-start-button",
+      "ok": true
+    },
+    {
+      "name": "dont-stop-title",
+      "ok": true
+    },
+    {
+      "name": "no-godot-branding",
+      "ok": true
+    },
+    {
+      "name": "no-second-start-prompt",
+      "ok": true
+    },
+    {
+      "name": "loading-completes",
+      "ok": true
+    },
+    {
+      "name": "canvas-alive",
+      "ok": true
+    },
+    {
+      "name": "loading-completes",
+      "ok": true
+    },
+    {
+      "name": "in-game-smoke",
+      "ok": true
+    },
+    {
+      "name": "page-alive",
+      "ok": true
+    },
+    {
+      "name": "still-alive-after-input",
+      "ok": true
+    },
+    {
+      "name": "no-blocking-console",
+      "ok": true
+    },
+    {
+      "name": "no-http-errors",
+      "ok": true
+    }
+  ],
+  "in_game_smoke": "[smoke] user_dir=/userfs/TowDownGame ; [smoke] renderer=gl_compatibility ; [smoke] save_state none ; [smoke] stage=camp state=CAMP ; [smoke] depart=true ; [smoke] stage=combat state=COMBAT monsters=1 ; [smoke] switch=true gun=1 ; [smoke] fire transient=0->3 ; [smoke] done pass=true ; [smoke] result=PASS",
+  "transcribed_from": "smoke.log (stdout of tools/smoke-web.js; *.log is intentionally not tracked per Don't stop/.gitignore)",
+  "recorded_at": "2026-09-15T17:33:47+08:00"
+}
