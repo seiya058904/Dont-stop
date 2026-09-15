@@ -1,7 +1,9 @@
 # R4 — A批修订（返回主菜单 / 图形弹匣 / 武器姿态）
 
-状态：`WEB_DEPLOYED_FOR_HUMAN_REVIEW`；`HUMAN_ACCEPTED = false`，`WEB_HUMAN_ACCEPTED = false`。
-本记录不创建 Release、不打标签，也不把 `HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED` 自行置为 true。
+状态：`A_BATCH_FIXED_LOCALLY`（本地已提交、已通过门禁，**未 push / 未合并 main / 未部署**）；
+`HUMAN_ACCEPTED = false`，`WEB_HUMAN_ACCEPTED = false`。
+`WEB_DEPLOYED_FOR_HUMAN_REVIEW` 是本批的**目标终态**，只有在合并 main 并完成 Pages 部署后成立，
+现在还不是。本记录不创建 Release、不打标签，也不把 `HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED` 自行置为 true。
 
 按 `AI-TASK.zh-CN.md` 分两批交付，本文件只覆盖 **A批**（功能修复）。B批（安全生成地基、1–30 加压、
 31–40 地狱、难度/性能验收）尚未开始，见文末。
@@ -179,6 +181,24 @@ export NODE_PATH="C:/Users/admin/AppData/Roaming/npm/node_modules"   # Playwrigh
 node "Don't stop/tools/web-menu-return-e2e.js" http://localhost:8788/index.html \
   "Don't stop/docs/iteration/evidence/r4/menu-return" 5
 ```
+
+## 源码提交（本轮，本地）
+
+| 项 | 值 |
+| --- | --- |
+| 分支 | `feat/dont-stop-revision` |
+| 提交 | `ee3ea1de796154734fdc06d4cdf9adf484e6753f`（短 `ee3ea1d`） |
+| 父提交 | `6a9d7895deeca900ae1e514b3a687dbd6f15643f`（本次审阅基线，即当时远端 `main`） |
+| 变更规模 | 74 files changed, 1706 insertions(+), 170 deletions(-) |
+| 提交说明 | `fix(web): root-cause the return-to-menu restart failure; ratio ammo bar; stable gun poses` |
+
+**候选制品相对源码的新鲜度**（避免「构建早于最后一次改码」这种静默失效）：`build/web/index.pck`
+的导出时间晚于全部游戏源码（`autoload/Demo.gd`、`ui/GameUI.gd`、`ui/widgets/BulletCountItem.gd`、
+`game/guns/*.gd`、`ui/ControlUI.tscn` 等）的最后修改时间；导出后新增/改动的文件只有 `.godot/`
+编辑器缓存、`docs/iteration/evidence/r4/*` 证据和 `tools/web-menu-return-e2e.js`，三者都被
+`export_presets.cfg` 的 `exclude_filter="tests/*,docs/*,tools/*,evidence/*,build/*,…"` 排除在 .pck 之外，
+因此候选 .pck 与提交后的工作树一致。另：Windows 候选 .pck 的导出时间比 Web 晚约 70 分钟，
+两者仍逐字节相同，说明这 70 分钟内源码没有变化。
 
 ## 同一源码的候选制品（本轮，未部署、未创建 Release）
 

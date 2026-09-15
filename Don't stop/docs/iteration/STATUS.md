@@ -10,9 +10,10 @@ WEB_HUMAN_ACCEPTED = false
 
 - 按 `AI-TASK.zh-CN.md` 分 A/B 两批交付；本状态只覆盖 **A批**（返回主菜单 / 图形弹匣 / 武器姿态）。
   B批（安全生成地基、1–30 加压、31–40 地狱、难度与性能验收）**尚未开始**。
-- **未部署**：`main` 仍是 `feb6b67`；本轮改动只在本地 feature 分支提交，**没有 push / 没有合并 main /
+- **未部署**：`main` 仍是 `feb6b67`；本轮改动已在本地 feature 分支 `feat/dont-stop-revision`
+  提交为 **`ee3ea1d`**（父提交 `6a9d789`，74 files / +1706 / -170），**没有 push / 没有合并 main /
   没有触发 Pages 部署**。部署属外部不可逆动作，等明确批准后再执行；`HUMAN_ACCEPTED` / `WEB_HUMAN_ACCEPTED`
-  未自行置为 true。
+  未自行置为 true。`WEB_DEPLOYED_FOR_HUMAN_REVIEW` 是目标终态，部署后才成立。
 - A批-1（返回主菜单后无法再次开始）：已定位到根因（返回时把武器重挂到即将销毁的 Hero 上，
   留下已释放节点引用）并修复。原生 5 轮回归 **128/0，exit 0**；浏览器 `web-menu-return-e2e.js`
   5 轮 **`RESULT=PASS` / exit 0 / 83 个 token 全 true**（`FIVE_CYCLES_COMPLETED cycles=5 returns=6`），
