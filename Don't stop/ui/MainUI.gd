@@ -16,11 +16,20 @@ func _ready() -> void:
 	Utils.notify_web_boot_menu_ready()
 
 func _on_start_pressed() -> void:
+	print("[leave] menu start button pressed (game_start=%s)" % str(Utils.is_game_start))
 	# One press = one session. A second press (double click, keyboard repeat) must
 	# not emit onGameStart again, re-create the HUD or re-open the camp panel.
 	if Utils.is_game_start: return
 	Utils.gameStart()
 	Demo.open_panel()
+
+## Diagnostic: a menu that is drawn and refuses input looks identical to a working
+## one in a screenshot, so the round's acceptance driver needs the game to say
+## whether a click reached the menu at all.
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		print("[leave] menu received a mouse press at %s (unhandled=%s)" % [
+			str(event.position), str(not get_viewport().is_input_handled())])
 
 func onModeChoose(mode):
 	if mode == 0:

@@ -213,15 +213,22 @@ func notify_web_boot_warmup_done() -> void:
 
 func _web_report_boot_ready() -> void:
 	if not OS.has_feature("web") or _web_boot_reported: return
-	if not (_web_boot_menu and _web_boot_warmup): return
+	# The title menu is what the player needs; the pre-warm pass is an optimisation.
+	# Requiring both used to put the reveal behind a pass the player does not have to
+	# wait for, and on a slow machine that meant the cover stayed up long after the
+	# menu was drawn (measured on the CI runner: the shell was still showing its
+	# loading text while the menu was already built). Warm-up is still reported as
+	# its own stage, it just no longer gates the hand-over.
+	if not _web_boot_menu: return
 	_web_boot_reported = true
 	# Two drawn frames: the shell must only drop its overlay once the menu has
 	# actually been presented, not merely built.
 	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	_web_call_shell(WEB_SHELL_HOOKS.ready)
-	print("[boot] completion notice sent t=%d (menu=%d warmup=%d)" % [
-		Time.get_ticks_msec(), _web_boot_menu_ms, _web_boot_warmup_ms])
+	print("[boot] completion notice sent t=%d (menu=%d warmup=%s)" % [
+		Time.get_ticks_msec(), _web_boot_menu_ms,
+		str(_web_boot_warmup_ms) if _web_boot_warmup else "not-yet"])
 
 ## Fire-and-forget call into web/loader.html's __dontStop hook.
 ## The bridge is looked up by name because the JavaScriptBridge singleton only

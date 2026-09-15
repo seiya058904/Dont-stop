@@ -577,13 +577,46 @@ func return_to_main_menu() -> void:
 	# menu is really on screen instead of guessing a delay. An earlier version fired
 	# this without awaiting and announced nothing, so a return that had not finished
 	# (or had not happened at all) looked identical to a finished one.
-	await SceneManager.change_scene("res://game/map/Main.tscn",
-		{ "pattern": "scribbles", "pattern_leave": "squares" })
-	# The transition's full-screen blend rectangle only stops taking input when its
-	# animation finishes. On the Web build that animation did not always finish, and
-	# the result was a menu that was on screen but could not be clicked at all. The
-	# return guarantees an interactive menu instead of assuming the animation ran.
-	SceneManager.finish_transition()
+	# On Web the return does NOT use the addon's dissolve transition. That transition
+	# was the only web-specific machinery in this path, and its full-screen shader
+	# rectangle is what a menu that "came back but could not be clicked" pointed at:
+	# whether it still owned input depended on the animation finishing, which made the
+	# second session start work sometimes and fail other times (measured: the same
+	# driver passed a restart in one run and failed it in the next). A direct scene
+	# change has no such dependency; the dissolve is decoration, not behaviour.
+	if OS.has_feature("web"):
+		get_tree().change_scene_to_file("res://game/map/Main.tscn")
+		# The swap is deferred; wait until the new scene is really current so the
+		# log and the acceptance driver describe a state that exists.
+		for _frame in 5:
+			await get_tree().process_frame
+			if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == "res://game/map/Main.tscn":
+				break
+	else:
+		await SceneManager.change_scene("res://game/map/Main.tscn",
+			{ "pattern": "scribbles", "pattern_leave": "squares" })
+		# The transition's full-screen blend rectangle only stops taking input when its
+		# animation finishes. If that animation is interrupted the menu is on screen
+		# and cannot be clicked, so the return guarantees an interactive menu instead
+		# of assuming the animation ran.
+		SceneManager.finish_transition()
+	# One diagnostic line, on the real page, of everything that decides whether the
+	# menu can be used: a menu that is drawn but refuses input is otherwise
+	# indistinguishable from a working one in a screenshot.
+	var canvas_ok := is_instance_valid(Utils.canvasLayer)
+	var menu: Node = Utils.canvasLayer.get_node_or_null("MainUI") if canvas_ok else null
+	var box: Node = menu.get_node_or_null("VBoxContainer") if menu != null else null
+	var start_button: Button = box.get_node_or_null("start") if box != null else null
+	print("[leave] state paused=%s pause_stack=%d canvas=%s menu=%s menu_visible=%s box_visible=%s in_tree=%s transitioning=%s scene=%s" % [
+		str(get_tree().paused), Demo.pause_stack.size(), str(canvas_ok), str(menu != null),
+		str(menu != null and menu.visible), str(box != null and box.visible),
+		str(box != null and box.is_visible_in_tree()), str(SceneManager.is_transitioning),
+		str(get_tree().current_scene.scene_file_path if get_tree().current_scene != null else "<none>")])
+	print("[leave] input viewport=%s canvas_transform=%s mouse_mode=%d start=%s" % [
+		str(get_viewport().get_visible_rect().size),
+		str(Utils.canvasLayer.get_final_transform()) if canvas_ok else "<none>",
+		Input.mouse_mode,
+		str(Rect2(start_button.global_position, start_button.size)) if start_button != null else "<none>"])
 	print("[leave] main menu is up scene=%s game_start=%s" % [
 		str(get_tree().current_scene.scene_file_path if get_tree().current_scene != null else "<none>"),
 		str(Utils.is_game_start)])
@@ -614,5 +647,7 @@ func fire_global_grenade(point: Vector2) -> bool:
 	return true
 
 func _unhandled_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		print("[leave] demo saw a mouse press at %s" % str(event.position))
 	if event.is_action_pressed("mouse_right") and pause_stack.is_empty() and is_instance_valid(Utils.player):
 		if fire_global_grenade(Utils.get_aim_world_position()): get_viewport().set_input_as_handled()

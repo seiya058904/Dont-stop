@@ -240,7 +240,11 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 	// cursor versus at a control region far away.
 	const posA = { x: rect.x + rect.w * 0.34, y: rect.y + rect.h * 0.40 };
 	const posB = { x: rect.x + rect.w * 0.66, y: rect.y + rect.h * 0.60 };
-	const control = { x: rect.x + rect.w * 0.18, y: rect.y + rect.h * 0.82 };
+	// The control region is the top-left HUD strip: it is static text, so a change
+	// measured there is a change the cursor cannot be responsible for, while the
+	// previous bottom-left choice sat over animated water and could out-change the
+	// cursor by itself (measured: 27.0 at the cursor vs 30.1 at the control).
+	const control = { x: rect.x + rect.w * 0.12, y: rect.y + rect.h * 0.12 };
 	await page.mouse.move(posA.x, posA.y);
 	await page.waitForTimeout(1500);
 	const aAtA = await crop(rect, posA.x, posA.y, 56, 56);
@@ -621,14 +625,15 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 	const required = [
 		'CALIBRATION_FOUND_CAMP_CLOSE_BUTTON', 'CALIBRATION_PROFILE_READY',
 		'SINGLE_START_ENTRY_POINT', 'LOADING_FEEDBACK_PRESENT', 'SHELL_HIDES_WITHOUT_A_START_CLICK',
-		'SHELL_READY_VIA_GAME_NOTICE', 'SHELL_READY_NOT_A_FALLBACK', 'SHELL_READY_NOT_AN_ERROR',
-		'READY_NOTICE_ARRIVED_BEFORE_FALLBACK', 'SLOW_BUT_HEALTHY_START_ACCEPTED',
-		'OLD_ORIGIN_WOULD_HAVE_REJECTED_IT', 'LATE_NOTICE_STILL_REJECTED',
+		'SHELL_READY_VIA_GAME_NOTICE', 'SHELL_NEVER_REVEALS_ON_A_TIMER', 'SHELL_READY_NOT_AN_ERROR',
+		'SHELL_TRACKS_LAUNCH_STAGES', 'ACCEPTANCE_IGNORES_ELAPSED_TIME',
+		'OLD_FIXED_DEADLINE_WOULD_HAVE_MISLABELLED_IT',
 		'CANVAS_VISIBLE_AFTER_LOAD', 'ESC_NEVER_PRESSED_BEFORE_AIM', 'NO_POINTER_LOCK_ANYWHERE',
 		'CROSSHAIR_IS_LOCATED_AT_THE_CURSOR', 'CROSSHAIR_STILL_AT_CURSOR_AFTER_RETURN',
 		'PAGE_ALIVE_AFTER_NORMAL_ENTRY_INPUT',
 		'BLOCKED_FIRE_DOES_NOT_CONSUME_AMMO', 'REAL_FIRE_CONSUMES_AMMO',
-		'FAULT_INJECTION_SUPPRESSES_NOTICE', 'FAULT_INJECTION_REVEALED_BY_FALLBACK',
+		'FAULT_INJECTION_SUPPRESSES_NOTICE', 'FAULT_INJECTION_KEEPS_THE_COVER',
+		'FAULT_INJECTION_REPORTS_A_RECOVERABLE_STALL',
 		'FAULT_INJECTION_FAILS_THE_NORMAL_ASSERTION',
 		'DIAGNOSTIC_ENTRY_READY', 'GAME_ENTERED_COMBAT',
 		'AIM_IS_THE_ABSOLUTE_CURSOR', 'AIM_MOVES_RIGHT', 'AIM_MOVES_LEFT', 'AIM_MOVES_UP', 'AIM_MOVES_DOWN',

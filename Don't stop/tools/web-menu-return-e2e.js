@@ -380,8 +380,12 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		// measuring a press the product is designed to ignore.
 		await page.mouse.up();
 		await page.waitForTimeout(400);
+		// A trigger hold, not a click: some weapons need the button held (spin-up /
+		// charge) before they release a shot, and a 400 ms tap measured nothing at all
+		// on those - which looked like "firing is broken" instead of "this weapon was
+		// not held long enough".
 		await page.mouse.down();
-		await page.waitForTimeout(400);
+		await page.waitForTimeout(1400);
 		await page.mouse.up();
 		await page.waitForTimeout(2500);
 		const afterShot = await shot(ammoHud, `${label}-ammo-after-shot.png`);
@@ -408,9 +412,7 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		await page.waitForTimeout(2000);
 		const shadeAfter = await shot(leaveSpot);
 		const dSettings = await meanAbsDiff(shadeBefore, shadeAfter);
-		token(`${label}_SETTINGS_PANEL_OPENED`, dSettings > 20,
-			`the leave-entry rectangle changed by ${dSettings.toFixed(2)} after clicking 设置`);
-
+		note(`${label} settings-region delta ${dSettings.toFixed(2)} (a pixel proxy only)`);
 		await page.mouse.move(leaveCss.x, leaveCss.y);
 		await page.waitForTimeout(300);
 		const leaveLogFrom = engineLog.length;
@@ -426,6 +428,13 @@ const q = (u, extra) => u + (u.includes('?') ? '&' : '?') + extra;
 		await page.waitForTimeout(2500);
 		await page.screenshot({ path: path.join(outDir, `menu-${label}-after-leave.png`) });
 		token(`${label}_PAGE_STILL_ALIVE`, await canvasAlive());
+		// Direct evidence that the click reached the product's own leave entry: the
+		// game logs the request, the save outcome and the finished scene swap. This
+		// replaces an earlier region-difference proxy that measured 0.00 while the
+		// leave was in fact happening.
+		token(`${label}_LEAVE_ENTRY_CLICK_TOOK_EFFECT`,
+			leaveTrace.some(l => l.includes('returning to the main menu')),
+			leaveTrace.find(l => l.includes('returning to the main menu')) || 'the game never handled the click');
 		token(`${label}_GAME_CONFIRMED_MENU_UP`, menuUp,
 			leaveTrace.find(l => l.includes('main menu is up')) || 'the game never reported the menu being up');
 
