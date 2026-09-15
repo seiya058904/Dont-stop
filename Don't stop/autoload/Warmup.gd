@@ -55,6 +55,9 @@ func start() -> void:
 	if _started or _finished:
 		return
 	_started = true
+	# Tell the browser shell this stage has begun, so the gap between "engine up"
+	# and "menu ready" is not one anonymous wait it cannot interpret.
+	Utils.notify_web_boot_stage("warmup")
 	_run()
 
 func _run() -> void:

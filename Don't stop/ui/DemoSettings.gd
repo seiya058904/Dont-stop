@@ -61,7 +61,16 @@ func _ready():
 	back.theme = t
 	add_child(back)
 	var exit = Button.new()
-	exit.text = "退出游戏"
+	# On Web there is no process to end and a tab is left by closing it, so the
+	# entry does what the player can actually observe: it returns to a live main
+	# menu (Demo.quit_game() saves first, then rebuilds the title scene). On the
+	# title menu itself there is nothing to return to, so the entry is absent
+	# rather than present-but-dead. Native keeps a real "quit the program".
+	if OS.has_feature("web"):
+		exit.text = "返回主菜单"
+		exit.visible = Utils.is_game_start
+	else:
+		exit.text = "退出游戏"
 	exit.position = Vector2(209,192)
 	exit.size = Vector2(116,31)
 	exit.theme = t

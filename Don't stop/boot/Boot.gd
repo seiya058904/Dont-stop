@@ -46,6 +46,9 @@ func _ready() -> void:
 		# _ready() makes the SceneTree remove a child while it is still adding
 		# one, which the engine reports as "Parent node is busy adding/removing
 		# children" (and which the Web E2E flags as an unexpected engine error).
+		# The stage mark tells the shell that engine bring-up finished and the
+		# synchronous scene load below is a real, expected wait.
+		Utils.notify_web_boot_stage("scene-prep")
 		get_tree().change_scene_to_file.call_deferred(MAIN_SCENE)
 		return
 	_run.call_deferred()

@@ -173,7 +173,10 @@ func _process(delta):
 	var mouse_pos = Utils.get_aim_world_position()
 	direction = (mouse_pos - gun_tip.global_position).normalized()
 
-	if is_use and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() && Input.is_action_pressed("shoot") and can_shoot and !is_reloading:
+	# A gun can outlive the player for a frame while a session is torn down (leaving
+	# for the main menu frees the old scene). Reading is_dead off the freed player
+	# threw "previously freed" script errors on every return.
+	if is_use and is_instance_valid(player) and not player.is_dead and Demo.fire_released and Utils.is_gameplay_mouse_mode() && Input.is_action_pressed("shoot") and can_shoot and !is_reloading:
 		can_shoot = false
 		timer.start()
 		if bullets_count > 0:

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://r3returnmenu001"]
+
+[ext_resource type="Script" path="res://tests/R3ReturnMenu.gd" id="1_r3ret"]
+
+[node name="R3ReturnMenu" type="Node"]
+script = ExtResource("1_r3ret")

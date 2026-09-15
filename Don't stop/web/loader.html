@@ -79,34 +79,47 @@
 		// invisible because the shell's fallback timer still removed the overlay.
 		const HOOK_READY = 'ready';
 		const HOOK_FAILED = 'failed';
+		// Stage progress from the game (autoload/Utils.gd, notify_web_boot_stage).
+		// Without it the shell sees one anonymous wait between "engine is up" and
+		// "menu is ready" and cannot tell a slow load from a dead one.
+		const HOOK_STAGE = 'stage';
 		// Fault injection for the acceptance test only: ?noready=1 makes the shell
 		// ignore the game's completion notice, so the test can prove that a broken
-		// handshake FAILS instead of quietly passing through the fallback.
+		// handshake is never accepted - the cover stays up and a retry is offered.
 		const SUPPRESS_READY = params.has('noready');
 
 		// Everything the acceptance test needs to tell "the game told us it is
-		// ready" apart from "we gave up waiting and showed it anyway".
-		//
-		// The timings have separate origins on purpose: the 20 s watchdog is armed
-		// only once startGame() resolves, so a slow download must not be charged
-		// against that window. Comparing the notice against the download start
-		// would reject a perfectly normal, late-but-healthy start.
+		// ready" apart from "the load stalled". There is no third answer.
+		// The cover is NEVER removed on a timer. There is no "give up and show it
+		// anyway" path left, because that is what revealed a still-loading game and
+		// then looked like a successful start: the deployed site was measured
+		// reporting a healthy notice at 20923 ms, past the old fixed 20 s deadline,
+		// so the deadline - not the game - decided what the player saw. A stalled
+		// load now keeps the cover up, says so, and offers a retry, and a notice
+		// that arrives later is still honoured.
+		const STALL_WINDOW_MS = 20000;
 		const state = window.__dontStopState = {
-			contract: 'dontstop-shell/2',
-			hookNames: [HOOK_READY, HOOK_FAILED],
+			contract: 'dontstop-shell/3',
+			hookNames: [HOOK_READY, HOOK_FAILED, HOOK_STAGE],
 			navigationStartedAt: performance.now(),
+			// Stage timestamps, so download / engine bring-up / scene preparation /
+			// warm-up / menu can be told apart instead of being one anonymous wait.
+			stages: {},
+			activeStage: 'navigating',
+			lastProgressAt: null,
 			downloadStartedAt: null,
 			// When the engine reported that it is up and running.
 			engineStartedAt: null,
-			// When the 20 s last-resort timer was actually armed. This is the only
-			// origin the "did the game tell us in time" question may use.
-			fallbackArmedAt: null,
-			fallbackWindowMs: 20000,
 			readyNoticeAt: null,
 			overlayRemovedAt: null,
-			// pending | game-reported-ready | timeout-fallback | engine-error
+			// pending | game-reported-ready | stalled | engine-error
 			outcome: 'pending',
-			fallbackUsed: false,
+			// Only ever 'game-reported-ready', so "how did the player get past the
+			// cover" cannot be answered by anything else.
+			revealedBy: null,
+			stallWindowMs: STALL_WINDOW_MS,
+			stallWarnedAt: null,
+			stallWarnings: 0,
 			// true when this page was asked to simulate a missing notice.
 			readyNoticeSuppressed: SUPPRESS_READY,
 			errorMessage: null,
@@ -116,7 +129,7 @@
 		let fatal = false;
 		let engineStarted = false;
 		let readyReported = false;
-		let watchdog = null;
+		let stallTimer = null;
 
 		function setStatus(text, busy) {
 			statusEl.textContent = text;
@@ -136,9 +149,9 @@
 		function reveal(reason) {
 			if (revealed) return;
 			revealed = true;
-			if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+			if (stallTimer) { clearTimeout(stallTimer); stallTimer = null; }
 			state.outcome = reason;
-			if (reason === 'timeout-fallback') state.fallbackUsed = true;
+			state.revealedBy = reason;
 			state.overlayRemovedAt = performance.now();
 			log('revealing the running game (' + reason + ') at ' + Math.round(state.overlayRemovedAt) + 'ms');
 			frameEl.classList.add('gone');
@@ -147,10 +160,44 @@
 			}, 300);
 		}
 
+		// Progress from any stage re-arms the stall check. A stalled load is
+		// reported, never revealed: the cover stays, the player is told what is
+		// happening, and the retry button reloads the page. If the game does report
+		// readiness afterwards, the notice still wins and the warning is dropped.
+		function mark(stage) {
+			if (revealed || fatal) return;
+			const now = performance.now();
+			state.activeStage = stage;
+			state.stages[stage] = now;
+			state.lastProgressAt = now;
+			log('stage ' + stage + ' at ' + Math.round(now) + 'ms');
+			armStallCheck();
+		}
+
+		function armStallCheck() {
+			if (stallTimer) clearTimeout(stallTimer);
+			stallTimer = setTimeout(function () {
+				stallTimer = null;
+				if (revealed || fatal || readyReported) return;
+				const idle = Math.round(performance.now() - (state.lastProgressAt || state.navigationStartedAt));
+				state.outcome = 'stalled';
+				state.stallWarnedAt = performance.now();
+				state.stallWarnings += 1;
+				log('no progress for ' + idle + 'ms; keeping the cover and offering a retry');
+				setStatus('仍在加载（' + state.activeStage + '）… ' + Math.round(idle / 1000) + ' 秒没有新进展', true);
+				errEl.textContent = '加载比预期慢：游戏仍在尝试载入，画面会保持在这里。可以继续等待，' +
+					'也可以重试；若反复如此，请检查网络或换一个浏览器。';
+				errEl.style.display = 'block';
+				retryEl.style.display = 'inline-block';
+				// Keep watching: a late completion still gets through.
+				armStallCheck();
+			}, STALL_WINDOW_MS);
+		}
+
 		function showError(message) {
 			if (fatal || revealed) return;
 			fatal = true;
-			if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+			if (stallTimer) { clearTimeout(stallTimer); stallTimer = null; }
 			log('fatal: ' + message);
 			state.outcome = 'engine-error';
 			state.errorMessage = message;
@@ -174,16 +221,25 @@
 				state.readyNoticeAt = performance.now();
 				if (SUPPRESS_READY) {
 					// Fault injection: behave exactly as if the game never called
-					// back, so the test can prove the fallback is NOT acceptance.
+					// back, so the test can prove a missing notice is NOT accepted.
 					log('completion notice SUPPRESSED by ?noready=1');
 					return;
 				}
 				readyReported = true;
+				if (stallTimer) { clearTimeout(stallTimer); stallTimer = null; }
 				setStatus('', false);
+				errEl.style.display = 'none';
+				retryEl.style.display = 'none';
+				state.outcome = 'pending';
 				reveal('game-reported-ready');
 			},
 			failed: function (message) {
 				showError(String(message || '游戏在初始化时报告了一个错误。'));
+			},
+			// Stage progress. Only ever called with the identifier strings this
+			// project defines, and only used to tell "slow" from "stuck".
+			stage: function (name) {
+				mark(String(name || 'unknown'));
 			}
 		};
 
@@ -226,8 +282,11 @@
 		engineStarted = true;
 		// Wasm/PCK fetch or engine bring-up failure lands here.
 		state.downloadStartedAt = performance.now();
+		mark('download');
 		engine.startGame({
 			onProgress: function (current, total) {
+				// Every download chunk is real progress: it re-arms the stall check.
+				mark('download');
 				if (total > 0) {
 					// The only number shown is the engine's own download count.
 					setProgress(Math.round(current / total * 100), '正在下载游戏资源… ' + Math.round(current / total * 100) + '%');
@@ -241,17 +300,7 @@
 			// title scene still has to build, draw and finish the warm-up pass.
 			state.engineStartedAt = performance.now();
 			setStatus('正在准备游戏内容…', true);
-			state.fallbackArmedAt = performance.now();
-			watchdog = setTimeout(function () {
-				if (!readyReported && !revealed) {
-					// Last resort so a player is never stranded behind the cover.
-					// This is NOT a successful start and says so: the acceptance
-					// test fails on this outcome instead of waiting it out.
-					log('game did not report readiness in ' + (state.fallbackWindowMs / 1000) + 's; revealing anyway');
-					setStatus('', false);
-					reveal('timeout-fallback');
-				}
-			}, state.fallbackWindowMs);
+			mark('engine-init');
 		}).catch(function (err) {
 			const detail = err && err.message ? ' (' + err.message + ')' : '';
 			showError('游戏加载失败，请重试；若反复失败请检查网络或浏览器设置。' + detail);

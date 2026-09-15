@@ -36,10 +36,16 @@ func _ready():
 			var result = Demo.save_camp()
 			note.text = result.reason
 			if result.success:
-				if quitting: Demo.finish_quit()
+				# Platform-aware: this must not reach finish_quit() on Web, where
+				# there is no process to end and get_tree().quit() would leave the
+				# browser frozen on the last frame.
+				if quitting: Demo.leave_after_save()
 				else: queue_free())
-	add_button(box,"取消退出" if quitting else "临时试玩 / 返回",queue_free)
-	if quitting: add_button(box,"放弃本次未保存变化并退出",Demo.finish_quit)
+	# Web "quit" returns to a live main menu, so the labels say 返回 there instead
+	# of promising to end a program that a browser tab cannot end.
+	var leave_word := "返回" if OS.has_feature("web") else "退出"
+	add_button(box,("取消" + leave_word) if quitting else "临时试玩 / 返回",queue_free)
+	if quitting: add_button(box,("放弃本次未保存变化并" + leave_word),Demo.leave_after_save)
 
 func add_button(box, text, action):
 	var button = Button.new()

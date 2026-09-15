@@ -77,27 +77,66 @@ func _e2e_camp_probe() -> void:
 		print("[e2e] camp-close-button text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
 			button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
 			rect.get_center().x, rect.get_center().y])
+		# The pause panel is also the only route to the in-game leave entry, so the
+		# driver needs the rectangle of its "设置" button to walk the real path with
+		# real clicks instead of guessing a position.
+		_report_button("camp-settings-button", Demo.ui, "设置")
 		# Second read-only locator: the in-game entry that leaves the session. The
 		# acceptance driver needs its rectangle to click it with a real mouse, since
 		# the normal-entry phase runs without any diagnostic help.
 		await _report_leave_entry()
 		return
 
+func _report_button(tag: String, root: Node, prefix: String) -> void:
+	var button := _find_button(root, prefix)
+	if button == null or button.size.x <= 10.0:
+		print("[e2e] %s none" % tag)
+		return
+	var rect := Rect2(button.global_position, button.size)
+	print("[e2e] %s text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
+		tag, button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
+		rect.get_center().x, rect.get_center().y])
+
 func _report_leave_entry() -> void:
 	for menu in Demo.pause_stack.duplicate():
 		Demo.pop_pause(menu)
 		if is_instance_valid(menu): menu.queue_free()
 	await get_tree().create_timer(0.3).timeout
+	var settings_script := load("res://ui/DemoSettings.gd")
+	print("[e2e] leave-entry diag script=%s children_before=%d" % [
+		str(settings_script != null),
+		Utils.canvasLayer.get_child_count() if is_instance_valid(Utils.canvasLayer) else -1])
 	Demo.open_settings()
 	await get_tree().create_timer(0.6).timeout
-	# Search the whole canvas layer rather than pause_stack.back(): the stack is not
-	# a reliable handle for "the panel that is on screen right now", and silently
-	# returning there is what made the first version print nothing at all.
-	var root: Node = Utils.canvasLayer if is_instance_valid(Utils.canvasLayer) else null
+	# The panel the player reaches through the pause menu, i.e. the exact object the
+	# driver must click on. It is looked up by script rather than through the pause
+	# stack: the stack is emptied by the lines above, and an earlier version that
+	# trusted the whole canvas layer reported the dormant MainUI/SettingUI copy
+	# instead. Both mistakes produced a plausible-looking rectangle for a control
+	# that is not the one on screen.
+	var root: Node = null
+	var canvas_ok := is_instance_valid(Utils.canvasLayer)
+	var seen_children: Array = []
+	if canvas_ok:
+		for child in Utils.canvasLayer.get_children():
+			seen_children.append("%s:%s" % [
+				child.name, str(child.get_script().resource_path) if child.get_script() != null else "no-script"])
+			if child.get_script() == settings_script: root = child
+	print("[e2e] leave-entry diag canvas=%s pause=%d root=%s children=%s" % [
+		str(canvas_ok), Demo.pause_stack.size(), str(root), str(seen_children.slice(0, 10))])
 	if root == null:
-		print("[e2e] leave-entry none (no canvas layer)")
+		print("[e2e] leave-entry none (no settings panel on screen)")
 		return
-	for prefix in ["结束游戏", "退出游戏", "退出", "返回主菜单"]:
+	print("[e2e] leave-entry panel=%s" % root.name)
+	var inventory: Array = []
+	_collect_button_texts(root, inventory)
+	print("[e2e] leave-entry inventory=%s" % str(inventory.slice(0, 14)))
+	# On Web the entry is labelled "返回主菜单" and only exists inside a running
+	# session, so the driver has to know which state this rectangle describes.
+	print("[e2e] leave-entry context is_game_start=%s web=%s" % [
+		str(Utils.is_game_start), str(OS.has_feature("web"))])
+	_report_button("settings-back-button", root, "返回")
+	for prefix in ["返回主菜单", "结束游戏", "退出游戏", "退出"]:
 		var button := _find_button(root, prefix)
 		if button == null or button.size.x <= 10.0: continue
 		var rect := Rect2(button.global_position, button.size)
@@ -113,12 +152,22 @@ func _report_leave_entry() -> void:
 
 func _collect_button_texts(node: Node, out: Array) -> void:
 	if node is Button and (node as Button).text != "":
-		out.append((node as Button).text)
+		# Visibility is part of the inventory: a dormant button and a live one used
+		# to be indistinguishable here, which is how the wrong rectangle got picked.
+		var button := node as Button
+		out.append("%s[%s,%.0fx%.0f]" % [
+			button.text, "shown" if button.is_visible_in_tree() else "hidden",
+			button.size.x, button.size.y])
 	for child in node.get_children():
 		_collect_button_texts(child, out)
 
+## Only buttons the player can actually see are reported. The canvas layer also
+## holds dormant UI (MainUI/SettingUI ships with visible = false and no code path
+## shows it), and its "Exit Game" button is laid out at 304,199 -> 407,227, i.e.
+## exactly the rectangle the acceptance driver used to click. It found that hidden
+## button instead of the live in-game panel and would have clicked empty space.
 func _find_button(node: Node, prefix: String) -> Button:
-	if node is Button and (node as Button).text.begins_with(prefix):
+	if node is Button and (node as Button).is_visible_in_tree() and (node as Button).text.begins_with(prefix):
 		return node
 	for child in node.get_children():
 		var found := _find_button(child, prefix)
