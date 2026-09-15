@@ -193,7 +193,8 @@ node "Don't stop/tools/web-menu-return-e2e.js" http://localhost:8788/index.html 
 | 与基线的代码差异 | 74 files changed, 1706 insertions(+), 170 deletions(-) |
 | 与基线的全部差异（含文档/证据） | 75 files changed, 1796 insertions(+), 170 deletions(-) |
 
-本轮的 4 个提交（代码 1 个 + 文档/证据 3 个）：
+本轮 4 个有实质内容的提交如下；HEAD 上还可能叠加若干「只改本报告表述」的文档提交，
+完整列表以 `git log 6a9d789..HEAD` 为准，此处不再逐一计数，以免每次改文档都要改这份文档：
 
 | 提交 | 内容 |
 | --- | --- |
