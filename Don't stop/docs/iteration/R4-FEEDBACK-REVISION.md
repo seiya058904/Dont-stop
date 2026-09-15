@@ -187,10 +187,18 @@ node "Don't stop/tools/web-menu-return-e2e.js" http://localhost:8788/index.html 
 | 项 | 值 |
 | --- | --- |
 | 分支 | `feat/dont-stop-revision` |
-| 提交 | `ee3ea1de796154734fdc06d4cdf9adf484e6753f`（短 `ee3ea1d`） |
-| 父提交 | `6a9d7895deeca900ae1e514b3a687dbd6f15643f`（本次审阅基线，即当时远端 `main`） |
-| 变更规模 | 74 files changed, 1706 insertions(+), 170 deletions(-) |
-| 提交说明 | `fix(web): root-cause the return-to-menu restart failure; ratio ammo bar; stable gun poses` |
+| **分支 HEAD** | `ca5129d25ee45004352b65e610e02f101cdfea7c`（短 `ca5129d`） |
+| 父提交 / 审阅基线 | `6a9d7895deeca900ae1e514b3a687dbd6f15643f`（当时远端 `main`） |
+| 与基线差异 | 75 files changed, 1796 insertions(+), 170 deletions(-) |
+
+本轮的 4 个提交（代码 1 个 + 文档/证据 3 个）：
+
+| 提交 | 内容 |
+| --- | --- |
+| `ee3ea1d` | A批三项修复本体：会话切换、比例弹药栏、武器锚点；含新夹具与 CI 门禁改写（74 files / +1706 / -170） |
+| `fc50be0` | 文档：钉住提交身份，并把本报告开头误写的 `WEB_DEPLOYED_FOR_HUMAN_REVIEW` 改回 `A_BATCH_FIXED_LOCALLY` |
+| `1c8a9cc` | 把 `smoke-web.js` 那次运行的 stdout 转写为 `evidence/r4/browser-smoke/smoke-result.json` |
+| `ca5129d` | 同步该次运行重写的 4 张冒烟截图，避免「一份运行的日志配另一次运行的图」 |
 
 **候选制品相对源码的新鲜度**（避免「构建早于最后一次改码」这种静默失效）：`build/web/index.pck`
 的导出时间晚于全部游戏源码（`autoload/Demo.gd`、`ui/GameUI.gd`、`ui/widgets/BulletCountItem.gd`、
