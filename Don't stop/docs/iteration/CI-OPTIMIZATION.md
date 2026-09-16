@@ -17,7 +17,16 @@
 瓶颈已经从"页面往返"变成"runner 上 ≈1 fps 的帧率 × 契约要求的状态迁移数"，脚本侧没有剩余空间。
 如实记录见第 5.5 节。
 
-真实数据与三次 run 见第 5 节；同口径降幅 **1 h 25 m 52 s → 8 m 25 s（−90.2%）**。
+第五轮在**不删任何覆盖面**的前提下把 `aim-e2e` 按相位拆成两个并行 job
+（`aim-core` = A+B、`aim-fault` = F；契约 61 + 10，并集仍是 **65**，丢失 0、新增 0）：
+aim 的串行成本从 588 s → **254–361 s**，故障注入另用 111–118 s 并行跑完，
+**aim 从此不再出现在关键路径上**。整条候选的 `exec` 由 8 m 21 s 变成
+**7 m 36 s / 8 m 14 s / 8 m 18 s**（三次同提交 dispatch）——关键路径转移到了
+**本轮没有改动**的 `save-audit`（384–443 s）与 `menu-return`（276–429 s）。
+因此 "≤8 min" 这条线**没有稳定达标**（三次里一次达标，另两次各超 14–18 s），
+超出部分不来自本轮任何改动。如实记录见第 5.6 节。
+
+真实数据与五次 run 见第 5 节；同口径降幅 **1 h 25 m 52 s → 约 8 m（−90% 以上）**。
 
 ---
 
@@ -57,7 +66,8 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
                         │
                         ├─► gate smoke      (并行)  ┐
                         ├─► gate save-audit (并行)  ├─► deploy(仅 main)
-                        ├─► gate aim-e2e    (并行)  │        │
+                        ├─► gate aim-core   (并行)  │        │
+                        ├─► gate aim-fault  (并行)  │        │
                         └─► gate menu-return(并行)  ┘        └─► online-smoke(≤5 min)
                                                                     （验指纹 + 走一次）
 ```
@@ -107,14 +117,14 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 | --- | --- | --- |
 | 1 | 先做真实性能审计 | 本文第 1 节，数据来自真实 run `34954529853` / `34962338505` |
 | 2 | Build Once / Test Once / Deploy Exact Artifact | `build` 唯一次构建 + `stamp-build-identity.py` 写 digest；门禁/部署/在线全部锁同一 artifact |
-| 3 | 浏览器测试并行化 | `browser-gates` matrix：smoke / save-audit / aim-e2e / menu-return 四个并行 job，`deploy` needs 全部 |
+| 3 | 浏览器测试并行化 | `browser-gates` matrix：smoke / save-audit / **aim-core / aim-fault** / menu-return 五个并行 job，`deploy` needs 全部。aim 的两半是同一个脚本 `tools/web-aim-e2e.js` 的 `core` / `fault` 两种相位选择（第五轮，见第 5.6 节） |
 | 4 | 优化 E2E 本身，不靠减轮数 | 固定延时 → 状态等待（`settlePaused()` / `waitRect()` / `waitState()`）；**仍是 5 轮 + 第 6 次再进入** |
 | 5 | 开火验证不依赖 HUD 像素差 | 像素探针删除；`web-aim-e2e.js` 用武器自身弹匣 + 引擎弹丸流；menu-return 改为"输入被吞 + 角色没动"的状态判据 |
 | 6 | Online smoke ≤5 min | `online-smoke.js`，`ONLINE_BUDGET_MS` 默认 5 min，job `timeout-minutes: 10` |
 | 7 | 缓存环境 | `actions/cache` 缓存 Godot 二进制 + 600 MB 导出模板、`~/.npm` + `~/.cache/ms-playwright` |
 | 8 | PR 自动跑 CI，main 才部署 | `pull_request: [main]` 跑门禁；`deploy` 有 `github.ref == refs/heads/main` 守卫，PR 永不部署 |
 | 9 | docs-only 不触发几小时构建 | `changes` job 判定（全部改动都在 `docs/`、`Don't stop/docs/` 或 `*.md` 时 `game=false`，重活全部跳过） |
-| 10 | 分层 FAST / RELEASE / SOAK | FAST = smoke + save-audit；RELEASE = aim-e2e + menu-return(5)，随每次 push/PR；SOAK = 每晚 `cron` 跑同一组但 **20 轮**，且不部署 |
+| 10 | 分层 FAST / RELEASE / SOAK | FAST = smoke + save-audit；RELEASE = aim-core + aim-fault + menu-return(5)，随每次 push/PR；SOAK = 每晚 `cron` 跑同一组但 **20 轮**，且不部署 |
 | 11 | 明确时间预算 | 每个 job 都有 `timeout-minutes`（见下表），脚本另有自身 watchdog |
 | 12 | 不改游戏 | 只碰测试基础设施：`autoload/Smoke.gd` 的 `--probe` 分支、`web/loader.html` 的 `?probe=1` 接线；**没有任何**玩法脚本/场景/数值改动 |
 | 13 | 验证标准 | 本节 + 第 4 节：本地实测 + 与旧 run 同口径对比；token 数从 83 增到 133（不是删断言） |
@@ -127,7 +137,8 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 | `changes` | 5 |
 | `build` | 12（目标 <5 min，冷缓存留余量） |
 | gate `smoke` / `save-audit` | 10 |
-| gate `aim-e2e` | 12 |
+| gate `aim-core` | 12（脚本 watchdog 10 min） |
+| gate `aim-fault` | 8（脚本 watchdog 6 min） |
 | gate `menu-return` | 15 |
 | `deploy` | 10 |
 | `online-smoke` | 10（脚本自身预算 5 min） |
@@ -157,6 +168,11 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 
 并行后 Browser 门禁阶段 ≈ **max(各 gate) ≈ 5–8 min**（原来是 **104 min**）。
 
+> 上表是**第一轮**的估算，当时四个门禁都还是截图型，所以按"截图数 × 单张成本"算。
+> 第三轮之后 `web-aim-e2e.js` 只剩 4 张**存档**截图（不作判据），
+> `web-menu-return-e2e.js` 改成纯状态判据；**真实数字一律以第 5 节的真机数据为准**，
+> 第 5.6 节还有拆成 5 个 job 之后的最新一版。
+
 ---
 
 ## 5. CI 实测（候选分支 workflow_dispatch，真实 runner）
@@ -169,6 +185,9 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 | [35051149300](https://github.com/seiya058904/Dont-stop/actions/runs/35051149300) | failure | 首次真机：门禁暴露一个**阈值标定 bug**（第 5.1 节） | 11 m 11 s |
 | [35052512912](https://github.com/seiya058904/Dont-stop/actions/runs/35052512912) | **success** | 修复后全绿：4 门禁 PASS，deploy / online 跳过 | **10 m 43 s** |
 | [35056975522](https://github.com/seiya058904/Dont-stop/actions/runs/35056975522) | **success** | aim-e2e 迁到只读 probe 通道后全绿（第 5.5 节） | **8 m 25 s** |
+| [35059568590](https://github.com/seiya058904/Dont-stop/actions/runs/35059568590) | **success** | Phase F 拆成并行 job（第 5.6 节）：5 门禁 PASS | **8 m 18 s** |
+| [35060318021](https://github.com/seiya058904/Dont-stop/actions/runs/35060318021) | **success** | 同提交复测（第 5.6 节） | **7 m 36 s** |
+| [35060328946](https://github.com/seiya058904/Dont-stop/actions/runs/35060328946) | **success** | 同提交复测（第 5.6 节）；span 含 452 s 排队 | **8 m 14 s** |
 
 > 耗时口径：表里的数字是**关键路径**（第一个 job 开始 → 最后一个 job 结束）。
 > GitHub 页面显示的 run 时长略大（含排队与收尾）：run `35052512912` = 10 m 47 s，
@@ -308,6 +327,102 @@ CI 上游戏跑 ≈1 fps，于是一次"状态等待"最少就是一帧 ≈1.1 s
 
 ---
 
+### 5.6 第五轮：把 Phase F 拆成并行 job（commit `101f9a6`，三次真机 dispatch）
+
+**这一轮只动两个文件**：`tools/web-aim-e2e.js` 增加一个相位选择参数，
+`.github/workflows/deploy-pages.yml` 把一行门禁拆成两行。**没有碰**：游戏业务逻辑 / Web 输入方案 /
+枪械逻辑 / `smoke-web.js` / `save-audit-web.js` / `web-menu-return-e2e.js` 的语义 /
+`main` / Pages / B批。
+
+#### 为什么还剩空间可以拿
+
+第四轮之后 `aim-e2e` 的 7 m 11 s 已经不是页面往返（截图与 `evaluate` 都拿掉了）。
+真机 AI 日志里 runner 跑软件渲染的 Godot Web 只有 **约 1 fps**，于是每个契约要等的一次状态迁移
+最少就是一个帧周期——**剩下的是"契约数 × 帧周期"**，脚本侧再压只能删覆盖面。
+唯一还没被拿走的是**相位的串行化**：Phase F 用 78 s 去等 loader 自己的 45 s 静默窗口，
+而它与 A / B **不共享一个字节的状态**（它是自己的一次 `?noready=1` 加载）。
+
+#### 拆分方式（一个脚本、两种相位、两个 job）
+
+| | `aim-core` | `aim-fault` |
+| --- | --- | --- |
+| 相位 | A + B | F |
+| 内容 | 真实入口（启动握手 + 瞄准/准星/360/暂停/恢复）+ 从状态读的开火链 | 故障注入 |
+| 调用 | `node tools/web-aim-e2e.js <url> <dir> core` | `node tools/web-aim-e2e.js <url> <dir> fault` |
+| `timeout-minutes` | 12（脚本 watchdog 10 min） | 8（脚本 watchdog 6 min） |
+| 断言 token | 61 | 10 |
+
+`all` 仍是默认值，所以**裸跑 `node web-aim-e2e.js <url> <dir>` 的行为与拆分前完全一致**（本地就用它）。
+`deploy` 的 `needs` 仍是整个 `browser-gates`，**两个 job 都必须成功**，不存在"另一个挂了也能过"。
+
+#### 覆盖面：机器核对，不是人工比对
+
+从两个 job 的**真实 CI 日志**里抽出 `token NAME=` 行，与拆分前 `d9ac940` 版本的 `const required` 对比：
+
+| 量 | 值 |
+| --- | --- |
+| 拆分前的契约数 | **65** |
+| `aim-core` 实际断言 | 61 |
+| `aim-fault` 实际断言 | 10 |
+| **两者并集** | **65** |
+| 两者交集（共用错误门禁，各断言一次） | 6 |
+| **丢失的契约** | **0** |
+| **新增的契约** | **0** |
+
+契约按相位分组（A 41 / F 4 / B 14 / 共用 6），每个 job 只要求"自己那组 + 共用组"，
+所以**跳过的相位不可能悄悄拿走一条要求**。共用组被两个 job **各断言一次**：
+故障注入 job 现在有自己的"无引擎/页面/网络错误、无 pointer lock、无渲染崩溃、在预算内"独立判据，
+比拆分前**多一层**检查。360° 扫掠仍是 **2 圈**（没有降成 1 圈）。
+
+#### 真机数据（5 次 dispatch，统一口径）
+
+`exec` = 第一个 job 开始 → 最后一个 job 结束（**剔除排队**）；`span` = GitHub 记录的 created→updated。
+
+| run | 门禁数 | exec | span | queue | 关键路径 |
+| --- | --- | --- | --- | --- | --- |
+| R1 `35052512912`（拆前） | 4 | **10 m 43 s** | 10 m 47 s | 3 s | `aim-e2e` 588 s |
+| R2 `35056975522`（拆前） | 4 | **8 m 21 s** | 8 m 25 s | 4 s | `aim-e2e` 431 s |
+| R3 `35059568590`（拆后） | 5 | **8 m 18 s** | 8 m 23 s | 4 s | `save-audit` 443 s |
+| R4 `35060318021`（拆后） | 5 | **7 m 36 s** | 7 m 40 s | 3 s | `save-audit` 393 s |
+| R5 `35060328946`（拆后） | 5 | **8 m 14 s** | 15 m 46 s | **452 s** | `menu-return` 429 s |
+
+> R5 的 452 s 是**并发组排队**（R4 还在跑，`cancel-in-progress` 只对 PR 为真），
+> 不是流水线成本，所以五个 run 的比较一律看 `exec`。
+
+逐门禁秒数（aim 拆开后是两个 job，用 `核心 + 故障` 表示）：
+
+| run | smoke | save-audit | aim | menu-return | build |
+| --- | --- | --- | --- | --- | --- |
+| R1 | 305 | 392 | **588**（单 job） | 436 | 43 |
+| R2 | 291 | 395 | **431**（单 job） | 424 | 53 |
+| R3 | 223 | **443** | 349 + **113** | 276 | 40 |
+| R4 | 224 | **393** | 361 + **111** | 283 | 47 |
+| R5 | 295 | **384** | 254 + **118** | **429** | 51 |
+
+#### 结论：aim 已经让出关键路径，但 8 分钟线现在由别的门禁决定
+
+* **拆分达到了设计目标**：aim 的串行成本 588 s → 431 s → **254–361 s**；
+  故障注入只用 111–118 s 跑完并与主链**真正并行**；三次拆后运行里 aim **从未成为关键路径**。
+  预测（A+B ≈316 s + 约 37 s 环境开销 ≈353 s）与实测 349 / 361 / 254 s 一致。
+* **8 分钟线的归属变了**：现在决定整条的是 `save-audit`（384–443 s）或 `menu-return`（276–429 s）——
+  两个**本轮没有改动**的门禁。`save-audit` 在 5 次运行里、同一份脚本下是
+  392 / 395 / 443 / 393 / 384 s（**约 15% 波动**），这个波动**大于**我们距离 8 分钟线的差距。
+* **达标判定（如实记录，不下"达标"结论）**：拆后三次是 **7 m 36 s / 8 m 14 s / 8 m 18 s**，
+  中位数 **8 m 14 s**。按"≤8 min"这条线，**三次里只有一次达标**，另两次各超出 14–18 s；
+  而超出的部分**不来自本轮改动的任何东西**。要关掉这 15 s 左右只能动
+  `save-audit` / `menu-return`，而它们在本轮**明确被排除在优化范围之外**，
+  所以这里把判定交回决策，而不是自行扩大范围。
+
+#### 本轮验证（本地，真机 Web build，同机同构建）
+
+| 模式 | 结果 | 本地墙钟 |
+| --- | --- | --- |
+| `fault` | **10/10 PASS** | 55 s |
+| `core` | **61/61 PASS** | 57 s |
+| `all`（默认，等价于拆分前） | **65/65 PASS** | 108 s |
+
+---
+
 ## 6. 改动文件
 
 | 文件 | 改动 |
@@ -315,10 +430,10 @@ CI 上游戏跑 ≈1 fps，于是一次"状态等待"最少就是一帧 ≈1.1 s
 | `autoload/Smoke.gd` | 新增 `--probe` 只读通道（`_start_probe` / `_probe_stream` / `_probe_report` / `_probe_report_rects`）；状态行增 `ingame`，矩形行增 `id`。**只读，不改任何游戏状态** |
 | `web/loader.html` | `?probe=1` → `GODOT_CONFIG.args = ['--probe']`（与 `?smoke` / `?e2e` 互斥分支） |
 | `tools/web-menu-return-e2e.js` | 重写为状态驱动：删除像素差与 instance-id 就绪判定，改用 `settlePaused()` / `waitRect()` / `waitState()`；blocked-input 改为"按住真实移动键 + 角色坐标未变"；token 83 → 133 |
-| `tools/web-aim-e2e.js` | 第三轮重写为只读状态驱动（第 5.5 节）：删除像素工具与整页标定加载、删除 HUD 弹药像素判据、43 处固定改状态等待；新增 `probe_ord` 配对的 `[probe] proj-shot` 事件与 `aimworld`/`projv`/`projang`/`fr`/`fps` 只读字段。24 条产品契约与 65 个 token 不变 |
+| `tools/web-aim-e2e.js` | 第三轮重写为只读状态驱动（第 5.5 节）：删除像素工具与整页标定加载、删除 HUD 弹药像素判据、43 处固定改状态等待；新增 `probe_ord` 配对的 `[probe] proj-shot` 事件与 `aimworld`/`projv`/`projang`/`fr`/`fps` 只读字段。24 条产品契约与 65 个 token 不变。第五轮（第 5.6 节）新增相位选择参数 `[all\|core\|fault]`，并把契约按相位分组（A 41 / F 4 / B 14 / 共用 6）——**没有任何 token 被删除或弱化**，两个 job 的并集仍是全部 65 条 |
 | `tools/online-smoke.js` | 新增：≤5 min 在线烟测（指纹 + 载荷 digest + 一次状态走查），28 token |
 | `tools/stamp-build-identity.py` | 新增：写 `dontstop-build` / `dontstop-artifact` 与 `build-identity.json`（本地与 CI 共用同一实现） |
-| `.github/workflows/deploy-pages.yml` | 重设计：单次构建 + 4 并行门禁 + PR 触发 + docs-only 跳过 + digest 身份 + 缓存 + 显式超时 + SOAK 排程 |
+| `.github/workflows/deploy-pages.yml` | 重设计：单次构建 + 并行门禁 + PR 触发 + docs-only 跳过 + digest 身份 + 缓存 + 显式超时 + SOAK 排程。第五轮把门禁从 4 个扩到 5 个：`aim-e2e` 一行拆成 `aim-core`（12 min）与 `aim-fault`（8 min），两者共用 `tools/web-aim-e2e.js`，靠新增的第 4 个参数选相位 |
 
 真机验证后又补了一个提交 `311df1d`（`fix(web): stop the gates measuring the renderer instead of
 the product`），只改 `tools/web-menu-return-e2e.js` 与 `tools/online-smoke.js`：把存活判据从
@@ -342,12 +457,15 @@ the product`），只改 `tools/web-menu-return-e2e.js` 与 `tools/online-smoke.
      `NO_UNEXPECTED_ENGINE_ERRORS` 失败。
    * 建议：这是 Godot Web 导出 + 换场时序的既有特性，若要根因需改引擎侧换场顺序，
      属于"改游戏"范围，本轮不做。
-2. **`aim-e2e` 是当前唯一贴近预算的 gate**：真机 **9 m 48 s**（预算 <10 min），
-   两次 run 里都是最长的（run1 9 m 59 s / run2 9 m 48 s），并决定整条关键路径。
-   它仍是截图型（10 张截图），所以它的耗时基本就是"截图数 × CI 单张成本"。
-   它**没有**超过 10 min，按本轮约定**没有**动它；但已经贴线，遇到更慢的 runner
-   有可能越线——建议把它列为下一个迁移到 `?probe=1` 状态判据的候选。
-   `smoke`（5 m 05 s）与 `save-audit`（6 m 32 s）都还有余量，暂不迁移。
+2. **关键路径已从 aim 转到 `menu-return`**（第五轮之后）：aim 拆成两半后，
+   `aim-core` 的脚本耗时降到 A+B ≈316 s，`aim-fault` 只有 F ≈78 s，
+   两者都不再是候选里最长的那条；现在最长的是 `menu-return`（真机约 **7 m 04 s**）。
+   它的成本**不是**截图或页面往返，而是**游戏自身的帧率地板**：
+   它要真走 6 次"菜单 → 进入 → 暂停 → 离开 → 再进入"，每次都必须等到
+   引擎真的推进若干帧，而 runner 上 ≈1 fps，所以每轮的墙钟下限由产品决定，不由脚本决定。
+   按本轮约定（见第 5.6 节）：候选关键路径若 ≤8 min 就**停止继续优化**，
+   不再动 `menu-return` / `smoke` / `save-audit`。
+   `aim-core` 与 `smoke` / `save-audit` 都还有明显余量。
 3. **`deploy` / `online-smoke` 尚未在 main 上实跑**：候选分支上它们被守卫跳过（有意为之），
    因此"online smoke ≤5 min"目前只有**本机实测 43 s** 支撑。要把它变成真机数字，
    需要在 main 上做一次真实部署（本轮未做：不合并、不部署 Pages）。
@@ -361,8 +479,14 @@ the product`），只改 `tools/web-menu-return-e2e.js` 与 `tools/online-smoke.
 
 ## 8. 本轮状态
 
-* **已推送候选分支** `feat/dont-stop-revision`（head `311df1d`），并做了两次
-  `workflow_dispatch` 真机验证；**未合并 main、未部署 Pages、未改线上**。
+* **已推送候选分支** `feat/dont-stop-revision`，并做了五次 `workflow_dispatch` 真机验证
+  （第三轮 1 次、第五轮 3 次同提交复测）；**未合并 main、未部署 Pages、未改线上**。
+  本轮被测提交 = `101f9a6`（"代码提交"，只含 `tools/web-aim-e2e.js` 与 workflow 两行门禁拆分的改动）。
+  本文档的更新是**后续的 docs-only 提交**，不改变被测代码。
 * 远端 `main` 仍是 `b6f6fa92`（未动），线上 Pages 不受影响；状态
   `H1_STATUS = WEB_DEPLOYED_FOR_HUMAN_REVIEW`，`HUMAN_ACCEPTED = false`。
-* CI 优化完成即停，**不进入 B批**。
+* **本轮 5 个门禁全 PASS，deploy / online-smoke 均 skipped（已确认）**，
+  两个 aim job 的 token 分别是 **61/61** 与 **10/10**，并集仍是 65 条契约。
+* **待决策**：拆后三次 `exec` 为 7 m 36 s / 8 m 14 s / 8 m 18 s，"≤8 min"未稳定达标；
+  超出部分来自 `save-audit` / `menu-return` 的正常波动，而这两个门禁本轮被明确排除在优化范围外，
+  因此不自行扩大范围、不继续优化。**CI 性能优化到此停手，不进入 B批。**
