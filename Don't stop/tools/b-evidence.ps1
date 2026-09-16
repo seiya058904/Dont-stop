@@ -5,7 +5,7 @@
 # committed evidence files, so what the report quotes is exactly what the runs printed.
 $ErrorActionPreference = 'Continue'
 $root = $PSScriptRoot | Split-Path -Parent
-$src = Join-Path $env:TEMP 'dontstop-bmeasure'
+$src = Join-Path $env:TEMP 'dontstop-bfinal'
 $dest = Join-Path $root 'docs/iteration/evidence/b'
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 

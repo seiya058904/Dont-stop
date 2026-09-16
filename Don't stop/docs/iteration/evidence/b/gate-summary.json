@@ -1,0 +1,167 @@
+[
+  {
+    "run": "bosses-authored-full",
+    "pass": 23,
+    "fail": 4,
+    "script_errors": 0,
+    "failed_checks": [
+      "FAIL boss used ultimate 30",
+      "FAIL boss reached Phase II by real damage 30",
+      "FAIL boss really lost more than half its HP 30",
+      "FAIL a strong build clears the three-phase boss 30"
+    ]
+  },
+  {
+    "run": "bosses-authored-high",
+    "pass": 24,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "bosses-phase-contract",
+    "pass": 160,
+    "fail": 4,
+    "script_errors": 0,
+    "failed_checks": [
+      "FAIL B02 ultimate connected at least once",
+      "FAIL B02 ultimate paid a percentage of maximum HP (0 of 16 boss hits)",
+      "FAIL B03 ultimate paid a percentage of maximum HP (0 of 22 boss hits)",
+      "FAIL B04 was really cleared by real fire"
+    ]
+  },
+  {
+    "run": "core-baseline",
+    "pass": 4,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "core-contracts",
+    "pass": 44,
+    "fail": 0,
+    "script_errors": 1,
+    "failed_checks": null
+  },
+  {
+    "run": "core-m10-barrage",
+    "pass": 9,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "core-m10-ultimate",
+    "pass": 32,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "core-m6-contracts",
+    "pass": 121,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "core-m8-contracts",
+    "pass": 52,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "core-m8-telegraphs",
+    "pass": 75,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "density-strong-probe",
+    "pass": 22,
+    "fail": 2,
+    "script_errors": 0,
+    "failed_checks": [
+      "FAIL monsters inside a wall stay incidental (4 of 3600) 35",
+      "FAIL monsters inside a wall stay incidental (41 of 5056) 39"
+    ]
+  },
+  {
+    "run": "density-strong",
+    "pass": 32,
+    "fail": 1,
+    "script_errors": 0,
+    "failed_checks": "FAIL no monster's collider is inside a wall (1 of 1089) 29"
+  },
+  {
+    "run": "density-typical-drive",
+    "pass": 32,
+    "fail": 4,
+    "script_errors": 0,
+    "failed_checks": [
+      "FAIL legal clear while moving 22",
+      "FAIL legal clear while moving 26",
+      "FAIL no monster's collider is inside a wall (1 of 530) 29",
+      "FAIL legal clear while moving 29"
+    ]
+  },
+  {
+    "run": "density-typical-probe",
+    "pass": 23,
+    "fail": 1,
+    "script_errors": 0,
+    "failed_checks": "FAIL no monster's collider is inside a wall (1 of 5038) 29"
+  },
+  {
+    "run": "fog-contract",
+    "pass": 110,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "fog-render",
+    "pass": 117,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "hazards",
+    "pass": 128,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "progression-bypass",
+    "pass": 33,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "progression",
+    "pass": 34,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "spawn-audit",
+    "pass": 20,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  },
+  {
+    "run": "visual-tour",
+    "pass": 37,
+    "fail": 0,
+    "script_errors": 0,
+    "failed_checks": null
+  }
+]

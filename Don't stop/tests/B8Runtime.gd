@@ -63,6 +63,17 @@ const EVIDENCE := "res://docs/iteration/evidence/b"
 func rendering() -> bool:
 	return DisplayServer.get_name() != "headless"
 
+## Reads back a frame that really contains the state the caller just changed. A SubViewport's
+## texture is one or more frames behind a state mutation, so a screenshot taken immediately
+## after writing `elapsed` silently repeats the PREVIOUS state - which is exactly what made
+## three different telegraph states hash identically before this existed.
+func settle_render(frames := 3) -> void:
+	if not rendering(): return
+	for i in frames:
+		await get_tree().process_frame
+	RenderingServer.force_draw(false)
+	await get_tree().process_frame
+
 func snap(label: String) -> void:
 	if not rendering(): return
 	RenderingServer.force_draw(false)

@@ -1,0 +1,50 @@
+[
+	{
+		"alive_peak": 10,
+		"clear": true,
+		"illegal_near_spawns": 0,
+		"mean_alive": 3.41609195402299,
+		"movement": 20819.4751844406,
+		"near80_peak": 2,
+		"probe": false,
+		"seconds": 45.053,
+		"shots": 795,
+		"simple_ratio": 0.639024390243902,
+		"simple_spawns": 131,
+		"spawns": 205,
+		"stage": 22,
+		"typical": false
+	},
+	{
+		"alive_peak": 16,
+		"clear": true,
+		"illegal_near_spawns": 0,
+		"mean_alive": 5.78390804597701,
+		"movement": 21731.035094738,
+		"near80_peak": 3,
+		"probe": false,
+		"seconds": 45.021,
+		"shots": 805,
+		"simple_ratio": 0.663299663299663,
+		"simple_spawns": 197,
+		"spawns": 297,
+		"stage": 26,
+		"typical": false
+	},
+	{
+		"alive_peak": 41,
+		"clear": true,
+		"illegal_near_spawns": 0,
+		"mean_alive": 20.6574712643678,
+		"movement": 21712.3372149812,
+		"near80_peak": 4,
+		"probe": false,
+		"seconds": 45.025,
+		"shots": 809,
+		"simple_ratio": 0.714733542319749,
+		"simple_spawns": 684,
+		"spawns": 957,
+		"stage": 29,
+		"typical": false
+	}
+]

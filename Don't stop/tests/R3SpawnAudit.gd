@@ -93,6 +93,11 @@ func _ready() -> void:
 	for seed_value in SEEDS:
 		if _out_of_time(): break
 		await _audit_hell_enemy_round(seed_value, 31)
+	# ---- layout connectivity: a region whose walls seal the player in cannot be played at
+	# all. This is the check that would have caught R8's first authored core, where the four
+	# bars met at the corners and enclosed the spawn pocket.
+	if not _out_of_time():
+		await _audit_region_connectivity()
 	# ---- sequence: camp -> depart again -> different region (stale result check)
 	if not _out_of_time():
 		await _audit_sequence_round()
@@ -236,6 +241,48 @@ func _audit_dense_round(stage: int) -> void:
 	_purge()
 	LevelServer.return_to_camp()
 	await wait(0.1)
+
+## For every region: how much of the walkable grid is actually reachable from the player's
+## own starting cell? A sealed pocket shows up here as a tiny fraction.
+func _audit_region_connectivity() -> void:
+	var stages = {"R1":2,"R2":6,"R3":11,"R4":16,"R5":21,"R6":26,"R7":31,"R8":36}
+	for region in stages:
+		if _out_of_time(): return
+		seed(2024)
+		if not LevelServer.town.depart(stages[region], true):
+			check(false, "connectivity depart %s" % region)
+			continue
+		LevelServer.timerStop()
+		await _advance_physics(3)
+		_keep_player_alive()
+		var arena = LevelServer.town.arena
+		if not is_instance_valid(arena):
+			# R1 fights in the camp tilemap and has its own navigation builder.
+			seen_entries["connectivity_%s_town" % region] = true
+			check(LevelServer.town.nav_ready, "town navigation is ready for %s" % region)
+			var town_walkable = LevelServer.town.walkable.size()
+			var town_reachable = 0
+			var town_start = LevelServer.town.nav_cell(Utils.player.global_position)
+			for cell in LevelServer.town.walkable:
+				if LevelServer.town.navigation.get_id_path(cell, town_start).size() > 1: town_reachable += 1
+			var town_ratio = float(town_reachable)/maxi(1, town_walkable)
+			print("R3_SPAWN_AUDIT connectivity %s walkable=%d reachable=%d ratio=%.3f" % [region, town_walkable, town_reachable, town_ratio])
+			check(town_ratio > 0.6, "%s camp walkable area is reachable from the player (%.2f)" % [region, town_ratio])
+			LevelServer.return_to_camp()
+			await wait(0.1)
+			continue
+		var start = arena.cell(Utils.player.global_position)
+		if not arena.grid.is_in_boundsv(start) or arena.grid.is_point_solid(start):
+			start = arena.nearest(Utils.player.global_position)
+		var reachable = 0
+		for cell in arena.cells:
+			if arena.grid.get_id_path(cell, start).size() > 1: reachable += 1
+		var ratio = float(reachable)/maxi(1, arena.cells.size())
+		print("R3_SPAWN_AUDIT connectivity %s stage=%d walkable=%d reachable=%d ratio=%.3f" % [region, stages[region], arena.cells.size(), reachable, ratio])
+		seen_entries["connectivity_%s" % region] = true
+		check(ratio > 0.6, "%s walkable area is reachable from the player (%.2f)" % [region, ratio])
+		LevelServer.return_to_camp()
+		await wait(0.1)
 
 ## Consecutive combat -> camp -> depart again -> different region. A stale map or
 ## epoch result would place actors in the previous arena, which the legality rules

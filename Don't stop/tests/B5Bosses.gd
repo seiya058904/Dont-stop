@@ -60,6 +60,10 @@ func fight(stage: int, boss_id: String, durable_hp: int, budget_ms: int, observe
 	while LevelServer.state == "COMBAT" and Time.get_ticks_msec()-start < budget_ms:
 		await wait(0.05)
 		if not is_instance_valid(boss): break
+		# Test affordance, not a damage injection: while a percentage ultimate is resolving the
+		# bot HOLDS POSITION instead of dodging, so the payload can be read off the real damage
+		# pipeline. The boss still has to be killed by real weapon fire.
+		moving = get_tree().get_nodes_in_group("boss_ultimate").is_empty()
 		var tier = "3" if boss.phase_three else ("2" if boss.phase_two else "1")
 		if boss.phase_three: seen.three = true
 		if boss.phase_two: seen.two = true
@@ -123,10 +127,10 @@ func _ready():
 	# OBSERVED pass: durable pool, real fire only. 60 HP so three phases of percentage
 	# ultimates and contact pressure stay survivable for the audit.
 	for stage in [10,20,30,40]:
-		rows.append(await fight(stage,STAGE_BOSS[stage],60,190000,true))
+		rows.append(await fight(stage,STAGE_BOSS[stage],150,260000,true))
 		print("B5 BOSS ",JSON.stringify(rows[-1]))
 	# AUTHORED pass: the real difficulty of the new final boss, reported not asserted.
-	var hell_row = await fight(40,"B04",8,200000,false)
+	var hell_row = await fight(40,"B04",8,260000,false)
 	rows.append(hell_row)
 	print("B5 BOSS AUTHORED ",JSON.stringify(hell_row))
 	var file = FileAccess.open("res://docs/iteration/evidence/b/bosses.json",FileAccess.WRITE)

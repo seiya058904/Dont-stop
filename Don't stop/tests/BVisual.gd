@@ -27,18 +27,16 @@ func telegraph(kind: String, style: String, offset: Vector2, direction: Vector2,
 func shoot_warning(label: String, zone):
 	if zone == null: return
 	await wait(0.35)
+	await settle_render()
 	recenter(); snap(label+"-warning")
 	# The final 0.2-0.3 s of a wind-up is meant to brighten hard; sample it explicitly.
 	zone.elapsed = zone.warning-0.08
-	await get_tree().physics_frame
-	await get_tree().physics_frame
+	await settle_render()
 	recenter(); snap(label+"-about-to-fire")
-	# HostileZone drives its state machine off `elapsed`, but a StageHazard drives it off
-	# `phase_time`; setting both is what actually forces the live state for the capture.
+	# HostileZone drives its state machine off `elapsed` alone; a StageHazard drives it off
+	# `phase_time` and is forced separately below.
 	zone.elapsed = zone.warning+0.05
-	zone.phase_time = 0.01
-	await get_tree().physics_frame
-	await get_tree().physics_frame
+	await settle_render()
 	if is_instance_valid(zone): recenter(); snap(label+"-active")
 	await wait(0.4)
 	if is_instance_valid(zone): zone.queue_free()
@@ -90,7 +88,7 @@ func _ready():
 	LevelServer.town.arena.add_child(poison)
 	await wait(0.4); recenter(); snap("ui-poison-warning")
 	poison.elapsed = 4.2; poison.phase_time = 0.01
-	await get_tree().physics_frame; await get_tree().physics_frame
+	await settle_render()
 	recenter(); snap("ui-poison-active")
 	check(poison.phase == "active","the poison field reached its live state for the capture")
 	poison.queue_free(); await wait(0.3)
@@ -101,7 +99,7 @@ func _ready():
 	LevelServer.town.arena.add_child(frost)
 	await wait(0.4); recenter(); snap("ui-frost-warning")
 	frost.elapsed = 4.2; frost.phase_time = 0.01
-	await get_tree().physics_frame; await get_tree().physics_frame
+	await settle_render()
 	recenter(); snap("ui-frost-active")
 	frost.queue_free(); await wait(0.3)
 

@@ -207,9 +207,14 @@ const WALLS = {
 	# Broken quarantine cells: a wide ring corridor plus a central channel, so a fogged
 	# player always has a long sight line to move along and never a dead end.
 	"R7":[Rect2(-330,-190,150,66),Rect2(-330,124,150,66),Rect2(180,-190,150,66),Rect2(180,124,150,66),Rect2(-40,-258,80,52),Rect2(-40,206,80,52)],
-	# Fractured core: four core fragments with gaps lasers sweep through, and four outer
-	# pylons that break the outer ring into readable quadrants.
-	"R8":[Rect2(-70,-70,140,26),Rect2(-70,44,140,26),Rect2(-70,-44,26,88),Rect2(44,-44,26,88),Rect2(-330,-230,70,70),Rect2(260,-230,70,70),Rect2(-330,160,70,70),Rect2(260,160,70,70)]
+	# Fractured core: four SEPARATED fragments with wide gaps, so the ring is broken rather
+	# than sealed. The first authored version had the four bars meeting exactly at the
+	# corners, enclosing an 88x88 pocket: the player spawned inside it, A* found zero paths
+	# out, no enemy could reach them, and the stage-40 boss could not find a legal spawn point
+	# at all. tests/R3SpawnAudit.gd now asserts per-region reachability so a sealed layout
+	# cannot come back.
+	# Four outer pylons break the outer ring into readable quadrants.
+	"R8":[Rect2(-140,-90,64,64),Rect2(76,-90,64,64),Rect2(-140,26,64,64),Rect2(76,26,64,64),Rect2(-330,-230,70,70),Rect2(260,-230,70,70),Rect2(-330,160,70,70),Rect2(260,160,70,70)]
 }
 
 ## ---- Encounter table ---------------------------------------------------------------

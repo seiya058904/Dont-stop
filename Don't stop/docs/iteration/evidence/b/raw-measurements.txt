@@ -1,0 +1,141 @@
+# B批 raw measurement lines, verbatim from the run logs
+
+## bosses-authored-full
+M10 BOSSES SUMMARY checks=27 failures=4
+
+## bosses-authored-high
+M10 BOSSES SUMMARY checks=24 failures=0
+
+## bosses-phase-contract
+B5 BOSSES CHECKS=164 FAILURES=4
+
+## density-strong-probe
+M10_DENSITY_CHECKS 24 FAILURES 2
+
+## density-strong
+M10_DENSITY_CHECKS 33 FAILURES 1
+
+## density-typical-drive
+M10_DENSITY_CHECKS 36 FAILURES 4
+
+## density-typical-probe
+M10_DENSITY_CHECKS 24 FAILURES 1
+
+## fog-contract
+B4 mode=product
+B4 PROFILE normal  0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+B4 PROFILE hell31  0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+B4 RADIUS normal=0 hell=0
+B4 PROFILE restored 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+B4 PROFILE stage31 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+B4 CHECKS=110 FAILURES=0
+
+## fog-render
+B4 mode=product
+B4 PROFILE normal  0.266 0.195 0.144 0.145 0.190 0.138 0.135 0.111 0.116 0.092 0.068 0.050
+B4 PROFILE hell31  0.194 0.170 0.139 0.109 0.098 0.039 0.022 0.013 0.008 0.006 0.010 0.034
+B4 RADIUS normal=432 hell=240
+B4 CONTRAST near 0.2305->0.1819 far 0.1252->0.0204
+B4 RADIUS normal=432 hell=240
+B4 PROFILE restored 0.266 0.187 0.140 0.145 0.190 0.138 0.135 0.111 0.116 0.092 0.068 0.050
+B4 PROFILE stage31 0.215 0.202 0.159 0.115 0.076 0.051 0.033 0.018 0.013 0.012 0.014 0.035
+B4 CHECKS=117 FAILURES=0
+
+## hazards
+B4 HAZARD poison_share=0.0150 expected=1.200 measured=0.900
+B4 HAZARD single=1.800 overlap=1.350 strongest_single_window=0.450
+B4 HAZARD hell39 live=11 cap=11 coverage=0.253
+B4 HAZARD CHECKS=128 FAILURES=0
+
+## progression-bypass
+B6 mode=bypass
+B6 CHECKSUM checks=33 failures=0
+
+## progression
+B6 mode=product
+B6 CHECKSUM checks=34 failures=0
+
+## spawn-audit
+R3_SPAWN_AUDIT_PROGRESS round=1 stage=1 samples=0 illegal=0 oob=0 wall=0 unreach=0 t=1241ms
+R3_SPAWN_AUDIT_PROGRESS round=2 stage=4 samples=5 illegal=0 oob=0 wall=0 unreach=0 t=1914ms
+R3_SPAWN_AUDIT_PROGRESS round=3 stage=5 samples=10 illegal=0 oob=0 wall=0 unreach=0 t=2611ms
+R3_SPAWN_AUDIT_PROGRESS round=4 stage=16 samples=15 illegal=0 oob=0 wall=0 unreach=0 t=3353ms
+R3_SPAWN_AUDIT_PROGRESS round=5 stage=21 samples=18 illegal=0 oob=0 wall=0 unreach=0 t=4125ms
+R3_SPAWN_AUDIT_PROGRESS round=6 stage=26 samples=23 illegal=0 oob=0 wall=0 unreach=0 t=4878ms
+R3_SPAWN_AUDIT_PROGRESS round=7 stage=29 samples=25 illegal=0 oob=0 wall=0 unreach=0 t=5664ms
+R3_SPAWN_AUDIT_PROGRESS round=8 stage=31 samples=29 illegal=0 oob=0 wall=0 unreach=0 t=6375ms
+R3_SPAWN_AUDIT_PROGRESS round=9 stage=33 samples=33 illegal=0 oob=0 wall=0 unreach=0 t=7148ms
+R3_SPAWN_AUDIT_PROGRESS round=10 stage=35 samples=38 illegal=0 oob=0 wall=0 unreach=0 t=7865ms
+R3_SPAWN_AUDIT_PROGRESS round=11 stage=36 samples=42 illegal=0 oob=0 wall=0 unreach=0 t=8576ms
+R3_SPAWN_AUDIT_PROGRESS round=12 stage=39 samples=45 illegal=0 oob=0 wall=0 unreach=0 t=9363ms
+R3_SPAWN_AUDIT_PROGRESS round=13 stage=1 samples=49 illegal=0 oob=0 wall=0 unreach=0 t=10094ms
+R3_SPAWN_AUDIT_PROGRESS round=14 stage=4 samples=54 illegal=0 oob=0 wall=0 unreach=0 t=10777ms
+R3_SPAWN_AUDIT_PROGRESS round=15 stage=5 samples=59 illegal=0 oob=0 wall=0 unreach=0 t=11467ms
+R3_SPAWN_AUDIT_PROGRESS round=16 stage=16 samples=64 illegal=0 oob=0 wall=0 unreach=0 t=12164ms
+R3_SPAWN_AUDIT_PROGRESS round=17 stage=21 samples=67 illegal=0 oob=0 wall=0 unreach=0 t=12895ms
+R3_SPAWN_AUDIT_PROGRESS round=18 stage=26 samples=72 illegal=0 oob=0 wall=0 unreach=0 t=13668ms
+R3_SPAWN_AUDIT_PROGRESS round=19 stage=29 samples=74 illegal=0 oob=0 wall=0 unreach=0 t=14379ms
+R3_SPAWN_AUDIT_PROGRESS round=20 stage=31 samples=78 illegal=0 oob=0 wall=0 unreach=0 t=15131ms
+R3_SPAWN_AUDIT_PROGRESS round=21 stage=33 samples=82 illegal=0 oob=0 wall=0 unreach=0 t=15883ms
+R3_SPAWN_AUDIT_PROGRESS round=22 stage=35 samples=87 illegal=0 oob=0 wall=0 unreach=0 t=16615ms
+R3_SPAWN_AUDIT_PROGRESS round=23 stage=36 samples=91 illegal=0 oob=0 wall=0 unreach=0 t=17387ms
+R3_SPAWN_AUDIT_PROGRESS round=24 stage=39 samples=94 illegal=0 oob=0 wall=0 unreach=0 t=18098ms
+R3_SPAWN_AUDIT_PROGRESS round=25 stage=1 samples=98 illegal=0 oob=0 wall=0 unreach=0 t=18829ms
+R3_SPAWN_AUDIT_PROGRESS round=26 stage=4 samples=103 illegal=0 oob=0 wall=0 unreach=0 t=19526ms
+R3_SPAWN_AUDIT_PROGRESS round=27 stage=5 samples=108 illegal=0 oob=0 wall=0 unreach=0 t=20278ms
+R3_SPAWN_AUDIT_PROGRESS round=28 stage=16 samples=113 illegal=0 oob=0 wall=0 unreach=0 t=20982ms
+R3_SPAWN_AUDIT_PROGRESS round=29 stage=21 samples=116 illegal=0 oob=0 wall=0 unreach=0 t=21693ms
+R3_SPAWN_AUDIT_PROGRESS round=30 stage=26 samples=121 illegal=0 oob=0 wall=0 unreach=0 t=22411ms
+R3_SPAWN_AUDIT_PROGRESS round=31 stage=29 samples=123 illegal=0 oob=0 wall=0 unreach=0 t=23197ms
+R3_SPAWN_AUDIT_PROGRESS round=32 stage=31 samples=127 illegal=0 oob=0 wall=0 unreach=0 t=23928ms
+R3_SPAWN_AUDIT_PROGRESS round=33 stage=33 samples=131 illegal=0 oob=0 wall=0 unreach=0 t=24701ms
+R3_SPAWN_AUDIT_PROGRESS round=34 stage=35 samples=136 illegal=0 oob=0 wall=0 unreach=0 t=25412ms
+R3_SPAWN_AUDIT_PROGRESS round=35 stage=36 samples=140 illegal=0 oob=0 wall=0 unreach=0 t=26199ms
+R3_SPAWN_AUDIT_PROGRESS round=36 stage=39 samples=143 illegal=0 oob=0 wall=0 unreach=0 t=26930ms
+R3_SPAWN_AUDIT_PROGRESS round=37 stage=10 samples=147 illegal=0 oob=0 wall=0 unreach=0 t=27758ms
+R3_SPAWN_AUDIT_PROGRESS round=38 stage=20 samples=149 illegal=0 oob=0 wall=0 unreach=0 t=28220ms
+R3_SPAWN_AUDIT_PROGRESS round=39 stage=30 samples=151 illegal=0 oob=0 wall=0 unreach=0 t=28683ms
+R3_SPAWN_AUDIT_PROGRESS round=40 stage=40 samples=153 illegal=0 oob=0 wall=0 unreach=0 t=29152ms
+R3_SPAWN_AUDIT_PROGRESS round=41 stage=10 samples=155 illegal=0 oob=0 wall=0 unreach=0 t=29621ms
+R3_SPAWN_AUDIT_PROGRESS round=42 stage=20 samples=157 illegal=0 oob=0 wall=0 unreach=0 t=30076ms
+R3_SPAWN_AUDIT_PROGRESS round=43 stage=30 samples=159 illegal=0 oob=0 wall=0 unreach=0 t=30525ms
+R3_SPAWN_AUDIT_PROGRESS round=44 stage=40 samples=161 illegal=0 oob=0 wall=0 unreach=0 t=30974ms
+R3_SPAWN_AUDIT_PROGRESS round=45 stage=10 samples=163 illegal=0 oob=0 wall=0 unreach=0 t=31449ms
+R3_SPAWN_AUDIT_PROGRESS round=46 stage=20 samples=165 illegal=0 oob=0 wall=0 unreach=0 t=31912ms
+R3_SPAWN_AUDIT_PROGRESS round=47 stage=30 samples=167 illegal=0 oob=0 wall=0 unreach=0 t=32381ms
+R3_SPAWN_AUDIT_PROGRESS round=48 stage=40 samples=169 illegal=0 oob=0 wall=0 unreach=0 t=32850ms
+R3_SPAWN_AUDIT_PROGRESS round=49 stage=21 samples=171 illegal=0 oob=0 wall=0 unreach=0 t=33257ms
+R3_SPAWN_AUDIT_PROGRESS round=50 stage=21 samples=175 illegal=0 oob=0 wall=0 unreach=0 t=33623ms
+R3_SPAWN_AUDIT_PROGRESS round=51 stage=21 samples=179 illegal=0 oob=0 wall=0 unreach=0 t=33975ms
+R3_SPAWN_AUDIT_PROGRESS round=52 stage=26 samples=183 illegal=0 oob=0 wall=0 unreach=0 t=34340ms
+R3_SPAWN_AUDIT_PROGRESS round=53 stage=29 samples=191 illegal=0 oob=0 wall=0 unreach=0 t=35010ms
+R3_SPAWN_AUDIT_PROGRESS round=54 stage=39 samples=199 illegal=0 oob=0 wall=0 unreach=0 t=35693ms
+R3_SPAWN_AUDIT_PROGRESS round=55 stage=31 samples=207 illegal=0 oob=0 wall=0 unreach=0 t=36376ms
+R3_SPAWN_AUDIT_PROGRESS round=56 stage=31 samples=210 illegal=0 oob=0 wall=0 unreach=0 t=36824ms
+R3_SPAWN_AUDIT_PROGRESS round=57 stage=31 samples=213 illegal=0 oob=0 wall=0 unreach=0 t=37259ms
+R3_SPAWN_AUDIT connectivity R1 walkable=624 reachable=623 ratio=0.998
+R3_SPAWN_AUDIT connectivity R2 stage=6 walkable=1873 reachable=1872 ratio=0.999
+R3_SPAWN_AUDIT connectivity R3 stage=11 walkable=1982 reachable=1981 ratio=0.999
+R3_SPAWN_AUDIT connectivity R4 stage=16 walkable=1934 reachable=1933 ratio=0.999
+R3_SPAWN_AUDIT connectivity R5 stage=21 walkable=1938 reachable=1937 ratio=0.999
+R3_SPAWN_AUDIT connectivity R6 stage=26 walkable=2010 reachable=2009 ratio=1.000
+R3_SPAWN_AUDIT connectivity R7 stage=31 walkable=1796 reachable=1795 ratio=0.999
+R3_SPAWN_AUDIT connectivity R8 stage=36 walkable=1856 reachable=1855 ratio=0.999
+R3_SPAWN_AUDIT_PROGRESS round=58 stage=6 samples=216 illegal=0 oob=0 wall=0 unreach=0 t=38809ms
+R3_SPAWN_AUDIT_PROGRESS round=59 stage=28 samples=217 illegal=0 oob=0 wall=0 unreach=0 t=39120ms
+R3_SPAWN_AUDIT samples=218 invalid_candidates=135934 rejected=135728 retries=0 deferred=33 boss_deferred=0 illegal_final=0 out_of_bounds_during_play=0 wall_overlap=0 unreachable=0 refusals=0 arena_no_point=33 truncated=0 rounds=59
+R3_SPAWN_AUDIT stages=[1, 4, 5, 16, 21, 26, 29, 31, 33, 35, 36, 39, 10, 20, 30, 40, 6, 28] entries=["town_nav", "wave", "rush", "elite_plan", "arena", "horde", "flank", "boss", "summon", "dense", "hell_E13", "hell_E14", "hell_E15", "connectivity_R1_town", "connectivity_R2", "connectivity_R3", "connectivity_R4", "connectivity_R5", "connectivity_R6", "connectivity_R7", "connectivity_R8", "region_switch"]
+R3_SPAWN_AUDIT checks=20 failures=0
+R3_SPAWN_AUDIT_RESULT PASS
+
+## visual-tour
+BVISUAL region-R2      0.294 0.225 0.163 0.147 0.160 0.166 0.169 0.130 0.135 0.107 0.078 0.059
+BVISUAL region-R3      0.403 0.306 0.222 0.208 0.212 0.208 0.194 0.153 0.160 0.126 0.091 0.064
+BVISUAL region-R4      0.191 0.141 0.108 0.113 0.118 0.127 0.103 0.080 0.088 0.072 0.054 0.054
+BVISUAL region-R5      0.317 0.240 0.184 0.172 0.174 0.171 0.161 0.133 0.141 0.106 0.076 0.058
+BVISUAL region-R6      0.265 0.187 0.140 0.145 0.190 0.138 0.135 0.111 0.116 0.092 0.068 0.057
+BVISUAL region-R7      0.215 0.195 0.157 0.115 0.076 0.051 0.032 0.018 0.013 0.012 0.013 0.043
+BVISUAL region-R8      0.106 0.092 0.093 0.031 0.007 0.001 0.001 0.003 0.001 0.002 0.006 0.039
+BVISUAL telegraph-host-R6 0.265 0.187 0.140 0.145 0.190 0.138 0.135 0.111 0.116 0.092 0.068 0.057
+BVISUAL telegraph-hell-R7 0.215 0.202 0.159 0.115 0.076 0.051 0.032 0.018 0.013 0.012 0.012 0.042
+BVISUAL CHECKS=37 FAILURES=0
