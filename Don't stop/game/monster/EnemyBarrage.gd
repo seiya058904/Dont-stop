@@ -12,6 +12,10 @@ var shift = 0.08
 var elapsed = 0.0
 var next_wave = 0
 var epoch = 0
+## Ink and control payload for the whole pattern, so a control volley is visually a control
+## volley (purple, waveform pellets) rather than indistinct orange pellets.
+var style = "projectile"
+var control = 0.0
 
 func _ready():
 	add_to_group("combat_transient")
@@ -31,7 +35,7 @@ func _physics_process(delta):
 			# Three vacant angular slots form a deterministic, learnable escape gap.
 			if i in [0,1,count-1]: continue
 		angle += shift*next_wave
-		if actor.shot(heading.rotated(angle),speed,0.18,false): emitted += 1
+		if actor.shot(heading.rotated(angle),speed,0.18,false,style,control): emitted += 1
 	actor.remember("barrage_wave")
 	actor.actions["barrage_projectiles"] = actor.actions.get("barrage_projectiles",0)+emitted
 	next_wave += 1
