@@ -275,6 +275,14 @@
 			if (params.has('nw')) GODOT_CONFIG.args.push('--no-warmup');
 			if (params.has('e2e')) GODOT_CONFIG.args.push('--e2e');
 			if (params.has('tour')) GODOT_CONFIG.args.push('--tour');
+			// ?probe=1 composes with the harness instead of replacing it: the
+			// read-only channel is what the acceptance driver reads its fire
+			// evidence from (bullet count, projectile generation, flight vector),
+			// and it only observes - it starts no driver, mutates no node and
+			// writes no game state. Without this the fire chain would have to be
+			// judged from screenshots again, which is exactly the cost this round
+			// removes.
+			if (params.has('probe')) GODOT_CONFIG.args.push('--probe');
 		} else if (params.has('probe')) {
 			// ?probe=1 arms ONLY the read-only observation channel: no smoke
 			// driver, no e2e harness, no scene-tree mutation, so the session the

@@ -257,6 +257,14 @@ var _probe_proj := 0
 var _probe_sess := 0
 var _probe_player_id := 0
 var _probe_rect_ids: Dictionary = {}
+## Projectiles the engine added but whose velocity is not readable yet. Bullet.fire()
+## assigns velocity one frame after the node enters the tree, so a node read on the
+## add frame would be reported as a zero-velocity "direction". Read-only: these
+## nodes are only observed, never created, moved, freed or re-parented here.
+var _probe_pending: Array = []
+var _probe_proj_v := Vector2.ZERO
+var _probe_proj_aim := 999.0
+var _probe_proj_shots := 0
 
 func _start_probe() -> void:
 	# PAUSABLE rather than the inherited default, so _probe_frames is a liveness
@@ -297,6 +305,49 @@ func _probe_on_node_added(node: Node) -> void:
 	var path: String = (script as Script).resource_path
 	if path.contains("game/bullets/") and not path.contains("BulletShell"):
 		_probe_proj += 1
+		# The ordinal is stamped on the node the engine added. Read at observation
+		# time instead, the number would report the COUNT of that moment: with a
+		# burst weapon several projectiles are added before the first one is
+		# observed, so every event of the burst would claim the newest ordinal and a
+		# driver could not pair an event with the round it actually describes.
+		# Metadata only - it is never read by gameplay.
+		node.set_meta("probe_ord", _probe_proj)
+		_probe_pending.append(node)
+
+## Read-only: report the flight vector of a projectile the engine itself created,
+## once the engine has actually given it one. This is the observation a driver
+## cannot make from pixels: a projectile's direction IS the product's answer to
+## "where did the shot go", and it is read here instead of being inferred from the
+## change of a magazine region on screen.
+##
+## `aim` is the aim provider's angle towards the gun tip on the frame the
+## projectile is reported, so a driver can prove the projectile left along the
+## unified aim rather than merely "somewhere". Nothing in here creates, moves or
+## frees a projectile, and nothing writes bullets_count.
+func _probe_track_projectiles() -> void:
+	if _probe_pending.is_empty(): return
+	var gun_ready := Utils.player != null and is_instance_valid(Utils.player) \
+			and Utils.player.gun != null and is_instance_valid(Utils.player.gun)
+	var still: Array = []
+	for node in _probe_pending:
+		if not is_instance_valid(node): continue
+		if node.velocity.length() > 0.1:
+			_probe_proj_v = node.velocity
+			if gun_ready:
+				_probe_proj_aim = rad_to_deg((Utils.get_aim_world_position() - Utils.player.gun.gun_tip.global_position).angle())
+			else:
+				_probe_proj_aim = 999.0
+			_probe_proj_shots += 1
+			# One-shot event line, deliberately separate from the 4 Hz state line:
+			# the state line carries a sticky "last seen" velocity, which cannot
+			# say WHICH shot it belongs to. `n` is the engine's own projectile
+			# ordinal, so a driver can pair the event with the count it read.
+			print("[probe] proj-shot n=%d vx=%.1f vy=%.1f speed=%.1f aim=%.1f" % [
+				node.get_meta("probe_ord", _probe_proj), _probe_proj_v.x, _probe_proj_v.y,
+				_probe_proj_v.length(), _probe_proj_aim])
+		else:
+			still.append(node)
+	_probe_pending = still
 
 func _probe_report() -> void:
 	var player_id := 0
@@ -320,7 +371,7 @@ func _probe_report() -> void:
 		_probe_player_id = player_id
 		if player_id != 0:
 			_probe_sess += 1
-	print("[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f" % [
+	print("[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d" % [
 		_probe_sess, _probe_frames, _probe_proj,
 		str(Utils.is_game_start), LevelServer.state,
 		str(not Demo.pause_stack.is_empty()), Demo.pause_stack.size(),
@@ -328,7 +379,25 @@ func _probe_report() -> void:
 		# session was released rather than merely hidden behind a menu.
 		str(player_id != 0),
 		gun_id, bullets, bullets_max, Input.mouse_mode,
-		player_pos, Utils.get_aim_viewport_position(), _e2e_crosshair_centre(), hp])
+		player_pos, Utils.get_aim_viewport_position(), _e2e_crosshair_centre(), hp,
+		# --- fields appended for the aim gate. All are observations; appending
+		# them (rather than inserting) keeps every existing prefix/regex reader
+		# working unchanged.
+		# aimworld: the aim point in WORLD space. A driver needs it to accumulate
+		# the swept angle of a continuous 360 degree aim sweep; viewport-space aim
+		# alone saturates at the edges of the screen.
+		Utils.get_aim_world_position(),
+		# projv / projang: the last projectile the engine created that has a
+		# velocity, and the aim angle at the moment it was observed. Sticky by
+		# design - the one-shot `[probe] proj-shot` line is what pairs a vector
+		# with a specific shot.
+		_probe_proj_v.x, _probe_proj_v.y, _probe_proj_aim, _probe_proj_shots,
+		# fr: whether the fire button has been released. Read (not written) so a
+		# driver can prove a pause-menu close did not leave the trigger stuck.
+		str(Demo.fire_released),
+		# fps: the real frame rate of THIS machine, so a run can report why a
+		# state change took as long as it did instead of guessing.
+		Engine.get_frames_per_second()])
 
 ## Read-only locators. The driver has to click the product's own controls with a
 ## real mouse, so it needs their rectangles - and it needs them for the panel
@@ -616,7 +685,18 @@ func _process(_delta: float) -> void:
 	if probe:
 		# A pause-aware idle-frame counter: the liveness signal the driver needs,
 		# and one that provably stops while a panel holds the tree paused.
-		_probe_frames += 1
+		#
+		# The paused check is explicit and not left to PROCESS_MODE_PAUSABLE,
+		# because the channel can now be armed TOGETHER with the e2e harness
+		# (?probe=1&smoke=1), and that harness forces this node to
+		# PROCESS_MODE_ALWAYS so it can watch round restarts. Left to the process
+		# mode alone, the counter would keep ticking inside a pause menu in that
+		# combination and "frames advanced" would stop meaning "the session ran".
+		if not get_tree().paused:
+			_probe_frames += 1
+		# Per frame, not on the 4 Hz report: a projectile can be freed between two
+		# reports (it hits a wall), and then its velocity would never be observed.
+		_probe_track_projectiles()
 	if _sampling:
 		_frame_times.append(get_process_delta_time() * 1000.0)
 	if e2e:
