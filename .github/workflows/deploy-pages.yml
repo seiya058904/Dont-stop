@@ -1,18 +1,65 @@
 name: Build and deploy Web release
 
-# Build + browser tests and the production deploy are separate jobs on purpose:
-# dispatching this workflow on a candidate branch must be able to build and test
-# it without ever touching the live Pages site. The `deploy` job is additionally
-# gated on `github.ref == 'refs/heads/main'`.
+# ---------------------------------------------------------------------------
+# WHY THIS FILE LOOKS THE WAY IT DOES
+#
+# The pipeline used to cost about 3.5 hours for one main deploy. Measured on
+# run 34954529853 / 34962338505:
+#
+#   build 45s -> Browser smoke 1h44m30s -> deploy 13s -> Online smoke 1h41m6s
+#
+# Almost all of it was two serial jobs that re-drove the whole game through
+# Playwright and measured everything with page.screenshot(). The Web export uses
+# the nothreads template, so the game loop owns the browser main thread and every
+# capture or evaluate has to wait for a slot on it: ~32 ms idle, ~30 s on CI. The
+# gates now read the game's own read-only state channel instead (?probe=1), which
+# costs no page round trip, so the same coverage runs in minutes.
+#
+# What this file therefore guarantees:
+#   * Build once. One `build` job exports the Web build, names it by digest, and
+#     is the only place a build is produced.
+#   * Test the exact bytes that ship. Every gate downloads that one `web-build`
+#     artifact; nothing is rebuilt for a test.
+#   * Deploy the exact bytes that were tested. The Pages artifact is uploaded
+#     from the same directory in the same job, and the online check compares the
+#     live page's SHA *and* payload digest against this run's identity.
+#   * Gates run in parallel (smoke / save-audit / aim-e2e / menu-return) and the
+#     deploy waits for all of them.
+#   * A PR runs the gates but can never deploy. A main push deploys.
+#   * A docs-only change does not pay for a game build.
+#   * Layered testing: FAST and RELEASE on every push/PR, SOAK nightly.
+#
+# Budgets held by this file:
+#   build                  <  5 min   (warm caches; 12 min ceiling for a cold run)
+#   each browser gate      < 10 min
+#   five-cycle menu return < 10-15 min
+#   pre-deploy total       < 20 min
+#   deploy + online smoke  < 10 min   (online smoke is a <=5 min script)
+#   main push, end to end  < 30 min
+# Every job carries an explicit timeout-minutes so a hang fails the run instead
+# of occupying a runner for hours; the scripts carry their own watchdogs too.
+# ---------------------------------------------------------------------------
 on:
   push:
     branches: [main]
+  # Requirement: a pull request into main runs the gates, and can never deploy.
+  # github.ref is refs/pull/N/merge there, so the deploy job's own guard is false.
+  pull_request:
+    branches: [main]
+  schedule:
+    # The SOAK layer, off-peak. Same gates, a 20-cycle return instead of 5, and a
+    # fresh build so a leak that five laps cannot see has a chance to show.
+    - cron: '17 3 * * *'
   workflow_dispatch:
     inputs:
       deploy:
         description: 'Also deploy to production Pages (main branch only)'
         type: boolean
         default: false
+      menu_cycles:
+        description: 'Menu-return cycles for this dispatch (5 = release, 20 = soak)'
+        type: string
+        default: '5'
 
 permissions:
   contents: read
@@ -20,8 +67,10 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  # A newer push to the same PR may supersede that PR's run, but a production
+  # deploy must never be cancelled half-way through, so only PR runs cancel.
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   GODOT_VERSION: 4.7.2-stable
@@ -32,31 +81,114 @@ env:
   # included). Bash needs the quotes; YAML must not, because a scalar that opens
   # with a quote has to close it before anything else follows.
   PROJECT_PATH: "Don't stop"
+  # The testing layers. FAST and RELEASE are always on; SOAK is the nightly run.
+  TIER: ${{ github.event_name == 'schedule' && 'soak' || 'release' }}
+  MENU_CYCLES: ${{ inputs.menu_cycles || (github.event_name == 'schedule' && '20' || '5') }}
 
 jobs:
-  build:
+  # ------------------------------------------------------------------------ #
+  # Scope: does this change need a game built at all? A docs-only commit must
+  # not spend the runner time a Web export costs - but the workflow still has to
+  # run, so a docs-only PR reports a real (cheap) result instead of nothing.
+  # ------------------------------------------------------------------------ #
+  changes:
+    name: Scope (docs-only detection)
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      game: ${{ steps.scope.outputs.game }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decide whether the game needs rebuilding
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          game=true
+          base=""
+          changed=""
+          case "${{ github.event_name }}" in
+            push)         base="${{ github.event.before }}" ;;
+            pull_request) base="${{ github.event.pull_request.base.sha }}" ;;
+            *)            base="" ;;
+          esac
+          if [ -n "$base" ] && git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            changed=$(git diff --name-only "$base" "${{ github.sha }}")
+            if [ -n "$changed" ]; then
+              # docs-only == every changed path is documentation. The project
+              # folder's apostrophe is matched with a dot so the pattern needs no
+              # quoting inside this script.
+              non_doc=$(printf '%s\n' "$changed" | grep -vE '^(docs/)|(^Don.t stop/docs/)|(\.md$)' || true)
+              if [ -z "$non_doc" ]; then game=false; fi
+            fi
+          fi
+          echo "game=$game" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Scope"
+            echo "- tier: \`${TIER}\`"
+            echo "- needs a game build: \`${game}\`"
+            echo "- changed paths:"
+            if [ -n "$changed" ]; then printf '  - `%s`\n' $changed; else echo "  - (nothing to compare; treating as a real change)"; fi
+          } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          echo "scope: game=$game tier=${TIER}"
+
+  # ------------------------------------------------------------------------ #
+  # Build once. Everything downstream consumes these bytes, and only these.
+  # ------------------------------------------------------------------------ #
+  build:
+    name: Build Web (once, exact artifact)
+    needs: changes
+    if: needs.changes.outputs.game == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    outputs:
+      artifact_digest: ${{ steps.identity.outputs.digest }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Install pinned Godot and Web export template
+      - name: Cache the Godot binary and the Web export template
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/godot
+          # The export templates archive is ~600 MB and only one template is
+          # used; downloading it once per run was pure waste.
+          key: godot-${{ env.GODOT_VERSION }}-web-nothreads-v1
+
+      - name: Install pinned Godot and Web export template (cache-aware)
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/godot" "$HOME/.local/share/godot/export_templates/4.7.2.stable"
-          curl --fail --location --retry 3 --retry-delay 2 \
-            "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_linux.x86_64.zip" \
-            --output "$RUNNER_TEMP/godot/godot.zip"
-          unzip -q "$RUNNER_TEMP/godot/godot.zip" -d "$RUNNER_TEMP/godot/bin"
-          curl --fail --location --retry 3 --retry-delay 2 \
-            "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_export_templates.tpz" \
-            --output "$RUNNER_TEMP/godot/templates.tpz"
-          unzip -p "$RUNNER_TEMP/godot/templates.tpz" templates/version.txt \
-            > "$HOME/.local/share/godot/export_templates/4.7.2.stable/version.txt"
-          unzip -p "$RUNNER_TEMP/godot/templates.tpz" templates/web_nothreads_release.zip \
-            > "$HOME/.local/share/godot/export_templates/4.7.2.stable/web_nothreads_release.zip"
-          echo "GODOT=$RUNNER_TEMP/godot/bin/Godot_v${GODOT_VERSION}_linux.x86_64" >> "$GITHUB_ENV"
+          BIN="$RUNNER_TEMP/godot/bin/Godot_v${GODOT_VERSION}_linux.x86_64"
+          TPLZ="$RUNNER_TEMP/godot/templates.tpz"
+          DEST="$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          mkdir -p "$RUNNER_TEMP/godot/bin" "$DEST"
+          if [ ! -x "$BIN" ]; then
+            echo "godot binary not cached; downloading"
+            curl --fail --location --retry 3 --retry-delay 2 \
+              "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_linux.x86_64.zip" \
+              --output "$RUNNER_TEMP/godot/godot.zip"
+            unzip -q "$RUNNER_TEMP/godot/godot.zip" -d "$RUNNER_TEMP/godot/bin"
+          else
+            echo "godot binary restored from cache"
+          fi
+          if [ ! -s "$TPLZ" ]; then
+            echo "export templates not cached; downloading"
+            curl --fail --location --retry 3 --retry-delay 2 \
+              "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_export_templates.tpz" \
+              --output "$TPLZ"
+          else
+            echo "export templates restored from cache"
+          fi
+          # Only the nothreads release template is needed, so the archive stays
+          # cached whole and only this member is unpacked into place.
+          unzip -p "$TPLZ" templates/version.txt > "$DEST/version.txt"
+          unzip -p "$TPLZ" templates/web_nothreads_release.zip > "$DEST/web_nothreads_release.zip"
+          echo "GODOT=$BIN" >> "$GITHUB_ENV"
 
       - name: Import project and export Web build
         shell: bash
@@ -80,50 +212,86 @@ jobs:
           # asserts it is really there instead of copying a second copy in.
           test -s "$PROJECT_PATH/build/web/index.icon.png"
 
-      - name: Stamp the build identity into the page
+      - name: Stamp build identity (commit SHA + artifact digest)
+        id: identity
         shell: bash
         run: |
           set -euo pipefail
-          # A 200 response or a correct <title> does not prove WHICH commit is
-          # live, so the merged commit is written into the deployed page and the
-          # online job compares the two.
-          python3 - <<'PY'
-          import os, pathlib
-          page = pathlib.Path("Don't stop/build/web/index.html")
-          html = page.read_text(encoding="utf-8")
-          assert "dontstop-build" not in html, "page is already stamped"
-          stamp = '<meta name="dontstop-build" content="%s" />' % os.environ["GITHUB_SHA"]
-          html = html.replace("</head>", stamp + "\n</head>", 1)
-          page.write_text(html, encoding="utf-8")
-          print("stamped build identity:", os.environ["GITHUB_SHA"])
-          PY
+          # A 200 response or a correct <title> does not prove WHICH build is
+          # live. Two identities go into the page: the commit it was built from,
+          # and a digest over the payload bytes themselves. The digest - not the
+          # SHA - is what ties "the thing that was tested" to "the thing that is
+          # served", because a rebuild of the same commit changes it. The same
+          # script is used for a local run, so the two cannot drift.
+          python3 "$PROJECT_PATH/tools/stamp-build-identity.py" \
+            "$PROJECT_PATH/build/web" "$GITHUB_SHA" "$RUNNER_TEMP/build-identity.json"
+
+      - name: Summarise the build identity
+        shell: bash
+        run: |
+          {
+            echo "### Web build identity"
+            echo ""
+            echo "| field | value |"
+            echo "| --- | --- |"
+            echo "| commit | \`${GITHUB_SHA}\` |"
+            echo "| artifact digest | \`${ARTIFACT_DIGEST}\` |"
+            echo "| digest covers | \`index.wasm \\|\\| index.pck \\|\\| index.js\` (sha256) |"
+            echo "| tier | \`${TIER}\` |"
+            echo "| menu-return cycles | \`${MENU_CYCLES}\` |"
+          } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Configure Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact
+      - name: Upload Pages artifact (the exact bytes that will be served)
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: "Don't stop/build/web"
 
-      - name: Upload Web build for smoke jobs
+      - name: Upload the Web build for the gate jobs
         uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: "Don't stop/build/web"
           retention-days: 3
 
-  browser-smoke:
-    name: Browser smoke (Playwright)
+      - name: Upload the build identity for the online check
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-identity
+          path: ${{ runner.temp }}/build-identity.json
+          retention-days: 3
+
+  # ------------------------------------------------------------------------ #
+  # The gates. Four parallel jobs, all downloading the one build above. The
+  # deploy waits for every one of them.
+  #
+  #   FAST    smoke, save-audit        cheap, always on
+  #   RELEASE aim-e2e, menu-return     the full acceptance layer
+  #   SOAK    the same jobs, nightly, with a 20-cycle return
+  # ------------------------------------------------------------------------ #
+  browser-gates:
+    name: "Gate ${{ matrix.name }} (${{ matrix.tier }})"
+    needs: [changes, build]
+    if: needs.changes.outputs.game == 'true'
     runs-on: ubuntu-24.04
-    needs: build
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: smoke,       tier: FAST,    script: tools/smoke-web.js,             timeout: 10 }
+          - { name: save-audit,  tier: FAST,    script: tools/save-audit-web.js,        timeout: 10 }
+          - { name: aim-e2e,     tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 12 }
+          - { name: menu-return, tier: RELEASE, script: tools/web-menu-return-e2e.js,   timeout: 15 }
     steps:
-      - name: Check out source (smoke scripts)
+      - name: Check out source (gate scripts)
         uses: actions/checkout@v4
 
-      - name: Download Web build
+      - name: Download the Web build under test (the same bytes as every other job)
         uses: actions/download-artifact@v4
         with:
           name: web-build
@@ -133,6 +301,14 @@ jobs:
         with:
           node-version: 22
 
+      - name: Cache npm and the Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/ms-playwright
+          key: pw-${{ env.PLAYWRIGHT_VERSION }}-chromium-v1
+
       - name: Install Playwright Chromium
         shell: bash
         run: |
@@ -140,74 +316,92 @@ jobs:
           npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
           npx "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
 
-      - name: Serve build and run browser smoke
+      - name: Run the gate
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p smoke-evidence
+          OUT="${{ matrix.name }}-evidence"
+          mkdir -p "$OUT"
           python3 -m http.server 8788 --directory build/web &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
           sleep 2
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
-          node "$PROJECT_PATH"/tools/smoke-web.js \
-            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/smoke.log
-          node "$PROJECT_PATH"/tools/save-audit-web.js \
-            http://localhost:8788/index.html "$RUNNER_TEMP/saveaudit" 2>&1 | tee smoke-evidence/save-audit.log
-          # Web mouse-aim E2E. Phase A drives the REAL entry point (no query
-          # flags) the way a player would and asserts the game's own completion
-          # notice is what removed the loading shell; Phase F injects a missing
-          # notice and requires that to fail; Phase B adds state streaming to
-          # assert cursor -> aim -> crosshair -> gun -> projectile. There is no
-          # environment escape hatch, so any non-zero exit blocks deploy.
-          node "$PROJECT_PATH"/tools/web-aim-e2e.js \
-            http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/aim-e2e.log
-          echo "WEB_AIM_E2E=PASS_CI_CHROMIUM (real browser input, not a human verdict)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          # Web "return to the main menu, then play again" acceptance, now a gate.
-          # It was previously recorded as KNOWN_FAILING_TRACKED because its second
-          # cycle failed: the title menu was on screen after a return but did not
-          # accept the start click, while tests/R3ReturnMenu.gd proved the same
-          # sequence natively. The session swap is fixed, the native fixture pins
-          # five laps, and this script now runs the same five cycles from the real
-          # entry point with real mouse input. Any non-zero exit blocks deploy.
-          node "$PROJECT_PATH"/tools/web-menu-return-e2e.js \
-            http://localhost:8788/index.html smoke-evidence 5 2>&1 | tee smoke-evidence/menu-return-e2e.log
-          echo "WEB_MENU_RETURN_E2E=PASS_CI_CHROMIUM_5_CYCLES (real browser input, not a human verdict)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          echo "HUMAN_ACCEPTANCE=NOT_COVERED_BY_CI" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          # Every gate script takes the same shape: <url> <evidenceDir> [cycles].
+          set -- "http://localhost:8788/index.html" "$OUT"
+          if [ "${{ matrix.name }}" = "menu-return" ]; then set -- "$@" "${MENU_CYCLES:-5}"; fi
+          START=$SECONDS
+          if ! node "$PROJECT_PATH/${{ matrix.script }}" "$@" 2>&1 | tee "$OUT/run.log"; then
+            echo "GATE_${{ matrix.name }}=FAIL tier=${{ matrix.tier }} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 1
+          fi
+          echo "GATE_${{ matrix.name }}=PASS tier=${{ matrix.tier }} wall_clock=$((SECONDS-START))s budget=${{ matrix.timeout }}m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
-      - name: Upload smoke evidence
+      - name: Upload gate evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-smoke-evidence
-          path: smoke-evidence
+          name: gate-${{ matrix.name }}-evidence
+          path: ${{ matrix.name }}-evidence
           retention-days: 14
 
+  # ------------------------------------------------------------------------ #
   # Production only. A workflow_dispatch on a candidate branch builds and tests
-  # but never deploys, and the online smoke never runs against a host that was
-  # not deployed by this same workflow.
+  # but never deploys (github.ref is the branch, and inputs.deploy defaults to
+  # false), the nightly soak never deploys, and a PR never deploys.
+  # ------------------------------------------------------------------------ #
   deploy:
-    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_dispatch' || inputs.deploy == true)
+    name: Deploy the tested artifact to Pages
+    needs: [changes, build, browser-gates]
+    if: >-
+      needs.changes.outputs.game == 'true'
+      && github.ref == 'refs/heads/main'
+      && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04
-    needs: [build, browser-smoke]
+    timeout-minutes: 10
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
+  # ------------------------------------------------------------------------ #
+  # Online smoke: a <=5 min script, not a re-run of the 100-minute job it
+  # replaced. It proves the live page IS this build (commit + digest), that the
+  # payload files are the exact ones that were tested, and then walks the
+  # product's own state once through menu -> round -> pause -> leave -> again.
+  # ------------------------------------------------------------------------ #
   online-smoke:
-    if: github.ref == 'refs/heads/main' && (github.event_name != 'workflow_dispatch' || inputs.deploy == true)
-    name: Online smoke (deployed Pages)
+    name: Online smoke (deployed Pages, <=5 min)
+    needs: [deploy]
+    if: >-
+      github.ref == 'refs/heads/main'
+      && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
     runs-on: ubuntu-24.04
-    needs: deploy
+    timeout-minutes: 10
     steps:
-      - name: Check out source (smoke scripts)
+      - name: Check out source (online smoke script)
         uses: actions/checkout@v4
+
+      - name: Restore the build identity this run produced
+        uses: actions/download-artifact@v4
+        with:
+          name: build-identity
+          path: build-identity
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Cache npm and the Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/ms-playwright
+          key: pw-${{ env.PLAYWRIGHT_VERSION }}-chromium-v1
 
       - name: Install Playwright Chromium
         shell: bash
@@ -216,33 +410,20 @@ jobs:
           npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
           npx "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
 
-      - name: Run online smoke against production Pages
+      - name: Verify the deployed build is THIS build, then walk it once
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p online-evidence
-          curl --fail --silent --show-error "$PAGES_URL" -o online-evidence/deployed-index.html
-          # Identity, not availability: the page must carry the commit this run
-          # built. A 200 or a correct title would pass even if Pages were still
-          # serving an older build.
-          grep -o 'name="dontstop-build" content="[0-9a-f]\{40\}"' online-evidence/deployed-index.html | head -1
-          grep -q "name=\"dontstop-build\" content=\"${GITHUB_SHA}\"" online-evidence/deployed-index.html
-          echo "DEPLOYED_BUILD_SHA=${GITHUB_SHA}" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          node "Don't stop"/tools/smoke-web.js \
-            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-smoke.log
-          # Same contract against the deployed site: the real entry point first,
-          # then the measured aim chain. Any non-zero exit fails the job.
-          node "Don't stop"/tools/web-aim-e2e.js \
-            "$PAGES_URL" online-evidence 2>&1 | tee online-evidence/online-aim-e2e.log
-          # The round's own acceptance is a gate now too: a green build that cannot
-          # be re-entered after leaving is not shippable. Non-zero exit fails the
-          # job.
-          echo "ONLINE_WEB_AIM_E2E=PASS_CI_CHROMIUM" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          node "Don't stop"/tools/web-menu-return-e2e.js \
-            "$PAGES_URL" online-evidence 5 2>&1 | tee online-evidence/online-menu-return-e2e.log
-          echo "ONLINE_WEB_MENU_RETURN_E2E=PASS_CI_CHROMIUM_5_CYCLES" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          DIGEST=$(python3 -c "import json;print(json.load(open('build-identity/build-identity.json'))['artifact_digest'])")
+          START=$SECONDS
+          node "$PROJECT_PATH/tools/online-smoke.js" \
+            "$PAGES_URL" "$DIGEST" "$GITHUB_SHA" \
+            online-evidence build-identity/build-identity.json \
+            2>&1 | tee online-evidence/online-smoke.log
+          echo "ONLINE_SMOKE=PASS identity=sha:$GITHUB_SHA digest:$DIGEST wall_clock=$((SECONDS-START))s budget=5m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
-      - name: Upload online smoke evidence
+      - name: Upload online evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:

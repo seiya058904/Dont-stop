@@ -275,6 +275,16 @@
 			if (params.has('nw')) GODOT_CONFIG.args.push('--no-warmup');
 			if (params.has('e2e')) GODOT_CONFIG.args.push('--e2e');
 			if (params.has('tour')) GODOT_CONFIG.args.push('--tour');
+		} else if (params.has('probe')) {
+			// ?probe=1 arms ONLY the read-only observation channel: no smoke
+			// driver, no e2e harness, no scene-tree mutation, so the session the
+			// driver sees is the session a player gets. It exists because the
+			// nothreads export keeps the game loop on the browser main thread, so
+			// every screenshot/evaluate has to wait for a slot on it - the same
+			// capture that costs ~32 ms locally measured ~30 s per call on a
+			// GitHub runner. The driver reads state off the console stream
+			// instead, which needs no page round trip at all.
+			GODOT_CONFIG.args = ['--probe'];
 		}
 
 		log('args=' + JSON.stringify(GODOT_CONFIG.args || null));
