@@ -10,12 +10,12 @@
 | B8 PR | [#6](https://github.com/seiya058904/Dont-stop/pull/6) — 全绿后合并 |
 | B8 代码合并 main | `8df2027b9034df05461381e16100d17b0795716c` |
 | 门禁抖动修复 PR | [#7](https://github.com/seiya058904/Dont-stop/pull/7) — 全绿后合并（见 §8.1） |
-| **最终 main** | **`7107b56378a8b7f115fffd3f4695dbc32962a346`** |
+| **最终 main** | **`acd04e1b3bf753f30a8e23498864b7d828f7375c`**（B8 代码 `8df2027` → 门禁修复 `7107b56` → 状态记录 `acd04e1`） |
 | PR #6 / #7 CI | Web 全绿（`35132153578` / `35139475159`：smoke ✓ save-audit ✓ aim-core ✓ aim-fault ✓ menu-return ✓）；Native 全绿（`35132153583`「pressure 12m56s / contracts 14m55s」、`35132123032`、`35139475145`「pressure 12m14s / contracts 14m59s」、`35139469832`） |
-| 最终 main 上的 CI | Web `35141479959` ✓（含 Deploy 与 Online smoke）；Native `35141479933` ✓（setup ✓ / pressure ✓ 12m45s / contracts ✓ 14m56s） |
+| 最终 main 上的 CI | Web `35141479959` ✓（含 Deploy 与 Online smoke）；Native `35141479933` ✓（setup ✓ / pressure ✓ 12m45s / contracts ✓ 14m56s）；状态记录 commit 的 Web ✓ / Native ✓ |
 | Web 地址 | https://seiya058904.github.io/Dont-stop/index.html |
-| 部署件 build SHA | `7107b56378a8b7f115fffd3f4695dbc32962a346`（读自部署页的 `dontstop-build`，与 main 一致） |
-| 部署件 artifact digest | `e099958581d1bb56d4e6188931fa2a42b3e44755708203875884dce5b46ed29b` |
+| 部署件 build SHA | `acd04e1b3bf753f30a8e23498864b7d828f7375c`（读自部署页的 `dontstop-build`，与 main 一致） |
+| 部署件 artifact digest | `4e16efbbec7da23869611a612c1e4c9eded8e6e21648e65f693abf4a319815c0` |
 | 状态 | `WEB_DEPLOYED_FOR_HUMAN_REVIEW` · `HUMAN_ACCEPTED=false` · `WEB_HUMAN_ACCEPTED=false` |
 
 本文件是 B8 的唯一汇总入口。所有数字来自真实运行；逐行原始数据保存在
