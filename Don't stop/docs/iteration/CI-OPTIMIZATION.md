@@ -164,6 +164,10 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 | [35051149300](https://github.com/seiya058904/Dont-stop/actions/runs/35051149300) | failure | 首次真机：门禁暴露一个**阈值标定 bug**（第 5.1 节） | 11 m 11 s |
 | [35052512912](https://github.com/seiya058904/Dont-stop/actions/runs/35052512912) | **success** | 修复后全绿：4 门禁 PASS，deploy / online 跳过 | **10 m 43 s** |
 
+> 耗时口径：表里的数字是**关键路径**（第一个 job 开始 → 最后一个 job 结束）。
+> GitHub 页面显示的 run 时长略大（含排队与收尾）：run `35052512912` = 10 m 47 s，
+> run `35051149300` = 11 m 11 s。两者都远低于 30 min 预算。
+
 ### 5.0 与优化前同口径对比（都是"候选分支 dispatch"）
 
 | 阶段 | 优化前 run `34954529853` | 优化后 run `35052512912` |
