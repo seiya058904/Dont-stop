@@ -23,8 +23,13 @@ name: Build and deploy Web release
 #   * Deploy the exact bytes that were tested. The Pages artifact is uploaded
 #     from the same directory in the same job, and the online check compares the
 #     live page's SHA *and* payload digest against this run's identity.
-#   * Gates run in parallel (smoke / save-audit / aim-e2e / menu-return) and the
-#     deploy waits for all of them.
+#   * Gates run in parallel (smoke / save-audit / aim-core / aim-fault /
+#     menu-return) and the deploy waits for all of them. The aim acceptance gate
+#     is one script split across two jobs purely for wall-clock: the fault
+#     injection waits out the loader's own 45 s quiet window and shares no state
+#     with the aim chain, so running it alongside costs nothing and takes 78 s
+#     off the critical path. Both jobs must pass, and together they still assert
+#     all 65 of the gate's contracts.
 #   * A PR runs the gates but can never deploy. A main push deploys.
 #   * A docs-only change does not pay for a game build.
 #   * Layered testing: FAST and RELEASE on every push/PR, SOAK nightly.
@@ -266,11 +271,15 @@ jobs:
           retention-days: 3
 
   # ------------------------------------------------------------------------ #
-  # The gates. Four parallel jobs, all downloading the one build above. The
+  # The gates. Five parallel jobs, all downloading the one build above. The
   # deploy waits for every one of them.
   #
-  #   FAST    smoke, save-audit        cheap, always on
-  #   RELEASE aim-e2e, menu-return     the full acceptance layer
+  #   FAST    smoke, save-audit         cheap, always on
+  #   RELEASE aim-core, aim-fault,      the full acceptance layer. aim-core and
+  #           menu-return               aim-fault are the two halves of
+  #                                     tools/web-aim-e2e.js, split by phase so
+  #                                     the fault injection stops serialising
+  #                                     the aim chain. Both must pass.
   #   SOAK    the same jobs, nightly, with a 20-cycle return
   # ------------------------------------------------------------------------ #
   browser-gates:
@@ -285,7 +294,8 @@ jobs:
         include:
           - { name: smoke,       tier: FAST,    script: tools/smoke-web.js,             timeout: 10 }
           - { name: save-audit,  tier: FAST,    script: tools/save-audit-web.js,        timeout: 10 }
-          - { name: aim-e2e,     tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 12 }
+          - { name: aim-core,    tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 12 }
+          - { name: aim-fault,   tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 8 }
           - { name: menu-return, tier: RELEASE, script: tools/web-menu-return-e2e.js,   timeout: 15 }
     steps:
       - name: Check out source (gate scripts)
@@ -327,9 +337,15 @@ jobs:
           trap 'kill "$SERVER" 2>/dev/null || true' EXIT
           sleep 2
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
-          # Every gate script takes the same shape: <url> <evidenceDir> [cycles].
+          # Every gate script takes the same shape: <url> <evidenceDir> [gateArg].
           set -- "http://localhost:8788/index.html" "$OUT"
-          if [ "${{ matrix.name }}" = "menu-return" ]; then set -- "$@" "${MENU_CYCLES:-5}"; fi
+          case "${{ matrix.name }}" in
+            menu-return) set -- "$@" "${MENU_CYCLES:-5}" ;;
+            # The two halves of the aim gate select their phases explicitly; the
+            # script's default is `all`, which would run them serialised.
+            aim-core)    set -- "$@" core ;;
+            aim-fault)   set -- "$@" fault ;;
+          esac
           START=$SECONDS
           if ! node "$PROJECT_PATH/${{ matrix.script }}" "$@" 2>&1 | tee "$OUT/run.log"; then
             echo "GATE_${{ matrix.name }}=FAIL tier=${{ matrix.tier }} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
