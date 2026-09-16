@@ -7,9 +7,12 @@
 
 ## 0. 一句话结论
 
-一次 main 部署从 **约 3.5 小时**降到**实测分钟级 + 预测 15–25 分钟**：4 个浏览器门禁改成
-**并行 job**、每个都改成**读游戏自己的只读状态**（不再靠截图）、在线烟测从"重跑整套"改成
-**≤5 分钟的指纹 + 一次状态走查**，并且部署的字节被 digest 锁死为"测过的那一份"。
+一次 main 部署从 **约 3.5 小时**降到**真机实测 10 分 43 秒**（候选分支 dispatch，同口径）：
+4 个浏览器门禁改成**并行 job**、每个都改成**读游戏自己的只读状态**（不再靠截图）、
+在线烟测从"重跑整套"改成**≤5 分钟的指纹 + 一次状态走查**，并且部署的字节被 digest 锁死为
+"测过的那一份"。
+
+真实数据与两次 run 见第 5 节；同口径降幅 **1 h 25 m 52 s → 10 m 43 s（−87.5%）**。
 
 ---
 
@@ -151,19 +154,86 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 
 ---
 
-## 5. CI 上的预期（需要一次真实 dispatch 才能钉死）
+## 5. CI 实测（候选分支 workflow_dispatch，真实 runner）
 
-| 阶段 | 优化前 | 优化后（预测） | 依据 |
+两次真实 dispatch，分支 `feat/dont-stop-revision`，参数 `deploy=false`。两次的 `deploy` 与
+`online-smoke` 都被 `github.ref == 'refs/heads/main'` 守卫**跳过**，**线上 Pages 完全未受影响**。
+
+| run | 结论 | 说明 | 整条耗时 |
 | --- | --- | --- | --- |
-| build（热缓存） | 45 s | 45 s–2 min | 二进制与模板已缓存 |
-| 浏览器门禁（4 并行） | 1 h 44 m 30 s | **5–8 min** | 本地实测 + 截图成本外推 |
-| deploy | 13 s | 13 s | 不变 |
-| online smoke | 1 h 41 m 6 s | **1–4 min** | 本地 43 s + CI 启动开销 |
-| **整条 main 推送** | **≈ 3 h 26 m** | **≈ 10–20 min** | 满足 <30 min 预算 |
+| [35051149300](https://github.com/seiya058904/Dont-stop/actions/runs/35051149300) | failure | 首次真机：门禁暴露一个**阈值标定 bug**（第 5.1 节） | 11 m 11 s |
+| [35052512912](https://github.com/seiya058904/Dont-stop/actions/runs/35052512912) | **success** | 修复后全绿：4 门禁 PASS，deploy / online 跳过 | **10 m 43 s** |
 
-**注意**：上表"优化后"是**预测**，不是实测。真实数字需要把候选分支推上去并
-`workflow_dispatch` 一次（候选分支 dispatch 不会部署，线上不受影响）。在拿到真机数据之前，
-本文件不把这些数字写成实测。
+### 5.0 与优化前同口径对比（都是"候选分支 dispatch"）
+
+| 阶段 | 优化前 run `34954529853` | 优化后 run `35052512912` |
+| --- | --- | --- |
+| Scope（docs-only 判定） | —（旧文件没有该 job） | 8 s |
+| build | 44 s | **43 s** |
+| Browser 门禁（旧：一个 job 串行跑 4 脚本） | **1 h 25 m 05 s** | — |
+| └ smoke（FAST） | （含在上面） | 5 m 05 s |
+| └ save-audit（FAST） | （含在上面） | 6 m 32 s |
+| └ aim-e2e（RELEASE） | （含在上面） | **9 m 48 s** |
+| └ menu-return（RELEASE，5 轮） | （含在上面） | 7 m 16 s |
+| deploy | skipped | skipped |
+| online smoke | skipped | skipped |
+| **候选分支整条（关键路径）** | **1 h 25 m 52 s** | **10 m 43 s** |
+
+**降幅 87.5%。**（main 推送的口径还要加 deploy 13 s + online smoke，按本地实测 43 s +
+CI 启动开销估计 ≈ 11–12 min；**本轮没在 main 上跑过，不写成实测**。）
+
+### 5.1 首次真机暴露并修掉的一个门禁 bug（阈值标定，不是产品问题）
+
+run `35051149300` 里 menu-return **7 个 token 全红**，且失败信息完全一样：
+
+```
+[menu-e2e] FAIL CYCLE1_SESSION_IS_RUNNING the game's own idle frames advanced 8 in 10013ms while unpaused
+```
+
+根因：探针的帧计数是 `PROCESS_MODE_PAUSABLE`，所以"未暂停时它前进了"本身就是完整结论；
+但有意义的对照是"暂停时它纹丝不动"。脚本却断言了**速率**（`+10 帧 / 10 s`），而这个阈值来自
+本机（vsync 60 fps）；CI 的软件渲染把**同一个循环**跑到 **≈0.8 fps**（8 帧 / 10 s）。
+**固定阈值测的是机器，不是产品。**
+
+修法（见 commit `311df1d`）：
+* 所有存活等待改成"推进了两帧"，不再断言速率（`+10/+5` → `+2`），窗口给足；
+* `online-smoke.js` 的"按住移动键"改成**按住直到角色真的动了**再松手，不再固定按 900 ms
+  （CI 上 900 ms 可能跨不到一帧——这正是本任务第 4 条"用状态等待替代固定等待"的同一条纪律）；
+* 附带：`net::ERR_ABORTED` 归类为**导航产物**而不是网络故障——门禁最后会重载整页，
+  此时仍在流式下载的 `index.wasm` 被浏览器取消；它没有 HTTP 状态码，重载后的页面另有断言
+  证明活着，且是测试自己的导航造成的。原始条目仍写进证据文件，其他任何失败（含所有
+  `http>=400`）照旧让 `NO_NETWORK_ERRORS` 失败。
+
+### 5.2 预算核对（run `35052512912`，全部达标）
+
+| 预算 | 目标 | 实测 | 结论 |
+| --- | --- | --- | --- |
+| build | < 5 min | **43 s** | ✅ |
+| 单个普通 browser gate | < 10 min | 最大 aim-e2e **9 m 48 s** | ✅（贴线，见第 7 节） |
+| menu-return 5 轮 | < 10 min（最多 15） | **7 m 16 s** | ✅ |
+| 候选 pre-deploy 整条 | < 20 min（最多 30） | **10 m 43 s** | ✅ |
+| deploy + online smoke | < 10 min | 未在候选分支上执行（守卫跳过） | 待 main 验证 |
+
+### 5.3 缓存命中（run `35052512912`）
+
+| 缓存键 | 结果 | 效果 |
+| --- | --- | --- |
+| `godot-4.7.2-stable-web-nothreads-v1`（Godot 二进制 + 600 MB 模板） | **命中** | "安装 Godot/模板"步骤 9 s → **0 s** |
+| `pw-1.60.0-chromium-v1`（`~/.npm` + `~/.cache/ms-playwright`） | **4 个门禁全部命中** | Chromium 安装 21–32 s → 14–18 s |
+
+run `35051149300` 是**冷缓存**：两项都 miss 并各自写出缓存键——这正是第二次能命中的原因。
+（冷缓存下 4 个门禁都 miss 同一个 Playwright 键，只有第一个写成功，其余报 "already exists"；
+这是正常的竞争，不影响正确性。）
+
+### 5.4 门禁结果（run `35052512912`）
+
+| gate | 证据 | 结果 |
+| --- | --- | --- |
+| smoke（FAST） | `[smoke] done pass=t` | **PASS** |
+| save-audit（FAST） | `RESULT=PASS` | **PASS** |
+| aim-e2e（RELEASE） | `RESULT=PASS` | **PASS** |
+| menu-return（RELEASE） | **133 / 133 token 全 true，`RESULT=PASS`**，`WALL_CLOCK 392 856 ms` | **PASS** |
+| deploy / online-smoke | — | **skipped（有意）** |
 
 ---
 
@@ -177,6 +247,11 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 | `tools/online-smoke.js` | 新增：≤5 min 在线烟测（指纹 + 载荷 digest + 一次状态走查），28 token |
 | `tools/stamp-build-identity.py` | 新增：写 `dontstop-build` / `dontstop-artifact` 与 `build-identity.json`（本地与 CI 共用同一实现） |
 | `.github/workflows/deploy-pages.yml` | 重设计：单次构建 + 4 并行门禁 + PR 触发 + docs-only 跳过 + digest 身份 + 缓存 + 显式超时 + SOAK 排程 |
+
+真机验证后又补了一个提交 `311df1d`（`fix(web): stop the gates measuring the renderer instead of
+the product`），只改 `tools/web-menu-return-e2e.js` 与 `tools/online-smoke.js`：把存活判据从
+"断言速率"改成"断言在推进"，并把 `net::ERR_ABORTED` 归类为导航产物。**没有**扩大任何 Godot
+错误忽略范围（`self_list` 仍是原来的窄口径，原文照记）。
 
 ---
 
@@ -195,19 +270,27 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
      `NO_UNEXPECTED_ENGINE_ERRORS` 失败。
    * 建议：这是 Godot Web 导出 + 换场时序的既有特性，若要根因需改引擎侧换场顺序，
      属于"改游戏"范围，本轮不做。
-2. **`aim-e2e` / `smoke` / `save-audit` 未重写**：它们仍用截图，CI 成本按截图数外推。
-   若真机数据显示某个 gate 超 10 min，下一步就是把它们也切到 `?probe=1` 状态判据。
-3. **CI 真机数据缺失**：第 5 节是预测。要么用户授权推候选分支 + dispatch，要么保持"预测"标注。
-4. **本机 vs CI 环境差异**：本机是桌面 GPU + 冷启动很快；CI 是软件渲染 + 首次着色器编译，
-   所以本机秒级 ≠ CI 秒级。所有"优化后"数字都按此口径标注。
-5. **工作区卫生**：`Don't stop/.git/` 是一个**非法的残留目录**（无 `HEAD`），只被我用作
-   scratch；它被 `.gitignore` 的 `**/.git/` 覆盖，git 不可见。本轮未删除（按"不做大范围删除"），
-   建议后续清理。
+2. **`aim-e2e` 是当前唯一贴近预算的 gate**：真机 **9 m 48 s**（预算 <10 min），
+   两次 run 里都是最长的（run1 9 m 59 s / run2 9 m 48 s），并决定整条关键路径。
+   它仍是截图型（10 张截图），所以它的耗时基本就是"截图数 × CI 单张成本"。
+   它**没有**超过 10 min，按本轮约定**没有**动它；但已经贴线，遇到更慢的 runner
+   有可能越线——建议把它列为下一个迁移到 `?probe=1` 状态判据的候选。
+   `smoke`（5 m 05 s）与 `save-audit`（6 m 32 s）都还有余量，暂不迁移。
+3. **`deploy` / `online-smoke` 尚未在 main 上实跑**：候选分支上它们被守卫跳过（有意为之），
+   因此"online smoke ≤5 min"目前只有**本机实测 43 s** 支撑。要把它变成真机数字，
+   需要在 main 上做一次真实部署（本轮未做：不合并、不部署 Pages）。
+4. **本机 vs CI 环境差异被量化了**：本机 60 fps / CI ≈0.8 fps，差约 75×；
+   这也正是第 5.1 节那个阈值 bug 的来源。**任何"本机成立"的时序假设都必须重审。**
+5. **工作区卫生已处理**：`Don't stop/.git/` 那个非法残留目录（无 `HEAD`/`config`/`objects`/`refs`，
+   只含我自己的 scratch）已按明确授权**精确删除**；内容先备份到
+   `.git/scratch/from-nested-dotgit/`（13 个文件，与源逐一致）。工作区仓库不受影响。
 
 ---
 
 ## 8. 本轮状态
 
-* 不部署、不合并、不推送（除非用户明确授权）。
-* 状态：`H1_STATUS = WEB_DEPLOYED_FOR_HUMAN_REVIEW`，`HUMAN_ACCEPTED = false`。
+* **已推送候选分支** `feat/dont-stop-revision`（head `311df1d`），并做了两次
+  `workflow_dispatch` 真机验证；**未合并 main、未部署 Pages、未改线上**。
+* 远端 `main` 仍是 `b6f6fa92`（未动），线上 Pages 不受影响；状态
+  `H1_STATUS = WEB_DEPLOYED_FOR_HUMAN_REVIEW`，`HUMAN_ACCEPTED = false`。
 * CI 优化完成即停，**不进入 B批**。

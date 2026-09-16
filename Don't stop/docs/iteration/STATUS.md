@@ -44,12 +44,16 @@ WEB_HUMAN_ACCEPTED = false
   - `web-menu-return-e2e.js` 的同类像素探针已在本轮降级为记录项 `note()`（blocked 测得比 shot 还大，
     方向是反的）；弹药消耗由原生夹具与截图（25/25 → 23/25）证明。
   - `tests/ContractRunner.gd` 的配件 `instance_id` 失败自 M8 起即存在，属既有问题，与本批无关。
-  - CI 时长副作用（**本轮已优化**）：5 轮返回门禁原先用截图测量一切，在 `web_nothreads` 导出上
-    每次截图要等游戏让出主线程（本机 32 ms / CI 约 30 s），Browser smoke / Online smoke 各约 100 分钟、
-    整条约 3.5 小时。改为**读游戏自己的只读状态通道**、门禁**并行**、在线烟测瘦身后：
-    本机实测 `web-menu-return-e2e.js` 6 轮 **133/133 token、`RESULT=PASS`、152.9 s**，
-    `online-smoke.js` **28/28 token、`RESULT=PASS`、43 s**。判据没有被削减（83 → 133 token）
-    也没有靠减轮数提速（仍是 5 轮 + 第 6 次再进入）。详见 [CI 优化报告](CI-OPTIMIZATION.md)。
+  - CI 时长副作用（**本轮已优化，并已真机验证**）：5 轮返回门禁原先用截图测量一切，在
+    `web_nothreads` 导出上每次截图要等游戏让出主线程（本机 32 ms / CI 约 30 s），
+    Browser smoke / Online smoke 各约 100 分钟、整条约 3.5 小时。改为**读游戏自己的只读状态通道**、
+    门禁**并行**、在线烟测瘦身后，候选分支两次真机 `workflow_dispatch` 实测：run `35052512912`
+    **4 个门禁全 PASS、deploy/online 按守卫跳过、整条关键路径 10 m 43 s**（同口径从
+    1 h 25 m 52 s 降下来，**−87.5%**）。本机实测 `web-menu-return-e2e.js` 6 轮
+    **133/133 token、`RESULT=PASS`**，`online-smoke.js` **28/28 token**。判据没有被削减
+    （83 → 133 token），也没有靠减轮数提速（仍是 5 轮 + 第 6 次再进入）。首次真机还暴露并修掉
+    一个门禁阈值标定 bug（断言了只有本机 60 fps 才成立的帧率，而 CI 软件渲染是 ≈0.8 fps）。
+    详见 [CI 优化报告](CI-OPTIMIZATION.md)。
 - 详见 [R4 报告](R4-FEEDBACK-REVISION.md)。本轮不创建 Release、不新增标签。
 
 ## R3 第六次真人试玩反馈修订（历史）
