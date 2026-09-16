@@ -126,7 +126,7 @@ func step(delta):
 			if mode in ["line","charge"]: inside = Geometry2D.get_closest_point_to_segment(target.global_position,global_position,global_position+direction*length).distance_to(target.global_position) <= width+6
 			elif mode == "cone": inside = offset.length() <= radius and absf(direction.angle_to(offset)) <= angle
 			if damage > 0 and inside and Combat.clear_line(global_position,target.global_position):
-				target.onHit(damage,owner_ref.get_ref() if owner_ref else null); hit_count += 1
+				target.onHit(damage,owner_ref.get_ref() if owner_ref else null,1.0,mode); hit_count += 1
 				# Applied after the damage so a root can never swallow the hit's feedback,
 				# and apply_root() itself refuses while the player is immune or already rooted.
 				if control > 0.0: target.apply_root(control)

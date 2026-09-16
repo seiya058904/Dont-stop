@@ -55,7 +55,7 @@ func _physics_process(delta):
 		is_atk = false
 		super._physics_process(delta)
 		if distance < contact_reach() and contact_cooldown <= 0:
-			Utils.player.onHit(contact_damage(),self)
+			Utils.player.onHit(contact_damage(),self,1.0,"contact")
 			contact_cooldown = 0.8
 		return
 	if phase == "warn":
@@ -76,7 +76,7 @@ func _physics_process(delta):
 		velocity = locked_direction*240
 		move_and_slide()
 		if distance < 19 and contact_cooldown <= 0:
-			Utils.player.onHit(contact_damage(),self)
+			Utils.player.onHit(contact_damage(),self,1.0,"contact")
 			contact_cooldown = 0.8
 		if phase_time <= 0 or get_slide_collision_count() > 0:
 			if role == "E04" and is_elite:

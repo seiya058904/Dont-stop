@@ -1,0 +1,108 @@
+[
+	{
+		"alive_mean": 18.0461893764434,
+		"alive_peak": 31,
+		"clear": true,
+		"closest_spawn": 106.824684143066,
+		"damage_by_category": [
+			{
+				"applied": 2.45,
+				"category": "beam_or_hostile_zone",
+				"hits": 3,
+				"share": 0.5
+			},
+			{
+				"applied": 2.45,
+				"category": "normal_contact",
+				"hits": 3,
+				"share": 0.5
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 2.45,
+				"category": "beam_or_hostile_zone",
+				"hits": 3,
+				"raw": 2.8,
+				"tag": "cone"
+			},
+			{
+				"applied": 2.45,
+				"category": "normal_contact",
+				"hits": 3,
+				"raw": 2.8,
+				"tag": "contact"
+			}
+		],
+		"damage_total": 4.9,
+		"death": false,
+		"death_at": -1.0,
+		"death_snapshot": {},
+		"denial_events": [],
+		"denial_modes": [
+			"cone"
+		],
+		"denial_samples": 9,
+		"denial_streak_peak": 2,
+		"elite_peak": 0,
+		"escape_peak_live_footprints": 3,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 1,
+		"geometric_modes": [
+			"cone"
+		],
+		"geometric_streak_peak": 1,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 6,
+		"horde_overlap_peak": 1,
+		"hostile_zone_peak": 5,
+		"hp_max": 8,
+		"hp_min": 5.475,
+		"illegal_near_spawns": 0,
+		"level_after": 9,
+		"level_before": 7,
+		"mode": "batch",
+		"movement": 4169.40209134342,
+		"near80_peak": 14,
+		"outcome": "clear",
+		"pin_level": 7,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 433,
+		"projectile_peak": 0,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 44940,
+		"samples": 433,
+		"seconds": 45.032,
+		"seed": 9101,
+		"shots": 87,
+		"spawns": 266,
+		"special_ratio": 0.285714285714286,
+		"special_spawns": 76,
+		"stage": 24,
+		"strict_denial_samples": 1,
+		"tag": "sanity",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 10.795,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	}
+]

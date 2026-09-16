@@ -57,7 +57,11 @@ func _physics_process(delta):
 	if Geometry2D.get_closest_point_to_segment(Utils.player.global_position,previous,global_position).distance_to(Utils.player.global_position) < 12:
 		# Barrage pellets intentionally carry fractional pressure; other attacks keep
 		# Hero's existing one-point minimum.
-		Utils.player.onHit(damage,owner_ref.get_ref() if owner_ref else null,0.0)
+		# The tag carries the shot's FAMILY, not just "a projectile": a 23-pellet artillery ring
+		# and a single aimed pellet are different balance questions, and the attacker alone
+		# cannot tell them apart because the barrage reports the boss as its owner.
+		Utils.player.onHit(damage,owner_ref.get_ref() if owner_ref else null,0.0,
+			("control_shot:" if control > 0.0 else "shot:")+style)
 		# Control is applied after the damage so a root can never eat the hit's feedback,
 		# and apply_root() itself refuses while the player is immune or already rooted.
 		if control > 0.0: Utils.player.apply_root(control)

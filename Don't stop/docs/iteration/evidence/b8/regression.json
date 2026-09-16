@@ -1,0 +1,101 @@
+{
+ "note": "Parsed from the B8 regression batch logs. Kept in the repo because the logs themselves live in a temp directory.",
+ "cases": [
+  {
+   "case": "B8Contracts",
+   "pass": 52,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "M8Contracts",
+   "pass": 52,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "M6Contracts",
+   "pass": 121,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "M4Talents",
+   "pass": 233,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "M10Growth",
+   "pass": 233,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "B3Hazards",
+   "pass": 128,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "M10Density stages=22,31 (driving)",
+   "pass": 11,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "M10Density probe stages=22,31",
+   "pass": 6,
+   "fail": 0,
+   "script_errors": 0
+  },
+  {
+   "case": "R3SpawnAudit",
+   "pass": 20,
+   "fail": 0,
+   "script_errors": 0
+  }
+ ],
+ "strong_build_density": [
+  {
+   "stage": 22,
+   "clear": true,
+   "death": false,
+   "seconds": 44.928,
+   "mean_alive": 3.12672811059908,
+   "alive_peak": 9,
+   "near80_peak": 1,
+   "hostile_zone_peak": 2,
+   "hazard_peak": 1,
+   "spawns": 178,
+   "special_ratio": 0.331460674157303,
+   "elite_count": 0,
+   "horde_overlap_peak": 1,
+   "flank_arrivals": 0,
+   "illegal_near_spawns": 0,
+   "closest_spawn": 113.160766601563,
+   "wall_overlap_actors": 0,
+   "unreachable_stuck": 0
+  },
+  {
+   "stage": 31,
+   "clear": true,
+   "death": false,
+   "seconds": 45.008,
+   "mean_alive": 9.30574712643678,
+   "alive_peak": 20,
+   "near80_peak": 3,
+   "hostile_zone_peak": 4,
+   "hazard_peak": 1,
+   "spawns": 321,
+   "special_ratio": 0.305295950155763,
+   "elite_count": 2,
+   "horde_overlap_peak": 1,
+   "flank_arrivals": 11,
+   "illegal_near_spawns": 0,
+   "closest_spawn": 110.310134887695,
+   "wall_overlap_actors": 0,
+   "unreachable_stuck": 0
+  }
+ ]
+}

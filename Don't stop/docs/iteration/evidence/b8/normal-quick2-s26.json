@@ -1,0 +1,212 @@
+[
+	{
+		"alive_mean": 10.5668202764977,
+		"alive_peak": 25,
+		"clear": true,
+		"closest_spawn": 120.864303588867,
+		"damage_by_category": [
+			{
+				"applied": 3.325,
+				"category": "normal_contact",
+				"hits": 4,
+				"share": 0.826086956521739
+			},
+			{
+				"applied": 0.7,
+				"category": "beam_or_hostile_zone",
+				"hits": 1,
+				"share": 0.173913043478261
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 3.325,
+				"category": "normal_contact",
+				"hits": 4,
+				"raw": 3.8,
+				"tag": "contact"
+			},
+			{
+				"applied": 0.7,
+				"category": "beam_or_hostile_zone",
+				"hits": 1,
+				"raw": 0.8,
+				"tag": "cone"
+			}
+		],
+		"damage_total": 4.025,
+		"death": false,
+		"death_at": -1.0,
+		"death_snapshot": {},
+		"denial_events": [],
+		"denial_modes": [
+			"cone"
+		],
+		"denial_samples": 2,
+		"denial_streak_peak": 2,
+		"elite_peak": 1,
+		"escape_peak_live_footprints": 3,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 2,
+		"geometric_modes": [
+			"cone"
+		],
+		"geometric_streak_peak": 2,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 5,
+		"horde_overlap_peak": 1,
+		"hostile_zone_peak": 4,
+		"hp_max": 8,
+		"hp_min": 5.85,
+		"illegal_near_spawns": 0,
+		"level_after": 9,
+		"level_before": 7,
+		"mode": "batch",
+		"movement": 4575.28102695942,
+		"near80_peak": 10,
+		"outcome": "clear",
+		"pin_level": 7,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 434,
+		"projectile_peak": 0,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 45031,
+		"samples": 434,
+		"seconds": 45.127,
+		"seed": 9101,
+		"shots": 86,
+		"spawns": 219,
+		"special_ratio": 0.351598173515982,
+		"special_spawns": 77,
+		"stage": 26,
+		"strict_denial_samples": 2,
+		"tag": "quick2",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 7.943,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	},
+	{
+		"alive_mean": 12.9333333333333,
+		"alive_peak": 38,
+		"clear": true,
+		"closest_spawn": 129.972076416016,
+		"damage_by_category": [
+			{
+				"applied": 3.78,
+				"category": "arena_hazard",
+				"hits": 4,
+				"share": 0.606741573033708
+			},
+			{
+				"applied": 2.45,
+				"category": "normal_contact",
+				"hits": 3,
+				"share": 0.393258426966292
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 3.78,
+				"category": "arena_hazard",
+				"hits": 4,
+				"raw": 3.78,
+				"tag": "hazard_laser"
+			},
+			{
+				"applied": 2.45,
+				"category": "normal_contact",
+				"hits": 3,
+				"raw": 2.8,
+				"tag": "contact"
+			}
+		],
+		"damage_total": 6.23,
+		"death": false,
+		"death_at": -1.0,
+		"death_snapshot": {},
+		"denial_events": [],
+		"denial_modes": [
+			"cone"
+		],
+		"denial_samples": 1,
+		"denial_streak_peak": 1,
+		"elite_peak": 1,
+		"escape_peak_live_footprints": 3,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 0,
+		"geometric_modes": [],
+		"geometric_streak_peak": 0,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 7,
+		"horde_overlap_peak": 1,
+		"hostile_zone_peak": 5,
+		"hp_max": 8,
+		"hp_min": 4.52,
+		"illegal_near_spawns": 0,
+		"level_after": 9,
+		"level_before": 7,
+		"mode": "batch",
+		"movement": 4391.08669500239,
+		"near80_peak": 12,
+		"outcome": "clear",
+		"pin_level": 7,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 435,
+		"projectile_peak": 0,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 45021,
+		"samples": 435,
+		"seconds": 45.022,
+		"seed": 9102,
+		"shots": 86,
+		"spawns": 219,
+		"special_ratio": 0.324200913242009,
+		"special_spawns": 71,
+		"stage": 26,
+		"strict_denial_samples": 0,
+		"tag": "quick2",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 9.239,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	}
+]

@@ -175,19 +175,19 @@ func _apply(_delta: float) -> void:
 			if hit_this_pulse: return
 			if _player_inside():
 				hit_this_pulse = true
-				player.onHit(damage,owner_ref.get_ref() if owner_ref else null)
+				player.onHit(damage,owner_ref.get_ref() if owner_ref else null,1.0,"hazard_"+kind)
 		"frost":
 			if not _player_inside() and not _player_on_slick(): return
 			if slick_remaining <= 0.0:
 				slick_remaining = slick_seconds
-				if _player_inside(): player.onHit(damage,owner_ref.get_ref() if owner_ref else null)
+				if _player_inside(): player.onHit(damage,owner_ref.get_ref() if owner_ref else null,1.0,"hazard_"+kind)
 			# Bounded control effect, never a movement rewrite: at most a 20% slow, and
 			# only while the player keeps standing on the slick.
 			if _player_inside() or _player_on_slick(): player.apply_slow(0.2,0.6)
 		"laser","shock":
 			if Geometry2D.get_closest_point_to_segment(player.global_position,origin(),origin()+direction*clipped).distance_to(player.global_position) <= width+6.0:
 				if Combat.clear_line(origin(),player.global_position):
-					player.onHit(damage,owner_ref.get_ref() if owner_ref else null)
+					player.onHit(damage,owner_ref.get_ref() if owner_ref else null,1.0,"hazard_"+kind)
 
 func _player_inside() -> bool:
 	var player = Utils.player

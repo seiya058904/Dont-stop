@@ -1,0 +1,463 @@
+[
+	{
+		"alive_mean": 20.2229299363057,
+		"alive_peak": 46,
+		"clear": false,
+		"closest_spawn": 127.221672058105,
+		"damage_by_category": [
+			{
+				"applied": 9.275,
+				"category": "normal_contact",
+				"hits": 11,
+				"share": 0.726027397260274
+			},
+			{
+				"applied": 3.5,
+				"category": "beam_or_hostile_zone",
+				"hits": 4,
+				"share": 0.273972602739726
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 9.275,
+				"category": "normal_contact",
+				"hits": 11,
+				"raw": 10.6,
+				"tag": "contact"
+			},
+			{
+				"applied": 3.5,
+				"category": "beam_or_hostile_zone",
+				"hits": 4,
+				"raw": 4.0,
+				"tag": "cone"
+			}
+		],
+		"damage_total": 12.775,
+		"death": true,
+		"death_at": 16.433,
+		"death_snapshot": {
+			"alive": 46,
+			"at": 16.433,
+			"boss_action": "",
+			"escape": {
+				"fair_modes": [
+					"cone"
+				],
+				"modes": [
+					"cone"
+				],
+				"reachable": 14,
+				"safe_fair": 11,
+				"safe_now": 14,
+				"safe_timed": 12,
+				"threats": 3
+			},
+			"fog": false,
+			"hazards": {
+				"shock": 1
+			},
+			"lethal": {
+				"applied": 0.875,
+				"at": 16.433,
+				"attacker": "E12",
+				"category": "beam_or_hostile_zone",
+				"hp_before": 0.0999999999999981,
+				"tag": "cone"
+			},
+			"phase": "",
+			"projectiles": 0,
+			"sequence": [
+				{
+					"applied": 0.875,
+					"at": 15.321,
+					"attacker": "E02",
+					"hp": 3.5,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.7,
+					"at": 15.37,
+					"attacker": "E02",
+					"hp": 2.625,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 15.549,
+					"attacker": "E02",
+					"hp": 1.925,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 15.923,
+					"attacker": "E12",
+					"hp": 1.05,
+					"post_root": false,
+					"rooted": false,
+					"tag": "cone"
+				},
+				{
+					"applied": 0.875,
+					"at": 16.102,
+					"attacker": "E11",
+					"hp": 0.974999999999998,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 16.433,
+					"attacker": "E12",
+					"hp": 0.0999999999999981,
+					"post_root": false,
+					"rooted": false,
+					"tag": "cone"
+				}
+			],
+			"zones": {
+				"cone": 2
+			}
+		},
+		"denial_events": [
+			{
+				"at": 7.386,
+				"modes": [
+					"cone"
+				]
+			},
+			{
+				"at": 15.563,
+				"modes": [
+					"cone"
+				]
+			}
+		],
+		"denial_modes": [
+			"cone"
+		],
+		"denial_samples": 14,
+		"denial_streak_peak": 7,
+		"elite_peak": 0,
+		"escape_peak_live_footprints": 3,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 1,
+		"geometric_modes": [
+			"cone"
+		],
+		"geometric_streak_peak": 1,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 15,
+		"horde_overlap_peak": 2,
+		"hostile_zone_peak": 7,
+		"hp_max": 8,
+		"hp_min": 0.0999999999999981,
+		"illegal_near_spawns": 0,
+		"level_after": 8,
+		"level_before": 7,
+		"mode": "batch",
+		"movement": 1567.98485544091,
+		"near80_peak": 18,
+		"outcome": "death",
+		"pin_level": 7,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 157,
+		"projectile_peak": 0,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 16385,
+		"samples": 157,
+		"seconds": 16.494,
+		"seed": 9101,
+		"shots": 31,
+		"spawns": 133,
+		"special_ratio": 0.406015037593985,
+		"special_spawns": 54,
+		"stage": 26,
+		"strict_denial_samples": 1,
+		"tag": "quick",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 7.062,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	},
+	{
+		"alive_mean": 18.1388888888889,
+		"alive_peak": 47,
+		"clear": false,
+		"closest_spawn": 117.98917388916,
+		"damage_by_category": [
+			{
+				"applied": 5.95,
+				"category": "normal_contact",
+				"hits": 7,
+				"share": 0.693877551020408
+			},
+			{
+				"applied": 1.75,
+				"category": "self_destruct",
+				"hits": 2,
+				"share": 0.204081632653061
+			},
+			{
+				"applied": 0.875,
+				"category": "beam_or_hostile_zone",
+				"hits": 1,
+				"share": 0.102040816326531
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 5.95,
+				"category": "normal_contact",
+				"hits": 7,
+				"raw": 6.8,
+				"tag": "contact"
+			},
+			{
+				"applied": 1.75,
+				"category": "self_destruct",
+				"hits": 2,
+				"raw": 2.0,
+				"tag": "detonate"
+			},
+			{
+				"applied": 0.875,
+				"category": "beam_or_hostile_zone",
+				"hits": 1,
+				"raw": 1.0,
+				"tag": "cone"
+			}
+		],
+		"damage_total": 8.575,
+		"death": true,
+		"death_at": 14.893,
+		"death_snapshot": {
+			"alive": 47,
+			"at": 14.893,
+			"boss_action": "",
+			"escape": {
+				"fair_modes": [
+					"cone"
+				],
+				"modes": [
+					"cone"
+				],
+				"reachable": 1,
+				"safe_fair": 0,
+				"safe_now": 0,
+				"safe_timed": 0,
+				"threats": 4
+			},
+			"fog": false,
+			"hazards": {
+				"shock": 1
+			},
+			"lethal": {
+				"applied": 0.875,
+				"at": 14.893,
+				"attacker": "E01",
+				"category": "normal_contact",
+				"hp_before": 0.6,
+				"tag": "contact"
+			},
+			"phase": "",
+			"projectiles": 0,
+			"sequence": [
+				{
+					"applied": 0.875,
+					"at": 13.545,
+					"attacker": "E02",
+					"hp": 8.0,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.7,
+					"at": 13.579,
+					"attacker": "E11",
+					"hp": 7.125,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 13.614,
+					"attacker": "E02",
+					"hp": 6.725,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.028,
+					"attacker": "E06",
+					"hp": 5.85,
+					"post_root": false,
+					"rooted": false,
+					"tag": "detonate"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.145,
+					"attacker": "E06",
+					"hp": 4.975,
+					"post_root": false,
+					"rooted": false,
+					"tag": "detonate"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.407,
+					"attacker": "E02",
+					"hp": 4.1,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.559,
+					"attacker": "E02",
+					"hp": 3.225,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.712,
+					"attacker": "E12",
+					"hp": 2.35,
+					"post_root": false,
+					"rooted": false,
+					"tag": "cone"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.796,
+					"attacker": "E01",
+					"hp": 1.475,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				},
+				{
+					"applied": 0.875,
+					"at": 14.893,
+					"attacker": "E01",
+					"hp": 0.6,
+					"post_root": false,
+					"rooted": false,
+					"tag": "contact"
+				}
+			],
+			"zones": {
+				"cone": 2
+			}
+		},
+		"denial_events": [
+			{
+				"at": 14.498,
+				"modes": [
+					"cone"
+				]
+			}
+		],
+		"denial_modes": [
+			"cone"
+		],
+		"denial_samples": 6,
+		"denial_streak_peak": 6,
+		"elite_peak": 0,
+		"escape_peak_live_footprints": 4,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 1,
+		"geometric_modes": [
+			"cone"
+		],
+		"geometric_streak_peak": 1,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 10,
+		"horde_overlap_peak": 2,
+		"hostile_zone_peak": 7,
+		"hp_max": 8,
+		"hp_min": 0.6,
+		"illegal_near_spawns": 0,
+		"level_after": 7,
+		"level_before": 7,
+		"mode": "batch",
+		"movement": 1485.31239858456,
+		"near80_peak": 25,
+		"outcome": "death",
+		"pin_level": 7,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 144,
+		"projectile_peak": 0,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 14902,
+		"samples": 144,
+		"seconds": 14.904,
+		"seed": 9102,
+		"shots": 28,
+		"spawns": 118,
+		"special_ratio": 0.338983050847458,
+		"special_spawns": 40,
+		"stage": 26,
+		"strict_denial_samples": 1,
+		"tag": "quick",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 13.545,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	}
+]
