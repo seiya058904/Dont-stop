@@ -1,0 +1,23 @@
+# B8 frozen measurement instrument
+# FROZEN BEFORE THE FIRST LONG RUN. From this point on, no probe, fixture, driver or
+# measurement definition may change until the batch it belongs to has finished; a change
+# invalidates that batch and requires a fresh one.
+# base_commit=594bdcd180cc96a8ab2fe62b16b48e241afae257
+c0a7fd48818ceb461f47874b28359433d1a48c0f5d88e3dcd8573e34fb51b8f2  tests/B8Probe.gd
+225d2b5bcbca81d10e217bb478b3b856447c8c9247a58d967b89cf483c90f9fd  tests/B8Normal.gd
+7a82c09682f7044dfcc6c7352a9aa33dcde83998ab72fb8c8cc3b9526758ca2c  tests/B8BossFair.gd
+418eb2240258368790f7680c6e7e9e572395e0701adf268830977a2660c10d9d  tests/B8Contracts.gd
+7ddda656418db85caf2034a1b73e83dc7084004f3785f1a467e3729ef4aaf8e6  tests/B8Normal.tscn
+da8a22a921fb5afca05aa9769199e3db078da3f3eb33391b7b99bdeb22a18cb0  tests/B8BossFair.tscn
+d9983062694ad9bb949abe535e22cfbfe67aa8b1467a41776423a40f995591ae  tests/B8Contracts.tscn
+0e8de3a64d8d5bc667d2484dacb203331b2860ce42017148c783e87938437303  tools/b8-run.ps1
+7fdf17ee743f08c4251c0eaaab6a0184f85e66a88d3755197b9b209a2426f0ce  game/hero/Hero.gd
+039119c79de2eae357a25b820dac3c142acdb89bf3dda9c7daa4746cae980db0  game/monster/DemoEnemy.gd
+7f97efea9d01fdde26715dd2ab6741c9e699259bcdbf1773ff66e7c6c8e3c8ec  game/monster/TacticalEnemy.gd
+063d5fb975b71b4bbfe3ab73d4053e759c6f0f8b609b1afece30392fe16b1d10  game/monster/EnemyShot.gd
+f15991af8d74bc560881bff8e7bc8e698dbfb9d3f37a81d1929a28ef878efd48  game/monster/HostileZone.gd
+7cdd62c6fd1763b2ad648b9c8ea1c52784ee00e86450e4aeafec81c11da5dcfe  game/monster/BossUltimate.gd
+41046899894e8f28120da74bd025b67c107d52b85473fa8fbcb1222ad38d31bf  game/monster/Monster 2/Monster2.gd
+d552aed9003de96cbdd43874bfbd3845df1510a5c96fc17ba22025fde44684d2  game/map/StageHazard.gd
+4de62aa8b224c4d0511f2ba60a4e7780a03b0a13eacdf7e34c35aa18fe7b0601  game/map/ArenaHazardDirector.gd
+

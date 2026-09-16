@@ -82,7 +82,7 @@ func _physics_process(delta):
 		inside = player.global_position.distance_to(safe_center) > safe_radius
 	if not hit_once and inside and Combat.clear_line(global_position,player.global_position):
 		hit_once = true
-		player.on_percentage_hit(fraction,boss)
+		player.on_percentage_hit(fraction,boss,"boss_percentage")
 		if role == "B02" and not player.is_dead: player.apply_root()
 		boss.remember("ultimate_hit")
 	if elapsed>=warning+(4.0 if role == "B02" else 0.3): queue_free()

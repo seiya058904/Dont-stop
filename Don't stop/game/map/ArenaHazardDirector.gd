@@ -121,7 +121,7 @@ func _tick_poison(delta: float) -> void:
 	if overlapping > 1: StageHazard.audit_poison_capped += 1
 	poison_ticks += 1
 	StageHazard.audit_poison_ticks += 1
-	player.on_percentage_hit(best,source)
+	player.on_percentage_hit(best,source,"hazard_poison")
 
 func _spawn() -> void:
 	if not is_instance_valid(arena): return

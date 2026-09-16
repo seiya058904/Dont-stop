@@ -335,7 +335,7 @@ func perform_attack():
 			# elite modifier rather than only with the telegraph.
 			var reach = 58 if elite_modifier() == "cluster" else 42
 			if global_position.distance_to(Utils.player.global_position)<=reach and Combat.clear_line(global_position,Utils.player.global_position):
-				Utils.player.onHit(boost*contact_damage(),self)
+				Utils.player.onHit(boost*contact_damage(),self,1.0,"detonate")
 			last_context = {"depth":1}; onDie()
 		"E07": summon(2 if elite_modifier() == "hive" else 1); phase_time = 2.0
 		"E08":
@@ -496,7 +496,7 @@ func _enter_phase(tier: int):
 
 func contact(reach: float):
 	if global_position.distance_to(Utils.player.global_position)<reach and contact_cooldown<=0:
-		Utils.player.onHit(contact_damage(),self)
+		Utils.player.onHit(contact_damage(),self,1.0,"contact")
 		contact_cooldown = 0.85; remember("contact")
 
 func movement_target(distance: float) -> Vector2:

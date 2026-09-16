@@ -41,10 +41,10 @@ func _draw():
 		for offset in [-10,0,10]: draw_line(Vector2(-19,offset),Vector2(19,-offset),Color(0.8,0.45,1),2)
 	elif cc_immunity>0: draw_arc(Vector2(0,4),19,0,TAU,32,Color(0.35,1,0.85,0.8),2)
 
-func on_percentage_hit(fraction: float, attacker = null):
+func on_percentage_hit(fraction: float, attacker = null, source := "percentage"):
 	# Percentage is resolved from current maximum HP and follows defense/rewards.
 	incoming_percentage = true
-	onHit(PlayerData.player_hp_max*clampf(fraction,0,0.35),attacker,0.0)
+	onHit(PlayerData.player_hp_max*clampf(fraction,0,0.35),attacker,0.0,source)
 	incoming_percentage = false
 
 var SPEED = 100.0
@@ -201,7 +201,15 @@ func gunAnim():
 
 signal incoming_hit(raw: float, applied: float, boss: bool)
 
-func onHit(hurt, attacker = null, minimum_pressure = 1.0):
+## Attribution channel. `incoming_hit` keeps its exact 3-argument signature because every
+## existing audit connects to it, and it cannot say WHICH mechanism produced a hit: a
+## HostileZone, a StageHazard and an arena poison tick all hand their owner in as `attacker`,
+## so the attacker alone cannot separate a beam from artillery from a ground hazard.
+## `source` is the mechanism tag the call site states. Nothing in the damage pipeline reads it
+## back - it is written once and emitted, so it cannot change what a hit does.
+signal damage_taken(raw: float, applied: float, source: String, attacker: Node)
+
+func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	# E2E driver mode keeps the test character alive so real inputs can be
 	# asserted against; gated behind the --e2e cmdline flag only.
 	if "--e2e" in OS.get_cmdline_args() or "--e2e" in OS.get_cmdline_user_args(): return
@@ -225,6 +233,7 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0):
 	if is_instance_valid(attacker) and not incoming_percentage:
 		hurt *= DemoConfig.BOSS_INCOMING if boss_source else DemoConfig.NORMAL_INCOMING
 	incoming_hit.emit(raw_pressure,hurt,boss_source)
+	damage_taken.emit(raw_pressure,hurt,source,attacker if is_instance_valid(attacker) else null)
 	PlayerData.player_hp -= hurt
 	for node in nodes:
 		if node.has_method("received"): node.received()
