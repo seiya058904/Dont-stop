@@ -1,0 +1,477 @@
+{
+	"rows": [
+		{
+			"alive_mean": 1.0,
+			"alive_peak": 1,
+			"boss": "B03",
+			"boss_hp_max": 9800.0,
+			"clear": true,
+			"closest_spawn": 207.623931884766,
+			"damage_by_category": [
+				{
+					"applied": 1.20474,
+					"category": "enemy_projectile",
+					"hits": 6,
+					"share": 1.0
+				}
+			],
+			"damage_by_tag": [
+				{
+					"applied": 1.20474,
+					"category": "enemy_projectile",
+					"hits": 6,
+					"raw": 1.08,
+					"tag": "shot:projectile"
+				}
+			],
+			"damage_total": 1.20474,
+			"death": false,
+			"death_at": -1.0,
+			"death_snapshot": {},
+			"denial_events": [],
+			"denial_modes": [],
+			"denial_samples": 0,
+			"denial_streak_peak": 0,
+			"elite_peak": 0,
+			"escape_peak_live_footprints": 5,
+			"flank_arrivals": 0,
+			"geometric_denial_samples": 0,
+			"geometric_modes": [],
+			"geometric_streak_peak": 0,
+			"gun": 124,
+			"hazard_peak": 1,
+			"hits_total": 6,
+			"horde_overlap_peak": 0,
+			"hostile_zone_peak": 4,
+			"hp_min": 6.79526,
+			"illegal_near_spawns": 0,
+			"mode": "boss-fair",
+			"movement": 10111.8693227768,
+			"near80_peak": 1,
+			"outcome": "clear",
+			"peak_owned_zones": 4,
+			"pool": 8,
+			"post_root_damage": 0.0,
+			"post_root_hits": 0,
+			"probe_samples": 841,
+			"projectile_peak": 50,
+			"rooted_damage": 0.0,
+			"rooted_hits": 0,
+			"round_ms": 86985,
+			"samples": 841,
+			"seconds": 87.287,
+			"seed": 4201,
+			"shots": 1566,
+			"spawns": 1,
+			"special_ratio": 1.0,
+			"special_spawns": 1,
+			"stage": 30,
+			"strict_denial_samples": 0,
+			"tag": "final",
+			"time_to_first_damage": 41.153,
+			"travel_speed": 109.0,
+			"truncated": false
+		},
+		{
+			"alive_mean": 1.0,
+			"alive_peak": 1,
+			"boss": "B03",
+			"boss_hp_max": 9800.0,
+			"clear": false,
+			"closest_spawn": 161.987655639648,
+			"damage_by_category": [
+				{
+					"applied": 4.2,
+					"category": "arena_hazard",
+					"hits": 4,
+					"share": 0.474688909232699
+				},
+				{
+					"applied": 2.64,
+					"category": "boss_percentage",
+					"hits": 1,
+					"share": 0.298375885803411
+				},
+				{
+					"applied": 2.0079,
+					"category": "enemy_projectile",
+					"hits": 10,
+					"share": 0.22693520496389
+				}
+			],
+			"damage_by_tag": [
+				{
+					"applied": 4.2,
+					"category": "arena_hazard",
+					"hits": 4,
+					"raw": 4.2,
+					"tag": "hazard_laser"
+				},
+				{
+					"applied": 2.64,
+					"category": "boss_percentage",
+					"hits": 1,
+					"raw": 2.64,
+					"tag": "boss_percentage"
+				},
+				{
+					"applied": 2.0079,
+					"category": "enemy_projectile",
+					"hits": 10,
+					"raw": 1.8,
+					"tag": "shot:projectile"
+				}
+			],
+			"damage_total": 8.8479,
+			"death": true,
+			"death_at": 41.344,
+			"death_snapshot": {
+				"alive": 1,
+				"at": 41.344,
+				"boss_action": "warn:dash",
+				"escape": {
+					"fair_modes": [
+						"hazard_laser"
+					],
+					"modes": [
+						"hazard_laser"
+					],
+					"reachable": 42,
+					"safe_fair": 22,
+					"safe_now": 22,
+					"safe_timed": 22,
+					"threats": 1
+				},
+				"fog": false,
+				"hazards": {
+					"laser": 1
+				},
+				"lethal": {
+					"applied": 1.05,
+					"at": 41.344,
+					"attacker": "",
+					"category": "arena_hazard",
+					"hp_before": 0.202100000000003,
+					"tag": "hazard_laser"
+				},
+				"phase": "2",
+				"projectiles": 44,
+				"sequence": [
+					{
+						"applied": 1.05,
+						"at": 40.288,
+						"attacker": "",
+						"hp": 3.3521,
+						"post_root": false,
+						"rooted": false,
+						"tag": "hazard_laser"
+					},
+					{
+						"applied": 1.05,
+						"at": 40.64,
+						"attacker": "",
+						"hp": 2.3021,
+						"post_root": false,
+						"rooted": false,
+						"tag": "hazard_laser"
+					},
+					{
+						"applied": 1.05,
+						"at": 40.992,
+						"attacker": "",
+						"hp": 1.2521,
+						"post_root": false,
+						"rooted": false,
+						"tag": "hazard_laser"
+					},
+					{
+						"applied": 1.05,
+						"at": 41.344,
+						"attacker": "",
+						"hp": 0.202100000000003,
+						"post_root": false,
+						"rooted": false,
+						"tag": "hazard_laser"
+					}
+				],
+				"zones": {}
+			},
+			"denial_events": [],
+			"denial_modes": [],
+			"denial_samples": 0,
+			"denial_streak_peak": 0,
+			"elite_peak": 0,
+			"escape_peak_live_footprints": 2,
+			"flank_arrivals": 0,
+			"geometric_denial_samples": 0,
+			"geometric_modes": [],
+			"geometric_streak_peak": 0,
+			"gun": 124,
+			"hazard_peak": 1,
+			"hits_total": 15,
+			"horde_overlap_peak": 0,
+			"hostile_zone_peak": 2,
+			"hp_min": 0.202100000000003,
+			"illegal_near_spawns": 0,
+			"mode": "boss-fair",
+			"movement": 4994.1584995985,
+			"near80_peak": 1,
+			"outcome": "death",
+			"peak_owned_zones": 2,
+			"pool": 8,
+			"post_root_damage": 0.0,
+			"post_root_hits": 0,
+			"probe_samples": 400,
+			"projectile_peak": 52,
+			"rooted_damage": 0.0,
+			"rooted_hits": 0,
+			"round_ms": 41343,
+			"samples": 400,
+			"seconds": 41.345,
+			"seed": 4202,
+			"shots": 753,
+			"spawns": 1,
+			"special_ratio": 1.0,
+			"special_spawns": 1,
+			"stage": 30,
+			"strict_denial_samples": 0,
+			"tag": "final",
+			"time_to_first_damage": 10.88,
+			"travel_speed": 109.0,
+			"truncated": false
+		},
+		{
+			"alive_mean": 1.0,
+			"alive_peak": 1,
+			"boss": "B03",
+			"boss_hp_max": 9800.0,
+			"clear": false,
+			"closest_spawn": 217.07551574707,
+			"damage_by_category": [
+				{
+					"applied": 5.28,
+					"category": "boss_percentage",
+					"hits": 2,
+					"share": 0.596540741586008
+				},
+				{
+					"applied": 1.40553,
+					"category": "enemy_projectile",
+					"hits": 7,
+					"share": 0.158798467522989
+				},
+				{
+					"applied": 1.1155,
+					"category": "beam_or_hostile_zone",
+					"hits": 1,
+					"share": 0.12603052978015
+				},
+				{
+					"applied": 1.05,
+					"category": "arena_hazard",
+					"hits": 1,
+					"share": 0.118630261110854
+				}
+			],
+			"damage_by_tag": [
+				{
+					"applied": 5.28,
+					"category": "boss_percentage",
+					"hits": 2,
+					"raw": 5.28,
+					"tag": "boss_percentage"
+				},
+				{
+					"applied": 1.40553,
+					"category": "enemy_projectile",
+					"hits": 7,
+					"raw": 1.26,
+					"tag": "shot:projectile"
+				},
+				{
+					"applied": 1.1155,
+					"category": "beam_or_hostile_zone",
+					"hits": 1,
+					"raw": 1.0,
+					"tag": "line"
+				},
+				{
+					"applied": 1.05,
+					"category": "arena_hazard",
+					"hits": 1,
+					"raw": 1.05,
+					"tag": "hazard_laser"
+				}
+			],
+			"damage_total": 8.85103,
+			"death": true,
+			"death_at": 64.175,
+			"death_snapshot": {
+				"alive": 1,
+				"at": 64.175,
+				"boss_action": "recover:ultimate",
+				"escape": {
+					"fair_modes": [],
+					"modes": [],
+					"reachable": 32,
+					"safe_fair": 32,
+					"safe_now": 32,
+					"safe_timed": 32,
+					"threats": 1
+				},
+				"fog": false,
+				"hazards": {
+					"laser": 1
+				},
+				"lethal": {
+					"applied": 2.64,
+					"at": 64.175,
+					"attacker": "B03+boss",
+					"category": "boss_percentage",
+					"hp_before": 1.78897,
+					"tag": "boss_percentage"
+				},
+				"phase": "3",
+				"projectiles": 0,
+				"sequence": [
+					{
+						"applied": 2.64,
+						"at": 64.175,
+						"attacker": "B03+boss",
+						"hp": 1.78897,
+						"post_root": false,
+						"rooted": false,
+						"tag": "boss_percentage"
+					}
+				],
+				"zones": {}
+			},
+			"denial_events": [],
+			"denial_modes": [],
+			"denial_samples": 0,
+			"denial_streak_peak": 0,
+			"elite_peak": 0,
+			"escape_peak_live_footprints": 4,
+			"flank_arrivals": 0,
+			"geometric_denial_samples": 0,
+			"geometric_modes": [],
+			"geometric_streak_peak": 0,
+			"gun": 124,
+			"hazard_peak": 1,
+			"hits_total": 11,
+			"horde_overlap_peak": 0,
+			"hostile_zone_peak": 4,
+			"hp_min": 1.78897,
+			"illegal_near_spawns": 0,
+			"mode": "boss-fair",
+			"movement": 7560.09991240501,
+			"near80_peak": 1,
+			"outcome": "death",
+			"peak_owned_zones": 4,
+			"pool": 8,
+			"post_root_damage": 0.0,
+			"post_root_hits": 0,
+			"probe_samples": 620,
+			"projectile_peak": 51,
+			"rooted_damage": 0.0,
+			"rooted_hits": 0,
+			"round_ms": 64194,
+			"samples": 620,
+			"seconds": 64.196,
+			"seed": 4203,
+			"shots": 1149,
+			"spawns": 1,
+			"special_ratio": 1.0,
+			"special_spawns": 1,
+			"stage": 30,
+			"strict_denial_samples": 0,
+			"tag": "final",
+			"time_to_first_damage": 8.492,
+			"travel_speed": 109.0,
+			"truncated": false
+		}
+	],
+	"verdicts": [
+		{
+			"death_boss_action": "",
+			"death_fog": false,
+			"death_hazards": {},
+			"death_phase": "",
+			"death_projectiles": 0,
+			"death_zones": {},
+			"denial_events": 0,
+			"denial_streak_peak": 0,
+			"escape_at_death": {},
+			"killer": "",
+			"killer_category": "",
+			"max_combo": 0,
+			"outcome": "clear",
+			"seconds": 87.287,
+			"simultaneous_footprints": 0,
+			"stage": 30,
+			"unavoidable": false
+		},
+		{
+			"death_boss_action": "warn:dash",
+			"death_fog": false,
+			"death_hazards": {
+				"laser": 1
+			},
+			"death_phase": "2",
+			"death_projectiles": 44,
+			"death_zones": {},
+			"denial_events": 0,
+			"denial_streak_peak": 0,
+			"escape_at_death": {
+				"fair_modes": [
+					"hazard_laser"
+				],
+				"modes": [
+					"hazard_laser"
+				],
+				"reachable": 42,
+				"safe_fair": 22,
+				"safe_now": 22,
+				"safe_timed": 22,
+				"threats": 1
+			},
+			"killer": "hazard_laser",
+			"killer_category": "arena_hazard",
+			"max_combo": 0,
+			"outcome": "death",
+			"seconds": 41.345,
+			"simultaneous_footprints": 0,
+			"stage": 30,
+			"unavoidable": false
+		},
+		{
+			"death_boss_action": "recover:ultimate",
+			"death_fog": false,
+			"death_hazards": {
+				"laser": 1
+			},
+			"death_phase": "3",
+			"death_projectiles": 0,
+			"death_zones": {},
+			"denial_events": 0,
+			"denial_streak_peak": 0,
+			"escape_at_death": {
+				"fair_modes": [],
+				"modes": [],
+				"reachable": 32,
+				"safe_fair": 32,
+				"safe_now": 32,
+				"safe_timed": 32,
+				"threats": 1
+			},
+			"killer": "boss_percentage",
+			"killer_category": "boss_percentage",
+			"max_combo": 0,
+			"outcome": "death",
+			"seconds": 64.196,
+			"simultaneous_footprints": 0,
+			"stage": 30,
+			"unavoidable": false
+		}
+	]
+}

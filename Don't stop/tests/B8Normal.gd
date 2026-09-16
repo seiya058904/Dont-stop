@@ -31,7 +31,16 @@ const TYPICAL_REWARDS := [12,14,17,18,20,21,22,23]
 const BUDGET_MS := 62000
 const EVIDENCE := "res://docs/iteration/evidence/b8"
 
+## The `typical` bundle, installed exactly the way tests/M10Density.gd installs it.
+##
+## The leading configure(124,true) is not decoration: M10Density buys weapon 124 and every
+## attachment and talent BEFORE it overwrites the build with the typical bundle, so the owned
+## attachment set, the talent payment ledger and Demo.applied_talent_hp are all in that state
+## when the measured rounds run. Installing only the three dictionaries would leave the gun's
+## attachment set different from the run whose 22/26/29 deaths are being explained, which would
+## make every comparison to last round meaningless.
 func ready_build() -> void:
+	configure(124,true)
 	Demo.owned_global_upgrades = TYPICAL_UPGRADES.duplicate()
 	Demo.talents = TYPICAL_TALENTS.duplicate()
 	for id in TYPICAL_REWARDS:

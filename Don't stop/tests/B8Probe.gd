@@ -155,9 +155,18 @@ func _on_damage(raw: float, applied: float, tag: String, attacker) -> void:
 	# The killing blow: the damage that takes the pool to zero or below. PlayerData.player_hp
 	# is still pre-hit here because Hero emits before subtracting, which is what lets this be
 	# attributed to the exact mechanism instead of guessed from the last sample.
+	#
+	# The death context is captured HERE rather than by the 10 Hz sampler. The sampler's first
+	# look after a death can already be a tick too late - LevelServer._timeout() flips the round
+	# to DEAD the moment the player dies, and half a second later return_to_camp() frees every
+	# zone, hazard and projectile. At this instant the arena is provably still standing, so the
+	# snapshot is the state that actually killed the player instead of whatever survived it. A
+	# first B8 run lost every death snapshot to that race.
 	if PlayerData.player_hp - applied <= 0.0 and lethal.is_empty():
 		lethal = {"at":now,"tag":tag,"applied":applied,"attacker":who,"hp_before":float(PlayerData.player_hp)}
 		lethal.category = category_for(tag,attacker)
+		death_at = now
+		death_snapshot = _snapshot(now)
 
 func attach_telemetry() -> void:
 	if not Utils.player.damage_taken.is_connected(_on_damage):
@@ -328,7 +337,17 @@ func _process(delta: float) -> void:
 
 func _sample() -> void:
 	var player = Utils.player
-	if not is_instance_valid(player) or LevelServer.state != "COMBAT": return
+	if not is_instance_valid(player): return
+	# Death is checked BEFORE the round-state gate. LevelServer flips to DEAD as soon as the
+	# player dies, and return_to_camp() after that frees the arena, so gating on COMBAT here
+	# would throw the death context away. This is the fallback path; the primary capture is in
+	# the damage handler, where the arena is provably still alive.
+	if player.is_dead:
+		if death_at < 0.0:
+			death_at = _now()
+			death_snapshot = _snapshot(death_at)
+		return
+	if LevelServer.state != "COMBAT": return
 	var now := _now()
 	var actors = get_tree().get_nodes_in_group("monsters").filter(func(n): return not n.is_die and not n.training)
 	var alive = actors.size()

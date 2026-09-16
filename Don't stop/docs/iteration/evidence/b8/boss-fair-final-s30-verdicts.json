@@ -1,0 +1,83 @@
+[
+	{
+		"death_boss_action": "",
+		"death_fog": false,
+		"death_hazards": {},
+		"death_phase": "",
+		"death_projectiles": 0,
+		"death_zones": {},
+		"denial_events": 0,
+		"denial_streak_peak": 0,
+		"escape_at_death": {},
+		"killer": "",
+		"killer_category": "",
+		"max_combo": 0,
+		"outcome": "clear",
+		"seconds": 87.287,
+		"simultaneous_footprints": 0,
+		"stage": 30,
+		"unavoidable": false
+	},
+	{
+		"death_boss_action": "warn:dash",
+		"death_fog": false,
+		"death_hazards": {
+			"laser": 1
+		},
+		"death_phase": "2",
+		"death_projectiles": 44,
+		"death_zones": {},
+		"denial_events": 0,
+		"denial_streak_peak": 0,
+		"escape_at_death": {
+			"fair_modes": [
+				"hazard_laser"
+			],
+			"modes": [
+				"hazard_laser"
+			],
+			"reachable": 42,
+			"safe_fair": 22,
+			"safe_now": 22,
+			"safe_timed": 22,
+			"threats": 1
+		},
+		"killer": "hazard_laser",
+		"killer_category": "arena_hazard",
+		"max_combo": 0,
+		"outcome": "death",
+		"seconds": 41.345,
+		"simultaneous_footprints": 0,
+		"stage": 30,
+		"unavoidable": false
+	},
+	{
+		"death_boss_action": "recover:ultimate",
+		"death_fog": false,
+		"death_hazards": {
+			"laser": 1
+		},
+		"death_phase": "3",
+		"death_projectiles": 0,
+		"death_zones": {},
+		"denial_events": 0,
+		"denial_streak_peak": 0,
+		"escape_at_death": {
+			"fair_modes": [],
+			"modes": [],
+			"reachable": 32,
+			"safe_fair": 32,
+			"safe_now": 32,
+			"safe_timed": 32,
+			"threats": 1
+		},
+		"killer": "boss_percentage",
+		"killer_category": "boss_percentage",
+		"max_combo": 0,
+		"outcome": "death",
+		"seconds": 64.196,
+		"simultaneous_footprints": 0,
+		"stage": 30,
+		"unavoidable": false
+	}
+]

@@ -1,0 +1,121 @@
+[
+	{
+		"alive_mean": 12.7482678983834,
+		"alive_peak": 32,
+		"clear": true,
+		"closest_spawn": 112.078186035156,
+		"damage_by_category": [
+			{
+				"applied": 5.25,
+				"category": "normal_contact",
+				"hits": 6,
+				"share": 0.625
+			},
+			{
+				"applied": 3.15,
+				"category": "beam_or_hostile_zone",
+				"hits": 4,
+				"share": 0.375
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 5.25,
+				"category": "normal_contact",
+				"hits": 6,
+				"raw": 6.0,
+				"tag": "contact"
+			},
+			{
+				"applied": 3.15,
+				"category": "beam_or_hostile_zone",
+				"hits": 4,
+				"raw": 3.6,
+				"tag": "cone"
+			}
+		],
+		"damage_total": 8.4,
+		"death": false,
+		"death_at": -1.0,
+		"death_snapshot": {},
+		"denial_events": [
+			{
+				"at": 35.725,
+				"modes": [
+					"cone"
+				]
+			},
+			{
+				"at": 37.277,
+				"modes": [
+					"cone"
+				]
+			}
+		],
+		"denial_modes": [
+			"cone"
+		],
+		"denial_samples": 18,
+		"denial_streak_peak": 8,
+		"elite_peak": 0,
+		"escape_peak_live_footprints": 2,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 1,
+		"geometric_modes": [
+			"cone"
+		],
+		"geometric_streak_peak": 1,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 10,
+		"horde_overlap_peak": 1,
+		"hostile_zone_peak": 10,
+		"hp_max": 8,
+		"hp_min": 2.375,
+		"illegal_near_spawns": 0,
+		"level_after": 8,
+		"level_before": 7,
+		"mode": "batch",
+		"movement": 3534.23619553261,
+		"near80_peak": 10,
+		"outcome": "clear",
+		"pin_level": 7,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 433,
+		"projectile_peak": 0,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 44947,
+		"samples": 433,
+		"seconds": 45.04,
+		"seed": 9101,
+		"shots": 86,
+		"spawns": 124,
+		"special_ratio": 0.362903225806452,
+		"special_spawns": 45,
+		"stage": 21,
+		"strict_denial_samples": 1,
+		"tag": "sanity",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 30.509,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	}
+]

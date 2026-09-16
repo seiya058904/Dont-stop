@@ -1,16 +1,20 @@
 # B8 frozen measurement instrument
-# FROZEN BEFORE THE FIRST LONG RUN. From this point on, no probe, fixture, driver or
-# measurement definition may change until the batch it belongs to has finished; a change
-# invalidates that batch and requires a fresh one.
-# base_commit=594bdcd180cc96a8ab2fe62b16b48e241afae257
-c0a7fd48818ceb461f47874b28359433d1a48c0f5d88e3dcd8573e34fb51b8f2  tests/B8Probe.gd
-225d2b5bcbca81d10e217bb478b3b856447c8c9247a58d967b89cf483c90f9fd  tests/B8Normal.gd
+# FROZEN. From this point on, no probe, fixture, driver, build fixture or measurement
+# definition changes until the batch it belongs to has finished; a change invalidates that
+# batch and requires a fresh one. The baseline sequence run of 2026-02-24 was discarded for
+# exactly this reason: its probe lost every death snapshot to a round-state race.
+# Validated by tools/b8-run.ps1 -Scene B8Contracts: 52 checks, 0 failures.
+# base_commit=e0f41032bfad76698b6132393de9e8fb57fae9d2
+89449d7da9130451825c2fd3494d7d5deaaca0634861fd6536b753340a3d38a6  tests/B8Probe.gd
+b4c37f24a1aabf9661e9298c309f371f218f1daf0650a927229157f41d41a463  tests/B8Normal.gd
 7a82c09682f7044dfcc6c7352a9aa33dcde83998ab72fb8c8cc3b9526758ca2c  tests/B8BossFair.gd
-418eb2240258368790f7680c6e7e9e572395e0701adf268830977a2660c10d9d  tests/B8Contracts.gd
+94b9b399394d3f6cf76ae8602233afa8ded7fa092aa3879c4f2bf95d7d4be068  tests/B8Contracts.gd
 7ddda656418db85caf2034a1b73e83dc7084004f3785f1a467e3729ef4aaf8e6  tests/B8Normal.tscn
 da8a22a921fb5afca05aa9769199e3db078da3f3eb33391b7b99bdeb22a18cb0  tests/B8BossFair.tscn
 d9983062694ad9bb949abe535e22cfbfe67aa8b1467a41776423a40f995591ae  tests/B8Contracts.tscn
 0e8de3a64d8d5bc667d2484dacb203331b2860ce42017148c783e87938437303  tools/b8-run.ps1
+a2b821c3f7c2ed8e707bb2afe5343d38367fe7ea2baaac070e30b069281c01cd  tools/b8-batch.ps1
+3bf3a00e4d43e4bdbdf81fde5c8afb32af6ae78c0f9272724e0b648fecc8aabd  tools/b8-summary.py
 7fdf17ee743f08c4251c0eaaab6a0184f85e66a88d3755197b9b209a2426f0ce  game/hero/Hero.gd
 039119c79de2eae357a25b820dac3c142acdb89bf3dda9c7daa4746cae980db0  game/monster/DemoEnemy.gd
 7f97efea9d01fdde26715dd2ab6741c9e699259bcdbf1773ff66e7c6c8e3c8ec  game/monster/TacticalEnemy.gd

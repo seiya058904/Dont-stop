@@ -114,6 +114,12 @@ func _ready():
 	configure(117,false)
 	Demo.talents = {}
 	Demo.refresh()
+	# The probe's OWN ledger path is what the batch relies on, so the contract has to drive it
+	# and cross-check it rather than only watching the raw signal itself. attach_telemetry()
+	# connects the probe's handler; the two observers below are the independent reference the
+	# probe is compared against.
+	attach_telemetry()
+	reset_telemetry()
 	Utils.player.damage_taken.connect(_observe)
 	Utils.player.incoming_hit.connect(_pair)
 	dummy = Node2D.new()
@@ -124,7 +130,7 @@ func _ready():
 	# round is running: the round timer is only started by LevelServer.roundStart().
 	live_state()
 	PlayerData.player_hp_max = 100; PlayerData.player_hp = 100
-	reset_watch()
+	reset_watch(); reset_telemetry()
 	Utils.player.onHit(4.0,dummy)
 	check(observed.size() == 1 and paired.size() == 1,"a real hit is reported on both channels")
 	check(is_equal_approx(first_applied(),paired_applied()) and is_equal_approx(first_raw(),paired_raw()),
@@ -132,6 +138,10 @@ func _ready():
 	check(is_equal_approx(first_applied(),4.0*DemoConfig.NORMAL_INCOMING),
 		"a non-boss hit still takes the normal incoming multiplier (%.4f)" % first_applied())
 	check(is_equal_approx(float(PlayerData.player_hp),100.0-first_applied()),"HP moved by exactly the reported amount")
+	check(total_hits == 1 and is_equal_approx(total_applied,first_applied()),
+		"the probe's own ledger agrees with the raw signal (%d hits, %.4f)" % [total_hits,total_applied])
+	check(is_equal_approx(float(ledger.get("",{}).get("applied",-1.0)),first_applied()),
+		"the probe's per-mechanism table agrees with the raw signal")
 	PlayerData.player_hp = 100
 	reset_watch()
 	Utils.player.onHit(0.4,dummy,0.0)
@@ -304,6 +314,35 @@ func _ready():
 	ArenaVisibility.reset()
 	check(not ArenaVisibility.fog_active(),"the fog gate is released again")
 	retire(gated)
+	await clear_transients()
+	LevelServer.state = "CAMP"
+
+	# ---- 4. the death snapshot survives the round-state flip -------------------------------
+	# LevelServer leaves COMBAT the moment the player dies, and return_to_camp() then frees every
+	# zone, hazard and projectile. A sampler that gates on COMBAT therefore throws the death
+	# context away - which is exactly what happened to the first B8 baseline run. The snapshot is
+	# captured inside the damage handler instead, where the arena is provably still standing.
+	live_state()
+	PlayerData.player_hp_max = 200; PlayerData.player_hp = 200
+	PlayerData.resurrectPlayer(200,0)
+	reset_watch(); reset_telemetry()
+	var killer = drop_zone("artillery",Utils.player.global_position+Vector2(4,0),46.0,0.05,1.0,null,"",3.0)
+	check(is_instance_valid(killer),"a live damaging footprint exists for the death contract")
+	PlayerData.player_hp = 0.5
+	await wait(0.8)
+	check(observed.size() > 0,"the live footprint dealt damage that reached the ledger")
+	check(Utils.player.is_dead,"the live footprint really killed the player")
+	check(not death_snapshot.is_empty(),"a lethal hit captured the death context")
+	var snap_lethal = death_snapshot.get("lethal",{})
+	check(str(snap_lethal.get("tag","")) == "artillery","the death context names the mechanism that killed (%s)" % str(snap_lethal.get("tag","")))
+	check(str(snap_lethal.get("category","")) == "artillery","the death context names the category that killed (%s)" % str(snap_lethal.get("category","")))
+	var snap_zones: Dictionary = death_snapshot.get("zones",{})
+	check(int(snap_zones.get("artillery",0)) >= 1,"the death context lists the footprints that were live (%s)" % str(snap_zones))
+	check(death_at > 0.0,"the death time was recorded")
+	check(is_instance_valid(killer),"the killing footprint was still alive when the snapshot was taken")
+	retire(killer)
+	PlayerData.resurrectPlayer(200,100)
+	Utils.player.is_dead = false
 	await clear_transients()
 	LevelServer.state = "CAMP"
 
