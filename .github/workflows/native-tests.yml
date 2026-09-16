@@ -13,6 +13,14 @@ name: Native gameplay tests
 # engine state, printed counters and saved JSON. No screenshot diffing, no page.evaluate.
 on:
   push:
+    # A docs-only push cannot change what these tests observe, and the whole suite costs about
+    # 30 runner-minutes. deploy-pages.yml already skips its heavy jobs for a docs-only change;
+    # this matches it. No test reads a fixture out of docs/ - M11SaveMigration's fixture lives in
+    # tests/fixtures/ and everything under docs/iteration/evidence is OUTPUT the tests write.
+    # pull_request is deliberately NOT filtered: a PR always gets the full suite.
+    paths-ignore:
+      - "Don't stop/docs/**"
+      - "**/*.md"
   pull_request:
   workflow_dispatch:
 permissions:
