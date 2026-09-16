@@ -12,7 +12,12 @@
 在线烟测从"重跑整套"改成**≤5 分钟的指纹 + 一次状态走查**，并且部署的字节被 digest 锁死为
 "测过的那一份"。
 
-真实数据与两次 run 见第 5 节；同口径降幅 **1 h 25 m 52 s → 10 m 43 s（−87.5%）**。
+第三轮把最后一个截图型门禁 `aim-e2e` 也迁到只读 probe 通道，同一口径再降到
+**真机实测 8 分 25 秒**（`aim-e2e` 9 m 48 s → 7 m 11 s）。**但 `aim-e2e` 的 1–3 min 目标没有达成**：
+瓶颈已经从"页面往返"变成"runner 上 ≈1 fps 的帧率 × 契约要求的状态迁移数"，脚本侧没有剩余空间。
+如实记录见第 5.5 节。
+
+真实数据与三次 run 见第 5 节；同口径降幅 **1 h 25 m 52 s → 8 m 25 s（−90.2%）**。
 
 ---
 
@@ -163,6 +168,7 @@ changes(秒级)  ─►  build(一次，产出唯一致测字节 + 指纹)
 | --- | --- | --- | --- |
 | [35051149300](https://github.com/seiya058904/Dont-stop/actions/runs/35051149300) | failure | 首次真机：门禁暴露一个**阈值标定 bug**（第 5.1 节） | 11 m 11 s |
 | [35052512912](https://github.com/seiya058904/Dont-stop/actions/runs/35052512912) | **success** | 修复后全绿：4 门禁 PASS，deploy / online 跳过 | **10 m 43 s** |
+| [35056975522](https://github.com/seiya058904/Dont-stop/actions/runs/35056975522) | **success** | aim-e2e 迁到只读 probe 通道后全绿（第 5.5 节） | **8 m 25 s** |
 
 > 耗时口径：表里的数字是**关键路径**（第一个 job 开始 → 最后一个 job 结束）。
 > GitHub 页面显示的 run 时长略大（含排队与收尾）：run `35052512912` = 10 m 47 s，
@@ -239,6 +245,67 @@ run `35051149300` 是**冷缓存**：两项都 miss 并各自写出缓存键—�
 | menu-return（RELEASE） | **133 / 133 token 全 true，`RESULT=PASS`**，`WALL_CLOCK 392 856 ms` | **PASS** |
 | deploy / online-smoke | — | **skipped（有意）** |
 
+### 5.5 第三轮：`aim-e2e` 迁到只读 probe 通道（run `35056975522`）
+
+**这一轮只动 `tools/web-aim-e2e.js`**（外加 `Smoke.gd` 的只读字段与 `loader.html` 的参数组合），
+不碰游戏业务逻辑、Web 输入方案、枪械逻辑、`smoke-web.js`、`save-audit-web.js`、menu-return 语义、
+`main`、Pages，不开始 B批。分支 `feat/dont-stop-revision`，dispatch 参数 `deploy=false`。
+
+#### 真实数字（GitHub runner，非估算）
+
+| 阶段 | run `35052512912`（前） | run `35056975522`（后） | 变化 |
+| --- | --- | --- | --- |
+| Scope | 8 s | 10 s | — |
+| build | 43 s | 53 s | — |
+| └ smoke（FAST） | 5 m 05 s | 4 m 51 s | — |
+| └ save-audit（FAST） | 6 m 32 s | 6 m 35 s | — |
+| └ **aim-e2e（RELEASE）** | **9 m 48 s** | **7 m 11 s** | **−2 m 37 s（−27%）** |
+| └ menu-return（RELEASE，5 轮） | 7 m 16 s | 7 m 04 s | — |
+| deploy / online smoke | skipped | **skipped** | — |
+| **候选分支整条（关键路径）** | **10 m 43 s** | **8 m 25 s** | **−2 m 18 s（−21%）** |
+
+门禁结果：4 门禁全 PASS；aim-e2e **65 required / 0 false / 65 total，`RESULT=PASS`**。
+
+#### 目标未达成，如实记录
+
+本轮的既定目标是 **aim-e2e ≤3 min（≤5 min 可接受）**，实测 **7 m 11 s**，**没有达标**。
+原因是瓶颈已经**不是**页面往返，而是 **runner 的帧率本身**。run 里的实测：
+
+```
+note the machine under test reports fps=1 (a rate is reported, never asserted: the product is not a frame-rate test)
+```
+
+CI 上游戏跑 ≈1 fps，于是一次"状态等待"最少就是一帧 ≈1.1 s，而脚本本身**只按状态推进**：
+
+| 阶段 | 实测 | 结构 |
+| --- | --- | --- |
+| A（真实入口：瞄准/十字线/360°/WASD/暂停恢复） | 147 s | 16 次真实指针移动 + 6 次按键，每次 ≥3 帧 |
+| F（故障注入：loader 自己的 45 s 静默窗口） | 78 s | 45 s 是**产品的**窗口，测试不缩短（主线程被游戏占住，定时器还会晚触发） |
+| B（`?smoke=1&e2e=1` 打靶链） | 169 s | 62 s 用于启动一场真实 COMBAT，其余 5 发真实开火 |
+| 合计（脚本） | **≈394 s** | |
+
+其中 `A-aim-360` 单段 53 s = 12 次指针移动 × ≈4.4 s；每次移动 ≈3 帧（1 帧事件投递 + 2 帧观察）。
+**这些帧不是脚本制造的，是 24 条产品契约要求的状态迁移数 × runner 的 1 fps。**
+上一轮 `aim-e2e` 里那 68 s 的标定页加载与本轮删掉的像素判据已经拿掉了；剩下的地板在 runner 上。
+
+> 结论：**要再往 1–3 min 压，只能减少契约要求的状态迁移数（牺牲覆盖面），或者提高 runner 的帧率
+> （更强 CPU / 硬件加速）**，脚本侧没有剩下的空间。本轮就此停手，未继续动其他门禁。
+
+#### 这次实际删掉 / 保留的东西
+
+* 删除：`meanAbsDiff` / `hudCrop` / `liveAgain` 三个像素工具、**整页标定加载**（68 s）、
+  旧的 HUD 像素弹药判据、`?e2e` 文本流的 `parseState` 轮询，以及**全部 43 处 `waitForTimeout`**。
+* 页面往返：`page.screenshot` 的调用点 8 处（其中一个在 4 次重试的循环里 → 实际最多约 14 次）→ **4 处**，
+  且这 4 张都不作为判据；`page.evaluate` 10 处 → **5 处**（均为一次性 DOM 读，不再是轮询）。
+  旧脚本用 `hudCrop()` 反复截 HUD 并写到磁盘的
+  `aim-ammo-hud-before-shot.png` / `aim-ammo-hud-after-shot.png` 也一并删除。
+* 保留的视觉证据（仅存档，不参与判定）：`aim-01-entry-title.png`、`aim-02-crosshair-visible.png`、
+  `aim-03-fault-injection-cover.png`、`aim-04-fired-from-normal-entry.png`。
+* 新增的 probe 只读字段：`aimworld`、`projv`、`projang`、`projshots`、`fr`（fire_released）、`fps`，
+  以及一次性的 `[probe] proj-shot n=… vx=… vy=… speed=… aim=…` 事件行（`n` 是引擎自己的弹药序号，
+  用于把事件和具体某一发配对）。全部只读：不调 `_shoot()`、不写 `bullets_count`、不设瞄准、
+  不生成弹丸、不跳过 UI、不改暂停状态。
+
 ---
 
 ## 6. 改动文件
@@ -248,6 +315,7 @@ run `35051149300` 是**冷缓存**：两项都 miss 并各自写出缓存键—�
 | `autoload/Smoke.gd` | 新增 `--probe` 只读通道（`_start_probe` / `_probe_stream` / `_probe_report` / `_probe_report_rects`）；状态行增 `ingame`，矩形行增 `id`。**只读，不改任何游戏状态** |
 | `web/loader.html` | `?probe=1` → `GODOT_CONFIG.args = ['--probe']`（与 `?smoke` / `?e2e` 互斥分支） |
 | `tools/web-menu-return-e2e.js` | 重写为状态驱动：删除像素差与 instance-id 就绪判定，改用 `settlePaused()` / `waitRect()` / `waitState()`；blocked-input 改为"按住真实移动键 + 角色坐标未变"；token 83 → 133 |
+| `tools/web-aim-e2e.js` | 第三轮重写为只读状态驱动（第 5.5 节）：删除像素工具与整页标定加载、删除 HUD 弹药像素判据、43 处固定改状态等待；新增 `probe_ord` 配对的 `[probe] proj-shot` 事件与 `aimworld`/`projv`/`projang`/`fr`/`fps` 只读字段。24 条产品契约与 65 个 token 不变 |
 | `tools/online-smoke.js` | 新增：≤5 min 在线烟测（指纹 + 载荷 digest + 一次状态走查），28 token |
 | `tools/stamp-build-identity.py` | 新增：写 `dontstop-build` / `dontstop-artifact` 与 `build-identity.json`（本地与 CI 共用同一实现） |
 | `.github/workflows/deploy-pages.yml` | 重设计：单次构建 + 4 并行门禁 + PR 触发 + docs-only 跳过 + digest 身份 + 缓存 + 显式超时 + SOAK 排程 |
