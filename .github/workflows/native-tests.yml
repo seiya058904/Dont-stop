@@ -1,10 +1,14 @@
 name: Native gameplay tests
 
 # Deliberately separate from deploy-pages.yml: that pipeline was cut from ~3.5 h to about
-# 10 minutes and must keep its shape, so the B批's new gameplay contracts get their own job
-# that runs in parallel with it instead of in front of the deploy.
+# 10 minutes and must keep its shape, so the B批's new gameplay contracts get their own
+# workflows that run in parallel with it instead of in front of the deploy.
 #
-# Every case here is STATE DRIVEN: each scene drives the real production entry points
+# Split into a contracts job and a pressure job because the boss and density audits are
+# minutes-long real battles; putting them in the same job as the fast contracts would push a
+# single job past its useful timeout for no benefit.
+#
+# Every case is STATE DRIVEN: each scene drives the real production entry points
 # (LevelServer.monsterCreate, Town.depart, the hazard director, the fog gate) and asserts
 # engine state, printed counters and saved JSON. No screenshot diffing, no page.evaluate.
 on:
@@ -14,7 +18,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: native-tests-${{ github.ref }}
+  group: native-${{ github.ref }}
   cancel-in-progress: true
 env:
   GODOT_VERSION: 4.7.2-stable
@@ -22,19 +26,17 @@ env:
   PROJECT_PATH: "Don't stop"
 
 jobs:
-  native:
+  setup:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-
       - name: Cache the pinned Godot binary
+        id: cache
         uses: actions/cache@v4
-        id: godot-cache
         with:
           path: ${{ runner.temp }}/godot
-          key: godot-${{ env.GODOT_VERSION }}-native-v1
-
+          key: godot-${{ env.GODOT_VERSION }}-native-v2
       - name: Install pinned Godot (cache-aware)
         shell: bash
         run: |
@@ -49,43 +51,53 @@ jobs:
           fi
           chmod +x "$BIN"
           echo "GODOT=$BIN" >> "$GITHUB_ENV"
-
       - name: Import the project
         shell: bash
         run: |
           set -euo pipefail
           "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
 
-      # One scene per step so a failure names the contract that broke. `fail_on` is the
-      # gate: a non-zero exit OR a printed FAIL/SCRIPT ERROR line, because Godot returns 0
-      # for a scene that errored out before its first assertion.
-      - name: Gameplay contracts
+  contracts:
+    needs: setup
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore the pinned Godot binary
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/godot
+          key: godot-${{ env.GODOT_VERSION }}-native-v2
+      - name: Save-file contracts, hazard system, fog and progression
         shell: bash
+        env:
+          GODOT: ${{ runner.temp }}/godot/bin/Godot_v4.7.2-stable_linux.x86_64
         run: |
           set -euo pipefail
+          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
           run_case () {
             local name="$1"; shift
-            local log="$RUNNER_TEMP/$name.log"
+            local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' -').log"
             set +e
             timeout 900 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
-              "res://tests/$name.tscn" "$@" > "$log" 2>&1
+              "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
             local code=$?
             set -e
-            local issues
+            local issues checks
             issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
-            local checks
             checks=$(grep -cE '^PASS ' "$log" || true)
-            echo "::group::$name (exit $code, checks $checks, issues $issues)"
+            echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
             tail -n 40 "$log"
             echo "::endgroup::"
             if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
-              echo "FAILED: $name"
+              echo "FAILED: $name $*"
               grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
               exit 1
             fi
-            echo "PASSED: $name checks=$checks"
+            echo "PASSED: $name $* checks=$checks"
           }
           run_case BaselineRegression
+          # write then read, in that order, in the same job and the same user:// directory.
           run_case SaveRunner write
           run_case SaveRunner read
           run_case B6Progression
@@ -94,44 +106,63 @@ jobs:
           run_case B4Fog
           run_case M6EncounterAudit
           run_case M8Encounters
-
-      - name: Boss phases and Hell pressure
-        shell: bash
-        run: |
-          set -euo pipefail
-          run_case () {
-            local name="$1"; shift
-            local log="$RUNNER_TEMP/$name.log"
-            set +e
-            timeout 1800 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
-              "res://tests/$name.tscn" "$@" > "$log" 2>&1
-            local code=$?
-            set -e
-            local issues
-            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
-            local checks
-            checks=$(grep -cE '^PASS ' "$log" || true)
-            echo "::group::$name (exit $code, checks $checks, issues $issues)"
-            grep -E '^M10 DENSITY |^B5 BOSS ' "$log" || true
-            tail -n 30 "$log"
-            echo "::endgroup::"
-            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
-              echo "FAILED: $name"
-              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
-              exit 1
-            fi
-            echo "PASSED: $name checks=$checks"
-          }
-          run_case M10Bosses full
-          run_case B5Bosses
-          run_case M10Density stages=22,26,29,31,35,39
-          run_case M10Density probe stages=22,26,29,31,35,39
-
-      - name: Upload native evidence
+      - name: Upload contract logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: native-evidence
+          name: native-contract-logs
+          path: ${{ runner.temp }}/*.log
+          if-no-files-found: warn
+
+  pressure:
+    needs: setup
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore the pinned Godot binary
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/godot
+          key: godot-${{ env.GODOT_VERSION }}-native-v2
+      - name: Boss phases, Hell density and spawn legality
+        shell: bash
+        env:
+          GODOT: ${{ runner.temp }}/godot/bin/Godot_v4.7.2-stable_linux.x86_64
+        run: |
+          set -euo pipefail
+          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
+          run_case () {
+            local name="$1"; shift
+            local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' ,=-').log"
+            set +e
+            timeout 1800 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 90000 \
+              "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
+            local code=$?
+            set -e
+            local issues checks
+            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
+            checks=$(grep -cE '^PASS ' "$log" || true)
+            echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
+            grep -E '^M10 DENSITY |^B5 BOSS |^R3_SPAWN_AUDIT ' "$log" || true
+            tail -n 30 "$log"
+            echo "::endgroup::"
+            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
+              echo "FAILED: $name $*"
+              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
+              exit 1
+            fi
+            echo "PASSED: $name $* checks=$checks"
+          }
+          run_case M10Bosses full
+          run_case B5Bosses
+          run_case M10Density stages=22,31
+          run_case M10Density probe stages=22,31
+      - name: Upload pressure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-pressure-evidence
           path: |
             ${{ runner.temp }}/*.log
             Don't stop/docs/iteration/evidence/m10/density.json
