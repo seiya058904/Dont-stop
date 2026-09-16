@@ -133,6 +133,14 @@ watchdog.unref?.();
 	const pageErrors = [];
 	const badResponses = [];
 	const failedRequests = [];
+	// Requests the browser ITSELF cancelled because the page navigated away - the
+	// gate reloads the page at the end, and index.wasm can still be streaming:
+	// Chromium reports that as net::ERR_ABORTED. It carries no HTTP status, the
+	// same file loads fine on the next navigation (this gate proves the reloaded
+	// page is alive), and it is the TEST's own navigation that causes it, so it
+	// is recorded here rather than counted as a network failure. Anything else -
+	// every real error, and every http>=400 - still fails NO_NETWORK_ERRORS.
+	const navigationAborts = [];
 	// Everything the game prints that this script reasons about. Kept as one list
 	// so the error filters below can also see how much the product actually said.
 	let gameLines = [];
@@ -160,7 +168,12 @@ watchdog.unref?.();
 	});
 	page.on('pageerror', e => pageErrors.push('pageerror: ' + e.message));
 	page.on('response', r => { if (r.status() >= 400) badResponses.push(r.status() + ' ' + r.url()); });
-	page.on('requestfailed', r => failedRequests.push(r.url() + ' :: ' + ((r.failure() && r.failure().errorText) || '?')));
+	page.on('requestfailed', r => {
+		const why = (r.failure() && r.failure().errorText) || '?';
+		const rec = r.url() + ' :: ' + why;
+		if (why === 'net::ERR_ABORTED') navigationAborts.push(rec);
+		else failedRequests.push(rec);
+	});
 
 	// ---------------------------------------------------------------- observation
 	const num = (l, re) => { const m = l.match(re); return m ? parseFloat(m[1]) : NaN; };
@@ -376,9 +389,17 @@ watchdog.unref?.();
 
 		// 3. Liveness, exactly: the frame counter only advances while the tree is
 		// not paused, so a frozen session cannot satisfy it.
+		// Liveness, NOT throughput. The counter is PROCESS_MODE_PAUSABLE, so "it
+		// moved at all while unpaused" is already the entire claim, and the
+		// -blocked-input phase below supplies the contrast by holding this same
+		// counter perfectly still under a real key. Do not assert a RATE: the
+		// first real CI run of this gate turned the loop at ~0.8 fps (8 frames in
+		// 10 s on a software renderer) where a developer machine vsyncs at 60, so a
+		// fixed delta measures the machine, not the product. Two frames is the
+		// floor that still separates "turning" from "frozen".
 		await phase(label + '-liveness', async () => {
 			const s0 = stateNow();
-			const advanced = await waitState(s => s.frames > s0.frames + 10, 10000, 'frames');
+			const advanced = await waitState(s => s.frames > s0.frames + 2, 15000, 'frames');
 			const s1 = advanced.state || stateNow();
 			token(`${label}_SESSION_IS_RUNNING`, advanced.ok,
 				`the game's own idle frames advanced ${s1.frames - s0.frames} in ${ms(advanced.ms)} while unpaused`);
@@ -472,7 +493,8 @@ watchdog.unref?.();
 				`the session hero stayed put (${b.player && b.player.x.toFixed(1)},${b.player && b.player.y.toFixed(1)}) -> (${a.player && a.player.x.toFixed(1)},${a.player && a.player.y.toFixed(1)}) = ${Number.isNaN(moved) ? 'n/a' : moved.toFixed(2)} units`);
 			await page.keyboard.press('Escape');
 			const resumed = await waitState(s => s.panels === 0 && !s.pause, 8000, 'resume');
-			const live = resumed.ok && (await waitState(s => s.frames > b.frames + 5, 8000, 'live-again')).ok;
+			// Same liveness floor as the main reading: two frames, not a rate.
+			const live = resumed.ok && (await waitState(s => s.frames > b.frames + 2, 12000, 'live-again')).ok;
 			token(`${label}_RESUMED_AFTER_BLOCKED_ATTEMPT`, live,
 				`panels cleared in ${ms(resumed.ms)} and idle frames advanced again, which is exactly what the frozen reading above was missing`);
 		});
@@ -551,7 +573,7 @@ watchdog.unref?.();
 			// the probe's own idle counter says so without a page round trip - which
 			// is the whole reason this script no longer screenshots.
 			const aliveFrom = stateNow();
-			const aliveAfter = await waitState(x => x.frames > aliveFrom.frames + 5, 8000, 'page-alive');
+			const aliveAfter = await waitState(x => x.frames > aliveFrom.frames + 2, 12000, 'page-alive');
 			token(`${label}_PAGE_STILL_ALIVE`, aliveAfter.ok,
 				`the read-only channel kept streaming and the engine's idle frames advanced ${((aliveAfter.state || stateNow()).frames - aliveFrom.frames)} after the swap`);
 		});
@@ -641,7 +663,8 @@ watchdog.unref?.();
 		token('NO_UNEXPECTED_ENGINE_ERRORS', unexpected.length === 0, unexpected.slice(0, 3).join(' | '));
 		token('NO_PAGE_ERRORS', pageErrors.length === 0, pageErrors.slice(0, 3).join(' | '));
 		token('NO_NETWORK_ERRORS', badResponses.length === 0 && failedRequests.length === 0,
-			`http>=400 ${badResponses.length}, failed requests ${failedRequests.length}`);
+			`http>=400 ${badResponses.length}, failed requests ${failedRequests.length}` +
+			(navigationAborts.length ? `, navigation-cancelled ${navigationAborts.length} (net::ERR_ABORTED, recorded not failed)` : ''));
 		token('NO_RENDERER_CRASH', rendererCrash === null, rendererCrash || 'no renderer crash');
 		token('WATCHDOG_DID_NOT_FIRE', !watchdogFired, `whole-run budget ${ms(WATCHDOG_MS)}`);
 	});
@@ -667,6 +690,7 @@ watchdog.unref?.();
 		rects_reported_by_the_game: rects,
 		console_errors: consoleErrors, page_errors: pageErrors,
 		http_errors: badResponses, failed_requests: failedRequests,
+		navigation_cancelled_requests: navigationAborts,
 	}, null, 2));
 
 	await context.close();

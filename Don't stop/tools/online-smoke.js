@@ -155,6 +155,11 @@ const MENU_START = { x: 41, y: 136 };
 	const pageErrors = [];
 	const badResponses = [];
 	const failedRequests = [];
+	// Same narrow classification as the menu-return gate: a request the browser
+	// itself cancelled because the page navigated (net::ERR_ABORTED) carries no
+	// HTTP status and is the navigation's artefact, not a broken resource, so it
+	// is recorded separately. Every real failure still fails NO_NETWORK_ERRORS.
+	const navigationAborts = [];
 	let gameLines = [];
 	let probeLines = [];
 	const rects = {};
@@ -176,7 +181,12 @@ const MENU_START = { x: 41, y: 136 };
 	});
 	page.on('pageerror', e => pageErrors.push('pageerror: ' + e.message));
 	page.on('response', r => { if (r.status() >= 400) badResponses.push(r.status() + ' ' + r.url()); });
-	page.on('requestfailed', r => failedRequests.push(r.url() + ' :: ' + ((r.failure() && r.failure().errorText) || '?')));
+	page.on('requestfailed', r => {
+		const why = (r.failure() && r.failure().errorText) || '?';
+		const rec = r.url() + ' :: ' + why;
+		if (why === 'net::ERR_ABORTED') navigationAborts.push(rec);
+		else failedRequests.push(rec);
+	});
 
 	const num = (l, re) => { const m = l.match(re); return m ? parseFloat(m[1]) : NaN; };
 	const vec = (l, re) => { const m = l.match(re); return m ? { x: parseFloat(m[1]), y: parseFloat(m[2]) } : null; };
@@ -292,14 +302,22 @@ const MENU_START = { x: 41, y: 136 };
 		`panels=${gone.state && gone.state.panels} after ${ms(gone.ms)}`);
 
 	// --- the session is live, and a REAL key moves the body
+	// Liveness, not throughput: the probe counter is PAUSABLE, so any advance at
+	// all while unpaused means the loop is turning. A rate must not be asserted -
+	// CI's software renderer runs this same loop below 1 fps (8 frames / 10 s on
+	// the first real run of the sibling gate) where a developer machine vsyncs at
+	// 60, so a fixed delta only measures the machine.
 	const liveFrom = stateNow();
-	const live = await waitState(s => s.frames > liveFrom.frames + 10, 15000, 'live');
+	const live = await waitState(s => s.frames > liveFrom.frames + 2, 15000, 'live');
 	token('SESSION_IS_RUNNING', live.ok, `idle frames advanced ${(live.state || stateNow()).frames - liveFrom.frames} while unpaused`);
+	// Hold the key until the body actually moves rather than for a fixed
+	// wall-clock slice: at CI's frame rate a 900 ms press can span less than one
+	// frame, so a fixed hold measures the renderer instead of the input path.
+	// The key stays down for as long as the movement takes, then is released.
 	const moveFrom = stateNow();
 	await page.keyboard.down('d');
-	await sleep(900);
+	const moved = await waitState(s => s.player && moveFrom.player && Math.hypot(s.player.x - moveFrom.player.x, s.player.y - moveFrom.player.y) > 1.5, 20000, 'moved');
 	await page.keyboard.up('d');
-	const moved = await waitState(s => s.player && moveFrom.player && Math.hypot(s.player.x - moveFrom.player.x, s.player.y - moveFrom.player.y) > 1.5, 6000, 'moved');
 	token('REAL_KEY_MOVED_THE_BODY', moved.ok,
 		`held 'd': the body moved ${moved.state && moveFrom.player ? Math.hypot(moved.state.player.x - moveFrom.player.x, moved.state.player.y - moveFrom.player.y).toFixed(1) : 'n/a'} units`);
 
@@ -371,7 +389,7 @@ const MENU_START = { x: 41, y: 136 };
 		await clickTag('camp-close-button');
 		const closed2 = await waitState(s => s.panels === 0 && !s.pause, 12000, 'second-closed');
 		const from2 = stateNow();
-		live2 = closed2.ok && (await waitState(s => s.frames > from2.frames + 5, 12000, 'second-live')).ok;
+		live2 = closed2.ok && (await waitState(s => s.frames > from2.frames + 2, 12000, 'second-live')).ok;
 	}
 	token('START_CLICK_REACHED_THE_MENU_AGAIN', pressed2.ok, pressed2.ok ? pressed2.line.replace('[leave] ', '') : 'the returned menu ignored the press');
 	token('SECOND_SESSION_WORKS', pressed2.ok && started2.ok && panel2.ok && live2,
@@ -404,7 +422,8 @@ const MENU_START = { x: 41, y: 136 };
 	token('NO_UNEXPECTED_ENGINE_ERRORS', unexpected.length === 0, unexpected.slice(0, 3).join(' | '));
 	token('NO_PAGE_ERRORS', pageErrors.length === 0, pageErrors.slice(0, 3).join(' | '));
 	token('NO_NETWORK_ERRORS', badResponses.length === 0 && failedRequests.length === 0,
-		`http>=400 ${badResponses.length}, failed requests ${failedRequests.length}`);
+		`http>=400 ${badResponses.length}, failed requests ${failedRequests.length}` +
+		(navigationAborts.length ? `, navigation-cancelled ${navigationAborts.length} (net::ERR_ABORTED, recorded not failed)` : ''));
 	token('NO_RENDERER_CRASH', rendererCrash === null, rendererCrash || 'no renderer crash');
 	token('WITHIN_THE_ONLINE_BUDGET', !watchdogFired, `whole-run budget ${ms(BUDGET_MS)}`);
 
@@ -418,6 +437,7 @@ const MENU_START = { x: 41, y: 136 };
 		deployed_page: { build: gotSha, artifact: gotDigest },
 		console_errors: consoleErrors, page_errors: pageErrors,
 		http_errors: badResponses, failed_requests: failedRequests,
+		navigation_cancelled_requests: navigationAborts,
 	}, null, 2));
 
 	console.log('[online] token counts: ' + Object.keys(tokens).length + ' total, ' + failed.length + ' false');
