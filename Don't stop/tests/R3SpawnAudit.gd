@@ -25,8 +25,12 @@ extends "res://tests/M8Runtime.gd"
 
 const SEEDS := [11, 808, 4242]
 ## One encounter per spawn-entry shape; roles/rhythm/cap come from DemoConfig.
-const WAVE_STAGES := [1, 4, 5, 16, 21, 26, 29]
-const BOSS_STAGES := [10, 20, 30]
+## B批 adds the two Hell regions R7 (31-35) and R8 (36-40) so the enlarged arena, the new
+## wall layouts and the Hell flank arrival path are audited by the same rules.
+const WAVE_STAGES := [1, 4, 5, 16, 21, 26, 29, 31, 33, 35, 36, 39]
+const BOSS_STAGES := [10, 20, 30, 40]
+## The Hell-only roster, spawned through the production M5Content.spawn() path.
+const HELL_ENEMIES := ["E13", "E14", "E15"]
 const EMISSIONS_PER_ROUND := 5
 const DENSE_EMISSIONS := 8
 ## Hard wall-clock budget. Sampling stops when it is reached and the summary says
@@ -82,9 +86,13 @@ func _ready() -> void:
 		if _out_of_time(): break
 		await _audit_summon_round(seed_value, 21)
 	# ---- high density: let the wave accumulate instead of purging each emission
-	for stage in [26, 29]:
+	for stage in [26, 29, 39]:
 		if _out_of_time(): break
 		await _audit_dense_round(stage)
+	# ---- the Hell-only roster, through the same production spawn path
+	for seed_value in SEEDS:
+		if _out_of_time(): break
+		await _audit_hell_enemy_round(seed_value, 31)
 	# ---- sequence: camp -> depart again -> different region (stale result check)
 	if not _out_of_time():
 		await _audit_sequence_round()
@@ -179,6 +187,36 @@ func _audit_summon_round(seed_value: int, stage: int) -> void:
 	LevelServer.return_to_camp()
 	await wait(0.1)
 
+## E13 / E14 / E15 are created through M5Content.spawn(), the same entry the wave and
+## summon paths use, and are then held to the same legality rules as everything else.
+func _audit_hell_enemy_round(seed_value: int, stage: int) -> void:
+	seed(seed_value)
+	if not LevelServer.town.depart(stage, true):
+		check(false, "depart hell roster stage %d seed %d" % [stage, seed_value])
+		return
+	LevelServer.timerStop()
+	await wait(0.15)
+	_seen(stage)
+	_keep_player_alive()
+	var town = LevelServer.town
+	for id in HELL_ENEMIES:
+		var point: Vector2 = town.spawn_near(Utils.player.global_position, 90.0, 200.0)
+		if point == Vector2.INF or not point.is_finite():
+			seen_entries["hell_%s_deferred" % id] = true
+			continue
+		var actor = M5Content.spawn(id, town.monster_root, point)
+		if actor == null:
+			check(false, "hell roster %s refused a legal point" % id)
+			continue
+		seen_entries["hell_%s" % id] = true
+		check(actor.get_meta("content_id", "") == id, "hell roster %s keeps its content id" % id)
+		_measure([actor], "hell-%s" % id)
+		await _advance_physics(4)
+		_measure_moving("hell-%s" % id)
+	_purge()
+	LevelServer.return_to_camp()
+	await wait(0.1)
+
 func _audit_dense_round(stage: int) -> void:
 	seed(4242)
 	if not LevelServer.town.depart(stage, true): return
@@ -237,10 +275,13 @@ func _emit_wave() -> Array:
 
 func _exercise_entry(index: int, stage: int) -> void:
 	var config = DemoConfig.ENCOUNTERS[stage]
-	if config.rhythm == "精英":
-		# Elite branch in Town.monsterCreate() needs the clock past 30s.
-		LevelServer.level_info.time = maxf(LevelServer.level_info.time, 35.0)
-		seen_entries["elite"] = true
+	var plan = M5Content.elite_plan(stage)
+	if not plan.is_empty():
+		# B批 elites are a rate, not a rhythm string: arm the plan's clock and its start time
+		# so Town._promote_if_elite() takes its real branch.
+		LevelServer.level_info.time = maxf(LevelServer.level_info.time, float(plan.get("start",0.0))+1.0)
+		LevelServer.elite_clock = 0.0
+		seen_entries["elite_plan"] = true
 	match index % 3:
 		0: seen_entries["wave"] = true
 		1:
@@ -250,10 +291,15 @@ func _exercise_entry(index: int, stage: int) -> void:
 			if M5Content.HORDES.has(stage):
 				seen_entries["horde"] = true
 				LevelServer.horde_active = true; LevelServer.horde_role = "E02"; LevelServer.horde_side = 0
+			if config.get("flank", false):
+				# Hell multi-direction arrival: the same emission, a different arc.
+				seen_entries["flank"] = true
+				LevelServer.flank_active = true
 
 func _restore_entry_flags() -> void:
 	LevelServer.rush_active = false
 	LevelServer.horde_active = false
+	LevelServer.flank_active = false
 
 ## ---------------------------------------------------------------- measurement
 
@@ -324,7 +370,9 @@ func _collider_overlaps_wall(actor: Node2D) -> bool:
 	if space == null: return false
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = cs.shape
-	query.collision_mask = 2147483649
+	# Walls only: bit 0 is where monsters live, so the mixed mask would report
+	# monster-vs-monster contact as a wall overlap.
+	query.collision_mask = 2147483648
 	query.transform = cs.global_transform
 	query.exclude = [actor.get_rid()]
 	return not space.intersect_shape(query, 1).is_empty()
@@ -366,8 +414,9 @@ func _place_player_at_edge(stage: int) -> void:
 		return
 	seen_entries["arena"] = true
 	# Cycle through two boundary edges and two corners so edge/corner candidate
-	# rings are actually exercised, not just the open middle.
-	var spots := [Vector2(375, 0), Vector2(-375, 0), Vector2(375, 271), Vector2(-375, -271)]
+	# rings are actually exercised, not just the open middle. Scaled to the enlarged
+	# 880x660 arena so the corners really are corners.
+	var spots := [Vector2(430, 0), Vector2(-430, 0), Vector2(430, 322), Vector2(-430, -322)]
 	var spot: Vector2 = spots[stage % spots.size()]
 	Utils.player.global_position = arena.to_global(spot)
 	await _advance_physics(2)

@@ -90,7 +90,7 @@ func zone(kind: String, point: Vector2, reach: float, delay: float, time = 0.12,
 	node.mode = kind; node.radius = reach; node.length = reach
 	node.warning = delay; node.duration = time; node.direction = locked_direction
 	node.owner_ref = weakref(self)
-	node.position = point
+	node.world_point = point
 	node.style = style
 	node.pierce = kind in ["line","charge"]
 	if kind == "charge": node.width = 22 if is_boss else 18
@@ -554,7 +554,7 @@ func onDie(effects = true):
 		if role == "E07" and not summoned: summon(2)
 		if role == "E12" and last_context.get("depth",0) < DemoConfig.MAX_DERIVATION:
 			var blast = load("res://game/monster/HostileZone.gd").new()
-			blast.radius = 58; blast.warning = 0.08; blast.position = global_position; blast.style = "shock"
+			blast.radius = 58; blast.warning = 0.08; blast.world_point = global_position; blast.style = "shock"
 			blast.friendly_context = {"damage":4.0,"depth":last_context.get("depth",0)+1,"epoch":born_epoch}
 			get_tree().current_scene.add_child(blast)
 			if elite_modifier() == "ember_field":

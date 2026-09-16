@@ -110,10 +110,24 @@ func _is_clear(point: Vector2, radius: float) -> bool:
 	query.transform = Transform2D(0,point)
 	return space.intersect_shape(query,1).is_empty()
 
-## Public clearance probe for the hazard director, so hazards and actors are validated by
-## exactly one rule.
-func point_clear(point: Vector2, radius: float) -> bool:
-	return _is_clear(point,radius)
+## Public clearance probe for the hazard director and the audits, so everything is validated
+## by exactly one rule. `exclude` must carry the RID of the actor being tested: an actor
+## standing in a legal spot still intersects its OWN collider, and an audit that forgets to
+## exclude it reports every unit as "inside a wall".
+func point_clear(point: Vector2, radius: float, exclude: Array = [], mask := 2147483649) -> bool:
+	var space := get_world_2d().direct_space_state
+	if space == null: return true
+	var shape := CircleShape2D.new()
+	shape.radius = radius
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	# The default mask includes bit 0, which is where monsters (collision_layer 3) and the
+	# player (25) live, so it answers "is this spot free". Mask 2147483648 (the arena's wall
+	# layer) answers "is this spot inside geometry", which is what a wall-overlap audit means.
+	query.collision_mask = mask
+	query.transform = Transform2D(0,point)
+	query.exclude = exclude
+	return space.intersect_shape(query,1).is_empty()
 
 ## Walkable area in square world pixels, measured from the actual navigation cells rather
 ## than from bounds arithmetic, so the hazard coverage budget is a share of real floor.

@@ -2,7 +2,7 @@ extends "res://tests/M8Runtime.gd"
 func _ready():
 	await boot(); configure(124)
 	check(Utils.weapon_list.size()==24 and Utils.am_dict.size()==24 and DemoConfig.TALENTS.size()==24,"frozen player content")
-	check(M5Content.ENEMIES.size()==12 and M5Content.BOSSES.size()==3 and DemoConfig.ENCOUNTERS.size()==30,"frozen combat content")
+	check(M5Content.ENEMIES.size()==15 and M5Content.BOSSES.size()==4 and DemoConfig.ENCOUNTERS.size()==40,"frozen combat content")
 	var barrier = wall(Utils.player.global_position+Vector2(35,0),Vector2(8,80))
 	await wait(0.06)
 	var start = Utils.player.global_position

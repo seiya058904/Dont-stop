@@ -57,8 +57,10 @@ static func _push(entry: Dictionary) -> void:
 ## World-space segment.
 static func push_line(a: Vector2, b: Vector2, color: Color, width: float) -> void:
 	_push({"kind":"line","a":a,"b":b,"color":color,"width":width})
-	# A doubled thin core reads as emissive against a near-black far field.
-	_push({"kind":"line","a":a,"b":b,"color":Color(color.r,color.g,color.b,color.a*0.55),width:width*0.4})
+	# A doubled thin core reads as emissive against a near-black far field. Both keys are
+	# quoted on purpose: a bare `width:` here created a differently typed key, which made the
+	# renderer read a missing property and draw nothing.
+	_push({"kind":"line","a":a,"b":b,"color":Color(color.r,color.g,color.b,color.a*0.55),"width":width*0.4})
 
 ## World-space circle outline.
 static func push_circle(center: Vector2, radius: float, color: Color, width: float) -> void:

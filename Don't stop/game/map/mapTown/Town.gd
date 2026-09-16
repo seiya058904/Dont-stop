@@ -343,9 +343,7 @@ func depart(stage: int, is_trial: bool) -> bool:
 		hazard_director.arena = arena
 		arena.add_child(hazard_director)
 	if DemoConfig.ENCOUNTERS[target_stage].has("boss"):
-		# Bosses are the largest actors, so their clearance is measured from the boss
-		# scene instead of being a fixed constant that only fits a small enemy.
-		var point = spawn_near(Utils.player.global_position,160,220,M5Content.radius_for(DemoConfig.ENCOUNTERS[target_stage].boss))
+		var point = boss_spawn_point(DemoConfig.ENCOUNTERS[target_stage].boss)
 		if point == Vector2.INF:
 			# spawn_near() returns this sentinel when no validated point exists.
 			# Spawning anyway used to place the boss at an infinite coordinate,
@@ -359,6 +357,20 @@ func depart(stage: int, is_trial: bool) -> bool:
 		LevelServer.boss_instance = boss.get_instance_id()
 	return true
 
+## Bosses are the largest actors, so their clearance is measured from the boss scene instead
+## of being a fixed constant that only fits a small enemy. The ring is widened in stages: the
+## authored 160-220 band is tried first, and only if the arena's own layout blocks it (R8's
+## fractured core leaves a narrow annulus around the player) are the wider bands used. This
+## replaces a single-ring failure that showed up as "the stage-40 boss did not appear".
+const BOSS_RINGS := [Vector2(160,220),Vector2(220,320),Vector2(120,380)]
+
+func boss_spawn_point(boss_id: String) -> Vector2:
+	var radius = M5Content.radius_for(boss_id)
+	for ring in BOSS_RINGS:
+		var point = spawn_near(Utils.player.global_position,ring.x,ring.y,radius)
+		if point != Vector2.INF: return point
+	return Vector2.INF
+
 ## A deferred boss (see depart()) is retried here once a validated point exists,
 ## instead of being created at an unvalidated coordinate.
 var _boss_pending := ""
@@ -367,7 +379,7 @@ func _process(_delta: float) -> void:
 	if _boss_pending == "" or LevelServer.state != "COMBAT": return
 	if not is_instance_valid(Utils.player): return
 	M5Content.audit_boss_retry += 1
-	var point = spawn_near(Utils.player.global_position,160,220,M5Content.radius_for(_boss_pending))
+	var point = boss_spawn_point(_boss_pending)
 	if point == Vector2.INF: return
 	var boss = M5Content.spawn(_boss_pending,monster_root,point)
 	if boss == null: return

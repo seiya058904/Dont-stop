@@ -5,10 +5,6 @@ var phase = "spawn"
 var phase_time = 0.6
 var locked_direction = Vector2.ZERO
 var contact_cooldown = 0.0
-## Set by M5Content.spawn() from HellMode. Telegraphed attacks use the full axis; raw body
-## contact uses DemoConfig.CONTACT_DAMAGE_WEIGHT of it, because contact is the one source
-## the player cannot dodge and scaling it fully turns a fogged Hell wave into chip damage.
-var damage_scale := 1.0
 
 func _ready():
 	super._ready()

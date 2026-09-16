@@ -7,7 +7,7 @@ func _ready():
 	Demo.try_purchase("weapon","117"); PlayerData.player_hp_max = 500; PlayerData.player_hp = 500
 	Utils.player.set_physics_process(false); Utils.player.set_process(false)
 	var town = LevelServer.town
-	check(M5Content.ENEMIES.size()==12 and M5Content.BOSSES.size()==3 and M5Content.REGIONS.size()==6 and DemoConfig.ENCOUNTERS.size()==30,"registered 12/3/6/30")
+	check(M5Content.ENEMIES.size()==15 and M5Content.BOSSES.size()==4 and M5Content.REGIONS.size()==8 and DemoConfig.ENCOUNTERS.size()==40,"registered 15/4/8/40")
 	for stage in DemoConfig.ENCOUNTERS:
 		dismiss(); await wait(0.03)
 		var progress = Demo.next_stage
@@ -56,9 +56,22 @@ func _ready():
 	check(Demo.next_stage==30,"normal progression reaches30")
 	check(town.depart(30,false),"normal final battle")
 	await wait(0.8); var boss = instance_from_id(LevelServer.boss_instance); Combat.hit(boss,{"damage":10000.0,"epoch":LevelServer.epoch}); await wait(0.1)
-	check(Demo.campaign_complete and Demo.next_stage==30 and LevelServer.state=="CAMP","final campaign resolves without stage31")
+	# B批 contract: clearing Stage 30 finishes the NORMAL campaign and unlocks Stage 31.
+	check(Demo.campaign_complete and Demo.next_stage==31 and LevelServer.state=="CAMP","stage30 completes the normal campaign and unlocks stage31")
 	dismiss(); await wait(0.7)
-	var snap = Demo.snapshot(); check(CampSnapshot.validate(snap) and snap.schema_version==5 and snap.campaign_complete,"schema4 completed campaign snapshot")
+	var snap = Demo.snapshot(); check(CampSnapshot.validate(snap) and snap.schema_version==6 and snap.campaign_complete,"schema6 completed campaign snapshot")
+	# Hell completion is an optional field, so a save written before this batch still loads:
+	# it simply has no key and defaults to false.
+	var no_hell = snap.duplicate(true); no_hell.erase("hell_complete")
+	check(CampSnapshot.validate(no_hell) and not CampSnapshot.normalize(no_hell).hell_complete,"hell_complete stays optional so no old save is invalidated")
+	# Stage 40 is the last stage that exists: clearing it can never produce a Stage 41.
+	Demo.next_stage = 40
+	check(DemoConfig.ENCOUNTERS.has(40) and not DemoConfig.ENCOUNTERS.has(41),"no stage41 exists")
+	check(town.depart(40,false),"hell final battle")
+	await wait(0.8); var hell_boss = instance_from_id(LevelServer.boss_instance); Combat.hit(hell_boss,{"damage":100000.0,"epoch":LevelServer.epoch}); await wait(0.1)
+	check(Demo.hell_complete and Demo.next_stage==40,"stage40 resolves to hell complete without stage41")
+	check(get_tree().get_nodes_in_group("monsters").is_empty() and get_tree().get_nodes_in_group("combat_transient").is_empty(),"hell stage cleanup")
+	dismiss(); await wait(0.7)
 	for version in [1,2,3]:
 		var old = snap.duplicate(true); old = M7Fixtures.legacy(old,version); old.erase("campaign_complete")
 		check(CampSnapshot.validate(old) and not CampSnapshot.normalize(old).campaign_complete,"old schema defaults without invented completion "+str(version))

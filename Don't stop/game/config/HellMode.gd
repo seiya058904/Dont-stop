@@ -61,25 +61,10 @@ static func speed_scale(stage: int) -> float:
 static func density_scale(stage: int) -> float:
 	return _axis(stage,DENSITY_FROM,DENSITY_TO) if is_hell(stage) else 1.0
 
-## Special-enemy share of the roster. 1-30 keeps its authored rosters; Hell moves the
-## share up monotonically so late Hell is combination pressure rather than more bodies.
-static func special_share(stage: int) -> float:
-	if not is_hell(stage): return 0.0
-	return _axis(stage,0.35,0.62)
-
-## Elite arrival: first arrival as a fraction of the round, and the seconds between
-## arrivals. Both tighten with stage; the count of simultaneous elites is capped.
-static func elite_start_fraction(stage: int) -> float:
-	if not is_hell(stage): return 0.5
-	return _axis(stage,0.30,0.12)
-
-static func elite_interval(stage: int) -> float:
-	if not is_hell(stage): return 12.0
-	return _axis(stage,14.0,7.0,2)
-
-static func elite_cap(stage: int) -> int:
-	if not is_hell(stage): return 1
-	return clampi(1+int(ramp(stage)*4.0),1,5)
+## Special-enemy share and the elite arrival plan are carried explicitly in the encounter
+## table (M5Content.encounters -> `roles`, `elite`), because those are authored per stage
+## rather than derived; Hell Mode only supplies the ceiling for how many elites may be
+## alive at once, which the `elite.cap` values are set from.
 
 ## Arena hazard budget: one hazard kind at 31, up to three overlapping kinds by 40.
 static func hazard_kinds(stage: int) -> int:

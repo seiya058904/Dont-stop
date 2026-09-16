@@ -63,13 +63,17 @@ func _ready() -> void:
 	rng.seed = fixed_seed if fixed_seed != 0 else hash([stage,epoch,808])
 	# First hazard is spaced out so the round opens with the roster, not with terrain.
 	spawn_clock = plan.get("interval",9.0)*0.6
-	if plan.is_empty(): queue_free()
+	# Deliberately NOT freed when the plan is empty. The director is also the arena's poison
+	# coordinator, and an ACTOR can put a field on the ground on a stage whose terrain plan is
+	# empty - B02's Phase III toxic zone on Stage 20 is exactly that case. Without a director
+	# those fields would be drawn and never ticked.
 
 func _physics_process(delta: float) -> void:
 	if epoch != LevelServer.epoch or LevelServer.state != "COMBAT":
 		queue_free(); return
-	if plan.is_empty(): return
+	# Poison is coordinated for the whole arena, whatever put the field there.
 	_tick_poison(delta)
+	if plan.is_empty() or not is_instance_valid(arena): return
 	spawn_clock -= delta
 	if spawn_clock <= 0.0:
 		spawn_clock = float(plan.interval)

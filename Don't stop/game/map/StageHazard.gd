@@ -74,7 +74,10 @@ func _ready() -> void:
 		warning = maxf(warning,ArenaHazards.WARNING_FLOOR)
 	clipped = length
 	phase = "warning"; phase_time = warning
-	position = at
+	# `at` is a WORLD point. Hazard parents differ (the arena is at (10000+N*1000,-6000),
+	# get_tree().current_scene is not), so assigning `position` here would have placed every
+	# arena-owned hazard ~32000 px off the map. global_position is parent independent.
+	global_position = at
 
 ## Diagnostics for tests/B3Hazards.gd. Counters only, no behaviour change.
 static var audit_spawned := 0

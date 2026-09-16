@@ -66,7 +66,7 @@ static func plan(stage: int) -> Dictionary:
 			"interval":HellMode.hazard_interval(stage),
 			"live_cap":HellMode.hazard_live_cap(stage),
 			"coverage":HELL_COVERAGE,
-			"warning":_axis(1.05,0.72,ramp),
+			"warning":_axis(1.05,0.80,ramp),
 			"active":_axis(4.6,5.8,ramp),
 			"poison_share":_axis(0.015,0.024,ramp),
 			"flat_damage":_axis(1.0,1.6,ramp),
