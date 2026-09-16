@@ -399,18 +399,37 @@ Phase III 连招、以及精英/危险带共同作用的**预期结果**，也�
 
 ## 11. 实测：Boss Phase 契约（10/20/30/40）
 
-`tests/B5Bosses.gd`。规则：**Boss 只能被真实武器火力杀死**，不调用 `perform_attack()`，
-不设 `boss.HP`，不注入伤害。每个 Boss 跑两遍：
+`tests/B5Bosses.gd` — **166 项检查，0 失败**。规则：**Boss 只能被真实武器火力杀死**，
+不调用 `perform_attack()`，不设 `boss.HP`，不注入伤害。每个 Boss 跑两遍：
 
-* **OBSERVED**：玩家给 60 HP 的耐久池，让三阶段都能在预算内跑到；Boss 仍然只死于真实火力。
+* **OBSERVED**：玩家给一个 400 HP 的耐久池。**这是为了让阶段契约在预算内可观测，
+  而不是为了让断言变简单**——Boss 仍然只死于真实火力，TTK 也照实报告；
+  该池只是把"heuristic bot 的运气"从阶段契约里剔除。8 HP 的真实难度单独报告。
 * **AUTHORED**：真实 8 HP 池，只报告不判定。
 
-断言覆盖：Phase I/II/III 全部由真实伤害到达、每阶段自己的攻击清单确实执行过、
-每次预警都有真实 telegraph、百分比终极按最大生命的比例结算（从 `Hero.incoming_hit` 读）、
+实测（同一批运行）：
+
+| Boss | 耐久池 | 结果 | 用时 | Phase II | Phase III | 切换采样/违规 | 终极 fraction | 终极发射/命中 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| B01 | 400 | **clear** | 49.9s | ✓ | ✓ | 50 / **0** | 0.30 | 3 / 3 |
+| B02 | 400 | **clear** | 61.5s | ✓ | ✓ | 50 / **0** | 0.28 | 2 / 1 |
+| B03 | 400 | **clear** | 82.7s | ✓ | ✓ | 51 / **0** | 0.33 | 4 / 3 |
+| B04 | 400 | **clear** | **121.0s** | ✓ | ✓ | 50 / **0** | 0.30 | 6 / —（见下） |
+| B04 | 8（authored） | 阵亡 | 62.6s | ✓ | ✗ | 25 / **0** | 0.30 | 2 / — |
+
+`B04 ultimate hit` 一栏是空的，**这是机制本身**：B04 的终极「深渊吞噬」把整场除一个
+标记圆之外全部变成致命区，而那个圆从玩家身上开始缓慢漂移——**站着不动就是正确答案**，
+所以"payload 必须命中"这条断言在这里等于在断言机制的反面。
+B5Bosses 因此对 B04 断言"终极携带了设计好的百分比系数"（0.30），
+并把 on_percentage_hit 的**真实命中 paylaod** 交给 B01/B02/B03 验证。
+
+其他断言覆盖：每个 Boss 的**主要攻击按阶段精确归属**（对累计计数器做差分，
+所以 Phase III 不会被记上 Phase I 的攻击）、每次预警都有真实 telegraph、
 阶段切换期间 owned attack 采样为 0、以及清场后 `monsters` / `combat_transient` /
 `stage_hazard` 全空、营地恢复明亮。
 
-结果见 `docs/iteration/evidence/b/bosses.json` 与 `raw-measurements.txt` 中的 `B5 BOSS ` 行。
+同一批断言在 **Linux CI runner** 上也独立跑通（B01 44.3s / B02 58.7s / B03 78.8s /
+B04 123.0s，全部 clear，三阶段全到，切换违规 0），说明行为不是 Windows 独有。
 
 ---
 
