@@ -28,6 +28,9 @@ var camp_prompt: Label
 
 func _ready():
 	LevelServer.town = self
+	# A fresh Main.tscn instance already carries the authored bright ambient and light, so
+	# only the runtime stage needs dropping - never a second write to the scene defaults.
+	ArenaVisibility.reset()
 	camp_prompt = Label.new()
 	camp_prompt.text = "按 E 打开营地"
 	camp_prompt.position = Vector2(165,188)
@@ -98,6 +101,10 @@ func onRoundEnd():
 	Utils.player.global_position = $PositionHome.global_position
 	$CanvasLayer/timeout.text = "营地整备 · E 商店 / Tab 配置"
 	for item in $TileMap2/PortalRoot.get_children(): item.reset()
+	# Belt and braces with LevelServer.return_to_camp(): the camp is bright in every path
+	# out of a round, including death, a manual return and a scene teardown.
+	ArenaVisibility.restore(true)
+	FogPierce.discard()
 
 #回合胜利
 func roundVictory():
@@ -124,7 +131,9 @@ func getPoint():
 	elif [26,27,28,29,30].has(LevelServer.level):
 		var node = pos_level_26.get_child(randi()%pos_level_26.get_child_count())
 		random_point = node.global_position
-	return random_point
+	# R7/R8 (31-40) fight in a generated arena rather than the camp tilemap, and any future
+	# stage must not fall through to `null` and crash a caller.
+	return random_point if random_point != null else $PositionHome.global_position
 
 func _on_shop_body_entered(body: Node2D) -> void:
 	if body is Player:
@@ -174,9 +183,23 @@ func monsterCreate():
 	# Rhythm controls arrival timing, never replaces a mixed roster with one role for 7-15 seconds.
 	LevelServer.spawn_index += 1
 	var ins = M5Content.spawn(role,monster_root,point)
-	if config.rhythm == "精英" and LevelServer.level_info.time >= 30 and not LevelServer.elite_spawned:
-		LevelServer.elite_spawned = true; ins.is_elite = true; ins.HP *= 1.5
-		var marker = Label.new(); marker.text = "精英"; marker.add_theme_font_size_override("font_size",7); marker.position = Vector2(-10,-32); ins.add_child(marker)
+	if ins == null: return
+	_promote_if_elite(ins,role)
+
+## Elites are a rate now, not a single mid-round flag. The plan gives a start time, an
+## interval and a simultaneous ceiling; every promoted actor also receives one named extra
+## mechanic, so an elite is a different problem rather than a bigger health bar.
+func _promote_if_elite(ins,role: String) -> void:
+	var plan = M5Content.elite_plan(LevelServer.level)
+	if plan.is_empty() or ins.get("is_elite") == true: return
+	if LevelServer.level_info.time < float(plan.get("start",1e9)) or LevelServer.elite_clock > 0.0: return
+	var alive = 0
+	for enemy in get_tree().get_nodes_in_group("monsters"):
+		if not enemy.is_die and enemy.get("is_elite") == true: alive += 1
+	if alive >= int(plan.get("cap",1)): return
+	LevelServer.elite_clock = float(plan.get("interval",12.0))
+	LevelServer.elites_created += 1
+	M5Content.promote_elite(ins,M5Content.elite_modifier_for(role))
 
 #怪物死亡
 func onMonsterDeath(monster_ins):
@@ -235,12 +258,26 @@ func path_step(from: Vector2, to: Vector2) -> Vector2:
 	var path = navigation.get_point_path(a,b)
 	return path[1] if path.size() > 1 else from
 
+## Arrival ring. The MINIMUM is the near-player pressure dial: late and Hell stages close it
+## from 145 px to ~108 px so reinforcement actually forms pressure around the player instead
+## of queueing at the rim. The maximum stays at the arena's usable radius - lowering the
+## minimum is the lever, not raising the ceiling.
+func ring() -> Vector2:
+	var pressure = M5Content.encounter_pressure(LevelServer.level)
+	return Vector2(float(pressure.get("ring_min",145.0)),float(pressure.get("ring_max",280.0)))
+
 func spawn_point(radius := -1.0) -> Vector2:
 	if radius <= 0.0: radius = M5Content.default_radius()
+	var limits = ring()
 	if is_instance_valid(arena):
+		if LevelServer.flank_active:
+			# Hell multi-direction arrival. Same validators as the ring, arbitrary arc, so a
+			# flank wave cannot place an enemy somewhere the ring would have refused.
+			var flank_point = arena.spawn_flank(Utils.player.global_position,limits.x,limits.y,radius)
+			if flank_point != Vector2.INF: return flank_point
 		var sides = M5Content.REGIONS[arena.region_id].sides
 		var side=LevelServer.horde_side if LevelServer.horde_active else (LevelServer.rush_side if LevelServer.rush_active else LevelServer.spawn_index%sides.size())
-		return arena.spawn_near(Utils.player.global_position,145,280,sides[side],radius)
+		return arena.spawn_near(Utils.player.global_position,limits.x,limits.y,sides[side],radius)
 	if not nav_ready or walkable.is_empty():
 		M5Content.audit_deferred += 1
 		return Vector2.INF
@@ -254,7 +291,7 @@ func spawn_point(radius := -1.0) -> Vector2:
 		var point = navigation.get_point_position(cell)
 		M5Content.audit_candidates += 1
 		var distance = point.distance_to(Utils.player.global_position)
-		if distance < 145 or distance > 280:
+		if distance < limits.x or distance > limits.y:
 			M5Content.audit_rejected += 1; continue
 		if navigation.get_id_path(cell,player_cell).size() <= 1:
 			M5Content.audit_rejected += 1; continue
@@ -290,6 +327,21 @@ func depart(stage: int, is_trial: bool) -> bool:
 		Demo.trial = previous_trial
 		return false
 	prepare_region(DemoConfig.ENCOUNTERS[target_stage].region)
+	# Fog is applied AFTER the region exists, so the tween targets the live CanvasModulate and
+	# the retained camera light of this scene rather than a stale node. Stage 1-30 targets the
+	# authored bright ambient, so this call is a no-op for the normal campaign.
+	ArenaVisibility.apply_stage(target_stage)
+	StageHazard.audit_spawned = 0
+	StageHazard.audit_rejected = 0
+	StageHazard.audit_skipped_anchor = 0
+	StageHazard.audit_peak_live = 0
+	StageHazard.audit_peak_coverage = 0.0
+	StageHazard.audit_poison_ticks = 0
+	StageHazard.audit_poison_capped = 0
+	if is_instance_valid(arena):
+		var hazard_director = load("res://game/map/ArenaHazardDirector.gd").new()
+		hazard_director.arena = arena
+		arena.add_child(hazard_director)
 	if DemoConfig.ENCOUNTERS[target_stage].has("boss"):
 		# Bosses are the largest actors, so their clearance is measured from the boss
 		# scene instead of being a fixed constant that only fits a small enemy.

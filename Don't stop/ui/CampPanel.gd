@@ -356,21 +356,26 @@ func show_talent(id: String):
 func equipment_list():
 	switch_tab("weapon")
 
+## Stage select. The normal campaign (1-30) and HELL MODE (31-40) are visually separate, and
+## Hell is locked until the normal campaign is finished. This is the visible half of one
+## rule; CampSnapshot.normalize() enforces the same rule on the save's data path, so a
+## hand-edited save cannot unlock Hell either.
 func stage_list():
 	if LevelServer.state != "CAMP":
 		label(listing,"战斗中不可出发或补给")
 		label(detail,"完成遭遇或失败返回营地后，可购买、补给与练枪。")
 		return
+	label(listing,"普通战役 1—30",9)
 	button(listing,"继续："+DemoConfig.ENCOUNTERS[Demo.next_stage].name,func(): depart(Demo.next_stage,false))
 	if Demo.campaign_complete:
 		button(listing,"已完成核心 · 从第1轮再次出发",func(): Demo.next_stage = 1; depart(1,false))
-	for id in DemoConfig.ENCOUNTERS:
-		if (id-1)%5 == 0: label(listing,M5Content.REGIONS[DemoConfig.ENCOUNTERS[id].region].name)
-		entry(DemoConfig.ENCOUNTERS[id].name,str(id),func():
-			clear_box(detail)
-			label(detail,DemoConfig.ENCOUNTERS[id].name,10)
-			label(detail,M5Content.REGIONS[DemoConfig.ENCOUNTERS[id].region].info+"\n"+DemoConfig.ENCOUNTERS[id].info+"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
-			button(detail,"开始此遭遇",func(): depart(id,true)))
+	stage_entries(1,30,false)
+	label(listing,"———— HELL MODE ————",9)
+	if Demo.hell_complete:
+		label(listing,"HELL COMPLETE · 已完成第40关",8)
+	if not Demo.campaign_complete:
+		label(listing,"完成第30关后解锁第31—40关；地狱模式固定战争迷雾。",7)
+	stage_entries(31,40,true)
 	button(listing,"开发辅助：补充测试钱包",func(): Demo.replenish(); message.text = "两种钱包已补到至少9999；装备、天赋、关卡保持")
 	button(listing,"购买备用弹匣 →",func(): switch_tab("magazine"))
 	button(listing,"恢复生命 · 10金币",func(): purchase("supply","health"))
@@ -380,7 +385,31 @@ func stage_list():
 	label(detail,"正常下一关："+DemoConfig.ENCOUNTERS[Demo.next_stage].name)
 	label(detail,"原移动速度/冲刺/视角保持。\n原数字键1—7对应持有栏前7把；全部%d把可在枪械页搜索/购买/装备，也可在当前配置选枪。\n练枪靶不掉落、不结算经验。" % Utils.weapon_list.size())
 
+func stage_entries(first: int, last: int, hell: bool):
+	var locked = hell and not stage_unlocked(first)
+	for id in range(first,last+1):
+		if not DemoConfig.ENCOUNTERS.has(id): continue
+		var config = DemoConfig.ENCOUNTERS[id]
+		if (id-1)%5 == 0: label(listing,M5Content.REGIONS[config.region].name)
+		var item = entry(config.name + (" · 未解锁" if locked else ""),str(id),func():
+			clear_box(detail)
+			label(detail,config.name,10)
+			label(detail,M5Content.REGIONS[config.region].info+"\n"+config.info+"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
+			button(detail,"开始此遭遇",func(): depart(id,true)))
+		item.disabled = locked
+
+## Hell Mode gate. `--hell-unlock` is the explicit test bypass the user asked for; there is
+## deliberately no "any trial stage is open" shortcut, because the stage list's
+## "开始此遭遇" button is itself a trial departure and used to open any stage at all.
+func stage_unlocked(stage: int) -> bool:
+	if not HellMode.is_hell(stage): return DemoConfig.ENCOUNTERS.has(stage)
+	if Demo.campaign_complete: return true
+	return "--hell-unlock" in OS.get_cmdline_user_args()
+
 func depart(stage: int, trial: bool):
+	if not stage_unlocked(stage):
+		message.text = "第31—40关为地狱模式；完成第30关后解锁"
+		return
 	if not Utils.player.gun:
 		message.text = "请先购买并装备一把枪"
 		return
