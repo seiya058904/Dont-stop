@@ -1,8 +1,28 @@
 # B批 · Combat / Level / Map / Hell Mode Quality Expansion
 
-Branch: `feat/dont-stop-b-combat-hell` · 起点 `main = d6652cb5e1b3ebaab79353e07dec29bb2e209446`
+## 交付状态
 
-本文件是本轮的唯一汇总入口。所有数字都来自本分支上的真实运行，原始行逐字保存在
+| 项 | 值 |
+| --- | --- |
+| 起点 main | `d6652cb5e1b3ebaab79353e07dec29bb2e209446` |
+| B批 feature branch | `feat/dont-stop-b-combat-hell` |
+| PR | [#5](https://github.com/seiya058904/Dont-stop/pull/5) |
+| **合并后 main** | **`46e8f6c9fe5abb1c8f89c2ad625e8a42b85e6bf5`** |
+| Pages workflow run | [35110255807](https://github.com/seiya058904/Dont-stop/actions/runs/35110255807) — 全部 job ✓ |
+| Web 地址 | https://seiya058904.github.io/Dont-stop/index.html |
+| 部署件 build SHA | `46e8f6c9fe5abb1c8f89c2ad625e8a42b85e6bf5`（读自部署页的 `dontstop-build`） |
+| 部署件 artifact digest | `42f52a330a2b600afdaa0a00c196ebb0439e1161265ef98cf64ffca4f641e672`（读自部署页的 `dontstop-artifact`） |
+| Native workflow run | [35110255926](https://github.com/seiya058904/Dont-stop/actions/runs/35110255926) — setup ✓ / contracts ✓ 15m0s / pressure ✓ 12m18s |
+| Online smoke（针对已部署 Pages） | **pass**（1m49s） |
+| Web 门禁 | smoke ✓ / save-audit ✓ / aim-core ✓ / aim-fault ✓ / menu-return ✓ |
+| Windows candidate | 见 §16（exe / pck / zip 的 sha256，以及 pck 与 Web 逐字节相同） |
+| 状态 | `WEB_DEPLOYED_FOR_HUMAN_REVIEW` · `HUMAN_ACCEPTED=false` · `WEB_HUMAN_ACCEPTED=false` |
+
+部署页自带的 identity 与合并 commit 一致，这是"测的是 A、部署的也是 A"的闭环证据：
+`dontstop-build` 就是合并后的 main SHA，`dontstop-artifact` 是
+`index.wasm ‖ index.pck ‖ index.js` 的 sha256（只取决于产物字节）。
+
+本文件是本轮的唯一汇总入口。所有数字都来自真实运行，原始行逐字保存在
 `docs/iteration/evidence/b/raw-measurements.txt`，结构化结果保存在同目录的 JSON 中。
 
 ---
@@ -542,15 +562,27 @@ Fog 特意只在两端都成立的前提下设计：`CanvasModulate` 与 `PointL
 `gl_compatibility` 上已实测生效（见 §13），`shadow_enabled` 依赖 `LightOccluder2D`
 而本场景未使用，所以两端都不会出现"只有 Forward+ 才有的雾"。
 
-Windows candidate 冒烟：导出的 `Don't stop.exe --headless` 退出码 0，
-日志显示 `[boot] title menu handed over at t=446 ms total` / `[boot] title menu drawn t=921`，
-无 `SCRIPT ERROR`。
+Windows candidate（`--export-release "Windows x64 Release"`，pinned Godot 4.7.2）：
+
+```
+build/windows/Don't stop.exe  sha256 = ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655  (104 MiB)
+build/windows/Don't stop.pck  sha256 = 252894f093bac797445b554a4190b3f3f7c18e3e4f1423ab65722f84a4233061  (39 MiB)
+Dont-stop-Windows-x64.zip     sha256 = 762e3c1d58a921a4988f8e577f5ffc7fa5418a75da354efa381ce6b78f3d3fe5
+```
+
+冒烟：导出的 `Don't stop.exe --headless --quit-after 900` 退出码 0，
+stderr 无 `SCRIPT ERROR`，日志显示
+`[warmup] instantiated 32 scenes` / `[boot] title menu handed over at t=446 ms total` /
+`[boot] title menu drawn t=921`。
+
+Web 导出同样本地完成（`--export-release "Web Release"`，`gl_compatibility`）：
+`index.html` / `index.js` / `index.wasm` / `index.pck` 全部生成，无导出错误。
 
 ---
 
 ## 17. Web 性能与 CI
 
-* `deploy-pages.yml` **未改动**：`changes`(5m) → `build`(12m) → `browser-gates` →
+* `deploy-pages.yml` **未改动**（本轮全程未编辑该文件）：`changes`(5m) → `build`(12m) → `browser-gates` →
   `deploy`(10m) → `online-smoke`(10m)，整体仍是约 10 分钟量级。
 * 既有 Web 门禁（smoke / save / aim / menu return）全部保留，未改成截图或 `evaluate` 驱动——
   它们仍然是**状态驱动**的。
