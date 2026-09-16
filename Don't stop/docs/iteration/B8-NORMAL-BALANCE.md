@@ -209,6 +209,25 @@ Normal 与 Hell 的间隔也保持：**31 关开局即带迷雾（31 关对 22/2
 **按 §15 故意没有重跑**：`B4Fog`、`B5Bosses`、`B6Progression`、`M10Bosses`——本轮没有改
 雾、Boss 行为、存档或进度。它们在 native CI 每次 push 时仍会跑。
 
+### 8.1 合并后发现的两处 pre-existing 门禁抖动（已单独修复）
+
+PR #6 全绿合并后，main 上的 native `pressure` job 变红。原因是**两个与 B8 无关的、我上一轮
+自己写的墙钟相关门禁**，而不是本轮改动：
+
+1. `M10Density` 的"engaged 跑不许有怪卡进几何"断言：`FAIL ... (1 samples, 1 actors, 308 audited) 31`。
+   命中的是 **stage 31**，其表在 B8 里 **0 处字段变化**；同一个 commit 在 PR 上跑过两次都过、
+   本地也过。1 个 actor 在 308 个 1 Hz 采样里出现 1 次，正是这条断言自己的注释描述的"活体怪群
+   互相碰撞把一只挤进几何"的单采样假象；零容忍版本在 `R3SpawnAudit`（20/0）。
+   → 改为**连续 3 个采样**才算 wedged（与相邻的 `unreachable_stuck` 同一去抖约定），
+   原始观测数与 distinct actor 数照旧写进 row，新增 `wall_overlap_wedged`。
+2. `B5Bosses` 的"真的用实弹打通"断言：`FAIL B03 was really cleared by real fire`。
+   **stage 30 的表同样 0 处变化**，且该 job 在同一棵树上已通过两次。
+   → 保留断言强度（**必须有一次真实打通**），但允许每个 Boss 最多 3 次真实尝试，并**打印每一次
+   尝试的结果**，把方差公布出来而不是用重试盖住。
+
+修复后：`M10Density stages=22,31` 连跑 3 次 11/0；`B5Bosses` 166/0，且四个 Boss 都是**第 1 次
+尝试**就通过（重试没有实际触发，运行时长不变）。修复见 PR #7。
+
 ## 9. 未达成项与结论（诚实记录）
 
 **未达成的是 §6 的验收目标本身，不是"改动没生效"。** 目标：22 ≈ 4/5、26 ≈ 3/5、29 ≈ 2–3/5。
