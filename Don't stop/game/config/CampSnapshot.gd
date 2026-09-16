@@ -107,6 +107,22 @@ static func validate(data) -> bool:
 static func normalize(data: Dictionary) -> Dictionary:
 	var result = data.duplicate(true)
 	result.campaign_complete = data.get("campaign_complete",false)
+	# B批: Hell Mode completion is an OPTIONAL field. schema_version stays 6, so every old
+	# save still validates (validate() does not require the key) and no namespace changed.
+	result.hell_complete = data.get("hell_complete",false)
+	# The Stage-30 -> Stage-31 migration lives here, between validate() and the restore, so
+	# it needs no schema bump: validate() runs first and stage 30 is still a legal stage, and
+	# stage 31 exists for every save written after this batch.
+	if result.campaign_complete:
+		if int(result.next_stage) == 30 and DemoConfig.ENCOUNTERS.has(31): result.next_stage = 31
+	elif not DemoConfig.ENCOUNTERS.has(int(result.next_stage)) or int(result.next_stage) > 30:
+		# A save that has NOT finished the normal campaign can never hold a Hell stage. This
+		# is a data-level guard, independent of the camp UI's lock.
+		result.next_stage = 30
+	if result.campaign_complete:
+		if int(result.selected_stage) > 40: result.selected_stage = 40
+	elif int(result.selected_stage) > 30:
+		result.selected_stage = 30
 	result.talent_payments = data.get("talent_payments",[]).duplicate(true) if data.schema_version >= 3 else []
 	result.legacy = data.get("legacy",[]).duplicate()
 	result.legacy_state = data.get("legacy_state",{}).duplicate()

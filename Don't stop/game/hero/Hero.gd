@@ -15,6 +15,18 @@ var cc_immunity = 0.0
 var root_epoch = -1
 var incoming_percentage = false
 
+## Bounded environmental slow, used by the R3 frost slick. Deliberately NOT a friction
+## rewrite: at most MAX_ENV_SLOW, refreshed instead of stacked, and it never blocks
+## movement, aim, fire or dash - the user's rule is that a hazard must not distort
+## character control.
+var slow_amount = 0.0
+var slow_time = 0.0
+const MAX_ENV_SLOW := 0.25
+
+func apply_slow(amount: float, seconds: float) -> void:
+	slow_amount = clampf(maxf(slow_amount,amount),0.0,MAX_ENV_SLOW)
+	slow_time = maxf(slow_time,seconds)
+
 func apply_root(seconds = 0.45) -> bool:
 	if is_dead or LevelServer.state != "COMBAT" or root_remaining > 0 or cc_immunity > 0: return false
 	root_remaining = clampf(seconds,0.4,0.5); root_epoch = LevelServer.epoch
@@ -111,6 +123,9 @@ func _input(event: InputEvent) -> void:
 func _physics_process(delta):
 	if root_epoch != LevelServer.epoch: root_remaining = 0.0; cc_immunity = 0.0
 	cc_immunity = maxf(0,cc_immunity-delta)
+	if slow_time > 0:
+		slow_time = maxf(0,slow_time-delta)
+		if slow_time == 0: slow_amount = 0.0
 	if root_remaining > 0:
 		root_remaining = maxf(0,root_remaining-delta)
 		if root_remaining == 0: cc_immunity = 1.2
@@ -120,13 +135,14 @@ func _physics_process(delta):
 	if Utils.freeze_frame:
 		delta = 0.0
 	var direction = Input.get_vector("left", "right", "up", "down")
+	var pressure = 1.0-slow_amount if slow_time > 0 else 1.0
 	if is_knockback:
 		if direction != Vector2.ZERO && SPEED < knockback_speed:
 			velocity = (SPEED - knockback_speed) * global_position.direction_to(Utils.get_aim_world_position())
 		else:
 			velocity = -knockback_speed * global_position.direction_to(Utils.get_aim_world_position())
 	else:
-		velocity = direction * SPEED
+		velocity = direction * SPEED * pressure
 	if is_dash:
 		velocity = direction * 600
 	if root_remaining > 0: velocity = Vector2.ZERO

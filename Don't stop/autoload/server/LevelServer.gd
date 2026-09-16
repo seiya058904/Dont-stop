@@ -113,6 +113,13 @@ var horde_side = 0
 var horde_role = "E02"
 var horde_overlap_peak = 0
 var horde_while_alive = 0
+## B批: elites are a rate, not a one-shot boolean. `elite_clock` counts down inside the
+## 10 Hz spawn tick; the plan's `start` / `interval` / `cap` come from the encounter table.
+var elite_clock = 0.0
+var elites_created = 0
+var flank_used = 0
+var flank_clock = 0.0
+var flank_active = false
 
 func _ready() -> void:
 	timer.wait_time = 0.1
@@ -136,6 +143,10 @@ func roundStart() -> bool:
 	rush_remaining = 0; rush_used = false; rush_active = false; rush_clock = 0
 	horde_jobs.clear(); horde_clock=1.0; horde_since=0; horde_last_kills=Combat.kill_events; horde_index=0; horde_active=false; horde_overlap_peak=0; horde_while_alive=0
 	elite_spawned = false
+	elite_clock = float(M5Content.elite_plan(level).get("start",0.0))
+	elites_created = 0
+	flank_used = 0
+	flank_clock = 1.4
 	wait_time_temp = 0
 	level_time = DemoConfig.ENCOUNTERS[level].seconds
 	state = "COMBAT"
@@ -180,15 +191,28 @@ func onMonsterCreate():
 	wait_time_temp += 0.1
 	var config = DemoConfig.ENCOUNTERS[level]
 	if config.has("boss"): return
+	elite_clock = maxf(0,elite_clock-0.1)
 	tick_horde(config)
 	if level>=16 and not rush_used and level_info.time>=config.seconds*0.5:
-		rush_used = true; rush_remaining = 8 if level>=26 else (6 if level>=21 else 4)
+		rush_used = true
+		# Hell stages bring a longer, multi-direction rush instead of a longer spawn list.
+		rush_remaining = 8 if level>=26 else (6 if level>=21 else 4)
+		if config.get("flank",false): rush_remaining += 2
 		rush_side = spawn_index % M5Content.REGIONS[config.region].sides.size()
 	if rush_remaining>0:
 		rush_clock -= 0.1
 		if rush_clock<=0:
 			rush_active = true; monsterCreate.emit(); rush_active = false
 			rush_remaining -= 1; rush_clock = 0.3
+	if config.get("flank",false) and level_info.time >= config.seconds*0.35:
+		# Hell multi-direction arrival: the same cap, the same validation, a different arc.
+		flank_clock -= 0.1
+		if flank_clock <= 0:
+			flank_clock = 2.6
+			flank_used += 1
+			flank_active = true
+			monsterCreate.emit()
+			flank_active = false
 	var phase = level_info.time / config.seconds
 	# Arrival, build, peak, brief recovery. No hidden health scaling.
 	var multiplier = 1.3 if phase < 0.2 else (0.7 if phase < 0.8 else 1.5)
@@ -238,13 +262,18 @@ func victory() -> bool:
 	if not Demo.trial:
 		var stages = DemoConfig.ENCOUNTERS.keys()
 		Demo.next_stage = stages[mini(stages.find(level)+1,stages.size()-1)]
+		# Stage 30 finishes the NORMAL campaign and unlocks Stage 31; Stage 40 is the last
+		# stage that exists, so `next_stage` clamps to 40 and no Stage 41 is ever produced.
 		if level == 30: Demo.campaign_complete = true
+		if level == 40: Demo.hell_complete = true
 	roundVictory.emit()
 	return_to_camp()
 	return true
 
 func return_to_camp():
 	horde_jobs.clear(); horde_active=false
+	flank_active = false; flank_clock = 1.4; flank_used = 0
+	elite_clock = 0.0
 	if state == "CAMP": return
 	state = "RESOLVING"
 	timerStop()
@@ -253,6 +282,10 @@ func return_to_camp():
 	for node in get_tree().get_nodes_in_group("combat_transient"): node.queue_free()
 	for node in get_tree().get_nodes_in_group("monsters"):
 		node.queue_free()
+	# Fog is a property of Hell combat only: camp, death and menu are always bright, and the
+	# stage target is dropped so no later gate can believe Hell is still applied.
+	ArenaVisibility.restore(true)
+	FogPierce.discard()
 	Demo.kill_stacks = 0
 	Demo.stack_time = 0
 	state = "CAMP"

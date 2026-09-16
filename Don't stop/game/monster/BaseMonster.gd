@@ -28,6 +28,11 @@ func refresh_slow():
 		slow_time = maxf(slow_time,status.seconds)
 	slow_amount = minf(0.4,slow_amount)*(0.25 if is_boss else 1.0)
 var is_elite = false
+## Hell Mode's damage axis. Declared on the shared base so EVERY actor has it, including
+## E01, which keeps the plain Monster2 script and would otherwise reject the assignment.
+## Contact damage uses DemoConfig.CONTACT_DAMAGE_WEIGHT of it; telegraphed attacks use it
+## in full.
+var damage_scale = 1.0
 var displayed_flash = -1.0
 
 func apply_burn(source: String, amount: float, seconds: float, context: Dictionary):

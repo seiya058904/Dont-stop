@@ -49,7 +49,13 @@ func _ready():
 					var child = instance_from_id(child_id)
 					if is_instance_valid(child): Combat.hit(child,{"damage":10000.0,"epoch":LevelServer.epoch})
 			var wallet = PlayerData.gold; var generation = LevelServer.epoch
-			Combat.hit(boss,{"damage":10000.0,"epoch":generation})
+			# Lethal damage expressed WITHOUT hard-coding a boss HP total: an armoured boss
+			# absorbs 55% of the first hit, so keep hitting until it is really dead instead of
+			# assuming that one 10000 point hit must be enough.
+			for attempt in 4:
+				if boss.is_die: break
+				Combat.hit(boss,{"damage":10000.0,"epoch":generation})
+			check(boss.is_die,"lethal damage kills the boss")
 			var kills = Combat.kill_events
 			check(not Combat.hit(boss,{"damage":10000.0,"epoch":generation}) and Combat.kill_events == kills,"dead boss rejects duplicate damage and death")
 			if scenario in ["double-death","abandon"]:

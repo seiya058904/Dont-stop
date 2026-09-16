@@ -3,6 +3,11 @@ class_name DemoConfig
 
 const NORMAL_INCOMING = 0.875
 const BOSS_INCOMING = 1.1155
+## Hell Mode's damage axis (1.08x -> 1.90x) is applied in full to telegraphed attacks and
+## at this weight to raw body contact. Contact is the one source the player cannot dodge,
+## so scaling it fully would turn a fogged Hell wave into unavoidable chip damage and would
+## make difficulty come from HP totals rather than from the fight.
+const CONTACT_DAMAGE_WEIGHT = 0.5
 const PROFILE = "experience_demo"
 const INITIAL_GOLD = 9999
 const INITIAL_TALENT_POINTS = 9999

@@ -17,6 +17,10 @@ var owned_global_upgrades: Array = []
 var grenade_cooldown = 0.0
 var next_instance = 1
 var campaign_complete = false
+## Set when Stage 40 is cleared. Persisted as an OPTIONAL field: schema_version stays 6,
+## old saves simply lack the key and default to false, and CampSnapshot.validate() does not
+## require it - so no old save is invalidated by this batch and no migration is needed.
+var hell_complete = false
 var next_stage = 1
 var selected_stage = 1
 var trial = false
@@ -320,7 +324,7 @@ func on_kill(monster, context: Dictionary):
 func snapshot() -> Dictionary:
 	var weapons = []
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
-	return {"schema_version":6,"campaign_complete":campaign_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":6,"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}
@@ -387,6 +391,7 @@ func load_camp() -> bool:
 		if reward.id == 10: reward.kill_count = int(data.legacy_state.get("10",0))
 		if reward.has_method("restore_state"): reward.restore_state(data.legacy_state.get(str(reward.id),{}))
 	campaign_complete = data.get("campaign_complete",false)
+	hell_complete = data.get("hell_complete",false)
 	next_stage = int(data.next_stage)
 	selected_stage = int(data.selected_stage)
 	trial = false
@@ -433,7 +438,7 @@ func export_bad_save() -> String:
 func create_new_save() -> bool:
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
-	var fresh = {"schema_version":6,"campaign_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"equipped":""}
+	var fresh = {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"equipped":""}
 	var result = save_store.save(save_path,fresh)
 	if not result.success: return false
 	return load_camp()
