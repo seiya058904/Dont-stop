@@ -125,6 +125,23 @@ const VIEW = { w: 1366, h: 768 };
 // Design space of the game's ControlUI. Every rectangle the probe reports and
 // every point this script clicks is in these units.
 const DESIGN = { w: 410, h: 230 };
+// How far the product's crosshair may sit from the aim point, in DESIGN px.
+// Set from measurement, not taste. ui/widgets/Crosshair.gd writes
+// `global_position = Utils.get_aim_viewport_position() - size / 2` every frame
+// and the probe re-adds `size / 2`, so this residual is a sampling artefact of
+// comparing that stored position against the live mouse position - it is not
+// slack in the aim chain. Measured values, all on the same commit and the same
+// build:
+//   CI 35059568590 1.99 | 35060318021 2.37 | 35060328946 2.37 | 35062200639 2.54
+//   local 60 fps   2.22
+// The previous inline `2.5` sat inside that band - 11% above the 60 fps value -
+// and failed run 35062200639's aim-core job on an unchanged product, i.e. it was
+// measuring the sampler rather than the product. That is the same class of
+// defect 311df1d already fixed for the frame-rate tokens. 3.0 is the smallest
+// round value that clears every healthy sample above; the exact error is still
+// recorded and printed (marks.crosshair_vs_aim_design_px) so a real drift in the
+// aim chain would still be visible.
+const CROSSHAIR_AIM_TOLERANCE = 3.0;
 // The title menu's own start button (MainUI/VBoxContainer/start: P(8,127) S(66,18),
 // as the game itself prints it in "[leave] input ... start=[P: (8.0, 127.0) ...]").
 const MENU_START = { x: 41, y: 136 };
@@ -577,14 +594,14 @@ watchdog.unref?.();
 		const chk = await waitNewProbe(1, 6000);
 		const crossErr = chk.crh && chk.aimvp ? Math.hypot(chk.crh.x - chk.aimvp.x, chk.crh.y - chk.aimvp.y) : NaN;
 		marks.crosshair_vs_aim_design_px = Number.isFinite(crossErr) ? +crossErr.toFixed(2) : null;
-		token('CROSSHAIR_FOLLOWS_AIM', !!chk.crh && !!chk.aimvp && crossErr < 2.5,
+		token('CROSSHAIR_FOLLOWS_AIM', !!chk.crh && !!chk.aimvp && crossErr <= CROSSHAIR_AIM_TOLERANCE,
 			`crh=${chk.crh ? `(${chk.crh.x.toFixed(1)}, ${chk.crh.y.toFixed(1)})` : 'unreported'} ` +
 			`aimvp=${chk.aimvp ? `(${chk.aimvp.x.toFixed(1)}, ${chk.aimvp.y.toFixed(1)})` : 'unreported'} delta=${crossErr.toFixed(2)}`);
 		// And it is really on screen: a crosshair drawn at a valid design point inside
 		// the viewport, at the aim point. The capture below is the visual aid, not the
 		// judgement.
 		const onScreen = !!chk.crh && chk.crh.x >= 0 && chk.crh.x <= DESIGN.w && chk.crh.y >= 0 && chk.crh.y <= DESIGN.h;
-		token('CROSSHAIR_IS_ON_SCREEN_AT_THE_AIM_POINT', onScreen && crossErr < 2.5,
+		token('CROSSHAIR_IS_ON_SCREEN_AT_THE_AIM_POINT', onScreen && crossErr <= CROSSHAIR_AIM_TOLERANCE,
 			`crh=${chk.crh ? `(${chk.crh.x.toFixed(1)}, ${chk.crh.y.toFixed(1)})` : 'unreported'} inside ${DESIGN.w}x${DESIGN.h}`);
 		await page.screenshot({ path: path.join(outDir, 'aim-02-crosshair-visible.png') });
 		const mousemodeOk = chk.mm === 1 && !(await pointerLocked());
