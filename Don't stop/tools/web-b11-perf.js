@@ -38,8 +38,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 	page.on('console', m => {
 		const t = m.text();
 		if (t.startsWith('[smoke-perf]')) markers.push(t);
-		if (t.startsWith('[probe] perf ')) {
-			const line = t.slice('[probe] perf '.length);
+		if (t.startsWith('[perf] ')) {
+			const line = t.slice('[perf] '.length);
 			const num = k => { const m2 = line.match(new RegExp(k + '=([-\\d.]+)')); return m2 ? parseFloat(m2[1]) : NaN; };
 			samples.push({
 				avg: num('avg'), p50: num('p50'), p95: num('p95'), p99: num('p99'), max: num('max'),

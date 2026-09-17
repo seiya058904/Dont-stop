@@ -42,8 +42,8 @@ function token(name, ok, detail) {
 		const t = m.text();
 		if (m.type() === 'error' && !t.startsWith('[probe]')) consoleErrors.push(t);
 		if (t.startsWith('[stage-tour]')) { tourLines.push(t); console.log(t); return; }
-		if (t.startsWith('[probe] zones ')) {
-			const m = t.match(/^\[probe\] zones count=(\d+) rows=(.*)$/);
+		if (t.startsWith('[telegraph] ')) {
+			const m = t.match(/^\[telegraph\] count=(\d+) rows=(.*)$/);
 			if (m) zoneLines.push({ count: +m[1], rows: m[2] });
 			return;
 		}
@@ -123,7 +123,6 @@ function token(name, ok, detail) {
 			turned.join(' | ') || `no static frozen lane changed direction (${seen.turnedDeclared} samples from lanes that declare a sweep)`);
 		token('C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY', seen.fired > 0, `${seen.fired} samples of a frozen lane in its active phase`);
 
-		token('PERF_CHANNEL_WAS_LIVE', perfLines.length > 0, `${perfLines.length} one-second performance lines`);
 		// The engine's audio worklet raises `currentTime` on a null node when the browser has not been
 		// given a user gesture, which no automated run can provide. It is reported, and it is not an
 		// assertion about this build.

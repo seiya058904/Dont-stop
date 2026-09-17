@@ -331,6 +331,12 @@ func _probe_stream() -> void:
 ## One line per second with the numbers a frame-rate complaint has to be judged on. The frame
 ## statistics come from this node's own idle callback measured in microseconds, so they are the real
 ## cost of a frame on the machine under test and not a guess from a screenshot.
+##
+## Its prefix is `[perf]`, deliberately NOT `[probe]`. The probe channel's contract is "the state line
+## and the locator reports", and the acceptance and menu gates detect it by matching any `[probe] `
+## line and taking the last one. Publishing this line under that prefix made those gates parse a
+## performance report as state (`sm=null`, `gun=NaN`) and fail in a cascade that had nothing to do
+## with the product - see `_probe_zone_state()` for the same reasoning.
 func _probe_perf_report() -> void:
 	var now := Time.get_ticks_usec()
 	_probe_perf_clock += float(now-_probe_perf_last)/1000.0
@@ -351,7 +357,7 @@ func _probe_perf_report() -> void:
 	var particles := 0
 	for node in get_tree().get_nodes_in_group("monsters"):
 		if is_instance_valid(node) and node.has_node("body/AnimatedSprite2D"): particles += 1
-	print("[probe] perf avg=%.2f p50=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d frames=%d enemies=%d projectiles=%d telegraphs=%d hazards=%d vfx=%d particles=%d nodes=%d created=%d removed=%d nodes_delta=%d stage=%d" % [
+	print("[perf] avg=%.2f p50=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d frames=%d enemies=%d projectiles=%d telegraphs=%d hazards=%d vfx=%d particles=%d nodes=%d created=%d removed=%d nodes_delta=%d stage=%d" % [
 		total/samples.size(), samples[int(samples.size()*0.50)], samples[int(samples.size()*0.95)],
 		samples[int(samples.size()*0.99)], samples.back(), Engine.get_frames_per_second(),
 		samples.size(),
@@ -364,11 +370,14 @@ func _probe_perf_report() -> void:
 		LevelServer.level])
 	_probe_nodes_prev = nodes
 	var zones := get_tree().get_nodes_in_group("hostile_zone")
-	print("[probe] zones count=%d rows=%s" % [zones.size(), _probe_zone_state()])
+	print("[telegraph] count=%d rows=%s" % [zones.size(), _probe_zone_state()])
 
 ## The lock state of every live footprint, so "the laser froze and then fired at the lane it froze"
 ## is read off a real session rather than inferred from the pictures. `t` is seconds until the
 ## footprint may damage; `frozen` is the actor's own lock flag.
+## Prefix `[telegraph]`, NOT `[probe]`, for the reason given above `_probe_perf_report()`. The name
+## is also the honest one: this is the telegraph channel, not the general probe channel.
+##
 ## Fields are `name=value` pairs joined by `;` and rows are joined by `|`. Neither separator can occur
 ## inside a value: there is no text in this payload, only numbers and short identifiers. An earlier
 ## version wrote the direction as `dir=%.2f,%.2f`, which made the comma-load-bearing and silently broke
@@ -524,6 +533,14 @@ func camp_scroll() -> int:
 	return -1
 
 ## Read-only locators. The driver has to click the product's own controls with a
+##
+## PREFIX CONTRACT, and it is load bearing: `tools/web-aim-e2e.js` and
+## `tools/web-menu-return-e2e.js` detect this channel by matching ANY `[probe] ` line and taking the
+## LAST one, because on the base build every line here was either the 4 Hz state line or a one-off
+## rectangle. Anything added to this channel at a HIGHER rate than the state line therefore hijacks
+## them. B11 learned that the hard way: a `[probe] perf` line did exactly this and reddened two gates
+## with `sm=null`. So the state line, the rectangles and the one-shot `proj-shot` stay on `[probe] `,
+## and every high-rate report uses its own prefix: `[perf]`, `[telegraph]`, `[stage]`, `[locator]`.
 ## real mouse, so it needs their rectangles - and it needs them for the panel
 ## that is actually on screen. Reporting them from the live panels replaces the
 ## throwaway calibration page load (a whole extra engine boot) and removes the
@@ -601,7 +618,7 @@ func _probe_rect_diag() -> void:
 		for child in canvas.get_children():
 			var script: Variant = child.get_script()
 			children.append("%s[%s]" % [child.name,str((script as Script).resource_path.get_file()) if script != null else "none"])
-	print("[probe] rect-diag canvas=%s children=%s stack=%d titles=%d" % [
+	print("[locator] canvas=%s children=%s stack=%d titles=%d" % [
 		str(is_instance_valid(canvas)), str(children.slice(0,14)), Demo.pause_stack.size(),
 		_find_scripts(canvas,"ui/MainUI.gd").size() if is_instance_valid(canvas) else -1])
 
@@ -685,9 +702,14 @@ func _probe_emit_rect(tag: String, button: Control) -> void:
 	# `on_screen` is published rather than implied. A control that is scrolled outside its viewport
 	# still HAS a rectangle, and the difference between "not built yet" and "not scrolled to" is the
 	# difference between a defect and a driver that has not turned the wheel far enough.
-	print("[probe] rect %s id=%d on_screen=%s text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
-		tag, id, str(on_screen), _control_label(button), rect.position.x, rect.position.y,
-		rect.size.x, rect.size.y, rect.get_center().x, rect.get_center().y])
+	# Field ORDER is a contract here, not a style choice. `tools/web-aim-e2e.js` and
+	# `tools/web-menu-return-e2e.js` parse this line with a positional regex that reads
+	# `id=`, `text="..."`, `x=`, `y=`, `w=`, `h=`, `cx=`, `cy=` in that order, and B11 broke both gates
+	# by inserting `on_screen=` in the middle of it: the regex stopped matching, no rectangle was ever
+	# stored, and the driver could not click anything. New fields go on the END.
+	print("[probe] rect %s id=%d text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f on_screen=%s" % [
+		tag, id, _control_label(button), rect.position.x, rect.position.y,
+		rect.size.x, rect.size.y, rect.get_center().x, rect.get_center().y, str(on_screen)])
 
 ## The visible label of a published control. `text` exists on Button and LineEdit and NOT on Control,
 ## and reading it off a Control raised inside the print above - which silently produced no line at all.
@@ -725,9 +747,9 @@ func _probe_on_screen(button: Control) -> bool:
 func _probe_report_stage(root: Node, stage: int) -> void:
 	var button := _find_stage_button(root, stage)
 	if button == null:
-		print("[probe] stage %d missing" % stage)
+		print("[stage] %d missing" % stage)
 		return
-	print("[probe] stage %d enabled=%s text=\"%s\"" % [stage, str(not button.disabled), button.text])
+	print("[stage] %d enabled=%s text=\"%s\"" % [stage, str(not button.disabled), button.text])
 	_probe_emit_rect("stage-%d" % stage, button)
 
 func _find_stage_button(node: Node, stage: int) -> Button:
