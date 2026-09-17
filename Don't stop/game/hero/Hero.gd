@@ -123,6 +123,7 @@ func _input(event: InputEvent) -> void:
 func _physics_process(delta):
 	if root_epoch != LevelServer.epoch: root_remaining = 0.0; cc_immunity = 0.0
 	cc_immunity = maxf(0,cc_immunity-delta)
+	contact_immunity = maxf(0,contact_immunity-delta)
 	if slow_time > 0:
 		slow_time = maxf(0,slow_time-delta)
 		if slow_time == 0: slow_amount = 0.0
@@ -209,14 +210,50 @@ signal incoming_hit(raw: float, applied: float, boss: bool)
 ## back - it is written once and emitted, so it cannot change what a hit does.
 signal damage_taken(raw: float, applied: float, source: String, attacker: Node)
 
+## ---- the contact bracket's hit-rate limiter -------------------------------------------------
+##
+## WHY THIS EXISTS. Every close-range attack in this game carried its cooldown on the ATTACKER
+## (`DemoEnemy.contact_cooldown`, `TacticalEnemy.contact_cooldown`), never on the player. That is
+## correct for one enemy and catastrophic for fifty: a Hell stage fields up to 146 simultaneous
+## monsters, and the terminal ones close to contact range. Measured on origin/main, a stage-39
+## run held 127.5 monsters alive on average with 52-64 of them inside 80 px. Fifty independent
+## 0.8 s cooldowns is fifty hits on the same frame, and at stage 39 a contact hit is worth about
+## 1.2 HP against a 5 HP base pool. The reported experience - "you cannot move and then you are
+## simply dead" - is that arithmetic, not a difficulty setting.
+##
+## The fix is a hit-RATE limiter, not a damage-system rewrite: after a contact or self-destruct
+## hit lands, further hits from those two sources are dropped for CONTACT_IMMUNITY seconds. It
+## lives in Hero because the player is the only thing that is common to all of them. A blocked
+## hit does NOT refresh the window, so sustained pressure converges on 1/0.6 hits per second
+## instead of on the crowd size - and the player can always see it happening, because contact is
+## the one attack that is standing in front of them.
+##
+## Telegraphs are deliberately NOT throttled. Standing inside a marked, warned, frozen footprint
+## is a mistake the player can read and undo, so it keeps paying what it says it pays. The two
+## sources this gates are the only ones with no footprint to read.
+const CONTACT_SOURCES := ["contact", "detonate"]
+const CONTACT_IMMUNITY := 0.6
+var contact_immunity := 0.0
+## Observability for the fairness audit. Counters only.
+var contact_blocked := 0
+
+func source_throttled(source: String) -> bool:
+	return source in CONTACT_SOURCES and contact_immunity > 0.0
+
 func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	# E2E driver mode keeps the test character alive so real inputs can be
 	# asserted against; gated behind the --e2e cmdline flag only.
 	if "--e2e" in OS.get_cmdline_args() or "--e2e" in OS.get_cmdline_user_args(): return
 	if is_dead or LevelServer.state != "COMBAT" or get_tree().paused: return
+	if source_throttled(source):
+		contact_blocked += 1
+		return
 	if Demo.shield_hit(hurt):
 		Utils.showHitLabel("护盾",self)
 		return
+	# Armed only for a hit that is really about to land, so a shield or a bad-save refusal can
+	# never start the window on the player's behalf.
+	if source in CONTACT_SOURCES: contact_immunity = CONTACT_IMMUNITY
 	hurt = maxf(minimum_pressure,hurt)
 	var nodes = get_tree().get_nodes_in_group("reward")
 	var temp_hurt = 0

@@ -9,67 +9,155 @@ var locked_direction = Vector2.ZERO
 var locked_point = Vector2.ZERO
 var contact_cooldown = 0.0
 
-## ---- B10: bounded tracking lock (the ONE implementation, in the base class) ----------------
+## ---- B11: the ONE bounded attack lock, shared by both rosters -------------------------------
 ##
-## WHY. Every locked attack used to freeze `locked_direction` / `locked_point` the instant the
-## attack was chosen - i.e. at the START of the warning - with no lead at all. The player moves
-## ~106 px/s, so a 0.6-0.75 s warning let them walk 64-80 px out of a fixed line, and a beam lane
-## 8 px wide or a 40 px artillery circle was then trivially escaped by any lateral step.
-## tests/B10Threat.gd measured the consequence: against a player who simply held ONE direction at
-## full speed, every special attack in the game scored exactly 0 hits.
+## WHY THIS SECTION WAS REWRITTEN. B10 replaced a snapshot-at-warning-start with a lock that
+## followed the player for 55% of the warning and then froze carrying a 0.15-0.35 s LEAD of the
+## player's own velocity. The lead is what broke the brief: it aims where the player WILL be,
+## which eats exactly the time the player needs to leave the marked area.
 ##
-## The fix is the brief's own: the aim FOLLOWS the player for the first part of the warning and
-## FREEZES for the last part, and the frozen value carries a BOUNDED lead of 0.15-0.35 s of the
-## player's own velocity. Never a perfect prediction, and never a lock that persists to the damage
-## frame: after the freeze there is still a third to a half of the warning left to step out of.
-## The player has to genuinely change direction to break the aim - and still can.
+## Measured on the real numbers of this build (player SPEED 110 px/s, `CircleShape2D` radius 7
+## from game/hero/Hero.tscn, `HostileZone` beam damage test `distance_to_segment <= width+6 = 16`):
 ##
-## This lives in DemoEnemy because it is the base of BOTH rosters (TacticalEnemy extends it), so
-## there is exactly one implementation and the two rosters cannot drift apart.
-const LOCK_TRACK_SHARE := 0.55
-const LOCK_LEAD_MIN := 0.15
-const LOCK_LEAD_MAX := 0.35
-## A PROJECTILE gets a different cap, and the reason is not a loophole. A footprint appears
-## instantly where it was aimed, so leading one by more than a fraction of a second would be an
-## unavoidable hit. A projectile has to FLY and cannot correct in the air, so leading it by its own
-## travel time is a lead shot, not a homing shot: a player who changes direction or speed after it
-## is fired still walks away from it. Without this, a 120 px/s pellet crossing 150 px arrives
-## 1.25 s late while the aim only compensated 0.3 s - so holding ONE direction stayed a complete
-## defence, which is exactly the behaviour this round is about.
-const PROJECTILE_LEAD_MAX := 1.10
+##   warning 0.65 s, freeze at 55% -> 0.2925 s left, lead 0.30 s, beam half-width 16 px
+##   * player standing still on the centreline at the freeze:
+##     displacement available = 0.2925 s * 110 = 32.2 px, and the lead points 0.30 s * 110 = 33 px
+##     AHEAD of them, so their own movement has to cover the lead before it covers anything else.
+##     32.2 px of travel against 33 px of lead leaves them ~1 px inside the beam. Net escape: nil.
+##   * player already moving along the beam at the freeze: 0 px escape. That is the "laser keeps
+##     tracking me, there is no way to dodge" report, and it is arithmetically exact.
+##   * best possible perpendicular escape: 0.707 * 110 * max(0, 0.2925 - 0.30) = 0 px.
+##
+## So the mechanism was not "hard", it was unfair, and it was unfair by construction. B11 fixes
+## the construction, not the number:
+##
+##   1. A reaction interval is COMPUTED, never typed in. It is the time a player needs to leave
+##      the frozen damage area from its worst legal starting point (dead centre), and it is
+##      derived from this build's own movement speed, the player's own collision radius and the
+##      attack's own damage half-width:
+##
+##        escape   = (half_width + player_radius) / speed   -- the pure travel term
+##        reaction = HUMAN_REACTION + escape * REACTION_SAFETY
+##
+##      `HUMAN_REACTION` is 0.25 s because zero is not a reaction, it is a frame. `REACTION_SAFETY`
+##      is 1.2, a margin on the travel term only.
+##   2. The freeze happens at a fixed short TRACK window after the aim starts, and the lock's own
+##      requirement extends the attack's warning until the full reaction interval fits after the
+##      freeze. An attack can therefore never be authored back into an undodgeable state by
+##      shortening its warning: shortening it makes the freeze earlier instead.
+##   3. From the freeze onward the geometry is FROZEN: target point, direction, angle, swept arc,
+##      clipped length, damage test. `step_lock()` may not touch any of it, and `refresh_zones()`
+##      may not be called at all. FIRE attacks the frozen region or nothing.
+##   4. A lead is still allowed, because a stationary player must not be able to ignore a
+##      telegraph forever - but it is CAPPED by the same computed interval, so it can only ever
+##      consume the safety margin and never the escape time:
+##
+##        lead_cap = max(0, escape_time - escape * REACTION_SAFETY * LEAD_FRACTION)
+##
+##      With the numbers above escape_time is 0.483 s and escape is 0.402 s, so the cap lands at
+##      0.19 s. Every caller routes through `begin_lock()`, so no attack can opt out.
+const TRACK_SECONDS := 0.35
+const HUMAN_REACTION := 0.25
+const REACTION_SAFETY := 1.2
+const LEAD_FRACTION := 0.5
+## Player collision radius, read from game/hero/Hero.tscn (`CircleShape2D` radius = 7.0). It is
+## a constant because the offset must exist before a player is in the tree, and a test asserts it
+## still equals the real collider.
+const PLAYER_RADIUS := 7.0
+## cos(45 degrees). See `escape_seconds()` for why the window is built from the 45-degree case.
+const ESCAPE_COS := 0.7071067811865476
+## A damage footprint's own half-extent used for the "can I leave it" calculation.
+const BEAM_SLOP := 6.0
+
 var lock_track := 0.0
 var lock_lead := 0.0
 var lock_frozen := true
+## Observability for the B11 fairness audit and the read-only Web probe. Read-only: nothing in
+## the product branches on these.
+var lock_frozen_at := 0.0
+var lock_fire_at := 0.0
+var lock_geometry := {}
+## Lane half-width of a charge footprint. `zone()` sets 18 for a non-boss charge and 22 for a
+## boss one; both are declared here because both windows are computed here, and a boss charge that
+## used the narrow number would be a silent unfairness. Declared on the BASE class because the base
+## class computes the reaction window for the roster it owns (E02/E04/E05).
+const CHARGE_WIDTH := 18.0
+const BOSS_CHARGE_WIDTH := 22.0
 
-## The player's top speed is read from the build, never assumed; the lead is clamped to it so a
-## knockback or a dash cannot turn the prediction into a teleport.
+## The player's top speed is read from the build, never assumed.
 func player_speed_cap() -> float:
 	var speed := 110.0
 	if is_instance_valid(Utils.player) and Utils.player.SPEED > 0.0:
 		speed = float(Utils.player.SPEED)
 	return speed
 
-## Lead for a projectile attack. A round has to be aimed where the player will be when the ROUND
-## ARRIVES, so the lead is the wind-up still to run PLUS the flight time - not the flight time
-## alone. Ignoring the remaining wind-up left the volley about 26 px short against a player who
-## kept one direction (the flight was compensated, the 0.34 s of warning left after the lock
-## froze was not). Real information only: distance, the attack's own muzzle speed, and its own
-## warning length.
-func projectile_lead(muzzle_speed: float, warning: float) -> float:
-	if not is_instance_valid(Utils.player) or muzzle_speed <= 0.0: return LOCK_LEAD_MIN
-	var remaining := maxf(0.0,warning*(1.0-LOCK_TRACK_SHARE))
+## Seconds a player needs to travel `required_clearance` px sideways, at the WORST useful escape
+## ANGLE. A player on a beam's centreline has to move perpendicular to it, and perpendicular is the
+## LONGEST useful escape: an escape at 45 degrees covers the clearance with a perpendicular
+## component of only cos(45) of the distance travelled. Bounding the window by the perpendicular
+## case alone would therefore leave the 45-degree case short, so the window is built from the
+## 45-degree case and the perpendicular case is then covered with room to spare.
+func escape_seconds(required_clearance: float) -> float:
+	return maxf(0.02,required_clearance/(maxf(1.0,player_speed_cap())*ESCAPE_COS))
+
+## The reaction interval an attack MUST leave between its freeze and its first damaging frame.
+## Prints nothing; the audit reads it through `aim_state()`.
+func reaction_interval(required_clearance: float) -> float:
+	return HUMAN_REACTION+escape_seconds(required_clearance)*REACTION_SAFETY
+
+## The full warning an attack needs so that `reaction_interval()` fits after `TRACK_SECONDS`.
+func warning_for(required_clearance: float) -> float:
+	return TRACK_SECONDS+reaction_interval(required_clearance)
+
+## Largest lead this attack may carry. See LEAD_FRACTION above: it may spend the safety margin
+## and nothing else, so the player's own escape time is never consumed by prediction.
+func lead_cap(required_clearance: float) -> float:
+	var escape := escape_seconds(required_clearance)
+	return maxf(0.0,escape-escape*REACTION_SAFETY*LEAD_FRACTION)
+
+## Half-extent of the damage footprint a `kind` really tests against the player centre. Mirrors
+## HostileZone.step()'s own test so the number the window is computed from is the number that
+## hurts: `distance_to_segment <= width+6` and `distance <= radius`.
+func required_clearance(kind: String, footprint: float, width: float) -> float:
+	var half := footprint
+	if kind in ["line","charge"]: half = width+BEAM_SLOP
+	return half+PLAYER_RADIUS
+
+## The volley's own envelope: a pellet hurts inside 12 px of its path (EnemyShot), plus the
+## player's radius. Kept as a function so the telegraph and the reaction window cannot drift.
+func volley_clearance() -> float:
+	return 12.0+PLAYER_RADIUS
+
+## Lead for a volley. A round has to be aimed where the player will be when the ROUND ARRIVES,
+## so the natural lead is the wind-up still to run plus the flight time. It is then clamped by
+## `lead_cap()` like every other attack - a projectile cannot be ordered to spend the player's
+## escape time just because it flies slowly.
+func projectile_lead(muzzle_speed: float, remaining_windup: float) -> float:
+	if not is_instance_valid(Utils.player) or muzzle_speed <= 0.0: return 0.0
 	var flight := global_position.distance_to(Utils.player.global_position)/muzzle_speed
-	return clampf(remaining+flight,LOCK_LEAD_MIN,PROJECTILE_LEAD_MAX+remaining)
+	return maxf(0.0,remaining_windup)+flight
 
-## Take a fresh lock at the start of a warning. `warning` is the full warning length in seconds and
-## `cap` the largest lead this kind of attack may carry (see PROJECTILE_LEAD_MAX).
-func begin_lock(warning: float, lead: float, cap := LOCK_LEAD_MAX) -> void:
-	lock_track = maxf(0.05,warning)*LOCK_TRACK_SHARE
-	lock_lead = clampf(lead,LOCK_LEAD_MIN,maxf(LOCK_LEAD_MIN,cap))
-	lock_frozen = lock_track <= 0.0
+## Take a fresh lock. `full_warning` is the warning the attack wants (it is extended to
+## `warning_for()` if it is too short), `lead_wanted` the lead the attack would like, and
+## `clearance` the distance the player must put between themselves and the frozen centre.
+## Returns the seconds the caller must keep the warning running so that the interval between the
+## freeze and the first damaging frame is at least the computed reaction interval.
+func begin_lock(full_warning: float, lead_wanted: float, clearance: float) -> float:
+	var reaction := reaction_interval(clearance)
+	var cap := lead_cap(clearance)
+	lock_track = TRACK_SECONDS
+	lock_lead = clampf(lead_wanted,0.0,cap)
+	lock_frozen = false
+	lock_frozen_at = 0.0
+	lock_fire_at = 0.0
+	lock_geometry = {}
+	var wanted := maxf(full_warning,0.0)
+	if wanted < TRACK_SECONDS+reaction:
+		wanted = TRACK_SECONDS+reaction
+	return maxf(reaction,wanted-lock_track)
 
-## Aim at a point, optionally leading the player's own velocity by `lead` seconds. Real
-## information only: the player's position and velocity, and this actor's own attack state.
+## Aim at a point, optionally leading the player's own velocity by `lead` seconds. Called with a
+## non-zero lead exactly once, at the freeze.
 func aim_at(point: Vector2, lead: float) -> void:
 	if not is_instance_valid(Utils.player): return
 	var aim := point
@@ -77,10 +165,11 @@ func aim_at(point: Vector2, lead: float) -> void:
 		aim = point+Utils.player.velocity.limit_length(player_speed_cap())*lead
 	locked_point = aim
 	locked_direction = global_position.direction_to(aim)
+	lock_geometry = {"origin":global_position,"point":locked_point,"direction":locked_direction,
+		"lead":lead,"frozen_at":lock_frozen_at}
 
-## One step of the lock. While tracking it follows the player's CURRENT position with no lead; at
-## the freeze it applies the bounded lead once. `refresh_zones()` is what lets a subclass carry
-## footprints that are already on the ground along with the lock.
+## One step of the lock. While tracking it follows the player's CURRENT position with NO lead.
+## At the freeze it takes the bounded lead once and then never touches the geometry again.
 func step_lock(delta: float) -> void:
 	if lock_frozen or phase != "warn": return
 	lock_track -= delta
@@ -89,10 +178,17 @@ func step_lock(delta: float) -> void:
 		refresh_zones()
 		return
 	lock_frozen = true
+	lock_frozen_at = Time.get_ticks_msec()/1000.0
 	aim_at(Utils.player.global_position,lock_lead)
+	# The last call of this function, ever, for this attack: after it returns the geometry is
+	# frozen and refresh_zones() is unreachable for the rest of the wind-up.
 	refresh_zones()
 
-## Overridden by TacticalEnemy, which owns warning footprints that follow the lock.
+## Read-only view of the lock for tests and the audit. Nothing in the product branches on it.
+func aim_state() -> Dictionary:
+	return {"frozen":lock_frozen,"track":lock_track,"lead":lock_lead,
+		"frozen_at":lock_frozen_at,"fire_at":lock_fire_at,"geometry":lock_geometry.duplicate()}
+
 func refresh_zones() -> void:
 	pass
 
@@ -153,18 +249,17 @@ func _physics_process(delta):
 		if phase_time <= 0:
 			if role == "E04":
 				phase = "dash"
-				# B10: the charge is now SIZED TO ARRIVE. It used to run a fixed 0.45 s at 240 px/s =
-				# 108 px, while its own engage gate opens anywhere inside 170 px - so from most of
-				# its own firing range the dash simply stopped short of the player.
-				# tests/B10Threat.gd measured exactly 0 hits per trial against a player who never
-				# moved at all, which is the clearest possible statement that it had no threat.
+				# The charge is SIZED TO ARRIVE, and it keeps that property: it runs for exactly the
+				# time it needs to cross the distance the lock was taken at, at its own dash speed.
+				# The frozen direction is what the warning showed, so arriving means arriving on the
+				# marked lane - not chasing a player who has already stepped off it.
 				phase_time = clampf((distance+22.0)/240.0,0.3,0.85)
 			else:
 				var count = 5 if LevelServer.level>=6 else 1
 				if is_elite: count += 3
-				# B10: 85/95 -> 120, and the centre pellet leads with the lock's bounded lead.
-				# Still slower than the player (106), so a read-and-move answer keeps working; it
-				# is just no longer free to ignore.
+				# 120 px/s is still slower than the player, so a read-and-move answer works: step
+				# perpendicular to the frozen lane and the volley crosses behind. The centre pellet
+				# is the fast one and it carries the lock's bounded lead.
 				var centre := int(count)/2
 				for i in count:
 					var spread = 0.2
@@ -181,10 +276,13 @@ func _physics_process(delta):
 			contact_cooldown = 0.8
 		if phase_time <= 0 or get_slide_collision_count() > 0:
 			if role == "E04" and is_elite:
-				# Elite charge is a two-step: the second dash re-locks onto the player.
+				# Elite charge is a two-step, and the second step gets a FULL new warning: a fresh
+				# tracking phase, a fresh freeze, and the computed reaction interval after it. The
+				# old fixed 0.4 s warning was shorter than the interval a charge needs, which is how
+				# a "two-step" turned into an unavoidable second hit.
 				is_elite = true
-				locked_direction = global_position.direction_to(Utils.player.global_position)
-				phase = "warn"; phase_time = 0.4
+				phase = "warn"
+				begin_lock(0.6,0.0,required_clearance("charge",0.0,CHARGE_WIDTH))
 				preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,16,locked_direction,"charge")
 				return
 			phase = "recover"
@@ -199,13 +297,19 @@ func _physics_process(delta):
 	super._physics_process(delta)
 	if distance < 170 and distance > 35 and Combat.clear_line(global_position,Utils.player.global_position):
 		phase = "warn"
+		# The wanted warning is the SMALLEST value that still fits the freeze plus the computed
+		# reaction interval, so it cannot regress by an edit and cannot be padded by accident.
 		if role == "E04":
-			# A charge is a footprint: a bounded fraction-of-a-second lead is all it may carry.
-			begin_lock(0.6,0.25)
+			# A charge is a contact footprint: the player leaves it by stepping off the lane, so
+			# the clearance is the player's own diameter plus the dash's contact reach. No lead:
+			# a charge aimed at where the player is GOING is a charge that cannot be out-walked.
+			var clearance := required_clearance("charge",0.0,CHARGE_WIDTH)
+			phase_time = begin_lock(warning_for(clearance),0.0,clearance)
 		else:
-			# A pellet volley leads by its own flight time: it cannot correct in the air, so
-			# this punishes a player who keeps one direction and is still walkable-away-from.
-			begin_lock(0.75,projectile_lead(145.0,0.75),PROJECTILE_LEAD_MAX+0.75)
+			# A pellet volley may lead by its own flight time, bounded by lead_cap().
+			var clearance := volley_clearance()
+			var reaction := reaction_interval(clearance)
+			phase_time = begin_lock(warning_for(clearance),projectile_lead(145.0,reaction),clearance)
 
 func onAtk():
 	pass
@@ -219,12 +323,14 @@ func _draw():
 	if phase == "spawn": draw_arc(Vector2.ZERO,14,0,TAU,16,Color(0.6,0.85,1,0.6),1)
 	if role == "E04":
 		draw_polyline(PackedVector2Array([Vector2(-8,-18),Vector2(0,-25),Vector2(8,-18)]),Color(1,0.65,0.2),2)
-		if phase == "warn":
-			preload("res://game/effects/CombatTelegraph.gd").paint(self,"charge",locked_direction,0,108,19,0,1-phase_time/0.6,false,0.0,{ },true,"charge")
+		# The charge's warning is the real `HostileZone` lane created in _physics_process: it
+		# carries the true length and the true width, and it is the geometry that will hurt.
+		# The old extra `paint()` lane here was a second, decorative overlay drawn 108 px long
+		# against a real zone of hundreds of pixels, so the two disagreed on screen.
 	if role == "E05":
 		draw_arc(Vector2(0,-12),10,PI,TAU,12,Color(0.7,1,0.4),2)
-		if phase == "warn":
+		if phase == "warn" and lock_frozen:
+			# A muzzle glow plus a lane as long as the volley's own damage envelope, drawn only
+			# once the aim is FROZEN, because that is the moment the lane is a promise.
 			draw_circle(Vector2(0,-20),3+sin(phase_time*18),Color(1,0.6,0.3))
-			# A short projectile-family lane makes the muzzle direction readable, so the
-			# volley is never a surprise in fog.
-			preload("res://game/effects/CombatTelegraph.gd").paint(self,"line",locked_direction,0,150,10,0,clampf(1.0-phase_time/0.75,0,1),false,0.0,{ },true,"projectile")
+			preload("res://game/effects/CombatTelegraph.gd").paint(self,"line",locked_direction,0,150,volley_clearance(),0,1.0,false,0.0,{ },true,"projectile")

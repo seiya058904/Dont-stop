@@ -222,6 +222,9 @@ func build_navigation():
 	navigation.offset = Vector2(8,8)
 	navigation.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	navigation.update()
+	# One reusable shape and one reusable query for the whole pass. This runs once per scene load,
+	# but it is 1972 cells: allocating a CircleShape2D and a PhysicsShapeQueryParameters2D per cell
+	# was 1972 allocations for a result that never changes.
 	var shape = CircleShape2D.new()
 	shape.radius = 7
 	var query = PhysicsShapeQueryParameters2D.new()
@@ -235,12 +238,16 @@ func build_navigation():
 		for y in range(18,52):
 			var cell = Vector2i(x,y)
 			var point = navigation.get_point_position(cell)
-			query.transform = Transform2D(0,point)
 			var ground = $TileMap3.get_cell_source_id(0,$TileMap3.local_to_map(point)) != -1
-			var hits = space.intersect_shape(query,1)
+			# A cell with no ground is already solid; asking the physics world about it cannot change
+			# that answer, so the query is skipped. Cells with ground are asked exactly as before.
+			var blocked = false
+			if ground:
+				query.transform = Transform2D(0,point)
+				blocked = not space.intersect_shape(query,1).is_empty()
 			if ground: ground_count += 1
-			if not hits.is_empty(): collision_count += 1
-			var solid = not ground or not hits.is_empty()
+			if blocked: collision_count += 1
+			var solid = not ground or blocked
 			navigation.set_point_solid(cell,solid)
 			if not solid: walkable.append(cell)
 	nav_ready = true
@@ -305,12 +312,22 @@ func spawn_point(radius := -1.0) -> Vector2:
 	return Vector2.INF
 
 ## Same shape query the arena uses, for the town's navigation branch.
-func _nav_point_clear(point: Vector2, radius: float) -> bool:
+## Cached per radius, exactly like the arena's own copy: `spawn_point()` asks this once per candidate
+## cell, so an uncached version allocated two physics objects per candidate.
+var _town_queries: Dictionary = {}
+func _nav_query(radius: float) -> PhysicsShapeQueryParameters2D:
+	var key := snappedf(radius,0.01)
+	if _town_queries.has(key): return _town_queries[key]
 	var shape := CircleShape2D.new()
 	shape.radius = radius
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
 	query.collision_mask = 2147483649
+	_town_queries[key] = query
+	return query
+
+func _nav_point_clear(point: Vector2, radius: float) -> bool:
+	var query := _nav_query(radius)
 	query.transform = Transform2D(0,point)
 	query.exclude = [Utils.player.get_rid()] if is_instance_valid(Utils.player) else []
 	return get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()

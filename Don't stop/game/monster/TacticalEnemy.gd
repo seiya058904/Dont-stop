@@ -215,39 +215,267 @@ func _schedule():
 ## player a beat to reposition between problems.
 const COMBO_GAP := 1.0
 
-## ---- B10: per-attack parameters for the bounded tracking lock -------------------------------
+## ---- B11: per-attack clearance, and which footprints follow the lock -------------------------
 ##
-## The mechanism itself lives ONCE, in the base class (game/monster/DemoEnemy.gd, which this class
-## extends): the aim follows the player for the first part of a warning, then freezes with a
-## bounded lead of the player's own velocity. Read the block there for why - in short, a snapshot
-## taken at the START of a 0.65 s warning is stale before the shot exists, and
-## tests/B10Threat.gd measured every special attack scoring 0 hits against a player who simply
-## held one direction.
+## The mechanism lives ONCE, in the base class (game/monster/DemoEnemy.gd): a short TRACK window,
+## then a FREEZE, then a COMPUTED reaction interval, then FIRE at the frozen geometry. Read that
+## block for the arithmetic. What this class decides is only:
 ##
-## What is decided here is only the SIZE of the lead per attack, and which footprints follow the
-## lock while it is still tracking.
+##   * `clearance(kind)`: how far the player must get from the frozen damage footprint, which is
+##     what the reaction interval is computed from. It mirrors `HostileZone`'s own damage test and
+##     `EnemyShot`'s own hit radius, so the number the window is built from is the number that
+##     hurts. An attack whose geometry can grow (a boss phase II ring) reports the LARGER one.
+##   * `LEAD_WANTED`: how much of the player's motion this attack would like to predict. Every
+##     value is clamped by `lead_cap()` in the base class, so a wrong number here cannot make an
+##     attack unavoidable - it can only waste the safety margin.
+##   * `TRACKED_KINDS`: which footprints re-aim while the aim is STILL TRACKING. Nothing re-aims
+##     after the freeze; a static lane must not follow anybody.
 ##
-## Longer warnings get more lead because the player has more time to move during them; the
-## control and detonate payloads get the least, so their commitment stays readable.
-const LEAD_BY_KIND := {
-	"beam":0.30,"cross":0.25,"cross_laser":0.25,"artillery":0.35,"tremor":0.30,
-	"charge":0.25,"cone":0.20,"detonate":0.20,"toxin":0.20,"shockwave":0.20,
-	"root_shot":0.30,"toxic_zone":0.30,"band":0.30,
+## A footprint's OWN warning is bumped by `HostileZone._ready()` to `FAIR_WARNING` in Hell, so the
+## warning passed here is already a floor - and the frozen geometry it describes is what fires.
+const LEAD_WANTED := {
+	"beam":0.16,"cross":0.16,"cross_laser":0.16,"artillery":0.24,"tremor":0.20,
+	"charge":0.0,"cone":0.18,"detonate":0.16,"toxin":0.16,"shockwave":0.16,
+	"root_shot":0.24,"toxic_zone":0.24,"band":0.20,
+	"cleave":0.18,"slam":0.18,"brood":0.0,"lockdown":0.20,"pulse":0.18,
+	"dash":0.0,"sweep":0.16,"burst":0.18,"summon":0.0,"heal":0.0,
 }
-## Attacks whose real payload is a PROJECTILE rather than a footprint. They lead by the round's own
-## flight time instead of by a fixed fraction of a second, and may carry a much longer lead,
-## because a projectile cannot correct in the air - see PROJECTILE_LEAD_MAX in DemoEnemy, which is
-## the base class this one extends.
+## Attacks whose real payload is a PROJECTILE rather than a footprint. They want a lead of the
+## round's own flight time instead of a fixed fraction of a second, still clamped by `lead_cap()`.
 const PROJECTILE_KINDS := {"artillery":140.0,"root_shot":150.0,"toxic_zone":130.0}
-## Only these footprints re-aim with the lock. A summon/brood marker is decoration and must not
-## follow anybody.
+## Only these footprints re-aim with the lock, and only WHILE IT IS TRACKING. A summon/brood
+## marker is decoration and must not follow anybody, and nothing follows the aim once it is frozen.
 const TRACKED_KINDS := ["line","charge","cone","circle","tremor","artillery","toxin"]
+
+## Footprint half-widths, kept as named constants because the reaction window is DERIVED from them:
+## an edit that widens a lane without widening its window is then a visible inconsistency instead of
+## a silent unfairness. Every value here is the REAL number the corresponding `zone()` call ends up
+## with, and `tests/B11Fairness.gd` compares the constant against the live footprint rather than
+## against this comment.
+
+## `HostileZone.width` defaults to 8 and `zone()` only overrides it for a charge, so a laser lane,
+## a sweep and a tremor lane are all 8 wide. The damage test is `dist_to_segment <= width + 6`.
+const LASER_WIDTH := 8.0
+## The sliding band is a `shock` lane, which keeps the same 8. Its danger is its SWEEP, not a wider
+## line, so its clearance is the same as a laser's.
+const BAND_WIDTH := 8.0
+## Reach of the ring an untargeted `zone("circle", ...)` covers, used for the window.
+const ARTILLERY_REACH := 40.0
+const SLAM_REACH := 72.0
+const DETONATE_REACH := 58.0
+const SHOCKWAVE_REACH := 100.0
+## Warning floor for a non-fog stage. The shortest authored wind-up this build ships, so a stage
+## without fog keeps the pacing it was tuned with while every attack still gets its interval.
+const BASE_WINDUP := 0.8
+
+## Distance the player must put between themselves and this attack's frozen damage footprint.
+## Read off the real geometry of the `_begin()` branches below, and deliberately CONSERVATIVE:
+## for a cone it uses the full reach rather than the cheaper sideways exit, so the window is always
+## at least what the geometry needs. Mirrors `HostileZone.step()`'s own tests
+## (`distance_to_segment <= width+6` for a lane, `distance <= radius` for a circle) and
+## `EnemyShot`'s 12 px hit radius, so the number the window is built from is the number that hurts.
+func clearance(kind: String) -> float:
+	match kind:
+		"beam","cross","cross_laser","sweep","tremor":
+			return required_clearance("line",0.0,LASER_WIDTH)
+		# A boss charge lays a WIDER lane than an ordinary one (HostileZone width 22 against 18), and the
+		# window is computed from the width that will really hurt, so a boss's own charge and dash both use
+		# the boss extent. Anything else would leave a six-pixel blind spot in a boss's reaction window.
+		"charge","dash": return required_clearance("charge",0.0,BOSS_CHARGE_WIDTH if is_boss else CHARGE_WIDTH)
+		"cone": return required_clearance("circle",60.0,0.0)
+		"root_shot": return required_clearance("circle",150.0,0.0)
+		"pulse": return required_clearance("circle",160.0,0.0)
+		"cleave": return required_clearance("circle",125.0,0.0)
+		"burst": return required_clearance("circle",240.0,0.0)
+		"artillery": return required_clearance("circle",ARTILLERY_REACH,0.0)
+		"lockdown": return required_clearance("circle",65.0,0.0)
+		"slam": return required_clearance("circle",SLAM_REACH,0.0)
+		"detonate": return required_clearance("circle",DETONATE_REACH,0.0)
+		"toxin": return required_clearance("circle",78.0,0.0)
+		"toxic_zone": return required_clearance("circle",96.0,0.0)
+		"shockwave": return required_clearance("circle",SHOCKWAVE_REACH,0.0)
+		"band": return required_clearance("line",0.0,BAND_WIDTH)
+	# A pure utility turn (summon, brood, heal) hurts nobody, so it needs no reaction interval.
+	return 0.0
+
+## The warning this `kind` is entitled to ask for, given the interval its own footprint needs.
+## It is a FLOOR, not a tuning knob: `begin_lock()` extends it again if an edit asks for less.
+func warning_seconds(kind: String) -> float:
+	return maxf(BASE_WINDUP,warning_for(clearance(kind)))
+
+## The FROZEN part of the wind-up: how long a footprint created NOW must warn before it may damage.
+## Every `zone()` call below is given a delay derived from here, so a footprint's own countdown can
+## never be shorter than the lock's promise nor longer than the warning the player was shown.
+func freeze_after() -> float:
+	return maxf(0.05,phase_time-lock_track)
+
+func _begin(kind: String) -> void:
+	attack_kind = kind
+	var windup = warning_seconds(kind)
+	if phase_three: windup *= 0.9
+	if ArenaVisibility.fog_active() and kind in DAMAGING_KINDS: windup = maxf(windup,0.6)
+	phase = "warn"
+	lock_zones.clear()
+	# The lock is taken BEFORE any footprint exists, so every footprint created below is registered
+	# against a lock that is still tracking - and the freeze, when it comes, carries all of them to
+	# the frozen geometry in ONE call and then stops for good.
+	var lead := 0.0
+	if PROJECTILE_KINDS.has(kind):
+		lead = projectile_lead(float(PROJECTILE_KINDS[kind]),warning_for(clearance(kind)))
+	else:
+		lead = float(LEAD_WANTED.get(kind,0.16))
+	# `phase_time` is the WHOLE wind-up, because that is what the actor loop counts down and what the
+	# player is shown. `begin_lock()` is still called for its two real effects - it arms the tracking
+	# window and it CLAMPS the lead - and the warning it would insist on is already satisfied here:
+	# `windup` came from `warning_seconds()`, which is exactly `TRACK_SECONDS + reaction`, and no
+	# later adjustment may cut into that. Where the later adjustment is one of the fog gate's, the
+	# check below keeps the promise by restoring this kind's own floor.
+	var promise: float = warning_for(clearance(kind))
+	begin_lock(windup,lead,clearance(kind))
+	phase_time = maxf(windup,promise)
+	# From here down, `delay` ALWAYS means "seconds from now until the freeze", never "the whole
+	# warning". A footprint whose own warning was the whole wind-up kept damaging after the actor had
+	# already moved on, which is how a telegraph and a hit could disagree.
+	var distance = global_position.distance_to(locked_point)
+	var boost = damage_pressure()
+	var delay = freeze_after()
+	match kind:
+		"charge":
+			dash_speed = 265 if role == "E03" else (310 if role == "E11" else 290)
+			if role == "B01": dash_speed = 330 if phase_two else 290
+			if phase_three: dash_speed *= 1.08
+			dash_seconds = clampf((distance+25)/dash_speed,0.25,0.9)
+			# The lane damages ON CONTACT along its frozen length, which is exactly the region the
+			# warning drew - the actor does not re-test distance and cannot catch anyone off-lane.
+			zone("charge",global_position,dash_speed*dash_seconds,delay,0.12,"charge").damage = contact_damage()
+		"detonate":
+			# Self-destruct: a readable fuse, then a blast at the actor's own feet.
+			var reach = DETONATE_REACH if elite_modifier() == "cluster" else 42
+			var fuse = warning_for(clearance("detonate"))
+			zone("circle",global_position,reach,fuse,0.12,"detonate").damage = 0
+			if elite_modifier() == "cluster":
+				zone("circle",global_position,34,fuse+0.4,0.12,"detonate").damage = 0
+			phase_time = fuse
+		"summon","heal": pass
+		"cone":
+			# Breath attack: its own reach sets the window, so the footprint and the interval match.
+			var breath = maxf(delay,warning_for(clearance("cone")))
+			zone("cone",global_position,60,breath,0.12,"detonate").angle = 1.25 if elite_modifier() == "bulwark" else 0.7
+		"beam":
+			# E14 is the long-range sentinel: a longer lane, the same readable freeze, and a lane
+			# that pierces the fog so its direction survives the darkness it is fired through.
+			var lane = 360.0 if role == "E14" else 280.0
+			var burn = 0.35 if role == "E14" else 0.3
+			var beam = zone("line",global_position,lane,maxf(delay,warning_for(clearance("beam"))),burn,"laser")
+			beam.damage = boost*0.6
+			beam.pierce = true
+			# A bounded sweep, only for a promoted sentinel. The warning draws the whole arc it will
+			# cover, so "it turned while I was standing there" is never a surprise.
+			if role == "E14" and (is_elite or elite_modifier() == "double_beam"):
+				beam.sweep = orbit_side*0.42
+		"artillery":
+			var strike = maxf(delay,warning_for(clearance("artillery")))
+			zone("circle",locked_point,ARTILLERY_REACH,strike,0.12,"artillery")
+			# A promoted bombardier marks a SECOND area, spread SIDEWAYS across the player's own line
+			# of travel. Two areas, not a carpet, and no prediction: both sit where the frozen lock
+			# point is, so both are where the warning is drawn.
+			if is_elite:
+				zone("circle",locked_point+locked_direction.orthogonal()*72.0*orbit_side,36,strike+0.2,0.12,"artillery")
+			phase_time = strike
+		"tremor":
+			# Low direct damage; the payload is the root, routed through Hero.apply_root().
+			var quake = maxf(delay,warning_for(clearance("tremor")))
+			zone("line",global_position,240,quake,0.22,"root").damage = boost*0.3
+			phase_time = quake
+		"cross":
+			locked_direction = global_position.direction_to(locked_point)
+			var star = maxf(delay,warning_for(clearance("cross")))
+			for i in 4:
+				var lane = zone("line",global_position,320,star,0.22,"laser")
+				lane.direction = locked_direction.rotated(i*PI/2)
+				lane.initial_direction = lane.direction
+				lane.damage = boost*0.5
+				lane.pierce = true
+			phase_time = star
+		"toxin":
+			# The sac swells visibly before it drops, so the field is never a surprise.
+			zone("circle",global_position,78,maxf(delay,warning_for(clearance("toxin"))),0.12,"poison").damage = 0
+		"shockwave":
+			# Ground pound, sized to its own wind-up. The old version stacked a 140 ring and a 100
+			# ring 0.5 s apart, which nobody could leave from the centre: the inner blast landed
+			# inside the outer one's own reaction interval, so the pair was not dodgeable as a pair.
+			# One ring, one commitment, and the window its radius actually needs.
+			var pound = maxf(delay,warning_for(clearance("shockwave")))
+			zone("circle",global_position,SHOCKWAVE_REACH,pound,0.12,"detonate")
+			phase_time = pound
+		"cross_laser":
+			locked_direction = global_position.direction_to(locked_point)
+			# Four lanes with a long bright warning and a short burn: the pattern is the problem to
+			# solve, not a long tick window to stand inside.
+			var grid = maxf(delay,warning_for(clearance("cross_laser")))
+			for i in 4:
+				var lance = zone("line",global_position,360,grid,0.35,"laser")
+				lance.direction = locked_direction.rotated(i*PI/2+PI/4)
+				lance.initial_direction = lance.direction
+				lance.damage = boost*0.5
+				lance.pierce = true
+			phase_time = grid
+		"root_shot":
+			var bind = zone("cone",global_position,150,maxf(delay,warning_for(clearance("root_shot"))),0.12,"root")
+			bind.angle = 0.85; bind.damage = boost*0.3; bind.control = 0.45
+		"toxic_zone":
+			var field = maxf(delay,warning_for(clearance("toxic_zone")))
+			var spot = locked_point+Vector2.RIGHT.rotated(randf()*TAU)*130.0
+			if not release_field("poison",spot,1.1,4.5,0.014,1.0,96.0):
+				zone("circle",locked_point,70,field,0.12,"poison").damage = boost*0.8
+			phase_time = field
+		"band":
+			# A moving danger band: it warns in place, then slides sideways, so standing still is what
+			# kills rather than standing in one marked circle. The warning draws the swept path and
+			# the damage follows the same rotation, so the two cannot disagree.
+			var slide = maxf(delay,warning_for(clearance("band")))
+			var side = Vector2.RIGHT.rotated(locked_direction.angle()+PI/2)*orbit_side
+			var band = zone("line",global_position-side*220.0,320,slide,1.2,"shock")
+			band.direction = side
+			band.initial_direction = side
+			band.sweep = orbit_side*0.9
+			band.damage = boost*0.6
+			phase_time = slide
+		# ---- base attacks ---------------------------------------------------------------------
+		"slam": zone("circle",global_position,SLAM_REACH,maxf(delay,warning_for(clearance("slam"))),0.12,"artillery")
+		"brood": zone("summon",global_position,42 if phase_two else 34,delay,0.12,"summon").damage = 0
+		"lockdown":
+			# Three marks, each with its own full warning, so leaving the first is a real answer and
+			# the later ones are separate problems rather than a stacked unavoidable hit.
+			var mark = maxf(delay,warning_for(clearance("lockdown")))
+			zone("circle",locked_point,65,mark,0.12,"artillery")
+			zone("circle",locked_point+locked_direction.orthogonal()*80.0,48,mark+0.25,0.12,"artillery")
+			if phase_two:
+				zone("circle",locked_point-locked_direction.orthogonal()*80.0,45,mark+0.5,0.12,"artillery")
+			phase_time = mark
+		"pulse": zone("cone",global_position,160,maxf(delay,warning_for(clearance("pulse"))),0.12,"detonate").angle = 0.9
+		"dash":
+			dash_speed = 440*(1.08 if phase_three else (1.0 if phase_two else 0.95))
+			dash_seconds = clampf(global_position.distance_to(locked_point)/dash_speed,0.24,0.7)
+			var rush = maxf(delay,warning_for(clearance("dash")))
+			zone("charge",global_position,dash_speed*dash_seconds,rush,0.12,"charge").damage = contact_damage()
+			phase_time = rush
+		"sweep":
+			locked_direction = locked_direction.rotated(-orbit_side*0.25)
+			var rate = (1.3 if phase_two else 1.0)*(1.15 if phase_three else 1.0)
+			var swath = maxf(delay,warning_for(clearance("sweep")))
+			zone("line",global_position,330,swath,0.85,"sweep").sweep = orbit_side*rate
+			phase_time = swath
+		"burst": zone("cone",global_position,240,maxf(delay,warning_for(clearance("burst"))),0.12,"projectile").damage = 0
+	remember("windup_"+attack_kind)
+
 ## Footprints already on the ground that travel with the lock: {"ref":WeakRef, "anchor":"point"|"dir"}.
 var lock_zones: Array = []
 
-## Carries every live warning footprint along with the lock. A ring created AT the lock point
-## (the artillery and poison circles) follows the point; a lane created at this actor follows the
-## direction. Called by step_lock() in the base class.
+## Carries every live warning footprint along with the lock, and is called ONLY from step_lock()
+## while the aim is still tracking. A ring created AT the lock point (the artillery and poison
+## circles) follows the point; a lane created at this actor follows the direction. After the
+## freeze the base class never calls this again, so every footprint ends up on the frozen geometry.
 func refresh_zones() -> void:
 	lock_zones = lock_zones.filter(func(entry): return is_instance_valid(entry.ref.get_ref()))
 	for entry in lock_zones:
@@ -256,127 +484,6 @@ func refresh_zones() -> void:
 		if entry.anchor == "point": node.global_position = locked_point
 		node.direction = locked_direction
 		node.initial_direction = locked_direction
-
-func _begin(kind: String) -> void:
-	attack_kind = kind
-	var delay = (0.65 if not phase_two else 0.5)
-	if phase_three: delay *= 0.85
-	if ArenaVisibility.fog_active() and kind in DAMAGING_KINDS: delay = maxf(delay,0.6)
-	phase = "warn"; phase_time = delay
-	lock_zones.clear()
-	if PROJECTILE_KINDS.has(kind):
-		begin_lock(delay,projectile_lead(float(PROJECTILE_KINDS[kind]),delay),PROJECTILE_LEAD_MAX+delay)
-	else:
-		begin_lock(delay,float(LEAD_BY_KIND.get(kind,0.25)))
-	var distance = global_position.distance_to(locked_point)
-	var boost = damage_pressure()
-	match kind:
-		"charge":
-			dash_speed = 265 if role == "E03" else (310 if role == "E11" else 290)
-			if role == "B01": dash_speed = 330 if phase_two else 290
-			if phase_three: dash_speed *= 1.08
-			dash_seconds = clampf((distance+25)/dash_speed,0.25,0.9)
-			zone("charge",global_position,dash_speed*dash_seconds,delay,0.12,"charge").damage = 0
-		"detonate":
-			var reach = 58 if elite_modifier() == "cluster" else 42
-			zone("circle",global_position,reach,0.8,0.12,"detonate").damage = 0
-			if elite_modifier() == "cluster": zone("circle",global_position,34,1.25,0.12,"detonate").damage = 0
-			phase_time = 0.8
-		"summon","heal": pass
-		"cone":
-			zone("cone",global_position,60,delay,0.12,"detonate").angle = 1.25 if elite_modifier() == "bulwark" else 0.7
-		"beam":
-			# E14 is the long-range sentinel: a longer lane and a longer, brighter warning.
-			var lane = 360.0 if role == "E14" else 280.0
-			var burn = 0.35 if role == "E14" else 0.3
-			var beam = zone("line",global_position,lane,delay,burn,"laser")
-			beam.damage = boost*0.6
-			# B10 type C: a bounded sweep, ~24 degrees, and only for a promoted sentinel ("double
-			# beam") or an elite E14. A clear direction (orbit_side) and a small arc - never a
-			# screen-wide wipe, and the lane itself telegraphs the whole path it will cover.
-			if role == "E14" and (is_elite or elite_modifier() == "double_beam"):
-				beam.sweep = orbit_side*0.42
-			phase_time = delay
-		"artillery":
-			zone("circle",locked_point,40,0.95,0.12,"artillery")
-			# B10 §13: a promoted bombardier marks a SECOND area along the player's own line of
-			# travel, so leaving the first circle the obvious way does not also leave the second.
-			# Two areas, not a carpet: the point is to change the route, not to fill the screen.
-			if is_elite:
-				zone("circle",locked_point+locked_direction*72.0,36,1.15,0.12,"artillery")
-			phase_time = maxf(delay,0.95)
-		"tremor":
-			# Low direct damage; the payload is the root, routed through Hero.apply_root().
-			zone("line",global_position,240,delay,0.22,"root").damage = boost*0.3
-			phase_time = delay
-		"cross":
-			locked_direction = global_position.direction_to(locked_point)
-			for i in 4:
-				var lane = zone("line",global_position,320,delay,0.22,"laser")
-				lane.direction = locked_direction.rotated(i*PI/2)
-				lane.initial_direction = lane.direction
-				lane.damage = boost*0.5
-			phase_time = delay
-		"toxin":
-			# The sac swells visibly before it drops, so the field is never a surprise.
-			zone("circle",global_position,78,delay,0.12,"poison").damage = 0
-			phase_time = delay
-		"shockwave":
-			zone("circle",global_position,140,delay,0.12,"detonate")
-			zone("circle",global_position,100,delay+0.5,0.12,"detonate")
-			phase_time = delay+0.45
-		"cross_laser":
-			locked_direction = global_position.direction_to(locked_point)
-			# A cross is four lanes, but a long bright warning and a short burn: the pattern
-			# is the problem to solve, not a long tick window to stand inside.
-			for i in 4:
-				var lance = zone("line",global_position,360,maxf(delay,1.0),0.35,"laser")
-				lance.direction = locked_direction.rotated(i*PI/2+PI/4)
-				lance.initial_direction = lance.direction
-				lance.damage = boost*0.5
-			phase_time = delay
-		"root_shot":
-			var bind = zone("cone",global_position,150,delay,0.12,"root")
-			bind.angle = 0.85; bind.damage = boost*0.3; bind.control = 0.45
-			phase_time = delay
-		"toxic_zone":
-			var spot = locked_point+Vector2.RIGHT.rotated(randf()*TAU)*130.0
-			if not release_field("poison",spot,1.1,4.5,0.014,1.0,96.0):
-				zone("circle",locked_point,70,0.95,0.12,"poison").damage = boost*0.8
-			phase_time = maxf(delay,0.95)
-		"band":
-			# A moving danger band: it warns in place, then slides sideways, so standing still
-			# is what kills rather than standing in one marked circle.
-			var side = Vector2.RIGHT.rotated(locked_direction.angle()+PI/2)*orbit_side
-			var band = zone("line",global_position-side*220.0,320,delay,1.2,"shock")
-			band.direction = side
-			band.initial_direction = side
-			band.sweep = orbit_side*0.9
-			band.damage = boost*0.6
-			phase_time = delay
-		# Base attacks, unchanged in their authored geometry and timing.
-		"cleave": zone("cone",global_position,125,delay,0.12,"detonate").angle = 0.95
-		"slam": zone("circle",global_position,100 if phase_two else 85,delay,0.12,"artillery")
-		"brood": zone("summon",global_position,42 if phase_two else 34,delay,0.12,"summon").damage = 0
-		"lockdown":
-			zone("circle",locked_point,65,0.95,0.12,"artillery")
-			zone("circle",locked_point+Utils.player.velocity.limit_length(85)*0.7,48,1.35,0.12,"artillery")
-			if phase_two: zone("circle",locked_point-locked_direction.orthogonal()*80,45,1.55,0.12,"artillery")
-			phase_time = maxf(delay,0.95)
-		"pulse": zone("cone",global_position,160,delay,0.12,"detonate").angle = 0.9
-		"dash":
-			dash_speed = 440*(1.08 if phase_three else (1.0 if phase_two else 0.95))
-			var intercept = locked_point+Utils.player.velocity.limit_length(100)*0.25
-			locked_direction = global_position.direction_to(intercept)
-			dash_seconds = clampf(global_position.distance_to(intercept)/dash_speed,0.24,0.7)
-			zone("charge",global_position,dash_speed*dash_seconds,delay,0.12,"charge").damage = 0
-		"sweep":
-			locked_direction = locked_direction.rotated(-orbit_side*0.25)
-			var rate = (1.3 if phase_two else 1.0)*(1.15 if phase_three else 1.0)
-			zone("line",global_position,330,0.9,0.85,"sweep").sweep = orbit_side*rate
-			phase_time = maxf(delay,0.9)
-		"burst": zone("cone",global_position,240,delay,0.12,"projectile").damage = 0
-	remember("windup_"+attack_kind)
 
 func perform_attack():
 	remember("attack"); remember(attack_kind)

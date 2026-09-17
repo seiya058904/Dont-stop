@@ -105,6 +105,11 @@ jobs:
             echo "PASSED: $name $* checks=$checks"
           }
           run_case BaselineRegression
+          # B11: the stage table is the product's selectability contract (1-40, always open), and the
+          # attack audit is the fairness contract (computed reaction window, frozen lock geometry,
+          # bounded contact hit rate). Both are state driven and read the live actors.
+          run_case B11Stages
+          run_case B11Fairness
           # SaveRunner is deliberately NOT in this list: it fails on origin/main in this
           # environment with "Invalid access to property or key 'instance_id' on a base object
           # of type 'Dictionary'" at SaveRunner.gd:19 (ContractRunner fails the same way), so
@@ -155,7 +160,7 @@ jobs:
             issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
             checks=$(grep -cE '^PASS ' "$log" || true)
             echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
-            grep -E '^M10 DENSITY |^B5 BOSS |^R3_SPAWN_AUDIT ' "$log" || true
+            grep -E '^M10 DENSITY |^B5 BOSS |^R3_SPAWN_AUDIT |^B11 PERF ' "$log" || true
             tail -n 30 "$log"
             echo "::endgroup::"
             if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
@@ -169,6 +174,12 @@ jobs:
           run_case B5Bosses
           run_case M10Density stages=22,31
           run_case M10Density probe stages=22,31
+          # The two stages a human reported frame-rate collapse on, measured as real rounds rather
+          # than as a synthetic pile of monsters. The gate is convergence, not a frame rate: a CI
+          # software renderer cannot report what a player's GPU will do, but it can report whether
+          # node/projectile/telegraph counts keep climbing or settle.
+          run_case B11Perf stage=39 seconds=75
+          run_case B11Perf stage=40 seconds=75
       - name: Upload pressure evidence
         if: always()
         uses: actions/upload-artifact@v4

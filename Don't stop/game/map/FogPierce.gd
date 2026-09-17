@@ -47,6 +47,10 @@ static func discard() -> void:
 	for child in root.get_children():
 		if child is FogPierce: child.queue_free()
 
+## Push order is a PRIORITY, not an accident. Each frame's list is capped, so when a crowded Hell
+## stage fills it the last pushes are the ones that are dropped. The two-kilometre beam lane that
+## tells the player where a laser is about to fire therefore goes FIRST, and the decorative bright
+## core that doubles it goes last, so the cap can only ever cost ink and never information.
 static func _push(entry: Dictionary) -> void:
 	if not ArenaVisibility.fog_active(): return
 	var layer = ensure()

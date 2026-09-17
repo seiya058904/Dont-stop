@@ -24,12 +24,11 @@ var hell_complete = false
 var next_stage = 1
 var selected_stage = 1
 var trial = false
-## B10: the Hell stage a PLAYTEST departure is currently running, or 0 when the running round -
-## if any - was entered through the formal campaign route. Reporting only: nothing in the
-## product reads it to decide anything, and it is deliberately NOT part of snapshot(), so it
-## cannot reach the save file. It exists so the playtest evidence can say which stage a
-## playtest session is in without inferring it.
-var hell_playtest_stage = 0
+## `trial` is NOT a "playtest" flag and never was a product feature. It is the one internal
+## switch that says "this departure must not move the linear campaign pointer": the stage
+## list's direct entries and the training/smoke drivers set it, while the "继续" entry and the
+## camp portals clear it. B11 deleted the separately branded Hell Playtest selector that used
+## to hang off this flag - the flag itself stays because progression writes read it.
 var kill_stacks = 0
 var stack_time = 0.0
 var blast_cooldown = 0.0
@@ -330,15 +329,11 @@ func on_kill(monster, context: Dictionary):
 func snapshot() -> Dictionary:
 	var weapons = []
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
-	# A HELL PLAYTEST round leaves `selected_stage` on a Hell stage while `campaign_complete` is
-	# still false, and CampSnapshot.normalize() would clamp that straight back to 30 on the next
-	# load. Writing a state the loader would repair is worse than not writing it, so the same
-	# clamp is applied here and the file on disk is always a state the product would accept.
-	# `next_stage` - the real campaign pointer - is NOT touched: LevelServer.victory() skips
-	# every progression write for a trial, and a playtest departure is a trial departure.
-	var saved_selected: int = selected_stage
-	if not campaign_complete and saved_selected > 30: saved_selected = 30
-	return {"schema_version":6,"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":saved_selected,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	# `selected_stage` is written as it is. Any stage 1-40 is a legal selection on any save,
+	# including a brand-new one, so there is nothing here to clamp and nothing to repair on the
+	# next load. `next_stage` remains the linear campaign pointer and is still bounded by
+	# CampSnapshot.normalize(); it is deliberately NOT written from a direct stage departure.
+	return {"schema_version":6,"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}

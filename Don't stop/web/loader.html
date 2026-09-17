@@ -270,7 +270,22 @@
 		// ?e2e=1 arms the real-input aim harness and ?tour=1 walks the product
 		// screens for visual evidence. All are test-only flags; none of them is
 		// needed to play, and none of them changes what a player sees.
-		if (params.has('smoke')) {
+		// ?perf=1[&stage=N][&seconds=N] arms the B11 sustained-load measurement in the
+		// browser: the game departs that stage on its own and prints one machine-readable
+		// performance line per second. Test-only, and it is the only way to measure a real
+		// stage in a real browser, because a Web build has no command line.
+		// ?stage-tour=1 arms the B11 walk over stages 31/35/39/40 inside ONE browser session, so the
+		// per-stage claims are made by the game itself instead of by forty wheel events. Test-only.
+		if (params.has('stage-tour')) {
+			GODOT_CONFIG.args = ['--stage-tour'];
+			if (params.has('probe')) GODOT_CONFIG.args.push('--probe');
+		} else if (params.has('perf')) {
+			// The measurement is published on the read-only probe channel, so arming one always arms
+			// the other: `?perf=1` alone used to arm a mode whose lines were never printed.
+			GODOT_CONFIG.args = ['--perf', '--probe'];
+			GODOT_CONFIG.args.push('--perf-stage=' + (parseInt(params.get('stage'), 10) || 39));
+			GODOT_CONFIG.args.push('--perf-seconds=' + (parseInt(params.get('seconds'), 10) || 75));
+		} else if (params.has('smoke')) {
 			GODOT_CONFIG.args = ['--smoke'];
 			if (params.has('nw')) GODOT_CONFIG.args.push('--no-warmup');
 			if (params.has('e2e')) GODOT_CONFIG.args.push('--e2e');
