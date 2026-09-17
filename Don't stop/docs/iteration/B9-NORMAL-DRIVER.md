@@ -6,6 +6,25 @@
 
 状态：`HUMAN_ACCEPTED=false` · `WEB_HUMAN_ACCEPTED=false`
 
+## 交付状态
+
+| 项 | 值 |
+| --- | --- |
+| B9 PR | [#8](https://github.com/seiya058904/Dont-stop/pull/8) — 全绿后合并 |
+| B9 代码提交 | `72a5c0b` |
+| 报告提交 | `4588fdc` |
+| **最终 main** | **`b720249d97a20890aeba10c5b2f906eadb5ba3cf`** |
+| PR CI | Web `35176118397` ✓ 8m04s · Native `35176118386` ✓ 15m34s（setup ✓ / pressure ✓ / contracts ✓）；另有分支 push 触发的 Native `35176045224` ✓ 15m27s |
+| 合并后 main CI | Web `35177402358` ✓ 9m45s · Native `35177402372` ✓ 15m27s |
+| 页面 | https://seiya058904.github.io/Dont-stop/index.html — HTTP 200，16339 bytes |
+| 部署件 | `dontstop-build = b720249d97a20890aeba10c5b2f906eadb5ba3cf` · `dontstop-artifact = 5f86678fe9f149bf2fb837feee565201ff08b271b2b9d3a9a3317cf6cdd6161f` |
+
+Native CI 里跑过、但本地按 §15 没重跑的套件全部通过：
+`M10Bosses full` 24/0 · `B5Bosses` 166/0 · `B4Fog` 110/0 · `B6Progression` ✓ ·
+`BaselineRegression` ✓ · `M6EncounterAudit` 41 · `M8Encounters` 19 ·
+`M10Density stages=22,31` 11/0 · `M10Density probe` 6/0。
+（`B5Bosses` 一次就过，没有用到 PR #7 的 3 次 attempt 重试。）
+
 ---
 
 ## 0. 一句话结论
