@@ -1,0 +1,37 @@
+# B9 frozen measurement instrument
+# FROZEN. The first B9 batch may change exactly ONE thing against the B8 numbers: the
+# driver. Nothing here - not the fixture, not the probe, not a launcher, not one product
+# damage entry point, not one encounter value - may change while the batch is running.
+# A change invalidates the batch and requires a fresh one.
+# Validated by tools/b8-run.ps1 -Scene B9Driver (38 checks) and -Scene B8Contracts.
+# base_commit=33cd09ed9eea6a33b54f262d5dd9a323ac788111
+13c3003171c9df6bf1052dc512a02a896ff0bea531f56a4f8bc81d0e35382475  tests/M8Runtime.gd
+df35b883a2b663066210834e04ce7100517ac67a6e186643cad257f58a68f7f3  tests/B9Driver.gd
+54ae1701fbe6a2f1d9cea31cdddd56f553c5e2ce2a5eaec92094bdc6f2cd368a  tests/B9Driver.tscn
+ca3026147130e9ec17e730e3ee4336deb914f8c49289fcea45c6b74d5c72b21b  tests/B9Normal.gd
+867f4c1f85c2a82cdf7960451b2847ddfc40a50ccacb4a31568e2474de20a470  tests/B9Normal.tscn
+b4c37f24a1aabf9661e9298c309f371f218f1daf0650a927229157f41d41a463  tests/B8Normal.gd
+7ddda656418db85caf2034a1b73e83dc7084004f3785f1a467e3729ef4aaf8e6  tests/B8Normal.tscn
+c0dda332b34939c99483f3051a413eae2d24d74840e176e243ca861d380623bc  tests/B8Probe.gd
+7a82c09682f7044dfcc6c7352a9aa33dcde83998ab72fb8c8cc3b9526758ca2c  tests/B8BossFair.gd
+da8a22a921fb5afca05aa9769199e3db078da3f3eb33391b7b99bdeb22a18cb0  tests/B8BossFair.tscn
+94b9b399394d3f6cf76ae8602233afa8ded7fa092aa3879c4f2bf95d7d4be068  tests/B8Contracts.gd
+d9983062694ad9bb949abe535e22cfbfe67aa8b1467a41776423a40f995591ae  tests/B8Contracts.tscn
+0e8de3a64d8d5bc667d2484dacb203331b2860ce42017148c783e87938437303  tools/b8-run.ps1
+ac4f8868f8e5efdc9db722b8c9be8b392cb45d2f19a62d223edc25df1d25aaff  tools/b8-batch.ps1
+75100ecb6f0eb3cfd168c66c2bc513291b463216a0025508b61cacaed32034f8  tools/b9-batch.ps1
+6c6259b57a061082c40daff6638389f82ec8cfa4af151304da00153fa2f7172b  tools/b9-boss.ps1
+ae326ec400a70e10130b09627ed3082d16d84eb2394129a4f0abc43d44a15c51  tools/b9-regression.ps1
+c62a180a8e190a6b07507a5640914c5faa8d28400d3802121fd4798457517bec  tools/b9-summary.py
+2b6a3f738b4d381d2a889ff2457a069585b686bd2770e7772ce1c6fec5644b53  tools/b9-freeze.ps1
+7fdf17ee743f08c4251c0eaaab6a0184f85e66a88d3755197b9b209a2426f0ce  game/hero/Hero.gd
+039119c79de2eae357a25b820dac3c142acdb89bf3dda9c7daa4746cae980db0  game/monster/DemoEnemy.gd
+7f97efea9d01fdde26715dd2ab6741c9e699259bcdbf1773ff66e7c6c8e3c8ec  game/monster/TacticalEnemy.gd
+063d5fb975b71b4bbfe3ab73d4053e759c6f0f8b609b1afece30392fe16b1d10  game/monster/EnemyShot.gd
+f15991af8d74bc560881bff8e7bc8e698dbfb9d3f37a81d1929a28ef878efd48  game/monster/HostileZone.gd
+7cdd62c6fd1763b2ad648b9c8ea1c52784ee00e86450e4aeafec81c11da5dcfe  game/monster/BossUltimate.gd
+41046899894e8f28120da74bd025b67c107d52b85473fa8fbcb1222ad38d31bf  game/monster/Monster 2/Monster2.gd
+d552aed9003de96cbdd43874bfbd3845df1510a5c96fc17ba22025fde44684d2  game/map/StageHazard.gd
+4de62aa8b224c4d0511f2ba60a4e7780a03b0a13eacdf7e34c35aa18fe7b0601  game/map/ArenaHazardDirector.gd
+9aca30c535b1df8f643b0f9e332c324f26401785dd5a8daa4868e227e1ff81f7  game/config/M5Content.gd
+cf58a75d822ab2fda678730c03cd708b70a7ea085fe2c7f472e73a0ab515223a  game/config/DemoConfig.gd
