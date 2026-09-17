@@ -14,7 +14,6 @@ var phase_three = false
 var heal_budget: Dictionary = {}
 var children_ids: Array[int] = []
 var owned_attacks: Array[WeakRef] = []
-var locked_point = Vector2.ZERO
 var summon_total = 0
 var travelled = 0.0
 var movement_clock = 0.0
@@ -96,6 +95,12 @@ func zone(kind: String, point: Vector2, reach: float, delay: float, time = 0.12,
 	if kind == "charge": node.width = 22 if is_boss else 18
 	get_tree().current_scene.add_child(node)
 	owned_attacks.append(weakref(node))
+	# B10: a footprint laid down while the lock is still tracking re-aims with it. The anchor says
+	# which half of the footprint follows: a ring created AT the lock point (the artillery and
+	# poison circles) follows the point, while a lane created at this actor follows the direction.
+	if lock_track > 0.0 and kind in TRACKED_KINDS:
+		lock_zones.append({"ref":weakref(node),
+			"anchor":("point" if point.distance_squared_to(locked_point) < 1.0 else "dir")})
 	remember(kind)
 	return node
 
@@ -210,12 +215,59 @@ func _schedule():
 ## player a beat to reposition between problems.
 const COMBO_GAP := 1.0
 
+## ---- B10: per-attack parameters for the bounded tracking lock -------------------------------
+##
+## The mechanism itself lives ONCE, in the base class (game/monster/DemoEnemy.gd, which this class
+## extends): the aim follows the player for the first part of a warning, then freezes with a
+## bounded lead of the player's own velocity. Read the block there for why - in short, a snapshot
+## taken at the START of a 0.65 s warning is stale before the shot exists, and
+## tests/B10Threat.gd measured every special attack scoring 0 hits against a player who simply
+## held one direction.
+##
+## What is decided here is only the SIZE of the lead per attack, and which footprints follow the
+## lock while it is still tracking.
+##
+## Longer warnings get more lead because the player has more time to move during them; the
+## control and detonate payloads get the least, so their commitment stays readable.
+const LEAD_BY_KIND := {
+	"beam":0.30,"cross":0.25,"cross_laser":0.25,"artillery":0.35,"tremor":0.30,
+	"charge":0.25,"cone":0.20,"detonate":0.20,"toxin":0.20,"shockwave":0.20,
+	"root_shot":0.30,"toxic_zone":0.30,"band":0.30,
+}
+## Attacks whose real payload is a PROJECTILE rather than a footprint. They lead by the round's own
+## flight time instead of by a fixed fraction of a second, and may carry a much longer lead,
+## because a projectile cannot correct in the air - see PROJECTILE_LEAD_MAX in DemoEnemy, which is
+## the base class this one extends.
+const PROJECTILE_KINDS := {"artillery":140.0,"root_shot":150.0,"toxic_zone":130.0}
+## Only these footprints re-aim with the lock. A summon/brood marker is decoration and must not
+## follow anybody.
+const TRACKED_KINDS := ["line","charge","cone","circle","tremor","artillery","toxin"]
+## Footprints already on the ground that travel with the lock: {"ref":WeakRef, "anchor":"point"|"dir"}.
+var lock_zones: Array = []
+
+## Carries every live warning footprint along with the lock. A ring created AT the lock point
+## (the artillery and poison circles) follows the point; a lane created at this actor follows the
+## direction. Called by step_lock() in the base class.
+func refresh_zones() -> void:
+	lock_zones = lock_zones.filter(func(entry): return is_instance_valid(entry.ref.get_ref()))
+	for entry in lock_zones:
+		var node = entry.ref.get_ref()
+		if not is_instance_valid(node): continue
+		if entry.anchor == "point": node.global_position = locked_point
+		node.direction = locked_direction
+		node.initial_direction = locked_direction
+
 func _begin(kind: String) -> void:
 	attack_kind = kind
 	var delay = (0.65 if not phase_two else 0.5)
 	if phase_three: delay *= 0.85
 	if ArenaVisibility.fog_active() and kind in DAMAGING_KINDS: delay = maxf(delay,0.6)
 	phase = "warn"; phase_time = delay
+	lock_zones.clear()
+	if PROJECTILE_KINDS.has(kind):
+		begin_lock(delay,projectile_lead(float(PROJECTILE_KINDS[kind]),delay),PROJECTILE_LEAD_MAX+delay)
+	else:
+		begin_lock(delay,float(LEAD_BY_KIND.get(kind,0.25)))
 	var distance = global_position.distance_to(locked_point)
 	var boost = damage_pressure()
 	match kind:
@@ -237,10 +289,21 @@ func _begin(kind: String) -> void:
 			# E14 is the long-range sentinel: a longer lane and a longer, brighter warning.
 			var lane = 360.0 if role == "E14" else 280.0
 			var burn = 0.35 if role == "E14" else 0.3
-			zone("line",global_position,lane,delay,burn,"laser").damage = boost*0.6
+			var beam = zone("line",global_position,lane,delay,burn,"laser")
+			beam.damage = boost*0.6
+			# B10 type C: a bounded sweep, ~24 degrees, and only for a promoted sentinel ("double
+			# beam") or an elite E14. A clear direction (orbit_side) and a small arc - never a
+			# screen-wide wipe, and the lane itself telegraphs the whole path it will cover.
+			if role == "E14" and (is_elite or elite_modifier() == "double_beam"):
+				beam.sweep = orbit_side*0.42
 			phase_time = delay
 		"artillery":
 			zone("circle",locked_point,40,0.95,0.12,"artillery")
+			# B10 §13: a promoted bombardier marks a SECOND area along the player's own line of
+			# travel, so leaving the first circle the obvious way does not also leave the second.
+			# Two areas, not a carpet: the point is to change the route, not to fill the screen.
+			if is_elite:
+				zone("circle",locked_point+locked_direction*72.0,36,1.15,0.12,"artillery")
 			phase_time = maxf(delay,0.95)
 		"tremor":
 			# Low direct damage; the payload is the root, routed through Hero.apply_root().
@@ -355,7 +418,11 @@ func perform_attack():
 			phase_time = 0.9
 			if attack_kind == "artillery":
 				var root = elite_modifier() == "root_artillery"
-				barrage("fan",12 if is_elite else 6,1,115,0.9,"root" if root else "projectile",0.4 if root else 0.0)
+				# B10: 115 -> 140. Still slower than the player's own speed, so the pattern stays
+				# readable and walking out of it still works - but no longer so slow that a single
+				# constant strafe is a complete answer. The centre pellet leads because the lock
+				# itself now carries a bounded lead.
+				barrage("fan",12 if is_elite else 6,1,140,0.9,"root" if root else "projectile",0.4 if root else 0.0)
 		"E13":
 			# Tremor shooter: one control shot, or two when promoted. Low direct damage; the
 			# payload is the root, and Hero's 1.2 s immunity still governs its real uptime.
@@ -363,7 +430,10 @@ func perform_attack():
 			var shots = 2 if elite_modifier() == "double_root" else 1
 			for i in shots:
 				var spread = 0.0 if shots == 1 else lerpf(-0.25,0.25,i/float(shots-1))
-				shot(locked_direction.rotated(spread),130,boost*0.35,true,"root",0.45)
+				# B10: 130 -> 150, and the lock's bounded lead aims the shot where the player is
+				# going. Still far short of a hitscan, and the purple root round stays visually
+				# distinct from plain damage so the control threat is never read as just a hit.
+				shot(locked_direction.rotated(spread),150,boost*0.35,true,"root",0.45)
 		"E14":
 			phase_time = 2.2
 			remember("beam_fired")
@@ -420,6 +490,9 @@ func _physics_process(delta):
 		return
 	if phase == "warn":
 		velocity = Vector2.ZERO
+		# B10: the aim keeps following the player for the first part of the warning, then freezes
+		# with a bounded lead. See LOCK_TRACK_SHARE.
+		step_lock(delta)
 		if phase_time<=0: perform_attack()
 		return
 	if phase == "dash":

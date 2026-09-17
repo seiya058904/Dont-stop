@@ -1,0 +1,58 @@
+{
+	"enemies": [
+		"E05",
+		"E10",
+		"E14"
+	],
+	"foreign_hits": 0,
+	"rows": [
+		{
+			"dodge_hits": 0,
+			"dodge_rate": 0.0,
+			"fired_dodge": 0,
+			"fired_standing": 3,
+			"fired_strafe": 3,
+			"id": "E05",
+			"name": "远程喷射者",
+			"role": "停步实体弹",
+			"standing_hits": 15,
+			"standing_rate": 5.0,
+			"strafe_hits": 0,
+			"strafe_rate": 0.0,
+			"trials": 3
+		},
+		{
+			"dodge_hits": 0,
+			"dodge_rate": 0.0,
+			"fired_dodge": 3,
+			"fired_standing": 3,
+			"fired_strafe": 3,
+			"id": "E10",
+			"name": "标记炮击者",
+			"role": "移动炮击循环、近身撤步、蓄力射线",
+			"standing_hits": 6,
+			"standing_rate": 2.0,
+			"strafe_hits": 0,
+			"strafe_rate": 0.0,
+			"trials": 3
+		},
+		{
+			"dodge_hits": 0,
+			"dodge_rate": 0.0,
+			"fired_dodge": 3,
+			"fired_standing": 3,
+			"fired_strafe": 3,
+			"id": "E14",
+			"name": "激光哨兵",
+			"role": "长距离持续射线；细线预警后增亮发射，墙体裁剪，与追击怪组合",
+			"standing_hits": 6,
+			"standing_rate": 2.0,
+			"strafe_hits": 0,
+			"strafe_rate": 0.0,
+			"trials": 3
+		}
+	],
+	"stage": 24,
+	"tag": "smoke",
+	"trials": 3
+}

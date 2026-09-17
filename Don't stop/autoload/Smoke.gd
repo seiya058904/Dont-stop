@@ -371,7 +371,7 @@ func _probe_report() -> void:
 		_probe_player_id = player_id
 		if player_id != 0:
 			_probe_sess += 1
-	print("[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d" % [
+	print("[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d stage=%d camp=%s hellc=%s next=%d sel=%d pt=%d fog=%s scroll=%d" % [
 		_probe_sess, _probe_frames, _probe_proj,
 		str(Utils.is_game_start), LevelServer.state,
 		str(not Demo.pause_stack.is_empty()), Demo.pause_stack.size(),
@@ -397,7 +397,32 @@ func _probe_report() -> void:
 		str(Demo.fire_released),
 		# fps: the real frame rate of THIS machine, so a run can report why a
 		# state change took as long as it did instead of guessing.
-		Engine.get_frames_per_second()])
+		Engine.get_frames_per_second(),
+		# --- fields appended for the B10 Hell playtest gate. Also pure observations.
+		# stage/camp/next/sel/pt are the product's own progression state, read so a
+		# playtest run can PROVE it did not move the campaign pointer or fake a
+		# completion, instead of the driver inferring it from the absence of a change.
+		# fog is ArenaVisibility.fog_active(): the Hell darkness really being applied,
+		# as opposed to merely being requested by the stage number.
+		LevelServer.level, str(Demo.campaign_complete), str(Demo.hell_complete),
+		Demo.next_stage, Demo.selected_stage, Demo.hell_playtest_stage,
+		str(ArenaVisibility.fog_active()),
+		# scroll: how far the open camp panel's listing is scrolled, in pixels, or -1 when no
+		# camp panel is up. A driver that has to reach a control deep in a long list needs to know
+		# where the list IS, rather than guessing how many wheel turns return it to the top.
+		camp_scroll()])
+
+## The camp stage/weapon listing's scroll offset, read off the live panel. -1 when no camp panel
+## is on screen, so a driver can tell "no list" from "list at the top".
+func camp_scroll() -> int:
+	for menu in Demo.pause_stack:
+		if not is_instance_valid(menu): continue
+		var script: Variant = menu.get_script()
+		if script == null: continue
+		if not (script as Script).resource_path.ends_with("ui/CampPanel.gd"): continue
+		var scroll = (menu as Node).get("listing_scroll")
+		if scroll != null and is_instance_valid(scroll): return int(scroll.scroll_vertical)
+	return -1
 
 ## Read-only locators. The driver has to click the product's own controls with a
 ## real mouse, so it needs their rectangles - and it needs them for the panel
@@ -414,20 +439,58 @@ func _probe_report_rects() -> void:
 		if path.ends_with("ui/CampPanel.gd"):
 			_probe_report_rect("camp-close-button", panel, "返回")
 			_probe_report_rect("camp-settings-button", panel, "设置")
+			# B10 Hell playtest entry: the driver has to reach the review selector with a real
+			# mouse, and the selector's own stage entries have to be clickable by stage id.
+			# The two label literals mirror CampPanel.HELL_PLAYTEST_ENTER/EXIT. They are copied
+			# rather than referenced because a const cannot be read off an untyped Node, and
+			# tests/B10Playtest.gd asserts the copies still agree, so they cannot silently rot.
+			_probe_report_rect("hell-playtest-button", panel, "HELL PLAYTEST")
+			_probe_report_rect("hell-playtest-exit-button", panel, "退出试玩")
+			# The stage tab itself, and the departure button a stage entry opens in the detail
+			# pane: reaching a stage from the camp takes two real clicks and both have to be
+			# aimed at the control the product actually put on screen.
+			_probe_report_rect("camp-stage-tab", panel, "出发")
+			_probe_report_rect("camp-depart-button", panel, "开始此遭遇")
+			_probe_report_stage(panel, 31)
+			_probe_report_stage(panel, 35)
+			_probe_report_stage(panel, 40)
 		elif path.ends_with("ui/DemoSettings.gd"):
 			_probe_report_rect("settings-back-button", panel, "返回")
 			_probe_report_rect("leave-entry", panel, "返回主菜单")
+		elif path.ends_with("ui/widgets/Scoreboard.gd"):
+			# The results panel a finished round shows. It owns the pause stack, so a driver that
+			# wants to play a second round has to close it with the product's own button.
+			_probe_report_rect("scoreboard-ok", panel, "OK")
+		elif path.ends_with("ui/widgets/DeathBoard.gd"):
+			# The death panel's second button is the "give up and go back to camp" one; its text
+			# is the translation KEY, which is what this locator matches, so it is locale-proof.
+			_probe_report_rect("deathboard-cancel", panel, "CANCEL")
 
 func _probe_report_rect(tag: String, root: Node, prefix: String) -> void:
-	var button := _find_button(root, prefix)
+	_probe_emit_rect(tag, _find_button(root, prefix))
+
+func _probe_emit_rect(tag: String, button: Button) -> void:
 	if button == null or button.size.x <= 10.0: return
 	if not button.is_visible_in_tree(): return
-	# Once per instance: a re-reported rectangle would let the driver click a
-	# stale position after the panel was rebuilt.
-	var id := button.get_instance_id()
-	if _probe_rect_ids.get(tag, 0) == id: return
-	_probe_rect_ids[tag] = id
+	# ON SCREEN, not merely visible-in-tree. `is_visible_in_tree()` is true for a control that is
+	# scrolled far outside its ScrollContainer, and the B10 Hell playtest entry was reported at
+	# y=1042 in a 230-unit panel - so a driver that clicked the reported centre clicked nothing at
+	# all, while the report confidently said the control was there. A control has to be really
+	# inside the scroll viewport to be clickable.
+	if not _probe_on_screen(button): return
 	var rect := Rect2(button.global_position, button.size)
+	# Re-report whenever the control MOVES, and not only when the instance changes.
+	#
+	# The original rule ("once per instance") was there to stop a driver clicking a position
+	# remembered from a rebuilt panel - but a control that is still on screen and has scrolled
+	# keeps the same instance, so its OLD position would stay the only one ever published, and a
+	# driver scrolling a long list could never learn where the control went. Publishing the latest
+	# position on every move is what makes scrolling work, and it is strictly safer than the old
+	# rule: the map always holds the newest rectangle, never a stale one.
+	var id := button.get_instance_id()
+	var stamp := "%d@%d,%d" % [id, roundi(rect.position.x), roundi(rect.position.y)]
+	if str(_probe_rect_ids.get(tag, "")) == stamp: return
+	_probe_rect_ids[tag] = stamp
 	# The instance id is part of the payload on purpose: a driver that has to press
 	# Esc twice (open, then close) needs to know the panel it sees is the one it
 	# just opened and not the previous cycle's, because a panel that owns the pause
@@ -435,6 +498,38 @@ func _probe_report_rect(tag: String, root: Node, prefix: String) -> void:
 	print("[probe] rect %s id=%d text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
 		tag, id, button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
 		rect.get_center().x, rect.get_center().y])
+
+## Is this control inside every scroll viewport it lives in, and is its centre inside the screen?
+## Walks the ancestors so a control nested in a panel inside a ScrollContainer is checked against
+## the scroll rect that actually clips it.
+func _probe_on_screen(button: Button) -> bool:
+	var centre := button.get_global_rect().get_center()
+	var screen := get_viewport().get_visible_rect()
+	if screen.size.x > 0.0 and not screen.has_point(centre): return false
+	var node: Node = button.get_parent()
+	while node != null:
+		if node is ScrollContainer:
+			var view := (node as ScrollContainer).get_global_rect()
+			if view.size.x > 0.0 and not view.has_point(centre): return false
+		node = node.get_parent()
+	return true
+
+## Locate a STAGE entry by the stage id the camp stores on its own button, reporting it under a
+## per-stage tag. Text cannot be used here: a stage entry's label carries a region/lock/playtest
+## suffix that changes with state, so the driver would be clicking a moving name. Only an ENABLED
+## button that is really on screen is reported, and the driver clicks the rectangle the product
+## reported - never a remembered position.
+func _probe_report_stage(root: Node, stage: int) -> void:
+	_probe_emit_rect("stage-%d" % stage, _find_stage_button(root, stage))
+
+func _find_stage_button(node: Node, stage: int) -> Button:
+	if node is Button and (node as Button).is_visible_in_tree() and not (node as Button).disabled \
+			and int((node as Button).get_meta("stage_id", 0)) == stage:
+		return node
+	for child in node.get_children():
+		var found := _find_stage_button(child, stage)
+		if found != null: return found
+	return null
 
 ## The product crosshair is the only cursor the player may see during Pointer
 ## Lock. Report where it actually sits so the driver can prove it agrees with
