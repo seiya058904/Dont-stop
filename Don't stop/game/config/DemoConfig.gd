@@ -8,6 +8,11 @@ const BOSS_INCOMING = 1.1155
 ## so scaling it fully would turn a fogged Hell wave into unavoidable chip damage and would
 ## make difficulty come from HP totals rather than from the fight.
 const CONTACT_DAMAGE_WEIGHT = 0.5
+## Hell uses a smaller share of the same axis. Contact is the one attack that carries no footprint
+## to read, so at Hell's top end the full axis made a single touch worth more than two fifths of a
+## starting health bar. B11 pairs this with the player-side contact window in game/hero/Hero.gd:
+## the window bounds how OFTEN contact can land, this bounds how much each landing is worth.
+const CONTACT_DAMAGE_WEIGHT_HELL = 0.35
 const PROFILE = "experience_demo"
 const INITIAL_GOLD = 9999
 const INITIAL_TALENT_POINTS = 9999

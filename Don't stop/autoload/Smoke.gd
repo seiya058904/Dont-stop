@@ -32,6 +32,22 @@ func _ready() -> void:
 		return
 	if probe:
 		_start_probe()
+	# `--stage-tour` is its OWN driver: it walks stages 31/35/39/40 in one session and prints one
+	# evidence line per stage. It deliberately runs with the probe channel armed and WITHOUT the smoke
+	# driver, so it has to be recognised before the "no --smoke, nothing to do" return below - a
+	# launch of `--stage-tour --probe` previously armed the channel, printed performance lines for
+	# five minutes and never started the walk.
+	if "--stage-tour" in args:
+		print("[stage-tour] mode=on")
+		_stage_tour_run.call_deferred()
+		return
+	# `--perf` is the browser half of tests/B11Perf.gd: the sustained-load measurement of a REAL stage,
+	# which only a browser can take. It owns the session, so it is dispatched here with the other
+	# drivers - it used to fall through every branch above and measure the title screen instead.
+	if "--perf" in args:
+		print("[smoke-perf] mode=on")
+		_perf_run.call_deferred()
+		return
 	# A probe-only launch must not run the scripted smoke sequence, which would
 	# fight the driver over rounds and panels.
 	if not ("--smoke" in args):
@@ -252,8 +268,21 @@ func _e2e_stream() -> void:
 ## Everything below observes. The projectile counter counts nodes the engine
 ## itself added; the frame counter is this node's own idle callback, which is
 ## why its process_mode is PAUSABLE.
+## The state line's shape, in one place. B11 replaced the inline literal with this constant and an
+## explicit `fields` Array so the specifier count and the argument count are both readable in one
+## screen; see `_probe_report()`.
+const PROBE_FORMAT := "[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d stage=%d camp=%s hellc=%s next=%d sel=%d pt=%d fog=%s scroll=%d"
+
 var _probe_frames := 0
 var _probe_proj := 0
+## B11 performance observation. Read-only: frame deltas of this node's own idle callback and the
+## engine's own node counts. Nothing here creates, frees, moves or pauses anything.
+var _probe_frame_ms: Array = []
+var _probe_created := 0
+var _probe_removed := 0
+var _probe_nodes_prev := 0
+var _probe_perf_clock := 0.0
+var _probe_perf_last := Time.get_ticks_usec()
 var _probe_sess := 0
 var _probe_player_id := 0
 var _probe_rect_ids: Dictionary = {}
@@ -272,6 +301,8 @@ func _start_probe() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	set_process(true)
 	get_tree().node_added.connect(_probe_on_node_added)
+	get_tree().node_removed.connect(_probe_on_node_removed)
+	_probe_nodes_prev = get_tree().get_node_count()
 	print("[probe] mode=on")
 	# Read-only, once: the acceptance driver reloads the page at the end and
 	# asserts the save is still readable, which is the durability half of the
@@ -295,11 +326,74 @@ func _probe_stream() -> void:
 		await get_tree().create_timer(0.25).timeout
 		_probe_report()
 		_probe_report_rects()
+		_probe_perf_report()
+
+## One line per second with the numbers a frame-rate complaint has to be judged on. The frame
+## statistics come from this node's own idle callback measured in microseconds, so they are the real
+## cost of a frame on the machine under test and not a guess from a screenshot.
+func _probe_perf_report() -> void:
+	var now := Time.get_ticks_usec()
+	_probe_perf_clock += float(now-_probe_perf_last)/1000.0
+	_probe_perf_last = now
+	if _probe_perf_clock < 1000.0: return
+	_probe_perf_clock = 0.0
+	var samples := _probe_frame_ms.duplicate()
+	_probe_frame_ms.clear()
+	if samples.is_empty(): return
+	samples.sort()
+	var total := 0.0
+	for value in samples: total += value
+	var nodes := get_tree().get_node_count()
+	var created_delta := _probe_created
+	var removed_delta := _probe_removed
+	_probe_created = 0
+	_probe_removed = 0
+	var particles := 0
+	for node in get_tree().get_nodes_in_group("monsters"):
+		if is_instance_valid(node) and node.has_node("body/AnimatedSprite2D"): particles += 1
+	print("[probe] perf avg=%.2f p50=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d frames=%d enemies=%d projectiles=%d telegraphs=%d hazards=%d vfx=%d particles=%d nodes=%d created=%d removed=%d nodes_delta=%d stage=%d" % [
+		total/samples.size(), samples[int(samples.size()*0.50)], samples[int(samples.size()*0.95)],
+		samples[int(samples.size()*0.99)], samples.back(), Engine.get_frames_per_second(),
+		samples.size(),
+		get_tree().get_nodes_in_group("monsters").filter(func(node): return not node.is_die).size(),
+		get_tree().get_nodes_in_group("enemy_projectiles").size(),
+		get_tree().get_nodes_in_group("hostile_zone").size(),
+		get_tree().get_nodes_in_group(StageHazard.GROUP).size(),
+		get_tree().get_nodes_in_group("combat_transient").size(),
+		particles, nodes, created_delta, removed_delta, nodes-_probe_nodes_prev,
+		LevelServer.level])
+	_probe_nodes_prev = nodes
+	var zones := get_tree().get_nodes_in_group("hostile_zone")
+	print("[probe] zones count=%d rows=%s" % [zones.size(), _probe_zone_state()])
+
+## The lock state of every live footprint, so "the laser froze and then fired at the lane it froze"
+## is read off a real session rather than inferred from the pictures. `t` is seconds until the
+## footprint may damage; `frozen` is the actor's own lock flag.
+## Fields are `name=value` pairs joined by `;` and rows are joined by `|`. Neither separator can occur
+## inside a value: there is no text in this payload, only numbers and short identifiers. An earlier
+## version wrote the direction as `dir=%.2f,%.2f`, which made the comma-load-bearing and silently broke
+## any reader that split on it - including this project's own browser gate, which then reported "no lane
+## was ever observed" while the game was measuring hundreds of frames of frozen lanes.
+func _probe_zone_state() -> String:
+	var rows := []
+	for node in get_tree().get_nodes_in_group("hostile_zone"):
+		var owner_ref = node.owner_ref
+		var actor = owner_ref.get_ref() if owner_ref else null
+		var frozen := -1
+		if actor != null and actor.has_method("aim_state"):
+			frozen = 1 if bool(actor.aim_state().frozen) else 0
+		rows.append("id=%d;mode=%s;style=%s;active=%s;t=%.2f;w=%.2f;len=%.1f;dx=%.3f;dy=%.3f;frozen=%d;sweep=%.2f;turned=%d" % [
+			node.get_instance_id(), node.mode, node.style, str(node.activated),
+			node.warning-node.elapsed, node.warning, node.length,
+			node.direction.x, node.direction.y, frozen, node.sweep,
+			1 if node.sweep != 0.0 else 0])
+	return "|".join(rows)
 
 ## Counts projectiles as the engine adds them. game/bullets/ also holds the
 ## ejected shells; those are excluded so the counter means "a projectile was
 ## created" rather than "a casing was ejected".
 func _probe_on_node_added(node: Node) -> void:
+	_probe_created += 1
 	var script: Variant = node.get_script()
 	if script == null: return
 	var path: String = (script as Script).resource_path
@@ -324,6 +418,9 @@ func _probe_on_node_added(node: Node) -> void:
 ## projectile is reported, so a driver can prove the projectile left along the
 ## unified aim rather than merely "somewhere". Nothing in here creates, moves or
 ## frees a projectile, and nothing writes bullets_count.
+func _probe_on_node_removed(_node: Node) -> void:
+	_probe_removed += 1
+
 func _probe_track_projectiles() -> void:
 	if _probe_pending.is_empty(): return
 	var gun_ready := Utils.player != null and is_instance_valid(Utils.player) \
@@ -371,46 +468,48 @@ func _probe_report() -> void:
 		_probe_player_id = player_id
 		if player_id != 0:
 			_probe_sess += 1
-	print("[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d stage=%d camp=%s hellc=%s next=%d sel=%d pt=%d fog=%s scroll=%d" % [
+	# The argument list is an explicit Array with one entry per specifier, in the same order. The
+	# previous version interleaved long comments between the arguments, which is exactly the shape
+	# an edit can unbalance - and did: `hp` lost its value, `%` raised, and the line below printed its
+	# own format string instead of a state report. Every reader of this channel then saw "no line".
+	var fields: Array = [
 		_probe_sess, _probe_frames, _probe_proj,
 		str(Utils.is_game_start), LevelServer.state,
 		str(not Demo.pause_stack.is_empty()), Demo.pause_stack.size(),
-		# The session graph itself, reported so a driver can prove the outgoing
-		# session was released rather than merely hidden behind a menu.
+		# The session graph itself, reported so a driver can prove the outgoing session was released
+		# rather than merely hidden behind a menu.
 		str(player_id != 0),
 		gun_id, bullets, bullets_max, Input.mouse_mode,
 		player_pos, Utils.get_aim_viewport_position(), _e2e_crosshair_centre(), hp,
-		# --- fields appended for the aim gate. All are observations; appending
-		# them (rather than inserting) keeps every existing prefix/regex reader
-		# working unchanged.
-		# aimworld: the aim point in WORLD space. A driver needs it to accumulate
-		# the swept angle of a continuous 360 degree aim sweep; viewport-space aim
-		# alone saturates at the edges of the screen.
+		# aimworld: the aim point in WORLD space. A driver needs it to accumulate the swept angle of a
+		# continuous 360 degree aim sweep; viewport-space aim alone saturates at the screen edges.
 		Utils.get_aim_world_position(),
-		# projv / projang: the last projectile the engine created that has a
-		# velocity, and the aim angle at the moment it was observed. Sticky by
-		# design - the one-shot `[probe] proj-shot` line is what pairs a vector
-		# with a specific shot.
+		# projv / projang: the last projectile the engine created that has a velocity, and the aim
+		# angle when it was observed. Sticky by design; the one-shot `[probe] proj-shot` line is what
+		# pairs a vector with a specific shot.
 		_probe_proj_v.x, _probe_proj_v.y, _probe_proj_aim, _probe_proj_shots,
-		# fr: whether the fire button has been released. Read (not written) so a
-		# driver can prove a pause-menu close did not leave the trigger stuck.
+		# fr: whether the fire button has been released, read (not written) so a driver can prove a
+		# pause-menu close did not leave the trigger stuck.
 		str(Demo.fire_released),
-		# fps: the real frame rate of THIS machine, so a run can report why a
-		# state change took as long as it did instead of guessing.
+		# fps: the real frame rate of THIS machine, so a run can report why a state change took as
+		# long as it did instead of guessing.
 		Engine.get_frames_per_second(),
-		# --- fields appended for the B10 Hell playtest gate. Also pure observations.
-		# stage/camp/next/sel/pt are the product's own progression state, read so a
-		# playtest run can PROVE it did not move the campaign pointer or fake a
-		# completion, instead of the driver inferring it from the absence of a change.
-		# fog is ArenaVisibility.fog_active(): the Hell darkness really being applied,
-		# as opposed to merely being requested by the stage number.
+		# stage/camp/hellc/next/sel: the product's own progression state, read so a driver can PROVE a
+		# direct stage departure did not move the campaign pointer or fake a completion.
+		# fog is ArenaVisibility.fog_active(): the Hell darkness really being applied, as opposed to
+		# merely being requested by the stage number.
 		LevelServer.level, str(Demo.campaign_complete), str(Demo.hell_complete),
-		Demo.next_stage, Demo.selected_stage, Demo.hell_playtest_stage,
+		Demo.next_stage, Demo.selected_stage,
+		# pt: kept in the line's shape for the drivers that already parse it. The playtest marker it
+		# used to report no longer exists, so it is a constant 0 - appending was deliberate, so no
+		# existing prefix or regex reader had to change when the product concept was removed.
+		0,
 		str(ArenaVisibility.fog_active()),
-		# scroll: how far the open camp panel's listing is scrolled, in pixels, or -1 when no
-		# camp panel is up. A driver that has to reach a control deep in a long list needs to know
-		# where the list IS, rather than guessing how many wheel turns return it to the top.
-		camp_scroll()])
+		# scroll: how far the open camp panel's listing is scrolled, or -1 when no camp panel is up.
+		camp_scroll(),
+	]
+	print(PROBE_FORMAT % fields)
+
 
 ## The camp stage/weapon listing's scroll offset, read off the live panel. -1 when no camp panel
 ## is on screen, so a driver can tell "no list" from "list at the top".
@@ -430,6 +529,20 @@ func camp_scroll() -> int:
 ## throwaway calibration page load (a whole extra engine boot) and removes the
 ## guesswork that made an earlier version fall back to a hard-coded layout.
 func _probe_report_rects() -> void:
+	_probe_rect_diag()
+	var canvas = Utils.canvasLayer
+	if not is_instance_valid(canvas):
+		return
+	# The title screen is a plain Control added straight to the control canvas layer, NOT a pause
+	# panel, so it is reported from a short walk here rather than from the pause stack below.
+	for title in _find_scripts(canvas,"ui/MainUI.gd"):
+		# The title screen's buttons are authored with TRANSLATION KEYS as their text
+		# (ui/ControlUI.tscn: text = "MAIN_UI_START"), not with the Chinese they render as.
+		# Matching the rendered text found nothing at all, which is why the first two browser
+		# runs could not click the menu and stopped at the title screen.
+		_probe_report_rect("menu-start-button", title, "MAIN_UI_START")
+		_probe_report_rect("menu-mods-button", title, "MAIN_UI_MOD")
+		_probe_report_rect("menu-settings-button", title, "MAIN_UI_SETTING")
 	for menu in Demo.pause_stack:
 		var panel: Node = menu
 		if not is_instance_valid(panel): continue
@@ -439,37 +552,111 @@ func _probe_report_rects() -> void:
 		if path.ends_with("ui/CampPanel.gd"):
 			_probe_report_rect("camp-close-button", panel, "返回")
 			_probe_report_rect("camp-settings-button", panel, "设置")
-			# B10 Hell playtest entry: the driver has to reach the review selector with a real
-			# mouse, and the selector's own stage entries have to be clickable by stage id.
-			# The two label literals mirror CampPanel.HELL_PLAYTEST_ENTER/EXIT. They are copied
-			# rather than referenced because a const cannot be read off an untyped Node, and
-			# tests/B10Playtest.gd asserts the copies still agree, so they cannot silently rot.
-			_probe_report_rect("hell-playtest-button", panel, "HELL PLAYTEST")
-			_probe_report_rect("hell-playtest-exit-button", panel, "退出试玩")
-			# The stage tab itself, and the departure button a stage entry opens in the detail
-			# pane: reaching a stage from the camp takes two real clicks and both have to be
-			# aimed at the control the product actually put on screen.
+			# The stage tab itself, and the departure button a stage entry opens in the detail pane:
+			# reaching a stage from the camp takes two real clicks and both have to be aimed at the
+			# control the product actually put on screen.
 			_probe_report_rect("camp-stage-tab", panel, "出发")
 			_probe_report_rect("camp-depart-button", panel, "开始此遭遇")
-			_probe_report_stage(panel, 31)
-			_probe_report_stage(panel, 35)
-			_probe_report_stage(panel, 40)
+			# B11: ONE stage list, 1-40, every entry a real enabled control. A driver reaches any of
+			# these with two real clicks and no selector switch in between, so the probe reports the
+			# far ends of the range plus the Hell stages a reviewer must be able to enter on a fresh
+			# save. Absence of a rectangle is the product saying the entry is missing or disabled.
+			# EVERY stage row the list built, not a hand-picked few: a row that is merely outside the
+			# scroll viewport must be reported as existing-but-not-clickable, or a driver cannot tell it
+			# apart from a stage the product does not offer at all.
+			for stage in _find_stage_ids(panel):
+				_probe_report_stage(panel, stage)
+			# The weapon tab, the first weapon row, and the detail pane's own action. A driver arming a
+			# fresh Web profile needs all three, and the third click is the real "购买"/"装备" control
+			# the product builds.
+			_probe_report_rect("camp-weapon-tab", panel, "武器")
+			_probe_report_weapon(panel,0)
+			_probe_report_search(panel)
 		elif path.ends_with("ui/DemoSettings.gd"):
 			_probe_report_rect("settings-back-button", panel, "返回")
 			_probe_report_rect("leave-entry", panel, "返回主菜单")
 		elif path.ends_with("ui/widgets/Scoreboard.gd"):
-			# The results panel a finished round shows. It owns the pause stack, so a driver that
-			# wants to play a second round has to close it with the product's own button.
+			# The results panel a finished round shows. It owns the pause stack, so a driver that wants
+			# to play a second round has to close it with the product's own button.
 			_probe_report_rect("scoreboard-ok", panel, "OK")
 		elif path.ends_with("ui/widgets/DeathBoard.gd"):
-			# The death panel's second button is the "give up and go back to camp" one; its text
-			# is the translation KEY, which is what this locator matches, so it is locale-proof.
+			# The death panel's second button is the "give up and go back to camp" one; its text is the
+			# translation KEY, which is what this locator matches, so it is locale-proof.
 			_probe_report_rect("deathboard-cancel", panel, "CANCEL")
+
+## Once per second, say what the locator channel can see. Without this, a driver that receives no
+## rectangle cannot tell "the function never ran" from "the control was not found", and that ambiguity
+## cost two browser runs before it was instrumented.
+var _probe_rect_diag_at := -1000
+var _probe_rect_diag_logged := false
+func _probe_rect_diag() -> void:
+	var now := Time.get_ticks_msec()
+	var first := not _probe_rect_diag_logged
+	if not first and now < _probe_rect_diag_at+1000: return
+	_probe_rect_diag_at = now
+	_probe_rect_diag_logged = true
+	var canvas = Utils.canvasLayer
+	var children := []
+	if is_instance_valid(canvas):
+		for child in canvas.get_children():
+			var script: Variant = child.get_script()
+			children.append("%s[%s]" % [child.name,str((script as Script).resource_path.get_file()) if script != null else "none"])
+	print("[probe] rect-diag canvas=%s children=%s stack=%d titles=%d" % [
+		str(is_instance_valid(canvas)), str(children.slice(0,14)), Demo.pause_stack.size(),
+		_find_scripts(canvas,"ui/MainUI.gd").size() if is_instance_valid(canvas) else -1])
+
+## Every node under `root` whose script is `suffix`. Used for the title screen, which has no
+## reference kept anywhere in the game: finding it by script is what makes the locator independent of
+## how the scene happens to be nested.
+func _find_scripts(root: Node, suffix: String) -> Array:
+	var found := []
+	var script: Variant = root.get_script()
+	if script != null and (script as Script).resource_path.ends_with(suffix): found.append(root)
+	for child in root.get_children():
+		found.append_array(_find_scripts(child,suffix))
+	return found
 
 func _probe_report_rect(tag: String, root: Node, prefix: String) -> void:
 	_probe_emit_rect(tag, _find_button(root, prefix))
 
-func _probe_emit_rect(tag: String, button: Button) -> void:
+## The camp listing's search field. It is a LineEdit, not a Button, so it is located by the placeholder
+## the product gives it, and it is reported with the same `on_screen` contract as every other control.
+func _probe_report_search(root: Node) -> void:
+	_probe_emit_rect("camp-search-box", _find_line_edit(root))
+
+func _find_line_edit(node: Node) -> LineEdit:
+	if node is LineEdit and (node as LineEdit).is_visible_in_tree(): return node
+	for child in node.get_children():
+		var found := _find_line_edit(child)
+		if found != null: return found
+	return null
+
+## The camp's weapon ROW for `weapon_id`, plus the detail pane's action button. Same contract as a
+## stage row: a missing report means the product does not offer it, and `on_screen=false` means the
+## listing has not been scrolled to it yet.
+func _probe_report_weapon(root: Node, weapon_id: int) -> void:
+	var row := _find_weapon_row(root,weapon_id)
+	if row != null: _probe_emit_rect("camp-weapon-%d" % weapon_id,row)
+	# The detail pane offers exactly one of these, depending on whether the weapon is already owned.
+	_probe_emit_rect("camp-weapon-action", _find_button(root,"购买"))
+	_probe_emit_rect("camp-weapon-owned-action", _find_button(root,"已拥有"))
+
+func _find_weapon_row(node: Node, weapon_id: int) -> Button:
+	if node is Button and int((node as Button).get_meta("weapon_id",-1)) == weapon_id: return node
+	for child in node.get_children():
+		var found := _find_weapon_row(child,weapon_id)
+		if found != null: return found
+	return null
+
+## Every stage id the open panel is currently listing, in the order the list holds them.
+func _find_stage_ids(node: Node, out: Array = []) -> Array:
+	if node is Button and (node as Button).has_meta("stage_id"):
+		var id := int((node as Button).get_meta("stage_id"))
+		if not out.has(id): out.append(id)
+	for child in node.get_children(): _find_stage_ids(child,out)
+	return out
+
+func _probe_emit_rect(tag: String, button: Control) -> void:
 	if button == null or button.size.x <= 10.0: return
 	if not button.is_visible_in_tree(): return
 	# ON SCREEN, not merely visible-in-tree. `is_visible_in_tree()` is true for a control that is
@@ -477,8 +664,8 @@ func _probe_emit_rect(tag: String, button: Button) -> void:
 	# y=1042 in a 230-unit panel - so a driver that clicked the reported centre clicked nothing at
 	# all, while the report confidently said the control was there. A control has to be really
 	# inside the scroll viewport to be clickable.
-	if not _probe_on_screen(button): return
 	var rect := Rect2(button.global_position, button.size)
+	var on_screen := _probe_on_screen(button)
 	# Re-report whenever the control MOVES, and not only when the instance changes.
 	#
 	# The original rule ("once per instance") was there to stop a driver clicking a position
@@ -488,21 +675,31 @@ func _probe_emit_rect(tag: String, button: Button) -> void:
 	# position on every move is what makes scrolling work, and it is strictly safer than the old
 	# rule: the map always holds the newest rectangle, never a stale one.
 	var id := button.get_instance_id()
-	var stamp := "%d@%d,%d" % [id, roundi(rect.position.x), roundi(rect.position.y)]
+	var stamp := "%d@%d,%d@%s" % [id, roundi(rect.position.x), roundi(rect.position.y), str(on_screen)]
 	if str(_probe_rect_ids.get(tag, "")) == stamp: return
 	_probe_rect_ids[tag] = stamp
 	# The instance id is part of the payload on purpose: a driver that has to press
 	# Esc twice (open, then close) needs to know the panel it sees is the one it
 	# just opened and not the previous cycle's, because a panel that owns the pause
 	# stack but has not finished building swallows the closing key.
-	print("[probe] rect %s id=%d text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
-		tag, id, button.text, rect.position.x, rect.position.y, rect.size.x, rect.size.y,
-		rect.get_center().x, rect.get_center().y])
+	# `on_screen` is published rather than implied. A control that is scrolled outside its viewport
+	# still HAS a rectangle, and the difference between "not built yet" and "not scrolled to" is the
+	# difference between a defect and a driver that has not turned the wheel far enough.
+	print("[probe] rect %s id=%d on_screen=%s text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f" % [
+		tag, id, str(on_screen), _control_label(button), rect.position.x, rect.position.y,
+		rect.size.x, rect.size.y, rect.get_center().x, rect.get_center().y])
+
+## The visible label of a published control. `text` exists on Button and LineEdit and NOT on Control,
+## and reading it off a Control raised inside the print above - which silently produced no line at all.
+func _control_label(control: Control) -> String:
+	if control is Button: return (control as Button).text
+	if control is LineEdit: return (control as LineEdit).text
+	return ""
 
 ## Is this control inside every scroll viewport it lives in, and is its centre inside the screen?
 ## Walks the ancestors so a control nested in a panel inside a ScrollContainer is checked against
 ## the scroll rect that actually clips it.
-func _probe_on_screen(button: Button) -> bool:
+func _probe_on_screen(button: Control) -> bool:
 	var centre := button.get_global_rect().get_center()
 	var screen := get_viewport().get_visible_rect()
 	if screen.size.x > 0.0 and not screen.has_point(centre): return false
@@ -515,15 +712,26 @@ func _probe_on_screen(button: Button) -> bool:
 	return true
 
 ## Locate a STAGE entry by the stage id the camp stores on its own button, reporting it under a
-## per-stage tag. Text cannot be used here: a stage entry's label carries a region/lock/playtest
-## suffix that changes with state, so the driver would be clicking a moving name. Only an ENABLED
-## button that is really on screen is reported, and the driver clicks the rectangle the product
-## reported - never a remembered position.
+## per-stage tag. Text cannot be used here: the label carries the stage's authored name and a future
+## edit could change it. The button's ENABLED state is published with the rectangle, so a driver can
+## prove the product really offers the stage instead of inferring it from a click having worked. B11
+## removed the disabled class of entry entirely, so a disabled one here is a defect and is reported as
+## such rather than silently skipped.
+##
+## The row is scrolled into view BY THE PRODUCT before it is reported. `_probe_emit_rect()` refuses a
+## control that is not really inside its scroll viewport - which is correct, a driver must not be
+## handed a rectangle it cannot click - so a forty-row list needs the list itself to move. Asking the
+## ScrollContainer is deterministic; turning the wheel and hoping was not.
 func _probe_report_stage(root: Node, stage: int) -> void:
-	_probe_emit_rect("stage-%d" % stage, _find_stage_button(root, stage))
+	var button := _find_stage_button(root, stage)
+	if button == null:
+		print("[probe] stage %d missing" % stage)
+		return
+	print("[probe] stage %d enabled=%s text=\"%s\"" % [stage, str(not button.disabled), button.text])
+	_probe_emit_rect("stage-%d" % stage, button)
 
 func _find_stage_button(node: Node, stage: int) -> Button:
-	if node is Button and (node as Button).is_visible_in_tree() and not (node as Button).disabled \
+	if node is Button and (node as Button).is_visible_in_tree() \
 			and int((node as Button).get_meta("stage_id", 0)) == stage:
 		return node
 	for child in node.get_children():
@@ -750,6 +958,113 @@ func _tour_run() -> void:
 	print("[tour] complete")
 	get_tree().quit(0)
 
+## B11 Web sustained-load measurement. Departs the requested stage, plays it for the requested number
+## of seconds, and lets the read-only probe channel publish the per-second performance line. It owns the
+## session, so the scripted smoke sequence never runs alongside it.
+func _perf_run() -> void:
+	await get_tree().create_timer(3.0).timeout
+	Demo.test_mode = true
+	var stage := _perf_arg("--perf-stage=",39)
+	var seconds := _perf_arg("--perf-seconds=",60)
+	await _enter_camp_from_title()
+	await _wait_until(func(): return Utils.is_game_start, 180000)
+	await _wait_until(func(): return LevelServer.state == "CAMP", 120000)
+	await _wait_until(func(): return Demo.pause_stack.is_empty(), 60000)
+	# A Web launch restores `equipped` from the save but not the live `Utils.player.gun`, so the rig
+	# arms itself exactly as a player would have to. Same in the BEFORE and the AFTER build.
+	if Utils.player != null and Utils.player.gun == null:
+		PlayerData.add_weapon(Utils.weapon_list["0"].instantiate())
+		PlayerData.changeWeapon(0,true)
+	# Survivability a player who reached Hell would have, so the run measures the STAGE and cannot end
+	# early on a level-1 health bar.
+	PlayerData.player_hp_max = 100000.0
+	PlayerData.player_hp = 100000.0
+	Utils.set_gameplay_mouse_mode()
+	await get_tree().create_timer(0.6).timeout
+	var departed: bool = LevelServer.town.depart(stage,true)
+	print("[smoke-perf] depart=%s stage=%d seconds=%d" % [str(departed),stage,seconds])
+	await _wait_until(func(): return LevelServer.state == "COMBAT", 120000)
+	var until := Time.get_ticks_msec()+seconds*1000
+	while Time.get_ticks_msec() < until:
+		PlayerData.player_hp = PlayerData.player_hp_max
+		# Real movement and real fire: a stage only builds up the way the report describes if the
+		# player is actually in it.
+		var step := ((Time.get_ticks_msec()/700)%4)
+		for pair in [["left",0],["right",1],["up",2],["down",3]]:
+			if step == int(pair[1]): Input.action_press(pair[0])
+			else: Input.action_release(pair[0])
+		Input.action_press("shoot")
+		await get_tree().process_frame
+	for action in ["left","right","up","down","shoot"]: Input.action_release(action)
+	print("[smoke-perf] complete stage=%d state=%s" % [stage,LevelServer.state])
+	LevelServer.return_to_camp()
+	await get_tree().create_timer(1.0).timeout
+	get_tree().quit(0)
+
+func _perf_arg(prefix: String, fallback: int) -> int:
+	for arg in OS.get_cmdline_args() + OS.get_cmdline_user_args():
+		if arg.begins_with(prefix): return int(arg.substr(prefix.length()))
+	return fallback
+
+## B11: walk the Hell stages in one session and say, per stage, what the product actually did.
+## Each line is an observation a gate can assert on: state, level, whether Hell darkness is applied,
+## how many real enemies arrived, and whether the player's own weapon is live.
+const STAGE_TOUR := [31,35,39,40]
+
+func _stage_tour_run() -> void:
+	await get_tree().create_timer(4.0).timeout
+	await _enter_camp_from_title()
+	await _wait_until(func(): return Utils.is_game_start, 180000)
+	await _wait_until(func(): return LevelServer.state == "CAMP", 120000)
+	# A live weapon, so a real round can be played rather than only observed.
+	if Utils.player != null and (Utils.player.gun == null or PlayerData.player_weapon_list.is_empty()):
+		var gun = Utils.weapon_list["0"].instantiate()
+		PlayerData.add_weapon(gun)
+		PlayerData.changeWeapon(0,true)
+		print("[stage-tour] armed gun=%s" % str(Utils.player.gun != null))
+	# Give the profile the survivability a player who reached Hell would have, so the tour measures the
+	# STAGE and not a level-1 health bar.
+	PlayerData.player_hp_max = 60; PlayerData.player_hp = 60
+	for stage in STAGE_TOUR:
+		LevelServer.return_to_camp()
+		await _wait_until(func(): return LevelServer.state == "CAMP", 60000)
+		await get_tree().create_timer(0.6).timeout
+		Utils.set_gameplay_mouse_mode()
+		var departed: bool = LevelServer.town.depart(stage,true)
+		await _wait_until(func(): return LevelServer.state == "COMBAT", 60000)
+		# Play it for a while: move, and hold the trigger so the round is a real one.
+		var until := Time.get_ticks_msec()+9000
+		var monsters := 0
+		var fog := false
+		var locked_lanes := 0
+		var moving := 0
+		while Time.get_ticks_msec() < until:
+			PlayerData.player_hp = PlayerData.player_hp_max
+			var step := ((Time.get_ticks_msec()/700)%4)
+			for pair in [["left",0],["right",1],["up",2],["down",3]]:
+				if step == int(pair[1]): Input.action_press(pair[0])
+				else: Input.action_release(pair[0])
+			Input.action_press("shoot")
+			if Utils.player != null and is_instance_valid(Utils.player):
+				moving += 1 if Utils.player.velocity.length() > 1.0 else 0
+			for node in get_tree().get_nodes_in_group("hostile_zone"):
+				var ref = node.owner_ref
+				if ref and ref.get_ref() != null and ref.get_ref().has_method("aim_state"):
+					if bool(ref.get_ref().aim_state().frozen): locked_lanes += 1
+			monsters = maxi(monsters,get_tree().get_nodes_in_group("monsters").filter(
+				func(node): return not node.is_die).size())
+			fog = fog or ArenaVisibility.fog_active()
+			await get_tree().create_timer(0.05).timeout
+		for action in ["left","right","up","down","shoot"]: Input.action_release(action)
+		print("[stage-tour] stage=%d departed=%s state=%s level=%d fog=%s monsters_peak=%d moving_frames=%d locked_lane_frames=%d next=%d campaign=%s hell=%s" % [
+			stage, str(departed), LevelServer.state, LevelServer.level, str(fog), monsters, moving,
+			locked_lanes, Demo.next_stage, str(Demo.campaign_complete), str(Demo.hell_complete)])
+		await get_tree().create_timer(0.5).timeout
+	LevelServer.return_to_camp()
+	await get_tree().create_timer(1.0).timeout
+	print("[stage-tour] complete")
+	get_tree().quit(0)
+
 func _wait_until(predicate: Callable, timeout_ms: int) -> void:
 	var deadline := Time.get_ticks_msec() + timeout_ms
 	while Time.get_ticks_msec() < deadline:
@@ -794,6 +1109,9 @@ func _process(_delta: float) -> void:
 		_probe_track_projectiles()
 	if _sampling:
 		_frame_times.append(get_process_delta_time() * 1000.0)
+	if probe and not get_tree().paused:
+		_probe_frame_ms.append(get_process_delta_time() * 1000.0)
+		if _probe_frame_ms.size() > 600: _probe_frame_ms.pop_front()
 	if e2e:
 		_track_transients()
 		if Input.mouse_mode != _last_mode:

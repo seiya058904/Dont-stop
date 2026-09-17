@@ -32,8 +32,14 @@ var visual_clock = 0.0
 var ray_clock = 0.0
 var previous_active = false
 var last_ray_origin = Vector2.INF
+## `full_detail` decides whether the redundant origin halo is drawn. It used to be recomputed from
+## `get_nodes_in_group("hostile_zone").size()` once per DRAWN ZONE per frame, which is a group scan of
+## every live telegraph multiplied by the number of live telegraphs. It is a presentation budget, so
+## it is now sampled once per zone every six frames from a static counter: the same decision, at a
+## sixth of the cost, and still shared by every zone alive in that window.
 static var budget_frame = -1
 static var full_detail = true
+static var budget_live := 0
 
 ## B批 attack-UI formalisation. `style` picks the palette family (see CombatTelegraph) and
 ## `pierce` mirrors long lanes onto FogPierce so a Hell beam's direction stays readable
@@ -57,6 +63,10 @@ var active_elapsed := 0.0
 const FAIR_VISIBLE := 0.5
 const FAIR_WARNING := 0.6
 const FAIR_MAX_EXTENSION := 1.4
+
+## Above this many live telegraphs the redundant origin halo is dropped. Every footprint, contrast
+## edge, timing ring, directional arrow and summon symbol stays.
+const DETAIL_BUDGET := 32
 
 static func profile_snapshot():
 	return profile_stats.duplicate()
@@ -151,7 +161,8 @@ func _draw():
 	var frame = Engine.get_physics_frames()/6
 	if budget_frame != frame:
 		budget_frame = frame
-		full_detail = get_tree().get_nodes_in_group("hostile_zone").size() <= 32
+		budget_live = get_tree().get_nodes_in_group("hostile_zone").size()
+	full_detail = budget_live <= DETAIL_BUDGET
 	# Under load omit only the redundant origin halo. Footprints, contrast edges,
 	# timing rings, directional arrows and the summon symbol always remain.
 	preload("res://game/effects/CombatTelegraph.gd").paint(self,mode,direction,radius,length,width,angle,elapsed/maxf(0.01,warning),elapsed>=warning,sweep,geometry_cache,full_detail,style)

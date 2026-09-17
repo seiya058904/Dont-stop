@@ -1,5 +1,12 @@
 # B10 — Hell Playtest Access + Special Enemy Threat Revision
 
+> **SUPERSEDED BY B11.** This document describes the "Hell Playtest / 地狱试玩" selector that B11
+> deleted. It was a misreading of the requirement: the product has no trial stage, no locked stage and
+> no preview mode, and Stage 1-40 are all permanently selectable from ONE normal stage list. The
+> measurements and the enemy-threat analysis below are still the record of what was built at the time;
+> **anything in here that describes the playtest entry, the lock, or the per-attack lead values is no
+> longer true of the product.** See `B11-FAIR-FIGHT-AND-PERF.md` for the current rules.
+
 **本轮产品改动分两块：**（1）让 31–40 真正可以在正式 Web 里被真人打开；（2）在不增加怪物数量、
 不涨 HP / 伤害的前提下，提高**特殊怪的单位战术威胁**。
 Stage 29 密度、Boss 框架、Hell 31–40 的 HP/damage/speed/fog/hazard 全部未动。

@@ -113,16 +113,23 @@ static func normalize(data: Dictionary) -> Dictionary:
 	# The Stage-30 -> Stage-31 migration lives here, between validate() and the restore, so
 	# it needs no schema bump: validate() runs first and stage 30 is still a legal stage, and
 	# stage 31 exists for every save written after this batch.
-	if result.campaign_complete:
-		if int(result.next_stage) == 30 and DemoConfig.ENCOUNTERS.has(31): result.next_stage = 31
-	elif not DemoConfig.ENCOUNTERS.has(int(result.next_stage)) or int(result.next_stage) > 30:
-		# A save that has NOT finished the normal campaign can never hold a Hell stage. This
-		# is a data-level guard, independent of the camp UI's lock.
-		result.next_stage = 30
-	if result.campaign_complete:
-		if int(result.selected_stage) > 40: result.selected_stage = 40
-	elif int(result.selected_stage) > 30:
-		result.selected_stage = 30
+	# B11: `next_stage` is the LINEAR CAMPAIGN pointer, and the only thing this file may do to it
+	# is keep it inside the stage table (1-40) and migrate the historical 30 -> 31 step for a save
+	# that had already finished the normal campaign. It is NOT a selectability gate any more: every
+	# stage is permanently choosable on any save, so a fresh save holding a Hell
+	# `next_stage` is a state the product accepts and there is nothing to rewrite. The previous
+	# version clamped an unfinished save to 30, which silently discarded a legal pointer -- and,
+	# worse, silently rewrote the terminal Stage-40 state of a save that had cleared Hell without
+	# clearing the normal campaign first.
+	result.next_stage = clampi(int(result.next_stage),1,40)
+	if result.campaign_complete and int(result.next_stage) == 30 and DemoConfig.ENCOUNTERS.has(31):
+		result.next_stage = 31
+	# B11: `selected_stage` is only bounded by the stage table (1-40), never by progress.
+	# Every stage is permanently selectable on a fresh save, so a Hell selection is a state the
+	# product accepts and there is nothing to rewrite here. `next_stage` below keeps its clamp
+	# because it is the LINEAR CAMPAIGN pointer - a fresh save's story really does resume at
+	# Stage 30 at the latest - and not a selectability gate.
+	result.selected_stage = clampi(int(result.selected_stage),1,40)
 	result.talent_payments = data.get("talent_payments",[]).duplicate(true) if data.schema_version >= 3 else []
 	result.legacy = data.get("legacy",[]).duplicate()
 	result.legacy_state = data.get("legacy_state",{}).duplicate()

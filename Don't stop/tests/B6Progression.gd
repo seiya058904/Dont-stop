@@ -2,10 +2,12 @@ extends "res://tests/M8Runtime.gd"
 
 ## B6 progression and save-migration audit.
 ##
-## Covers the three rules the user set for this batch:
+## Covers the rules that still hold after B11:
 ##   1. a save that finished the normal campaign but predates Hell Mode must migrate from
 ##      next_stage 30 to 31, WITHOUT losing the recorded Stage-30 completion;
-##   2. a save that has NOT finished Stage 30 must not be handed Hell Mode by any path;
+##   2. the stage table bounds every saved pointer (1-40) and normalization never invents a
+##      completion -- progression no longer gates which stage a player may choose, so the old
+##      "an unfinished save can never hold a Hell stage" rule is deliberately gone (see B11Stages);
 ##   3. Stage 40 must not produce a Stage 41, and no schema_version bump or namespace change
 ##      may be needed to express any of it.
 ##
@@ -45,13 +47,27 @@ func _ready():
 	check(not migrated.hell_complete,"a migrated save does not claim Hell completion")
 	check(CampSnapshot.validate(migrated),"the migrated save is itself valid")
 
-	# --- Rule 2: an unfinished save is never given Hell ---------------------------------
+	# --- Rule 2 (B11): the stage TABLE bounds a save; progress does not --------------------
+	# The previous batch asserted that an unfinished save could never hold a Hell stage. B11 removed
+	# that rule: every stage is permanently choosable, so a Hell stage in `selected_stage` is a state
+	# the product must accept rather than quietly rewrite. What still has to hold is that no save may
+	# point outside the real 1-40 table, and that normalizing is never a progression write.
 	for next_value in [30,31,35,40]:
 		var pending = old_save(false,next_value,next_value)
 		var guarded = CampSnapshot.normalize(pending)
-		check(int(guarded.next_stage)<=30 and not guarded.campaign_complete,
-			"unfinished save at next_stage %d cannot hold a Hell stage" % next_value)
-		check(int(guarded.selected_stage)<=30,"unfinished save cannot select a Hell stage (%d)" % next_value)
+		check(not guarded.campaign_complete,
+			"normalizing an unfinished save never invents a completion (next=%d)" % next_value)
+		check(int(guarded.next_stage)==next_value,
+			"normalizing keeps a legal linear pointer (%d -> %d)" % [next_value,int(guarded.next_stage)])
+		check(int(guarded.selected_stage)==next_value,
+			"normalizing keeps a legal Hell selection (%d -> %d)" % [next_value,int(guarded.selected_stage)])
+	for out_of_range in [0,41,99]:
+		var bogus = old_save(false,out_of_range,out_of_range)
+		var clamped = CampSnapshot.normalize(bogus)
+		check(int(clamped.next_stage)>=1 and int(clamped.next_stage)<=40,
+			"a pointer outside the table is clamped into it (%d -> %d)" % [out_of_range,int(clamped.next_stage)])
+		check(int(clamped.selected_stage)>=1 and int(clamped.selected_stage)<=40,
+			"a selection outside the table is clamped into it (%d -> %d)" % [out_of_range,int(clamped.selected_stage)])
 
 	# --- Rule 3: Stage 40 is terminal ---------------------------------------------------
 	var cleared = old_save(true,40,40)
@@ -66,32 +82,20 @@ func _ready():
 	check(CampSnapshot.validate(legacy_shape),"a save without hell_complete validates unchanged")
 	check(not CampSnapshot.normalize(legacy_shape).hell_complete,"a missing hell_complete defaults to false")
 
-	# --- The UI lock is the visible half of the same rule -------------------------------
-	LevelServer.state = "CAMP"
-	Demo.open_panel()
-	await wait(0.25)
-	var panel = Demo.ui
-	check(is_instance_valid(panel),"the camp panel opens for the stage list")
-	if is_instance_valid(panel):
-		var bypass = "--hell-unlock" in OS.get_cmdline_user_args()
-		for stage in [30]:
-			check(panel.stage_unlocked(stage),"stage %d is always open" % stage)
-		for stage in [31,35,40]:
-			if Demo.campaign_complete:
-				check(panel.stage_unlocked(stage),"a completed campaign opens stage %d" % stage)
-			elif bypass:
-				check(panel.stage_unlocked(stage),"the explicit --hell-unlock bypass opens stage %d" % stage)
-			else:
-				check(not panel.stage_unlocked(stage),"stage %d stays locked for a fresh save" % stage)
-		# The whole complaint was that the per-stage "开始此遭遇" button is itself a trial
-		# departure, so a locked entry must refuse at depart() too, not only be greyed out.
-		if not Demo.campaign_complete and not bypass:
-			panel.switch_tab("stage")
-			await wait(0.2)
-			panel.depart(40,true)
-			await wait(0.1)
-			check(LevelServer.state=="CAMP","a locked Hell stage cannot be departed into")
-		panel.queue_free()
+	# --- B11: the stage list has no lock for this to be the visible half of ------------------
+	# The panel's own gate is asserted in tests/B11Stages.gd, including a live scan of every label it
+	# renders. What belongs HERE is the save-side half: the pointer and the selection stay inside the
+	# stage table on every path, and a fresh save can be given a Hell selection.
+	var fresh_hell = old_save(false,1,39)
+	check(CampSnapshot.validate(fresh_hell),"a fresh save with a Hell selection validates")
+	check(int(CampSnapshot.normalize(fresh_hell).selected_stage)==39,
+		"a fresh save with a Hell selection survives normalization")
+	var fresh_pointer = old_save(false,40,1)
+	check(int(CampSnapshot.normalize(fresh_pointer).next_stage)==40,
+		"a fresh save may hold any legal pointer, including a Hell one")
+	if is_instance_valid(Demo.ui):
+		check(Demo.ui.stage_unlocked(40),"the live panel answers available for stage 40")
+		Demo.ui.queue_free()
 	await wait(0.2)
 
 	# --- Story completion through the real victory path ---------------------------------

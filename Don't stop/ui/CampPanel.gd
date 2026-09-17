@@ -29,30 +29,19 @@ var weapon_badge: Label
 var weapon_header: HBoxContainer
 var category_box: OptionButton
 
-## HELL PLAYTEST (B10). Human review access to Stage 31-40.
+## B11 removed the "Hell Playtest" product concept entirely.
 ##
-## WHY THIS EXISTS: the formal Hell gate is `Demo.campaign_complete`, and the only bypass was
-## the native `--hell-unlock` command-line flag. `web/loader.html` maps exactly five query
-## parameters (smoke, nw, e2e, tour, probe) and never maps that one, so in the shipped Web
-## build the flag is unreachable: a browser player could only enter Hell by clearing all 30
-## Normal stages, and the first real playtest of Hell therefore could not happen at all.
+## WHY: the previous batch misread the requirement and shipped a second, separately labelled
+## selector ("HELL PLAYTEST / 地狱试玩") whose departures were TRIAL departures, so clearing
+## Stage 40 through it recorded nothing. That is not this product's rule. There is no trial
+## stage, no locked stage and no preview mode: Stage 1-40 are all permanently and directly
+## selectable from ONE normal stage list, on a completely fresh save, with no prerequisite and
+## no save-progress requirement. Stage 31-40 are simply the harder Hell stages, not a second
+## mode, and no player-visible control may ever say Locked / 未解锁 / Playtest / 试玩.
 ##
-## This is a visible, labelled review entry - not a hidden cheat command - and it changes
-## exactly ONE thing: which stages the list will let you depart into. It CANNOT mark the
-## campaign complete, because a playtest departure is a TRIAL departure
-## (`depart(stage, true)` -> `Town.depart(stage, true)` -> `Demo.trial = true`), and
-## `LevelServer.victory()` already writes `next_stage`, `campaign_complete` and `hell_complete`
-## only inside `if not Demo.trial`. Clearing Stage 40 in playtest records nothing.
-##
-## The formal lock is deliberately left in place below: the official 31-40 buttons stay
-## disabled and keep their existing text, so no existing gate, test or save rule changes
-## meaning. This only adds a second, clearly separated selector.
-var hell_playtest := false
-
-## The playtest selector's own labels, kept as constants because the read-only Web probe
-## locates the controls by text (autoload/Smoke.gd) and the E2E driver asserts on them.
-const HELL_PLAYTEST_ENTER := "HELL PLAYTEST"
-const HELL_PLAYTEST_EXIT := "退出试玩"
+## `stage_unlocked()` is KEPT because other systems still reference the progression fields it
+## used to read. It no longer decides anything a player can see: it answers
+## "does this stage exist", which is the only question a selector may ask.
 
 func switch_tab(next_tab: String):
 	tab_state[tab] = {"selection":selection,"scroll":listing_scroll.scroll_vertical}
@@ -262,6 +251,9 @@ func render():
 				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("√ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
 				weapon_card.icon=gun.image; weapon_card.expand_icon=true; weapon_card.add_theme_constant_override("icon_max_width",36)
 				weapon_card.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; weapon_card.custom_minimum_size.y=31
+				# Read-only locator, exactly like a stage row's: the ONLY stable name for a weapon row is
+				# its id, because the visible label carries a purchase/equipped marker that changes state.
+				weapon_card.set_meta("weapon_id",int(id))
 				tier_style(weapon_card,WeaponCatalog.tier(int(id)))
 		"attachment":
 			for id in Utils.am_dict:
@@ -381,40 +373,28 @@ func show_talent(id: String):
 func equipment_list():
 	switch_tab("weapon")
 
-## Stage select. The normal campaign (1-30) and HELL MODE (31-40) are visually separate, and
-## Hell is locked until the normal campaign is finished. This is the visible half of one
-## rule; CampSnapshot.normalize() enforces the same rule on the save's data path, so a
-## hand-edited save cannot unlock Hell either.
+## Stage select. ONE list. Stage 1-40, all permanently and directly selectable.
+##
+## B11 rule, stated once so it cannot drift: the product has no locked stage and no trial
+## stage. A brand-new empty save must be able to pick 1, 10, 20, 30, 31, 35, 39 and 40 from
+## this same list and really enter that battle. Progress fields (next_stage, campaign_complete,
+## hell_complete) still exist for the save format and for the "继续" convenience entry, but
+## nothing in this panel reads them to decide whether a stage may be chosen.
 func stage_list():
 	if LevelServer.state != "CAMP":
 		label(listing,"战斗中不可出发或补给")
 		label(detail,"完成遭遇或失败返回营地后，可购买、补给与练枪。")
 		return
-	label(listing,"普通战役 1—30",9)
-	button(listing,"继续："+DemoConfig.ENCOUNTERS[Demo.next_stage].name,func(): depart(Demo.next_stage,false))
+	label(listing,"关卡选择 1—40",9)
+	# The linear campaign still advances through this one entry, exactly as before: it is the
+	# "play the story in order" door. Every entry below it is a direct repeat, and none of them
+	# is gated.
+	button(listing,"继续："+DemoConfig.ENCOUNTERS[Demo.next_stage].name,func(): depart_campaign())
 	if Demo.campaign_complete:
-		button(listing,"已完成核心 · 从第1轮再次出发",func(): Demo.next_stage = 1; depart(1,false))
-	# The playtest entry lives NEXT TO THE TOP, not at the bottom of the Hell block.
-	#
-	# Two reasons, and the second is the important one. A reviewer opening the stage list should
-	# not have to scroll past thirty campaign rows to find the thing this round exists to expose;
-	# and a 40-row list on a slow Web renderer is genuinely awkward to scroll, so an entry that
-	# needs scrolling is an entry that will be missed. The formal Hell block below is unchanged.
-	if hell_playtest:
-		label(listing,"———— HELL PLAYTEST · 地狱试玩 31—40 ————",9)
-		label(listing,"试玩模式：可自由进入 31—40。不记录通关，不改变正式进度，不影响存档指针。",7)
-		stage_entries(31,40,true,true)
-		button(listing,HELL_PLAYTEST_EXIT+" · 返回正式关卡表",func(): hell_playtest = false; request_refresh())
-	else:
-		button(listing,HELL_PLAYTEST_ENTER+" · 地狱模式试玩（31—40）",func(): hell_playtest = true; request_refresh())
-	stage_entries(1,30,false)
-	# ---- the formal gate, unchanged --------------------------------------------------------
-	label(listing,"———— HELL MODE ————",9)
+		label(listing,"普通战役已完成 · 下列关卡仍可自由重玩",7)
 	if Demo.hell_complete:
-		label(listing,"HELL COMPLETE · 已完成第40关",8)
-	if not Demo.campaign_complete:
-		label(listing,"完成第30关后解锁第31—40关；地狱模式固定战争迷雾。",7)
-	stage_entries(31,40,true)
+		label(listing,"HELL COMPLETE · 已完成第40关",7)
+	stage_entries(1,40)
 	button(listing,"开发辅助：补充测试钱包",func(): Demo.replenish(); message.text = "两种钱包已补到至少9999；装备、天赋、关卡保持")
 	button(listing,"购买备用弹匣 →",func(): switch_tab("magazine"))
 	button(listing,"恢复生命 · 10金币",func(): purchase("supply","health"))
@@ -422,46 +402,49 @@ func stage_list():
 		button(listing,"练枪：%d目标" % count,func(): LevelServer.town.practice(count); queue_free())
 	button(listing,"清理练枪靶与效果",func(): LevelServer.town.clear_practice(); message.text = "已清理；练枪不发金币、经验或击杀奖励")
 	label(detail,"正常下一关："+DemoConfig.ENCOUNTERS[Demo.next_stage].name)
-	label(detail,"原移动速度/冲刺/视角保持。\n原数字键1—7对应持有栏前7把；全部%d把可在枪械页搜索/购买/装备，也可在当前配置选枪。\n练枪靶不掉落、不结算经验。" % Utils.weapon_list.size())
+	label(detail,"1—30 为普通战役，31—40 为地狱模式（固定战争迷雾，难度更高）。\n全部关卡永久可选，没有解锁条件。\n从关卡表出发是重复挑战：不移动「继续」进度指针，通关也不改变解锁。\n原移动速度/冲刺/视角保持。\n原数字键1—7对应持有栏前7把；全部%d把可在枪械页搜索/购买/装备，也可在当前配置选枪。\n练枪靶不掉落、不结算经验。" % Utils.weapon_list.size())
 
-func stage_entries(first: int, last: int, hell: bool, playtest := false):
-	var locked = hell and not playtest and not stage_unlocked(first)
+## Every entry is a real, enabled control. There is deliberately no `locked` branch, no suffix
+## that names a state, and no second selector: a reviewer reading this function should be able
+## to conclude "1-40, all clickable" without reading anything else.
+func stage_entries(first: int, last: int):
 	for id in range(first,last+1):
 		if not DemoConfig.ENCOUNTERS.has(id): continue
 		var config = DemoConfig.ENCOUNTERS[id]
 		if (id-1)%5 == 0: label(listing,M5Content.REGIONS[config.region].name)
-		var suffix = " · 未解锁" if locked else (" · 试玩" if playtest else "")
-		var item = entry(config.name + suffix,str(id),func():
+		var item = entry(config.name,str(id),func():
 			clear_box(detail)
 			label(detail,config.name,10)
-			label(detail,M5Content.REGIONS[config.region].info+"\n"+config.info+
-				("\n试玩模式：本次出发不写进度，通关也不会解锁或标记完成。\n" if playtest else "")+
-				"胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n直接试玩不跳过正常进度。")
-			button(detail,"开始此遭遇",func(): depart(id,true,playtest)))
-		item.disabled = locked
+			label(detail,("地狱模式（固定战争迷雾）\n" if HellMode.is_hell(id) else "")+
+				M5Content.REGIONS[config.region].info+"\n"+config.info+
+				"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n重复挑战不移动「继续」进度指针。")
+			button(detail,"开始此遭遇",func(): depart(id)))
 		# Read-only locator for the browser probe (autoload/Smoke.gd). A driver has to click a
 		# control by its REAL rectangle, and the only stable name for a stage entry is its stage
-		# id: the visible text carries a region/lock/playtest suffix that changes with state.
+		# id - the visible text carries a region name that a future edit could change.
 		item.set_meta("stage_id",id)
 
-## Hell Mode gate. `--hell-unlock` is the explicit native test bypass; there is deliberately no
-## "any trial stage is open" shortcut, because the stage list's "开始此遭遇" button is itself a
-## trial departure and used to open any stage at all. This function's MEANING is unchanged by
-## the playtest entry above: playtest playability comes from stage_playtestable(), a separate
-## and explicitly labelled path, so every existing gate, test and save rule keeps its meaning.
+## Kept because save handling and audits still reference it. Its MEANING under B11 is only
+## "this stage exists": progression fields no longer gate anything a player can do, so a fresh
+## save answers true for 1 through 40, including 31-40. `--hell-unlock` is gone along with the
+## gate it used to bypass.
 func stage_unlocked(stage: int) -> bool:
-	if not HellMode.is_hell(stage): return DemoConfig.ENCOUNTERS.has(stage)
-	if Demo.campaign_complete: return true
-	return "--hell-unlock" in OS.get_cmdline_user_args()
+	return DemoConfig.ENCOUNTERS.has(stage)
 
-## Is this stage departable through the visible playtest selector right now? True only while
-## the selector is open, so nothing else in the product can reach a Hell stage through it.
-func stage_playtestable(stage: int) -> bool:
-	return hell_playtest and HellMode.is_hell(stage)
+## The linear campaign door. `Town.depart(stage, false)` reads `Demo.next_stage`, so this is
+## the path that writes progression; it is not reachable from the stage list below.
+func depart_campaign():
+	_depart_with(Demo.next_stage,false)
 
-func depart(stage: int, trial: bool, playtest := false):
-	if not stage_unlocked(stage) and not (playtest and stage_playtestable(stage)):
-		message.text = "第31—40关为地狱模式；完成第30关后解锁"
+## Direct stage choice. Every stage in the list departs as a repeat departure, which is what
+## keeps "pick stage 40 on a fresh save" from silently marking the campaign finished. The
+## refusal set is the real one only: unknown stage, no equipped weapon, round already running.
+func depart(stage: int):
+	_depart_with(stage,true)
+
+func _depart_with(stage: int, trial: bool):
+	if not DemoConfig.ENCOUNTERS.has(stage):
+		message.text = "该关卡不存在"
 		return
 	if not Utils.player.gun:
 		message.text = "请先购买并装备一把枪"
@@ -471,9 +454,6 @@ func depart(stage: int, trial: bool, playtest := false):
 		return
 	Demo.pop_pause(self)
 	if LevelServer.town.depart(stage,trial):
-		# Remembered only so the round can be described accurately in the playtest evidence;
-		# it is not progression state and is cleared by the next non-playtest departure.
-		Demo.hell_playtest_stage = stage if (playtest and HellMode.is_hell(stage)) else 0
 		queue_free()
 	else:
 		Demo.push_pause(self)

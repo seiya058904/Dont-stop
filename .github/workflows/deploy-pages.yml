@@ -297,6 +297,12 @@ jobs:
           - { name: aim-core,    tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 12 }
           - { name: aim-fault,   tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 8 }
           - { name: menu-return, tier: RELEASE, script: tools/web-menu-return-e2e.js,   timeout: 15 }
+          # B11. The claims this batch makes can only be judged in a browser: stages 31/35/39/40 really
+          # start Hell rounds on a fresh profile, and a frozen laser lane really fires at the geometry
+          # it froze. The gate reads the game's own read-only channel - including each live footprint's
+          # identity, countdown, direction, declared sweep and lock state - so it needs no screenshot
+          # diffing, and it asserts on the game's own per-stage evidence lines.
+          - { name: stages-fair,  tier: RELEASE, script: tools/web-b11-stagerun.js,    timeout: 15 }
     steps:
       - name: Check out source (gate scripts)
         uses: actions/checkout@v4
@@ -345,6 +351,10 @@ jobs:
             # script's default is `all`, which would run them serialised.
             aim-core)    set -- "$@" core ;;
             aim-fault)   set -- "$@" fault ;;
+            # The B11 gate walks four Hell stages and reads the telegraph channel; it takes only the URL
+            # and an evidence directory. The sustained-load measurement is deliberately NOT run on a
+            # software-rendered CI runner - see docs/iteration/B11-FAIR-FIGHT-AND-PERF.md.
+            stages-fair) set -- "$@" ;;
           esac
           START=$SECONDS
           if ! node "$PROJECT_PATH/${{ matrix.script }}" "$@" 2>&1 | tee "$OUT/run.log"; then
