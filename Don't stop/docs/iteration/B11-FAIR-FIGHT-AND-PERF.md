@@ -152,6 +152,39 @@ footprint still pays what the footprint says.
 
 ### 5.3 BEFORE / AFTER raw data
 
+Browser (Playwright, headless Chromium on the real GPU, 60 s per run, both builds measured by the same
+script `tools/web-b11-perf.js` with `Cache-Control: no-store` forced on every response):
+
+%s
+
+Native (headless, real physics at 60 Hz, 75 s per stage, `tests/B11Perf.gd`):
+
+| build | stage | created/s | removed/s | peak nodes | peak enemies | peak projectiles | peak telegraphs |
+|---|---|---|---|---|---|---|---|
+| BEFORE (`d97290e`) | 39 | 429.4 | 429.9 | 2805 | 43 | 10 | 8 |
+| AFTER (B11) | 39 | 401.8 | 402.3 | 2876 | 49 | 12 | 11 |
+| BEFORE (`d97290e`) | 40 | 454.4 | 449.7 | 978 | 1 | 42 | 4 |
+| AFTER (B11) | 40 | 463.1 | 455.1 | 930 | 1 | 46 | 4 |
+
+What these numbers do and do NOT show:
+
+* **The browser measurement is vsync-bound on both builds.** Every warm sample on both sides is
+  16.67 ms, i.e. exactly the 60 Hz frame period, so this machine's GPU was never the constraint and
+  frame time cannot separate the two builds here. The separation is in the WORKLOAD: peak live nodes
+  on Stage 39 fall from **1952 to 1274 (-35 %%)** and peak simultaneous enemies from **146 to 84**.
+  The first two samples of every run are the unloaded title screen (232 nodes) and are excluded from
+  the warm figure.
+* **I could not reproduce a frame-time collapse on either build in either environment.** Stage 39 ran
+  at the 60 Hz cap in the browser and at ~144 FPS headless on this machine, before and after. The
+  reported stutter therefore remains UNVERIFIED here; what this batch changes is the work the frame
+  has to do, and that is measured.
+* The headless native numbers are frame COST only - headless has no renderer - which is why they are
+  quoted as node and rate figures rather than as FPS.
+* The native BEFORE/AFTER pair is not a pure optimisation diff: the AFTER build also fields the new
+  Hell caps, so its live counts differ by design. The counts that matter for the memory question are
+  the ones that converge rather than climb, and `tests/B11Perf.gd` gates exactly that.
+
+
 Raw data is in `docs/iteration/evidence/b11/` (`perf-before-*.json`, `perf-after-*.json`,
 `web-perf-before-*.json`, `web-perf-after-*.json`). The report quotes the numbers verbatim; see the
 delivery report for the tables, since they are generated from the runs and not typed by hand.
