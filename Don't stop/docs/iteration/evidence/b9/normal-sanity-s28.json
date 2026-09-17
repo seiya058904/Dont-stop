@@ -1,0 +1,317 @@
+[
+	{
+		"alive_mean": 72.8545034642032,
+		"alive_peak": 125,
+		"clear": true,
+		"closest_spawn": 102.774688720703,
+		"damage_by_category": [
+			{
+				"applied": 4.2,
+				"category": "normal_contact",
+				"hits": 5,
+				"share": 0.514800514800515
+			},
+			{
+				"applied": 2.1,
+				"category": "arena_hazard",
+				"hits": 2,
+				"share": 0.257400257400257
+			},
+			{
+				"applied": 1.575,
+				"category": "beam_or_hostile_zone",
+				"hits": 2,
+				"share": 0.193050193050193
+			},
+			{
+				"applied": 0.2835,
+				"category": "enemy_projectile",
+				"hits": 2,
+				"share": 0.0347490347490347
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 4.2,
+				"category": "normal_contact",
+				"hits": 5,
+				"raw": 4.8,
+				"tag": "contact"
+			},
+			{
+				"applied": 2.1,
+				"category": "arena_hazard",
+				"hits": 2,
+				"raw": 2.1,
+				"tag": "hazard_shock"
+			},
+			{
+				"applied": 1.575,
+				"category": "beam_or_hostile_zone",
+				"hits": 2,
+				"raw": 1.8,
+				"tag": "line"
+			},
+			{
+				"applied": 0.2835,
+				"category": "enemy_projectile",
+				"hits": 2,
+				"raw": 0.324,
+				"tag": "shot:projectile"
+			}
+		],
+		"damage_total": 8.1585,
+		"death": false,
+		"death_at": -1.0,
+		"death_snapshot": {},
+		"denial_events": [],
+		"denial_modes": [
+			"hazard_shock",
+			"line",
+			"circle",
+			"cone"
+		],
+		"denial_samples": 3,
+		"denial_streak_peak": 2,
+		"dodge_all_blocked": 0,
+		"dodge_all_danger": 139,
+		"dodge_blocked_candidates": 1528,
+		"dodge_danger_marks": 10312,
+		"dodge_decisions": 427,
+		"dodge_last": {
+			"all_danger": true,
+			"blocked": 3,
+			"chosen": "(-0.707107, 0.707107)",
+			"marks": 22,
+			"penalties": 39,
+			"risky": true,
+			"scored": 13,
+			"wanted": "(-0.698426, -0.04692)"
+		},
+		"dodge_risky_choices": 140,
+		"dodge_scored_candidates": 5304,
+		"dodge_unchanged": 15,
+		"elite_peak": 2,
+		"escape_peak_live_footprints": 16,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 1,
+		"geometric_modes": [
+			"hazard_shock"
+		],
+		"geometric_streak_peak": 1,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 11,
+		"horde_overlap_peak": 2,
+		"hostile_zone_peak": 19,
+		"hp_max": 8,
+		"hp_min": 5.025,
+		"illegal_near_spawns": 0,
+		"level_after": 9,
+		"level_before": 8,
+		"mode": "batch",
+		"movement": 4831.89960646629,
+		"near80_peak": 18,
+		"outcome": "clear",
+		"pin_level": 8,
+		"post_root_damage": 0.0,
+		"post_root_hits": 0,
+		"probe_samples": 433,
+		"projectile_peak": 63,
+		"rooted_damage": 0.0,
+		"rooted_hits": 0,
+		"round_ms": 44974,
+		"samples": 433,
+		"seconds": 45.071,
+		"seed": 9101,
+		"shots": 86,
+		"spawns": 309,
+		"special_ratio": 0.330097087378641,
+		"special_spawns": 102,
+		"stage": 28,
+		"strict_denial_samples": 1,
+		"tag": "sanity",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 9.292,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	},
+	{
+		"alive_mean": 59.4781609195402,
+		"alive_peak": 105,
+		"clear": true,
+		"closest_spawn": 106.515098571777,
+		"damage_by_category": [
+			{
+				"applied": 3.5,
+				"category": "normal_contact",
+				"hits": 4,
+				"share": 0.410172272354389
+			},
+			{
+				"applied": 2.457,
+				"category": "enemy_projectile",
+				"hits": 16,
+				"share": 0.287940935192781
+			},
+			{
+				"applied": 1.4,
+				"category": "beam_or_hostile_zone",
+				"hits": 2,
+				"share": 0.164068908941756
+			},
+			{
+				"applied": 1.05,
+				"category": "arena_hazard",
+				"hits": 1,
+				"share": 0.123051681706317
+			},
+			{
+				"applied": 0.126,
+				"category": "control_projectile",
+				"hits": 1,
+				"share": 0.014766201804758
+			}
+		],
+		"damage_by_tag": [
+			{
+				"applied": 3.5,
+				"category": "normal_contact",
+				"hits": 4,
+				"raw": 4.0,
+				"tag": "contact"
+			},
+			{
+				"applied": 2.457,
+				"category": "enemy_projectile",
+				"hits": 16,
+				"raw": 2.808,
+				"tag": "shot:projectile"
+			},
+			{
+				"applied": 1.4,
+				"category": "beam_or_hostile_zone",
+				"hits": 2,
+				"raw": 1.6,
+				"tag": "line"
+			},
+			{
+				"applied": 1.05,
+				"category": "arena_hazard",
+				"hits": 1,
+				"raw": 1.05,
+				"tag": "hazard_laser"
+			},
+			{
+				"applied": 0.126,
+				"category": "control_projectile",
+				"hits": 1,
+				"raw": 0.144,
+				"tag": "control_shot:root"
+			}
+		],
+		"damage_total": 8.533,
+		"death": false,
+		"death_at": -1.0,
+		"death_snapshot": {},
+		"denial_events": [],
+		"denial_modes": [
+			"circle",
+			"line"
+		],
+		"denial_samples": 2,
+		"denial_streak_peak": 1,
+		"dodge_all_blocked": 2,
+		"dodge_all_danger": 178,
+		"dodge_blocked_candidates": 2189,
+		"dodge_danger_marks": 13093,
+		"dodge_decisions": 429,
+		"dodge_last": {
+			"all_danger": true,
+			"blocked": 1,
+			"chosen": "(-0.707107, 0.707107)",
+			"marks": 156,
+			"penalties": 239,
+			"risky": true,
+			"scored": 15,
+			"wanted": "(-0.684392, 0.729115)"
+		},
+		"dodge_risky_choices": 181,
+		"dodge_scored_candidates": 4675,
+		"dodge_unchanged": 17,
+		"elite_peak": 2,
+		"escape_peak_live_footprints": 19,
+		"flank_arrivals": 0,
+		"geometric_denial_samples": 0,
+		"geometric_modes": [],
+		"geometric_streak_peak": 0,
+		"gun": 117,
+		"hazard_peak": 1,
+		"hits_total": 24,
+		"horde_overlap_peak": 2,
+		"hostile_zone_peak": 21,
+		"hp_max": 8,
+		"hp_min": 6.6,
+		"illegal_near_spawns": 0,
+		"level_after": 9,
+		"level_before": 8,
+		"mode": "batch",
+		"movement": 4791.67284798622,
+		"near80_peak": 18,
+		"outcome": "clear",
+		"pin_level": 8,
+		"post_root_damage": 1.505,
+		"post_root_hits": 5,
+		"probe_samples": 435,
+		"projectile_peak": 85,
+		"rooted_damage": 0.315,
+		"rooted_hits": 2,
+		"round_ms": 45021,
+		"samples": 435,
+		"seconds": 45.022,
+		"seed": 9102,
+		"shots": 86,
+		"spawns": 287,
+		"special_ratio": 0.320557491289199,
+		"special_spawns": 92,
+		"stage": 28,
+		"strict_denial_samples": 0,
+		"tag": "sanity",
+		"talents": {
+			"T01": 2,
+			"T02": 2,
+			"T03": 2,
+			"T04": 2,
+			"T07": 3,
+			"T08": 2,
+			"T19": 1,
+			"T24": 2
+		},
+		"time_to_first_damage": 10.634,
+		"travel_speed": 106.0,
+		"truncated": false,
+		"upgrades": [
+			"110",
+			"0",
+			"1",
+			"117",
+			"120"
+		]
+	}
+]

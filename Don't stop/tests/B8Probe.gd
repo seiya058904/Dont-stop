@@ -189,6 +189,7 @@ func reset_telemetry() -> void:
 	denial_streak_peak = 0; denial_events = []; denial_modes = {}; geometric_denial_samples = 0
 	geometric_streak = 0; geometric_streak_peak = 0; geometric_modes = {}; strict_denial_samples = 0
 	last_escape = {}
+	reset_dodge_telemetry()
 	travel_speed = maxf(60.0,float(Utils.player.SPEED)) if is_instance_valid(Utils.player) and Utils.player.SPEED > 0.0 else DEFAULT_TRAVEL
 
 func _now() -> float:
@@ -516,6 +517,12 @@ func row(outcome: String) -> Dictionary:
 	out["escape_peak_live_footprints"] = escape_peak_live
 	out["death_snapshot"] = death_snapshot
 	out["travel_speed"] = travel_speed
+	# B9 dodge telemetry: what the shared safe-movement core actually did this round. Every key
+	# is namespaced `dodge_` and a key that a measurement field already owns is never replaced,
+	# so this can add evidence but cannot overwrite a measurement.
+	var dodge := dodge_report()
+	for key in dodge:
+		if not out.has(key): out[key] = dodge[key]
 	return out
 
 func write_json(path: String, data) -> void:

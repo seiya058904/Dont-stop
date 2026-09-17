@@ -1,0 +1,104 @@
+[
+	{
+		"death_boss_action": "recover:ultimate",
+		"death_fog": true,
+		"death_hazards": {
+			"poison": 4,
+			"shock": 1
+		},
+		"death_phase": "2",
+		"death_projectiles": 13,
+		"death_zones": {},
+		"denial_events": 0,
+		"denial_streak_peak": 0,
+		"escape_at_death": {
+			"fair_modes": [],
+			"modes": [],
+			"reachable": 41,
+			"safe_fair": 41,
+			"safe_now": 41,
+			"safe_timed": 41,
+			"threats": 1
+		},
+		"killer": "boss_percentage",
+		"killer_category": "boss_percentage",
+		"max_combo": 0,
+		"outcome": "death",
+		"seconds": 43.834,
+		"simultaneous_footprints": 0,
+		"stage": 40,
+		"unavoidable": false
+	},
+	{
+		"death_boss_action": "recover:burst",
+		"death_fog": true,
+		"death_hazards": {
+			"laser": 2,
+			"poison": 1,
+			"shock": 2
+		},
+		"death_phase": "1",
+		"death_projectiles": 14,
+		"death_zones": {},
+		"denial_events": 0,
+		"denial_streak_peak": 0,
+		"escape_at_death": {
+			"fair_modes": [
+				"hazard_laser",
+				"hazard_shock"
+			],
+			"modes": [
+				"hazard_laser",
+				"hazard_shock"
+			],
+			"reachable": 44,
+			"safe_fair": 25,
+			"safe_now": 25,
+			"safe_timed": 25,
+			"threats": 4
+		},
+		"killer": "hazard_laser",
+		"killer_category": "arena_hazard",
+		"max_combo": 0,
+		"outcome": "death",
+		"seconds": 38.197,
+		"simultaneous_footprints": 0,
+		"stage": 40,
+		"unavoidable": false
+	},
+	{
+		"death_boss_action": "warn:dash",
+		"death_fog": true,
+		"death_hazards": {
+			"laser": 1,
+			"poison": 2,
+			"shock": 2
+		},
+		"death_phase": "2",
+		"death_projectiles": 0,
+		"death_zones": {},
+		"denial_events": 0,
+		"denial_streak_peak": 0,
+		"escape_at_death": {
+			"fair_modes": [
+				"hazard_laser"
+			],
+			"modes": [
+				"hazard_laser"
+			],
+			"reachable": 46,
+			"safe_fair": 35,
+			"safe_now": 35,
+			"safe_timed": 35,
+			"threats": 3
+		},
+		"killer": "hazard_laser",
+		"killer_category": "arena_hazard",
+		"max_combo": 0,
+		"outcome": "death",
+		"seconds": 61.271,
+		"simultaneous_footprints": 0,
+		"stage": 40,
+		"unavoidable": false
+	}
+]

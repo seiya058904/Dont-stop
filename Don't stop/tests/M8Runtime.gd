@@ -8,6 +8,37 @@ var movement = 0.0
 var bot_clock = 0.0
 var last_position = Vector2.ZERO
 var dash_cooldown = 0.0
+
+# ---- B9 dodge telemetry ---------------------------------------------------------------
+# Observation only. Every counter below is written inside choose_safe_movement() and read
+# back by the measurement row; none of them feeds a decision, and removing them would not
+# change one pixel of movement.
+const DODGE_DIRECTIONS := 16
+const DODGE_WALL_STEP := 24.0
+const DODGE_LOOKAHEAD := 38.0
+const DODGE_SHOT_LOOKAHEAD := 0.3
+var dodge_decisions := 0
+var dodge_blocked := 0
+var dodge_scored := 0
+var dodge_danger_marks := 0
+var dodge_all_danger := 0
+var dodge_risky_choices := 0
+var dodge_unchanged := 0
+var dodge_all_blocked := 0
+var dodge_last: Dictionary = {}
+
+func reset_dodge_telemetry() -> void:
+	dodge_decisions = 0; dodge_blocked = 0; dodge_scored = 0; dodge_danger_marks = 0
+	dodge_all_danger = 0; dodge_risky_choices = 0; dodge_unchanged = 0
+	dodge_all_blocked = 0; dodge_last = {}
+
+func dodge_report() -> Dictionary:
+	return {"dodge_decisions":dodge_decisions,"dodge_blocked_candidates":dodge_blocked,
+		"dodge_scored_candidates":dodge_scored,"dodge_danger_marks":dodge_danger_marks,
+		"dodge_all_danger":dodge_all_danger,"dodge_risky_choices":dodge_risky_choices,
+		"dodge_unchanged":dodge_unchanged,"dodge_all_blocked":dodge_all_blocked,
+		"dodge_last":dodge_last}
+
 func _enter_tree():
 	if DisplayServer.get_name()!="headless":
 		get_window().unfocusable = true
@@ -88,41 +119,13 @@ func _process(delta):
 			direction = Utils.player.global_position.direction_to(step)
 		elif offset.length()<65: direction = -offset.normalized().rotated(0.5)
 		else: direction = offset.normalized().orthogonal()*0.7
-		if target_boss and target.is_boss:
-			var best = -INF
-			var wanted = direction
-			var zones = get_tree().get_nodes_in_group("hostile_zone")
-			# Choose actual movement inputs with wall/telegraph lookahead; no teleport or invulnerability.
-			for i in 16:
-				var candidate = Vector2.RIGHT.rotated(i*TAU/16)
-				if Utils.player.test_move(Utils.player.global_transform,candidate*24): continue
-				var next = Utils.player.global_position+candidate*38
-				var score = candidate.dot(wanted)*1.5
-				# Keep a firing lane instead of circling indefinitely behind an arena column.
-				if not Combat.clear_line(next,target.global_position): score -= 3
-				if is_instance_valid(LevelServer.town.arena):
-					var local = LevelServer.town.arena.to_local(next)
-					if absf(local.x)>320 or absf(local.y)>230: score -= 1.5
-				for actor in actors:
-					var distance = next.distance_to(actor.global_position)
-					if distance<62: score -= (62-distance)*0.2
-				for zone in zones:
-					if zone.damage<=0 and zone.mode not in ["charge","circle"]: continue
-					var relative = next-zone.global_position
-					var danger = relative.length()<zone.radius+16
-					if zone.mode in ["line","charge"]:
-						danger = Geometry2D.get_closest_point_to_segment(next,zone.global_position,zone.global_position+zone.direction*zone.length).distance_to(next)<zone.width+18
-					elif zone.mode=="cone": danger = relative.length()<zone.radius+16 and absf(zone.direction.angle_to(relative))<zone.angle+0.15
-					if danger:
-						# A graded exit distance still chooses an escape when every nearby sample is inside.
-						var depth = maxf(0,zone.radius+16-relative.length())
-						if zone.mode == "cone": depth = minf(depth,relative.length()*maxf(0,zone.angle+0.15-absf(zone.direction.angle_to(relative))))
-						elif zone.mode in ["line","charge"]: depth = zone.width+18-Geometry2D.get_closest_point_to_segment(next,zone.global_position,zone.global_position+zone.direction*zone.length).distance_to(next)
-						score -= 8+depth*0.6
-				for shot in get_tree().get_nodes_in_group("combat_transient"):
-					if shot.get_script() and shot.get_script().resource_path == "res://game/monster/EnemyShot.gd":
-						if Geometry2D.get_closest_point_to_segment(next,shot.global_position,shot.global_position+shot.velocity*0.3).distance_to(next)<18: score -= 4
-				if score>best: best=score; direction=candidate
+		# Both an ordinary late-game encounter and a boss steer through the SAME core. This
+		# evaluation used to sit behind `target_boss and target.is_boss`, so the Boss driver
+		# dodged and the Stage 21-29 driver walked straight into the telegraphs - which made
+		# every Normal clear rate measured with it an underestimate of what the build can do.
+		# Only the Boss TARGET PRIORITY, the Boss lead aim and the Boss close-range dash below
+		# stay boss-specific.
+		direction = choose_safe_movement(direction,target,actors)
 	for pair in [["left",direction.x < -0.2],["right",direction.x > 0.2],["up",direction.y < -0.2],["down",direction.y > 0.2]]:
 		if pair[1]: Input.action_press(pair[0])
 		else: Input.action_release(pair[0])
@@ -132,3 +135,95 @@ func _process(delta):
 		var event = InputEventAction.new(); event.action = "dash"; event.pressed = true
 		Utils.player._input(event)
 		Input.action_release("dash")
+
+## The ONE dangerous-direction evaluator, shared by ordinary encounters and bosses.
+##
+## `wanted_direction` is what the chase logic above wants to do; the return value is the
+## direction the driver will actually press. It reads only real state - the player's own
+## collider through test_move, the live monster list, the live hostile zones, the live enemy
+## shots, the real line-of-sight ray - and it moves the player only through the WASD presses
+## the caller issues. There is no teleport, no invulnerability, no HP edit, no deleted
+## projectile, no deleted zone and no forced kill anywhere in this function, and there must
+## never be one.
+##
+## The 16-direction scoring itself is the boss driver's own scan, moved here verbatim: same
+## wall step, same 38 px lookahead, same firing-lane, arena-bounds, body-spacing, telegraph
+## and projectile-lookahead terms, same graded exit depth. What changed is WHO calls it.
+##
+## Reaction budget: the caller invokes this once per movement decision (10 Hz), not per
+## physics frame. The bot therefore reacts about as fast as a person, not 60 times a second.
+func choose_safe_movement(wanted_direction: Vector2, target, actors: Array) -> Vector2:
+	var wanted := wanted_direction
+	var choice := wanted
+	var best := -INF
+	var best_risky := false
+	var scored := 0
+	var blocked := 0
+	var marks := 0
+	var risky_candidates := 0
+	var penalties := 0
+	var zones = get_tree().get_nodes_in_group("hostile_zone")
+	var shots: Array = []
+	for shot in get_tree().get_nodes_in_group("combat_transient"):
+		if shot.get_script() and shot.get_script().resource_path == "res://game/monster/EnemyShot.gd":
+			shots.append(shot)
+	var arena = LevelServer.town.arena if is_instance_valid(LevelServer.town) else null
+	var origin: Vector2 = Utils.player.global_position
+	for i in DODGE_DIRECTIONS:
+		var candidate = Vector2.RIGHT.rotated(i*TAU/DODGE_DIRECTIONS)
+		if Utils.player.test_move(Utils.player.global_transform,candidate*DODGE_WALL_STEP):
+			blocked += 1
+			continue
+		scored += 1
+		var next = origin+candidate*DODGE_LOOKAHEAD
+		var score = candidate.dot(wanted)*1.5
+		var risky := false
+		# Keep a firing lane instead of circling indefinitely behind an arena column.
+		if not Combat.clear_line(next,target.global_position): score -= 3; penalties += 1
+		if arena != null:
+			var local = arena.to_local(next)
+			if absf(local.x)>320 or absf(local.y)>230: score -= 1.5; penalties += 1
+		for actor in actors:
+			var distance = next.distance_to(actor.global_position)
+			if distance<62: score -= (62-distance)*0.2; penalties += 1
+		for zone in zones:
+			if zone.damage<=0 and zone.mode not in ["charge","circle"]: continue
+			var relative = next-zone.global_position
+			var danger = relative.length()<zone.radius+16
+			if zone.mode in ["line","charge"]:
+				danger = Geometry2D.get_closest_point_to_segment(next,zone.global_position,zone.global_position+zone.direction*zone.length).distance_to(next)<zone.width+18
+			elif zone.mode=="cone": danger = relative.length()<zone.radius+16 and absf(zone.direction.angle_to(relative))<zone.angle+0.15
+			if danger:
+				# A graded exit distance still chooses an escape when every nearby sample is inside.
+				var depth = maxf(0,zone.radius+16-relative.length())
+				if zone.mode == "cone": depth = minf(depth,relative.length()*maxf(0,zone.angle+0.15-absf(zone.direction.angle_to(relative))))
+				elif zone.mode in ["line","charge"]: depth = zone.width+18-Geometry2D.get_closest_point_to_segment(next,zone.global_position,zone.global_position+zone.direction*zone.length).distance_to(next)
+				score -= 8+depth*0.6
+				penalties += 1; marks += 1; risky = true
+		for shot in shots:
+			if Geometry2D.get_closest_point_to_segment(next,shot.global_position,shot.global_position+shot.velocity*DODGE_SHOT_LOOKAHEAD).distance_to(next)<18:
+				score -= 4; penalties += 1; marks += 1; risky = true
+		if risky: risky_candidates += 1
+		if score>best: best=score; choice=candidate; best_risky=risky
+	dodge_decisions += 1
+	dodge_blocked += blocked
+	dodge_scored += scored
+	dodge_danger_marks += marks
+	if scored > 0 and risky_candidates == scored: dodge_all_danger += 1
+	if scored == 0: dodge_all_blocked += 1
+	# Two ways the wish survives untouched, and both are deliberate:
+	#  * nothing in the field argued against it - no wall, no live footprint, no incoming shot,
+	#    no crowding body, no lost firing lane - so snapping it to the nearest of 16 samples
+	#    would be a change with no cause;
+	#  * nothing is reachable at all (every sample is pressed into geometry), so there is no
+	#    better answer to give and a NaN would be a bug. The wish is kept and reported.
+	var constrained := penalties > 0 or blocked > 0
+	if scored == 0 or (not constrained and wanted.length_squared() > 0.0001):
+		choice = wanted
+		best_risky = false
+		dodge_unchanged += 1
+	if best_risky: dodge_risky_choices += 1
+	dodge_last = {"wanted":wanted,"chosen":choice,"scored":scored,"blocked":blocked,
+		"marks":marks,"penalties":penalties,"risky":best_risky,
+		"all_danger":(scored > 0 and risky_candidates == scored)}
+	return choice

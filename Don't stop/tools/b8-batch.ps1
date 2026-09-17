@@ -14,7 +14,10 @@
 param(
     [string]$Tag = 'pre',
     [Parameter(Mandatory = $true)][string]$Levels,
-    [string]$Seeds = '9101,9102,9103,9104,9105'
+    [string]$Seeds = '9101,9102,9103,9104,9105',
+    # B9 runs the identical batch through the B9 measurement fixture, which is the same fixture
+    # with a different driver. Default unchanged so every B8 invocation still reproduces B8.
+    [string]$Scene = 'B8Normal'
 )
 $ErrorActionPreference = 'Continue'
 $runner = Join-Path $PSScriptRoot 'b8-run.ps1'
@@ -24,8 +27,8 @@ foreach ($entry in $Levels.Split(',', [System.StringSplitOptions]::RemoveEmptyEn
     $stage = $parts[0].Trim()
     $pin = if ($parts.Count -gt 1) { $parts[1].Trim() } else { '0' }
     $caseArgs = @("stage=$stage", 'mode=batch', "seeds=$Seeds", "pin_level=$pin", "tag=$Tag")
-    Write-Output ("=== stage {0} pin {1} seeds {2} ===" -f $stage, $pin, $Seeds)
-    & $runner -Scene B8Normal -CaseArgs $caseArgs -Frames 300000 -LogName "b8-$Tag-s$stage"
+    Write-Output ("=== scene {0} stage {1} pin {2} seeds {3} ===" -f $Scene, $stage, $pin, $Seeds)
+    & $runner -Scene $Scene -CaseArgs $caseArgs -Frames 300000 -LogName "b8-$Tag-s$stage"
     Write-Output ("--- stage {0} exit {1} ---" -f $stage, $LASTEXITCODE)
 }
 Write-Output 'B8 BATCH DONE'
