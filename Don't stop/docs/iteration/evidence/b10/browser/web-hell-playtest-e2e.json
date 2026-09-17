@@ -1,0 +1,321 @@
+{
+  "url": "http://127.0.0.1:8199/",
+  "headed": false,
+  "tokens": {
+    "FIXTURE_PROFILE_SEEDED": true,
+    "SHELL_HIDES_WITHOUT_A_START_CLICK": true,
+    "CANVAS_VISIBLE": true,
+    "PROBE_STATE_IS_FLOWING": true,
+    "PROBE_IS_THE_ONLY_HARNESS": true,
+    "A_START_CLICK_REACHED_THE_MENU": true,
+    "A_ENTERED_CAMP_FROM_THE_MENU": true,
+    "A_STAGE_TAB_IS_REPORTED": true,
+    "A_HELL_PLAYTEST_ENTRY_IS_VISIBLE": true,
+    "A_FORMAL_HELL_ENTRIES_ARE_LOCKED_IN_THE_BROWSER": true,
+    "A_FRESH_PROFILE_IS_NOT_A_COMPLETED_CAMPAIGN": true,
+    "B_PLAYTEST_ENTRY_CLICK_IS_REPORTED": true,
+    "B_PLAYTEST_SELECTOR_REPORTS_STAGE_31_AS_ENABLED": true,
+    "B_SELECTOR_REPORTS_STAGE_35_AFTER_SCROLLING": true,
+    "B_SELECTOR_REPORTS_STAGE_40_AFTER_SCROLLING": true,
+    "B_SELECTOR_HAS_A_WAY_BACK": true,
+    "B_OPENING_THE_SELECTOR_DID_NOT_TOUCH_PROGRESSION": true,
+    "C31_CAMP_PANEL_OPENED_FRESH": true,
+    "C31_STAGE_TAB_IS_REPORTED": true,
+    "C31_PLAYTEST_ENTRY_IS_REACHABLE": false,
+    "C31_STAGE_ENTRY_IS_REPORTED": false,
+    "C31_DEPART_BUTTON_IS_REPORTED": false,
+    "C31_ROUND_STARTED_AT_STAGE": false,
+    "C31_HELL_DARKNESS_IS_APPLIED": false,
+    "C31_ROUND_IS_MARKED_AS_A_PLAYTEST": false,
+    "C31_ROUND_IS_REALLY_RUNNING": false,
+    "C31_ROUND_ENDED_AND_RETURNED_TO_CAMP": true,
+    "C31_CAMP_IS_BRIGHT_AGAIN": true,
+    "C31_PROGRESSION_POINTER_UNMOVED": true,
+    "C31_CAMPAIGN_STILL_NOT_COMPLETE": true,
+    "C35_CAMP_PANEL_OPENED_FRESH": true,
+    "C35_STAGE_TAB_IS_REPORTED": true,
+    "C35_PLAYTEST_ENTRY_IS_REACHABLE": false,
+    "C35_STAGE_ENTRY_IS_REPORTED": false,
+    "C35_DEPART_BUTTON_IS_REPORTED": false,
+    "C35_ROUND_STARTED_AT_STAGE": false,
+    "C35_HELL_DARKNESS_IS_APPLIED": false,
+    "C35_ROUND_IS_MARKED_AS_A_PLAYTEST": false,
+    "C35_ROUND_IS_REALLY_RUNNING": false,
+    "C35_ROUND_ENDED_AND_RETURNED_TO_CAMP": true,
+    "C35_CAMP_IS_BRIGHT_AGAIN": true,
+    "C35_PROGRESSION_POINTER_UNMOVED": true,
+    "C35_CAMPAIGN_STILL_NOT_COMPLETE": true,
+    "C40_CAMP_PANEL_OPENED_FRESH": true,
+    "C40_STAGE_TAB_IS_REPORTED": true,
+    "C40_PLAYTEST_ENTRY_IS_REACHABLE": false,
+    "C40_STAGE_ENTRY_IS_REPORTED": false,
+    "C40_DEPART_BUTTON_IS_REPORTED": false,
+    "C40_ROUND_STARTED_AT_STAGE": false,
+    "C40_HELL_DARKNESS_IS_APPLIED": false,
+    "C40_ROUND_IS_MARKED_AS_A_PLAYTEST": false,
+    "C40_ROUND_IS_REALLY_RUNNING": false,
+    "C40_ROUND_ENDED_AND_RETURNED_TO_CAMP": true,
+    "C40_CAMP_IS_BRIGHT_AGAIN": true,
+    "C40_PROGRESSION_POINTER_UNMOVED": true,
+    "C40_CAMPAIGN_STILL_NOT_COMPLETE": true,
+    "F_LEAVE_ENTRY_RETURNED_TO_THE_MAIN_MENU": true,
+    "F_MENU_IS_LIVE_AGAIN": true,
+    "F_START_CLICK_REACHED_THE_MENU": true,
+    "F_SECOND_SESSION_STARTED": true,
+    "F_STAGE_TAB_IS_REPORTED": true,
+    "F_PLAYTEST_ENTRY_WORKS_IN_A_SECOND_SESSION": true,
+    "F_SECOND_SESSION_SAVE_IS_STILL_A_CAMPAIGN_IN_PROGRESS": true,
+    "NO_UNEXPECTED_ENGINE_ERRORS": true,
+    "NO_PAGE_ERRORS": true,
+    "NO_NETWORK_ERRORS": true,
+    "WATCHDOG_DID_NOT_FIRE": true
+  },
+  "notes": [
+    "fixture: profile seeded so the camp owns a weapon and can depart; setup only, not an assertion",
+    "scrollListTop finished, product reports scroll=0",
+    "scrollListTop finished, product reports scroll=0",
+    "scrollListTop finished, product reports scroll=0",
+    "scrollListTop finished, product reports scroll=0",
+    "scrollListTop finished, product reports scroll=0",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=-1",
+    "scrollListTop finished, product reports scroll=0",
+    "scrollListTop finished, product reports scroll=0"
+  ],
+  "timings": [
+    {
+      "name": "fixture-seed-profile",
+      "ms": 12157
+    },
+    {
+      "name": "acceptance-load",
+      "ms": 2967
+    },
+    {
+      "name": "formal-gate-shut",
+      "ms": 49771
+    },
+    {
+      "name": "playtest-selector",
+      "ms": 51351
+    },
+    {
+      "name": "C31-enter",
+      "ms": 286853
+    },
+    {
+      "name": "C31-return",
+      "ms": 2019
+    },
+    {
+      "name": "C35-enter",
+      "ms": 287833
+    },
+    {
+      "name": "C35-return",
+      "ms": 2009
+    },
+    {
+      "name": "C40-enter",
+      "ms": 288127
+    },
+    {
+      "name": "C40-return",
+      "ms": 2007
+    },
+    {
+      "name": "play-31-35-40",
+      "ms": 868848
+    },
+    {
+      "name": "second-session",
+      "ms": 63823
+    },
+    {
+      "name": "error-audit",
+      "ms": 1
+    }
+  ],
+  "wall_clock_ms": 1049321,
+  "rounds": {
+    "C31": {
+      "before": {
+        "next": 1,
+        "campaign": false,
+        "hellc": false,
+        "sel": 1
+      },
+      "entered": {
+        "stage": 1,
+        "fog": false,
+        "pt": 0
+      },
+      "after": {
+        "next": 1,
+        "campaign": false,
+        "hellc": false,
+        "sel": 1,
+        "fog": false
+      }
+    },
+    "C35": {
+      "before": {
+        "next": 1,
+        "campaign": false,
+        "hellc": false,
+        "sel": 1
+      },
+      "entered": {
+        "stage": 1,
+        "fog": false,
+        "pt": 0
+      },
+      "after": {
+        "next": 1,
+        "campaign": false,
+        "hellc": false,
+        "sel": 1,
+        "fog": false
+      }
+    },
+    "C40": {
+      "before": {
+        "next": 1,
+        "campaign": false,
+        "hellc": false,
+        "sel": 1
+      },
+      "entered": {
+        "stage": 1,
+        "fog": false,
+        "pt": 0
+      },
+      "after": {
+        "next": 1,
+        "campaign": false,
+        "hellc": false,
+        "sel": 1,
+        "fog": false
+      }
+    }
+  },
+  "probe": {
+    "transport": "read-only ?probe=1 console channel (autoload/Smoke.gd)",
+    "save_state": "none"
+  },
+  "rects_reported_by_the_game": {
+    "camp-settings-button": {
+      "id": 765225601772,
+      "text": "设置",
+      "x": 244,
+      "y": 10,
+      "w": 20,
+      "h": 16,
+      "cx": 254,
+      "cy": 18
+    },
+    "camp-stage-tab": {
+      "id": 765661809412,
+      "text": "出发",
+      "x": 324,
+      "y": 29,
+      "w": 75,
+      "h": 16,
+      "cx": 361.5,
+      "cy": 37
+    },
+    "hell-playtest-exit-button": {
+      "id": 309170538497,
+      "text": "退出试玩 · 返回正式关卡表",
+      "x": 11,
+      "y": 107,
+      "w": 140,
+      "h": 16,
+      "cx": 81,
+      "cy": 115
+    },
+    "settings-back-button": {
+      "id": 667229886538,
+      "text": "返回上一层 [Esc]",
+      "x": 85,
+      "y": 192,
+      "w": 136,
+      "h": 31,
+      "cx": 153,
+      "cy": 207.5
+    },
+    "leave-entry": {
+      "id": 667280218189,
+      "text": "返回主菜单",
+      "x": 209,
+      "y": 192,
+      "w": 116,
+      "h": 31,
+      "cx": 267,
+      "cy": 207.5
+    },
+    "camp-close-button": {
+      "id": 765376596723,
+      "text": "返回 [Esc]",
+      "x": 358,
+      "y": 10,
+      "w": 41,
+      "h": 16,
+      "cx": 378.5,
+      "cy": 18
+    },
+    "camp-depart-button": {
+      "id": 819818663605,
+      "text": "开始此遭遇",
+      "x": 163,
+      "y": 183,
+      "w": 236,
+      "h": 16,
+      "cx": 281,
+      "cy": 191
+    },
+    "hell-playtest-button": {
+      "id": 778831924702,
+      "text": "HELL PLAYTEST · 地狱模式试玩（31—40）",
+      "x": 11,
+      "y": 109,
+      "w": 140,
+      "h": 16,
+      "cx": 81,
+      "cy": 117
+    },
+    "stage-31": {
+      "id": 816446442958,
+      "text": "R7 · 31 雾蚀初现 · 试玩",
+      "x": 11,
+      "y": 171,
+      "w": 140,
+      "h": 16,
+      "cx": 81,
+      "cy": 179
+    }
+  },
+  "console_errors": [],
+  "page_errors": [],
+  "http_errors": [],
+  "failed_requests": [],
+  "navigation_cancelled_requests": [
+    "http://127.0.0.1:8199/index.pck :: net::ERR_ABORTED"
+  ]
+}

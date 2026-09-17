@@ -1,0 +1,58 @@
+{
+	"enemies": [
+		"E05",
+		"E06",
+		"E12"
+	],
+	"foreign_hits": 0,
+	"rows": [
+		{
+			"dodge_hits": 0,
+			"dodge_rate": 0.0,
+			"fired_dodge": 0,
+			"fired_standing": 3,
+			"fired_strafe": 3,
+			"id": "E05",
+			"name": "远程喷射者",
+			"role": "停步实体弹",
+			"standing_hits": 15,
+			"standing_rate": 5.0,
+			"strafe_hits": 0,
+			"strafe_rate": 0.0,
+			"trials": 3
+		},
+		{
+			"dodge_hits": 0,
+			"dodge_rate": 0.0,
+			"fired_dodge": 1,
+			"fired_standing": 3,
+			"fired_strafe": 3,
+			"id": "E06",
+			"name": "自爆逼近者",
+			"role": "高速追近、近身锁定预警自爆；提前击杀取消",
+			"standing_hits": 3,
+			"standing_rate": 1.0,
+			"strafe_hits": 0,
+			"strafe_rate": 0.0,
+			"trials": 3
+		},
+		{
+			"dodge_hits": 0,
+			"dodge_rate": 0.0,
+			"fired_dodge": 0,
+			"fired_standing": 3,
+			"fired_strafe": 3,
+			"id": "E12",
+			"name": "易爆载能体",
+			"role": "推进扇面放电；死亡对敌有限爆破",
+			"standing_hits": 6,
+			"standing_rate": 2.0,
+			"strafe_hits": 0,
+			"strafe_rate": 0.0,
+			"trials": 3
+		}
+	],
+	"stage": 24,
+	"tag": "probe2",
+	"trials": 3
+}
