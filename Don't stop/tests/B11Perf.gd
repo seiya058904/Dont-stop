@@ -161,22 +161,36 @@ func _ready():
 	}
 	print("B11 PERF %s" % JSON.stringify(gate))
 
-	# Bounded-growth gate. The claim being tested is NOT "the node count never rises" - a boss round
-	# legitimately adds the boss, its summoned children and its projectiles, and an encounter's whole
-	# point is that it builds up. The claim is that the count CONVERGES: the growth in the last quarter
-	# of the run against the third quarter has to be a fraction of the growth the first two quarters
-	# produced. A leak keeps growing at the same rate and fails that; a stage reaching its own ceiling
-	# passes it.
+	# Bounded-growth gate. The claim under test is NOT "the node count never rises": a boss round adds
+	# the boss and its first wave immediately and then oscillates as waves and barrages spawn and die,
+	# so a rising edge is normal. The claim is that the count does not grow WITHOUT BOUND, and the way
+	# to see that is a BAND rather than two single samples - comparing two endpoints inside an
+	# oscillation measures which phase they landed in, which is how an earlier version of this gate
+	# failed a Stage-40 run whose own trajectory was flat (peak 980, band 489-980, no trend).
+	# So: the second half of the run must stay inside the ceiling the first half established, with a
+	# tolerance for a wave plan that legitimately peaks later. A leak lifts the second half's floor and
+	# its ceiling together and fails.
 	if samples.size() >= 12:
+		var half := int(samples.size()/2.0)
+		var first := samples.slice(0,half)
+		var second := samples.slice(half)
+		var first_peak := 0.0
+		for row in first: first_peak = maxf(first_peak,float(row.nodes))
+		var second_peak := 0.0
+		var second_floor := INF
+		for row in second:
+			second_peak = maxf(second_peak,float(row.nodes))
+			second_floor = minf(second_floor,float(row.nodes))
+		var ceiling := first_peak*1.25+100.0
+		check(second_peak <= ceiling,
+			"the node count stays inside the ceiling the first half established (first peak %.0f, second peak %.0f, ceiling %.0f over %ds)"
+				% [first_peak,second_peak,ceiling,int(seconds)])
+		# A leak also lifts the FLOOR: a build that never frees what it creates cannot return to a low
+		# count even between waves. This is the half of the claim two endpoints could never see.
+		check(second_floor <= first_peak,
+			"and it still returns towards its own baseline between waves (second-half floor %.0f, first-half peak %.0f)"
+				% [second_floor,first_peak])
 		var quarter := int(samples.size()/4.0)
-		var q1 := float(samples[quarter].nodes)
-		var q3 := float(samples[samples.size()-1-quarter].nodes)
-		var q4 := float(samples[samples.size()-1].nodes)
-		var late_growth := absf(q4-q3)
-		var early_growth := absf(q3-q1)
-		check(late_growth <= early_growth*0.5+20.0,
-			"the node count converges instead of climbing (early +%.0f, late +%.0f over %ds)"
-				% [q3-q1,q4-q3,int(seconds)])
 		var last_projectiles := 0
 		for row in samples.slice(samples.size()-quarter):
 			last_projectiles = maxi(last_projectiles,int(row.projectiles))
