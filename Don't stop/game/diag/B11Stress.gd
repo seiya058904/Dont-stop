@@ -42,6 +42,14 @@ var lasers := 0
 var root_period := 0.0
 var park := false
 var label := "run"
+## B11.2: how many ordinary monsters the density amplifier tops the arena up to, and how many
+## barrage attackers it keeps alive. Both are TOP-UPS onto the director's own population, never a
+## replacement for it, and neither can push the population past the stage's own published cap.
+var enemies := 0
+var barrage := 0
+## B11.2: comma-separated purely-visual switches for the isolation A/B. Empty means "everything on",
+## which is the shipped state.
+var iso := ""
 
 # ---- per-frame samples (parallel packed arrays: no per-frame allocation) ---------------------
 var _ms := PackedFloat32Array()
@@ -66,10 +74,12 @@ const F_LANE := 16
 
 # ---- gauges sampled at 10 Hz: peaks matter, per-frame group scans would perturb the thing ----
 var _peak := {"enemies":0,"zones":0,"beams":0,"hazards":0,"vfx":0,"transients":0,"labels":0,
-	"projectiles":0,"nodes":0,"rewards":0}
+	"projectiles":0,"nodes":0,"rewards":0,"objects":0,"orphans":0,"mem":0.0,"canvas_items":0}
 var _created := 0
 var _removed := 0
 var _prev := {}
+var _prev_pq := 0
+var _pq_total := 0
 var _last_report_index := 0
 var _peak_same_frame := 0
 
@@ -80,6 +90,7 @@ var _root_windows := 0
 var _driver_roots := 0
 var _driver_root_attempts := 0
 var _amplified := 0
+var _topped_up := 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -91,30 +102,84 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-lasers="): lasers = int(arg.substr(16))
 		elif arg.begins_with("--stress-root="): root_period = float(arg.substr(14))
 		elif arg.begins_with("--stress-park="): park = arg.substr(14) == "1"
+		elif arg.begins_with("--stress-enemies="): enemies = int(arg.substr(18))
+		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(18))
+		elif arg.begins_with("--stress-iso="): iso = arg.substr(14)
 		elif arg.begins_with("--stress-label="): label = arg.substr(15)
 	B11Probe.enabled = true
+	_apply_iso()
 	get_tree().node_added.connect(_count_added)
 	get_tree().node_removed.connect(_count_removed)
-	print("[stress] mode=on scenario=%s stage=%d seconds=%d seed=%d lasers=%d root=%.2f park=%s label=%s" % [
-		scenario,stage,seconds,run_seed,lasers,root_period,str(park),label])
+	print("[stress] mode=on scenario=%s stage=%d seconds=%d seed=%d lasers=%d root=%.2f park=%s enemies=%d barrage=%d iso=%s label=%s" % [
+		scenario,stage,seconds,run_seed,lasers,root_period,str(park),enemies,barrage,
+		("none" if iso == "" else iso),label])
 	run.call_deferred()
+
+## B11.2 visual isolation. Test-only, and deliberately blunt: each name switches off exactly one
+## purely-visual product and nothing else. Damage, collision, timing, AI, spawning and the essential
+## telegraph footprint keep running, so a frame-cost difference can only come from the ink.
+func _apply_iso() -> void:
+	var parts := iso.split(",",false)
+	B11Probe.iso_vfx = "vfx" in parts
+	B11Probe.iso_labels = "labels" in parts
+	B11Probe.iso_trails = "trails" in parts
+	B11Probe.iso_fog_core = "fogcore" in parts
+	B11Probe.iso_td_decor = "tddecor" in parts
+	B11Probe.iso_particles = "particles" in parts
+	if iso != "":
+		print("[stress] iso vfx=%s labels=%s trails=%s fogcore=%s tddecor=%s particles=%s" % [
+			str(B11Probe.iso_vfx),str(B11Probe.iso_labels),str(B11Probe.iso_trails),
+			str(B11Probe.iso_fog_core),str(B11Probe.iso_td_decor),str(B11Probe.iso_particles)])
 
 func _count_added(_node: Node) -> void: _created += 1
 func _count_removed(_node: Node) -> void: _removed += 1
 
 ## The stress scenario is the whole point of the round, so it is stated once and named.
-##   A  the real Stage 39 exactly as shipped
-##   B  A + real Elite laser sentinels, so several lanes are genuinely live at once
-##   C  B + the real root applied on a fixed cadence, so the player is pinned inside them
-##   D  C, with the player holding position: the "rooted while covered" frame
+##
+## B11.1 shaped A-D around the laser/root overlap, because that was the report at the time. B11.2's
+## report is different in kind - "the whole picture is busy and it still hitches" - so the same four
+## names now carry the four LOAD PROFILES the round has to separate. Everything that produces them
+## is still a shipped actor on a shipped code path; the amplifiers only decide how many arrive.
+##   A  normal Stage 39, exactly as shipped. The control.
+##   B  dense enemies: real Stage 39 monsters topped up toward the stage's own cap, attacks normal.
+##      Isolates "many bodies" from "many attacks".
+##   C  dense attacks: the real laser/artillery/root/poison families held alive at once, population
+##      normal. Isolates "many attacks" from "many bodies".
+##   D  worst visual load: 80+ bodies AND the full attack mix AND the rooted/held position, with the
+##      player firing. This is the "场上累积的各种特效和怪非常多" frame the human described.
 func _apply_scenario() -> void:
 	match scenario:
 		"A": pass
-		"B": lasers = maxi(lasers,4)
-		"C": lasers = maxi(lasers,4); root_period = maxf(root_period,2.0)
-		"D": lasers = maxi(lasers,4); root_period = maxf(root_period,2.0); park = true
-	print("[stress] effective scenario=%s lasers=%d root_period=%.2f park=%s" % [
-		scenario,lasers,root_period,str(park)])
+		"B": enemies = maxi(enemies,60)
+		"C": lasers = maxi(lasers,4); root_period = maxf(root_period,2.0); barrage = maxi(barrage,6)
+		"D":
+			enemies = maxi(enemies,80); lasers = maxi(lasers,4); root_period = maxf(root_period,2.0)
+			barrage = maxi(barrage,6); park = true
+	if enemies > 0: enemies = mini(enemies,_stage_cap())
+	print("[stress] effective scenario=%s lasers=%d root_period=%.2f park=%s enemies=%d/%d barrage=%d" % [
+		scenario,lasers,root_period,str(park),enemies,_stage_cap(),barrage])
+
+## The stage's own published simultaneous cap, read from the shipped encounter table. The amplifiers
+## below can never take the population past it - that is the B11 contract and this round does not
+## touch it.
+func _stage_cap() -> int:
+	var table: Dictionary = M5Content.encounters()
+	if table.has(stage): return int(table[stage].get("cap",0))
+	return 0
+
+## The stage's own role list, so a top-up is drawn from the real composition instead of an invented
+## one. Stage 39 is `E01 E02 E14 E02 E13 E01 E02 E15 E02 E10`.
+func _stage_roles() -> Array:
+	var table: Dictionary = M5Content.encounters()
+	if table.has(stage): return table[stage].get("roles",[])
+	return ["E01","E02"]
+
+func _live_enemies() -> int:
+	var count := 0
+	for actor in get_tree().get_nodes_in_group("monsters"):
+		if actor.is_die: continue
+		count += 1
+	return count
 
 func run() -> void:
 	await get_tree().create_timer(3.0).timeout
@@ -193,6 +258,9 @@ func _sample_round() -> void:
 	var clear_prev: int = B11Probe.clear_line_calls
 	var hit_prev: int = B11Probe.player_hits
 	if lasers > 0: _amplify_lasers()
+	if barrage > 0: _amplify_barrage()
+	if enemies > 0: _top_up_enemies()
+	if B11Probe.iso_particles: _collect_particles()
 	Input.action_press("shoot")
 	var next_amp := 4.0
 	while LevelServer.state == "COMBAT" and is_instance_valid(Utils.player) and not Utils.player.is_dead:
@@ -200,9 +268,14 @@ func _sample_round() -> void:
 		PlayerData.player_hp = PlayerData.player_hp_max
 		var now := Time.get_ticks_msec()
 		var elapsed := float(now-started)/1000.0
-		if lasers > 0 and elapsed >= next_amp:
+		if elapsed >= next_amp:
 			next_amp += 4.0
-			if _amplified_alive() < lasers: _amplify_lasers()
+			# Every amplifier is a TOP-UP, not a one-off volley: the player kills what arrives, so a
+			# single volley decayed long before the dense window and the run measured an ordinary
+			# round again. Re-arming on a cadence is what makes the condition the whole run is made of.
+			if lasers > 0 and _meta_alive("b11_amplified") < lasers: _amplify_lasers()
+			if barrage > 0 and _meta_alive("b11_barrage") < barrage: _amplify_barrage()
+			if enemies > 0 and _live_enemies() < mini(enemies,_stage_cap()): _top_up_enemies()
 		if root_period > 0.0 and elapsed >= next_root:
 			next_root += root_period
 			_driver_root_attempts += 1
@@ -254,23 +327,62 @@ func _sample_round() -> void:
 ## again. The amplifier restores the population on a cadence so the condition the human reported -
 ## several lanes live at the same time, repeatedly - is what the whole run is made of.
 func _amplify_lasers() -> void:
+	for i in lasers:
+		_spawn_amplified("E14" if i % 2 == 0 else "E13","b11_amplified")
+
+## B11.2 dense-attack mix. These are the same four Stage 39 families that carry the attack load the
+## human described - the laser sentinel (`cross_beam`), the tremor shooter (`double_root`, the only
+## source of purple projectiles), the marker artillery (`root_artillery`) and the poison carrier
+## (`lingering_poison`) - held alive together. Their telegraphs, projectiles, hostile zones and
+## impact VFX are all produced by the actors themselves, so nothing here fakes a load.
+func _amplify_barrage() -> void:
+	var pool := ["E14","E13","E10","E13","E15","E13"]
+	var i := 0
+	while _meta_alive("b11_barrage") < barrage and i < pool.size():
+		_spawn_amplified(pool[i],"b11_barrage")
+		i += 1
+
+## B11.2 density amplifier, and the ONE amplifier that does not promote to elite: scenario B is
+## "many bodies, ordinary attacks", so this tops the population up out of the stage's own role list
+## with plain actors. Bounded by the stage's published cap, which it reads from the shipped table.
+func _top_up_enemies() -> void:
 	var town = LevelServer.town
 	if not is_instance_valid(town): return
-	for i in lasers:
-		var role := "E14" if i % 2 == 0 else "E13"
+	var target := mini(enemies,_stage_cap())
+	var roles := _stage_roles()
+	if roles.is_empty(): return
+	var guard := 0
+	while _live_enemies() < target and guard < 48:
+		guard += 1
+		var role := str(roles[guard % roles.size()])
 		var point: Vector2 = town.spawn_point(M5Content.radius_for(role))
 		if point == Vector2.INF: continue
 		var actor: Node = M5Content.spawn(role,town.monster_root,point)
 		if actor == null: continue
-		actor.set_meta("b11_amplified",true)
-		M5Content.promote_elite(actor,M5Content.elite_modifier_for(role))
-		_amplified += 1
+		actor.set_meta("b11_topped_up",true)
+		_topped_up += 1
 
-func _amplified_alive() -> int:
+## Real actor through the SAME production call the director uses
+## (`Town.monsterCreate` -> `M5Content.spawn`), so it has ordinary AI, an ordinary telegraph,
+## ordinary damage and an ordinary root. Only the director's timing and its elite ceiling are
+## bypassed, and that is exactly what makes the dense moment repeatable instead of luck.
+func _spawn_amplified(role: String, meta_key: String) -> bool:
+	var town = LevelServer.town
+	if not is_instance_valid(town): return false
+	var point: Vector2 = town.spawn_point(M5Content.radius_for(role))
+	if point == Vector2.INF: return false
+	var actor: Node = M5Content.spawn(role,town.monster_root,point)
+	if actor == null: return false
+	actor.set_meta(meta_key,true)
+	M5Content.promote_elite(actor,M5Content.elite_modifier_for(role))
+	_amplified += 1
+	return true
+
+func _meta_alive(key: String) -> int:
 	var count := 0
 	for actor in get_tree().get_nodes_in_group("monsters"):
 		if actor.is_die: continue
-		if actor.get_meta("b11_amplified",false): count += 1
+		if actor.get_meta(key,false): count += 1
 	return count
 
 func _drive_movement(now: int) -> void:
@@ -290,6 +402,35 @@ func _sample_gauges() -> void:
 	if B11Probe.beams_active > int(_peak.beams): _peak.beams = B11Probe.beams_active
 	var nodes := get_tree().get_node_count()
 	if nodes > int(_peak.nodes): _peak.nodes = nodes
+	# B11.2 engine-level gauges. Sampled here rather than per frame because they are whole-engine
+	# counters and the sampling cost has to stay common to both builds.
+	var objects := int(Performance.get_monitor(Performance.OBJECT_COUNT))
+	if objects > int(_peak.objects): _peak.objects = objects
+	var orphans := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
+	if orphans > int(_peak.orphans): _peak.orphans = orphans
+	var mem := Performance.get_monitor(Performance.MEMORY_STATIC)
+	if mem > float(_peak.mem): _peak.mem = mem
+	var canvas_items := int(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
+	if canvas_items > int(_peak.canvas_items): _peak.canvas_items = canvas_items
+	if B11Probe.iso_particles: _silence_particles()
+
+## B11.2 visual isolation for particles. There are real GPUParticles2D emitters on the rig and on
+## several weapons, and `emitting` is the switch that removes them without touching anything that
+## hurts. Re-applied on the gauge cadence because weapon switches create new emitters.
+func _silence_particles() -> void:
+	for node in get_tree().get_nodes_in_group("iso_particle_targets"):
+		if node is GPUParticles2D: node.emitting = false
+		elif node is CPUParticles2D: node.emitting = false
+
+func _collect_particles() -> void:
+	var root := get_tree().current_scene
+	if root == null: return
+	var stack: Array = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is GPUParticles2D or node is CPUParticles2D:
+			node.add_to_group("iso_particle_targets")
+		for child in node.get_children(): stack.append(child)
 
 ## One line per second. It exists so a run can be read as a TIMELINE - which second the hitch was
 ## in - instead of as one number for the whole round.
@@ -306,7 +447,7 @@ func _report_second(round_index: int) -> void:
 		rates[key] = int(now[key])-int(_prev.get(key,now[key]))
 	_prev = now
 	_peak_same_frame = maxi(_peak_same_frame,B11Probe.hits_in_frame_peak)
-	print("[spike] r=%d t=%.1f n=%d avg=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d over25=%d over33=%d over50=%d slow_run_ms=%.0f phys_avg=%.2f phys_p95=%.2f phys_max=%.2f proc_avg=%.2f draws=%d beams=%d zone_hits=%d hits=%d same_frame=%d rays=%d rays_sk=%d cl=%d labels=%d vfx=%d fog=%d reward_scans=%d rbuilt=%d rreuse=%d rnodes=%d rooted_frames=%d zone_usec=%d zone_worst_us=%d clear_usec=%d onhit_usec=%d onhit_worst_us=%d draw_usec=%d" % [
+	print("[spike] r=%d t=%.1f n=%d avg=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d over25=%d over33=%d over50=%d slow_run_ms=%.0f phys_avg=%.2f phys_p95=%.2f phys_max=%.2f proc_avg=%.2f draws=%d beams=%d zone_hits=%d hits=%d same_frame=%d rays=%d rays_sk=%d cl=%d labels=%d vfx=%d fog=%d reward_scans=%d rbuilt=%d rreuse=%d rnodes=%d rooted_frames=%d zone_usec=%d zone_worst_us=%d clear_usec=%d onhit_usec=%d onhit_worst_us=%d draw_usec=%d objects=%d orphans=%d mem_mb=%.2f pq=%d foglines=%d fogscans=%d shots=%d shotexc=%d td_draws=%d td_usec=%d hz_draws=%d hz_usec=%d swalk=%d swalk_empty=%d" % [
 		round_index,_combat_seconds[_ms.size()-1],count,stats.avg,stats.p95,stats.p99,stats.max,
 		Engine.get_frames_per_second(),stats.over25,stats.over33,stats.over50,stats.slow_run,
 		cpu.avg,cpu.p95,cpu.max,_stats(_proc.slice(from,_proc.size())).avg,_draws[_draws.size()-1],
@@ -317,10 +458,30 @@ func _report_second(round_index: int) -> void:
 		int(rates.get("reward_built",0)),int(rates.get("reward_reused",0)),B11Probe.reward_nodes_peak,
 		_rooted_frames_in(from),
 		int(rates.get("zone_step_usec",0)),int(worst[0]),int(rates.get("clear_line_usec",0)),
-		int(rates.get("onhit_usec",0)),int(worst[1]),int(rates.get("zone_draw_usec",0))])
+		int(rates.get("onhit_usec",0)),int(worst[1]),int(rates.get("zone_draw_usec",0)),
+		int(Performance.get_monitor(Performance.OBJECT_COUNT)),
+		int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
+		Performance.get_monitor(Performance.MEMORY_STATIC)/1048576.0,
+		_path_queries()-_prev_pq,
+		int(rates.get("fog_push_lines",0)),int(rates.get("fog_ensure_scans",0)),
+		int(rates.get("shot_created",0)),int(rates.get("shot_exceptions",0)),
+		int(rates.get("telegraph_draws",0)),int(rates.get("telegraph_draw_usec",0)),
+		int(rates.get("hazard_draws",0)),int(rates.get("hazard_draw_usec",0)),
+		int(rates.get("status_walks",0)),int(rates.get("status_walks_empty",0))])
+	_prev_pq = _path_queries()
 	B11Probe.hits_in_frame_peak = 0
 	B11Probe.beams_active_peak = B11Probe.beams_active
 	_last_report_index = _ms.size()
+
+## The arena owns the A* counter (`CombatArena.path_queries`), so it is read rather than duplicated.
+## `_pq_total` remembers the high-water mark because the arena is freed with the round, and the
+## final `[stress-load]` line is printed after the last round has already ended.
+func _path_queries() -> int:
+	var town = LevelServer.town
+	if is_instance_valid(town) and is_instance_valid(town.arena):
+		var live := int(town.arena.path_queries)
+		if live > _pq_total: _pq_total = live
+	return _pq_total
 
 func _rooted_frames_in(from: int) -> int:
 	var count := 0
@@ -386,6 +547,33 @@ func _dump() -> void:
 	# engine's own CPU cost for the frame. On a vsync-locked browser the first is coarse and the
 	# second is the one that attributes. Both are reported, because a build that improves only one
 	# of them has not answered the report.
+	# B11.2: engine-level load, node churn and the redundancy counters, on their own lines so the
+	# B11.1 report fields above keep working unchanged.
+	var draws_avg := 0.0
+	if _draws.size() > 0:
+		var draw_acc := 0
+		for v in _draws: draw_acc += v
+		draws_avg = float(draw_acc)/float(_draws.size())
+	var pq := _path_queries()
+	var per_s := maxf(total_s,0.001)
+	print("[stress-load] frames=%d combat_s=%.1f objects_peak=%d orphans_peak=%d canvas_items_peak=%d mem_static_peak_mb=%.1f draws_avg=%.1f draws_peak=%d path_queries=%d path_per_s=%.1f created=%d removed=%d created_per_s=%.1f removed_per_s=%.1f enemies_peak=%d projectiles_peak=%d hazards_peak=%d zones_peak=%d beams_peak=%d vfx_peak=%d labels_peak=%d transients_peak=%d rewards_peak=%d nodes_peak=%d topped_up=%d" % [
+		_ms.size(),total_s,_peak.objects,_peak.orphans,_peak.canvas_items,float(_peak.mem)/1048576.0,
+		draws_avg,_draws_peak(),pq,float(pq)/per_s,_created,_removed,
+		float(_created)/per_s,float(_removed)/per_s,
+		_peak.enemies,_peak.projectiles,_peak.hazards,_peak.zones,_peak.beams,_peak.vfx,
+		_peak.labels,_peak.transients,_peak.rewards,_peak.nodes,_topped_up])
+	print("[stress-ink] fog_push_lines=%d fog_ensure_scans=%d fog_canvas_hits=%d fog_scans=%d fog_appended=%d fog_dropped=%d fog_draws=%d fog_entries_drawn=%d fog_draw_usec=%d fog_pushes=%d shoots=%d shot_exceptions=%d shot_fog_mirrors=%d vfx_created=%d vfx_draws=%d hazard_draws=%d hazard_draw_usec=%d telegraph_draws=%d telegraph_draw_usec=%d telegraph_cache_hits=%d telegraph_cache_rebuilds=%d status_walks=%d status_walks_empty=%d labels_created=%d label_tweens=%d clear_line=%d raycasts=%d raycasts_skipped=%d onhit_usec=%d zone_step_usec=%d zone_draw_usec=%d path_usec=%d" % [
+		B11Probe.fog_push_lines,B11Probe.fog_ensure_scans,B11Probe.fog_canvas_hits,
+		B11Probe.fog_scans,B11Probe.fog_entries_appended,B11Probe.fog_entries_dropped,
+		B11Probe.fog_draws,B11Probe.fog_entries_drawn,B11Probe.fog_draw_usec,
+		B11Probe.fog_pushes,
+		B11Probe.shot_created,B11Probe.shot_exceptions,B11Probe.shot_fog_mirrors,
+		B11Probe.vfx_created,B11Probe.vfx_draws,B11Probe.hazard_draws,B11Probe.hazard_draw_usec,
+		B11Probe.telegraph_draws,B11Probe.telegraph_draw_usec,B11Probe.telegraph_cache_hits,
+		B11Probe.telegraph_cache_rebuilds,B11Probe.status_walks,B11Probe.status_walks_empty,
+		B11Probe.labels_created,B11Probe.label_tweens,B11Probe.clear_line_calls,B11Probe.raycasts,
+		B11Probe.raycasts_skipped,B11Probe.onhit_usec,B11Probe.zone_step_usec,B11Probe.zone_draw_usec,
+		B11Probe.path_usec])
 	_buckets("ms",_ms)
 	_buckets("phys",_phys)
 

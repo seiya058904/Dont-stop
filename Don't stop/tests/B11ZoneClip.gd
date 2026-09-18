@@ -27,6 +27,10 @@ extends "res://tests/M8Runtime.gd"
 ##      unchanged - then re-classifies once a member leaves. This is the second change made in this
 ##      round and it must not reorder a callback. Every node is named by its position in the live
 ##      group, never by a catalog id, because `BaseReward.id` is runtime-unique.
+##   G. B11.2, same defect class as A/B one layer up: a footprint whose ink provably cannot change
+##      stops repainting (measured, not inferred - `profile_stats.redraw_requests`), while a lane
+##      that really is TURNING keeps the physics cadence, so "stop when frozen" cannot freeze a
+##      sweeping laser mid-arc.
 ##
 ## Every lane below is a product `TacticalEnemy.zone()` footprint on live geometry, not a synthetic
 ## fixture built to agree with the test. The only thing the test injects is a wall it places itself,
@@ -59,6 +63,10 @@ func lanes() -> Array:
 func one_lane() -> Node2D:
 	var list := lanes()
 	return list[0] if not list.is_empty() else null
+
+## The product's own repaint counter, armed because B11Probe is enabled (see HostileZone.profile_stats).
+func redraws() -> int:
+	return int(load("res://game/monster/HostileZone.gd").profile_snapshot().redraw_requests)
 
 ## Spawn a stationary sentinel whose physics does not run, so the ONLY thing advancing is the lane
 ## under test. Contact is pushed out of the way; its own attacks are never reached.
@@ -263,6 +271,63 @@ func _ready():
 		Utils.player._reward_fanout(get_tree().get_nodes_in_group("reward"))
 		check(B11Probe.reward_fanouts_built == built_b+1,
 			"a changed group misses the cache and is re-classified")
+
+	# ---- G. the B11.2 repaint contract ---------------------------------------------------------
+	# The SAME "permanently true" defect as the clip above, one layer up - in the repaint gate
+	# rather than in the raycast gate:
+	#
+	#     if visual_clock <= 0 or active != previous_active or elapsed >= warning-0.15:
+	#
+	# `elapsed >= warning-0.15` also becomes true FOREVER the instant a footprint fires, so an
+	# ACTIVE zone repainted at the PHYSICS cadence for its whole active window - even though
+	# `progress` is clamped to 1, `active` overwrites both palette entries and the geometry cache
+	# cannot miss, so the ink it produced was byte-identical on every one of those frames. The fix
+	# stops the repaint while the ink provably cannot change, and keeps it wherever the ink CAN:
+	# activation, a turning lane, a moved origin, a detail-budget flip. `redraw_requests` is the
+	# product's own counter; every other footprint is cleared first so the delta is attributable.
+	await clean_actors()
+	var frozen_actor = parked_sentinel("E14")
+	check(frozen_actor != null,"a sentinel spawns for the frozen-repaint half")
+	if frozen_actor != null:
+		frozen_actor.phase = "move"; frozen_actor.phase_time = 0.0
+		frozen_actor._begin("beam")
+		var frozen_lane = one_lane()
+		check(frozen_lane != null and float(frozen_lane.sweep) == 0.0,
+			"the frozen-repaint probe is an unpromoted, non-turning lane")
+		if frozen_lane != null:
+			check(await until(func(): return frozen_lane.activated,400),"the frozen-repaint probe really fires")
+			if is_instance_valid(frozen_lane):
+				await until(func(): return frozen_lane.active_elapsed > 0.06,120)
+				if is_instance_valid(frozen_lane):
+					var mark: int = redraws()
+					for i in 8: await wait(1.0/60.0)
+					var grown: int = redraws()-mark
+					check(grown == 0,
+						"a frozen active lane stops repainting, because its ink cannot change (%d requests in 8 frames)" % grown)
+
+	# The carve-out, and it is the half that protects readability: a lane that really IS turning
+	# changes its ink every tick, so it must keep the physics cadence. Without this, "stop
+	# repainting when frozen" would freeze a sweeping laser mid-arc.
+	await clean_actors()
+	var sweeping_actor = parked_sentinel("E14")
+	check(sweeping_actor != null,"a promoted sentinel spawns for the turning half")
+	if sweeping_actor != null:
+		sweeping_actor.is_elite = true
+		sweeping_actor.phase = "move"; sweeping_actor.phase_time = 0.0
+		sweeping_actor._begin("beam")
+		var turning_lane = one_lane()
+		check(turning_lane != null and float(turning_lane.sweep) != 0.0,
+			"a promoted E14 really produces a TURNING lane")
+		if turning_lane != null:
+			check(await until(func(): return turning_lane.activated,400),"the turning lane really fires")
+			if is_instance_valid(turning_lane):
+				await until(func(): return turning_lane.active_elapsed > 0.04,120)
+				if is_instance_valid(turning_lane):
+					var mark2: int = redraws()
+					for i in 5: await wait(1.0/60.0)
+					var grown2: int = redraws()-mark2
+					check(grown2 >= 4,
+						"a turning lane keeps repainting every tick (%d requests in 5 frames)" % grown2)
 
 	await finish()
 

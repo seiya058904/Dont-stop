@@ -32,6 +32,11 @@ var visual_clock = 0.0
 var ray_clock = 0.0
 var previous_active = false
 var last_ray_origin = Vector2.INF
+## B11.2 repaint gate state: the detail budget this zone was last DRAWN with, and the origin it was
+## last drawn at. Both are compared against the live values to decide whether a frozen footprint's
+## ink could still differ from what is already on screen. No product behaviour reads either.
+var previous_detail := true
+var last_draw_origin := Vector2.INF
 ## `full_detail` decides whether the redundant origin halo is drawn. It used to be recomputed from
 ## `get_nodes_in_group("hostile_zone").size()` once per DRAWN ZONE per frame, which is a group scan of
 ## every live telegraph multiplied by the number of live telegraphs. It is a presentation budget, so
@@ -119,8 +124,11 @@ func step(delta):
 	if epoch != LevelServer.epoch or LevelServer.state != "COMBAT": queue_free(); return
 	if owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die): queue_free(); return
 	elapsed += delta
+	# `sweep_t` is hoisted out of the branch below because the repaint gate further down also needs
+	# it: a lane that is still TURNING changes its ink every tick and must keep the full cadence.
+	var sweep_t := 0.0
 	if mode in ["line","charge"]:
-		var sweep_t := clampf((elapsed-warning)/maxf(duration,0.01),0,1)
+		sweep_t = clampf((elapsed-warning)/maxf(duration,0.01),0,1)
 		direction = initial_direction.rotated(sweep_t*sweep)
 		ray_clock -= delta
 		# The clip answer is a pure function of (origin, direction, maximum length) against STATIC
@@ -143,14 +151,44 @@ func step(delta):
 			last_ray_origin = global_position; ray_clock = 0.1
 		elif B11Probe.enabled and elapsed >= warning:
 			B11Probe.raycasts_skipped += 1
+	# The detail budget is a presentation decision shared by the repaint gate below and by the
+	# painter, so it is resolved once here - same six-physics-frame cadence, same static counter it
+	# has always used - instead of inside `_draw()`, which can no longer be reached every frame.
+	var budget: int = Engine.get_physics_frames()/6
+	if budget_frame != budget:
+		budget_frame = budget
+		budget_live = get_tree().get_nodes_in_group("hostile_zone").size()
+	full_detail = budget_live <= DETAIL_BUDGET
 	visual_clock -= delta
-	var active = elapsed >= warning
-	# Only decorative warning motion is sampled at 30 Hz; the final 150 ms,
-	# activation edge and damaging/sweeping geometry keep the physics cadence.
-	if visual_clock <= 0 or active != previous_active or elapsed >= warning-0.15:
+	var active: bool = elapsed >= warning
+	var sweeping := sweep != 0.0 and sweep_t > 0.0 and sweep_t < 1.0
+	# Only decorative warning motion is sampled at 30 Hz; the final 150 ms, activation edge and
+	# damaging/sweeping geometry keep the physics cadence.
+	#
+	# B11.2: an ACTIVE footprint that is not turning has ink that is a pure function of frozen
+	# inputs - `progress` is clamped to 1, `active` overwrites BOTH palette entries, the geometry
+	# cache is keyed by values that cannot change, and the detail budget is compared right here - so
+	# its draw commands are already on screen and re-running `_draw()` would reproduce them exactly.
+	# The old condition kept repainting it at the PHYSICS cadence for its whole active window,
+	# because `elapsed >= warning-0.15` becomes true FOREVER at the instant a zone fires: the same
+	# "permanently true" defect the clipping above already avoids. A lane still turning, a footprint
+	# whose origin moved, and a detail-budget flip all DO change the ink and keep the full cadence.
+	# Everything else stops repainting until it changes or is freed, and because the ink is retained
+	# the player still sees it.
+	var frozen: bool = active and not sweeping and full_detail == previous_detail and global_position == last_draw_origin
+	if not frozen and (visual_clock <= 0 or active != previous_active or elapsed >= warning-0.15):
 		queue_redraw(); visual_clock = 1.0/30.0
 		if profiling: profile_stats.redraw_requests += 1
 	previous_active = active
+	previous_detail = full_detail
+	last_draw_origin = global_position
+	# A lane that starts beyond the light still has to announce its direction. That is a per-tick
+	# piece of INFORMATION, not ink, so it is emitted here on every physics tick instead of from
+	# `_draw()`: keeping it in `_draw()` tied it to the repaint cadence, and a frozen lane's mirrored
+	# direction would then vanish on every frame it did not repaint, because FogPierceCanvas clears
+	# its entries each time it is drawn.
+	if pierce and mode in ["line","charge"]:
+		preload("res://game/map/FogPierce.gd").push_line(global_position,global_position+direction*length,Color(1,0.66,0.22,0.55 if not activated else 0.85),3.0 if activated else 2.0)
 	if elapsed < warning:
 		if fair_gate and damage > 0 and _footprint_visible(): visible_warning += delta
 		return
@@ -198,17 +236,10 @@ func _footprint_visible() -> bool:
 	return maxf(0.0,here.distance_to(target.global_position)-radius) <= reach
 func _draw():
 	var started = Time.get_ticks_usec() if profiling else 0
-	var frame = Engine.get_physics_frames()/6
-	if budget_frame != frame:
-		budget_frame = frame
-		budget_live = get_tree().get_nodes_in_group("hostile_zone").size()
-	full_detail = budget_live <= DETAIL_BUDGET
-	# Under load omit only the redundant origin halo. Footprints, contrast edges,
-	# timing rings, directional arrows and the summon symbol always remain.
+	# Ink only. The detail budget and the pierce fog mirror are per-physics-tick decisions and now
+	# live in `step()`; with both gone from here, a frozen footprint can stop repainting without
+	# losing either its presentation budget or its mirrored direction.
 	preload("res://game/effects/CombatTelegraph.gd").paint(self,mode,direction,radius,length,width,angle,elapsed/maxf(0.01,warning),elapsed>=warning,sweep,geometry_cache,full_detail,style)
-	# A lane that starts beyond the light still has to announce its direction.
-	if pierce and mode in ["line","charge"]:
-		preload("res://game/map/FogPierce.gd").push_line(global_position,global_position+direction*length,Color(1,0.66,0.22,0.55 if not activated else 0.85),3.0 if activated else 2.0)
 	if profiling:
 		var draw_cost = Time.get_ticks_usec()-started
 		profile_stats.draw_calls += 1

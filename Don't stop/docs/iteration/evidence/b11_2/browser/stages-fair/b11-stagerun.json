@@ -1,0 +1,237 @@
+{
+	"url": "http://127.0.0.1:8795/index.html",
+	"wall_clock_ms": 56174,
+	"tokens": [
+		{
+			"name": "TOUR_REACHED_ITS_END",
+			"ok": true,
+			"detail": "the game printed the completion line"
+		},
+		{
+			"name": "S31_TOUR_LINE_PRESENT",
+			"ok": true,
+			"detail": "[stage-tour] stage=31 departed=true state=COMBAT level=31 fog=true monsters_peak=36 moving_frames=99 locked_lane_frames=135 next=1 campaign=false hell=false"
+		},
+		{
+			"name": "S31_DEPARTURE_WAS_ACCEPTED",
+			"ok": true,
+			"detail": "true"
+		},
+		{
+			"name": "S31_REALLY_ENTERED_COMBAT",
+			"ok": true,
+			"detail": "state=COMBAT"
+		},
+		{
+			"name": "S31_RAN_AS_THE_REQUESTED_STAGE",
+			"ok": true,
+			"detail": "level=31"
+		},
+		{
+			"name": "S31_HELL_DARKNESS_IS_APPLIED",
+			"ok": true,
+			"detail": "fog=true"
+		},
+		{
+			"name": "S31_REALLY_SPAWNED_ENEMIES",
+			"ok": true,
+			"detail": "peak=36"
+		},
+		{
+			"name": "S31_PLAYER_COULD_MOVE",
+			"ok": true,
+			"detail": "moving frames=99"
+		},
+		{
+			"name": "S31_LEFT_THE_CAMPAIGN_POINTER_ALONE",
+			"ok": true,
+			"detail": "next=1"
+		},
+		{
+			"name": "S31_CLAIMED_NO_COMPLETION",
+			"ok": true,
+			"detail": "campaign=false hell=false"
+		},
+		{
+			"name": "S35_TOUR_LINE_PRESENT",
+			"ok": true,
+			"detail": "[stage-tour] stage=35 departed=true state=COMBAT level=35 fog=true monsters_peak=68 moving_frames=120 locked_lane_frames=411 next=1 campaign=false hell=false"
+		},
+		{
+			"name": "S35_DEPARTURE_WAS_ACCEPTED",
+			"ok": true,
+			"detail": "true"
+		},
+		{
+			"name": "S35_REALLY_ENTERED_COMBAT",
+			"ok": true,
+			"detail": "state=COMBAT"
+		},
+		{
+			"name": "S35_RAN_AS_THE_REQUESTED_STAGE",
+			"ok": true,
+			"detail": "level=35"
+		},
+		{
+			"name": "S35_HELL_DARKNESS_IS_APPLIED",
+			"ok": true,
+			"detail": "fog=true"
+		},
+		{
+			"name": "S35_REALLY_SPAWNED_ENEMIES",
+			"ok": true,
+			"detail": "peak=68"
+		},
+		{
+			"name": "S35_PLAYER_COULD_MOVE",
+			"ok": true,
+			"detail": "moving frames=120"
+		},
+		{
+			"name": "S35_LEFT_THE_CAMPAIGN_POINTER_ALONE",
+			"ok": true,
+			"detail": "next=1"
+		},
+		{
+			"name": "S35_CLAIMED_NO_COMPLETION",
+			"ok": true,
+			"detail": "campaign=false hell=false"
+		},
+		{
+			"name": "S39_TOUR_LINE_PRESENT",
+			"ok": true,
+			"detail": "[stage-tour] stage=39 departed=true state=COMBAT level=39 fog=true monsters_peak=84 moving_frames=120 locked_lane_frames=406 next=1 campaign=false hell=false"
+		},
+		{
+			"name": "S39_DEPARTURE_WAS_ACCEPTED",
+			"ok": true,
+			"detail": "true"
+		},
+		{
+			"name": "S39_REALLY_ENTERED_COMBAT",
+			"ok": true,
+			"detail": "state=COMBAT"
+		},
+		{
+			"name": "S39_RAN_AS_THE_REQUESTED_STAGE",
+			"ok": true,
+			"detail": "level=39"
+		},
+		{
+			"name": "S39_HELL_DARKNESS_IS_APPLIED",
+			"ok": true,
+			"detail": "fog=true"
+		},
+		{
+			"name": "S39_REALLY_SPAWNED_ENEMIES",
+			"ok": true,
+			"detail": "peak=84"
+		},
+		{
+			"name": "S39_PLAYER_COULD_MOVE",
+			"ok": true,
+			"detail": "moving frames=120"
+		},
+		{
+			"name": "S39_LEFT_THE_CAMPAIGN_POINTER_ALONE",
+			"ok": true,
+			"detail": "next=1"
+		},
+		{
+			"name": "S39_CLAIMED_NO_COMPLETION",
+			"ok": true,
+			"detail": "campaign=false hell=false"
+		},
+		{
+			"name": "S40_TOUR_LINE_PRESENT",
+			"ok": true,
+			"detail": "[stage-tour] stage=40 departed=true state=COMBAT level=40 fog=true monsters_peak=1 moving_frames=135 locked_lane_frames=93 next=1 campaign=false hell=false"
+		},
+		{
+			"name": "S40_DEPARTURE_WAS_ACCEPTED",
+			"ok": true,
+			"detail": "true"
+		},
+		{
+			"name": "S40_REALLY_ENTERED_COMBAT",
+			"ok": true,
+			"detail": "state=COMBAT"
+		},
+		{
+			"name": "S40_RAN_AS_THE_REQUESTED_STAGE",
+			"ok": true,
+			"detail": "level=40"
+		},
+		{
+			"name": "S40_HELL_DARKNESS_IS_APPLIED",
+			"ok": true,
+			"detail": "fog=true"
+		},
+		{
+			"name": "S40_REALLY_SPAWNED_ENEMIES",
+			"ok": true,
+			"detail": "peak=1"
+		},
+		{
+			"name": "S40_PLAYER_COULD_MOVE",
+			"ok": true,
+			"detail": "moving frames=135"
+		},
+		{
+			"name": "S40_LEFT_THE_CAMPAIGN_POINTER_ALONE",
+			"ok": true,
+			"detail": "next=1"
+		},
+		{
+			"name": "S40_CLAIMED_NO_COMPLETION",
+			"ok": true,
+			"detail": "campaign=false hell=false"
+		},
+		{
+			"name": "C_LINE_FOOTPRINTS_WERE_OBSERVED",
+			"ok": true,
+			"detail": "78 lane observations across 44 samples (up to 13 live footprints)"
+		},
+		{
+			"name": "C_A_FROZEN_LANE_WAS_OBSERVED_WITH_TIME_TO_RUN",
+			"ok": true,
+			"detail": "31 samples of a frozen lane before it fired"
+		},
+		{
+			"name": "C_A_STATIC_FROZEN_LANE_NEVER_TURNED",
+			"ok": true,
+			"detail": "no static frozen lane changed direction (0 samples from lanes that declare a sweep)"
+		},
+		{
+			"name": "C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY",
+			"ok": true,
+			"detail": "19 samples of a frozen lane in its active phase"
+		},
+		{
+			"name": "NO_PAGE_ERRORS",
+			"ok": true,
+			"detail": "1 audio-autoplay notices ignored"
+		}
+	],
+	"notes": [
+		"zone report: 44 samples, up to 13 live footprints, 78 lane observations",
+		"  lane root id=293047638081 len=240.0 t=0.74 active=false frozen=false sweep=0.00",
+		"  lane root id=293047638081 len=240.0 t=0.21 active=false frozen=true sweep=0.00",
+		"  lane laser id=297711704255 len=360.0 t=0.64 active=false frozen=false sweep=0.00",
+		"  lane root id=301369137362 len=240.0 t=0.59 active=false frozen=true sweep=0.00"
+	],
+	"tour_lines": [
+		"[stage-tour] mode=on",
+		"[stage-tour] armed gun=true",
+		"[stage-tour] stage=31 departed=true state=COMBAT level=31 fog=true monsters_peak=36 moving_frames=99 locked_lane_frames=135 next=1 campaign=false hell=false",
+		"[stage-tour] stage=35 departed=true state=COMBAT level=35 fog=true monsters_peak=68 moving_frames=120 locked_lane_frames=411 next=1 campaign=false hell=false",
+		"[stage-tour] stage=39 departed=true state=COMBAT level=39 fog=true monsters_peak=84 moving_frames=120 locked_lane_frames=406 next=1 campaign=false hell=false",
+		"[stage-tour] stage=40 departed=true state=COMBAT level=40 fog=true monsters_peak=1 moving_frames=135 locked_lane_frames=93 next=1 campaign=false hell=false",
+		"[stage-tour] complete"
+	],
+	"zone_samples": 44,
+	"perf": [],
+	"console_errors": [
+		"pageerror: Cannot read properties of null (reading 'currentTime')"
+	]
+}

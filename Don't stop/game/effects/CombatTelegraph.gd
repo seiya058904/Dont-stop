@@ -53,8 +53,11 @@ static func segments(radius: float, radians = TAU):
 	return clampi(int(ceil(absf(radians)*sqrt(maxf(radius,1.0))))+1,12,64)
 static func geometry(kind: String, direction: Vector2, radius: float, length: float, width: float, angle: float, sweep: float, cache: Dictionary):
 	var key = [kind,direction,radius,length,width,angle,sweep]
-	if cache.get("key") == key: return cache
+	if cache.get("key") == key:
+		if B11Probe.enabled: B11Probe.telegraph_cache_hits += 1
+		return cache
 	cache.clear(); cache.key = key
+	if B11Probe.enabled: B11Probe.telegraph_cache_rebuilds += 1
 	var normal = direction.orthogonal()*width
 	cache.box = PackedVector2Array([-normal,direction*length-normal,direction*length+normal,normal])
 	cache.sides = PackedVector2Array([-normal,direction*length-normal,normal,direction*length+normal])
@@ -78,6 +81,27 @@ static func geometry(kind: String, direction: Vector2, radius: float, length: fl
 	cache.marks = marks
 	return cache
 static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: float, length: float, width: float, angle: float, progress: float, active: bool, sweep = 0.0, cache: Dictionary = {}, detail = true, style := "generic"):
+	## B11.2 test-only: `iso_td_decor` drops the DECORATIVE ink only - the charge arrows, the cone's
+	## aim dash, the sweep preview, the summon buds, the poison wobble and bubbles, the detonate
+	## blink and the generic cross marks. The footprint fill, the contrast edges, the beam/cone
+	## outline, the warning line and both countdown arcs stay, because those are the contract ("the
+	## player must be able to read and dodge the attack"). Nothing about timing, geometry or damage
+	## is in this function, so switching it off cannot change what the attack does.
+	##
+	## TWO tiers, and the split is load-bearing:
+	##   `decor`      - passes this painter has ALWAYS drawn, whatever the caller passed for
+	##                  `detail`. `detail` must not appear in this condition. It did for one
+	##                  revision, which silently added "and under load" to six passes the previous
+	##                  build drew at every load - a readability reduction nobody asked for, on a
+	##                  path (>32 live footprints) the measured profiles never reach, which is
+	##                  exactly the kind of change that hides from a benchmark.
+	##   `detail_ink` - the one pass the caller's `detail` already gated (the origin halo).
+	var decor: bool = not B11Probe.iso_td_decor
+	var detail_ink: bool = detail and decor
+	var t0 := 0
+	if B11Probe.enabled:
+		B11Probe.telegraph_draws += 1
+		t0 = Time.get_ticks_usec()
 	var shape = geometry(kind,direction,radius,length,width,angle,sweep,cache)
 	var ink = palette(style_for(kind,style))
 	var p = clampf(progress,0,1)
@@ -95,19 +119,23 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 		canvas.draw_multiline(shape.sides,Color(0.06,0.05,0.09,0.65),3,true)
 		canvas.draw_multiline(shape.sides,edge,1.1+0.6*pulse,true)
 		if kind == "charge":
-			var arrows = PackedVector2Array()
-			for i in int(length/26.0):
-				var point = direction*fposmod(i*26.0+p*52.0,length)
-				arrows.append_array(PackedVector2Array([point-direction*5-normal*0.42,point,point,point-direction*5+normal*0.42]))
-			if not arrows.is_empty(): canvas.draw_multiline(arrows,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.28+0.45*p),1.3,true)
+			# Only the arrow pass is switchable. `detail` is unchanged as a gate, so a caller that
+			# already asked for the reduced form keeps exactly what it had.
+			if decor:
+				var arrows = PackedVector2Array()
+				for i in int(length/26.0):
+					var point = direction*fposmod(i*26.0+p*52.0,length)
+					arrows.append_array(PackedVector2Array([point-direction*5-normal*0.42,point,point,point-direction*5+normal*0.42]))
+				if not arrows.is_empty(): canvas.draw_multiline(arrows,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.28+0.45*p),1.3,true)
 		else:
 			# Beam language: a thin line while warning, and a hard brightness step in the
 			# last quarter of the wind-up so the shot reads as "now" rather than "soon".
+			# Timing information - kept even when the decorative pass is off.
 			var near = p > 0.75
 			canvas.draw_line(Vector2.ZERO,direction*length,edge,width*1.5 if active else (2.6 if near else 0.8),true)
 			if near and not active: canvas.draw_line(Vector2.ZERO,direction*length,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.55),1.2,true)
 			if active: canvas.draw_line(Vector2.ZERO,direction*length,Color(1,1,1,0.9),width*0.45,true)
-		if sweep != 0 and not active:
+		if decor and sweep != 0 and not active:
 			canvas.draw_colored_polygon(shape.sector,Color(ink.fill.r,ink.fill.g,ink.fill.b,0.06))
 			canvas.draw_line(Vector2.ZERO,direction.rotated(sweep)*length,edge*Color(1,1,1,0.6),1,true)
 			var turn = direction.rotated(sweep*p)*length*0.65
@@ -117,29 +145,32 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 		canvas.draw_colored_polygon(shape.cone,fill)
 		canvas.draw_polyline(shape.cone_edge,Color(0.07,0.04,0.08,0.8),4,true)
 		canvas.draw_polyline(shape.cone_edge,edge,1.6,true)
+		# The advancing inner arc is the time-left reading and is kept either way.
 		canvas.draw_arc(Vector2.ZERO,radius*p,direction.angle()-angle,direction.angle()+angle,segments(radius*p,angle*2),edge*Color(1,1,1,0.55),2,true)
-		canvas.draw_line(direction*radius*0.3,direction*radius*0.55,edge,1.2,true)
-		if style == "root":
-			# Control attacks get a waveform so they never look like plain damage.
-			var wave = PackedVector2Array()
-			for i in 16:
-				var t = float(i)/15.0
-				var along = direction.rotated(lerpf(-angle,angle,t))*radius*0.82
-				var cross = along.normalized().orthogonal()*sin(t*PI*4+progress*10)*7
-				wave.append(along+cross)
-			canvas.draw_polyline(wave,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.7),1.6,true)
+		if decor:
+			canvas.draw_line(direction*radius*0.3,direction*radius*0.55,edge,1.2,true)
+			if style == "root":
+				# Control attacks get a waveform so they never look like plain damage.
+				var wave = PackedVector2Array()
+				for i in 16:
+					var t = float(i)/15.0
+					var along = direction.rotated(lerpf(-angle,angle,t))*radius*0.82
+					var cross = along.normalized().orthogonal()*sin(t*PI*4+progress*10)*7
+					wave.append(along+cross)
+				canvas.draw_polyline(wave,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.7),1.6,true)
 	else:
 		canvas.draw_circle(Vector2.ZERO,radius,fill)
 		canvas.draw_polyline(shape.ring,Color(0.07,0.04,0.08,0.8),4,true)
 		canvas.draw_polyline(shape.ring,edge,1.6+0.5*pulse,true)
+		# Both countdown arcs are timing and stay.
 		canvas.draw_arc(Vector2.ZERO,radius*(1.0-p),0,TAU,segments(radius*(1.0-p)),edge*Color(1,1,1,0.7),1.5,true)
 		canvas.draw_arc(Vector2.ZERO,radius+3,-PI/2,-PI/2+TAU*p,segments(radius+3,TAU*p),edge,2,true)
-		if kind == "summon":
+		if decor and kind == "summon":
 			# Three emerging buds distinguish summoning from an impact footprint.
 			for i in 3:
 				var center = Vector2.RIGHT.rotated(-PI/2+i*TAU/3)*radius*0.48
 				canvas.draw_arc(center,4+3*p,0,TAU,12,edge,2,true)
-		elif style == "poison":
+		elif decor and style == "poison":
 			# Area denial: an unstable edge plus spore bubbles, not a bare timing circle.
 			var wobble = PackedVector2Array()
 			for i in 40:
@@ -149,9 +180,11 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 			for i in 7:
 				var a = i*TAU/7.0+progress*3.0
 				canvas.draw_circle(Vector2.RIGHT.rotated(a)*radius*0.55,2.0+2.0*p,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.45))
-		elif style == "detonate":
+		elif decor and style == "detonate":
 			# Self-destruct: a fast inner blink that accelerates as the fuse burns down.
 			canvas.draw_circle(Vector2.ZERO,4.0+3.0*sin(progress*40.0),Color(1,0.4,0.3,0.85))
-		else: canvas.draw_multiline(shape.marks,edge,1.4,true)
+		elif decor:
+			canvas.draw_multiline(shape.marks,edge,1.4,true)
 	# Common origin charge halo, never an opaque screen flash.
-	if detail or kind == "summon": canvas.draw_arc(Vector2.ZERO,5+4*p,0,TAU,segments(5+4*p),edge,1.4,true)
+	if detail_ink or kind == "summon": canvas.draw_arc(Vector2.ZERO,5+4*p,0,TAU,segments(5+4*p),edge,1.4,true)
+	if B11Probe.enabled: B11Probe.telegraph_draw_usec += Time.get_ticks_usec()-t0

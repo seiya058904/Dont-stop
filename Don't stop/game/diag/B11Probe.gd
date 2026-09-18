@@ -27,6 +27,76 @@ class_name B11Probe
 
 static var enabled := false
 
+## ---- B11.2 visual-isolation switches (test-only) --------------------------------------------
+##
+## WHY. B11.2's report is "the whole picture is busy and it still stutters", so the first question
+## is which PART of the load costs anything. Each switch below removes exactly ONE purely-visual
+## product, and nothing else: damage, collision, timing, AI, spawning and the essential telegraph
+## footprint keep running while it is on. They exist only so an A/B run can charge a render cost to
+## a named visual instead of guessing. `false` is the shipped state; nothing in the product reads
+## them except the draw calls they silence, and no player setting can reach them.
+static var iso_vfx := false          # HostileVFX ink
+static var iso_labels := false       # damage numbers
+static var iso_trails := false       # EnemyShot trail segments (the projectile body stays)
+static var iso_fog_core := false     # FogPierce's decorative thin core pass
+static var iso_td_decor := false     # CombatTelegraph decorative detail (footprint/timing stay)
+static var iso_particles := false    # GPUParticles2D emission on the rig
+
+## ---- B11.2 redundancy counters ---------------------------------------------------------------
+##
+## `FogPierce` resolution cost. `push_line` reaches `_push` twice (lane + decorative core) and every
+## `_push` re-resolves the canvas by scanning the parent's children, so one logical line costs two
+## scans. These three separate "how many producers asked" from "how many scans that turned into".
+static var fog_push_lines := 0
+static var fog_ensure_scans := 0
+static var fog_canvas_hits := 0
+## Child scans actually entered. `fog_ensure_scans` only counts resolution ATTEMPTS, so on the
+## BEFORE build (which had no cache) it doubled as the scan count, while on AFTER it stays high
+## while the real work collapses to nothing. This counter is the unambiguous one: it is bumped
+## immediately before `get_children()` is walked, so BEFORE == AFTER is a fair like-for-like test.
+static var fog_scans := 0
+static var fog_entries_appended := 0
+static var fog_entries_dropped := 0
+
+## The Fog layer's own CPU cost. B11.2 moved `HostileZone`'s pierce mirror out of the ink gate so a
+## reduced ink cadence can no longer starve it, which is a correctness win but spends pushes: the
+## canvas drains (and clears) once per drawn frame, so anything that wants to stay visible has to
+## re-push every frame the canvas happens to redraw. These three are the acceptance thermometer for
+## that trade - entry VOLUME and DRAW COST must be compared against BEFORE before it is accepted.
+##
+## `fog_draws` is also the "did it flicker" proxy: the canvas only redraws on a frame where at
+## least one entry arrived, so a lane that is meant to be continuously readable and a
+## `fog_draws`/frame ratio near 1.0 while it is active is the machine version of "no even/odd
+## disappearance". Anything below that means some producer is feeding the canvas at half rate.
+static var fog_draws := 0
+static var fog_draw_usec := 0
+static var fog_entries_drawn := 0
+
+## EnemyShot churn, and specifically the per-shot collision-exception fan-out over every monster.
+static var shot_created := 0
+static var shot_exceptions := 0
+static var shot_fog_mirrors := 0
+
+## Rendering call counts for the pure-ink producers, kept apart from their timing so a run can tell
+## "fewer calls" from "cheaper call".
+static var vfx_draws := 0
+static var label_tweens := 0
+static var hazard_draws := 0
+static var hazard_draw_usec := 0
+static var telegraph_draws := 0
+static var telegraph_draw_usec := 0
+static var telegraph_cache_hits := 0
+static var telegraph_cache_rebuilds := 0
+
+## `BaseMonster._process` status bookkeeping. Counts the walks it actually performs, so a run can
+## show that a monster with no status at all was still paying for the walk.
+static var status_walks := 0
+static var status_walks_empty := 0
+
+## Crowd pathfinding. `CombatArena.path_step` owns the query counter; this is the time those
+## queries cost, which is what decides whether the A* share is worth restructuring for.
+static var path_usec := 0
+
 ## ---- CPU cost of the attack pipeline, in microseconds --------------------------------------
 ##
 ## WHY MICROSECONDS AND NOT FRAME TIME. The browser build is vsync-locked at 60 Hz, so a frame that
@@ -125,6 +195,19 @@ static func snapshot() -> Dictionary:
 		"reward_built":reward_fanouts_built, "reward_reused":reward_fanouts_reused,
 		"zone_step_usec":zone_step_usec, "zone_draw_usec":zone_draw_usec,
 		"clear_line_usec":clear_line_usec, "onhit_usec":onhit_usec,
+		"fog_push_lines":fog_push_lines, "fog_ensure_scans":fog_ensure_scans,
+		"fog_canvas_hits":fog_canvas_hits, "fog_entries_appended":fog_entries_appended,
+		"fog_entries_dropped":fog_entries_dropped,
+		"fog_draws":fog_draws, "fog_draw_usec":fog_draw_usec,
+		"fog_entries_drawn":fog_entries_drawn,
+		"shot_created":shot_created, "shot_exceptions":shot_exceptions,
+		"shot_fog_mirrors":shot_fog_mirrors,
+		"vfx_draws":vfx_draws, "hazard_draws":hazard_draws, "hazard_draw_usec":hazard_draw_usec,
+		"telegraph_draws":telegraph_draws, "telegraph_draw_usec":telegraph_draw_usec,
+		"telegraph_cache_hits":telegraph_cache_hits,
+		"telegraph_cache_rebuilds":telegraph_cache_rebuilds,
+		"status_walks":status_walks, "status_walks_empty":status_walks_empty,
+		"path_usec":path_usec,
 	}
 
 ## Worst single-observation costs are peaks, not sums, so they are read and reset by the driver
