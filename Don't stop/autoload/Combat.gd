@@ -106,11 +106,36 @@ func secondary_hit(source, context: Dictionary, damage: float, talent: String):
 	trace([source.global_position,nearest.global_position])
 
 func clear_line(from: Vector2, to: Vector2) -> bool:
+	# B11.1 test-only counters (game/diag/B11Probe.gd). Read-only: they observe this query, they do
+	# not change it. See that file for why the cost is measured in microseconds rather than being
+	# inferred from the frame time - the browser build is vsync-locked, so frame time hides it.
+	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	if B11Probe.enabled: B11Probe.clear_line_calls += 1
 	if not is_instance_valid(Utils.player): return false
-	var query = PhysicsRayQueryParameters2D.create(from,to,2147483649)
-	if exclusions_dirty: _refresh_exclusions()
-	query.exclude = actor_exclusions
-	return Utils.player.get_world_2d().direct_space_state.intersect_ray(query).is_empty()
+	var result := _clear_line_query(from,to)
+	if started != 0: B11Probe.clear_line_usec += Time.get_ticks_usec()-started
+	return result
+
+const CLEAR_LINE_MASK := 2147483649
+## B11.1: ONE reusable query for the line-of-sight check. `clear_line` is issued on the order of
+## 500 times a second in a dense Hell round, and every call used to allocate a fresh
+## `PhysicsRayQueryParameters2D` and re-assign an `exclude` list holding a RID for the player plus
+## one per live monster - up to 85 entries, converted to a packed array each time. The mask never
+## changes and the actor set only changes when something spawns or dies, so the query is built once
+## and the `exclude` list is only re-applied on the same dirty flag that already guarded the
+## refresh. Identical queries, identical answers, minus the per-call churn.
+var clear_query: PhysicsRayQueryParameters2D = null
+
+func _clear_line_query(from: Vector2, to: Vector2) -> bool:
+	if clear_query == null:
+		clear_query = PhysicsRayQueryParameters2D.create(from,to,CLEAR_LINE_MASK)
+	else:
+		clear_query.from = from
+		clear_query.to = to
+	if exclusions_dirty:
+		_refresh_exclusions()
+		clear_query.exclude = actor_exclusions
+	return Utils.player.get_world_2d().direct_space_state.intersect_ray(clear_query).is_empty()
 
 func explosion(position: Vector2, radius: float, damage: float, gun = null, depth = 0):
 	if depth > DemoConfig.MAX_DERIVATION: return

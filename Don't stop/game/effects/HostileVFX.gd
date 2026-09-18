@@ -25,6 +25,8 @@ const INK = {
 }
 static func emit_at(parent: Node, point: Vector2, reach = 18.0, dir = Vector2.RIGHT, family := "generic"):
 	if alive >= 32: return
+	# B11.1 test-only counter (game/diag/B11Probe.gd): transient VFX creation rate.
+	if B11Probe.enabled: B11Probe.vfx_created += 1
 	var fx = load("res://game/effects/HostileVFX.gd").new()
 	fx.position = point; fx.radius = minf(75,reach); fx.direction = dir
 	fx.style = family; fx.tint = INK.get(family,INK.generic)

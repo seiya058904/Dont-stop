@@ -23,6 +23,49 @@ var slow_amount = 0.0
 var slow_time = 0.0
 const MAX_ENV_SLOW := 0.25
 
+## ---- B11.1: incoming-damage fan-out cache ---------------------------------------------------
+##
+## WHY. `onHit` fans out to the `reward` group four times: a `beforePlayerHit` pass, an `incoming`
+## pass, a `received` pass and an `afterPlayerHit` pass. Written the obvious way that resolves
+## `connect_beforePlayerHit` (a script property) and `has_method("incoming")` (a method lookup by
+## name) on EVERY reward on EVERY landed hit - 92 reflective lookups per hit at the full 23-reward
+## width. That cost is invisible in an average-FPS table, but it is paid once per hit and a rooted
+## player standing inside several overlapping telegraphs can take eight hits in ONE physics frame,
+## which is precisely when the human report says the game stutters.
+##
+## WHAT IT DOES NOT CHANGE. The classification walks the group in the group's own order and the
+## four phases still run in the same order over the same nodes, so the number of callbacks, their
+## order, the accumulated `hurt` and the resulting damage are byte-for-byte the same. Only the
+## repeated NAME LOOKUPS are removed; they are stored as `Callable`s once and re-used. The cache is
+## keyed on the group's exact contents in order, so any change to the reward tree - a purchase, a
+## removal, a name collision - misses the key and forces a full re-classification.
+var fanout_nodes: Array = []
+var fanout_before: Array = []
+var fanout_incoming: Array = []
+var fanout_received: Array = []
+var fanout_after: Array = []
+
+## Re-classify only when the group's contents (or their order) actually differ from last time.
+func _reward_fanout(nodes: Array) -> void:
+	var reusable := nodes.size() == fanout_nodes.size()
+	if reusable:
+		for i in nodes.size():
+			if nodes[i] != fanout_nodes[i]: reusable = false; break
+	if reusable:
+		if B11Probe.enabled: B11Probe.note_reward_fanout(false,nodes.size())
+		return
+	fanout_nodes = nodes.duplicate()
+	fanout_before.clear(); fanout_incoming.clear(); fanout_received.clear(); fanout_after.clear()
+	for node in fanout_nodes:
+		# `connect_*` are script properties on BaseReward; the two `has_method` probes mirror the
+		# original `node.has_method(...)` gates exactly, including for a reward that does not
+		# implement one of them.
+		if node.connect_beforePlayerHit: fanout_before.append(Callable(node,"beforePlayerHit"))
+		if node.has_method("incoming"): fanout_incoming.append(Callable(node,"incoming"))
+		if node.has_method("received"): fanout_received.append(Callable(node,"received"))
+		if node.connect_afterPlayerHit: fanout_after.append(Callable(node,"afterPlayerHit"))
+	if B11Probe.enabled: B11Probe.note_reward_fanout(true,nodes.size())
+
 func apply_slow(amount: float, seconds: float) -> void:
 	slow_amount = clampf(maxf(slow_amount,amount),0.0,MAX_ENV_SLOW)
 	slow_time = maxf(slow_time,seconds)
@@ -254,15 +297,21 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	# Armed only for a hit that is really about to land, so a shield or a bad-save refusal can
 	# never start the window on the player's behalf.
 	if source in CONTACT_SOURCES: contact_immunity = CONTACT_IMMUNITY
+	# B11.1 test-only gauges (game/diag/B11Probe.gd). Counters only: a hit that reached the damage
+	# path, how many such hits shared one physics frame, and what the path cost in microseconds -
+	# the reading a vsync-locked frame time cannot produce.
+	var hit_started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	if B11Probe.enabled: B11Probe.note_player_hit()
 	hurt = maxf(minimum_pressure,hurt)
 	var nodes = get_tree().get_nodes_in_group("reward")
+	if B11Probe.enabled: B11Probe.reward_scans += 1
+	_reward_fanout(nodes)
+	# Same four phases, same order, same nodes: only the repeated name lookups are hoisted.
 	var temp_hurt = 0
-	for node in nodes:
-		if node.connect_beforePlayerHit:
-			var num = node.call("beforePlayerHit",hurt)
-			temp_hurt += num
-	for node in nodes:
-		if node.has_method("incoming"): temp_hurt += node.incoming(hurt,incoming_percentage)
+	for cb in fanout_before:
+		temp_hurt += cb.call(hurt)
+	for cb in fanout_incoming:
+		temp_hurt += cb.call(hurt,incoming_percentage)
 	hurt += temp_hurt
 	hurt = maxf(0,hurt)
 	var raw_pressure = hurt
@@ -272,15 +321,18 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	incoming_hit.emit(raw_pressure,hurt,boss_source)
 	damage_taken.emit(raw_pressure,hurt,source,attacker if is_instance_valid(attacker) else null)
 	PlayerData.player_hp -= hurt
-	for node in nodes:
-		if node.has_method("received"): node.received()
+	for cb in fanout_received:
+		cb.call()
 	Utils.showHitLabel(hurt,self)
 	get_tree().call_group("control","hit")
 	#Utils.freeze_frame = true
 	Utils.freezeFrame(0.1)
-	for node in nodes:
-		if node.connect_afterPlayerHit:
-			node.call("afterPlayerHit",hurt)
+	for cb in fanout_after:
+		cb.call(hurt)
+	if hit_started != 0:
+		var hit_cost = Time.get_ticks_usec()-hit_started
+		B11Probe.onhit_usec += hit_cost
+		if hit_cost > B11Probe.onhit_usec_worst: B11Probe.onhit_usec_worst = hit_cost
 
 func onHpChange(hp,max_hp):
 	if hp <= 0:

@@ -1,0 +1,140 @@
+build identities: BEFORE(round2)=e22168f220f5506b  AFTER(round2)=e05d7ada54d79afb
+all five runs per side share one identity: 1 / 1
+
+=== 1. NOISE FLOOR: BEFORE round1 vs BEFORE round2, identical source and seeds ===
+metric                                 r1         r2       |d|%
+onHit us/hit                       301.51     302.44        1.9
+clear_line us/call                  12.43      12.30        7.9
+phys ms/frame                        5.36       5.57        5.5
+zone_step us/frame                 109.70     114.28       12.4
+zone_draw us/frame                 176.53     250.51       42.9
+raycasts/s                         120.85     127.87       11.8
+hits/s                              12.44      12.42       14.2
+clear_line/s                       486.12     457.05       17.7
+wall raycasts                    11002.20   11640.60       11.8
+raycasts skipped                     0.00       0.00        nan
+frames >33ms                         5.20       5.20       14.7
+frames >50ms                         4.20       4.00        4.0
+max frame ms                       145.13     145.83        1.9
+phys ticks >8ms                    210.40     249.00       65.7
+reward fanout reuses                 0.00       0.00        nan
+reward fanout rebuilds               0.00       0.00        nan
+enemies peak                        84.00      84.00        0.0
+
+=== 2. BEFORE(round2) -> AFTER(round2) per scenario, with noise multiples ===
+--- scenario C ---
+metric                              BEFORE       AFTER    delta%    noise%    ratio
+onHit us/hit                        316.85      278.67    -12.0%      1.9%      6.5
+clear_line us/call                   12.17        6.77    -44.4%      7.9%      5.6
+phys ms/frame                         5.64        5.36     -4.9%      5.5%      0.9
+zone_step us/frame                  114.92       93.98    -18.2%     12.4%      1.5
+zone_draw us/frame                  281.69      222.19    -21.1%     42.9%      0.5
+raycasts/s                          130.21       51.47    -60.5%     11.8%      5.1
+hits/s                               11.76       10.54    -10.4%     14.2%      0.7
+clear_line/s                        526.99      547.51      3.9%     17.7%      0.2
+wall raycasts                     11888.00     4699.00    -60.5%     11.8%      5.1
+raycasts skipped                      0.00     5655.00      nan%      nan%      nan
+frames >33ms                          5.00        5.00      0.0%     14.7%      0.0
+frames >50ms                          4.00        4.00      0.0%      4.0%      0.0
+max frame ms                        147.19      148.00      0.6%      1.9%      0.3
+phys ticks >8ms                     284.00      272.00     -4.2%     65.7%      0.1
+reward fanout reuses                  0.00      961.00      nan%      nan%      nan
+reward fanout rebuilds                0.00        1.00      nan%      nan%      nan
+enemies peak                         84.00       84.00      0.0%      0.0%      nan
+frames with a wall raycast %          84.8        52.5    -32.3%        -        -
+frames with NO raycast %              15.2        47.5     32.3%        -        -
+
+--- scenario C(rpt) ---
+metric                              BEFORE       AFTER    delta%    noise%    ratio
+onHit us/hit                        292.33      272.19     -6.9%      1.9%      3.7
+clear_line us/call                   12.02        7.28    -39.4%      7.9%      5.0
+phys ms/frame                         5.36        5.04     -6.0%      5.5%      1.1
+zone_step us/frame                  118.65       91.39    -23.0%     12.4%      1.8
+zone_draw us/frame                  235.23      220.34     -6.3%     42.9%      0.1
+raycasts/s                          132.07       56.55    -57.2%     11.8%      4.9
+hits/s                               13.04        9.81    -24.7%     14.2%      1.7
+clear_line/s                        443.99      448.12      0.9%     17.7%      0.1
+wall raycasts                     12071.00     5169.00    -57.2%     11.8%      4.9
+raycasts skipped                      0.00     6531.00      nan%      nan%      nan
+frames >33ms                          6.00        5.00    -16.7%     14.7%      1.1
+frames >50ms                          4.00        4.00      0.0%      4.0%      0.0
+max frame ms                        144.02      143.90     -0.1%      1.9%      0.0
+phys ticks >8ms                      91.00      253.00    178.0%     65.7%      2.7
+reward fanout reuses                  0.00      896.00      nan%      nan%      nan
+reward fanout rebuilds                0.00        1.00      nan%      nan%      nan
+enemies peak                         84.00       84.00      0.0%      0.0%      nan
+frames with a wall raycast %          85.4        56.3    -29.1%        -        -
+frames with NO raycast %              14.6        43.7     29.1%        -        -
+
+--- scenario A ---
+metric                              BEFORE       AFTER    delta%    noise%    ratio
+onHit us/hit                        308.27      288.96     -6.3%      1.9%      3.4
+clear_line us/call                   11.72        7.46    -36.4%      7.9%      4.6
+phys ms/frame                         5.42        5.34     -1.6%      5.5%      0.3
+zone_step us/frame                   91.00       86.83     -4.6%     12.4%      0.4
+zone_draw us/frame                  228.38      209.22     -8.4%     42.9%      0.2
+raycasts/s                           92.98       41.16    -55.7%     11.8%      4.7
+hits/s                                9.67       10.73     11.0%     14.2%      0.8
+clear_line/s                        457.62      418.08     -8.6%     17.7%      0.5
+wall raycasts                      8489.00     3758.00    -55.7%     11.8%      4.7
+raycasts skipped                      0.00     5238.00      nan%      nan%      nan
+frames >33ms                          5.00        5.00      0.0%     14.7%      0.0
+frames >50ms                          5.00        5.00      0.0%      4.0%      0.0
+max frame ms                        144.67      147.88      2.2%      1.9%      1.2
+phys ticks >8ms                     159.00      220.00     38.4%     65.7%      0.6
+reward fanout reuses                  0.00      979.00      nan%      nan%      nan
+reward fanout rebuilds                0.00        1.00      nan%      nan%      nan
+enemies peak                         84.00       84.00      0.0%      0.0%      nan
+frames with a wall raycast %          75.9        50.0    -25.9%        -        -
+frames with NO raycast %              24.1        50.0     25.9%        -        -
+
+--- scenario B ---
+metric                              BEFORE       AFTER    delta%    noise%    ratio
+onHit us/hit                        308.43      278.92     -9.6%      1.9%      5.2
+clear_line us/call                   12.24        7.66    -37.4%      7.9%      4.8
+phys ms/frame                         6.06        5.73     -5.4%      5.5%      1.0
+zone_step us/frame                  109.42      114.09      4.3%     12.4%      0.3
+zone_draw us/frame                  231.34      234.38      1.3%     42.9%      0.0
+raycasts/s                          132.60       62.92    -52.5%     11.8%      4.5
+hits/s                               11.58       13.68     18.2%     14.2%      1.3
+clear_line/s                        509.42      401.06    -21.3%     17.7%      1.2
+wall raycasts                     12106.00     5745.00    -52.5%     11.8%      4.5
+raycasts skipped                      0.00     7125.00      nan%      nan%      nan
+frames >33ms                          5.00        4.00    -20.0%     14.7%      1.4
+frames >50ms                          4.00        4.00      0.0%      4.0%      0.0
+max frame ms                        149.25      148.93     -0.2%      1.9%      0.1
+phys ticks >8ms                     458.00      399.00    -12.9%     65.7%      0.2
+reward fanout reuses                  0.00     1248.00      nan%      nan%      nan
+reward fanout rebuilds                0.00        1.00      nan%      nan%      nan
+enemies peak                         84.00       84.00      0.0%      0.0%      nan
+frames with a wall raycast %          84.3        63.6    -20.7%        -        -
+frames with NO raycast %              15.7        36.4     20.7%        -        -
+
+--- scenario D ---
+metric                              BEFORE       AFTER    delta%    noise%    ratio
+onHit us/hit                        286.34      265.44     -7.3%      1.9%      3.9
+clear_line us/call                   13.37        7.45    -44.3%      7.9%      5.6
+phys ms/frame                         5.38        5.16     -4.2%      5.5%      0.8
+zone_step us/frame                  137.41      110.36    -19.7%     12.4%      1.6
+zone_draw us/frame                  275.92      246.47    -10.7%     42.9%      0.2
+raycasts/s                          151.49       62.56    -58.7%     11.8%      5.0
+hits/s                               16.04       14.13    -11.9%     14.2%      0.8
+clear_line/s                        347.25      509.90     46.8%     17.7%      2.6
+wall raycasts                     13649.00     5637.00    -58.7%     11.8%      5.0
+raycasts skipped                      0.00     6324.00      nan%      nan%      nan
+frames >33ms                          5.00        5.00      0.0%     14.7%      0.0
+frames >50ms                          3.00        3.00      0.0%      4.0%      0.0
+max frame ms                        144.04      148.68      3.2%      1.9%      1.7
+phys ticks >8ms                     253.00      218.00    -13.8%     65.7%      0.2
+reward fanout reuses                  0.00     1272.00      nan%      nan%      nan
+reward fanout rebuilds                0.00        1.00      nan%      nan%      nan
+enemies peak                         84.00       84.00      0.0%      0.0%      nan
+frames with a wall raycast %          86.1        60.5    -25.6%        -        -
+frames with NO raycast %              13.9        39.5     25.6%        -        -
+
+=== 3. VERDICT: metrics where |delta| clears 3x the measured noise, in ALL FIVE scenarios ===
+metric                               mean B       mean A mean delta%
+onHit us/hit                         302.44       276.84    -8.4%
+clear_line us/call                    12.30         7.32   -40.4%
+raycasts/s                           127.87        54.93   -56.9%
+wall raycasts                      11640.60      5001.60   -56.9%

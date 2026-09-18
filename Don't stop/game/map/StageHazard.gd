@@ -49,9 +49,20 @@ var offset := Vector2.ZERO
 var initial_direction := Vector2.RIGHT
 var slick_remaining := 0.0
 var activated := false
-## Wall-clipped reach for the line kinds. Recomputed every physics tick from the real
-## physics world, exactly like HostileZone does, so a beam cannot shoot through a wall.
+## Wall-clipped reach for the line kinds. Identical rule to HostileZone: ask the physics world,
+## never assume the nominal length is what the beam actually covers.
+##
+## B11.1: the answer is a pure function of (origin, direction, length) against STATIC level
+## geometry, so it only has to be recomputed when one of those actually moves. `sweep == 0` means
+## neither does - `_advance()` shifts `offset` only for a sweeping shock and turns `direction` only
+## for a sweeping laser - so for a static band the same question was being asked and answered on
+## every single physics tick. It is now asked once and re-used. This is the same defect HostileZone
+## carried, in the sibling implementation, and it sits inside the same physics budget.
+## `clip_origin` covers a hazard whose own `global_position` moves under it, so a moving band can
+## never be left with a stale reach.
 var clipped := 0.0
+var clip_valid := false
+var clip_origin := Vector2.INF
 
 ## Minimum seconds of visible warning before a Hell hazard may damage. Matches
 ## HostileZone's gate so the two systems cannot disagree about what is fair.
@@ -93,7 +104,11 @@ func _physics_process(delta: float) -> void:
 		queue_free(); return
 	elapsed += delta
 	phase_time -= delta
-	if kind in ["laser","shock"]: _clip()
+	if kind in ["laser","shock"]:
+		var here := origin()
+		if sweep != 0.0 or not clip_valid or here != clip_origin:
+			clip_origin = here; clip_valid = true
+			_clip()
 	queue_redraw()
 	match phase:
 		"warning": _warning(delta)
