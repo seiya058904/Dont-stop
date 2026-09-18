@@ -168,7 +168,15 @@ func is_gameplay_mouse_mode() -> bool:
 ## transform already folds in the canvas CSS size, window stretch/aspect (black
 ## bars), page offset, device pixel ratio and the canvas_items scale, so the
 ## conversion to world space happens exactly once, in get_aim_world_position().
+## aim_override is a TEST-ONLY hook: a headless fixture cannot move the OS cursor,
+## and the root viewport mouse ignores synthetic input events entirely (measured),
+## so a benchmark whose weapon re-derives its direction from the mouse in _shoot()
+## cannot be aimed without it. It is gated behind Demo.test_mode, so even a stray
+## assignment can never move the aim in a production launch; null (the shipped
+## state) keeps the behaviour below in every mode.
+var aim_override: Variant = null
 func get_aim_viewport_position() -> Vector2:
+	if Demo.test_mode and aim_override != null: return aim_override
 	return get_viewport().get_mouse_position()
 
 func get_aim_world_position() -> Vector2:

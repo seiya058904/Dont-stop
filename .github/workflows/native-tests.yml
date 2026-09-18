@@ -122,6 +122,18 @@ jobs:
           run_case B4Fog
           run_case M6EncounterAudit
           run_case M8Encounters
+          # B12 weapon-quality contracts. The heavy 24x3 B12WeaponBench stays OUT of per-PR
+          # CI on purpose (it is evidence generation, ~30 min); these assert the frozen
+          # evidence against the live catalog and the shop UI instead.
+          run_case B12Catalog
+          run_case B12Strength
+          run_case B12Save
+          run_case B12UI
+          # Pins the B12 clear_line fix: footprint consumes the shared exclusions_dirty
+          # flag before the LOS query, freed RIDs must not survive actor churn, and a
+          # real wall must still block the ray.
+          run_case B12LineOfSightRegression
+          run_case M3Weapons
       - name: Upload contract logs
         if: always()
         uses: actions/upload-artifact@v4

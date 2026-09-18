@@ -121,9 +121,15 @@ const CLEAR_LINE_MASK := 2147483649
 ## 500 times a second in a dense Hell round, and every call used to allocate a fresh
 ## `PhysicsRayQueryParameters2D` and re-assign an `exclude` list holding a RID for the player plus
 ## one per live monster - up to 85 entries, converted to a packed array each time. The mask never
-## changes and the actor set only changes when something spawns or dies, so the query is built once
-## and the `exclude` list is only re-applied on the same dirty flag that already guarded the
-## refresh. Identical queries, identical answers, minus the per-call churn.
+## changes, so the query object is built once; the actor LIST may change whenever something spawns
+## or dies, so the exclude list is re-mirrored on every call from actor_exclusions (refreshed first
+## if dirty). Re-mirroring unconditionally is the correctness anchor: CombatFootprint refreshes the
+## same shared actor_exclusions for its own throwaway queries and thereby consumes the dirty flag,
+## so a conditional mirror can keep FREED RIDs from an earlier actor set in the active query - the
+## ray then hits the current target itself and every LOS-gated attack whiffs until the next spawn
+## (measured in the B12 bench as whole scenarios of zero damage for cone/explosion weapons).
+## Mirroring is a small RID-array copy per call; the churn the B11.1 optimisation removed was the
+## per-call query ALLOCATION, which stays gone.
 var clear_query: PhysicsRayQueryParameters2D = null
 
 func _clear_line_query(from: Vector2, to: Vector2) -> bool:
@@ -134,7 +140,7 @@ func _clear_line_query(from: Vector2, to: Vector2) -> bool:
 		clear_query.to = to
 	if exclusions_dirty:
 		_refresh_exclusions()
-		clear_query.exclude = actor_exclusions
+	clear_query.exclude = actor_exclusions
 	return Utils.player.get_world_2d().direct_space_state.intersect_ray(clear_query).is_empty()
 
 func explosion(position: Vector2, radius: float, damage: float, gun = null, depth = 0):
