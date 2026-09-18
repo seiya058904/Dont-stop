@@ -1,0 +1,242 @@
+{
+  "url": "http://127.0.0.1:8795/index.html",
+  "headed": false,
+  "viewport": {
+    "w": 1366,
+    "h": 768
+  },
+  "design": {
+    "w": 410,
+    "h": 230
+  },
+  "tokens": {
+    "SINGLE_START_ENTRY_POINT": true,
+    "LOADING_FEEDBACK_PRESENT": true,
+    "SHELL_HIDES_WITHOUT_A_START_CLICK": true,
+    "SHELL_READY_VIA_GAME_NOTICE": true,
+    "SHELL_NEVER_REVEALS_ON_A_TIMER": true,
+    "SHELL_READY_NOT_AN_ERROR": true,
+    "SHELL_TRACKS_LAUNCH_STAGES": true,
+    "OLD_FIXED_DEADLINE_WOULD_HAVE_MISLABELLED_IT": true,
+    "ACCEPTANCE_IGNORES_ELAPSED_TIME": true,
+    "CANVAS_VISIBLE_AFTER_LOAD": true,
+    "PROBE_STATE_IS_FLOWING": true,
+    "REAL_ENTRY_REACHES_THE_MENU": true,
+    "START_CLICK_REACHED_THE_MENU": true,
+    "START_OPENS_A_ROUND": true,
+    "CAMP_CLOSE_BUTTON_REPORTED_BY_THE_LIVE_PANEL": true,
+    "CAMP_PANEL_IS_ON_SCREEN": true,
+    "REAL_CLICK_CLOSED_THE_PANEL": true,
+    "SESSION_IS_RUNNING": true,
+    "AIM_IS_THE_ABSOLUTE_CURSOR": true,
+    "AIM_MOVES_RIGHT": true,
+    "AIM_AXIS_ISOLATION_X": true,
+    "AIM_MOVES_LEFT": true,
+    "AIM_MOVES_DOWN": true,
+    "AIM_AXIS_ISOLATION_Y": true,
+    "AIM_MOVES_UP": true,
+    "CURSOR_RETURNS_EXACTLY": true,
+    "CROSSHAIR_FOLLOWS_AIM": true,
+    "CROSSHAIR_IS_ON_SCREEN_AT_THE_AIM_POINT": true,
+    "GAMEPLAY_POINTER_IS_NOT_LOCKED": true,
+    "AIM_360": true,
+    "WASD_POSITION_CHANGED": true,
+    "WASD_HORIZONTAL_CHANGED": true,
+    "ESC_NEVER_PRESSED_BEFORE_AIM": true,
+    "ESC_PAUSED_THE_GAME": true,
+    "PAUSE_SHOWS_THE_POINTER": true,
+    "COMMANDS_ARE_NOT_STUCK_WHILE_PAUSED": true,
+    "ESC_RESUMES_WITHOUT_RECAPTURE": true,
+    "INPUT_NOT_STUCK_AFTER_RESUME": true,
+    "AIM_STILL_WORKS_AFTER_RESUME": true,
+    "PAGE_ALIVE_AFTER_NORMAL_ENTRY_INPUT": true,
+    "NO_POINTER_LOCK_ANYWHERE": true,
+    "DIAGNOSTIC_ENTRY_READY": true,
+    "GAME_ENTERED_COMBAT": true,
+    "COMBAT_HAS_A_REAL_WEAPON": true,
+    "PROJECTILE_FOLLOWS_AIM_RIGHT": true,
+    "PROJECTILE_FOLLOWS_AIM_RIGHT_MATCHES_AIM": true,
+    "REAL_FIRE_CONSUMES_AMMO": true,
+    "PROJECTILE_FOLLOWS_AIM_LEFT": true,
+    "PROJECTILE_FOLLOWS_AIM_LEFT_MATCHES_AIM": true,
+    "PROJECTILE_FOLLOWS_AIM_DOWN": true,
+    "PROJECTILE_FOLLOWS_AIM_DOWN_MATCHES_AIM": true,
+    "PROJECTILE_FOLLOWS_AIM_UP": true,
+    "PROJECTILE_FOLLOWS_AIM_UP_MATCHES_AIM": true,
+    "BLOCKED_FIRE_DOES_NOT_CONSUME_AMMO": true,
+    "SESSION_RUNNING_AGAIN_AFTER_BLOCKED_ATTEMPT": true,
+    "NO_UNEXPECTED_ENGINE_ERRORS": true,
+    "NO_PAGE_ERRORS": true,
+    "NO_NETWORK_ERRORS": true,
+    "NO_POINTER_LOCK_EVER": true,
+    "NO_RENDERER_CRASH": true,
+    "WITHIN_THE_RUN_BUDGET": true
+  },
+  "notes": [
+    "shell stages: {\"download\":431.6050000190735,\"warmup\":1981.3600000143051,\"scene-prep\":2017.7400000095367,\"menu\":2728.9000000953674,\"engine-init\":2958.085000038147}",
+    "stall warnings during this healthy start: 0 (a warning keeps the cover up and is not a reveal, so it is reported rather than asserted)",
+    "download + engine bring-up took 2703ms",
+    "boot timing: stage warmup t=1470 | transition patterns loaded=8 | shell drawn at t=1471 | stage scene-prep t=1506 | title menu drawn t=2217 | stage menu t=2218 | completion notice sent t=2837 (menu=2217 warmup=not-yet)",
+    "first probe line: [probe] sess=1 frames=4 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(0.0, -0.300261) crh=(-11.52262, -12.52262) hp=5.0 aimworld=(-24.85109, -22.73471) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+    "the machine under test reports fps=1 (a rate is reported, never asserted: the product is not a frame-rate test)",
+    "focus phase skipped: headless Chromium has no OS focus to lose (run with E2E_HEADED=1)",
+    "engine-internal (not a gate): ERROR: Condition \"p_elem->_root\" is true.",
+    "engine-internal (not a gate):  at: add (./core/templates/self_list.h:46)"
+  ],
+  "marks": {
+    "fps": 1,
+    "aim_tracking_error_design_px": 0,
+    "crosshair_vs_aim_design_px": 2.05,
+    "aim_360_accumulated_deg": 659,
+    "fire_right": {
+      "bullets_before": 25,
+      "bullets_after": 16,
+      "bullets_max": 25,
+      "projectile_generation_before": 2,
+      "projectile_generation_after": 11,
+      "projectile_vx": 374.9,
+      "projectile_vy": -139.3,
+      "projectile_speed": 400,
+      "provider_aim_deg": -19.3,
+      "hold_ms": 3630
+    },
+    "blocked_input": {
+      "bullets_before": 13,
+      "bullets_after": 13,
+      "projectile_generation_before": 14,
+      "projectile_generation_after": 14,
+      "hold_ms": 1200,
+      "panel_open": true,
+      "pause_settled": true
+    }
+  },
+  "mode": "core",
+  "phases_run": [
+    "A",
+    "B"
+  ],
+  "contracts_across_both_jobs": 65,
+  "wall_clock_ms": 52855,
+  "phase_timings": [
+    {
+      "name": "A-shell-revealed",
+      "ms": 3972
+    },
+    {
+      "name": "A-title-load",
+      "ms": 1504
+    },
+    {
+      "name": "A-round-started",
+      "ms": 1742
+    },
+    {
+      "name": "A-panel-closed",
+      "ms": 637
+    },
+    {
+      "name": "A-aim-directions",
+      "ms": 3701
+    },
+    {
+      "name": "A-crosshair",
+      "ms": 2025
+    },
+    {
+      "name": "A-aim-360",
+      "ms": 7794
+    },
+    {
+      "name": "A-wasd",
+      "ms": 943
+    },
+    {
+      "name": "A-pause-resume",
+      "ms": 2646
+    },
+    {
+      "name": "A-done",
+      "ms": 255
+    },
+    {
+      "name": "B-combat-entry",
+      "ms": 11048
+    },
+    {
+      "name": "B-first-shot",
+      "ms": 5400
+    },
+    {
+      "name": "B-four-directions",
+      "ms": 6240
+    },
+    {
+      "name": "B-blocked-input",
+      "ms": 4730
+    },
+    {
+      "name": "errors",
+      "ms": 102
+    }
+  ],
+  "boot_timing_lines": [
+    "[boot] stage warmup t=1470",
+    "[boot] transition patterns loaded=8",
+    "[boot] shell drawn at t=1471",
+    "[boot] stage scene-prep t=1506",
+    "[boot] title menu drawn t=2217",
+    "[boot] stage menu t=2218",
+    "[boot] completion notice sent t=2837 (menu=2217 warmup=not-yet)"
+  ],
+  "camp_close_button": {
+    "id": 303080413243,
+    "text": "返回 [Esc]",
+    "x": 358,
+    "y": 10,
+    "w": 41,
+    "h": 16,
+    "cx": 378.5,
+    "cy": 18
+  },
+  "probe_save_state": "gold=\"9999.0\" equipped=\"\"",
+  "console_errors": [
+    "ERROR: Condition \"p_elem->_root\" is true.",
+    "   at: add (./core/templates/self_list.h:46)"
+  ],
+  "page_errors": [],
+  "http_errors": [],
+  "failed_requests": [],
+  "navigation_cancelled_requests": [],
+  "sample_probe_line": "[probe] sess=1 frames=150 proj=14 start=true sm=COMBAT pause=false panels=0 ingame=true gun=0 bullets=13/25 mm=1 player=(289.0, 432.6665) aimvp=(378.4846, 17.7154) crh=(378.8217, 17.56084) hp=5.0 aimworld=(457.9957, 326.7138) projv=(-75.6, -392.8) projang=-100.9 projshots=4 fr=true fps=6 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+  "projectile_events": [
+    {
+      "n": 11,
+      "vx": 374.9,
+      "vy": -139.3,
+      "speed": 400,
+      "aim": -19.3
+    },
+    {
+      "n": 12,
+      "vx": -398.4,
+      "vy": -36,
+      "speed": 400,
+      "aim": -175.7
+    },
+    {
+      "n": 13,
+      "vx": -77.3,
+      "vy": 392.5,
+      "speed": 400,
+      "aim": 101.1
+    },
+    {
+      "n": 14,
+      "vx": -75.6,
+      "vy": -392.8,
+      "speed": 400,
+      "aim": -100.9
+    }
+  ],
+  "escape_sent_by_driver": 2
+}

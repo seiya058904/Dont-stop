@@ -1,0 +1,29 @@
+{
+	"url": "http://127.0.0.1:8795/index.html",
+	"gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+	"phases": [
+		{
+			"label": "stage39-dense",
+			"files": [
+				"stage39-dense-1.png",
+				"stage39-dense-2.png",
+				"stage39-dense-3.png",
+				"stage39-dense-4.png",
+				"stage39-dense-5.png"
+			],
+			"errors": [],
+			"armed": true
+		},
+		{
+			"label": "hell-dense",
+			"files": [
+				"hell-dense-1.png",
+				"hell-dense-2.png",
+				"hell-dense-3.png",
+				"hell-dense-4.png"
+			],
+			"errors": [],
+			"armed": true
+		}
+	]
+}

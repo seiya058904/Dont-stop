@@ -17,15 +17,30 @@ const INK = {
 	"laser":Color(0.45,0.95,1.0)
 }
 func _ready():
+	# B11.2 test-only counter (game/diag/B11Probe.gd): kept so the AFTER run can report the burst
+	# cost as zero rather than merely absent.
+	if B11Probe.enabled: B11Probe.shot_created += 1
 	if get_tree().get_nodes_in_group("enemy_projectiles").size() >= 180:
 		set_physics_process(false); queue_free(); return
 	add_to_group("combat_transient")
 	add_to_group("enemy_projectiles")
 	epoch = LevelServer.epoch
 	collision_layer = 0
-	collision_mask = 2147483649
-	add_collision_exception_with(Utils.player)
-	for actor in get_tree().get_nodes_in_group("monsters"): add_collision_exception_with(actor)
+	# Walls, and only walls. Every body that can block a shot carries layer 32: the arena's own
+	# static geometry does (`CombatArena._ready`, 2147483648) and so do the town and snow building
+	# slabs, whose published layer is 2147483649 = 1 + 32. Neither the hero (25 = 1+8+16) nor a
+	# monster (3 = 1+2) carries layer 32.
+	#
+	# The old mask asked for layer 1 as well, which is the layer the hero AND every monster share,
+	# and then spent one collision exception per live monster - plus one for the player - undoing it
+	# again. Measured on the worst-load profile: 83 exceptions per shot, 26,846 physics-server pair
+	# insertions in a 45 s run, all of it arriving in bursts the moment a barrage is fired.
+	#
+	# Nothing about the hit changes. The projectile never produced damage through this body's
+	# contact - `_physics_process` measures the distance from the player to the segment the shot
+	# travelled this frame, and applies the hit itself. This mask only ever decided what STOPPED the
+	# shot, which is the map. `tests/B11ShotLayer.gd` asserts all four halves of that contract.
+	collision_mask = 2147483648
 	var shape = CollisionShape2D.new()
 	shape.shape = CircleShape2D.new()
 	shape.shape.radius = 3
@@ -33,8 +48,11 @@ func _ready():
 	z_index = 5
 func _draw():
 	var ink = INK.get(style,INK.projectile)
-	for i in range(1,trail.size()):
-		draw_line(to_local(trail[i-1]),to_local(trail[i]),Color(ink.r,ink.g,ink.b,0.1+0.45*i/trail.size()),1.0+1.5*i/trail.size(),true)
+	# B11.2 visual isolation (test-only): the projectile BODY always draws - only the decorative
+	# trail segments are switchable, because the body is what the player actually dodges.
+	if not B11Probe.iso_trails:
+		for i in range(1,trail.size()):
+			draw_line(to_local(trail[i-1]),to_local(trail[i]),Color(ink.r,ink.g,ink.b,0.1+0.45*i/trail.size()),1.0+1.5*i/trail.size(),true)
 	draw_circle(Vector2.ZERO,4,Color(ink.r*0.15,ink.g*0.15,ink.b*0.15))
 	draw_circle(Vector2.ZERO,2.8,Color(ink.r,ink.g,ink.b))
 	if control > 0.0:
@@ -77,4 +95,5 @@ func _mirror_into_fog() -> void:
 	var player = Utils.player
 	if not is_instance_valid(player): return
 	if global_position.distance_to(player.global_position) > ArenaVisibility.fair_radius()*1.4: return
+	if B11Probe.enabled: B11Probe.shot_fog_mirrors += 1
 	preload("res://game/map/FogPierce.gd").push_line(global_position,global_position+velocity.normalized()*14.0,INK.get(style,INK.projectile),2.0)

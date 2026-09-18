@@ -78,12 +78,26 @@ func setData(data):
 	knockback_def = 5
 
 func _process(delta):
-	for source in slows.keys():
-		slows[source].seconds -= delta
-		if slows[source].seconds <= 0: slows.erase(source)
+	# B11.2 test-only counters (game/diag/B11Probe.gd): how often the status walks ran, and how
+	# often they ran over an EMPTY status set. The second number is the whole question - an actor
+	# carrying no status at all should not be paying for a walk.
+	if B11Probe.enabled:
+		B11Probe.status_walks += 1
+		if slows.is_empty() and burns.is_empty(): B11Probe.status_walks_empty += 1
+	# B11.2. `Dictionary.keys()` builds a fresh Array on every call, and this ran for EVERY actor on
+	# EVERY frame whether or not it carried a single status. Measured on the worst-load profile: all
+	# 221,172 walks in a 45 s run were over an empty pair of dictionaries, i.e. ~9,800 array
+	# constructions per second for nothing. The guard is the same predicate the loops would have
+	# evaluated on their first iteration, so which statuses tick, in what order, and for how long is
+	# unchanged - including the re-check below, which is why it is still written as a second
+	# `is_empty()`: a loop that erased its last entry must still fall through to the decay branch.
+	if not slows.is_empty():
+		for source in slows.keys():
+			slows[source].seconds -= delta
+			if slows[source].seconds <= 0: slows.erase(source)
 	if not slows.is_empty(): refresh_slow()
 	else: slow_time = maxf(0,slow_time-delta)
-	if not is_die:
+	if not is_die and not burns.is_empty():
 		for source in burns.keys():
 			var burn = burns[source]
 			var elapsed = minf(delta,burn.remaining)

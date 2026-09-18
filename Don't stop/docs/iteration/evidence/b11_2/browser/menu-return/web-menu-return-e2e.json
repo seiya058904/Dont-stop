@@ -1,0 +1,895 @@
+{
+  "url": "http://127.0.0.1:8795/index.html",
+  "headed": false,
+  "cycles": 5,
+  "tokens": {
+    "FIXTURE_PROFILE_SEEDED": true,
+    "SHELL_HIDES_WITHOUT_A_START_CLICK": true,
+    "CANVAS_VISIBLE": true,
+    "PROBE_STATE_IS_FLOWING": true,
+    "PROBE_IS_THE_ONLY_HARNESS": true,
+    "CYCLE1_START_CLICK_REACHED_THE_MENU": true,
+    "CYCLE1_START_OPENED_A_ROUND": true,
+    "CYCLE1_START_OPENS_CAMP_PANEL": true,
+    "CYCLE1_PANEL_CLOSE_BUTTON_IS_REPORTED": true,
+    "CYCLE1_MOUSE_CLOSE_REMOVED_PANEL": true,
+    "CYCLE1_SESSION_IS_RUNNING": true,
+    "CYCLE1_CROSSHAIR_AT_CURSOR": true,
+    "CYCLE1_PAUSE_AND_RESUME": true,
+    "CYCLE1_BLOCKED_ATTEMPT_WAS_PAUSED": true,
+    "CYCLE1_BLOCKED_INPUT_DID_NOT_ADVANCE_THE_GAME": true,
+    "CYCLE1_BLOCKED_INPUT_DID_NOT_MOVE_THE_PLAYER": true,
+    "CYCLE1_RESUMED_AFTER_BLOCKED_ATTEMPT": true,
+    "CYCLE1_SETTINGS_ENTRY_IS_REPORTED": true,
+    "CYCLE1_LEAVE_ENTRY_IS_REPORTED": true,
+    "CYCLE1_LEAVE_ENTRY_CLICK_TOOK_EFFECT": true,
+    "CYCLE1_GAME_CONFIRMED_MENU_UP": true,
+    "CYCLE1_RETURNED_TO_LIVE_MENU": true,
+    "CYCLE1_RETURN_REBUILT_THE_SESSION": true,
+    "CYCLE1_NO_GHOST_AMMO_HUD": true,
+    "CYCLE1_PAGE_STILL_ALIVE": true,
+    "CYCLE2_START_CLICK_REACHED_THE_MENU": true,
+    "CYCLE2_START_OPENED_A_ROUND": true,
+    "CYCLE2_START_OPENS_CAMP_PANEL": true,
+    "CYCLE2_PANEL_CLOSE_BUTTON_IS_REPORTED": true,
+    "CYCLE2_MOUSE_CLOSE_REMOVED_PANEL": true,
+    "CYCLE2_SESSION_IS_RUNNING": true,
+    "CYCLE2_CROSSHAIR_AT_CURSOR": true,
+    "CYCLE2_PAUSE_AND_RESUME": true,
+    "CYCLE2_BLOCKED_ATTEMPT_WAS_PAUSED": true,
+    "CYCLE2_BLOCKED_INPUT_DID_NOT_ADVANCE_THE_GAME": true,
+    "CYCLE2_BLOCKED_INPUT_DID_NOT_MOVE_THE_PLAYER": true,
+    "CYCLE2_RESUMED_AFTER_BLOCKED_ATTEMPT": true,
+    "CYCLE2_SETTINGS_ENTRY_IS_REPORTED": true,
+    "CYCLE2_LEAVE_ENTRY_IS_REPORTED": true,
+    "CYCLE2_LEAVE_ENTRY_CLICK_TOOK_EFFECT": true,
+    "CYCLE2_GAME_CONFIRMED_MENU_UP": true,
+    "CYCLE2_RETURNED_TO_LIVE_MENU": true,
+    "CYCLE2_RETURN_REBUILT_THE_SESSION": true,
+    "CYCLE2_NO_GHOST_AMMO_HUD": true,
+    "CYCLE2_PAGE_STILL_ALIVE": true,
+    "CYCLE3_START_CLICK_REACHED_THE_MENU": true,
+    "CYCLE3_START_OPENED_A_ROUND": true,
+    "CYCLE3_START_OPENS_CAMP_PANEL": true,
+    "CYCLE3_PANEL_CLOSE_BUTTON_IS_REPORTED": true,
+    "CYCLE3_MOUSE_CLOSE_REMOVED_PANEL": true,
+    "CYCLE3_SESSION_IS_RUNNING": true,
+    "CYCLE3_CROSSHAIR_AT_CURSOR": true,
+    "CYCLE3_PAUSE_AND_RESUME": true,
+    "CYCLE3_BLOCKED_ATTEMPT_WAS_PAUSED": true,
+    "CYCLE3_BLOCKED_INPUT_DID_NOT_ADVANCE_THE_GAME": true,
+    "CYCLE3_BLOCKED_INPUT_DID_NOT_MOVE_THE_PLAYER": true,
+    "CYCLE3_RESUMED_AFTER_BLOCKED_ATTEMPT": true,
+    "CYCLE3_SETTINGS_ENTRY_IS_REPORTED": true,
+    "CYCLE3_LEAVE_ENTRY_IS_REPORTED": true,
+    "CYCLE3_LEAVE_ENTRY_CLICK_TOOK_EFFECT": true,
+    "CYCLE3_GAME_CONFIRMED_MENU_UP": true,
+    "CYCLE3_RETURNED_TO_LIVE_MENU": true,
+    "CYCLE3_RETURN_REBUILT_THE_SESSION": true,
+    "CYCLE3_NO_GHOST_AMMO_HUD": true,
+    "CYCLE3_PAGE_STILL_ALIVE": true,
+    "CYCLE4_START_CLICK_REACHED_THE_MENU": true,
+    "CYCLE4_START_OPENED_A_ROUND": true,
+    "CYCLE4_START_OPENS_CAMP_PANEL": true,
+    "CYCLE4_PANEL_CLOSE_BUTTON_IS_REPORTED": true,
+    "CYCLE4_MOUSE_CLOSE_REMOVED_PANEL": true,
+    "CYCLE4_SESSION_IS_RUNNING": true,
+    "CYCLE4_CROSSHAIR_AT_CURSOR": true,
+    "CYCLE4_PAUSE_AND_RESUME": true,
+    "CYCLE4_BLOCKED_ATTEMPT_WAS_PAUSED": true,
+    "CYCLE4_BLOCKED_INPUT_DID_NOT_ADVANCE_THE_GAME": true,
+    "CYCLE4_BLOCKED_INPUT_DID_NOT_MOVE_THE_PLAYER": true,
+    "CYCLE4_RESUMED_AFTER_BLOCKED_ATTEMPT": true,
+    "CYCLE4_SETTINGS_ENTRY_IS_REPORTED": true,
+    "CYCLE4_LEAVE_ENTRY_IS_REPORTED": true,
+    "CYCLE4_LEAVE_ENTRY_CLICK_TOOK_EFFECT": true,
+    "CYCLE4_GAME_CONFIRMED_MENU_UP": true,
+    "CYCLE4_RETURNED_TO_LIVE_MENU": true,
+    "CYCLE4_RETURN_REBUILT_THE_SESSION": true,
+    "CYCLE4_NO_GHOST_AMMO_HUD": true,
+    "CYCLE4_PAGE_STILL_ALIVE": true,
+    "CYCLE5_START_CLICK_REACHED_THE_MENU": true,
+    "CYCLE5_START_OPENED_A_ROUND": true,
+    "CYCLE5_START_OPENS_CAMP_PANEL": true,
+    "CYCLE5_PANEL_CLOSE_BUTTON_IS_REPORTED": true,
+    "CYCLE5_MOUSE_CLOSE_REMOVED_PANEL": true,
+    "CYCLE5_SESSION_IS_RUNNING": true,
+    "CYCLE5_CROSSHAIR_AT_CURSOR": true,
+    "CYCLE5_PAUSE_AND_RESUME": true,
+    "CYCLE5_BLOCKED_ATTEMPT_WAS_PAUSED": true,
+    "CYCLE5_BLOCKED_INPUT_DID_NOT_ADVANCE_THE_GAME": true,
+    "CYCLE5_BLOCKED_INPUT_DID_NOT_MOVE_THE_PLAYER": true,
+    "CYCLE5_RESUMED_AFTER_BLOCKED_ATTEMPT": true,
+    "CYCLE5_SETTINGS_ENTRY_IS_REPORTED": true,
+    "CYCLE5_LEAVE_ENTRY_IS_REPORTED": true,
+    "CYCLE5_LEAVE_ENTRY_CLICK_TOOK_EFFECT": true,
+    "CYCLE5_GAME_CONFIRMED_MENU_UP": true,
+    "CYCLE5_RETURNED_TO_LIVE_MENU": true,
+    "CYCLE5_RETURN_REBUILT_THE_SESSION": true,
+    "CYCLE5_NO_GHOST_AMMO_HUD": true,
+    "CYCLE5_PAGE_STILL_ALIVE": true,
+    "RESTART_AFTER_LAST_RETURN_START_CLICK_REACHED_THE_MENU": true,
+    "RESTART_AFTER_LAST_RETURN_START_OPENED_A_ROUND": true,
+    "RESTART_AFTER_LAST_RETURN_START_OPENS_CAMP_PANEL": true,
+    "RESTART_AFTER_LAST_RETURN_PANEL_CLOSE_BUTTON_IS_REPORTED": true,
+    "RESTART_AFTER_LAST_RETURN_MOUSE_CLOSE_REMOVED_PANEL": true,
+    "RESTART_AFTER_LAST_RETURN_SESSION_IS_RUNNING": true,
+    "RESTART_AFTER_LAST_RETURN_CROSSHAIR_AT_CURSOR": true,
+    "RESTART_AFTER_LAST_RETURN_PAUSE_AND_RESUME": true,
+    "RESTART_AFTER_LAST_RETURN_BLOCKED_ATTEMPT_WAS_PAUSED": true,
+    "RESTART_AFTER_LAST_RETURN_BLOCKED_INPUT_DID_NOT_ADVANCE_THE_GAME": true,
+    "RESTART_AFTER_LAST_RETURN_BLOCKED_INPUT_DID_NOT_MOVE_THE_PLAYER": true,
+    "RESTART_AFTER_LAST_RETURN_RESUMED_AFTER_BLOCKED_ATTEMPT": true,
+    "RESTART_AFTER_LAST_RETURN_SETTINGS_ENTRY_IS_REPORTED": true,
+    "RESTART_AFTER_LAST_RETURN_LEAVE_ENTRY_IS_REPORTED": true,
+    "RESTART_AFTER_LAST_RETURN_LEAVE_ENTRY_CLICK_TOOK_EFFECT": true,
+    "RESTART_AFTER_LAST_RETURN_GAME_CONFIRMED_MENU_UP": true,
+    "RESTART_AFTER_LAST_RETURN_RETURNED_TO_LIVE_MENU": true,
+    "RESTART_AFTER_LAST_RETURN_RETURN_REBUILT_THE_SESSION": true,
+    "RESTART_AFTER_LAST_RETURN_NO_GHOST_AMMO_HUD": true,
+    "RESTART_AFTER_LAST_RETURN_PAGE_STILL_ALIVE": true,
+    "FIVE_CYCLES_COMPLETED": true,
+    "PAUSE_RESUME_EVERY_CYCLE": true,
+    "SAVE_READABLE_AFTER_FIVE_RETURNS_AND_A_RELOAD": true,
+    "NO_UNEXPECTED_ENGINE_ERRORS": true,
+    "NO_PAGE_ERRORS": true,
+    "NO_NETWORK_ERRORS": true,
+    "NO_RENDERER_CRASH": true,
+    "WATCHDOG_DID_NOT_FIRE": true
+  },
+  "notes": [
+    "fixture: profile seeded with the default weapon, game reported ready=true in 11401ms (setup only, not an acceptance phase)",
+    "CYCLE1 cycle wall clock 20983ms",
+    "CYCLE2 cycle wall clock 19807ms",
+    "CYCLE3 cycle wall clock 19327ms",
+    "CYCLE4 cycle wall clock 19903ms",
+    "CYCLE5 cycle wall clock 20957ms",
+    "RESTART_AFTER_LAST_RETURN cycle wall clock 20101ms",
+    "engine-internal (not a gate): ERROR: Condition \"p_elem->_root\" is true.",
+    "engine-internal (not a gate):  at: add (./core/templates/self_list.h:46)"
+  ],
+  "timings": [
+    {
+      "name": "fixture-seed-profile",
+      "ms": 11684
+    },
+    {
+      "name": "acceptance-load",
+      "ms": 2862
+    },
+    {
+      "name": "CYCLE1-start",
+      "ms": 784
+    },
+    {
+      "name": "CYCLE1-close-panel",
+      "ms": 1719
+    },
+    {
+      "name": "CYCLE1-liveness",
+      "ms": 698
+    },
+    {
+      "name": "CYCLE1-aim",
+      "ms": 325
+    },
+    {
+      "name": "CYCLE1-pause-resume",
+      "ms": 1783
+    },
+    {
+      "name": "CYCLE1-blocked-input",
+      "ms": 3421
+    },
+    {
+      "name": "CYCLE1-leave",
+      "ms": 11109
+    },
+    {
+      "name": "CYCLE1-total",
+      "ms": 20983
+    },
+    {
+      "name": "CYCLE2-start",
+      "ms": 671
+    },
+    {
+      "name": "CYCLE2-close-panel",
+      "ms": 1760
+    },
+    {
+      "name": "CYCLE2-liveness",
+      "ms": 649
+    },
+    {
+      "name": "CYCLE2-aim",
+      "ms": 328
+    },
+    {
+      "name": "CYCLE2-pause-resume",
+      "ms": 1767
+    },
+    {
+      "name": "CYCLE2-blocked-input",
+      "ms": 3452
+    },
+    {
+      "name": "CYCLE2-leave",
+      "ms": 11180
+    },
+    {
+      "name": "CYCLE2-total",
+      "ms": 19807
+    },
+    {
+      "name": "CYCLE3-start",
+      "ms": 694
+    },
+    {
+      "name": "CYCLE3-close-panel",
+      "ms": 1459
+    },
+    {
+      "name": "CYCLE3-liveness",
+      "ms": 655
+    },
+    {
+      "name": "CYCLE3-aim",
+      "ms": 334
+    },
+    {
+      "name": "CYCLE3-pause-resume",
+      "ms": 1764
+    },
+    {
+      "name": "CYCLE3-blocked-input",
+      "ms": 3155
+    },
+    {
+      "name": "CYCLE3-leave",
+      "ms": 11266
+    },
+    {
+      "name": "CYCLE3-total",
+      "ms": 19327
+    },
+    {
+      "name": "CYCLE4-start",
+      "ms": 740
+    },
+    {
+      "name": "CYCLE4-close-panel",
+      "ms": 1731
+    },
+    {
+      "name": "CYCLE4-liveness",
+      "ms": 702
+    },
+    {
+      "name": "CYCLE4-aim",
+      "ms": 312
+    },
+    {
+      "name": "CYCLE4-pause-resume",
+      "ms": 1751
+    },
+    {
+      "name": "CYCLE4-blocked-input",
+      "ms": 3498
+    },
+    {
+      "name": "CYCLE4-leave",
+      "ms": 11169
+    },
+    {
+      "name": "CYCLE4-total",
+      "ms": 19903
+    },
+    {
+      "name": "CYCLE5-start",
+      "ms": 735
+    },
+    {
+      "name": "CYCLE5-close-panel",
+      "ms": 1752
+    },
+    {
+      "name": "CYCLE5-liveness",
+      "ms": 702
+    },
+    {
+      "name": "CYCLE5-aim",
+      "ms": 326
+    },
+    {
+      "name": "CYCLE5-pause-resume",
+      "ms": 1748
+    },
+    {
+      "name": "CYCLE5-blocked-input",
+      "ms": 3459
+    },
+    {
+      "name": "CYCLE5-leave",
+      "ms": 11234
+    },
+    {
+      "name": "CYCLE5-total",
+      "ms": 20957
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-start",
+      "ms": 764
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-close-panel",
+      "ms": 1788
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-liveness",
+      "ms": 705
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-aim",
+      "ms": 346
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-pause-resume",
+      "ms": 1769
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-blocked-input",
+      "ms": 3473
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-leave",
+      "ms": 11256
+    },
+    {
+      "name": "RESTART_AFTER_LAST_RETURN-total",
+      "ms": 20101
+    },
+    {
+      "name": "cycles",
+      "ms": 121078
+    },
+    {
+      "name": "save-reload",
+      "ms": 1339
+    },
+    {
+      "name": "error-audit",
+      "ms": 0
+    }
+  ],
+  "wall_clock_ms": 137398,
+  "cycle_measurements": {
+    "CYCLE1": {
+      "aim": {
+        "aimD": {
+          "x": 150,
+          "y": 100
+        },
+        "css": {
+          "x": 499.7560975609756,
+          "y": 333.9130434782609
+        },
+        "aimvp": {
+          "x": 149.7731,
+          "y": 99.68668
+        },
+        "crh": {
+          "x": 149.6,
+          "y": 100.0056
+        },
+        "err": 0.38685014204469803,
+        "crossErr": 0.3628685387299447
+      },
+      "blocked": {
+        "panels": 1,
+        "paused": true,
+        "framesBefore": 16,
+        "framesAfter": 16,
+        "playerBefore": {
+          "x": 225,
+          "y": 117
+        },
+        "playerAfter": {
+          "x": 225,
+          "y": 117
+        },
+        "moved": 0
+      },
+      "return": {
+        "sessBefore": 1,
+        "sessAfter": 2,
+        "state": {
+          "raw": "[probe] sess=2 frames=28 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-12.34546, -13.34546) hp=5.0 aimworld=(173.7354, 149.6727) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=6 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+          "sess": 2,
+          "frames": 28,
+          "proj": 2,
+          "start": false,
+          "pause": false,
+          "panels": 0,
+          "ingame": true,
+          "gun": -1,
+          "bullets": -1,
+          "bulletsMax": -1,
+          "mm": 0,
+          "player": {
+            "x": 225,
+            "y": 117
+          },
+          "aimvp": {
+            "x": 266.8301,
+            "y": 207.4804
+          },
+          "crh": {
+            "x": -12.34546,
+            "y": -13.34546
+          }
+        }
+      }
+    },
+    "CYCLE2": {
+      "aim": {
+        "aimD": {
+          "x": 150,
+          "y": 100
+        },
+        "css": {
+          "x": 499.7560975609756,
+          "y": 333.9130434782609
+        },
+        "aimvp": {
+          "x": 149.7731,
+          "y": 99.68668
+        },
+        "crh": {
+          "x": 149.1076,
+          "y": 100.9708
+        },
+        "err": 0.38685014204469803,
+        "crossErr": 1.446324453364464
+      },
+      "blocked": {
+        "panels": 1,
+        "paused": true,
+        "framesBefore": 44,
+        "framesAfter": 44,
+        "playerBefore": {
+          "x": 225,
+          "y": 117
+        },
+        "playerAfter": {
+          "x": 225,
+          "y": 117
+        },
+        "moved": 0
+      },
+      "return": {
+        "sessBefore": 2,
+        "sessAfter": 3,
+        "state": {
+          "raw": "[probe] sess=3 frames=49 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-12.20743, -13.20743) hp=5.0 aimworld=(173.7354, 149.6727) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=6 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+          "sess": 3,
+          "frames": 49,
+          "proj": 2,
+          "start": false,
+          "pause": false,
+          "panels": 0,
+          "ingame": true,
+          "gun": -1,
+          "bullets": -1,
+          "bulletsMax": -1,
+          "mm": 0,
+          "player": {
+            "x": 225,
+            "y": 117
+          },
+          "aimvp": {
+            "x": 266.8301,
+            "y": 207.4804
+          },
+          "crh": {
+            "x": -12.20743,
+            "y": -13.20743
+          }
+        }
+      }
+    },
+    "CYCLE3": {
+      "aim": {
+        "aimD": {
+          "x": 150,
+          "y": 100
+        },
+        "css": {
+          "x": 499.7560975609756,
+          "y": 333.9130434782609
+        },
+        "aimvp": {
+          "x": 149.7731,
+          "y": 99.68668
+        },
+        "crh": {
+          "x": 149.8864,
+          "y": 100.02
+        },
+        "err": 0.38685014204469803,
+        "crossErr": 0.35204987203520255
+      },
+      "blocked": {
+        "panels": 1,
+        "paused": true,
+        "framesBefore": 64,
+        "framesAfter": 64,
+        "playerBefore": {
+          "x": 225,
+          "y": 117
+        },
+        "playerAfter": {
+          "x": 225,
+          "y": 117
+        },
+        "moved": 0
+      },
+      "return": {
+        "sessBefore": 3,
+        "sessAfter": 4,
+        "state": {
+          "raw": "[probe] sess=4 frames=68 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-12.34378, -13.34378) hp=5.0 aimworld=(173.7354, 149.6727) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=6 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+          "sess": 4,
+          "frames": 68,
+          "proj": 2,
+          "start": false,
+          "pause": false,
+          "panels": 0,
+          "ingame": true,
+          "gun": -1,
+          "bullets": -1,
+          "bulletsMax": -1,
+          "mm": 0,
+          "player": {
+            "x": 225,
+            "y": 117
+          },
+          "aimvp": {
+            "x": 266.8301,
+            "y": 207.4804
+          },
+          "crh": {
+            "x": -12.34378,
+            "y": -13.34378
+          }
+        }
+      }
+    },
+    "CYCLE4": {
+      "aim": {
+        "aimD": {
+          "x": 150,
+          "y": 100
+        },
+        "css": {
+          "x": 499.7560975609756,
+          "y": 333.9130434782609
+        },
+        "aimvp": {
+          "x": 149.7731,
+          "y": 99.68668
+        },
+        "crh": {
+          "x": 149.2637,
+          "y": 100.6614
+        },
+        "err": 0.38685014204469803,
+        "crossErr": 1.099803363515501
+      },
+      "blocked": {
+        "panels": 1,
+        "paused": true,
+        "framesBefore": 84,
+        "framesAfter": 84,
+        "playerBefore": {
+          "x": 225,
+          "y": 117
+        },
+        "playerAfter": {
+          "x": 225,
+          "y": 117
+        },
+        "moved": 0
+      },
+      "return": {
+        "sessBefore": 4,
+        "sessAfter": 5,
+        "state": {
+          "raw": "[probe] sess=5 frames=89 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-12.3467, -13.3467) hp=5.0 aimworld=(173.7354, 149.6727) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=6 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+          "sess": 5,
+          "frames": 89,
+          "proj": 2,
+          "start": false,
+          "pause": false,
+          "panels": 0,
+          "ingame": true,
+          "gun": -1,
+          "bullets": -1,
+          "bulletsMax": -1,
+          "mm": 0,
+          "player": {
+            "x": 225,
+            "y": 117
+          },
+          "aimvp": {
+            "x": 266.8301,
+            "y": 207.4804
+          },
+          "crh": {
+            "x": -12.3467,
+            "y": -13.3467
+          }
+        }
+      }
+    },
+    "CYCLE5": {
+      "aim": {
+        "aimD": {
+          "x": 150,
+          "y": 100
+        },
+        "css": {
+          "x": 499.7560975609756,
+          "y": 333.9130434782609
+        },
+        "aimvp": {
+          "x": 149.7731,
+          "y": 99.68668
+        },
+        "crh": {
+          "x": 149.2766,
+          "y": 100.671
+        },
+        "err": 0.38685014204469803,
+        "crossErr": 1.102450956913739
+      },
+      "blocked": {
+        "panels": 1,
+        "paused": true,
+        "framesBefore": 105,
+        "framesAfter": 105,
+        "playerBefore": {
+          "x": 225,
+          "y": 117
+        },
+        "playerAfter": {
+          "x": 225,
+          "y": 117
+        },
+        "moved": 0
+      },
+      "return": {
+        "sessBefore": 5,
+        "sessAfter": 6,
+        "state": {
+          "raw": "[probe] sess=6 frames=110 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-12.43193, -13.43193) hp=5.0 aimworld=(173.7354, 149.6727) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=6 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+          "sess": 6,
+          "frames": 110,
+          "proj": 2,
+          "start": false,
+          "pause": false,
+          "panels": 0,
+          "ingame": true,
+          "gun": -1,
+          "bullets": -1,
+          "bulletsMax": -1,
+          "mm": 0,
+          "player": {
+            "x": 225,
+            "y": 117
+          },
+          "aimvp": {
+            "x": 266.8301,
+            "y": 207.4804
+          },
+          "crh": {
+            "x": -12.43193,
+            "y": -13.43193
+          }
+        }
+      }
+    },
+    "RESTART_AFTER_LAST_RETURN": {
+      "aim": {
+        "aimD": {
+          "x": 150,
+          "y": 100
+        },
+        "css": {
+          "x": 499.7560975609756,
+          "y": 333.9130434782609
+        },
+        "aimvp": {
+          "x": 149.7731,
+          "y": 99.68668
+        },
+        "crh": {
+          "x": 150.8296,
+          "y": 97.7025
+        },
+        "err": 0.38685014204469803,
+        "crossErr": 2.2479240472934086
+      },
+      "blocked": {
+        "panels": 1,
+        "paused": true,
+        "framesBefore": 132,
+        "framesAfter": 132,
+        "playerBefore": {
+          "x": 225,
+          "y": 117
+        },
+        "playerAfter": {
+          "x": 225,
+          "y": 117
+        },
+        "moved": 0
+      },
+      "return": {
+        "sessBefore": 6,
+        "sessAfter": 7,
+        "state": {
+          "raw": "[probe] sess=7 frames=137 proj=2 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-12.31498, -13.31498) hp=5.0 aimworld=(173.7354, 149.6727) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=5 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1",
+          "sess": 7,
+          "frames": 137,
+          "proj": 2,
+          "start": false,
+          "pause": false,
+          "panels": 0,
+          "ingame": true,
+          "gun": -1,
+          "bullets": -1,
+          "bulletsMax": -1,
+          "mm": 0,
+          "player": {
+            "x": 225,
+            "y": 117
+          },
+          "aimvp": {
+            "x": 266.8301,
+            "y": 207.4804
+          },
+          "crh": {
+            "x": -12.31498,
+            "y": -13.31498
+          }
+        }
+      }
+    }
+  },
+  "renderer_crash": null,
+  "probe": {
+    "transport": "read-only ?probe=1 console channel (autoload/Smoke.gd), no page round trips",
+    "save_state_at_reload": "gold=\"9999.0\" equipped=\"\""
+  },
+  "rects_reported_by_the_game": {
+    "menu-start-button": {
+      "id": 893940407121,
+      "text": "MAIN_UI_START",
+      "x": 8,
+      "y": 127,
+      "w": 66,
+      "h": 18,
+      "cx": 41,
+      "cy": 136
+    },
+    "menu-mods-button": {
+      "id": 893990738758,
+      "text": "MAIN_UI_MOD",
+      "x": 8,
+      "y": 149,
+      "w": 66,
+      "h": 18,
+      "cx": 41,
+      "cy": 158
+    },
+    "menu-settings-button": {
+      "id": 894041069639,
+      "text": "MAIN_UI_SETTING",
+      "x": 8,
+      "y": 171,
+      "w": 66,
+      "h": 18,
+      "cx": 41,
+      "cy": 180
+    },
+    "camp-close-button": {
+      "id": 866174114717,
+      "text": "返回 [Esc]",
+      "x": 358,
+      "y": 10,
+      "w": 41,
+      "h": 16,
+      "cx": 378.5,
+      "cy": 18
+    },
+    "camp-settings-button": {
+      "id": 866023118897,
+      "text": "设置",
+      "x": 244,
+      "y": 10,
+      "w": 20,
+      "h": 16,
+      "cx": 254,
+      "cy": 18
+    },
+    "camp-stage-tab": {
+      "id": 866459327374,
+      "text": "出发",
+      "x": 324,
+      "y": 29,
+      "w": 75,
+      "h": 16,
+      "cx": 361.5,
+      "cy": 37
+    },
+    "camp-weapon-tab": {
+      "id": 866257999947,
+      "text": "武器",
+      "x": 11,
+      "y": 29,
+      "w": 74,
+      "h": 16,
+      "cx": 48,
+      "cy": 37
+    },
+    "camp-weapon-owned-action": {
+      "id": 867415628639,
+      "text": "已拥有",
+      "x": 199,
+      "y": 48,
+      "w": 63,
+      "h": 24,
+      "cx": 230.5,
+      "cy": 60
+    },
+    "camp-search-box": {
+      "id": 866543213449,
+      "text": "",
+      "x": 11,
+      "y": 48,
+      "w": 126,
+      "h": 24,
+      "cx": 74,
+      "cy": 60
+    },
+    "settings-back-button": {
+      "id": 888454257552,
+      "text": "返回上一层 [Esc]",
+      "x": 85,
+      "y": 192,
+      "w": 136,
+      "h": 31,
+      "cx": 153,
+      "cy": 207.5
+    },
+    "leave-entry": {
+      "id": 888504589197,
+      "text": "返回主菜单",
+      "x": 209,
+      "y": 192,
+      "w": 116,
+      "h": 31,
+      "cx": 267,
+      "cy": 207.5
+    }
+  },
+  "console_errors": [
+    "ERROR: Condition \"p_elem->_root\" is true.",
+    "   at: add (./core/templates/self_list.h:46)"
+  ],
+  "page_errors": [],
+  "http_errors": [],
+  "failed_requests": [],
+  "navigation_cancelled_requests": []
+}

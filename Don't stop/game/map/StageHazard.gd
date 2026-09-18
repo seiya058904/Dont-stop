@@ -236,6 +236,10 @@ func describe() -> String:
 	return "%s@%s r=%.0f l=%.0f w=%.0f warn=%.2f pulses=%d" % [kind,str(at.round()),radius,length,width,warning,pulses]
 
 func _draw() -> void:
+	var t0 := 0
+	if B11Probe.enabled:
+		B11Probe.hazard_draws += 1
+		t0 = Time.get_ticks_usec()
 	var progress = clampf(1.0-phase_time/maxf(0.01,warning),0.0,1.0)
 	var live = phase == "active"
 	match kind:
@@ -244,6 +248,7 @@ func _draw() -> void:
 		"frost": _draw_frost(live,progress)
 		"laser": _draw_band("laser",live,progress)
 		"shock": _draw_band("shock",live,progress)
+	if B11Probe.enabled: B11Probe.hazard_draw_usec += Time.get_ticks_usec()-t0
 
 func _draw_poison(live: bool, progress: float) -> void:
 	var pulse = 0.5+0.5*sin(elapsed*3.4)

@@ -39,6 +39,10 @@ func _process(delta):
 	if age >= lifetime: queue_free(); return
 	queue_redraw()
 func _draw():
+	# B11.2 test-only counter + visual isolation. `emit_at` and the node's lifetime are untouched:
+	# this switches the INK off, not the effect, so an A/B run charges a cost to the drawing alone.
+	if B11Probe.enabled: B11Probe.vfx_draws += 1
+	if B11Probe.iso_vfx: return
 	var p = age/lifetime
 	var color = Color(tint.r,minf(1.0,tint.g+0.28*(1-p)),tint.b,(1-p)*0.7)
 	draw_arc(Vector2.ZERO,radius*(0.25+0.75*p),0,TAU,28,color,1.8*(1-p)+0.5,true)

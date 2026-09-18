@@ -295,6 +295,14 @@
 			GODOT_CONFIG.args.push('--stress-seed=' + (parseInt(params.get('seed'), 10) || 20260918));
 			GODOT_CONFIG.args.push('--stress-lasers=' + (parseInt(params.get('lasers'), 10) || 0));
 			GODOT_CONFIG.args.push('--stress-root=' + (parseFloat(params.get('root')) || 0));
+			// B11.2 adds the two density amplifiers and the visual-isolation switches. `enemies`
+			// tops the population up out of the stage's own role list (never past the stage's own
+			// cap), `barrage` holds the real laser/artillery/root/poison families alive together,
+			// and `iso` names the purely-visual parts to switch off one at a time (vfx, labels,
+			// trails, fogcore, tddecor, particles). All test-only; none of them is needed to play.
+			GODOT_CONFIG.args.push('--stress-enemies=' + (parseInt(params.get('enemies'), 10) || 0));
+			GODOT_CONFIG.args.push('--stress-barrage=' + (parseInt(params.get('barrage'), 10) || 0));
+			if (params.has('iso')) GODOT_CONFIG.args.push('--stress-iso=' + params.get('iso'));
 			if (params.get('park') === '1') GODOT_CONFIG.args.push('--stress-park=1');
 			GODOT_CONFIG.args.push('--stress-label=' + (params.get('label') || 'run'));
 		} else if (params.has('perf')) {

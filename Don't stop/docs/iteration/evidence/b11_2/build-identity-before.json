@@ -1,0 +1,16 @@
+{
+ "tag": "before",
+ "index.wasm": {
+  "bytes": 39514754,
+  "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+ },
+ "index.pck": {
+  "bytes": 41253380,
+  "sha256": "1673d1fa157e9b77a88e889c7b57ab108aca5af0b10b8697c337834da24aa372"
+ },
+ "index.js": {
+  "bytes": 279815,
+  "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+ },
+ "identity": "a3e036d9e014b543b76f7a803eb6bad8125749f1b7d171ecd0330a883cbd875d"
+}

@@ -1,0 +1,53 @@
+{
+  "url": "http://127.0.0.1:8795/index.html",
+  "headed": false,
+  "viewport": {
+    "w": 1366,
+    "h": 768
+  },
+  "design": {
+    "w": 410,
+    "h": 230
+  },
+  "tokens": {
+    "FAULT_INJECTION_SUPPRESSES_NOTICE": true,
+    "FAULT_INJECTION_KEEPS_THE_COVER": true,
+    "FAULT_INJECTION_REPORTS_A_RECOVERABLE_STALL": true,
+    "FAULT_INJECTION_FAILS_THE_NORMAL_ASSERTION": true,
+    "NO_UNEXPECTED_ENGINE_ERRORS": true,
+    "NO_PAGE_ERRORS": true,
+    "NO_NETWORK_ERRORS": true,
+    "NO_POINTER_LOCK_EVER": true,
+    "NO_RENDERER_CRASH": true,
+    "WITHIN_THE_RUN_BUDGET": true
+  },
+  "notes": [],
+  "marks": {},
+  "mode": "fault",
+  "phases_run": [
+    "F"
+  ],
+  "contracts_across_both_jobs": 65,
+  "wall_clock_ms": 53049,
+  "phase_timings": [
+    {
+      "name": "F-done",
+      "ms": 52829
+    },
+    {
+      "name": "errors",
+      "ms": 109
+    }
+  ],
+  "boot_timing_lines": [],
+  "camp_close_button": null,
+  "probe_save_state": null,
+  "console_errors": [],
+  "page_errors": [],
+  "http_errors": [],
+  "failed_requests": [],
+  "navigation_cancelled_requests": [],
+  "sample_probe_line": null,
+  "projectile_events": [],
+  "escape_sent_by_driver": 0
+}

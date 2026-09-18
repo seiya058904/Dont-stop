@@ -83,10 +83,15 @@ func nearest(point: Vector2) -> Vector2i:
 	return cells[0]
 func path_step(from: Vector2, target: Vector2) -> Vector2:
 	path_queries+=1
+	# B11.2 test-only timer (game/diag/B11Probe.gd). `path_queries` alone cannot say whether the
+	# crowd's A* share is 1% of the frame or 20%; this is the number that decides it.
+	var t0 := 0
+	if B11Probe.enabled: t0 = Time.get_ticks_usec()
 	var a = cell(from); var b = cell(target)
 	if not grid.is_in_boundsv(a) or grid.is_point_solid(a): a = nearest(from)
 	if not grid.is_in_boundsv(b) or grid.is_point_solid(b): b = nearest(target)
 	var path = grid.get_point_path(a,b)
+	if B11Probe.enabled: B11Probe.path_usec += Time.get_ticks_usec()-t0
 	return to_global(path[1]) if path.size()>1 else to_global(grid.get_point_position(b))
 func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radius := -1.0) -> Vector2:
 	# A negative radius means "the actor's own size". Every enemy instantiates the
