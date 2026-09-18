@@ -2,10 +2,18 @@ extends Node
 ## B12 strength contract: data-driven verification of the rework's quality separation,
 ## computed from the runtime benchmarks (never from catalog values).
 ##
-## Reads docs/iteration/evidence/b12/{before,after}/power-*.json - both written by
-## tests/B12WeaponBench.tscn on the real game runtime - recomputes the General Power
-## Score exactly as B12WeaponBench.gd does (burst = damage in the first 3 s of the
-## single scenario; floor 0.01 per normalised metric; geometric mean of 4), and asserts:
+## This is NOT a re-measurement: it validates the FROZEN runtime evidence
+## (docs/iteration/evidence/b12/{before,after}/power-*.json, written once by
+## tests/B12WeaponBench.tscn on the real game runtime) against the current
+## quality classification. To keep stale evidence from silently passing after a
+## catalog edit, every AFTER row must still agree with the live catalog on
+## tier / price / power_mul, and every measurement-input file must match the
+## sha256 manifest recorded next to the evidence (LF-normalised, so the digest
+## is checkout-independent across autocrlf settings).
+##
+## Recomputes the General Power Score exactly as B12WeaponBench.gd does (burst =
+## damage in the first 3 s of the single scenario; floor 0.01 per normalised
+## metric; geometric mean of 4), and asserts:
 ##   * the five quality medians strictly increase, adjacent >= 1.20x (传说/史诗 >= 1.25x)
 ##   * 传说/普通 median ratio reaches at least the ~2.2x floor the spec demands
 ##     (the spec's full 2.2..2.5 band is unreachable without either 6x-buffing the
@@ -85,6 +93,48 @@ func tier_medians(scores: Dictionary, tiers: Dictionary) -> Dictionary:
 		out[t] = med(per_tier[t])
 	return out
 
+func sha256_lf(path: String) -> String:
+	if not FileAccess.file_exists(path): return "MISSING"
+	var file := FileAccess.open(path,FileAccess.READ)
+	if file == null: return "MISSING"
+	var data: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	# Normalise CRLF -> LF so the digest does not depend on the checkout's autocrlf.
+	var flat := PackedByteArray()
+	var i := 0
+	while i < data.size():
+		if data[i] == 13 and i+1 < data.size() and data[i+1] == 10:
+			flat.append(10); i += 2
+		else:
+			flat.append(data[i]); i += 1
+	var hasher := HashingContext.new()
+	hasher.start(HashingContext.HASH_SHA256)
+	hasher.update(flat)
+	return hasher.finish().hex_encode()
+
+func verify_manifest():
+	var manifest_raw: Array = load_rows("res://docs/iteration/evidence/b12/manifest.json")
+	check(not manifest_raw.is_empty(),"B12 evidence manifest exists")
+	if manifest_raw.is_empty(): return
+	var expected := ["game/config/WeaponCatalog.gd","game/config/EffectiveStats.gd",
+		"autoload/Combat.gd","tests/B12WeaponBench.gd"]
+	var guns_dir := DirAccess.open("res://game/guns")
+	if guns_dir != null:
+		for entry in guns_dir.get_files():
+			if entry.ends_with(".gd") or entry.ends_with(".tscn"):
+				expected.append("game/guns/"+entry)
+	expected.sort()
+	var covered: Array = []
+	for entry in manifest_raw:
+		var rel: String = str(entry.path)
+		covered.append(rel)
+		check(expected.has(rel),"manifest path belongs to the measurement set: "+rel)
+		var digest := sha256_lf("res://"+rel)
+		check(digest == str(entry.sha256),"manifest sha256 matches for "+rel+
+			((" (now "+digest.substr(0,12)+"…)") if digest != "MISSING" else " (file missing)"))
+	covered.sort()
+	check(str(covered)==str(expected),"manifest covers the whole measurement set (catalog + stats + combat + bench + 24 gun scenes/scripts)")
+
 func _ready():
 	var before_rows: Array = load_rows("res://docs/iteration/evidence/b12/before/power-before.json")
 	var after_rows: Array = load_rows("res://docs/iteration/evidence/b12/after/power-after.json")
@@ -93,6 +143,21 @@ func _ready():
 	if before_rows.is_empty() or after_rows.is_empty():
 		print("B12_STRENGTH_CHECKS ",checks," FAILURES ",failures)
 		get_tree().quit(1); return
+	# --- evidence <-> catalog consistency (stale-evidence guard) --------------------------
+	# Each AFTER row records the tier / price / POWER the weapon had when it was measured.
+	# If the catalog moves without re-running the benchmark, these must fail loudly instead
+	# of letting frozen numbers validate a classification they never measured.
+	var seen_evidence := {}
+	for r in after_rows:
+		var wid: int = int(r.id)
+		if seen_evidence.has(wid): continue
+		seen_evidence[wid] = true
+		check(int(r.tier)==WeaponCatalog.tier(wid),"evidence tier matches catalog tier for "+str(wid))
+		check(int(r.price)==int(WeaponCatalog.PRICES[str(wid)]),"evidence price matches catalog price for "+str(wid))
+		check(is_equal_approx(float(r.power_mul),float(WeaponCatalog.power(wid))),"evidence power_mul matches catalog POWER for "+str(wid))
+	check(seen_evidence.size()==24,"AFTER evidence covers exactly the 24 catalog weapons")
+	# --- measurement-input fingerprint (manifest) ------------------------------------------
+	verify_manifest()
 	var tiers := {}
 	var old_tiers_from_rows := {}
 	for id in WeaponCatalog.TIERS: tiers[int(id)] = int(WeaponCatalog.TIERS[id])

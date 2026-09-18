@@ -214,3 +214,35 @@ validate 通过、抹掉后按同一 ID 恢复、重新装备同 ID 成功、按
 零迁移兼容。改动总计：3 个常量表 + 5 处 UI 文案 + 2 个正确性修复 + 6 个新测试场景。
 
 **未决事项**：真人视觉验收（§10 的截图需人工过目）；`B12_IMPLEMENTED_FOR_EXTERNAL_REVIEW`。
+
+## 14. B12.1 external-review closeout（本节为复审后追加）
+
+外部复审提出 4 个收尾问题，全部在本轮修复；**TIERS / PRICES / POWER 与 24 武器分档
+数值完全未动**（manifest 指纹与一致性检查现在会阻止这类"静默改动"）。
+
+1. **商店"强度↓"文案错误**：`sort_mode==1` 的实际行为是品质 5→1、同品质内价格升序，
+   不是按强度排序。已改为 **品质↓**，四个排序项现在是 品质↑/品质↓/价格↑/价格↓。
+   `tests/B12UI` 新增断言：两个品质方向的真实排序走查、同品质价格序、排序框中不得
+   出现"强度"。GPS 保持设计度量，不暴露为玩家属性。
+2. **B12 合同接入 GitHub Native CI**：`.github/workflows/native-tests.yml` 的 contracts
+   job 新增 `B12Catalog` / `B12Strength` / `B12Save` / `B12UI` /
+   `B12LineOfSightRegression` / `M3Weapons`。完整的 24×3 benchmark（`B12WeaponBench`）
+   仍只在本地做证据生成，不进每 PR CI。
+3. **clear_line 修复的确定性回归**：新增 `tests/B12LineOfSightRegression`（已入 CI），
+   复现精确时序：actor set 变化 → `exclusions_dirty=true` → `CombatFootprint.polygon`
+   经真实路径消费 dirty → `clear_line` 必须仍判空场（旧实现此处 exclude 陈旧、射线
+   命中目标自身）；随后 A 释放换 B，断言 freed RID 不残留于复用查询；最后放真墙，
+   断言 `clear_line` 返回 false、无墙路径仍为 true。未改动 Combat 行为。
+4. **`Utils.aim_override` 收紧为测试模式**：`get_aim_viewport_position()` 现在仅在
+   `Demo.test_mode == true` 时采用 override；生产启动即使被意外赋值也不会改变瞄准。
+   `tests/B12Catalog` 新增 3 条断言（test_mode 下生效 / 非测试模式读真实鼠标 /
+   意外赋值不生效，测试后恢复全部全局状态）；`AimProvider` 原有 14 条合同全绿。
+5. **evidence 完整性**：`tests/B12Strength` 新增两层守卫——
+   (a) AFTER 证据的每一把武器逐一断言 `tier == WeaponCatalog.tier(id)`、
+   `price == WeaponCatalog.PRICES[id]`、`power_mul == WeaponCatalog.power(id)`
+   （72 行覆盖 24 武器，改表后旧证据立即失败）；
+   (b) 轻量指纹 `evidence/b12/manifest.json`：对 WeaponCatalog.gd / EffectiveStats.gd /
+   Combat.gd / B12WeaponBench.gd + 全部 24 个枪械 .tscn 与 15 个 .gd（共 43 文件）做
+   **LF 归一化 sha256**（与 checkout 的 autocrlf 无关），测试逐一校验并断言清单覆盖
+   完整测量集。证据口径澄清：B12Strength 验证的是"**冻结的运行时证据**对当前划分
+   是否满足合同"，不是 CI 重新测量。

@@ -153,7 +153,9 @@ func _ready():
 	filters.add_child(tier_box)
 	tier_box.item_selected.connect(func(index): tier_filter = index; request_refresh())
 	sort_box = OptionButton.new()
-	for text in ["品质↑","强度↓","价格↑","价格↓"]: sort_box.add_item(text)
+	# sort_mode 1 orders by tier descending (品质↓); there is deliberately no "strength"
+	# sort - the runtime benchmark score is a design metric, never a player-facing attribute.
+	for text in ["品质↑","品质↓","价格↑","价格↓"]: sort_box.add_item(text)
 	filters.add_child(sort_box)
 	sort_box.item_selected.connect(func(index): sort_mode = index; request_refresh())
 	var columns = HBoxContainer.new()

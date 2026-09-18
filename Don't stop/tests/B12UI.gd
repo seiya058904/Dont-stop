@@ -55,8 +55,30 @@ func _ready():
 		if WeaponCatalog.tier(id)==last_tier and int(Utils.weapon_money_list[str(id)])<last_price: ordered = false
 		last_tier = WeaponCatalog.tier(id); last_price = int(Utils.weapon_money_list[str(id)])
 	check(ordered,"quality-ascending sort keeps tier order and within-tier price order")
+	# --- sort option labels: quality both ways, price both ways, never a strength claim ----
+	var sort_texts: Array = []
+	for i in panel.sort_box.item_count: sort_texts.append(panel.sort_box.get_item_text(i))
+	check(str(sort_texts)==str(["品质↑","品质↓","价格↑","价格↓"]),"sort options are 品质↑/品质↓/价格↑/价格↓")
+	check(not "强度" in "".join(sort_texts),"no misleading 强度 label anywhere in the sort box")
+	# --- quality-DESCENDING sort: tier 5 -> 1, within one tier the same stable price order --
 	panel.sort_mode = 1; panel.render()
-	check(card_ids(panel).size()==24,"strength sort still renders every weapon")
+	check(card_ids(panel).size()==24,"quality-descending sort still renders every weapon")
+	var desc_ok := true
+	var prev_tier := 6
+	var prev_price := 0
+	for id in card_ids(panel):
+		var t: int = WeaponCatalog.tier(id)
+		var p: int = int(Utils.weapon_money_list[str(id)])
+		if t>prev_tier: desc_ok = false
+		if t==prev_tier and p<prev_price: desc_ok = false
+		prev_tier = t; prev_price = p
+	check(desc_ok,"quality-descending sort runs tier 5 -> 1 with stable within-tier price order")
+	var tiers_desc: Array = []
+	for id in card_ids(panel): tiers_desc.append(WeaponCatalog.tier(id))
+	var tiers_asc: Array = tiers_desc.duplicate()
+	tiers_asc.sort()
+	tiers_asc.reverse()
+	check(str(tiers_desc)==str(tiers_asc),"品质↓ walks tiers strictly 5 -> 1")
 	# --- search maps the stable plan ID ---------------------------------------------------
 	panel.sort_mode = 0; panel.search_text = "W24"; panel.search_box.text = "W24"; panel.render()
 	check(card_ids(panel)==[124],"plan-ID search still resolves W24 -> 124")

@@ -40,6 +40,20 @@ func _ready():
 		var gun = Utils.weapon_list[str(id)].instantiate()
 		check(tr(gun.weapon_name)!="","weapon name present for "+str(id))
 		gun.free()
+	# --- aim_override production guard ------------------------------------------------
+	# The test-only aim hook must be inert outside Demo.test_mode, even if a stray
+	# assignment happens: gameplay aim must keep reading the real viewport mouse.
+	var saved_override: Variant = Utils.aim_override
+	var saved_test_mode: bool = Demo.test_mode
+	Utils.aim_override = Vector2(7777,7777)
+	Demo.test_mode = true
+	check(Utils.get_aim_viewport_position()==Vector2(7777,7777),"aim hook is honoured in test mode")
+	Demo.test_mode = false
+	check(Utils.get_aim_viewport_position()==Utils.get_viewport().get_mouse_position(),
+		"aim hook is inert outside test mode and reads the real viewport mouse")
+	check(Utils.get_aim_viewport_position()!=Vector2(7777,7777),"a stray aim_override cannot move production aim")
+	Demo.test_mode = saved_test_mode
+	Utils.aim_override = saved_override
 	print("B12_CATALOG_CHECKS ",checks," FAILURES ",failures)
 	if failures: get_tree().quit(1)
 	else: await Demo.quit_game()
