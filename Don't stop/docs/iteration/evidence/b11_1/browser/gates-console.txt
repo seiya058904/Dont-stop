@@ -1,0 +1,80 @@
+# B11.1 browser gates — captured console output
+
+Runner: `.git/scratch/b11.1/run_browser_gates.sh`, executed against the AFTER Web export served from
+`http://127.0.0.1:8795/index.html` (build identity `e05d7ada54d79afb…`, see `../stress/after/`).
+Chromium on the real GPU: `ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)`.
+
+===== smoke-web (plain load) =====
+[smoke-web] ok canvas-alive
+[smoke-web] ok loading-completes
+[smoke-web] ok in-game-smoke [smoke] user_dir=/userfs/TowDownGame ; [smoke] renderer=gl_compatibility ; [smoke] save_state none ; [smoke] stage=camp state=CAMP ; [smoke] depart=true ; [smoke] stage=combat state=COMBAT monsters=1 ; [smoke] switch=true gun=1 ; [smoke] fire transient=0->3 ; [smoke] done pass=true ; [smoke] result=PASS
+[smoke-web] ok page-alive
+[smoke-web] ok still-alive-after-input
+[smoke-web] ok no-blocking-console
+[smoke-web] ok no-http-errors
+[smoke-web] RESULT=PASS
+exit=0
+
+===== save-audit-web =====
+[save-audit] ok T5-fresh-profile first-run save_state: [smoke] save_state none
+[save-audit] ok T6a-reload-restores after reload equipped= gold=9999.0
+[save-audit] ok T6b-browser-restart-restores equipped= gold=9999.0
+[save-audit] ok userfs-in-indexeddb {"names":["/userfs"],"godotObjects":["FILE_DATA:33keys"]}
+[save-audit] ok T7-profile-isolation fresh profile save_state: [smoke] save_state none
+[save-audit] RESULT=PASS
+exit=0
+
+===== stage tour 31/35/39/40 (repeat 1) =====
+PASS S40_REALLY_ENTERED_COMBAT :: state=COMBAT
+PASS S40_RAN_AS_THE_REQUESTED_STAGE :: level=40
+PASS S40_HELL_DARKNESS_IS_APPLIED :: fog=true
+PASS S40_REALLY_SPAWNED_ENEMIES :: peak=1
+PASS S40_PLAYER_COULD_MOVE :: moving frames=135
+PASS S40_LEFT_THE_CAMPAIGN_POINTER_ALONE :: next=1
+PASS S40_CLAIMED_NO_COMPLETION :: campaign=false hell=false
+PASS C_LINE_FOOTPRINTS_WERE_OBSERVED :: 81 lane observations across 44 samples (up to 11 live footprints)
+PASS C_A_FROZEN_LANE_WAS_OBSERVED_WITH_TIME_TO_RUN :: 35 samples of a frozen lane before it fired
+PASS C_A_STATIC_FROZEN_LANE_NEVER_TURNED :: no static frozen lane changed direction (0 samples from lanes that declare a sweep)
+PASS C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY :: 19 samples of a frozen lane in its active phase
+PASS NO_PAGE_ERRORS :: 1 audio-autoplay notices ignored
+
+B11_STAGERUN tokens=42 failures=0 wall_clock=56s
+exit=0
+
+===== stage tour 31/35/39/40 (repeat 2) =====
+PASS S40_REALLY_ENTERED_COMBAT :: state=COMBAT
+PASS S40_RAN_AS_THE_REQUESTED_STAGE :: level=40
+PASS S40_HELL_DARKNESS_IS_APPLIED :: fog=true
+PASS S40_REALLY_SPAWNED_ENEMIES :: peak=1
+PASS S40_PLAYER_COULD_MOVE :: moving frames=135
+PASS S40_LEFT_THE_CAMPAIGN_POINTER_ALONE :: next=1
+PASS S40_CLAIMED_NO_COMPLETION :: campaign=false hell=false
+PASS C_LINE_FOOTPRINTS_WERE_OBSERVED :: 82 lane observations across 44 samples (up to 13 live footprints)
+PASS C_A_FROZEN_LANE_WAS_OBSERVED_WITH_TIME_TO_RUN :: 38 samples of a frozen lane before it fired
+PASS C_A_STATIC_FROZEN_LANE_NEVER_TURNED :: no static frozen lane changed direction (0 samples from lanes that declare a sweep)
+PASS C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY :: 13 samples of a frozen lane in its active phase
+PASS NO_PAGE_ERRORS :: 1 audio-autoplay notices ignored
+
+B11_STAGERUN tokens=42 failures=0 wall_clock=56s
+exit=0
+
+===== normal Stage 39 sustained run (repeat 1) =====
+B11 WEB PERF after39r1 stage=39 samples=49 markers=3 fps_avg=55.35 frame_ms_avg=21.66 frame_ms_p95=21.89 frame_ms_max=150.00 nodes_first=232 nodes_last=288 peak_nodes=1315 peak_enemies=84 peak_projectiles=32 peak_telegraphs=10 gpu="ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+exit=0
+
+===== normal Stage 39 sustained run (repeat 2) =====
+B11 WEB PERF after39r2 stage=39 samples=49 markers=3 fps_avg=55.18 frame_ms_avg=21.65 frame_ms_p95=23.27 frame_ms_max=150.00 nodes_first=232 nodes_last=284 peak_nodes=1274 peak_enemies=84 peak_projectiles=18 peak_telegraphs=10 gpu="ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+exit=0
+
+BROWSER GATES DONE
+
+## Notes on what these gates do and do not cover
+
+* `C_A_STATIC_FROZEN_LANE_NEVER_TURNED` and `C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY` are the two
+  tokens that matter most for this round: they are the browser-level statement that the frozen lane
+  which stopped re-clipping still fired at the geometry it had frozen, and that no lane declaring a
+  sweep was ever observed as static. Both passed on two independent sessions.
+* The dense-laser and dense-laser+root cases are NOT part of this script: they are the stress driver's
+  scenarios B/C/D, whose evidence is under `../stress/`.
+* `frame_ms_max=150.00` in both perf runs is the same per-round-start hitch the stress census isolates;
+  it is present in the BEFORE build too and is not affected by this round's changes.

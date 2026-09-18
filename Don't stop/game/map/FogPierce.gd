@@ -53,6 +53,8 @@ static func discard() -> void:
 ## core that doubles it goes last, so the cap can only ever cost ink and never information.
 static func _push(entry: Dictionary) -> void:
 	if not ArenaVisibility.fog_active(): return
+	# B11.1 test-only counter (game/diag/B11Probe.gd): fog pierce entry churn.
+	if B11Probe.enabled: B11Probe.fog_pushes += 1
 	var layer = ensure()
 	if layer == null: return
 	if layer.canvas.entries.size() >= FogPierceCanvas.MAX_ENTRIES: return

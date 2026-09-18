@@ -588,7 +588,12 @@ func _physics_process(delta):
 	phase_flash = maxf(0,phase_flash-delta); queue_redraw()
 	if state_array.has(Utils.STATE_TYPE.STUN): return
 	if hit: move_and_slide(); return
-	owned_attacks = owned_attacks.filter(func(ref): return is_instance_valid(ref.get_ref()))
+	# B11.1: `filter()` allocates a new array (and re-converts the untyped result back to
+	# `Array[WeakRef]`) on EVERY physics frame of EVERY live monster, for a list that is empty most
+	# of the time. Filtering an empty array can only return an empty array, so the empty case is
+	# skipped outright. Identical contents either way.
+	if not owned_attacks.is_empty():
+		owned_attacks = owned_attacks.filter(func(ref): return is_instance_valid(ref.get_ref()))
 	if is_boss and not phase_two and HP<=max_hp*PHASE_TWO_AT: _enter_phase(2)
 	if is_boss and phase_two and not phase_three and HP<=max_hp*PHASE_THREE_AT: _enter_phase(3)
 	if phase == "spawn" or phase == "transition":

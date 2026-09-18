@@ -279,6 +279,24 @@
 		if (params.has('stage-tour')) {
 			GODOT_CONFIG.args = ['--stage-tour'];
 			if (params.has('probe')) GODOT_CONFIG.args.push('--probe');
+		} else if (params.has('stress')) {
+			// B11.1 dense-attack stress driver (test-only). B11 measured a whole Stage 39 round and
+			// reported averages, which cannot show the reported problem: the human's stutter is the
+			// INSTANT a laser burst and a root overlap. So it reports frame spikes, the longest run
+			// of slow frames, and a conditioned split of those frames by what was happening on them.
+			// It deliberately does not arm --probe: that channel reports on a 0.25 s cadence and
+			// walks subtrees, and an observer that costs a frame occasionally lands in exactly the
+			// number being reported. All of these are test-only flags and none of them is needed to
+			// play.
+			GODOT_CONFIG.args = ['--stress'];
+			GODOT_CONFIG.args.push('--stress-stage=' + (parseInt(params.get('stage'), 10) || 39));
+			GODOT_CONFIG.args.push('--stress-seconds=' + (parseInt(params.get('seconds'), 10) || 90));
+			GODOT_CONFIG.args.push('--stress-scenario=' + (params.get('scenario') || 'A'));
+			GODOT_CONFIG.args.push('--stress-seed=' + (parseInt(params.get('seed'), 10) || 20260918));
+			GODOT_CONFIG.args.push('--stress-lasers=' + (parseInt(params.get('lasers'), 10) || 0));
+			GODOT_CONFIG.args.push('--stress-root=' + (parseFloat(params.get('root')) || 0));
+			if (params.get('park') === '1') GODOT_CONFIG.args.push('--stress-park=1');
+			GODOT_CONFIG.args.push('--stress-label=' + (params.get('label') || 'run'));
 		} else if (params.has('perf')) {
 			// The measurement is published on the read-only probe channel, so arming one always arms
 			// the other: `?perf=1` alone used to arm a mode whose lines were never printed.

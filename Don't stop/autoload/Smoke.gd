@@ -23,7 +23,8 @@ func _ready() -> void:
 	var args := OS.get_cmdline_args()
 	args.append_array(OS.get_cmdline_user_args())
 	probe = "--probe" in args
-	if not ("--smoke" in args) and not probe:
+	var stress := "--stress" in args
+	if not ("--smoke" in args) and not probe and not stress:
 		# Stay instantiated (inert) so autoload cross-references stay valid, but
 		# take the node out of idle processing: _process appends a frame sample
 		# every frame and nothing reads it in a real launch, so leaving it on
@@ -32,6 +33,18 @@ func _ready() -> void:
 		return
 	if probe:
 		_start_probe()
+	# `--stress` is the B11.1 dense-attack driver (game/diag/B11Stress.gd). It owns the session the
+	# same way `--stage-tour` and `--perf` do, so it is dispatched here and returns. It deliberately
+	# does NOT arm `--probe`: the probe reports on a 0.25 s cadence and walks subtrees, and this
+	# driver exists to measure single-frame spikes - an observer that costs a frame occasionally
+	# would show up in exactly the number being reported. It samples what it needs itself.
+	if stress:
+		print("[stress] driver=game/diag/B11Stress.gd")
+		var rig := Node.new()
+		rig.name = "B11Stress"
+		rig.set_script(load("res://game/diag/B11Stress.gd"))
+		add_child(rig)
+		return
 	# `--stage-tour` is its OWN driver: it walks stages 31/35/39/40 in one session and prints one
 	# evidence line per stage. It deliberately runs with the probe channel armed and WITHOUT the smoke
 	# driver, so it has to be recognised before the "no --smoke, nothing to do" return below - a

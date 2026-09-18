@@ -41,6 +41,11 @@ static var budget_frame = -1
 static var full_detail = true
 static var budget_live := 0
 
+## B11.1 test-only gauges (see game/diag/B11Probe.gd). `probe_firing` is this zone's own edge
+## flag so the shared "how many lanes are actually firing right now" gauge is adjusted exactly
+## once per zone, including when a zone is freed mid-window. No product behaviour reads it.
+var probe_firing := false
+
 ## B批 attack-UI formalisation. `style` picks the palette family (see CombatTelegraph) and
 ## `pierce` mirrors long lanes onto FogPierce so a Hell beam's direction stays readable
 ## even where the lit radius ends. Neither touches collision, timing or damage.
@@ -71,7 +76,11 @@ const DETAIL_BUDGET := 32
 static func profile_snapshot():
 	return profile_stats.duplicate()
 func _ready():
-	profiling = "--telegraph-profile" in OS.get_cmdline_user_args()
+	# `--telegraph-profile` keeps its original meaning (the headless M8/M9/M10 perf tests). The
+	# B11.1 stress driver arms the same per-instance timers, so a browser run reports the same
+	# numbers those tests report instead of a second, differently shaped instrument.
+	profiling = "--telegraph-profile" in OS.get_cmdline_user_args() or B11Probe.enabled
+	if B11Probe.enabled: B11Probe.note_zone_added()
 	epoch = LevelServer.epoch
 	# Parent-independent placement: see world_point.
 	if world_point.is_finite(): global_position = world_point
@@ -85,27 +94,55 @@ func _ready():
 	# In Hell a damaging footprint always gets a real warning, even for a phase-II charge
 	# that used to warn for only half a second.
 	if fair_gate and damage > 0: warning = maxf(warning,FAIR_WARNING)
+
+## B11.1: release this zone's gauge slots. Both counters are neighbours of a single edge, so a
+## zone freed mid-window (epoch change, owner death, or its own end) cannot leave a lane counted
+## as still firing. No product behaviour reads either of them.
+func _exit_tree():
+	if not B11Probe.enabled: return
+	B11Probe.note_zone_removed()
+	if probe_firing:
+		probe_firing = false
+		B11Probe.note_beam_active(false)
+
 func _physics_process(delta):
 	var started = Time.get_ticks_usec() if profiling else 0
 	step(delta)
 	if profiling:
 		profile_stats.physics_calls += 1
-		profile_stats.physics_usec += Time.get_ticks_usec()-started
+		var cost = Time.get_ticks_usec()-started
+		profile_stats.physics_usec += cost
+		if B11Probe.enabled:
+			B11Probe.zone_step_usec += cost
+			if cost > B11Probe.zone_step_usec_worst: B11Probe.zone_step_usec_worst = cost
 func step(delta):
 	if epoch != LevelServer.epoch or LevelServer.state != "COMBAT": queue_free(); return
 	if owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die): queue_free(); return
 	elapsed += delta
 	if mode in ["line","charge"]:
-		direction = initial_direction.rotated(clampf((elapsed-warning)/maxf(duration,0.01),0,1)*sweep)
+		var sweep_t := clampf((elapsed-warning)/maxf(duration,0.01),0,1)
+		direction = initial_direction.rotated(sweep_t*sweep)
 		ray_clock -= delta
-		# The warning is locked. Refresh moving origins immediately and retain full-rate
-		# collision clipping on activation / throughout the actual attack and sweep.
-		if ray_clock <= 0 or elapsed >= warning or global_position != last_ray_origin:
+		# The clip answer is a pure function of (origin, direction, maximum length) against STATIC
+		# level geometry, so it only has to be recomputed when one of those actually moves. Before
+		# the warning the direction cannot move (the sweep clamp is 0), and during the sweep it
+		# moves every tick; the origin is covered by `last_ray_origin`, and `ray_clock` keeps the
+		# 0.1 s safety refresh. The old condition ALSO treated `elapsed >= warning` as a reason by
+		# itself - and that becomes true FOREVER at the instant a lane fires, so a lane that never
+		# turns re-raycast the same frozen segment on every physics frame of its entire active
+		# window for an answer that provably could not change. Full-rate clipping is retained where
+		# it means something: the activation edge, a turning lane, and a moving origin.
+		var turning := sweep != 0.0 and sweep_t > 0.0 and sweep_t < 1.0
+		var activation_edge: bool = elapsed >= warning and elapsed-delta < warning
+		if ray_clock <= 0 or turning or activation_edge or global_position != last_ray_origin:
 			var query = PhysicsRayQueryParameters2D.create(global_position,global_position+direction*maximum_length,2147483648)
 			var hit = get_world_2d().direct_space_state.intersect_ray(query)
 			if profiling: profile_stats.raycasts += 1
+			if B11Probe.enabled: B11Probe.raycasts += 1
 			length = global_position.distance_to(hit.position) if not hit.is_empty() else maximum_length
 			last_ray_origin = global_position; ray_clock = 0.1
+		elif B11Probe.enabled and elapsed >= warning:
+			B11Probe.raycasts_skipped += 1
 	visual_clock -= delta
 	var active = elapsed >= warning
 	# Only decorative warning motion is sampled at 30 Hz; the final 150 ms,
@@ -123,6 +160,8 @@ func step(delta):
 		if fair_gate and damage > 0 and visible_warning < FAIR_VISIBLE and elapsed < warning+FAIR_MAX_EXTENSION:
 			return
 		activated = true
+		probe_firing = B11Probe.enabled
+		if probe_firing: B11Probe.note_beam_active(true)
 		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if mode == "circle" else 18,direction)
 	active_elapsed += delta
 	if not friendly_context.is_empty():
@@ -137,6 +176,7 @@ func step(delta):
 			elif mode == "cone": inside = offset.length() <= radius and absf(direction.angle_to(offset)) <= angle
 			if damage > 0 and inside and Combat.clear_line(global_position,target.global_position):
 				target.onHit(damage,owner_ref.get_ref() if owner_ref else null,1.0,mode); hit_count += 1
+				if B11Probe.enabled: B11Probe.zone_hits += 1
 				# Applied after the damage so a root can never swallow the hit's feedback,
 				# and apply_root() itself refuses while the player is immune or already rooted.
 				if control > 0.0: target.apply_root(control)
@@ -170,5 +210,7 @@ func _draw():
 	if pierce and mode in ["line","charge"]:
 		preload("res://game/map/FogPierce.gd").push_line(global_position,global_position+direction*length,Color(1,0.66,0.22,0.55 if not activated else 0.85),3.0 if activated else 2.0)
 	if profiling:
+		var draw_cost = Time.get_ticks_usec()-started
 		profile_stats.draw_calls += 1
-		profile_stats.draw_usec += Time.get_ticks_usec()-started
+		profile_stats.draw_usec += draw_cost
+		if B11Probe.enabled: B11Probe.zone_draw_usec += draw_cost

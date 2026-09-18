@@ -2,6 +2,8 @@ extends Label
 
 func _ready() -> void:
 	add_to_group("damage_labels")
+	# B11.1 test-only counter (game/diag/B11Probe.gd): damage-number churn rate.
+	if B11Probe.enabled: B11Probe.labels_created += 1
 	var tween = create_tween().set_parallel(true).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self,"scale",Vector2(1,1),0.2).from(Vector2.ZERO)
 	tween.tween_property(self,"position:y",position.y - 50,0.5)
