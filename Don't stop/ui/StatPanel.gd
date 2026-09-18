@@ -62,7 +62,7 @@ func render():
 		stats=["max_hp","speed","damage","crit","pickup"]
 	else:
 		var preview=TextureRect.new(); preview.texture=gun.image; preview.custom_minimum_size=Vector2(120,30); preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE; preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED; preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; listing.add_child(preview)
-		label(listing,tr(gun.weapon_name)+" · Tier "+str(WeaponCatalog.tier(gun.weapon_id)))
+		label(listing,tr(gun.weapon_name)+" · "+WeaponCatalog.rarity(gun.weapon_id))
 		label(listing,"弹药 %d / %d · RPM %.1f\n%s" % [gun.bullets_count,snapshot.weapon.magazine,snapshot.weapon.rpm,EffectiveStats.damage_unit(gun.effective)])
 	for stat in stats:
 		var value=p.get(stat,snapshot.weapon.get(stat,0)); values[stat]=value

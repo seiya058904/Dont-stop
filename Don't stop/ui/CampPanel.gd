@@ -149,11 +149,11 @@ func _ready():
 	filters.add_child(owned)
 	owned.toggled.connect(func(value): owned_only = value; request_refresh())
 	tier_box = OptionButton.new()
-	for text in ["全部Tier","Tier I","Tier II","Tier III","Tier IV","Tier V"]: tier_box.add_item(text)
+	for text in ["全部品质",WeaponCatalog.RARITY_NAMES[0],WeaponCatalog.RARITY_NAMES[1],WeaponCatalog.RARITY_NAMES[2],WeaponCatalog.RARITY_NAMES[3],WeaponCatalog.RARITY_NAMES[4]]: tier_box.add_item(text)
 	filters.add_child(tier_box)
 	tier_box.item_selected.connect(func(index): tier_filter = index; request_refresh())
 	sort_box = OptionButton.new()
-	for text in ["Tier↑","强度↓","价格↑","价格↓"]: sort_box.add_item(text)
+	for text in ["品质↑","强度↓","价格↑","价格↓"]: sort_box.add_item(text)
 	filters.add_child(sort_box)
 	sort_box.item_selected.connect(func(index): sort_mode = index; request_refresh())
 	var columns = HBoxContainer.new()
@@ -248,7 +248,7 @@ func render():
 				if int(id) >= 111: categories.append("特殊")
 				if not matches(tr(gun.weapon_name)+id+WeaponCatalog.definition(int(id)).get("plan","")+DemoConfig.weapon_info(int(id)),categories): continue
 				if owned_only and not PlayerData.player_weapon_list.has(int(id)): continue
-				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("√ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\nT%d · %s · %d金" % [WeaponCatalog.tier(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
+				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("√ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\n%s · %s · %d金币" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
 				weapon_card.icon=gun.image; weapon_card.expand_icon=true; weapon_card.add_theme_constant_override("icon_max_width",36)
 				weapon_card.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; weapon_card.custom_minimum_size.y=31
 				# Read-only locator, exactly like a stage row's: the ONLY stable name for a weapon row is
@@ -297,7 +297,7 @@ func show_weapon(id: String, gun):
 	weapon_preview.texture=weapon_art(gun.image)
 	assert(weapon_preview.texture!=null,"Missing weapon preview: "+id)
 	weapon_heading.text=tr(gun.weapon_name)
-	weapon_badge.text="TIER %s · %s · %d金币" % [["I","II","III","IV","V"][WeaponCatalog.tier(int(id))-1],WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]]
+	weapon_badge.text="%s · %s · %d金币" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]]
 	weapon_badge.add_theme_color_override("font_color",tier_color(WeaponCatalog.tier(int(id))))
 	var stats = gun.effective if owned else {}
 	if stats.is_empty():

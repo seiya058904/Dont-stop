@@ -23,7 +23,7 @@ func _ready():
 	panel.search_text = ""; panel.category = "爆炸"; panel.render()
 	check(panel.detail_actions.size() == 4,"weapon explosive category real tag filter")
 	panel.category = "全部"; panel.selection = "117"; panel.render()
-	check("TIER III" in detail_text(panel),"detail exposes fixed strength tier")
+	check(WeaponCatalog.rarity(117) in detail_text(panel),"detail exposes quality name")
 	panel.switch_tab("attachment")
 	panel.selected_gun = 120; panel.compatible_only = true; panel.render()
 	check(panel.detail_actions.has("123") and panel.detail_actions.has("122"),"attachment compatibility filter")

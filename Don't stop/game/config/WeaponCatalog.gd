@@ -20,11 +20,21 @@ static func definition(id: int) -> Dictionary:
 	return DEFINITIONS.get(id,{})
 
 # Fixed progression, no random rarity. Multipliers are applied once in EffectiveStats.
-const TIERS = {3:1,1:1,0:2,9:1,2:2,5:2,8:2,123:2,7:2,4:4,117:3,118:3,115:4,6:4,111:5,112:4,114:4,116:4,122:4,113:5,119:5,120:5,121:5,124:5}
-const PRICES = {"3":90,"1":60,"0":240,"9":120,"2":260,"5":290,"8":320,"123":350,"7":380,"4":1300,"117":700,"118":760,"115":1550,"6":1750,"111":2600,"112":1500,"114":1600,"116":1700,"122":1800,"113":2800,"119":3000,"120":3200,"121":3400,"124":3600}
-const POWER = {3:1.4,1:1.0,0:1.0,9:1.0,2:1.4,5:1.2,8:1.6,123:1.7,7:1.1,4:1.35,117:2.5,118:2.0,115:2.3,6:1.7,111:1.9,112:3.6,114:4.2,116:3.0,122:3.0,113:4.8,119:4.0,120:3.4,121:4.5,124:1.9}
+# B12 re-classification from the runtime benchmark (docs/iteration/B12-WEAPON-TIER-REBALANCE.md):
+#   8 精良->普通, 4/6/119 史诗/传说->稀有, 122 史诗->传说.
+# POWER moves only where the benchmark showed a tier member distorting its band:
+#   115 扇面脉冲炮 2.3->1.9 (its crowd burst dominated every 传说 weapon),
+#   116 热流喷射器 3.0->2.6 (scored above 传说 median while priced 史诗).
+const TIERS = {3:1,1:1,0:2,9:1,2:2,5:2,8:1,123:2,7:2,4:3,117:3,118:3,115:4,6:3,111:5,112:4,114:4,116:4,122:5,113:5,119:3,120:5,121:5,124:5}
+const PRICES = {"3":90,"1":60,"0":240,"9":120,"2":260,"5":290,"8":150,"123":350,"7":380,"4":840,"117":700,"118":760,"115":1550,"6":780,"111":2600,"112":1500,"114":1600,"116":1700,"122":3000,"113":2800,"119":920,"120":3200,"121":3400,"124":3600}
+const POWER = {3:1.4,1:1.0,0:1.0,9:1.0,2:1.4,5:1.2,8:1.6,123:1.7,7:1.1,4:1.35,117:2.5,118:2.0,115:1.9,6:1.7,111:1.9,112:3.6,114:4.2,116:2.6,122:3.0,113:4.8,119:4.0,120:3.4,121:4.5,124:1.9}
 static func tier(id: int) -> int:
 	return TIERS.get(id,1)
+## Player-facing quality names for tiers 1..5. Internal tier numbers stay numeric; every
+## player-visible surface must go through rarity() instead of showing "Tier N"/"T5".
+const RARITY_NAMES = ["普通","精良","稀有","史诗","传说"]
+static func rarity(id: int) -> String:
+	return RARITY_NAMES[clampi(TIERS.get(id,1),1,5)-1]
 static func power(id: int) -> float:
 	return POWER.get(id,1.0)
 static func short_info(id: int) -> String:
