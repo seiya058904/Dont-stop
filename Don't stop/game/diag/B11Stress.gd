@@ -52,6 +52,11 @@ var barrage := 0
 var iso := ""
 var presentation_weapons: Array[int] = []
 var presentation_weapon := -1
+var presentation_boss_log: Array = []
+var presentation_boss_phase := ""
+var presentation_boss_entry: Dictionary = {}
+var presentation_boss_hold := false
+var presentation_ultimate_count := -1
 
 # ---- per-frame samples (parallel packed arrays: no per-frame allocation) ---------------------
 var _ms := PackedFloat32Array()
@@ -208,6 +213,7 @@ func run() -> void:
 	while _total_combat_s < float(seconds) and _rounds < 8:
 		await _one_round()
 	Input.action_release("shoot")
+	Utils.aim_override = null
 	print("[stress] done scenario=%s rounds=%d frames=%d combat_s=%.1f" % [
 		scenario,_rounds,_ms.size(),_total_combat_s])
 	_dump()
@@ -286,6 +292,9 @@ func _sample_round() -> void:
 				Input.action_release("shoot")
 			else:
 				Input.action_press("shoot")
+		if stage == 40 and label.begins_with("presentation"):
+			if presentation_boss_hold: Input.action_release("shoot")
+			else: Input.action_press("shoot")
 		if elapsed >= next_amp:
 			next_amp += 4.0
 			# Every amplifier is a TOP-UP, not a one-off volley: the player kills what arrives, so a
@@ -410,6 +419,26 @@ func _drive_movement(now: int) -> void:
 		else: Input.action_release(pair[0])
 
 func _sample_gauges() -> void:
+	if stage == 40 and label.begins_with("presentation"):
+		# Optional full-phase observation uses the established test-only aim hook.
+		# Real weapon fire and real boss AI still decide all HP and transitions.
+		var boss = instance_from_id(LevelServer.boss_instance)
+		if is_instance_valid(boss):
+			Utils.aim_override = get_viewport().get_canvas_transform()*(boss.global_position-Vector2(0,8))
+			var tier = "3" if boss.phase_three else ("2" if boss.phase_two else "1")
+			var key = str(_rounds)+":"+tier
+			if key != presentation_boss_phase:
+				presentation_boss_phase = key
+				presentation_boss_entry = boss.actions.duplicate()
+				presentation_boss_log.append({"frame":_ms.size(),"round":_rounds,"phase":tier,"actions":boss.actions.duplicate()})
+			var required = {"1":["dash","sweep","burst"],"2":["sweep","dash","cross","band"],"3":["cross_laser","sweep","band"]}[tier]
+			presentation_boss_hold = false
+			for attack in required:
+				if boss.actions.get(attack,0) <= presentation_boss_entry.get(attack,0): presentation_boss_hold = true
+			var ultimates = int(boss.actions.get("ultimate_activated",0))
+			if ultimates != presentation_ultimate_count:
+				presentation_ultimate_count = ultimates
+				presentation_boss_log.append({"frame":_ms.size(),"round":_rounds,"phase":tier,"ultimate_activated":ultimates,"actions":boss.actions.duplicate()})
 	var live := get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die).size()
 	if live > int(_peak.enemies): _peak.enemies = live
 	for spec in [["zones","hostile_zone"],["hazards",StageHazard.GROUP],["vfx","hostile_vfx"],
@@ -542,6 +571,7 @@ func _stats(values) -> Dictionary:
 ## the stutter is a burst, the conditioned rows separate from the unconditioned ones here; if it is
 ## not, they do not - and that is the answer either way.
 func _dump() -> void:
+	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.
 	if label.begins_with("presentation"):

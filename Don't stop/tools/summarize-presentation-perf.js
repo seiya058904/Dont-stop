@@ -11,7 +11,8 @@ function stats(values) {
   const q = p => sorted[Math.min(sorted.length-1,Math.floor(sorted.length*p))];
   let longest = 0, run = 0;
   for (const ms of values) { run = ms > 33.3 ? run+ms : 0; longest=Math.max(longest,run); }
-  return {n:values.length,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1),
+  const avg=values.reduce((sum,v)=>sum+v,0)/values.length;
+  return {n:values.length,avg,p50:q(.5),p95:q(.95),p99:q(.99),max:sorted.at(-1),
     over25:values.filter(v=>v>25).length,over33_3:values.filter(v=>v>33.3).length,
     over50:values.filter(v=>v>50).length,longest_slow_run_ms:longest};
 }
@@ -31,10 +32,15 @@ for (const input of inputs) {
   const result = {source:path.basename(input),build:source.build,gpu:source.gpu,scenario:source.scenario,
     protocol:{warmup_combat_seconds:15,window_combat_seconds:90,viewport:'1280x760',seed:20260918},
     frame_ms:stats(pick('ms')),physics_ms:stats(pick('physics_ms')),process_ms:stats(pick('process_ms')),
-    draw_calls:((s)=>({n:s.n,p50:s.p50,p95:s.p95,p99:s.p99,max:s.max}))(stats(pick('draws'))),full_run_peaks:source.load,errors:source.errors,
-    unavailable:{gpu_time_ms:'N/A: no GPU timer instrumentation',peak_window:'Peaks cover the full run, including warmup'},
+    draw_calls:((s)=>({n:s.n,p50:s.p50,p95:s.p95,p99:s.p99,max:s.max}))(stats(pick('draws'))),full_run_peaks:{...source.load},errors:source.errors,
+    unavailable:{gpu_time_ms:'N/A: no GPU timer instrumentation',peak_window:'Peaks cover the full run, including warmup',cpu_resolution:'Engine monitor gauges sampled each frame; not independent per-frame CPU timings'},
     gates:{p95_delta_ms:'max(0.8, BEFORE * 0.05)',p99_delta_ms:'max(1.5, BEFORE * 0.10)',
       extra_over33_3:2,repeatable_new_over50:'not accepted',cpu_p95_delta_ms:'max(0.5, BEFORE * 0.05)'}};
+  result.fps=1000/result.frame_ms.avg;
+  if (!(Number(source.load?.mem_static_peak_mb)>0)) {
+    result.full_run_peaks.mem_static_peak_mb=null;
+    result.unavailable.memory_static_mb='N/A: this Web export reports zero for the static-memory monitor';
+  }
   const output = input.replace(/\.json$/,'.warm.json');
   fs.writeFileSync(output,JSON.stringify(result,null,2));
   console.log(JSON.stringify({output,frame_ms:result.frame_ms,physics_ms:result.physics_ms,process_ms:result.process_ms}));

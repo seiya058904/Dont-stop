@@ -1,7 +1,7 @@
 [
  {
   "path": "autoload/Combat.gd",
-  "sha256": "4ad66f20236626ebcc0476410f571c48f2012e517b1b7d3e00afbccff2769a01"
+  "sha256": "21809db4caec0ba6788d35755caadb25ecae304b710495fa5e50158730ff5249"
  },
  {
   "path": "game/config/EffectiveStats.gd",
@@ -17,7 +17,7 @@
  },
  {
   "path": "game/guns/AlienMachine.tscn",
-  "sha256": "95e75fefaf4d7e37927dc41ca86425eba167e3e477d42f81b3e7256d7edc4038"
+  "sha256": "543bbb8bd590b447f594db9142c88a73b08594860d380c29a168f630e8c03d58"
  },
  {
   "path": "game/guns/AlienRifle.gd",
@@ -25,7 +25,7 @@
  },
  {
   "path": "game/guns/AlienRifle.tscn",
-  "sha256": "a02138077352931a45e1ecc3932a314ba0bee0508e9dd885b179402394d95a86"
+  "sha256": "02e3422c2d929864ac09ed007c10844832bf7d23757750e658d55d66dfbf3251"
  },
  {
   "path": "game/guns/ArcCaster.gd",
@@ -33,7 +33,7 @@
  },
  {
   "path": "game/guns/ArcCaster.tscn",
-  "sha256": "3f14ce4a92bedbbd582fd39aaed4c854b8840981550e7a99bd209e7ba96788c9"
+  "sha256": "ce5888932ed034738042ac18ab013d0b17e07c6e0d062cc139f89124b71ad996"
  },
  {
   "path": "game/guns/BabyZapZap.gd",
@@ -45,7 +45,7 @@
  },
  {
   "path": "game/guns/BaseGun.gd",
-  "sha256": "db2a528f8bac042a7a7cc2a608594deedd958c0d6353cf63013591f1ef84fe10"
+  "sha256": "756b6d4acada766a0ec5f6a516d7564b6a26f5e0603029dcca31d9baed6eaa95"
  },
  {
   "path": "game/guns/BoomBoi.gd",
@@ -53,7 +53,7 @@
  },
  {
   "path": "game/guns/BoomBoi.tscn",
-  "sha256": "1484ce617b0c5ce61c4aaaba8375063752d26b02420084bde2454aac1acb9919"
+  "sha256": "f3c379f4364ebcbd2f428bf5b9cac68fa574a6e386b9f70b735154dffefd9de9"
  },
  {
   "path": "game/guns/BurstCarbine.gd",
@@ -61,7 +61,7 @@
  },
  {
   "path": "game/guns/BurstCarbine.tscn",
-  "sha256": "e811bb3b81484065aaf4e9a186ca99e95cd0bf0880c1d12ecb6f5841ba1b8f61"
+  "sha256": "50448e1c02ad2be6265224aa3917db85a011e7d7f6e627fd89f42950a6bce667"
  },
  {
   "path": "game/guns/EmpireShotgun.gd",
@@ -69,7 +69,7 @@
  },
  {
   "path": "game/guns/EmpireShotgun.tscn",
-  "sha256": "7127fbe881a12fd4fa42de90a15875ebb94b62980bf85df86b429877bd9a1069"
+  "sha256": "c85d784c6a6873d332b180778870eadb5d892c83abb5c05670107e7a53dc38d9"
  },
  {
   "path": "game/guns/GunSprite.gd",
@@ -77,11 +77,11 @@
  },
  {
   "path": "game/guns/GunSprite.tscn",
-  "sha256": "9f6aee4c692b381fe1c4c28d0ebbf9da2b4f78a39400e990f2018d33692e1d08"
+  "sha256": "895ffe58b76b0206691e129fd4a7da488c97d7bf9c5c6948959c046012eaad8b"
  },
  {
   "path": "game/guns/MechanismGun.gd",
-  "sha256": "f95ad6bbf71a8d26d5d04e419dd9807393509277252f7b6f30b35d3a03b5f98b"
+  "sha256": "cf59570ce0201d49ff11223b5d69b2f8377006a36be76bc39aed5298b0c780c3"
  },
  {
   "path": "game/guns/PlasmaOrb.gd",
@@ -89,7 +89,7 @@
  },
  {
   "path": "game/guns/PlasmaOrb.tscn",
-  "sha256": "8edfe6418417e8c1647dfa3bd306aa60eb3836dae9f07b4355f76b13390c0808"
+  "sha256": "5a21c74f9188c6c42a23fa2a15db6710ec4d276dcab88d9d03dd5602bdd2a70f"
  },
  {
   "path": "game/guns/RebalShotgun.gd",
@@ -125,47 +125,47 @@
  },
  {
   "path": "game/guns/W11.tscn",
-  "sha256": "1b8f90112b9cd469bc694fc5efbdf71493398d3d50cfbe39ac7a4be64fd8813f"
+  "sha256": "a2149159840a93ddcf4da13d6a0e88f968d2237312e808c2b9aacf046b8afc60"
  },
  {
   "path": "game/guns/W13.tscn",
-  "sha256": "4701727714dfcb64f3c9fdd7dd34480a651cb7c26bc56e882a7e2966e98330cf"
+  "sha256": "6266b643793e5ffb358887a16f712d4a86901987e92cfc694ed295ce9bdb237b"
  },
  {
   "path": "game/guns/W15.tscn",
-  "sha256": "952c3bcd6bc937499ad11e81fe428b40ff6362d72b328566008e5fa074c354d5"
+  "sha256": "4f973bdb4ff2028ecafbcfe23ccfb6de064a7c77df129fccfad2a317bdf7615f"
  },
  {
   "path": "game/guns/W16.tscn",
-  "sha256": "51f489e055f2add753bafc2dba2c1e3c9ac41408e3b991a33d0f07e677b8eba0"
+  "sha256": "542468ce7ce235137e00de81f605e625f78025916e8f0ca5f94cb07335d51512"
  },
  {
   "path": "game/guns/W17.tscn",
-  "sha256": "a31314672a22b9beb03126ace6d6fe3713d69ab72090f2673f49e5023fcf8c40"
+  "sha256": "ffacb718f461ebe3162f972c793f7d4b4cc5946a97b6f2e55481e8d4df428c75"
  },
  {
   "path": "game/guns/W18.tscn",
-  "sha256": "a68266db0f4ba240eaa940243844870dc7d16fc47597528c350242c39f02984f"
+  "sha256": "b129466c6881801d0ee96781a0707264bf61d10f2a9e23e3610c8f0003a5dc8a"
  },
  {
   "path": "game/guns/W19.tscn",
-  "sha256": "8e1e5d6fd0e80febb784a6b5591e2ddd6e02a873c5abb9de73a38c73123c9972"
+  "sha256": "6bf1e8f1d78afa3c6250eb4aaa4426b74ef775e4cbe3cf360e69129e7926060e"
  },
  {
   "path": "game/guns/W20.tscn",
-  "sha256": "378fc6a8629d738f5853423f05c22ae0c66a78091841f5dbc784415faba7f090"
+  "sha256": "d69fd7573cd05fde08766f6e760a8b089f6ecff5144db9a496801abec74035e1"
  },
  {
   "path": "game/guns/W21.tscn",
-  "sha256": "398be3bc6966af264557b643e13db2495f5cb12d2452e2103cbb7bb8363006e5"
+  "sha256": "0bb6754038f4b4ab4448971bc8ef23f4d4928696b5f3883714d5cbb391234fd6"
  },
  {
   "path": "game/guns/W22.tscn",
-  "sha256": "60ad611ab279f8f0a3d00700ccb9f21ce025436750b7442a9da68f800b83ea3a"
+  "sha256": "f33c1464067e1146212c8f76a20fcc573e496e9045f903de841163b9fb9cda7e"
  },
  {
   "path": "game/guns/W24.tscn",
-  "sha256": "e235ace87588dc5a0949670dda22853ebaaccddd5769e8b2e672d5bfc54315b4"
+  "sha256": "6b16672565f8091520a491e11c4fad2ae994b3026f7321ce53d5846c16c6444d"
  },
  {
   "path": "tests/B12WeaponBench.gd",

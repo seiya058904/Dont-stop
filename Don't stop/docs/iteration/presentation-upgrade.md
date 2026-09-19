@@ -65,10 +65,18 @@ All paths below are relative to `evidence/visual-upgrade-20260919`.
 - `states-before`: real HostileZone gate extension reproduced without damage, yet
   the original beam already appeared active. Boss views are configured state
   observations; they are not an end-to-end proof of a naturally occurring ultimate.
-- `fire-after-final`: 48 real target/wall cases, six times through 1.6s. No wall case
-  damaged its target. `gravity-before-final` and `gravity-after-final` match final
+- `fire-before-aimed` / `fire-after-aimed`: definitive 48-case target/wall observations,
+  six times through 1.6s, both with 48 outcome assertions passed. All 24 targets are
+  actually hit and all 24 walls block. The preceding `fire-*-final` fixtures did not
+  aim root-mouse-reading conventional guns reliably and are not final hit evidence.
+  The existing B12 test aim hook fixes the observer only. `gravity-before-final` and `gravity-after-final` match final
   HP 99976.15 / wall HP 100000, ammunition and anchors. The earlier 1.1s mismatch
   sampled before delayed gravity resolution; it remains in the earlier record.
+- BoomBoi's real 0.4s beam has a 4/5-tick frame-boundary difference in the first paired
+  capture. `beam6-before-repeat` and `beam6-after-repeat` both measure HP 99984.36,
+  ammo 9/10 and the same anchors. Its production script and tick timer are unchanged.
+- `weapons-after-final` and `final-pose-comparison.json`: latest nearest-sampled
+  held render, all 192 pose records identical to the baseline.
 - `fire-reduced-final`: nine representative families with reduced flash enabled.
 - `states-after-final`: 100/60/1/0, reload, unarmed and gate-extension screenshots;
   all four actual-state checks pass. PresentationContracts: 51 passes.
@@ -101,12 +109,31 @@ All paths below are relative to `evidence/visual-upgrade-20260919`.
   and current trees; both start unarmed. It remains a pre-existing failure.
 - Initial PresentationContracts compile failures (inherited particle preload and
   declaration order) were fixed; later imports and 51 contracts pass.
-- The current B12Strength/B13Strength runs fail 22/3 whole-file manifest hashes
+- The initial B12Strength/B13Strength runs failed 22/3 whole-file manifest hashes
   after presentation edits. The frozen numbers are not being relabelled as fresh.
-  Full B12 and B13 runtime benchmarks are being regenerated before their manifests.
+  Full B12 (72 scenarios) and B13 (8 builds × 3 scenarios) were regenerated before
+  their manifests: refreshed B12Strength 195 passes, B13Strength 143 passes.
+- B13Strength also had a pre-existing read-only-array sort error (reproduced on the
+  baseline). The verifier now duplicates its constant before sorting; all assertions
+  remain intact, and the refreshed run has no engine error.
 - `final-aim` failed FOCUS_LOSS_PAUSES while another browser test had a live window.
-  All other 67 checks passed, including fault injection. An isolated core run is
-  being used to distinguish focus-test interference from a product regression.
+  All other 67 checks passed, including fault injection. Both isolated current and
+  isolated baseline core runs fail that same focus assertion. It is retained as a
+  baseline Windows-browser failure; no focus policy or test threshold is changed.
+- The headless Stage40 stress-driver check timed out. A targeted query shows its
+  mouse mode remains 0 instead of the required 4, so production input cannot fire.
+  This is not a usable rendering/performance run; use Chromium for the Stage40 driver.
+
+## Additional completed regressions
+
+- M6EncounterAudit: 30 basic-build encounters, zero cleanup failures. Bot deaths are
+  actual reported outcomes, not clears.
+- M10Density normal/probe: 11 / 6 checks passed on stages 22 and 31.
+- B11Perf: 6 checks each on stages 39 and 40; headless count convergence only.
+- B6Progression product/hell flag: 41 checks each.
+- Web smoke, save isolation/reload/browser restart, and B11 stage run (42 checks) pass.
+- Exported Windows EXE launched and completed its smoke harness with exit 0.
+  This is standalone startup/harness evidence, not native human input acceptance.
 
 ## Performance protocol
 

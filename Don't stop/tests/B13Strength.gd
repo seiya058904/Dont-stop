@@ -192,7 +192,7 @@ func verify_manifest():
 			((" (now "+digest.substr(0,12)+"…)") if digest != "MISSING" else " (file missing)"))
 	var covered: Array = stored.keys()
 	covered.sort()
-	var expected: Array = Array(REQUIRED_MEASUREMENT_INPUTS)
+	var expected: Array = REQUIRED_MEASUREMENT_INPUTS.duplicate()
 	expected.sort()
 	var missing: Array = expected.filter(func(p): return not covered.has(p))
 	var extra: Array = covered.filter(func(p): return not expected.has(p))

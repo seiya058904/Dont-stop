@@ -1,7 +1,7 @@
 [
  {
   "path": "autoload/Combat.gd",
-  "sha256": "4ad66f20236626ebcc0476410f571c48f2012e517b1b7d3e00afbccff2769a01"
+  "sha256": "21809db4caec0ba6788d35755caadb25ecae304b710495fa5e50158730ff5249"
  },
  {
   "path": "autoload/Demo.gd",
@@ -53,7 +53,7 @@
  },
  {
   "path": "game/guns/BaseGun.gd",
-  "sha256": "db2a528f8bac042a7a7cc2a608594deedd958c0d6353cf63013591f1ef84fe10"
+  "sha256": "756b6d4acada766a0ec5f6a516d7564b6a26f5e0603029dcca31d9baed6eaa95"
  },
  {
   "path": "game/guns/GunSprite.gd",
@@ -61,7 +61,7 @@
  },
  {
   "path": "game/guns/GunSprite.tscn",
-  "sha256": "9f6aee4c692b381fe1c4c28d0ebbf9da2b4f78a39400e990f2018d33692e1d08"
+  "sha256": "895ffe58b76b0206691e129fd4a7da488c97d7bf9c5c6948959c046012eaad8b"
  },
  {
   "path": "game/monster/BaseMonster.gd",

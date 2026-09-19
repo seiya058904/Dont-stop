@@ -37,6 +37,9 @@ func _ready():
 				face.polygon = PackedVector2Array([Vector2(-2,-50),Vector2(2,-50),Vector2(2,50),Vector2(-2,50)])
 				barrier.add_child(face)
 			await wait(0.1)
+			# Same aim hook as B12WeaponBench: some guns re-read the root mouse in
+			# _shoot(), so a frozen native observation camera alone cannot aim them.
+			Utils.aim_override = get_viewport().get_canvas_transform()*(target.global_position-Vector2(0,8))
 			var ammo_before = gun.bullets_count
 			if id == 113: gun.charge_time = gun.effective.warmup
 			gun._shoot()
@@ -49,6 +52,7 @@ func _ready():
 				await RenderingServer.frame_post_draw
 				play_view.get_texture().get_image().save_png(output+"/fire-%d-%s-%03d.png" % [id,"wall" if blocked else "target",roundi(moment*100)])
 			results.append({"weapon":id,"wall":blocked,"target_hp":target.HP,"ammo_before":ammo_before,"ammo_after":gun.bullets_count,"muzzle":str(gun.gun_tip.global_position),"anchor":str(gun.resting_position)})
+			check(target.HP == 100000 if blocked else target.HP < 100000,"observed target outcome %d wall=%s" % [id,str(blocked)])
 			gun.cancel_actions()
 			gun.set_physics_process(false)
 			if barrier: barrier.queue_free()
@@ -57,4 +61,7 @@ func _ready():
 	var record = FileAccess.open(output+"/events.json",FileAccess.WRITE)
 	record.store_string(JSON.stringify(results,"\t"))
 	record.close()
-	await Demo.quit_game()
+	Utils.aim_override = null
+	print("WEAPON_FIRE_CHECKS=",checks," FAILURES=",failures)
+	if failures: get_tree().quit(1)
+	else: await Demo.quit_game()
