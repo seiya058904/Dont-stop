@@ -9,7 +9,7 @@ func _ready():
 	var panel = Demo.ui
 	var before = EffectiveStats.calculate(Utils.player.gun).duplicate(true)
 	var models: Dictionary = panel.weapon_models.duplicate()
-	check(models.size() == 24,"all registered weapon display models are cached once")
+	check(models.size() == 24,"all registered weapons have an owned display model")
 	panel.search_text = "Uzi"
 	panel.selection = "9"
 	panel.render()
@@ -22,7 +22,10 @@ func _ready():
 	panel.render()
 	check(panel.weapon_preview.texture == texture,"selection reuses its pixel preview texture")
 	for id in models:
-		check(panel.weapon_models[id] == models[id],"search does not rebuild display model "+id)
+		if id == "6":
+			check(not is_instance_valid(models[id]) and is_instance_valid(panel.weapon_models[id]),"BoomBoi retains the original emitter lifecycle and frees its prior model")
+		else:
+			check(panel.weapon_models[id] == models[id],"search does not rebuild display model "+id)
 	panel.message.text = "保留交易结果"
 	panel.search_text = "__no_matching_weapon__"
 	panel.render()
