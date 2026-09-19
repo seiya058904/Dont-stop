@@ -1108,6 +1108,10 @@ func _stage_tour_run() -> void:
 			monsters = maxi(monsters,get_tree().get_nodes_in_group("monsters").filter(
 				func(node): return not node.is_die).size())
 			fog = fog or ArenaVisibility.fog_active()
+			# Tour-only observation: the normal 1 Hz report can miss a 0.12 s
+			# active lane now that specials are sparse. Sample this existing
+			# read-only channel at the tour's 50 ms cadence, not the perf probe.
+			print("[telegraph] count=%d rows=%s" % [get_tree().get_nodes_in_group("hostile_zone").size(), _probe_zone_state()])
 			await get_tree().create_timer(0.05).timeout
 		for action in ["left","right","up","down","shoot"]: Input.action_release(action)
 		print("[stage-tour] stage=%d departed=%s state=%s level=%d fog=%s monsters_peak=%d moving_frames=%d locked_lane_frames=%d next=%d campaign=%s hell=%s" % [
@@ -1223,7 +1227,7 @@ func _run() -> void:
 		return
 	# Scripted native smoke must neither restore nor write the player's real save.
 	# E2E explicitly retains its isolated-browser-profile seeding contract.
-	if not e2e:
+	if not e2e and not OS.has_feature("web"):
 		Demo.test_mode = true
 		print("[smoke] isolated=true save_writes=false")
 	await get_tree().create_timer(3.0).timeout

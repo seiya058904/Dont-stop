@@ -39,7 +39,7 @@
     },
     {
       "path": "autoload/Smoke.gd",
-      "sha256": "a84d50d0b395a5f0933a27002291ac531a4435dbcaf4b9109a4dec7439434372"
+      "sha256": "a62b1c82f8cadc722f640d1799695212e18b49e77d0b820c594d55ac226456af"
     },
     {
       "path": "autoload/Utils.gd",
@@ -1227,7 +1227,7 @@
     },
     {
       "path": "tests/B5Bosses.gd",
-      "sha256": "ef4a2d43fffeebf084dc61c40d07c9fd82d8d168d6c3aeee12ea0f81772c36d2"
+      "sha256": "65bcfcca07a080b8420486a1b3a85ae96c45dc0d0d5706e7b5f25cf3c7ee2c08"
     },
     {
       "path": "tests/B5Bosses.tscn",

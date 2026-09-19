@@ -1,0 +1,32 @@
+{
+  "production_sha": "eee876d39054fc4454a41fb66e05d8df2a02bdd3",
+  "windows": {
+    "Don't stop.exe": {
+      "bytes": 109197312,
+      "sha256": "ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655"
+    },
+    "Don't stop.pck": {
+      "bytes": 41299824,
+      "sha256": "bff3f67b95738c232512f6d35a7513dc51ad2b720f075cd3c6755a1535c7ef30"
+    }
+  },
+  "web": {
+    "build_sha": "eee876d39054fc4454a41fb66e05d8df2a02bdd3",
+    "artifact_digest": "fdbe4d35b99b483aae828d8e1a02f40d7536f8f09de7191af2c194377e6b44a0",
+    "digest_algo": "sha256(index.wasm || index.pck || index.js)",
+    "payload": {
+      "index.wasm": {
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.pck": {
+        "bytes": 41299824,
+        "sha256": "bff3f67b95738c232512f6d35a7513dc51ad2b720f075cd3c6755a1535c7ef30"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      }
+    }
+  }
+}

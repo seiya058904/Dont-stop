@@ -29,7 +29,8 @@ screens={
     'b14-web-final':['02-full.png','03-replaced.png','04-cleared.png','05-restored-reconfigured.png','06-combat-hud.png','result.json'],
     'b14-attack-before':['B04-3-ultimate-active.png','B04-3-ultimate-early-warning.png','E14-warn-beam-locked.png','index.json'],
     'b14-attack-after':['B04-3-ultimate-active.png','B04-3-ultimate-early-warning.png','B04-1-warn-dash-locked.png','E14-warn-beam-locked.png','E14-recover-beam-locked.png','index.json'],
-    'b14-web-release':['02-full.png','03-replaced.png','05-restored-reconfigured.png','06-combat-hud.png','result.json']}
+    'b14-web-release':['02-full.png','03-replaced.png','05-restored-reconfigured.png','06-combat-hud.png','result.json'],
+    'b14-web-revision':['camp-113.png','stage39-115.png','stage40-opening.png','result.json']}
 for directory,names in screens.items():
     for name in names:
         path=source/directory/name

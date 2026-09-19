@@ -84,6 +84,12 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-boss-observation-fixed.log",
+    "bytes": 340,
+    "sha256": "6a9b038889a8d51feef17eb1943cbacc913b7dc19f9047245d59d2d8e31e6cab",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-camp-regression.log",
     "bytes": 2100,
     "sha256": "c71a9172874b760a82101c3b8b3003a5eea2212ede5813588fc8c5c3cb2fa089",
@@ -105,6 +111,24 @@
     "path": "evidence/visual-upgrade-20260919/b14-catalog-release.json",
     "bytes": 24714,
     "sha256": "df39c7f827be0c564dd17c66fff3a8137661d8a127120afbc20a647ec56d3cfb",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-ci-eee-pressure-failure.log",
+    "bytes": 3950,
+    "sha256": "8b0adea0950ed2e9e9c384e734acd581a9b2182bbe3eb6b6203c3d877f86eb9c",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-ci-eee-save-failure.log",
+    "bytes": 974,
+    "sha256": "f9c7e8679ca4d450ca3c2a59eea3e3157f19f16a0aac933d097cd9e2364224ba",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-ci-eee-stage-failure.log",
+    "bytes": 802,
+    "sha256": "56fc20e3111b3fc88213e08c2731347c5c53a8c14f57e053a85331177047816b",
     "remote_copy": "complete"
   },
   {
@@ -600,6 +624,12 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-release-build.json",
+    "bytes": 1077,
+    "sha256": "7e2c33297bceb320f833ba3f1da239997b37fdad9d9caa0e9670647a89bf463c",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-talent-effects-after.log",
     "bytes": 1887,
     "sha256": "4277bac9b413a2b3def21770610ad8bcdb3a1389d29dcdbadd48cbfb2e4db3e1",
@@ -642,6 +672,12 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-web-eee876d-export.log",
+    "bytes": 282828,
+    "sha256": "ade9d30ff81536b5b5cac95a1fd1b1a51a9ec029d6f6713690eea508abced260",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-web-export.log",
     "bytes": 284608,
     "sha256": "64f56a097320c526587126c6df1a7bc4439e7039f80fc162ada3d90f60be8a25",
@@ -678,9 +714,21 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-web-release-build.json",
+    "bytes": 653,
+    "sha256": "c2f767744fb9e1a139c7b6fedfb6effa6c42567ff2530c7e7a5c1cfe89c2a8d6",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-windows-66f69e2-export.log",
     "bytes": 282828,
     "sha256": "064fa7d47dbe756a16917e184d4d354045ca281333e8d5d39fed8d7790115b31",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-eee876d-export.log",
+    "bytes": 282828,
+    "sha256": "ade9d30ff81536b5b5cac95a1fd1b1a51a9ec029d6f6713690eea508abced260",
     "remote_copy": "complete"
   },
   {
@@ -693,6 +741,12 @@
     "path": "evidence/visual-upgrade-20260919/b14-windows-final-export.log",
     "bytes": 283082,
     "sha256": "07587d4f4d2d64b4e7316d1082507dbf50d9cf44988ccf48402e978512ff5e0e",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-release-smoke.log",
+    "bytes": 1358,
+    "sha256": "ef828d315d991e7da29cea3f2eab041462de749bb046b943a0d4ebfae994dd5c",
     "remote_copy": "complete"
   },
   {
@@ -801,6 +855,60 @@
     "path": "evidence/visual-upgrade-20260919/b14-attack-after/index.json",
     "bytes": 17764,
     "sha256": "37807833839118c6defda8a455c6019ecd85abf9e3addcd959d1e7bc62c14e8e",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-release/02-full.png",
+    "bytes": 65618,
+    "sha256": "a4ac7ec4ca60b15585fdd5e2e60319f3021df7a4ca95e46f129f09c5b197d5d9",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-release/03-replaced.png",
+    "bytes": 59219,
+    "sha256": "d44f327c59e2d15e36da26a97e261f1860c4b9bc287e46015dc6f106af6b86a0",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-release/05-restored-reconfigured.png",
+    "bytes": 64235,
+    "sha256": "b5eadff731956486595537e26bdfda450460a439fcc07a4b2577c6a2df0193ec",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-release/06-combat-hud.png",
+    "bytes": 515408,
+    "sha256": "2c6d07ac96bc23681f4f3a457be634738de7c298f0fbdd60a54fb8a8ed73e9f9",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-release/result.json",
+    "bytes": 441,
+    "sha256": "92741b89d0d795ad51d7cabbd5ef0fc51e545f29084c59f37fbda21abd6e4c06",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-revision/camp-113.png",
+    "bytes": 60042,
+    "sha256": "6df96be77857aa097168359c211660f09ab6df635732253ca993d266703924c8",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-revision/stage39-115.png",
+    "bytes": 187314,
+    "sha256": "acac6e5db0a4201a68924c8a68895ce17f953147c33ef9a1f1afa41266a2298c",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-revision/stage40-opening.png",
+    "bytes": 175441,
+    "sha256": "91fc681598607532e8dcff4c412fe27de07aec1e592820056adddf63d987b5d2",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-revision/result.json",
+    "bytes": 868,
+    "sha256": "1920b217af7d1e71793a5514cba971cfe12a1653f84fa08a8a443fa77f8bddc4",
     "remote_copy": "complete selected frame"
   }
 ]

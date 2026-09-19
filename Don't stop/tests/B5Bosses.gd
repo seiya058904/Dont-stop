@@ -26,6 +26,21 @@ const PHASES = {
 }
 const STAGE_BOSS = {10:"B01",20:"B02",30:"B03",40:"B04"}
 
+var observing_attacks := false
+var observed_phase_actions: Dictionary = {}
+
+func fire_at(point: Vector2, delta: float):
+	# The observed pass must let authored attacks execute before real DPS ends
+	# their phase. Stronger weapons can otherwise kill during the last windup.
+	# Movement, boss AI, HP, damage and all existing assertions remain real.
+	var boss = instance_from_id(LevelServer.boss_instance)
+	if observing_attacks and is_instance_valid(boss):
+		var tier = "3" if boss.phase_three else ("2" if boss.phase_two else "1")
+		for attack in PHASES.get(boss.role, {}).get(tier, []):
+			if int(observed_phase_actions.get(tier, {}).get(attack, 0)) == 0:
+				return
+	super.fire_at(point, delta)
+
 func _process(delta):
 	# The payload observer deliberately holds position until a real ultimate lands.
 	# M8Runtime's close-range dash is independent of `moving`; suppress that input
@@ -53,6 +68,8 @@ func fight(stage: int, boss_id: String, durable_hp: int, budget_ms: int, observe
 	var warned_kinds = {}
 	var transition_samples = 0
 	var phase_view = {"1":{},"2":{},"3":{}}
+	observing_attacks = observe
+	observed_phase_actions = phase_view
 	var percentage_hits = []
 	# The boss frees itself shortly after dying, so the action ledger is snapshotted every
 	# sample rather than read off a possibly-freed node afterwards.
@@ -104,6 +121,7 @@ func fight(stage: int, boss_id: String, durable_hp: int, budget_ms: int, observe
 			# A phase change must be a real pause: no owned attack may be alive through it.
 			if owned > 0: transition_violations += 1
 	driving = false
+	observing_attacks = false
 	Utils.player.incoming_hit.disconnect(observer)
 	var seconds = (Time.get_ticks_msec()-start)/1000.0
 	var row = {

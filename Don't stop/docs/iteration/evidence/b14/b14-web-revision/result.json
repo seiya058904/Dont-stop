@@ -1,0 +1,46 @@
+{
+  "success": true,
+  "identity": "eee876d39054fc4454a41fb66e05d8df2a02bdd3",
+  "observations": [
+    {
+      "id": 113,
+      "gun": 113,
+      "bullets": 5,
+      "mode": "COMBAT",
+      "stage": 39,
+      "hp": 5
+    },
+    {
+      "id": 115,
+      "gun": 115,
+      "bullets": 11,
+      "mode": "COMBAT",
+      "stage": 39,
+      "hp": 5
+    },
+    {
+      "id": 119,
+      "gun": 119,
+      "bullets": 8,
+      "mode": "COMBAT",
+      "stage": 39,
+      "hp": 5
+    },
+    {
+      "id": 124,
+      "gun": 124,
+      "bullets": 94,
+      "mode": "COMBAT",
+      "stage": 39,
+      "hp": 5
+    },
+    {
+      "gun": 113,
+      "bullets": 6,
+      "mode": "COMBAT",
+      "stage": 40,
+      "hp": 5
+    }
+  ],
+  "method": "Playwright Chromium ANGLE D3D11, real input, normal HP, isolated profile; short rendered gameplay, not completion or performance acceptance"
+}

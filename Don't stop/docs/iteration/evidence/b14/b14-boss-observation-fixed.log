@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2381
+[boot-probe] utils_ready t=2382
+[boot] title menu drawn t=2900
+[boot-probe] controlui_ready t=2900
+PASS boss depart 10
+PASS stage 10 spawns B01
+PASS stage 10 fields B01
+PASS stage 10 boss starts in Phase I
+PASS B01 uses its authored HP
