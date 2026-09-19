@@ -200,6 +200,9 @@ func step(delta):
 		activated = true
 		# The fairness gate, not the nominal timer, owns the visible firing edge.
 		queue_redraw()
+		# This queued draw already uses the activated palette. A frozen footprint
+		# must not schedule the same activation edge again on the next physics tick.
+		previous_active = true
 		if profiling: profile_stats.redraw_requests += 1
 		probe_firing = B11Probe.enabled
 		if probe_firing: B11Probe.note_beam_active(true)

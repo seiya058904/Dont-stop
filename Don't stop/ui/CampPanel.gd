@@ -322,6 +322,11 @@ func render():
 				# Off-tree display models live only as long as this panel. Search and selection
 				# never rebuild all weapon scenes, and real owned guns remain authoritative.
 				if not weapon_models.has(id): weapon_models[id] = Utils.weapon_list[id].instantiate()
+				elif id == "6":
+					# The original display scene recreated two dormant GPU emitters on
+					# every eligible render (four engine RNG draws). Preserve that old
+					# stream while reusing the model; no random values drive the UI art.
+					for _legacy_draw in 4: randi()
 				var gun = weapon_models[id]
 				var tags = DemoConfig.weapon_tags(int(id))
 				var categories = []

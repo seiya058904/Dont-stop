@@ -25,6 +25,8 @@ func _ready():
 	for pair in [[0.875,"0.88"],[1.0,"1"],[150.0,"150"],[0.001,"<0.01"],[12.5,"12.5"]]:
 		hit_label.setNumber(pair[0])
 		check(hit_label.text == pair[1],"damage display precision "+str(pair[0]))
+	hit_label.setNumber("护盾")
+	check(hit_label.text == "护盾","status feedback is not converted to numeric zero")
 	hit_label.free()
 	var muzzle = load("res://game/effects/TierMuzzle.gd").new()
 	add_child(muzzle)

@@ -333,3 +333,9 @@ func _shootAnim():
 	var tier = WeaponCatalog.tier(weapon_id)
 	tier_muzzle.pulse(tier,weapon_id)
 	player.cameraSnake((shake_vector + Vector2.ONE*maxi(0,tier-3)*0.12) * direction)
+	# Godot 4.7.2's removed particle allocation advanced the global RNG: two
+	# draws on the dummy renderer, three on Compatibility/Web. Preserve that
+	# legacy stream so removing allocation cannot change later crits/AI choices.
+	# These values do not choose or animate the replacement muzzle decoration.
+	for _legacy_draw in (2 if DisplayServer.get_name() == "headless" else 3):
+		randi()

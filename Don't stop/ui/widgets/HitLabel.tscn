@@ -4,7 +4,7 @@
 [ext_resource type="FontVariation" path="res://fonts/ui-font.tres" id="1_sv7pc"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_f1w54"]
-blend_mode = 1
+blend_mode = 0
 
 [node name="HitLabel" type="Label"]
 texture_filter = 1
@@ -15,6 +15,8 @@ offset_right = 46.0
 offset_bottom = 12.0
 pivot_offset = Vector2(24, 13)
 theme_override_fonts/font = ExtResource("1_sv7pc")
+theme_override_colors/font_outline_color = Color(0.035, 0.055, 0.07, 1)
+theme_override_constants/outline_size = 1
 text = "-10"
 horizontal_alignment = 1
 vertical_alignment = 1

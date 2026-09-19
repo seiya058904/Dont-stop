@@ -201,6 +201,34 @@ func run() -> void:
 	if Utils.player != null and Utils.player.gun == null:
 		PlayerData.add_weapon(Utils.weapon_list["0"].instantiate())
 		PlayerData.changeWeapon(0,true)
+	if label == "presentation-rng":
+		# An explicit observer-only check of the complete production animation.
+		# Run in both original and changed Web exports; never an acceptance load.
+		seed(20260919)
+		var sequence: Array = []
+		for i in 9: sequence.append(randi())
+		seed(20260919)
+		Utils.player.gun._shootAnim()
+		var observed: Array = []
+		for i in 6: observed.append(randi())
+		print("[presentation-rng] ",JSON.stringify({"sequence":sequence,"observed":observed,"matches_legacy":observed==sequence.slice(3,9),"animation_ran":Utils.player.gun.tier_muzzle.remaining>0}))
+		Demo.open_panel()
+		await get_tree().create_timer(0.1).timeout
+		var camp_rows: Array = []
+		for quality in [0,1,2,3,4,5]:
+			Demo.ui.tier_filter = quality
+			seed(20260919)
+			var camp_sequence: Array = []
+			for i in 16: camp_sequence.append(randi())
+			seed(20260919)
+			Demo.ui.render()
+			var camp_observed: Array = []
+			for i in 6: camp_observed.append(randi())
+			var expected_draws = 4 if quality == 0 or quality == WeaponCatalog.tier(6) else 0
+			camp_rows.append({"quality":quality,"draws":camp_sequence.find(camp_observed[0]),"matches_legacy":camp_observed==camp_sequence.slice(expected_draws,expected_draws+6)})
+		print("[presentation-camp-rng] ",JSON.stringify(camp_rows))
+		_close_panels()
+		return
 	# The reward tree a Hell player owns. Without this the incoming-damage path scans an EMPTY
 	# reward group and the harness would report that path as free.
 	_grant_everything()

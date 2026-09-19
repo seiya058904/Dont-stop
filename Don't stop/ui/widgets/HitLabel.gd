@@ -14,6 +14,10 @@ func _ready() -> void:
 	tween.tween_callback(self.queue_free).set_delay(1)
 
 func setNumber(number):
+	# The existing feedback channel also carries status text such as "护盾".
+	if not (number is int or number is float):
+		text = str(number)
+		return
 	# Display precision only: the hit pipeline retains the unrounded value.
 	var value := float(number)
 	if value != 0.0 and absf(value) < 0.01:

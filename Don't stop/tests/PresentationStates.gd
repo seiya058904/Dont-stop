@@ -46,6 +46,7 @@ func _ready():
 	zone.damage = 1
 	add_child(zone)
 	zone.set_physics_process(false)
+	zone.profiling = true
 	zone.fair_gate = true
 	zone.step(0.8)
 	check(not zone.activated,"fair gate extends warning after nominal warning time")
@@ -56,6 +57,9 @@ func _ready():
 	check(zone.activated,"actual gate release activates zone")
 	var active_frame = await capture("zone-active")
 	check(waiting_frame.get_pixel(280,80).get_luminance() < active_frame.get_pixel(280,80).get_luminance(),"extended warning stays visually distinct from real firing")
+	var activation_draws = zone.profile_snapshot().redraw_requests
+	zone.step(0.01)
+	check(zone.profile_snapshot().redraw_requests == activation_draws,"frozen active footprint does not redraw the activation edge twice")
 	zone.queue_free()
 	await wait(0.1)
 	for role in ["B01","B02","B03","B04"]:
@@ -72,6 +76,22 @@ func _ready():
 		await capture(role+"-active")
 		ultimate.queue_free()
 		await wait(0.05)
+	# Exercise the real feedback channel with an explicitly configured status label.
+	# This observes text rendering, not a claim that a shield proc occurred here.
+	Utils.showHitLabel("护盾",Utils.player)
+	Utils.showHitLabelMore(0.875,Utils.player,Vector2(28,0))
+	await wait(0.2)
+	check(get_tree().get_nodes_in_group("damage_labels").any(func(label): return label.text == "护盾"),"production feedback channel preserves shield status text")
+	await capture("status-shield-text")
+	LevelServer.return_to_camp()
+	await wait(0.1)
+	LevelServer.town.depart(6,true)
+	observer.global_position = Utils.player.global_position
+	await wait(0.3)
+	Utils.showHitLabel("护盾",Utils.player)
+	Utils.showHitLabelMore(0.875,Utils.player,Vector2(28,0))
+	await wait(0.2)
+	await capture("status-text-dark-floor")
 	print("PRESENTATION_STATES checks=",checks," failures=",failures)
 	if failures: get_tree().quit(1)
 	else: await Demo.quit_game()
