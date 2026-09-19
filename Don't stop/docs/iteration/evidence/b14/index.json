@@ -84,9 +84,15 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-boss-observation-fixed.json",
+    "bytes": 4518,
+    "sha256": "03ea5cc9a3025ffd90960dcb685d8bd629128fd69f4ecf8d0409904af85d32eb",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-boss-observation-fixed.log",
-    "bytes": 340,
-    "sha256": "6a9b038889a8d51feef17eb1943cbacc913b7dc19f9047245d59d2d8e31e6cab",
+    "bytes": 13338,
+    "sha256": "b2e2829269279cf4b19a12f9196c240ddfc1568775c1410ab2db1de9536aa976",
     "remote_copy": "complete"
   },
   {
@@ -114,6 +120,12 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-ci-e67-stage-failure.log",
+    "bytes": 732,
+    "sha256": "3979dcb0733e690fe45b4721694ed303f420a0c8cd05ee0c8149a10ad4a89ec8",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-ci-eee-pressure-failure.log",
     "bytes": 3950,
     "sha256": "8b0adea0950ed2e9e9c384e734acd581a9b2182bbe3eb6b6203c3d877f86eb9c",
@@ -132,6 +144,30 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-ci-ff12e13-stage.log",
+    "bytes": 2695,
+    "sha256": "d475381c19e8f38d639acf373c4826b737bce6bcc834412c434c18bff0184bd9",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-ci-ff12e13-web.json",
+    "bytes": 18349,
+    "sha256": "ecbce1c373c5941b2d6b2fab403861082a4229b8567a721b5963b03b058cf92a",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-growth-e67fc75.log",
+    "bytes": 32494,
+    "sha256": "b291c8ca1ef15440f8dd1ae69fe464a86076aa10f0cd8ecdffa5285aeff29451",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-growth-ff12e13.log",
+    "bytes": 32494,
+    "sha256": "b7a2321ad2df74898d7cce59799ad05c4d24218509b2d465a4afd49a5be6906a",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-current-growth-final.log",
     "bytes": 32494,
     "sha256": "593671801abc2cda4d3852fa8f19de30163f5bfcd39c23c67b2efcbc25258a91",
@@ -144,6 +180,18 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-current-weapons-e67fc75.log",
+    "bytes": 39592,
+    "sha256": "d29a255c498603af5efd7e82428730086801b882a421760dc2eecdc21ad46fbd",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-weapons-ff12e13.log",
+    "bytes": 39592,
+    "sha256": "f73d0fa43e3927b23cc737d811cca42991210470953dfa5e7a9b42224236b7aa",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-current-weapons-final.log",
     "bytes": 39592,
     "sha256": "a4fdff3e7efe7ef46f4d1ec178dd1f338510123fbef406e6a51b3ff29cfb97b3",
@@ -153,6 +201,12 @@
     "path": "evidence/visual-upgrade-20260919/b14-current-weapons.log",
     "bytes": 39592,
     "sha256": "301bed3f32a4a58bd543ccaa0d117f1623b1d654f9d0adcbf7a2170febd19503",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-e67fc75-build.json",
+    "bytes": 1077,
+    "sha256": "990c331a45e19b8191c7dee24484e79d1572262f944eb7f860a6441a96bb3f3d",
     "remote_copy": "complete"
   },
   {
@@ -300,6 +354,12 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-final-build.json",
+    "bytes": 1077,
+    "sha256": "2aaa7723c85249d773f601c9e787174b1443f6b6dc95a5efdfa88755c5cb850c",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-fixed-perf-after.json",
     "bytes": 604620,
     "sha256": "9f9a45333a241a5287197e37ea7ea55d98f5b6ae7fce1dea1805d9f170a1a61e",
@@ -429,6 +489,12 @@
     "path": "evidence/visual-upgrade-20260919/b14-growth-t13-diagnostic.log",
     "bytes": 5439,
     "sha256": "f3804c7fdc7363a62f3f1ee53c0e8dfc0ed3b3a3be13ccf0b1ffb71554b733db",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-tour-observer-parse.log",
+    "bytes": 5484,
+    "sha256": "53f60bf3b664bd7b329067022aaa3b55e0a5edd6613dfff5d6e34e47eb8b53d2",
     "remote_copy": "complete"
   },
   {
@@ -672,6 +738,30 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-web-e67fc75-build.json",
+    "bytes": 653,
+    "sha256": "ed93fc27bd903076187289d7ecd3c9e3f19aacc416ff67fe441a5c293ed207b0",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-e67fc75-export.log",
+    "bytes": 282828,
+    "sha256": "ade9d30ff81536b5b5cac95a1fd1b1a51a9ec029d6f6713690eea508abced260",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-e67fc75-save-audit.log",
+    "bytes": 531,
+    "sha256": "932cb4197460cbf622d041bf1c11360fe6ca37fb9b5420bd4bb0e01641957261",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-e67fc75-stagerun.log",
+    "bytes": 3634,
+    "sha256": "464998f8431273a9a0d4ec73c8135ab69bce39bb17598b3afc7273e52b08878e",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-web-eee876d-export.log",
     "bytes": 282828,
     "sha256": "ade9d30ff81536b5b5cac95a1fd1b1a51a9ec029d6f6713690eea508abced260",
@@ -708,6 +798,24 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-web-ff12e13-build.json",
+    "bytes": 653,
+    "sha256": "233369db281834c3f1be25018f1c57170896123117a8223edc41a6db9738887b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-ff12e13-export.log",
+    "bytes": 282828,
+    "sha256": "ade9d30ff81536b5b5cac95a1fd1b1a51a9ec029d6f6713690eea508abced260",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-ff12e13-stagerun.log",
+    "bytes": 3972,
+    "sha256": "4044bfa9e1a492ef5c96a5b54d7c8c2690166c8c83551aa7b0df239226e6dbfb",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-web-final-export.log",
     "bytes": 282828,
     "sha256": "064fa7d47dbe756a16917e184d4d354045ca281333e8d5d39fed8d7790115b31",
@@ -726,6 +834,18 @@
     "remote_copy": "complete"
   },
   {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-e67fc75-export.log",
+    "bytes": 283265,
+    "sha256": "d9500d22e874a76c4e7ad855432c23a0f1ea1e3da4de533cb4bd7c3cbe8ea675",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-e67fc75-smoke.log",
+    "bytes": 1357,
+    "sha256": "d0798641809b60306b990177caffdee7f09ca01a16b2f39e9d82fc52e3a7d4ec",
+    "remote_copy": "complete"
+  },
+  {
     "path": "evidence/visual-upgrade-20260919/b14-windows-eee876d-export.log",
     "bytes": 282828,
     "sha256": "ade9d30ff81536b5b5cac95a1fd1b1a51a9ec029d6f6713690eea508abced260",
@@ -735,6 +855,18 @@
     "path": "evidence/visual-upgrade-20260919/b14-windows-export.log",
     "bytes": 283335,
     "sha256": "51e149a8e71fd4b2a086054cf464a332b1dd8732569a41579f8447b3531e1632",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-ff12e13-export.log",
+    "bytes": 284338,
+    "sha256": "b4abb5b7ef94405f3f293e8db480b42b6506fea81c9a257c84ab2471927d2734",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-ff12e13-smoke.log",
+    "bytes": 1358,
+    "sha256": "f6e02eb3f08a1fd807ab82f88eaad2f3ee29edf9ab7f7df7df66e89fc8fb7015",
     "remote_copy": "complete"
   },
   {
@@ -909,6 +1041,30 @@
     "path": "evidence/visual-upgrade-20260919/b14-web-revision/result.json",
     "bytes": 868,
     "sha256": "1920b217af7d1e71793a5514cba971cfe12a1653f84fa08a8a443fa77f8bddc4",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-e67fc75-stagerun/b11-stagerun.json",
+    "bytes": 6125,
+    "sha256": "a9699436b476d4f2656bcdad0d30c2c1206910478eacb67f942fef3d1d05dbc5",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-e67fc75-stagerun/stagerun.png",
+    "bytes": 39265,
+    "sha256": "3467dbc987f02ca358dd80061b1e9bf84fe9123340bab8a11b9e3a7cd52710ed",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-ff12e13-stagerun/b11-stagerun.json",
+    "bytes": 6641,
+    "sha256": "d5a4dd7e12dc97d553493cf8b3d27d392945e9d18292fc9b23c576e4e9fb1775",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-ff12e13-stagerun/stagerun.png",
+    "bytes": 35415,
+    "sha256": "7f094714cb160b5ed479d23117200c24891a500c4c869ac9324b8bb720665c91",
     "remote_copy": "complete selected frame"
   }
 ]

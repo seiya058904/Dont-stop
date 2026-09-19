@@ -1,0 +1,6 @@
+2026-09-19T18:56:08.9986497Z PASS C_LINE_FOOTPRINTS_WERE_OBSERVED :: 1 lane observations across 141 samples (up to 1 live footprints)
+2026-09-19T18:56:08.9987934Z FAIL C_A_FROZEN_LANE_WAS_OBSERVED_WITH_TIME_TO_RUN :: 0 samples of a frozen lane before it fired
+2026-09-19T18:56:08.9991051Z FAIL C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY :: 0 samples of a frozen lane in its active phase
+2026-09-19T18:56:09.2691394Z B11_STAGERUN tokens=42 failures=2 wall_clock=98s
+2026-09-19T18:56:09.2692475Z   FAIL C_A_FROZEN_LANE_WAS_OBSERVED_WITH_TIME_TO_RUN :: 0 samples of a frozen lane before it fired
+2026-09-19T18:56:09.2693756Z   FAIL C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY :: 0 samples of a frozen lane in its active phase

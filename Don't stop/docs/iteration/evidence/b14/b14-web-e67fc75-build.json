@@ -1,0 +1,19 @@
+{
+  "build_sha": "e67fc753aa90d633434561c44a878a20e2d46ed0",
+  "artifact_digest": "c17668a580c9125b11de4811165287e4f97af04d518c65a626caff1febedfd74",
+  "digest_algo": "sha256(index.wasm || index.pck || index.js)",
+  "payload": {
+    "index.wasm": {
+      "bytes": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.pck": {
+      "bytes": 41299872,
+      "sha256": "b4ac0c19043ad62192f51b3164d3f6e10629f7bb0aa66ab783d1971c440f8c1e"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    }
+  }
+}

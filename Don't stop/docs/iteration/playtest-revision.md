@@ -5,6 +5,10 @@
 视觉/数值冻结限制，但不允许合并、部署、Release 或改动真实用户存档。
 保留此前美术、营地主布局和全部历史性能 FAIL/未定记录。
 
+当前可玩构建为 `ff12e139a8c4e3939667d4a2cabf75753cf76b6b`，包含下面全部修订。
+Windows 入口仍为 `Don't stop/build/windows/Don't stop.exe`；EXE 与同目录 PCK 必须一起保留。
+完整指纹见 [最终构建身份](evidence/b14/b14-final-build.json)。下方 66f69e2 为先行装卸版本的历史记录。
+
 ## A：7 槽装卸修复
 
 旧版回归：隔离测试购买9把成功，但没有独立携带栏（10项检查中1项失败）。
@@ -39,7 +43,7 @@ Playwright + Chromium / ANGLE D3D11 的真实鼠标/键盘链路通过：买9把
 
 先行装卸实现提交 `146068d`；隔离原生烟测存档和合法战斗切枪修正 `66f69e2`。
 两次提交已推送同一 PR 分支。第一份装卸先行 Windows 和 Web 均从 `66f69e2` 导出，
-不是此前的 v12，也尚不包含后续未提交的成长/平衡修改。
+不是此前的 v12；该历史构建不包含随后 eee876d 提交的成长/平衡修改，已被上方当前构建替代。
 
 Windows 入口：`Don't stop/build/windows/Don't stop.exe`（仓库根下）。
 EXE：109197312 字节，SHA256 `ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655`。
@@ -150,3 +154,42 @@ M3Energy的蓄力1.2→0.8s、六目标→八目标/第九排除是本轮授权�
 - stages-fair：旧 telegraph 输出来自每秒统计，短至 0.12 秒的激活窗口可能落在采样之间；特殊怪减少后采样覆盖不足。仅 stage-tour 测试入口改为按原有 50ms 巡游步进读取真实状态，原 9 秒/关窗口不变，普通探针和性能采样不变；仍要求冻结、实际激活以及固定方向全部成立。
 
 以上均须以修正后检查结果判定；不据此豁免历史性能失败。eee876d 的普通 7 格/39与40关鼠标键盘验证可覆盖未改的玩法路径，不能冒称对后续构建做过同一套截图。
+
+## 最终可玩版本与定向回归
+
+最终生产构建 `ff12e139a8c4e3939667d4a2cabf75753cf76b6b`：
+- Windows EXE SHA256 `ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655`（109197312字节）。
+- Windows/Web PCK SHA256 `990d0bb11a68defe532242ff7b61f581f02c120fa2deb0ee7a405568b11af13b`（41300144字节）。
+- Web 合成内容指纹 `b343fb8990e0e43d52b4010e8462903c626b2fbb84d2f8f85edf2a6d4125cf4b`。
+- EXE 是相同引擎模板，游戏内容由 PCK 区分；不能只用 EXE 相同推断未包含修订。
+
+Windows 原生 Forward+/Vulkan 导出版本启动/进入营地/出发/切枪/真实开火 PASS。
+Web 现有 save-audit 的独立profile新建、刷新恢复、完整浏览器重启恢复、IndexedDB及profile隔离全部PASS；该脚本保留既有 SwiftShader 启动参数，不是 Windows 原生存档测量。
+e67fc75 本地 Playwright/Chromium ANGLE D3D11 的 stage-tour 42项全部PASS：226条线状观察、105条激活前冻结观察、42条实际激活观察；未发现固定冻结线转向。固定9秒/关巡游，不能声称完成四关或证明性能。
+
+|本地验证|结果／范围|
+|---|---|
+|B14Loadout / B13Unequip / CampPresentation|86 / 55 / 38项PASS；所有权、固定槽、当前手持、保存与鼠标键盘流程|
+|B14Growth / B14Rail / B14Feedback / B14EncounterContracts|13 / 8 / 6 / 88项PASS；真实命中与条件触发|
+|B13UpgradeEffects / B13TalentEffects / M4Talents|85 / 37 / 233项PASS|
+|B12Catalog / B13Catalog / B13Economy / B12Save / B13UI|182 / 530 / 158 / 14 / 137项PASS|
+|M3Energy / M3Special / M4ThermalClock / M3Weapons|16 / 14 / 9 / 72项PASS|
+|M8Mechanics / B11ShotLayer / M6BossStops|11 / 54 / 24项PASS|
+|PresentationContracts / PresentationRng / PresentationLifecycle|52 / 8 / 52项PASS|
+|当前构建B12Strength --b14 / B13Strength --b14|741 / 602项PASS；新协议证据及源文件绑定，非旧基准通过|
+
+eee876d 的真实鼠标购买113/115/119/124、39关切换各枪并实际耗弹、40关正常5HP开局操作通过，无脚本/页面错误，截图已目视检查；40关仅开局，未宣称真人通关。e67fc75只进一步改测试入口/观察器，普通玩法生产代码与eee876d相同；不将这些截图改标为e67fc75。此后文档/证据提交不重新冒充游戏构建。
+
+
+### 最后一次观察器校正与保留限制
+
+B5Bosses 修正后的166项全部PASS，四Boss的OBSERVED阶段均以真实伤害清除并完整观察指定攻击。400HP是明确的观察用耐久池，不是真人通关。另跑的8HP AUTHORED Stage40在20.53秒死亡，未进入二阶段；该结果完整保留，不能用观察器通关冒称正常HP通关。
+
+e67fc75的Linux CI stages-fair仍然失败：31/35/39/40分别只有20/22/21/19次移动观察，仅1条线状态，激活前冻结与激活均未采到。即使本地42项通过，也未据此将远端失败改绿。日志为b14-ci-e67-stage-failure.log。
+
+ff12e13仅调整stage-tour测试入口：每关必须实际完成至少9秒物理模拟，单关60秒墙钟上限，整套300秒上限不变；新增四项模拟时长断言。短攻击状态逐物理帧读取，普通游戏、probe和性能入口关闭该物理观察器。移动节奏也按模拟时间推进。原42项断言全部保留，此校正不是延长性能预热或改动15..105秒窗口。
+
+源文件与新武器/成长证据校验741/602项再次通过。e67fc75的独立Web存档恢复审计覆盖ff12e13未改动的保存路径；ff12e13的Windows构建另跑原生启动/切枪/开火烟测。eee876d、e67fc75和ff12e13的构建指纹均分别保留，不将旧截图、旧性能或旧测量改名为最新构建。
+
+ff12e13最终复测：本地stage-tour 46/46 PASS，每关实际物理模拟至少9秒；964条线观察、462条激活前冻结、189条真实激活，固定方向未转动。Windows原生导出烟测PASS。
+远端Web运行35462912565已完成，六门（smoke、save-audit、aim-core、aim-fault、menu-return、stages-fair）全部SUCCESS；部署和线上烟测明确SKIPPED。远端同生产SHA的native pressure已SUCCESS，contracts尚在运行，暂不声称全量CI通过。详细状态与原始关键日志已保存。
