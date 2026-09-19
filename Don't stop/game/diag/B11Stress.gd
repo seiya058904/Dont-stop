@@ -202,6 +202,10 @@ func run() -> void:
 		PlayerData.add_weapon(Utils.weapon_list["0"].instantiate())
 		PlayerData.changeWeapon(0,true)
 	if label == "presentation-rng":
+		# _boot_to_camp queued the initial panel for deletion. Let that complete
+		# before open_panel checks Demo.ui; a queued-but-live panel is not reusable.
+		await get_tree().process_frame
+		await get_tree().process_frame
 		# An explicit observer-only check of the complete production animation.
 		# Run in both original and changed Web exports; never an acceptance load.
 		seed(20260919)
