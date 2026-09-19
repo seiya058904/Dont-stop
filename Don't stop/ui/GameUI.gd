@@ -59,6 +59,7 @@ func _ready() -> void:
 	level_notice=Label.new(); level_notice.position=Vector2(4,3); level_notice.size=Vector2(172,44); level_notice.add_theme_font_size_override("font_size",7); level_panel.add_child(level_notice)
 	change_audio.bus = "UI"
 	Demo.restored.connect(on_restore)
+	Demo.changed.connect(_update_unarmed_hud)
 	Utils.onGameStart.connect(self.onGameStart)
 	RewardServer.onRewardAdd.connect(self.onRewardAdd)
 	PlayerData.onRewardChange.connect(self.onRewardChange)
@@ -99,7 +100,16 @@ func on_restore():
 	else:
 		ammo_count_label.text = "--"
 		weapon_change_image.texture = null
-		weapon_change_name.text = ""
+		weapon_change_name.text = "未装备武器"
+
+## B13: "no weapon equipped" is a real, first-class state. Any config change (purchase,
+## unequip, save restore) re-checks it, so the HUD can never keep showing a stale gun card
+## after the player drops their weapon in the camp.
+func _update_unarmed_hud():
+	if is_instance_valid(Utils.player) and Utils.player.gun == null:
+		ammo_count_label.text = "--"
+		weapon_change_image.texture = null
+		weapon_change_name.text = "未装备武器"
 
 func playerWeaponListChange():
 	for item in PlayerData.player_weapon_list:

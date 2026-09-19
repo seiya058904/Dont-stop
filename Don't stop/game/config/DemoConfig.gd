@@ -16,38 +16,73 @@ const CONTACT_DAMAGE_WEIGHT_HELL = 0.35
 const PROFILE = "experience_demo"
 const INITIAL_GOLD = 9999
 const INITIAL_TALENT_POINTS = 9999
+## Kept ONLY for the legacy reward shop (原型奖励). Talent prices are data-driven per
+## quality and rank since B13: TALENT_GOLD_PRICE is no longer a talent price source.
 const TALENT_GOLD_PRICE = 100
 const SWITCH_SECONDS = 0.12 # Input debounce only; HUD keeps its .3 + .5 + .3 animation.
 const MAX_DERIVATION = 2
 const AMBIENT = Color(0.64, 0.69, 0.76, 1)
 const MIN_RELOAD_SECONDS = 0.15
+## B13: talents share the upgrade system's three player-visible qualities. Quality is the
+## value grade of the talent itself (not a route, not a rank): 普通=渐进成长, 稀有=明显/组合,
+## 传说=机制解锁. Rank (1..max) is how many times a talent was bought and stays independent.
+## Core B13 rule: overall, talent value must exceed upgrade value; legends change how fights play.
+const TALENT_QUALITY = {
+	"T01":1,"T03":1,"T04":1,"T05":1,"T07":1,"T08":1,"T09":1,"T18":1,"T20":1,
+	"T02":2,"T06":2,"T10":2,"T11":2,"T12":2,"T15":2,"T17":2,"T21":2,"T22":2,"T24":2,
+	"T13":3,"T14":3,"T16":3,"T19":3,"T23":3
+}
+## Data-driven prices per rank (index = next rank - 1), calibrated against the 9999 demo
+## wallet: all commons ≈ 6750 gold, each rare ≈ 1650, each legend 2400 - a full account
+## (~35k) is deliberately out of reach of the starting wallet. B13.1: the legendary talent
+## price sits ABOVE the legendary upgrade price band's upper edge (AttachmentCatalog tops
+## out at 2000), because a legend talent is max=1, has no later rank cost, and the talent
+## system is the premium one - a legend must never be the cheaper legendary purchase.
+const TALENT_GOLD_PRICES = {1:[150,250,350],2:[400,550,700],3:[2400]}
+const TALENT_POINT_PRICES = {1:[1,1,2],2:[2,3,4],3:[5]}
 const TALENTS = {
-	"T02": {"name":"快速循环","max":3,"step":0.06,"info":"每级射速+6%；热流保持0.1秒tick并提升每tick伤害，原激光仅提升脉冲频率。","unit":"射速/DPS"},
+	"T02": {"name":"快速循环","max":3,"step":0.1,"info":"每级射速+10%；热流保持0.1秒tick并提升每tick伤害，原激光仅提升脉冲频率。","unit":"射速/DPS"},
 	"T05": {"name":"弹道延展","max":3,"step":0.1,"info":"每级有效射程/实体弹寿命+10%；墙仍阻断。","unit":"射程"},
-	"T06": {"name":"弱点识别","max":3,"step":0.05,"info":"每级暴击率+5个百分点；每次命中只采样一次，暴击×1.5。","unit":"暴击率百分点"},
+	"T06": {"name":"弱点识别","max":3,"step":0.06,"info":"每级暴击率+6个百分点；每次命中只采样一次，暴击×1.5。","unit":"暴击率百分点"},
 	"T07": {"name":"生存余量","max":3,"step":1.0,"info":"每级最大生命+1（初始基础5的20%），购买补该增量；旧头盔生命增量作为历史来源保留。","unit":"生命"},
 	"T08": {"name":"轻装移动","max":3,"step":0.03,"info":"每级基础移速+3%；不改变冲刺。旧蓝靴来源保留，详情另列。","unit":"基础移速"},
 	"T09": {"name":"拾取磁场","max":3,"step":0.2,"info":"金币/回血拾取半径每级+20%；隔墙不可吸附，不执行寻路。","unit":"拾取范围"},
 	"T11": {"name":"弹药回流","max":3,"step":1.0,"kills":5,"info":"每5次有效直接击杀补1×等级备用弹匣；假人、派生击杀不计，不填弹匣。","unit":"每5杀弹匣"},
-	"T12": {"name":"首发重击","max":3,"values":[0.15,0.2,0.25],"info":"完成实际补弹后的第一发伤害+15/20/25%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。","unit":"首发伤害"},
+	"T12": {"name":"首发重击","max":3,"values":[0.25,0.4,0.55],"info":"完成实际补弹后的第一发伤害+25/40/55%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。","unit":"首发伤害"},
 	"T13": {"name":"贯穿专精","max":1,"step":1.0,"info":"明确兼容的直射攻击+1贯穿；总目标最多8，实墙阻断，不影响爆炸/跟踪/锯盘。","unit":"额外贯穿"},
-	"T14": {"name":"静电跃迁","max":1,"step":0.2,"cooldown":0.6,"damage":0.4,"radius":80.0,"info":"直接命中20%概率电弧到附近一个不同目标，40%命中伤害；冷却0.6秒，墙阻挡；派生不触发。","unit":"触发概率"},
-	"T15": {"name":"灼热弹道","max":3,"step":0.2,"seconds":1.5,"tick":0.25,"info":"直接命中施加1.5秒灼烧，每0.25秒伤害0.2×等级；同来源刷新，一条计时记录。","unit":"每次灼烧tick"},
+	"T14": {"name":"静电跃迁","max":1,"step":0.25,"cooldown":0.5,"damage":0.5,"radius":80.0,"info":"直接命中25%概率电弧到附近一个不同目标，50%命中伤害；冷却0.5秒，墙阻挡；派生不触发。","unit":"触发概率"},
+	"T15": {"name":"灼热弹道","max":3,"step":0.3,"seconds":1.5,"tick":0.25,"info":"直接命中施加1.5秒灼烧，每0.25秒伤害0.3×等级；同来源刷新，一条计时记录。","unit":"每次灼烧tick"},
 	"T17": {"name":"低温冲击","max":3,"step":0.08,"seconds":1.5,"info":"直接命中减速8%×等级，1.5秒；最高24%，Boss仅四分之一，不叠无限层。","unit":"减速"},
 	"T18": {"name":"冲击放大","max":3,"step":0.15,"info":"普通敌人冲量每级+15%；Boss免推移。","unit":"冲量"},
-	"T19": {"name":"应急护盾","max":1,"cooldown":8.0,"step":1.0,"info":"战斗抵消一次正伤害，冷却8秒；先占用冷却再反馈，同帧下一击仍受伤。","unit":"抵消次数"},
+	"T19": {"name":"应急护盾","max":1,"cooldown":6.0,"step":1.0,"info":"战斗抵消一次正伤害，冷却6秒；先占用冷却再反馈，同帧下一击仍受伤。","unit":"抵消次数"},
 	"T20": {"name":"战后修复","max":3,"step":0.1,"info":"有效遭遇胜利回复最大生命10%×等级；手动回营、选关和重复结算不触发。","unit":"胜利回复生命比例"},
-	"T21": {"name":"精英猎手","max":3,"values":[0.1,0.15,0.2],"info":"对显式is_elite目标伤害+10/15/20%；Boss不适用。第5/15/25轮末段有显式精英，Boss不适用。","unit":"对精英伤害"},
-	"T22": {"name":"密集火网","max":3,"step":0.05,"radius":100.0,"count":3,"interval":0.2,"info":"100范围内至少3名存活敌人时伤害+5%×等级；每0.2秒更新，发射快照保留该次状态。","unit":"条件伤害"},
-	"T23": {"name":"暴击回响","max":1,"step":0.3,"radius":70.0,"cooldown":0.15,"info":"直接暴击向附近一个不同目标回响30%该次伤害，冷却0.15秒；墙阻挡，回响不暴击、不递归。","unit":"回响伤害比例"},
+	"T21": {"name":"精英猎手","max":3,"values":[0.15,0.25,0.35],"info":"对显式is_elite目标伤害+15/25/35%；Boss不适用。第5/15/25轮末段有显式精英，Boss不适用。","unit":"对精英伤害"},
+	"T22": {"name":"密集火网","max":3,"step":0.08,"radius":100.0,"count":3,"interval":0.2,"info":"100范围内至少3名存活敌人时伤害+8%×等级；每0.2秒更新，发射快照保留该次状态。","unit":"条件伤害"},
+	"T23": {"name":"暴击回响","max":1,"step":0.4,"radius":85.0,"cooldown":0.15,"info":"直接暴击向附近一个不同目标回响40%该次伤害，冷却0.15秒；墙阻挡，回响不暴击、不递归。","unit":"回响伤害比例"},
 
-	"T01": {"name":"火力强化", "max":3, "step":0.08},
-	"T03": {"name":"熟练装填", "max":3, "step":0.05},
-	"T04": {"name":"扩充携弹", "max":3, "step":0.1},
-	"T10": {"name":"连杀加速", "max":3, "step":0.03, "stacks":5, "seconds":4.0},
-	"T16": {"name":"连锁爆破", "max":1, "radius":32.0, "damage":2.0, "cooldown":0.4},
-	"T24": {"name":"吸能修复", "max":3, "step":0.15, "cooldown":0.5}
+	"T01": {"name":"火力强化", "max":3, "step":0.15},
+	"T03": {"name":"熟练装填", "max":3, "step":0.08},
+	"T04": {"name":"扩充携弹", "max":3, "step":0.18},
+	"T10": {"name":"连杀加速", "max":3, "step":0.04, "stacks":5, "seconds":4.0},
+	"T16": {"name":"连锁爆破", "max":1, "radius":40.0, "damage":2.6, "cooldown":0.4},
+	"T24": {"name":"吸能修复", "max":3, "step":0.2, "cooldown":0.5}
 }
+
+static func talent_quality(id: String) -> int:
+	return int(TALENT_QUALITY.get(id,1))
+
+static func talent_quality_name(id: String) -> String:
+	return AttachmentCatalog.QUALITY_NAMES[clampi(talent_quality(id),1,3)-1]
+
+## Price of buying `rank` (the rank being purchased, 1-based) of a talent in the given
+## currency. Recorded per payment, so reset/refund keeps replaying actual payments.
+static func talent_gold_price(id: String, rank: int) -> int:
+	var ladder: Array = TALENT_GOLD_PRICES[talent_quality(id)]
+	return int(ladder[clampi(rank-1,0,ladder.size()-1)])
+
+static func talent_point_price(id: String, rank: int) -> int:
+	var ladder: Array = TALENT_POINT_PRICES[talent_quality(id)]
+	return int(ladder[clampi(rank-1,0,ladder.size()-1)])
 
 static func talent_value(id: String, rank: int) -> float:
 	var d = TALENTS[id]

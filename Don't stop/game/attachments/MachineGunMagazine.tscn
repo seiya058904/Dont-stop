@@ -6,7 +6,7 @@
 [node name="UniversalExtendedMagazines" type="Node2D"]
 script = ExtResource("1_ccqfe")
 am_id = 6
-am_name = "MACHINE GUN MAGAZINE"
+am_name = "效率弹链"
 am_image = ExtResource("2_muycv")
 am_type = "WEAPON_AMMUNITION"
 am_info = "INFO_MACHINE GUN MAGAZINE"

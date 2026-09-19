@@ -1,0 +1,98 @@
+[
+ {
+  "path": "autoload/Combat.gd",
+  "sha256": "4ad66f20236626ebcc0476410f571c48f2012e517b1b7d3e00afbccff2769a01"
+ },
+ {
+  "path": "autoload/Demo.gd",
+  "sha256": "27eb9ede1e6e61fe8a57e9ae3e1bf3148bdd3c5ed50f21b2a62dbf318266a8b8"
+ },
+ {
+  "path": "autoload/PlayerData.gd",
+  "sha256": "7046ba6c15cbd70d8259ab408fc16fc7d4d83a68b0f5087318c4466f355d1140"
+ },
+ {
+  "path": "autoload/Utils.gd",
+  "sha256": "985ac0be884bbb77f3aba0e8ae79b6e8f59e2427492bd0b9b19f213da6028ce0"
+ },
+ {
+  "path": "autoload/server/RewardServer.gd",
+  "sha256": "c1efde17310ef25e6e7f3ef029bba301780bffa4addc41aa6dadc2ce2c0369dc"
+ },
+ {
+  "path": "game/bullets/Bullet.gd",
+  "sha256": "8cab12552ab8f00abcdee44d2a1cbcca324f9ce7bfd40828e97181d58fb96095"
+ },
+ {
+  "path": "game/bullets/SmpBullet.gd",
+  "sha256": "95015d2ba4c634ac02171d00cc1ac81faea8f66fe5b5d08769090872e2156380"
+ },
+ {
+  "path": "game/bullets/SmpBullet.tscn",
+  "sha256": "12ff97dc289b729be29e2c198991a4bbc4ef69f653f05c3286a72bb0727abeb7"
+ },
+ {
+  "path": "game/config/AttachmentCatalog.gd",
+  "sha256": "010380bf014e8cfc39fba24c2c96d5f83cf160eafc75d6f971e3cd000ed6f8f2"
+ },
+ {
+  "path": "game/config/DemoConfig.gd",
+  "sha256": "31cc00cf5c0d02119b1daf36bfaf1d4a2003a3e02bb4025299c5ecd6fc48d96c"
+ },
+ {
+  "path": "game/config/EffectiveStats.gd",
+  "sha256": "5ea7580edd666ba77f0eadd22dfce76e02457a34ca01099956c0d304bb510918"
+ },
+ {
+  "path": "game/config/LevelProgression.gd",
+  "sha256": "d433bd46c68e4ad04823b1b0c9bc306c2cf41c041e4308b7f92c2aa1b9d4e9f6"
+ },
+ {
+  "path": "game/config/WeaponCatalog.gd",
+  "sha256": "ab526ec597391a5894d75e87754490ab262c569c095756078cd032f7585a3281"
+ },
+ {
+  "path": "game/guns/BaseGun.gd",
+  "sha256": "db2a528f8bac042a7a7cc2a608594deedd958c0d6353cf63013591f1ef84fe10"
+ },
+ {
+  "path": "game/guns/GunSprite.gd",
+  "sha256": "e44891569d31d6606da68d70c9a91458f4fa9d674a6222ec55366ac01df30765"
+ },
+ {
+  "path": "game/guns/GunSprite.tscn",
+  "sha256": "9f6aee4c692b381fe1c4c28d0ebbf9da2b4f78a39400e990f2018d33692e1d08"
+ },
+ {
+  "path": "game/monster/BaseMonster.gd",
+  "sha256": "281b7ef1d251916e5fb85499c5b35bc1b69037d2e9ce0829fa2b27fbd41189d5"
+ },
+ {
+  "path": "game/monster/Monster 2/Monster2.gd",
+  "sha256": "41046899894e8f28120da74bd025b67c107d52b85473fa8fbcb1222ad38d31bf"
+ },
+ {
+  "path": "game/monster/Monster 2/Monster2.tscn",
+  "sha256": "57737ea8e17effba448ec5205f63c5f513ce9cd50e174a90ddd8134b02668f1b"
+ },
+ {
+  "path": "tests/B13GrowthBench.gd",
+  "sha256": "53ca91c771f764f7b6e0f312e2c99b5bb1df2455c4ec2afeef6ade1e923ffce3"
+ },
+ {
+  "path": "tests/B13GrowthBench.tscn",
+  "sha256": "cda586cb4dee7948877fb1e30038de48fd0b3c1bee2077345dbf9f417d36cfdf"
+ },
+ {
+  "path": "tests/M3Weapons.gd",
+  "sha256": "393a75940a14e6bbd634e9e4403c2fa744ce0fcf37782e9a5e13260320ab523e"
+ },
+ {
+  "path": "tests/M8Runtime.gd",
+  "sha256": "13c3003171c9df6bf1052dc512a02a896ff0bea531f56a4f8bc81d0e35382475"
+ },
+ {
+  "path": "tests/M9Power.gd",
+  "sha256": "2f482d9da3d87280797228893d2baf4a0101f9cd5afead26199b7a04543cbd3a"
+ }
+]

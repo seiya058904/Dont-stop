@@ -1,0 +1,53 @@
+[
+	{
+		"build": "talents_common",
+		"clear_seconds": -1.0,
+		"crit": 0.0,
+		"damage": 180.09000000004,
+		"damage_stat": 2.61,
+		"dps": 12.0051996533591,
+		"magazine": 38,
+		"owned_upgrades": 0,
+		"rate": 5.0,
+		"reload_s": 0.76,
+		"reload_seconds": 0.759000000000001,
+		"scenario": "single",
+		"seconds": 15.001,
+		"talent_ranks": 9,
+		"volleys": 69
+	},
+	{
+		"build": "talents_common",
+		"clear_seconds": 15.608,
+		"crit": 0.0,
+		"damage": 180.0,
+		"damage_stat": 2.61,
+		"dps": 11.5325474115838,
+		"magazine": 38,
+		"owned_upgrades": 0,
+		"rate": 5.0,
+		"reload_s": 0.76,
+		"reload_seconds": 0.759000000000001,
+		"scenario": "crowd",
+		"seconds": 15.608,
+		"talent_ranks": 9,
+		"volleys": 72
+	},
+	{
+		"build": "talents_common",
+		"clear_seconds": -1.0,
+		"crit": 0.0,
+		"damage": 180.09000000004,
+		"damage_stat": 2.61,
+		"dps": 12.0051996533591,
+		"magazine": 38,
+		"owned_upgrades": 0,
+		"rate": 5.0,
+		"reload_s": 0.76,
+		"reload_seconds": 0.759000000000001,
+		"scenario": "boss",
+		"seconds": 15.001,
+		"talent_ranks": 9,
+		"volleys": 69
+	}
+]

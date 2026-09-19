@@ -4,7 +4,7 @@
 [node name="A114" type="Node2D"]
 script = ExtResource("1")
 am_id = 114
-am_name = "过载枪管"
+am_name = "强化枪管"
 am_image = ExtResource("2")
 am_type = "WEAPON_BARREL"
 am_info = "所有枪：伤害 +15%；装填时间 +10%"

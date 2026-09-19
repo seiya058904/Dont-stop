@@ -4,7 +4,7 @@
 [node name="A118" type="Node2D"]
 script = ExtResource("1")
 am_id = 118
-am_name = "贯穿弹芯"
+am_name = "贯穿弹药包"
 am_image = ExtResource("2")
 am_type = "WEAPON_AMMUNITION"
 am_info = "贯穿弹芯：详情读取统一机制目录"

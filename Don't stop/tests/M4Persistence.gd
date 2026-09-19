@@ -12,10 +12,13 @@ func _ready():
 		check(PlayerData.player_am_list.size() == 4,"cross-process four magazine instances")
 		check(PlayerData.player_weapon_list[0].bullets_count == 4 and PlayerData.player_weapon_list[4].bullets_count == 7,"cross-process expanded magazines preserve exact ammo")
 		var refund = Demo.reset_preview()
-		check(refund.gold == 2400 and refund.points == 0 and refund.unknown == 0,"cross-process exact payment ledger")
+		# B13: rank-1 gold prices are data-driven; the ledger replays exactly what was paid.
+		var paid_gold = 0
+		for id in DemoConfig.TALENTS: paid_gold += DemoConfig.talent_gold_price(id,1)
+		check(refund.gold == paid_gold and refund.points == 0 and refund.unknown == 0,"cross-process exact payment ledger")
 		var old_gold = PlayerData.gold
-		check(Demo.reset_talents(refund.revision).success and PlayerData.gold == old_gold+2400,"cross-process refund actual gold")
-		check(not Demo.reset_talents(refund.revision).success and PlayerData.gold == old_gold+2400,"cross-process repeat click cannot refund again")
+		check(Demo.reset_talents(refund.revision).success and PlayerData.gold == old_gold+paid_gold,"cross-process refund actual gold")
+		check(not Demo.reset_talents(refund.revision).success and PlayerData.gold == old_gold+paid_gold,"cross-process repeat click cannot refund again")
 	else:
 		for id in Utils.weapon_list: Demo.try_purchase("weapon",id)
 		for id in DemoConfig.TALENTS: Demo.try_purchase("talent",id,"gold")

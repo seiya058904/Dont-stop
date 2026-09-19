@@ -4,7 +4,7 @@
 [node name="A113" type="Node2D"]
 script = ExtResource("1")
 am_id = 113
-am_name = "棱镜扩散器"
+am_name = "宽域扩束模块"
 am_image = ExtResource("2")
 am_type = "WEAPON_MUZZLE"
 am_info = "棱镜扩散器：详情读取统一机制目录"

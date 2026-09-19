@@ -149,7 +149,10 @@ func playerWeaponListChange():
 			local_gun.name = str(weapon_id)
 			gun_root.add_child(local_gun)
 			local_gun.setOwner(self)
-			if gun == null and not Demo.loading:
+			# B13: default-equipping only answers "no weapon yet". After an explicit camp
+			# unequip the player has chosen to stay unarmed, so a new purchase must not
+			# silently re-arm them; equipping stays an explicit panel/hotkey action.
+			if gun == null and not Demo.loading and not Demo.explicitly_unequipped:
 				gun = local_gun
 				gun.set_use(true)
 

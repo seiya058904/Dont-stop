@@ -4,7 +4,7 @@
 [node name="A112" type="Node2D"]
 script = ExtResource("1")
 am_id = 112
-am_name = "补偿枪口"
+am_name = "稳定瞄准模块"
 am_image = ExtResource("2")
 am_type = "WEAPON_MUZZLE"
 am_info = "散布实体枪：散布角 -25%"

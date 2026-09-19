@@ -4,7 +4,7 @@
 [node name="A117" type="Node2D"]
 script = ExtResource("1")
 am_id = 117
-am_name = "冲量支架"
+am_name = "冲击载荷模块"
 am_image = ExtResource("2")
 am_type = "WEAPON_UNDERBARREL"
 am_info = "实体弹/光束：普通敌人击退 +35%；Boss保留抗性"
