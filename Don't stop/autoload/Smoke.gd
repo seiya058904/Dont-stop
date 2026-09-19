@@ -563,6 +563,9 @@ func _probe_report_rects() -> void:
 	var canvas = Utils.canvasLayer
 	if not is_instance_valid(canvas):
 		return
+	for hud in _find_scripts(canvas,"ui/GameUI.gd"):
+		for item in hud.weapon_lsit_node.get_children():
+			if item.has_meta("slot_id"): _probe_emit_rect("hud-slot-%d" % item.get_meta("slot_id"),item)
 	# The title screen is a plain Control added straight to the control canvas layer, NOT a pause
 	# panel, so it is reported from a short walk here rather than from the pause stack below.
 	for title in _find_scripts(canvas,"ui/MainUI.gd"):
@@ -602,6 +605,11 @@ func _probe_report_rects() -> void:
 			_probe_report_rect("camp-weapon-tab", panel, "武器")
 			_probe_report_weapon(panel,0)
 			_probe_report_search(panel)
+			_probe_loadout_controls(panel)
+			var carry_state = JSON.stringify({"slots":PlayerData.weapon_slots,"equipped":Utils.player.gun.weapon_id if Utils.player.gun else -1,"owned":PlayerData.player_weapon_list.keys(),"gold":PlayerData.gold,"message":panel.message.text,"saved":Demo.save_result.success})
+			if carry_state != _last_carry_state:
+				_last_carry_state = carry_state
+				print("[loadout] ",carry_state)
 		elif path.ends_with("ui/DemoSettings.gd"):
 			_probe_report_rect("settings-back-button", panel, "返回")
 			_probe_report_rect("leave-entry", panel, "返回主菜单")
@@ -618,6 +626,17 @@ func _probe_report_rects() -> void:
 ## rectangle cannot tell "the function never ran" from "the control was not found", and that ambiguity
 ## cost two browser runs before it was instrumented.
 var _probe_rect_diag_at := -1000
+var _last_carry_state := ""
+
+func _probe_loadout_controls(node: Node) -> void:
+	if node is Button:
+		if node.has_meta("slot_id"):
+			_probe_emit_rect("loadout-%s-%d" % [node.get_meta("action_id"),node.get_meta("slot_id")],node)
+		elif node.get_meta("action_id","") == "clear_loadout": _probe_emit_rect("loadout-clear",node)
+		elif node.get_meta("action_id","") == "purchase_weapon": _probe_emit_rect("camp-weapon-action",node)
+		elif node.get_meta("action_id","") == "equip_owned": _probe_emit_rect("camp-weapon-owned-action",node)
+		if node.has_meta("weapon_id"): _probe_emit_rect("camp-weapon-%d" % node.get_meta("weapon_id"),node)
+	for child in node.get_children(): _probe_loadout_controls(child)
 var _probe_rect_diag_logged := false
 func _probe_rect_diag() -> void:
 	var now := Time.get_ticks_msec()
@@ -721,7 +740,7 @@ func _probe_emit_rect(tag: String, button: Control) -> void:
 	# by inserting `on_screen=` in the middle of it: the regex stopped matching, no rectangle was ever
 	# stored, and the driver could not click anything. New fields go on the END.
 	print("[probe] rect %s id=%d text=\"%s\" x=%.1f y=%.1f w=%.1f h=%.1f cx=%.1f cy=%.1f on_screen=%s" % [
-		tag, id, _control_label(button), rect.position.x, rect.position.y,
+		tag, id, _control_label(button).replace("\n"," "), rect.position.x, rect.position.y,
 		rect.size.x, rect.size.y, rect.get_center().x, rect.get_center().y, str(on_screen)])
 
 ## The visible label of a published control. `text` exists on Button and LineEdit and NOT on Control,

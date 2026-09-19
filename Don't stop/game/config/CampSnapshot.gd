@@ -21,6 +21,7 @@ static func validate(data) -> bool:
 	if data.schema_version >= 4 and not data.get("campaign_complete") is bool: return false
 	# Optional B13 field: only constrained when present, so old saves need no migration.
 	if data.has("unequipped") and not data.unequipped is bool: return false
+	if data.has("weapon_slots") and not data.weapon_slots is Array: return false
 	for key in ["gold","points","level","next_stage","selected_stage"]:
 		if not number(data[key],true): return false
 	for key in ["hp","hp_max","exp"]:

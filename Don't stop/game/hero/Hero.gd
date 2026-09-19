@@ -152,7 +152,7 @@ func playerWeaponListChange():
 			# B13: default-equipping only answers "no weapon yet". After an explicit camp
 			# unequip the player has chosen to stay unarmed, so a new purchase must not
 			# silently re-arm them; equipping stays an explicit panel/hotkey action.
-			if gun == null and not Demo.loading and not Demo.explicitly_unequipped:
+			if gun == null and not Demo.loading and not Demo.explicitly_unequipped and PlayerData.weapon_slots.has(weapon_id):
 				gun = local_gun
 				gun.set_use(true)
 

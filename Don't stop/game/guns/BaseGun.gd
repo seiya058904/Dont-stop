@@ -268,7 +268,7 @@ func set_use(use:bool):
 	if player && is_use:
 		player.gun = self
 		PlayerData.emit_signal("onWeaponChangeAnim",weapon_id,Utils.GUN_CHANGE_TYPE.CHANGE)
-		if bullets_count == 0 and not Demo.loading:
+		if bullets_count == 0 and not Demo.loading and LevelServer.state != "CAMP":
 			reload_ammo()
 	PlayerData.emit_signal("onWeaponChanged")
 

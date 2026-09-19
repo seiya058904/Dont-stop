@@ -65,6 +65,13 @@ func _ready():
 	check(Demo.unequip_weapon().success,"unequip again")
 	check(Utils.player.gun == null,"unarmed again")
 	PlayerData.switch_deadline = 0
+	# B14: removed guns are owned but no longer hotkeys. Re-add explicitly, then
+	# exercise a real carried-to-carried hotkey switch; ownership/ammo checks remain.
+	check(not PlayerData.changeWeapon(4),"removed gun cannot be selected by a hotkey")
+	check(PlayerData.equip_owned(4,1).success,"camp re-adds gun 4 to the loadout")
+	PlayerData.switch_deadline = 0
+	check(PlayerData.changeWeapon(0),"select another carried gun before hotkey test")
+	PlayerData.switch_deadline = 0
 	check(PlayerData.changeWeapon(4),"hotkey-path equip works (WeaponListItem route)")
 	check(Utils.player.gun != null and Utils.player.gun.weapon_id == 4,"hotkey re-equip restored gun 4")
 	# --- CAMP is the ONLY state that may unequip (the API refuses the rest) -----------------

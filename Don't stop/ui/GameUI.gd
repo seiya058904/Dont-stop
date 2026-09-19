@@ -126,6 +126,7 @@ func _update_weapon_readout() -> void:
 		ammo_count_label.add_theme_color_override("font_color",Color("d3ab7b") if empty else Color("e1e8df"))
 
 func onGameStart():
+	playerWeaponListChange()
 	level_label.text = "Lv. " + str(PlayerData.player_level)
 	onPlayerExpChange(PlayerData.player_exp,PlayerData.getMaxExp())
 	onGoldChange(PlayerData.gold)
@@ -164,12 +165,14 @@ func _update_unarmed_hud():
 		weapon_change_name.text = "未装备武器"
 
 func playerWeaponListChange():
-	for item in PlayerData.player_weapon_list:
-		if weapon_lsit_node.get_child_count() < 7 and !weapon_lsit_node.has_node(str(item)):
-			var ins = weapon_item_pre.instantiate()
-			ins.name = str(item)
-			ins.local_id = item
-			weapon_lsit_node.add_child(ins)
+	if weapon_lsit_node.get_child_count() != 7:
+		for child in weapon_lsit_node.get_children(): child.free()
+		for slot in 7:
+			var item = weapon_item_pre.instantiate()
+			item.slot_id = slot
+			item.name = "Slot%d" % (slot+1)
+			weapon_lsit_node.add_child(item)
+	for item in weapon_lsit_node.get_children(): item.refresh_slot()
 
 func onWeaponChangeAnim(weapon_id,tag = Utils.GUN_CHANGE_TYPE.CHANGE):
 	if tag == Utils.GUN_CHANGE_TYPE.CHANGE:

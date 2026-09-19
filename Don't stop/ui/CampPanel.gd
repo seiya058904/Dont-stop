@@ -38,6 +38,64 @@ var save_retry: Button
 var weapon_models: Dictionary = {}
 var preview_textures: Dictionary = {}
 var expanded_weapons: Dictionary = {}
+var loadout_box: VBoxContainer
+var target_slot := -1
+var replacement_weapon := -1
+
+func loadout_status(id: int) -> String:
+	if not PlayerData.player_weapon_list.has(id): return "未拥有"
+	var slot = PlayerData.weapon_slots.find(id)
+	if slot < 0: return "已拥有 · 未携带"
+	return "槽位%d%s" % [slot+1," · 当前手持" if Utils.player.gun and Utils.player.gun.weapon_id == id else " · 已携带"]
+
+func show_loadout_result(result: Dictionary):
+	message.text = result.reason
+	request_refresh()
+
+func equip_selection(id: int):
+	var result = PlayerData.equip_owned(id,target_slot)
+	if result.get("needs_slot",false): replacement_weapon = id
+	elif result.success:
+		replacement_weapon = -1
+		target_slot = -1
+	show_loadout_result(result)
+
+func render_loadout():
+	clear_box(loadout_box)
+	loadout_box.visible = tab == "weapon"
+	if tab != "weapon": return
+	var heading = HBoxContainer.new(); loadout_box.add_child(heading)
+	var title = label(heading,"携带栏 1–7 · 保留所有已购武器",7)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button(heading,"卸下全部",func():
+		replacement_weapon = -1; target_slot = -1
+		show_loadout_result(PlayerData.clear_loadout())).set_meta("action_id","clear_loadout")
+	if replacement_weapon >= 0:
+		button(heading,"取消替换",func(): replacement_weapon = -1; request_refresh())
+	var row = HBoxContainer.new(); row.add_theme_constant_override("separation",2); loadout_box.add_child(row)
+	for slot in 7:
+		var column = HBoxContainer.new(); column.size_flags_horizontal = Control.SIZE_EXPAND_FILL; column.add_theme_constant_override("separation",0); row.add_child(column)
+		var id = int(PlayerData.weapon_slots[slot])
+		var gun = PlayerData.player_weapon_list.get(id)
+		var current = Utils.player.gun and Utils.player.gun.weapon_id == id
+		var pick = button(column,str(slot+1)+(" +" if id < 0 else ("*" if current else "")),func():
+			if replacement_weapon >= 0:
+				target_slot = slot; equip_selection(replacement_weapon)
+			elif id < 0:
+				target_slot = slot; message.text = "已选择空槽%d；选择已拥有武器后点击装备" % (slot+1)
+				request_refresh()
+			else: show_loadout_result(PlayerData.equip_owned(id)))
+		pick.set_meta("slot_id",slot); pick.set_meta("action_id","select_slot")
+		pick.toggle_mode = true; pick.set_pressed_no_signal(current or target_slot == slot)
+		pick.expand_icon = true; pick.add_theme_constant_override("icon_max_width",20)
+		pick.custom_minimum_size = Vector2(35,20)
+		pick.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if gun: pick.icon = gun.image
+		pick.tooltip_text = "选择此槽替换" if replacement_weapon >= 0 else (gun.weapon_name if gun else "空槽 · 添加已拥有武器")
+		var remove = button(column,"x",func(): show_loadout_result(PlayerData.remove_slot(slot)))
+		remove.custom_minimum_size.x = 12
+		remove.tooltip_text = "移出槽位%d · 保留武器与弹药" % (slot+1)
+		remove.disabled = id < 0; remove.set_meta("slot_id",slot); remove.set_meta("action_id","remove_slot")
 
 ## B11 removed the "Hell Playtest" product concept entirely.
 ##
@@ -170,6 +228,8 @@ func _ready():
 		nav.toggle_mode = true
 		nav.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tab_buttons[pair[0]] = nav
+	loadout_box = VBoxContainer.new()
+	body.add_child(loadout_box)
 	var filters = HBoxContainer.new()
 	body.add_child(filters)
 	search_box = LineEdit.new()
@@ -285,6 +345,7 @@ func clear_box(box):
 
 func render():
 	refresh_pending = false
+	render_loadout()
 	weapon_header.visible=tab=="weapon"
 	var scroll_position = listing_scroll.scroll_vertical
 	var detail_position = detail_scroll.scroll_vertical
@@ -335,7 +396,7 @@ func render():
 				if int(id) >= 111: categories.append("特殊")
 				if not matches(tr(gun.weapon_name)+id+WeaponCatalog.definition(int(id)).get("plan","")+DemoConfig.weapon_info(int(id)),categories): continue
 				if owned_only and not PlayerData.player_weapon_list.has(int(id)): continue
-				var weapon_card=entry(("▶ " if Utils.player.gun and Utils.player.gun.weapon_id == int(id) else ("√ " if PlayerData.player_weapon_list.has(int(id)) else ""))+tr(gun.weapon_name)+"\n%s · %s · %d金币" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
+				var weapon_card=entry(tr(gun.weapon_name)+" · "+loadout_status(int(id))+"\n%s · %s · %d金币" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id]],id,func(): show_weapon(id,gun))
 				weapon_card.icon=gun.image; weapon_card.expand_icon=false
 				weapon_card.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; weapon_card.custom_minimum_size.y=34
 				weapon_card.clip_text = true
@@ -413,7 +474,7 @@ func show_weapon(id: String, gun):
 	weapon_preview.texture=weapon_art(gun.image)
 	assert(weapon_preview.texture!=null,"Missing weapon preview: "+id)
 	weapon_heading.text=tr(gun.weapon_name)
-	weapon_badge.text="%s · %s\n%d金币 · %s" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id],"当前装备" if owned and gun.is_use else ("已拥有" if owned else "未拥有")]
+	weapon_badge.text="%s · %s\n%d金币 · %s" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id],loadout_status(int(id))]
 	weapon_badge.add_theme_color_override("font_color",tier_color(WeaponCatalog.tier(int(id))))
 	var stats = gun.effective if owned else {}
 	if stats.is_empty():
@@ -453,10 +514,12 @@ func show_weapon(id: String, gun):
 		else:
 			button(detail,"已拥有 | 装备",func():
 				selected_gun = int(id)
-				if PlayerData.changeWeapon(int(id),true): message.text = "已装备「%s」" % tr(gun.weapon_name)
-				request_refresh())
+				equip_selection(int(id))).set_meta("action_id","equip_owned")
+		var carried_slot = PlayerData.weapon_slots.find(int(id))
+		if carried_slot >= 0 and not gun.is_use:
+			button(detail,"移出携带栏",func(): show_loadout_result(PlayerData.remove_slot(carried_slot)))
 	else:
-		button(detail,"%d金币 | 购买" % Utils.weapon_money_list[id],func(): purchase("weapon",id))
+		button(detail,"%d金币 | 购买" % Utils.weapon_money_list[id],func(): purchase("weapon",id)).set_meta("action_id","purchase_weapon")
 
 func magazine_list():
 	for count in [5,10,25]:

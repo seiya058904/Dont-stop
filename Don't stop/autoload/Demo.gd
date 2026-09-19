@@ -323,8 +323,11 @@ func unequip_weapon() -> Dictionary:
 	if LevelServer.state != "CAMP": return {"success":false,"reason":"仅营地可卸下武器；请先返回营地"}
 	if not is_instance_valid(Utils.player) or not Utils.player.gun: return {"success":false,"reason":"当前没有装备武器"}
 	var name = tr(Utils.player.gun.weapon_name)
+	var slot = PlayerData.weapon_slots.find(Utils.player.gun.weapon_id)
+	if slot >= 0: return PlayerData.remove_slot(slot)
 	Utils.player.gun.set_use(false)
 	Utils.player.gun = null
+	PlayerData.onWeaponChanged.emit()
 	explicitly_unequipped = true
 	changed.emit()
 	var saved = save_camp()
@@ -360,7 +363,7 @@ func snapshot() -> Dictionary:
 	# including a brand-new one, so there is nothing here to clamp and nothing to repair on the
 	# next load. `next_stage` remains the linear campaign pointer and is still bounded by
 	# CampSnapshot.normalize(); it is deliberately NOT written from a direct stage departure.
-	return {"schema_version":6,"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":6,"weapon_slots":PlayerData.weapon_slots.duplicate(),"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}
@@ -403,6 +406,7 @@ func load_camp() -> bool:
 	PlayerData.player_am_list.clear()
 	for gun in PlayerData.player_weapon_list.values(): gun.free()
 	PlayerData.player_weapon_list.clear()
+	PlayerData.weapon_slots = [-1,-1,-1,-1,-1,-1,-1]
 	for reward in Utils.player.reward_root.get_children(): reward.free()
 	Utils.player.SPEED = 100 * PlayerData.player_speed
 	talents = data.talents.duplicate()
@@ -418,6 +422,7 @@ func load_camp() -> bool:
 	PlayerData.player_exp = data.exp
 	for w in data.weapons:
 		PlayerData.add_weapon(Utils.weapon_list[w.id].instantiate())
+	PlayerData.load_slots(data)
 	purchases = data.legacy.duplicate()
 	for id in purchases:
 		var reward = RewardServer.reward_list[id].instantiate()
@@ -448,7 +453,8 @@ func load_camp() -> bool:
 	PlayerData.gold = int(data.gold)
 	PlayerData.reward_point = int(data.points)
 	loading = true
-	if data.equipped != "": Utils.player.changeWeapon(int(data.equipped))
+	if data.equipped != "" and PlayerData.weapon_slots.has(int(data.equipped)): Utils.player.changeWeapon(int(data.equipped))
+	if Utils.player.gun == null and data.equipped != "" and data.has("weapon_slots"): explicitly_unequipped = true
 	loading = false
 	save_blocked = false; dirty = false
 	save_result = {"success":true,"reason":"已恢复"}
@@ -712,6 +718,7 @@ func release_session_nodes() -> void:
 		outgoing.gun = null
 	Utils.player = null
 	PlayerData.player_weapon_list.clear()
+	PlayerData.weapon_slots = [-1,-1,-1,-1,-1,-1,-1]
 	PlayerData.player_am_list.clear()
 	# The CanvasLayer belongs to the outgoing scene. Leaving it set makes the new
 	# scene's ControlUI indistinguishable from the old one and lets a stale HUD be
