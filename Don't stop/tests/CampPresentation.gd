@@ -22,10 +22,7 @@ func _ready():
 	panel.render()
 	check(panel.weapon_preview.texture == texture,"selection reuses its pixel preview texture")
 	for id in models:
-		if id == "6":
-			check(not is_instance_valid(models[id]) and is_instance_valid(panel.weapon_models[id]),"BoomBoi retains the original emitter lifecycle and frees its prior model")
-		else:
-			check(panel.weapon_models[id] == models[id],"search does not rebuild display model "+id)
+		check(panel.weapon_models[id] == models[id],"search does not rebuild display model "+id)
 	panel.message.text = "保留交易结果"
 	panel.search_text = "__no_matching_weapon__"
 	panel.render()

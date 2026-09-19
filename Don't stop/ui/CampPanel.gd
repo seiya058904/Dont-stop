@@ -321,13 +321,12 @@ func render():
 				if tier_filter > 0 and WeaponCatalog.tier(int(id)) != tier_filter: continue
 				# Off-tree display models live only as long as this panel. Search and selection
 				# never rebuild all weapon scenes, and real owned guns remain authoritative.
-				# BoomBoi's dormant emitters consume engine RNG during instantiation.
-				# Keep that one scene's original lifecycle on every backend; guessing
-				# a draw count would couple gameplay RNG to export/renderer details.
-				if id == "6" and weapon_models.has(id):
-					weapon_models[id].free()
-					weapon_models.erase(id)
 				if not weapon_models.has(id): weapon_models[id] = Utils.weapon_list[id].instantiate()
+				elif id == "6":
+					# The pinned Godot 4.7.2 baseline recreated two dormant emitters
+					# here: two global RNG draws in headless, four in rendered
+					# native/Web Camp. Preserve that stream without rebuilding it.
+					for _legacy_draw in (2 if DisplayServer.get_name() == "headless" else 4): randi()
 				var gun = weapon_models[id]
 				var tags = DemoConfig.weapon_tags(int(id))
 				var categories = []
