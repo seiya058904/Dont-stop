@@ -1221,6 +1221,11 @@ func _run() -> void:
 	# sequence would fight it over rounds and panels.
 	if "--tour" in OS.get_cmdline_args() or "--tour" in OS.get_cmdline_user_args():
 		return
+	# Scripted native smoke must neither restore nor write the player's real save.
+	# E2E explicitly retains its isolated-browser-profile seeding contract.
+	if not e2e:
+		Demo.test_mode = true
+		print("[smoke] isolated=true save_writes=false")
 	await get_tree().create_timer(3.0).timeout
 	await _enter_camp_from_title()
 	await get_tree().create_timer(1.5).timeout
@@ -1274,7 +1279,7 @@ func _run() -> void:
 		print("[smoke] result=", "PASS" if ok_depart and combat_ok else "FAIL")
 		return
 
-	var ok_switch: bool = PlayerData.changeWeapon(other, true)
+	var ok_switch: bool = PlayerData.changeWeapon(other)
 	_mark_frames()
 	await get_tree().create_timer(1.2).timeout
 	_report_frames("first-switch")
@@ -1293,7 +1298,7 @@ func _run() -> void:
 
 	# Second round: same actions again (cold vs warm comparison).
 	var other2: int = ids[0] if other != ids[0] else ids[1]
-	PlayerData.changeWeapon(other2, true)
+	PlayerData.changeWeapon(other2)
 	_mark_frames()
 	await get_tree().create_timer(1.2).timeout
 	_report_frames("second-switch")
