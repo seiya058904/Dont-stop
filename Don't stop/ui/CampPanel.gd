@@ -8,6 +8,7 @@ var listing: VBoxContainer
 var detail: VBoxContainer
 var wallet: Label
 var message: Label
+var transaction_tween: Tween
 var cached: Array = []
 var selected_gun = -1
 var detail_actions = {}
@@ -387,7 +388,15 @@ func render():
 func purchase(kind: String,id: String,currency = "gold"):
 	var result = Demo.try_purchase(kind,id,currency)
 	message.text = result.reason
-	if result.success: Demo.play_ui()
+	if transaction_tween and transaction_tween.is_valid(): transaction_tween.kill()
+	message.modulate = Color.WHITE
+	if result.success:
+		Demo.play_ui()
+		# A short local confirmation follows the successful transaction only.
+		# The data, rank, payment and save outcome above remain authoritative.
+		message.modulate = Color("a7dfbd")
+		transaction_tween = create_tween()
+		transaction_tween.tween_property(message,"modulate",Color.WHITE,0.45)
 	selection = id
 	request_refresh()
 

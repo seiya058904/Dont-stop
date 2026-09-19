@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://game/guns/MechanismGun.gd" id="1_hv6am"]
-[ext_resource type="Texture2D" path="res://Sprites/The Tiny Alchemist - Guns/gun13.png" id="2_knpti"]
+[ext_resource type="Texture2D" path="res://Sprites/Presentation/weapon-119.svg" id="2_knpti"]
 [ext_resource type="PackedScene" path="res://game/bullets/SmpBullet.tscn" id="3_v01pf"]
 [ext_resource type="Animation" path="res://game/guns/anim/reload.anim" id="4_ehwfm"]
 [ext_resource type="AudioStream" path="res://audio/GUNAuto_Assault Rifle B Fire_01.wav" id="4_ysjra"]

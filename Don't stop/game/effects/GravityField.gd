@@ -4,10 +4,18 @@ var age = 0.0
 var ended = false
 var footprint = PackedVector2Array()
 var local_footprint = PackedVector2Array()
+var edge = PackedVector2Array()
+var inner_rings: Array[PackedVector2Array] = []
 func _ready():
 	add_to_group("combat_transient")
 	footprint = preload("res://game/effects/CombatFootprint.gd").polygon(global_position,context.get("radius",64.0))
 	for point in footprint: local_footprint.append(to_local(point))
+	edge = local_footprint.duplicate()
+	if not edge.is_empty(): edge.append(edge[0])
+	for i in 3:
+		var ring = PackedVector2Array()
+		ring.resize(edge.size())
+		inner_rings.append(ring)
 func _physics_process(delta):
 	if ended: return
 	if context.get("epoch",-1) != LevelServer.epoch:
@@ -29,9 +37,8 @@ func _draw():
 	var radius = context.get("radius",64.0)
 	if local_footprint.is_empty(): return
 	draw_colored_polygon(local_footprint,Color(0.6,0.4,1,0.08))
-	var edge = local_footprint.duplicate(); edge.append(edge[0])
 	draw_polyline(edge,Color(0.75,0.6,1,0.8),1)
 	for i in 3:
-		var inner = PackedVector2Array()
-		for point in edge: inner.append(point*fposmod(1.0-age+i/3.0,1.0))
-		draw_polyline(inner,Color(0.6,0.4,1,0.65),1)
+		var scale_factor = fposmod(1.0-age+i/3.0,1.0)
+		for point_index in edge.size(): inner_rings[i][point_index] = edge[point_index]*scale_factor
+		draw_polyline(inner_rings[i],Color(0.6,0.4,1,0.65),1)

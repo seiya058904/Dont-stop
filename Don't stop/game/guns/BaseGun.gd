@@ -1,8 +1,8 @@
 extends Node2D
 class_name BaseGun
 
-
 const particles_pre = preload("res://game/hero/gpu_particles_2d.tscn")
+var thermal_visual: Node2D
 
 ## 武器ID
 @export var weapon_id = 0 #枪械ID
@@ -96,6 +96,7 @@ func _ready() -> void:
 	bullets_count = bullets_max_count
 	audio_reload_ammo.stream = reload_stream
 	gun_image.texture = image
+	gun_image.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	# The scene values are the grip pose. Capture them before any animation can
 	# move the gun, so every later recoil has a fixed place to come back to.
 	capture_pose()
@@ -164,8 +165,13 @@ func addAttachMent(am:BaseAttachment) -> bool:
 func removeAttachMent(am:BaseAttachment):
 	pass
 
+func stop_thermal_visual():
+	if is_instance_valid(thermal_visual): thermal_visual.queue_free()
+	thermal_visual = null
+
 func cancel_actions():
 	if is_instance_valid(tier_muzzle): tier_muzzle.stop()
+	stop_thermal_visual()
 	action_generation += 1
 	change_timer.stop()
 	is_reloading = false
@@ -325,8 +331,5 @@ func _shoot() -> void:
 func _shootAnim():
 	if not is_use or not is_instance_valid(player) or player.is_dead or get_tree().paused: return
 	var tier = WeaponCatalog.tier(weapon_id)
-	tier_muzzle.pulse(tier)
+	tier_muzzle.pulse(tier,weapon_id)
 	player.cameraSnake((shake_vector + Vector2.ONE*maxi(0,tier-3)*0.12) * direction)
-	var ins = particles_pre.instantiate()
-	ins.position = gun_tip.position
-	add_child(ins)

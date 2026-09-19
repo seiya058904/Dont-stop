@@ -209,7 +209,14 @@ func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 			if context.has("burn") and not target.is_die: target.apply_burn("thermal",context.burn,1.0,context)
 	var edge = Array(footprint)
 	edge.append(start)
-	trace(edge,Color(1,0.5,0.2) if context.has("burn") else Color(0.4,0.9,1),1.0)
+	if context.has("burn"):
+		# Refresh one visual per sustained gun; the hit/tick/footprint above is unchanged.
+		if not is_instance_valid(gun.thermal_visual) or gun.thermal_visual.is_queued_for_deletion():
+			gun.thermal_visual = load("res://game/effects/CombatEffect.gd").new()
+			get_tree().current_scene.add_child(gun.thermal_visual)
+		gun.thermal_visual.refresh_cone(edge,Color(1,0.5,0.2))
+	else:
+		trace(edge,Color(0.4,0.9,1),1.0)
 
 func fragments(position: Vector2, angle: float, context: Dictionary, ignored, speed: float):
 	for i in mini(3,context.get("shards",0)):

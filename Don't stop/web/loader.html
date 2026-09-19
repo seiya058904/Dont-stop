@@ -305,6 +305,7 @@
 			if (params.has('iso')) GODOT_CONFIG.args.push('--stress-iso=' + params.get('iso'));
 			if (params.get('park') === '1') GODOT_CONFIG.args.push('--stress-park=1');
 			GODOT_CONFIG.args.push('--stress-label=' + (params.get('label') || 'run'));
+			if (params.has('weapons')) GODOT_CONFIG.args.push('--stress-weapons=' + params.get('weapons'));
 		} else if (params.has('perf')) {
 			// The measurement is published on the read-only probe channel, so arming one always arms
 			// the other: `?perf=1` alone used to arm a mode whose lines were never printed.

@@ -139,7 +139,12 @@ func _draw():
 	super._draw()
 	var mode = spec.get("mode","")
 	var color = Color(1,0.65,0.2) if mode in ["rocket","missile"] else Color(0.4,0.9,1)
-	draw_line(Vector2(-9,0),Vector2.ZERO,color,2 if mode != "fragment" else 1)
+	if mode == "gravity": color = Color(0.72,0.58,1)
+	draw_line(Vector2(-3 if mode == "fragment" else -7,0),Vector2.ZERO,color,2 if mode != "fragment" else 1)
+	if mode in ["rocket","missile"]:
+		draw_colored_polygon(PackedVector2Array([Vector2(3,0),Vector2(0,-2),Vector2(-3,-2),Vector2(-3,2),Vector2(0,2)]),Color(0.85,0.88,0.76))
+	elif mode == "gravity": draw_arc(Vector2.ZERO,3,0,TAU,8,color,1)
+	elif mode == "shard": draw_line(Vector2(-1,-2),Vector2(2,1),color,1)
 	if mode == "ricochet": draw_arc(Vector2.ZERO,4,0,TAU,8,color,1)
 	if mode == "disc":
 		draw_arc(Vector2.ZERO,7,0,TAU,12,Color(0.8,0.9,1),2)

@@ -50,6 +50,8 @@ var barrage := 0
 ## B11.2: comma-separated purely-visual switches for the isolation A/B. Empty means "everything on",
 ## which is the shipped state.
 var iso := ""
+var presentation_weapons: Array[int] = []
+var presentation_weapon := -1
 
 # ---- per-frame samples (parallel packed arrays: no per-frame allocation) ---------------------
 var _ms := PackedFloat32Array()
@@ -106,6 +108,9 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(18))
 		elif arg.begins_with("--stress-iso="): iso = arg.substr(14)
 		elif arg.begins_with("--stress-label="): label = arg.substr(15)
+		elif arg.begins_with("--stress-weapons="):
+			for key in arg.substr(17).split(",",false):
+				if Utils.weapon_list.has(str(int(key))): presentation_weapons.append(int(key))
 	B11Probe.enabled = true
 	_apply_iso()
 	get_tree().node_added.connect(_count_added)
@@ -268,6 +273,19 @@ func _sample_round() -> void:
 		PlayerData.player_hp = PlayerData.player_hp_max
 		var now := Time.get_ticks_msec()
 		var elapsed := float(now-started)/1000.0
+		# Optional actual-weapon load profile. Default A-D keep their original gun.
+		if not presentation_weapons.is_empty():
+			var slot := int((_total_combat_s+elapsed)/8.0) % presentation_weapons.size()
+			var next_weapon: int = presentation_weapons[slot]
+			if next_weapon != presentation_weapon:
+				presentation_weapon = next_weapon
+				Utils.player.changeWeapon(next_weapon)
+				print("[stress] weapon=%d round=%d combat_s=%.2f" % [next_weapon,round_index,elapsed])
+			# A charge weapon needs a real release; holding forever only benchmarks charging.
+			if presentation_weapon == 113 and fmod(elapsed,2.0) < 0.12:
+				Input.action_release("shoot")
+			else:
+				Input.action_press("shoot")
 		if elapsed >= next_amp:
 			next_amp += 4.0
 			# Every amplifier is a TOP-UP, not a one-off volley: the player kills what arrives, so a
@@ -524,6 +542,10 @@ func _stats(values) -> Dictionary:
 ## the stutter is a burst, the conditioned rows separate from the unconditioned ones here; if it is
 ## not, they do not - and that is the answer either way.
 func _dump() -> void:
+	# Optional post-run evidence only: no allocation/serialization in measured frames.
+	# Retain the existing B11 summaries; consumers can derive an exact warm window.
+	if label.begins_with("presentation"):
+		print("[stress-frames] ",JSON.stringify({"ms":Array(_ms),"physics_ms":Array(_phys),"process_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_seconds":Array(_combat_seconds)}))
 	var all: Dictionary = _stats(_ms)
 	var phys: Dictionary = _stats(_phys)
 	var proc: Dictionary = _stats(_proc)

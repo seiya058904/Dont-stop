@@ -160,7 +160,7 @@ func step(delta):
 		budget_live = get_tree().get_nodes_in_group("hostile_zone").size()
 	full_detail = budget_live <= DETAIL_BUDGET
 	visual_clock -= delta
-	var active: bool = elapsed >= warning
+	var active: bool = activated
 	var sweeping := sweep != 0.0 and sweep_t > 0.0 and sweep_t < 1.0
 	# Only decorative warning motion is sampled at 30 Hz; the final 150 ms, activation edge and
 	# damaging/sweeping geometry keep the physics cadence.
@@ -175,7 +175,7 @@ func step(delta):
 	# whose origin moved, and a detail-budget flip all DO change the ink and keep the full cadence.
 	# Everything else stops repainting until it changes or is freed, and because the ink is retained
 	# the player still sees it.
-	var frozen: bool = active and not sweeping and full_detail == previous_detail and global_position == last_draw_origin
+	var frozen: bool = elapsed >= warning and active == previous_active and not sweeping and full_detail == previous_detail and global_position == last_draw_origin
 	if not frozen and (visual_clock <= 0 or active != previous_active or elapsed >= warning-0.15):
 		queue_redraw(); visual_clock = 1.0/30.0
 		if profiling: profile_stats.redraw_requests += 1
@@ -198,6 +198,9 @@ func step(delta):
 		if fair_gate and damage > 0 and visible_warning < FAIR_VISIBLE and elapsed < warning+FAIR_MAX_EXTENSION:
 			return
 		activated = true
+		# The fairness gate, not the nominal timer, owns the visible firing edge.
+		queue_redraw()
+		if profiling: profile_stats.redraw_requests += 1
 		probe_firing = B11Probe.enabled
 		if probe_firing: B11Probe.note_beam_active(true)
 		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if mode == "circle" else 18,direction)
@@ -239,7 +242,7 @@ func _draw():
 	# Ink only. The detail budget and the pierce fog mirror are per-physics-tick decisions and now
 	# live in `step()`; with both gone from here, a frozen footprint can stop repainting without
 	# losing either its presentation budget or its mirrored direction.
-	preload("res://game/effects/CombatTelegraph.gd").paint(self,mode,direction,radius,length,width,angle,elapsed/maxf(0.01,warning),elapsed>=warning,sweep,geometry_cache,full_detail,style)
+	preload("res://game/effects/CombatTelegraph.gd").paint(self,mode,direction,radius,length,width,angle,elapsed/maxf(0.01,warning),activated,sweep,geometry_cache,full_detail,style)
 	if profiling:
 		var draw_cost = Time.get_ticks_usec()-started
 		profile_stats.draw_calls += 1
