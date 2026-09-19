@@ -315,8 +315,12 @@ func replenish():
 ## untouched - the player simply has no current weapon. `set_use(false)` is what makes the
 ## old gun inert (stops firing/reload processing and hides it); clearing the Hero's `gun`
 ## link is what makes the state observable to every system as "unarmed".
+##
+## The API is safe by itself, not by UI hiding: CAMP is the ONLY level-server state that
+## may unequip. PREPARING / COMBAT / DEAD / RESOLVING all refuse, so no caller, hotkey,
+## test or future panel can drop a weapon mid-fight even if a button is visible.
 func unequip_weapon() -> Dictionary:
-	if LevelServer.state == "COMBAT": return {"success":false,"reason":"战斗中不可卸下；请先返回营地"}
+	if LevelServer.state != "CAMP": return {"success":false,"reason":"仅营地可卸下武器；请先返回营地"}
 	if not is_instance_valid(Utils.player) or not Utils.player.gun: return {"success":false,"reason":"当前没有装备武器"}
 	var name = tr(Utils.player.gun.weapon_name)
 	Utils.player.gun.set_use(false)

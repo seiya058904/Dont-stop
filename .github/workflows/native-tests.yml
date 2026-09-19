@@ -68,7 +68,10 @@ jobs:
   contracts:
     needs: setup
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    # B13.1 added M4Talents (the 24-talent behaviour audit) to this job; 30 min keeps the
+    # whole contracts block comfortably inside one timeout as cases accumulate. Cases are
+    # never dropped to save time.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Restore the pinned Godot binary
@@ -143,6 +146,9 @@ jobs:
           run_case B13Economy
           run_case B13Unequip
           run_case B13UI
+          # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
+          # job as the B13 contracts that pin their new magnitudes.
+          run_case M4Talents
           run_case B13Strength
           run_case M3Weapons
       - name: Upload contract logs

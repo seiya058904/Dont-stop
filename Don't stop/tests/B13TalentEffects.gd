@@ -156,7 +156,7 @@ func _ready():
 	var gold = PlayerData.gold
 	check(Demo.try_purchase("talent","T01","gold").success and PlayerData.gold == gold-150,"T01 rank 1 charges the common price 150")
 	check(Demo.try_purchase("talent","T01","gold").success and PlayerData.gold == gold-150-250,"T01 rank 2 charges 250")
-	check(Demo.try_purchase("talent","T16","gold").success and PlayerData.gold == gold-150-250-1200,"T16 charges the legendary price 1200")
+	check(Demo.try_purchase("talent","T16","gold").success and PlayerData.gold == gold-150-250-2400,"T16 charges the legendary price 2400")
 	var points = PlayerData.reward_point
 	check(Demo.try_purchase("talent","T02","points").success and PlayerData.reward_point == points-2,"T02 rank 1 charges 2 points")
 	check(Demo.try_purchase("talent","T02","points").success and PlayerData.reward_point == points-2-3,"T02 rank 2 charges 3 points")

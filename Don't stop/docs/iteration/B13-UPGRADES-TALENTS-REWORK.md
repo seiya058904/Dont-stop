@@ -7,6 +7,14 @@ and the B11 systems. The raw BEFORE audit lives at
 `docs/iteration/evidence/b13/audit-before.md`; every BEFORE row there was read from
 runtime source, not from names.
 
+**B13.1 closeout (this revision)** applies the external-review findings without
+redesigning the batch: an expanded benchmark measurement-input manifest, the growth
+contract restated honestly as a three-scenario GrowthScore, legendary talents re-priced
+above the legendary upgrade band, real 当前 → 购买后 previews for directly-mapped
+talents, a strict CAMP-only unequip guard in the API itself, real unarmed
+shoot/reload/dash input regressions, a hardcoded B12-era payment refund fixture, and
+M4Talents wired into Native CI. Section 14 lists every finding → fix.
+
 ---
 
 ## 1. What this batch is
@@ -106,17 +114,17 @@ All BEFORE prices were flat 100 gold / 1 point per rank (`TALENT_GOLD_PRICE`).
 | T10 | 连杀加速 | 3 | +3%/lvl ×5 stacks | 稀有 | 3 | +4%/lvl ×5 stacks | 400/550/700 | 2/3/4 |
 | T11 | 弹药回流 | 3 | 1×lvl mags / 5 kills | 稀有 | 3 | unchanged | 400/550/700 | 2/3/4 |
 | T12 | 首发重击 | 3 | +15/20/25% first shot | 稀有 | 3 | +25/40/55% | 400/550/700 | 2/3/4 |
-| T13 | 贯穿专精 | 1 | +1 pierce (straight) | 传说 | 1 | unchanged (mechanism unlock) | 1200 | 5 |
-| T14 | 静电跃迁 | 1 | 20% arc, 40% dmg, cd 0.6 | 传说 | 1 | **25% arc, 50% dmg, cd 0.5** | 1200 | 5 |
+| T13 | 贯穿专精 | 1 | +1 pierce (straight) | 传说 | 1 | unchanged (mechanism unlock) | 2400 | 5 |
+| T14 | 静电跃迁 | 1 | 20% arc, 40% dmg, cd 0.6 | 传说 | 1 | **25% arc, 50% dmg, cd 0.5** | 2400 | 5 |
 | T15 | 灼热弹道 | 3 | burn 0.2×lvl/tick | 稀有 | 3 | burn 0.3×lvl/tick | 400/550/700 | 2/3/4 |
-| T16 | 连锁爆破 | 1 | r32, dmg 2.0, cd 0.4 | 传说 | 1 | **r40, dmg 2.6** | 1200 | 5 |
+| T16 | 连锁爆破 | 1 | r32, dmg 2.0, cd 0.4 | 传说 | 1 | **r40, dmg 2.6** | 2400 | 5 |
 | T17 | 低温冲击 | 3 | slow 8%×lvl (cap 24%) | 稀有 | 3 | unchanged | 400/550/700 | 2/3/4 |
 | T18 | 冲击放大 | 3 | knockback +15%/lvl | 普通 | 3 | unchanged | 150/250/350 | 1/1/2 |
-| T19 | 应急护盾 | 1 | block 1 hit, cd 8s | 传说 | 1 | **cd 6s** | 1200 | 5 |
+| T19 | 应急护盾 | 1 | block 1 hit, cd 8s | 传说 | 1 | **cd 6s** | 2400 | 5 |
 | T20 | 战后修复 | 3 | heal 10%×lvl on victory | 普通 | 3 | unchanged | 150/250/350 | 1/1/2 |
 | T21 | 精英猎手 | 3 | +10/15/20% vs elite | 稀有 | 3 | **+15/25/35%** | 400/550/700 | 2/3/4 |
 | T22 | 密集火网 | 3 | +5%×lvl in crowds | 稀有 | 3 | **+8%×lvl** | 400/550/700 | 2/3/4 |
-| T23 | 暴击回响 | 1 | 30% echo, r70 | 传说 | 1 | **40% echo, r85** | 1200 | 5 |
+| T23 | 暴击回响 | 1 | 30% echo, r70 | 传说 | 1 | **40% echo, r85** | 2400 | 5 |
 | T24 | 吸能修复 | 3 | heal 0.15×lvl/kill | 稀有 | 3 | heal 0.2×lvl/kill | 400/550/700 | 2/3/4 |
 
 Quality split: 9 普通 / 10 稀有 / 5 传说 (T13 静电跃迁 T16 暴击回响 应急护盾 + 贯穿专精).
@@ -132,10 +140,17 @@ hold rank 3 of anything still validate.
   two independent axes (T23 传说 max1; T01 普通 max3).
 * Prices are now data-driven per quality and rank
   (`DemoConfig.talent_gold_price / talent_point_price`); `TALENT_GOLD_PRICE` remains ONLY
-  for the legacy prototype-reward shop. Bands never cross (rank-1: 150 < 400 < 1200).
-  The full talent build costs 29 250 gold vs 22 370 for the full upgrade build — the
+  for the legacy prototype-reward shop. Bands never cross (rank-1: 150 < 400 < 2400).
+  The full talent build costs 35 250 gold vs 22 370 for the full upgrade build — the
   premium system is also the pricier one. `INITIAL_GOLD = 9999` untouched: a fresh wallet
   buys all commons + change, the rest is a progression.
+* B13.1 premium relation: every legendary talent costs **2400 gold — above the legendary
+  upgrade band's top (2000)**. A legend talent is max=1 with no later rank cost, so that
+  single price is its whole gold route; the B13 positioning "talents are the more advanced,
+  more expensive, stronger system" requires it to never undercut a legendary upgrade.
+  Common/rare ladders verified healthy and left untouched; point prices stay 1/1/2,
+  2/3/4, 5; `INITIAL_GOLD`/`INITIAL_TALENT_POINTS` untouched; existing payment ledgers are
+  never rewritten (refunds replay what was actually paid — see the B12-era fixture in §14).
 * Legendary talents were DEEPENED, not just relabelled (rule 15): deeper arc, deeper kill
   blast, faster shield, deeper echo. All stay inside the existing bounds (cooldowns,
   MAX_DERIVATION 2, no recursion, no infinite projectiles).
@@ -143,31 +158,38 @@ hold rank 3 of anything still validate.
 ## 4. Measured strength (rule 31/32) — runtime, not catalog numbers
 
 `tests/B13GrowthBench.tscn` (same real fixture as M9Power/B12WeaponBench: real firing,
-reloads, health deltas; weapon 0, level 1; evidence in `docs/iteration/evidence/b13/growth-*.json`):
+reloads, health deltas; weapon 0, level 1; evidence in `docs/iteration/evidence/b13/growth-*.json`,
+re-frozen at the B13.1 closeout head together with the expanded measurement-input manifest):
 
-| Build | single DPS | boss DPS | crowd 6×30hp clear |
-|---|---|---|---|
-| baseline | 7.56 | 7.56 | 25.08 s |
-| upgrades_common | 10.27 | 10.27 | 17.83 s |
-| upgrades_rare | 14.85 | 14.85 | 6.17 s |
-| upgrades_full | 19.55 | 19.55 | 4.69 s |
-| talents_common | 12.01 | 12.01 | 15.61 s |
-| talents_rare | 18.97 | 22.36 | 7.34 s |
-| talents_full | 18.26 | 21.48 | **2.84 s** |
-| both_full | 35.88 | 42.41 | 1.35 s |
+| Build | single DPS | boss DPS | crowd 6×30hp clear | GrowthScore |
+|---|---|---|---|---|
+| baseline | 7.56 | 7.56 | 25.08 s | 1.00 |
+| upgrades_common | 10.27 | 10.27 | 17.83 s | 1.37 |
+| upgrades_rare | 14.85 | 14.85 | 6.17 s | 2.50 |
+| upgrades_full | 19.55 | 19.55 | 4.69 s | 3.29 |
+| talents_common | 12.01 | 12.01 | 15.61 s | 1.59 |
+| talents_rare | 18.97 | 22.36 | 7.34 s | 2.94 |
+| talents_full | 18.26 | 21.48 | **2.84 s** | **3.93** |
+| both_full | 35.88 | 42.41 | 1.35 s | 7.90 |
+
+GrowthScore = geomean(single_ratio, boss_ratio, crowd_speed_ratio) against the baseline
+build — the single honest aggregate, because the legendary talent step does NOT grow
+single/boss DPS monotonically and this report no longer claims it does.
 
 Conclusions drawn by `tests/B13Strength.gd` from that frozen evidence:
 
-1. **Higher quality is really stronger** inside both systems (every rung > baseline ×1.1;
-   upgrade common→rare→full and talent common→rare→full strictly grow).
-2. **Talent gain > upgrade gain**: talents win at common and rare in both single and boss;
-   at full investment legendary TALENTS are mechanisms (arc/echo/blast need a second
-   target or a kill), so single-target output is near-parity (18.26 vs 19.55, −7%) while
-   talents win boss (+10%) and crush the crowd scenario (2.84 s vs 4.69 s clear). Across
-   all three scenarios the geometric mean of the talent/upgrade ratios is **1.19** — the
-   talent system is the stronger one, asserted as >1.15 in CI.
-3. **Legendary talents are felt**: crowd clear drops 2.84 s vs the rare talent build's
-   7.34 s (>30% cut, asserted).
+1. **Every build beats the baseline** by >10% sustained DPS in single and boss.
+2. **Higher quality is really stronger, as a three-scenario score**: the upgrade ladder
+   1.37 → 2.50 → 3.29 and the talent ladder 1.59 → 2.94 → 3.93 rise at every step.
+   No per-scenario strict-monotonic claim is made — legendary talents are mechanisms
+   (pierce/arc/kill-blast/shield/crit-echo) whose value lives largely in crowd/utility,
+   and talents_full's single/boss DPS is measurably ~4% under talents_rare's. That
+   trade-off is BOUNDED, not ignored: the anti-masking guards require single/boss ≥ 90%
+   of the rare build (measured 96.3% / 96.1%) and a clearly faster crowd clear
+   (>10%; measured 61% faster, and the >30% mechanisms rule still holds).
+3. **Talent gain > upgrade gain at every investment level**, as the aggregate:
+   1.59 vs 1.37 (common), 2.94 vs 2.50 (rare), 3.93 vs 3.29 (full) — and
+   **Talent Full / Upgrade Full = 1.19**, asserted >1.15 in CI.
 4. **No runaway**: crowd clears stay finite; the strongest account stays inside a 12×
    envelope; derivation depth ≤ 2 (M4Combinations + B13UpgradeEffects).
 5. Compounding works: both_full ≈ 4.7× baseline single DPS — strong, bounded endgame.
@@ -186,9 +208,14 @@ All stacking paths re-verified with the new amplitudes:
 
 ## 6. Unequip weapon (rule 19–24)
 
-* **The action**: `Demo.unequip_weapon()` — camp-only. `gun.set_use(false)` (inert: stops
-  firing/reload processing, hides), then `Utils.player.gun = null`. Ownership, ammo,
-  ownership records: untouched. No refund.
+* **The action**: `Demo.unequip_weapon()` — CAMP-only, enforced by the API itself
+  (B13.1): `if LevelServer.state != "CAMP": refuse`. PREPARING / COMBAT / DEAD /
+  RESOLVING all refuse, so no caller, hotkey, test or future panel can drop a weapon
+  mid-fight even if a button were visible; the panel hiding the button is only the
+  second layer. `gun.set_use(false)` (inert: stops firing/reload processing, hides),
+  then `Utils.player.gun = null`. Ownership, ammo, ownership records: untouched. No refund.
+  B13Unequip walks the full state matrix (each non-CAMP state refuses with the weapon
+  still equipped; CAMP succeeds).
 * **The intent state**: `Demo.explicitly_unequipped`. Set by an explicit unequip; cleared
   by ANY successful equip (panel or hotkey, `PlayerData.changeWeapon`). It distinguishes
   "no weapon yet" (fresh player's first purchase still auto-equips — preserved) from
@@ -205,6 +232,12 @@ All stacking paths re-verified with the new amplitudes:
   `Demo.changed`); StatPanel says `未装备武器；装备武器后可查看完整属性`; CampPanel lists
   ownership and offers 装备; talent_status reads are guarded; death/resurrect guarded.
   The old hard refusal "请先购买并装备一把枪" is gone from both CampPanel and LevelServer.
+* **Real unarmed input regression** (B13.1, in B13Unequip): inside a real unarmed COMBAT
+  session the test presses and releases the real `shoot` action — no projectile spawns
+  (Bullet-node count unchanged), a nearby dummy takes zero damage; presses and releases
+  the real `reload` action — reserve magazines unchanged, gun still null; presses the
+  real `dash` action — the dash path executes, the player stays alive, no script error.
+  No `check(true)` placeholders.
 * **Re-equip**: panel 装备 button, hotkey path (`PlayerData.changeWeapon`) — both tested;
   equip restores HUD/ammo state, switch debounce intact, save records the new equipped id.
 
@@ -230,6 +263,17 @@ All stacking paths re-verified with the new amplitudes:
   quality (explicitly "价值等级；与当前等级独立"), full condition text, current effect,
   next-rank effect, and BOTH next-rank prices (gold and points); condition/cooldown/state
   lines kept (T10 stacks, T24 cooldown, T13 compatibility, ...). Quality filter shared.
+* B13.1 — real 当前 → 购买后 preview for directly-mapped talents: T01/T02/T03/T04/T05/
+  T06/T18 settle through `EffectiveStats.calculate` on the CURRENT gun, T07 through
+  refresh()'s own HP-delta formula, T08 through `EffectiveStats.player_values`, T09
+  through `RewardServer.pickup_bonus` — the same paths the purchase itself uses, with
+  the candidate rank applied only inside the calculation and restored immediately.
+  Rendered with the same comparison format as the upgrade shop
+  (`Damage  2.6 → 3.0  ▲+15%`). Conditional/proc/kill-mechanism talents (T10–T17,
+  T19–T24) keep their mechanism descriptions — no fake static stat and no synthetic
+  "综合战力" is invented, and nothing is parsed from description strings. B13UI asserts
+  one weapon-stat (T01) and one player-stat (T07) preview against the ACTUAL post-purchase
+  runtime value.
 * Weapon page: equipped weapon now offers **卸下武器**; unarmed page offers 装备; markers
   (▶/√) unchanged for B12UI compatibility.
 
@@ -241,17 +285,18 @@ New B13 contracts wired into `.github/workflows/native-tests.yml` (contracts job
 |---|---|---|
 | B13Catalog | shape, quality 1..3, names, price bands, shop price = catalog, talent ladders, system price relation | 530 PASS |
 | B13UpgradeEffects | all 24 upgrades really change exactly what they declare, on two guns; mechanism secondaries; grenade unlock; full-account caps | 85 PASS |
-| B13TalentEffects | exact runtime magnitude of every talent incl. deepened legends; charged prices | 37 PASS |
-| B13Economy | underfunded refusals, exact per-rank/currency charges, mixed-ledger refund, bands, talent>upgrade price relation, INITIAL_GOLD unchanged | 136 PASS |
-| B13Unequip | fresh auto-equip, unequip, save `equipped=""`+intent, reload keeps unarmed, no silent re-arm on purchase, manual+hotkey equip, unarmed combat, resurrect | 39 PASS |
-| B13UI | real CampPanel: filters, quality cards, detail fields, live preview, owned states, unequip button, unarmed stat panel | 129 PASS |
-| B13Strength | frozen growth evidence vs design rules incl. geomean >1.15 and harness sha256 manifest | 49 PASS |
+| B13TalentEffects | exact runtime magnitude of every talent incl. deepened legends; charged prices (legend 2400) | 37 PASS |
+| B13Economy | underfunded refusals, exact per-rank/currency charges, mixed-ledger refund, bands, talent>upgrade price relation, legend-above-upgrade-band premium, B12-era hardcoded payment fixture refund, INITIAL_GOLD/POINTS unchanged | 154 PASS |
+| B13Unequip | fresh auto-equip, unequip, save `equipped=""`+intent, reload keeps unarmed, no silent re-arm on purchase, manual+hotkey equip, full CAMP-only state matrix, real unarmed shoot/reload/dash inputs, resurrect | 52 PASS |
+| B13UI | real CampPanel: filters, quality cards, detail fields, live previews, talent preview == actual post-purchase value (T01 + T07), owned states, unequip button, unarmed stat panel | 137 PASS |
+| B13Strength | frozen growth evidence vs the GrowthScore design rules (ladders, talent>upgrade, full ratio >1.15, anti-masking guards) + the 23-file measurement-input sha256 manifest | 139 PASS |
 | B13GrowthBench | evidence generator (8 builds × 3 scenarios) — OUT of per-PR CI by design | runs clean |
 
 Regression (rule 35): B12Catalog 182, B12Strength 195, B12Save 14, B12UI 75,
-B12LineOfSightRegression 12, M3Weapons 72, AimProvider 14, M4Talents 233,
-BaselineRegression 4, B11Fairness 61, B11Perf stage39 + stage40 (convergence kept:
-created≈removed, fps_avg 144+) — **all PASS**. ContractRunner/M4Attachments/
+B12LineOfSightRegression 12, M3Weapons 72, AimProvider 14, M4Talents 233 (now also a
+Native CI contracts case), BaselineRegression 4, B11Fairness 61, B11Perf stage39 +
+stage40 (convergence kept: created≈removed, fps_avg 144+) — **all PASS** at the B13.1
+closeout head. ContractRunner/M4Attachments/
 M4Combinations/M4Persistence stop on the pre-existing `result.instance_id` /
 `player_am_list[...]` defects of the retired attachment-inventory contract family;
 verified byte-identical failures on a clean origin/main worktree (same PASS counts, same
@@ -290,8 +335,10 @@ no FAIL. M4Combinations max_depth_seen ≤ 2 with the full account.
    (out of scope); their semantics live on in the B13 contracts.
 2. Single-target benchmark output of the full talent build sits ~7% under the full
    upgrade build (legendary talents are mechanisms, invisible to a lone immortal dummy);
-   the systems are compared across all three scenarios (geomean 1.19) — this trade-off is
-   a design statement, recorded here explicitly.
+   the systems are compared across all three scenarios via the GrowthScore geomean
+   (3.93 vs 3.29, ratio 1.19) — this trade-off is a design statement, recorded here
+   explicitly and bounded by the ≥90% single/boss guards in B13Strength rather than
+   papered over with a per-scenario monotonicity claim the data does not support.
 3. Bench numbers are from one representative weapon (id 0) and one seed per scenario;
    they prove ordering and magnitude, not per-weapon tuning.
 4. No save schema bump was needed; `unequipped` is an optional field, so B12-era saves,
@@ -303,6 +350,26 @@ Code: `AttachmentCatalog.gd`, `DemoConfig.gd`, `Demo.gd`, `PlayerData.gd`, `Hero
 `LevelServer.gd`, `CampSnapshot.gd`, `CampPanel.gd`, `StatPanel.gd`, `GameUI.gd`,
 24 attachment `.tscn` display names.
 Tests: 8 new B13 scenes/scripts, pin updates in ContractRunner/M4Talents/M4Persistence/M6SaveUI.
-CI: `native-tests.yml` (+7 run_case lines).
+CI: `native-tests.yml` (+7 run_case lines, +M4Talents, contracts timeout 25→30 min).
 Evidence/docs: `docs/iteration/evidence/b13/*` (audit-before.md, 8 growth JSONs, manifest.json,
-14 PNGs), this report.
+14 PNGs), this report, `tools/b13_manifest.py`.
+
+## 14. B13.1 — External Review Closeout (finding → fix)
+
+Scope guard: this is the B13 closeout round, not a new design pass. The 24 upgrade
+definitions, the 24 talent definitions and their amplitudes, B12's
+TIERS/PRICES/POWER, and the B11 difficulty/performance systems are all untouched
+beyond the explicit findings below. Not merged, not deployed, not tagged.
+
+| # | Finding | Fix |
+|---|---------|-----|
+| 1 | Growth-evidence provenance pinned only `tests/B13GrowthBench.gd`; editing any measurement input could silently rotate the meaning of the frozen JSON | `docs/iteration/evidence/b13/manifest.json` is now the **measurement-input manifest**: 23 files covering the harness chain (B13GrowthBench + M9Power + M8Runtime + M3Weapons + the bench `.tscn`), build composition & stat path (`DemoConfig`, `AttachmentCatalog`, `EffectiveStats`, `WeaponCatalog`), the runtime combat path (`Demo`, `Combat`, `PlayerData`, `Utils`, `RewardServer`), the benchmark weapon id 0 and its projectile/hit path (`BaseGun`, `GunSprite.gd/.tscn`, `Bullet`, `SmpBullet.gd/.tscn`) and the dummy's HP accounting (`BaseMonster`, `Monster2.gd/.tscn`). LF-normalised SHA-256, same convention as B12. `B13Strength` verifies: manifest non-empty, exactly the required set (no gaps, no extras), every file exists, every hash matches — any drift FAILS until the bench is re-run and the manifest regenerated via `tools/b13_manifest.py` (which parses the required list out of B13Strength.gd, so generator and verifier cannot drift). Deliberately excluded and documented: LevelServer (only its state flag is flipped), Hero (frozen, never hit), save/UI layers. |
+| 2 | The contract claimed "common < rare < full strictly grows in single + boss" for BOTH systems; the frozen data does not support that for the legendary talent step (talents_full single 18.26 / boss 21.48 vs talents_rare 18.97 / 22.36) | Contract restated as a three-scenario **GrowthScore = geomean(single_ratio, boss_ratio, crowd_speed_ratio)** vs baseline. No per-scenario monotonic ladder is claimed anywhere. Verified relations (all aggregate): upgrade and talent ladders rise at every step; talents outgain upgrades at common, rare AND full; Talent Full / Upgrade Full >= 1.15 (measured ≈1.19). New anti-masking guards for talents_full vs talents_rare: single >= 90% and boss >= 90% of the rare build, crowd clear clearly improved (>10% faster; frozen data shows >30%). No talent was buffed or nerfed to make this fit. |
+| 3 | Legendary talents cost 1200 gold — cheaper than the legendary upgrade band top (2000), contradicting "talents are the more advanced, more expensive, stronger system" (a legend talent is max=1, so that one price is its whole gold route) | `TALENT_GOLD_PRICES[3]` recalibrated **1200 → 2400**, i.e. above the legendary upgrade band's upper edge with a clear premium. Common/rare ladders verified healthy and untouched; point prices stay (commons 1/1/2, rares 2/3/4, legends 5); `INITIAL_GOLD`/`INITIAL_TALENT_POINTS` untouched; existing payment ledgers are never rewritten. Price assertions updated in B13TalentEffects; a new B13Economy assertion pins every legend talent above the upgrade band top; UI/doc prices re-rendered from the catalog. |
+| 4 | Talent detail shows effects as text only; no honest 当前 → 购买后 preview for the directly-mapped talents | Real runtime preview in the talent detail (same comparison format as the upgrade shop), computed through the SAME paths the purchase uses — `EffectiveStats.calculate` for T01/T02/T03/T04/T05/T06/T18 on the current gun, refresh()'s HP-delta formula for T07, `EffectiveStats.player_values` for T08, `RewardServer.pickup_bonus` for T09 — candidate rank applied only inside the calculation, restored immediately. Nothing parsed from description strings; no synthetic aggregate score. Conditional/proc/kill talents (T10–T17, T19–T24) stay on mechanism descriptions. B13UI asserts one weapon-stat (T01) and one player-stat (T07) preview equals the ACTUAL post-purchase value. |
+| 5 | `Demo.unequip_weapon()` only refused `state == "COMBAT"`; PREPARING/DEAD/RESOLVING could theoretically unequip if ever called there | The API now refuses everything that is not `state == "CAMP"` (explicit `!= "CAMP"` guard). B13Unequip walks the matrix: PREPARING/COMBAT/DEAD/RESOLVING refuse with the weapon still equipped, CAMP succeeds. Panel button hiding remains only a second layer. |
+| 6 | Unarmed regression lacked real shoot/reload/dash input | B13Unequip now presses and releases the real actions in a real unarmed COMBAT session: `shoot` spawns no Bullet and deals no damage to a live dummy; `reload` consumes no reserve magazine and leaves the gun null; `dash` executes the dash path and the player survives. No `check(true)` stubs. B13Visual keeps the full visual unequip/departure/re-equip flow. |
+| 7 | Migration tests only proved refunds at CURRENT B13 prices; nothing pinned a real B12-era ledger | New hardcoded B12-era fixture in B13Economy: T01 rank1 gold **100**, T02 rank1 points **1**, plus a mixed rank (T02 rank2 gold 130) — amounts deliberately ≠ any B13 price and never generated from `DemoConfig.talent_gold_price`. Verified: snapshot validates, load leaves every amount untouched, `reset_preview()` replays exactly 230 gold / 1 point, reset refunds exactly that (NOT the B13 prices), and the refunded wallets survive save/reload. |
+| 8 | M4Talents (24-talent behaviour audit) was missing from Native CI although B13 reworked all 24 talents | `run_case M4Talents` added to the contracts job next to the B13 contracts; contracts timeout raised 25→30 min as headroom (cases are never dropped to make time). |
+| 9 | PR #14 added `.gd.uid` sidecars for seven B12-era test scripts — unrelated B12 metadata | Removed from the PR (no repo-wide UID migration is in progress; B12 did not ship them). B13's own new-script `.uid` files stay, per current project convention. |
+| 10 | Evidence had to be re-generated so the final PR's config, prices, UI, tests and provenance share one head | Final `B13GrowthBench` re-run (8 builds × 3 scenarios) at the closeout head; growth JSONs + the expanded manifest re-frozen; `B13Strength` re-run green against them. The JSONs are never hand-edited. |

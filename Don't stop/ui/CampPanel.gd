@@ -412,6 +412,12 @@ func show_talent(id: String):
 		# B13: per-quality, per-rank prices replace the flat 100/1. The next purchase charges
 		# exactly the price of the rank it grants; reset/refund replays recorded payments.
 		label(detail,"下一等级：%s\n等级 %d → %d\n支付任选一种：%d金币 或 %d天赋点" % [DemoConfig.talent_effect(id,rank+1),rank,rank+1,DemoConfig.talent_gold_price(id,rank+1),DemoConfig.talent_point_price(id,rank+1)])
+		# B13.1: the real 当前 → 购买后 values for directly-mapped stats, settled through the
+		# live calculation paths. Conditional/proc talents stay on their mechanism text above.
+		var preview_lines := talent_preview_lines(id,rank,rank+1)
+		if not preview_lines.is_empty():
+			label(detail,"当前 → 购买后（真实结算）",8)
+			for preview_line in preview_lines: label(detail,preview_line,8)
 	button(detail,"金币购买",func(): purchase("talent",id,"gold")).disabled = rank == d.max
 	button(detail,"天赋点升级",func(): purchase("talent",id,"points")).disabled = rank == d.max
 
@@ -561,8 +567,50 @@ func tier_style(item: Button,tier: int):
 		if tier==5: style.shadow_color=Color(1,0.74,0.3,0.15); style.shadow_size=2
 		item.add_theme_stylebox_override(state,style)
 func comparison(stat: String,current: float,candidate: float) -> String:
-	var names={"damage":"Damage","rate":"RPM","magazine":"Magazine","reload":"Reload","crit":"Crit","range":"Range","spread":"Spread","impulse":"Knockback","pierce":"Pierce","shards":"Shards"}
+	var names={"damage":"Damage","rate":"RPM","magazine":"Magazine","reload":"Reload","crit":"Crit","range":"Range","spread":"Spread","impulse":"Knockback","pierce":"Pierce","shards":"Shards","max_hp":"Max HP","speed":"Speed","pickup":"Pickup"}
 	var delta=candidate-current
-	var change="%+.0f" % delta if stat in ["magazine","pierce","shards","bounces"] else ("%+.1fpp" % (delta*100) if stat=="crit" else ("%+.0f%%" % (delta/current*100) if current!=0 else "%+.1f" % delta))
+	var change="%+.0f" % delta if stat in ["magazine","pierce","shards","bounces","max_hp"] else ("%+.1fpp" % (delta*100) if stat=="crit" else ("%+.0f%%" % (delta/current*100) if current!=0 else "%+.1f" % delta))
 	var factor=60.0 if stat=="rate" else (100.0 if stat=="crit" else 1.0)
 	return "%s  %.1f → %.1f  %s%s" % [names[stat],current*factor,candidate*factor,"▲" if delta>0 else ("▼" if delta<0 else "="),change]
+
+## B13.1 real purchase preview for the directly-mapped talents. The numbers come from the
+## SAME calculation paths the game itself uses - EffectiveStats.calculate for the weapon
+## stats of the CURRENT gun, EffectiveStats.player_values / RewardServer.pickup_bonus for
+## player stats, and refresh()'s own hp-delta formula for T07 - with the candidate rank
+## applied only inside the calculation and restored immediately afterwards. Nothing is
+## parsed from a description string, and no synthetic "overall power" is invented.
+## Talents whose value is conditional or proc-driven (T10-T17, T19-T24) have no honest
+## static stat to show, so they keep their mechanism descriptions.
+func talent_preview_lines(id: String, rank: int, next_rank: int) -> Array:
+	var lines: Array = []
+	var saved_rank: int = Demo.talents.get(id,0)
+	var weapon_stats := {"T01":"damage","T02":"rate","T03":"reload","T04":"magazine","T05":"range","T06":"crit","T18":"impulse"}
+	if weapon_stats.has(id):
+		if not is_instance_valid(Utils.player) or not is_instance_valid(Utils.player.gun): return lines
+		var before: Dictionary = EffectiveStats.calculate(Utils.player.gun)
+		Demo.talents[id] = next_rank
+		var after: Dictionary = EffectiveStats.calculate(Utils.player.gun)
+		restore_preview_rank(id,saved_rank)
+		var stat: String = weapon_stats[id]
+		lines.append(comparison(stat,float(before[stat]),float(after[stat])))
+	elif id == "T07":
+		# refresh() applies exactly this delta on purchase; preview it without mutating.
+		var hp: float = PlayerData.player_hp_max
+		lines.append(comparison("max_hp",hp,hp+DemoConfig.talent_value("T07",next_rank)-DemoConfig.talent_value("T07",rank)))
+	elif id == "T08":
+		var speed_before: float = EffectiveStats.player_values().speed
+		Demo.talents[id] = next_rank
+		var speed_after: float = EffectiveStats.player_values().speed
+		restore_preview_rank(id,saved_rank)
+		lines.append(comparison("speed",speed_before,speed_after))
+	elif id == "T09":
+		var pickup_before: float = 1.0+RewardServer.pickup_bonus()
+		Demo.talents[id] = next_rank
+		var pickup_after: float = 1.0+RewardServer.pickup_bonus()
+		restore_preview_rank(id,saved_rank)
+		lines.append(comparison("pickup",pickup_before,pickup_after))
+	return lines
+
+func restore_preview_rank(id: String, saved_rank: int):
+	if saved_rank == 0: Demo.talents.erase(id)
+	else: Demo.talents[id] = saved_rank

@@ -63,8 +63,56 @@ func _ready():
 	for key in Utils.am_dict:
 		if AttachmentCatalog.quality(int(key)) == 1: max_common_upgrade = maxi(max_common_upgrade,int(AttachmentCatalog.PRICES[int(key)]))
 	check(DemoConfig.talent_gold_price("T16",1) > max_common_upgrade,"legendary talent outranks every common upgrade")
+	# B13.1 premium relation: a legendary talent costs MORE than the legendary upgrade price
+	# band's upper edge. A legend talent is max=1 with no later rank cost, so the whole gold
+	# route of the purchase is that one price - it must not undercut the legend upgrades.
+	var max_legendary_upgrade := 0
+	for key in Utils.am_dict:
+		if AttachmentCatalog.quality(int(key)) == 3: max_legendary_upgrade = maxi(max_legendary_upgrade,int(AttachmentCatalog.PRICES[int(key)]))
+	for id in DemoConfig.TALENTS:
+		if DemoConfig.talent_quality(id) != 3: continue
+		check(DemoConfig.talent_gold_price(id,1) > max_legendary_upgrade,"legendary talent %d gold sits above the legendary upgrade band top (%d)"%[DemoConfig.talent_gold_price(id,1),max_legendary_upgrade])
 	# --- the INITIAL_GOLD demo rule is untouched --------------------------------------------
 	check(DemoConfig.INITIAL_GOLD == 9999,"demo wallet constant unchanged")
+	check(DemoConfig.INITIAL_TALENT_POINTS == 9999,"demo talent-point wallet constant unchanged")
+	# --- B12-era historical payments refund exactly what was paid ---------------------------
+	# The mixed-ledger test above builds its payments at CURRENT B13 prices. That cannot
+	# prove anything about real B12 saves, whose ledger amounts were written before the
+	# rework. This fixture HARDCODES genuine B12-era amounts (flat 100 gold / 1 point) and
+	# must never be regenerated from DemoConfig.talent_gold_price(): if it were, the test
+	# would pass even if the refund logic wrongly re-priced old payments. T02 rank 2 rides
+	# along as a mixed rank with a currency switch, as a real B12 account could hold.
+	Demo.talents = {"T01":1,"T02":2}
+	Demo.talent_payments = [
+		{"id":"T01","level":1,"currency":"gold","amount":100},
+		{"id":"T02","level":1,"currency":"points","amount":1},
+		{"id":"T02","level":2,"currency":"gold","amount":130},
+	]
+	var b13_t01_price: int = DemoConfig.talent_gold_price("T01",1)
+	var b13_t02_point_price: int = DemoConfig.talent_point_price("T02",1)
+	check(b13_t01_price != 100 and b13_t02_point_price != 1,"fixture sanity: B13 prices differ from the hardcoded B12 amounts (%d gold / %d points)"%[b13_t01_price,b13_t02_point_price])
+	Demo.refresh()
+	var historic_snapshot: Dictionary = Demo.snapshot()
+	check(CampSnapshot.validate(historic_snapshot),"a save carrying B12-era payment amounts validates")
+	check(Demo.save_store.save(Demo.save_path,historic_snapshot).success,"write the B12-era save")
+	check(Demo.load_camp(),"reload the B12-era save")
+	var ledger_after_load: Array = Demo.talent_payments.duplicate(true)
+	var ledger_ok := ledger_after_load.size() == 3
+	for i in 3:
+		if not ledger_ok: break
+		for key in ["id","level","currency","amount"]:
+			ledger_ok = ledger_ok and str(ledger_after_load[i].get(key)) == str(Demo.talent_payments[i].get(key))
+	check(ledger_ok,"loading a B12-era save leaves every payment amount untouched")
+	var historic_preview: Dictionary = Demo.reset_preview()
+	check(historic_preview.gold == 230 and historic_preview.points == 1,"reset preview replays the historical amounts paid (230 gold = 100+130, 1 point)")
+	check(Demo.reset_talents(historic_preview.revision).success,"resetting the historical plan succeeds")
+	var gold_after_refund: int = PlayerData.gold
+	var points_after_refund: int = PlayerData.reward_point
+	check(Demo.talents.is_empty() and Demo.talent_payments.is_empty(),"the historical plan is fully cleared")
+	check(Demo.save_store.save(Demo.save_path,Demo.snapshot()).success,"write the post-refund save")
+	check(Demo.load_camp(),"reload after the historical refund")
+	check(PlayerData.gold == gold_after_refund and PlayerData.reward_point == points_after_refund,"the refunded historical amounts survive a save/reload untouched")
+	check(Demo.talents.is_empty() and Demo.talent_payments.is_empty(),"no payment reappears after the reload")
 	print("B13_ECONOMY_CHECKS ",checks," FAILURES ",failures)
 	if failures: get_tree().quit(1)
 	else: await Demo.quit_game()

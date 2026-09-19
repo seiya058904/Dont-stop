@@ -33,9 +33,12 @@ const TALENT_QUALITY = {
 	"T13":3,"T14":3,"T16":3,"T19":3,"T23":3
 }
 ## Data-driven prices per rank (index = next rank - 1), calibrated against the 9999 demo
-## wallet: all commons ≈ 6750 gold, each rare ≈ 1650, each legend 1200 - a full account
-## (~29k) is deliberately out of reach of the starting wallet.
-const TALENT_GOLD_PRICES = {1:[150,250,350],2:[400,550,700],3:[1200]}
+## wallet: all commons ≈ 6750 gold, each rare ≈ 1650, each legend 2400 - a full account
+## (~35k) is deliberately out of reach of the starting wallet. B13.1: the legendary talent
+## price sits ABOVE the legendary upgrade price band's upper edge (AttachmentCatalog tops
+## out at 2000), because a legend talent is max=1, has no later rank cost, and the talent
+## system is the premium one - a legend must never be the cheaper legendary purchase.
+const TALENT_GOLD_PRICES = {1:[150,250,350],2:[400,550,700],3:[2400]}
 const TALENT_POINT_PRICES = {1:[1,1,2],2:[2,3,4],3:[5]}
 const TALENTS = {
 	"T02": {"name":"快速循环","max":3,"step":0.1,"info":"每级射速+10%；热流保持0.1秒tick并提升每tick伤害，原激光仅提升脉冲频率。","unit":"射速/DPS"},

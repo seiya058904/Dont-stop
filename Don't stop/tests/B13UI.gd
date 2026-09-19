@@ -92,6 +92,32 @@ func _ready():
 	check("400金币 或 2天赋点" in detail,"talent detail shows the next-rank gold and point prices")
 	check(DemoConfig.talent_effect("T02",1) in detail,"talent detail states the next-rank effect")
 	check(find_button(panel,"金币购买") != null and find_button(panel,"天赋点升级") != null,"both purchase routes are offered")
+	# --- B13.1: the talent preview must equal the ACTUAL post-purchase value -----------------
+	# One weapon-stat talent (T01 → gun damage through EffectiveStats) and one player-stat
+	# talent (T07 → max HP through refresh()'s own delta). The number the panel showed
+	# before buying must be the number the runtime reports after buying.
+	panel.selection = "T01"; panel.render()
+	detail = detail_text_of(panel)
+	check("当前 → 购买后（真实结算）" in detail,"a weapon-stat talent shows the real preview section")
+	var saved_t01_rank: int = Demo.talents.get("T01",0)
+	Demo.talents["T01"] = 1
+	var expected_damage: float = float(EffectiveStats.calculate(Utils.player.gun).damage)
+	if saved_t01_rank == 0: Demo.talents.erase("T01")
+	else: Demo.talents["T01"] = saved_t01_rank
+	check(("%.1f"%expected_damage) in detail,"T01 preview shows the real post-purchase damage (%.1f)"%expected_damage)
+	panel.purchase("talent","T01","gold")
+	await wait(0.1)
+	check(Demo.rank("T01") == 1,"T01 was bought for the preview comparison")
+	check(is_equal_approx(Utils.player.gun.effective.damage,expected_damage),"the real purchased damage equals the previewed value")
+	panel.selection = "T07"; panel.render()
+	detail = detail_text_of(panel)
+	check("当前 → 购买后（真实结算）" in detail,"a player-stat talent shows the real preview section")
+	var expected_hp: float = PlayerData.player_hp_max+DemoConfig.talent_value("T07",1)
+	check(("%.1f"%expected_hp) in detail,"T07 preview shows the real post-purchase max HP (%.1f)"%expected_hp)
+	panel.purchase("talent","T07","gold")
+	await wait(0.1)
+	check(Demo.rank("T07") == 1,"T07 was bought for the preview comparison")
+	check(is_equal_approx(float(PlayerData.player_hp_max),expected_hp),"the real purchased max HP equals the previewed value")
 	# --- weapon tab: the equipped weapon offers the unequip action ---------------------------
 	panel.switch_tab("weapon"); panel.selection = "0"; panel.render()
 	check(find_button(panel,"卸下武器") != null,"the equipped weapon offers 卸下武器")
