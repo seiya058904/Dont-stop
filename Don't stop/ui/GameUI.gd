@@ -27,6 +27,10 @@ var inv_ui
 var exp_text: Label
 var level_notice: Label
 var notice_tween: Tween
+var current_weapon_label: Label
+var current_weapon_icon: TextureRect
+var readout_clock := 0.0
+var readout_empty := -1
 
 ## The graphic magazine shows the *ratio* of the current magazine, not one shell
 ## per round. The bar used to build min(bullets_count, 40) shells and then delete
@@ -51,6 +55,7 @@ var ammo_segments: Array = []
 var ammo_lit := -1.0
 
 func _ready() -> void:
+	_setup_weapon_readout()
 	PlayerData.level_rewards_applied.connect(show_level_rewards)
 	level_bar.show_percentage=false
 	exp_text=Label.new(); exp_text.position=level_bar.position; exp_text.size=level_bar.size; exp_text.add_theme_font_size_override("font_size",5); box_top.add_child(exp_text)
@@ -73,7 +78,55 @@ func _ready() -> void:
 	PlayerData.onHpChange.connect(func hpChange(hp,max_hp): #血量变化监听
 		hp_bar.max_value = max_hp;hp_bar.value = hp)
 
+func _setup_weapon_readout() -> void:
+	# Keep the combat centre clear; the current gun belongs beside its ammunition.
+	$WeaponChangeUI.hide()
+	current_weapon_label = Label.new()
+	current_weapon_label.position = Vector2(-46,-23)
+	current_weapon_label.size = Vector2(140,11)
+	current_weapon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	current_weapon_label.clip_text = true
+	current_weapon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	current_weapon_label.add_theme_font_size_override("font_size",6)
+	current_weapon_label.add_theme_color_override("font_color",Color("d9e2de"))
+	bottom_bls.add_child(current_weapon_label)
+	current_weapon_icon = TextureRect.new()
+	current_weapon_icon.position = Vector2(-26,-11)
+	current_weapon_icon.size = Vector2(32,16)
+	current_weapon_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	current_weapon_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	current_weapon_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	current_weapon_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bottom_bls.add_child(current_weapon_icon)
+	weapon_bullet_list.offset_left = -26
+	weapon_bullet_list.offset_right = 94
+	ammo_count_label.add_theme_font_size_override("font_size",7)
+	ammo_label.add_theme_color_override("font_color",Color("a0b2ba"))
+	gold_label.add_theme_color_override("font_color",Color("aebbb9"))
+	reward_label.add_theme_color_override("font_color",Color("aebbb9"))
+	_update_weapon_readout()
+
+func _process(delta: float) -> void:
+	# Reload has no UI signal. Observe its real state; never maintain another timer.
+	readout_clock += delta
+	if readout_clock < 0.1: return
+	readout_clock = 0.0
+	_update_weapon_readout()
+
+func _update_weapon_readout() -> void:
+	if not is_instance_valid(current_weapon_label): return
+	var gun := _equipped_gun()
+	var next_text: String = "未装备武器" if gun == null else ("装填 · " if gun.is_reloading else "")+gun.weapon_name
+	if current_weapon_label.text != next_text: current_weapon_label.text = next_text
+	var next_texture: Texture2D = null if gun == null else gun.image
+	if current_weapon_icon.texture != next_texture: current_weapon_icon.texture = next_texture
+	var empty: bool = gun == null or gun.bullets_count == 0
+	if int(empty) != readout_empty:
+		readout_empty = int(empty)
+		ammo_count_label.add_theme_color_override("font_color",Color("d3ab7b") if empty else Color("e1e8df"))
+
 func onGameStart():
+	playerWeaponListChange()
 	level_label.text = "Lv. " + str(PlayerData.player_level)
 	onPlayerExpChange(PlayerData.player_exp,PlayerData.getMaxExp())
 	onGoldChange(PlayerData.gold)
@@ -112,12 +165,14 @@ func _update_unarmed_hud():
 		weapon_change_name.text = "未装备武器"
 
 func playerWeaponListChange():
-	for item in PlayerData.player_weapon_list:
-		if weapon_lsit_node.get_child_count() < 7 and !weapon_lsit_node.has_node(str(item)):
-			var ins = weapon_item_pre.instantiate()
-			ins.name = str(item)
-			ins.local_id = item
-			weapon_lsit_node.add_child(ins)
+	if weapon_lsit_node.get_child_count() != 7:
+		for child in weapon_lsit_node.get_children(): child.free()
+		for slot in 7:
+			var item = weapon_item_pre.instantiate()
+			item.slot_id = slot
+			item.name = "Slot%d" % (slot+1)
+			weapon_lsit_node.add_child(item)
+	for item in weapon_lsit_node.get_children(): item.refresh_slot()
 
 func onWeaponChangeAnim(weapon_id,tag = Utils.GUN_CHANGE_TYPE.CHANGE):
 	if tag == Utils.GUN_CHANGE_TYPE.CHANGE:

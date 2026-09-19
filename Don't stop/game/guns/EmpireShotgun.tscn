@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://bcv0qtflr50wt"]
 
 [ext_resource type="Script" path="res://game/guns/EmpireShotgun.gd" id="1_nbdk4"]
-[ext_resource type="Texture2D" uid="uid://dijcgwkaw1w7u" path="res://Sprites/The Tiny Alchemist - Guns/gun13.png" id="2_psynq"]
+[ext_resource type="Texture2D" path="res://Sprites/Presentation/weapon-5.svg" id="2_psynq"]
 [ext_resource type="PackedScene" uid="uid://dcdejklfqy5wk" path="res://game/bullets/SmpBullet.tscn" id="3_fnttn"]
 [ext_resource type="AudioStream" uid="uid://djod47wdns4f" path="res://audio/GUNTech_Sci Fi Shotgun Fire Heavy_06.wav" id="4_556r1"]
 [ext_resource type="Animation" uid="uid://b42daukxb8wl4" path="res://game/guns/anim/reload.anim" id="4_mbjfd"]

@@ -1,0 +1,134 @@
+[
+  {
+    "issues": 0,
+    "test": "BaselineRegression",
+    "checks": 4,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B11Stages",
+    "checks": 57,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B11Fairness",
+    "checks": 61,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B6Progression",
+    "checks": 41,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B3Hazards",
+    "checks": 128,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B4Fog",
+    "checks": 110,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B12Catalog",
+    "checks": 182,
+    "exit": 0
+  },
+  {
+    "issues": 22,
+    "test": "B12Strength",
+    "checks": 173,
+    "exit": 1
+  },
+  {
+    "issues": 0,
+    "test": "B12Save",
+    "checks": 14,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B12UI",
+    "checks": 75,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B12LineOfSightRegression",
+    "checks": 12,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B13Catalog",
+    "checks": 530,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B13UpgradeEffects",
+    "checks": 85,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B13TalentEffects",
+    "checks": 37,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B13Economy",
+    "checks": 158,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B13Unequip",
+    "checks": 52,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "B13UI",
+    "checks": 137,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "M4Talents",
+    "checks": 233,
+    "exit": 0
+  },
+  {
+    "issues": 3,
+    "test": "B13Strength",
+    "checks": 140,
+    "exit": 1
+  },
+  {
+    "issues": 0,
+    "test": "M3Weapons",
+    "checks": 72,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "CampPresentation",
+    "checks": 38,
+    "exit": 0
+  },
+  {
+    "issues": 0,
+    "test": "PresentationContracts",
+    "checks": 51,
+    "exit": 0
+  }
+]

@@ -57,6 +57,7 @@ func handle_thermal(pressed: bool, delta: float):
 	if not pressed or not is_use or player.is_dead or get_tree().paused or is_reloading:
 		thermal_clock = 0.0
 		sustained = false
+		stop_thermal_visual()
 		return
 	thermal_clock += delta
 	while thermal_clock+0.000001 >= 0.1:
@@ -91,6 +92,7 @@ func cancel_actions():
 	queue_redraw()
 
 func reload_ammo():
+	stop_thermal_visual()
 	thermal_clock = 0.0
 	charging = false
 	charge_time = 0.0

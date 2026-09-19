@@ -1,7 +1,7 @@
 [gd_scene load_steps=19 format=3 uid="uid://b5766vf0e5ckg"]
 
 [ext_resource type="Script" path="res://game/guns/BoomBoi.gd" id="1_5fns6"]
-[ext_resource type="Texture2D" uid="uid://bsxk02hl7i4a6" path="res://Sprites/The Tiny Alchemist - Guns/gun5.png" id="2_7wcnc"]
+[ext_resource type="Texture2D" path="res://Sprites/Presentation/weapon-6.svg" id="2_7wcnc"]
 [ext_resource type="Texture2D" uid="uid://6cng77rsgedk" path="res://game/bullets/assets/lights2.png" id="3_5vsnc"]
 [ext_resource type="PackedScene" uid="uid://cu576cs21f7sb" path="res://game/bullets/Bullet.tscn" id="3_7tj4b"]
 [ext_resource type="AudioStream" uid="uid://cqdvy2oqigf3n" path="res://audio/bullet/SCIMisc_Reload Alien Tech_05.wav" id="4_0ip26"]

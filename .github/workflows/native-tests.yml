@@ -146,6 +146,10 @@ jobs:
           run_case B13Economy
           run_case B13Unequip
           run_case B13UI
+          run_case CampPresentation
+          run_case PresentationContracts
+          run_case PresentationRng
+          run_case PresentationLifecycle
           # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
           # job as the B13 contracts that pin their new magnitudes.
           run_case M4Talents

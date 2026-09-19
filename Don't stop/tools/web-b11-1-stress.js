@@ -89,6 +89,7 @@ function parseKv(line) {
 	// a B11.1-era consumer of this JSON keeps reading exactly the fields it always read.
 	let load = null;
 	let ink = null;
+	let rawFrames = null;
 	const errors = [];
 	// Every line the page printed, bounded. The engine's own script errors arrive here, and a
 	// harness that reports "no summary line" without showing them is how a whole measurement round
@@ -110,6 +111,10 @@ function parseKv(line) {
 
 	page.on('console', m => {
 		const t = m.text();
+		if (t.startsWith('[stress-frames] ')) {
+			rawFrames = JSON.parse(t.slice('[stress-frames] '.length));
+			return; // Store once, outside the bounded human-readable console log.
+		}
 		if (allConsole.length < 600) allConsole.push(`${m.type()}: ${t}`);
 		if (t.startsWith('[spike] ')) spikes.push(parseKv(t.slice('[spike] '.length)));
 		else if (t.startsWith('[stress-bucket] ')) buckets.push(parseKv(t.slice('[stress-bucket] '.length)));
@@ -159,6 +164,7 @@ function parseKv(line) {
 		peaks: peak,
 		load,
 		ink,
+		raw_frames: rawFrames,
 		bucket_rows: buckets,
 		per_second: spikes,
 		markers,

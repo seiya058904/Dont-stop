@@ -1,0 +1,15 @@
+{
+  "rows": 48,
+  "differences": [
+    {
+      "id": 6,
+      "wall": false,
+      "different": {
+        "target_hp": [
+          99980.45,
+          99984.36
+        ]
+      }
+    }
+  ]
+}

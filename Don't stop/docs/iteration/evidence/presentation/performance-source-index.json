@@ -1,0 +1,457 @@
+[
+  {
+    "file": "stress-after-cache-dense-1-D.json",
+    "bytes": 1022616,
+    "sha256": "002bea6557f5a4956611272fc2880d8dcdd9c3ba1fa57bd9d738a89d8f0a4c47"
+  },
+  {
+    "file": "stress-after-cache-dense-1-D.warm.json",
+    "bytes": 3049,
+    "sha256": "31c18a547f795e3c3f03cc9b56b604f126546bbe789e0d9561d8b77c49b4ef6b"
+  },
+  {
+    "file": "stress-after-cache-dense-2-D.json",
+    "bytes": 1020820,
+    "sha256": "f29396432613510ab13c2a5576db0938970d90eec23a6febf8c602b66858207d"
+  },
+  {
+    "file": "stress-after-cache-dense-2-D.warm.json",
+    "bytes": 3049,
+    "sha256": "5c1643219bbd26c7c4765341289c919a4c92598aa8e05dbfbae4c33359e5e45c"
+  },
+  {
+    "file": "stress-after-cache-dense-3-D.json",
+    "bytes": 1017010,
+    "sha256": "89ba240b1bf65ad185e1f0d54cc0b8cdf97f99257775a2d17ad8453ad9ae1cb3"
+  },
+  {
+    "file": "stress-after-cache-dense-3-D.warm.json",
+    "bytes": 3034,
+    "sha256": "375fbdebe0cf0ba3f3abb08794edcbfc3efbe9b68a03f1101756779ed72789ce"
+  },
+  {
+    "file": "stress-after-cache-dense-clean-1-D.json",
+    "bytes": 1024539,
+    "sha256": "b610577c114f57f30fc116583ea785dbb5e7cd4bf2b2a4129a7986345bd1b8a5"
+  },
+  {
+    "file": "stress-after-cache-dense-clean-1-D.warm.json",
+    "bytes": 3073,
+    "sha256": "48a8b19691b69ee5e90118faff0595426a68a9fa57880a095fbb7be3f2c403a8"
+  },
+  {
+    "file": "stress-after-dense-D-D.json",
+    "bytes": 1022333,
+    "sha256": "15d7697f5c7c5a5ab96e1a46eb706e15ec7c3788e8b1a6e4d00a6416f56e6632"
+  },
+  {
+    "file": "stress-after-dense-D-D.warm.json",
+    "bytes": 3043,
+    "sha256": "2a5c564744488b95855060c52c9959e60676fd8d7a9322c724baf979c32107bd"
+  },
+  {
+    "file": "stress-after-dense-repeat-D-D.json",
+    "bytes": 1005475,
+    "sha256": "43bfdd4c1acfeaac72a5028c4e6ca9a45cafa70457fed0b884cdb470c29cf830"
+  },
+  {
+    "file": "stress-after-dense-repeat-D-D.warm.json",
+    "bytes": 3044,
+    "sha256": "6954998bfb9d3a40f34652f02977a5d07c776b65ca5d3feb6afa4d37d8faf528"
+  },
+  {
+    "file": "stress-after-final-A-1-A.json",
+    "bytes": 1025177,
+    "sha256": "71515fa7057977867199a42943abb4e91f2258d4454a59f3bec9307f13078000"
+  },
+  {
+    "file": "stress-after-final-A-1-A.warm.json",
+    "bytes": 3007,
+    "sha256": "4fea88e7e949a82943ab813e239747072f2c8301653102813523efc3da6d0c90"
+  },
+  {
+    "file": "stress-after-final-A-2-A.json",
+    "bytes": 1026271,
+    "sha256": "de34bbc5bec864b98617b4d118bff95940c8ab6761900f4a5f044de073047183"
+  },
+  {
+    "file": "stress-after-final-A-2-A.warm.json",
+    "bytes": 2992,
+    "sha256": "fe6ef9a50cc07d269901d8c97ddf5eb84c84fc28d4b0501ad95b63f252046f2a"
+  },
+  {
+    "file": "stress-after-final-A-3-A.json",
+    "bytes": 1025754,
+    "sha256": "ebc29b45920daadf4bdc2e3a0e3fdb605dd5acddeefcf794189407c5f069e0d6"
+  },
+  {
+    "file": "stress-after-final-A-3-A.warm.json",
+    "bytes": 2993,
+    "sha256": "42cdf1bd2bf73bddf937551d86a5910fb11ce8ff65206078383d7d3e68679efc"
+  },
+  {
+    "file": "stress-after-final-dense-2-D.json",
+    "bytes": 1025321,
+    "sha256": "d8527d90297adcc634e05fa280c16da7d63723a376b892a73bc3ee9663f1f308"
+  },
+  {
+    "file": "stress-after-final-dense-2-D.warm.json",
+    "bytes": 3040,
+    "sha256": "129d8bd1c3e48cc9fafe8ba2662c72032b9d675328b754fca1201fb2130aed8e"
+  },
+  {
+    "file": "stress-after-final-dense-3-D.json",
+    "bytes": 1024350,
+    "sha256": "361e2226df6180a15f286ff1573d54ebe0d4dcf461740e26f902cbb322692b33"
+  },
+  {
+    "file": "stress-after-final-dense-3-D.warm.json",
+    "bytes": 3038,
+    "sha256": "ea6d343ca57369b174962562513e402b370a14226317af70b2c1728a25f5ea81"
+  },
+  {
+    "file": "stress-after-final-dense-D.json",
+    "bytes": 1021676,
+    "sha256": "b1005e7847c56f78be2228b4e98004a2f8f03302acf2c0b6450151107dc2c39c"
+  },
+  {
+    "file": "stress-after-final-dense-D.warm.json",
+    "bytes": 3057,
+    "sha256": "2ae561e43d1cf8762ff8f48533d4840d2c9746b6db2a7db919b984d6a3b06e1e"
+  },
+  {
+    "file": "stress-after-material-A-1-A.json",
+    "bytes": 1027591,
+    "sha256": "d03b8f13bbf081b6db78ae3bbef44967edc42daa714491e1d9672dcb53fa4b14"
+  },
+  {
+    "file": "stress-after-material-A-1-A.warm.json",
+    "bytes": 3001,
+    "sha256": "c4af468ee9865458cc608a729d16be0908ab6f16c9cc317002c6b3e5ca5c8631"
+  },
+  {
+    "file": "stress-after-material-A-2-A.json",
+    "bytes": 1027914,
+    "sha256": "cdf2b93d6fd732595f5c7a026bb915f767d163a7d87b741a9e60cd9478eb403a"
+  },
+  {
+    "file": "stress-after-material-A-2-A.warm.json",
+    "bytes": 3002,
+    "sha256": "bf36c3eac0a262fb344f49a773ba0c8c496ea6b7be53624bb0c63204eea83734"
+  },
+  {
+    "file": "stress-after-material-A-3-A.json",
+    "bytes": 1025800,
+    "sha256": "2322b8dcf01620f257fdc271ea418e1377f23c3176f7a9ca09b6e8861299fde2"
+  },
+  {
+    "file": "stress-after-material-A-3-A.warm.json",
+    "bytes": 3003,
+    "sha256": "85ccfc0dec989401dc699d1945f9b6552b56e2965aaa80509514b9d3f6999713"
+  },
+  {
+    "file": "stress-after-material-dense-1-D.json",
+    "bytes": 1024672,
+    "sha256": "e7c3e880a9cfe6808dde115a39d973b2b46e692e31c6d4a4ed6897d3144debb5"
+  },
+  {
+    "file": "stress-after-material-dense-1-D.warm.json",
+    "bytes": 3038,
+    "sha256": "83214987bf6a32858dc9d50ffd53ee45ac0971b5af9388374ca53af0b7810589"
+  },
+  {
+    "file": "stress-after-material-dense-2-D.json",
+    "bytes": 1023744,
+    "sha256": "ae118478b0c069fe3949c4ba8c3c0d7ef3f6ef1297b0e83a4220f13061c2438d"
+  },
+  {
+    "file": "stress-after-material-dense-2-D.warm.json",
+    "bytes": 3020,
+    "sha256": "29e4a7c78064edb4e416d77f46b825703cb36315411b79d2875d682cecfc3362"
+  },
+  {
+    "file": "stress-after-material-dense-3-D.json",
+    "bytes": 1020688,
+    "sha256": "239de7ace9b52fa34a604087f5c3c8b52aaa1f755eafb2df33743b645b7f4d41"
+  },
+  {
+    "file": "stress-after-material-dense-3-D.warm.json",
+    "bytes": 3040,
+    "sha256": "3bb839c96e141f13883cd87a10959548139c85664a0f9dc00517c58c4e1efb46"
+  },
+  {
+    "file": "stress-after-material-mixed-1-D.json",
+    "bytes": 1079842,
+    "sha256": "63465ddccf44a1db7dbc9224735d075e8289ae25af62ea58fb716c0f33507815"
+  },
+  {
+    "file": "stress-after-material-mixed-1-D.warm.json",
+    "bytes": 3073,
+    "sha256": "abc2c7933650f8901757d2c9ce8196e3ffadaa42a8774cc2908957f50277c227"
+  },
+  {
+    "file": "stress-after-material-mixed-2-D.json",
+    "bytes": 1078130,
+    "sha256": "c54fc79a76bebc86660db4cf8c3f6c4a821d9f9c17645ce10fc73cf72454673c"
+  },
+  {
+    "file": "stress-after-material-mixed-2-D.warm.json",
+    "bytes": 3052,
+    "sha256": "d4b3ecbfec9d0d9a16e74580bb834bb231f0e1170c3239d26f9952385baead97"
+  },
+  {
+    "file": "stress-after-material-mixed-3-D.json",
+    "bytes": 1083270,
+    "sha256": "400d2688202afd68e682ebaeb3df41690a2b5ad05f0dfecf7892a3e16d5c693f"
+  },
+  {
+    "file": "stress-after-material-mixed-3-D.warm.json",
+    "bytes": 3072,
+    "sha256": "6bb5ce0ed53a26e1be0c319ed1897b778131582a903e89f46983eab3599f2e59"
+  },
+  {
+    "file": "stress-after-material-stage40-1-A.json",
+    "bytes": 934012,
+    "sha256": "ef6ee084cdf6f5b50280f5216fd8d3b6412019a7435b708fc33baf3574218e46"
+  },
+  {
+    "file": "stress-after-material-stage40-1-A.warm.json",
+    "bytes": 3003,
+    "sha256": "19b5993a69bb001b304d669daa756fff059bd40276d9c7bda5de5fbf164e47dc"
+  },
+  {
+    "file": "stress-after-material-stage40-2-A.json",
+    "bytes": 921103,
+    "sha256": "b9cfa98732a7fcd825bd333251c0e7fc9575bcedb81c360708cf88a1077b1306"
+  },
+  {
+    "file": "stress-after-material-stage40-2-A.warm.json",
+    "bytes": 3037,
+    "sha256": "cf06e7652add793bdfd14cb45c964c80deb84639101670048feda197ebe4e90a"
+  },
+  {
+    "file": "stress-after-material-stage40-3-A.json",
+    "bytes": 921555,
+    "sha256": "586755db636fde9c2a490c482aeb8454aa8c90157db3414ccfe4f52365ec7914"
+  },
+  {
+    "file": "stress-after-material-stage40-3-A.warm.json",
+    "bytes": 3004,
+    "sha256": "b09d1bbc70fc7a6127dc23d68e56a7e485eeac392db94767e0fbcdab738ede55"
+  },
+  {
+    "file": "stress-after-mixed-corrected-D-D.json",
+    "bytes": 1070809,
+    "sha256": "9ed359bcbe48d90a41e68d28ab1c808fbf6255c6589560038dc008a5afc52061"
+  },
+  {
+    "file": "stress-after-mixed-corrected-D-D.warm.json",
+    "bytes": 3065,
+    "sha256": "4d7538e1e611011a13d4fb746524191614f3fa73e5bc62189d1a9c137a1ee71d"
+  },
+  {
+    "file": "stress-after-mixed-repeat-D-D.json",
+    "bytes": 1071634,
+    "sha256": "ef0b54e45fbd31b188a4323878c2a581da2603adda815ad50a274e0eeae914f1"
+  },
+  {
+    "file": "stress-after-mixed-repeat-D-D.warm.json",
+    "bytes": 3062,
+    "sha256": "cd919c5f26fcde49078a77b8dbb9136af4ed7183ce3f5c081f7514c8422e2707"
+  },
+  {
+    "file": "stress-after-stage40-A.json",
+    "bytes": 928685,
+    "sha256": "cf81599b1707c5aca19456f4001d5f9881594ae8508f407318b7f762c81a4fe1"
+  },
+  {
+    "file": "stress-after-stage40-A.warm.json",
+    "bytes": 2985,
+    "sha256": "7e84839bd8d58ba82f52171c81306086d764588c120ed13ed4cb091d197314c8"
+  },
+  {
+    "file": "stress-after-stage40-repeat-A.json",
+    "bytes": 930954,
+    "sha256": "8ad8a22a67d1b67e8cebe284832d7049ecc6ee9285f7705b4a4ed24b7bbdb0ff"
+  },
+  {
+    "file": "stress-after-stage40-repeat-A.warm.json",
+    "bytes": 2987,
+    "sha256": "c881cc674074aa5a0f5ad263bb09e920eb2ab3ab2d230e2ee29dcd03ef7312d1"
+  },
+  {
+    "file": "stress-after-warm-A-1-A.json",
+    "bytes": 1026853,
+    "sha256": "83effbfc79c2556fb8f241e6203922a169e173012c8732cf246ba9c681b9322e"
+  },
+  {
+    "file": "stress-after-warm-A-1-A.warm.json",
+    "bytes": 2991,
+    "sha256": "93e8b07d80efa3a262b0d40695a74bd2c3ea2f596ba4d6648ff982c3f485ba9e"
+  },
+  {
+    "file": "stress-after-warm-A-2-A.json",
+    "bytes": 1023327,
+    "sha256": "cfb093a573a141a59c01ad4b34a6d9c368fb4493b77869e3b292634b020b050c"
+  },
+  {
+    "file": "stress-after-warm-A-2-A.warm.json",
+    "bytes": 2989,
+    "sha256": "18e462e6ad56ab994c605fbab61767fa8351c30287c26662ef20798209fab9e3"
+  },
+  {
+    "file": "stress-after-warm-A-3-A.json",
+    "bytes": 1028121,
+    "sha256": "a87dbedda8413be57411957759353d0b5c7747802581289e6682e38f2c43bbe2"
+  },
+  {
+    "file": "stress-after-warm-A-3-A.warm.json",
+    "bytes": 3007,
+    "sha256": "440f0aeb320422271c87036b197e1833fbdf6ad0afc145904d8b2da30df5b077"
+  },
+  {
+    "file": "stress-before-dense-D-D.json",
+    "bytes": 1019969,
+    "sha256": "d437ee3fff585bbc1d9fa20e2cf9433b70ad728dce7f549d01b217429689d0fc"
+  },
+  {
+    "file": "stress-before-dense-D-D.warm.json",
+    "bytes": 3033,
+    "sha256": "cabc25809807e83d59dc8b5cc3827328be3a84f5a743c5d9ff8ae24a0a159ea2"
+  },
+  {
+    "file": "stress-before-dense-repeat-D-D.json",
+    "bytes": 1018906,
+    "sha256": "84d511b271acd18e5e54be6412a3f061fa6ba70de80f4814cc642c1cc2f40342"
+  },
+  {
+    "file": "stress-before-dense-repeat-D-D.warm.json",
+    "bytes": 3035,
+    "sha256": "a293117021c64c2ee27b2fdd8420919f201a475f4d76a9c20118b3c22067cfc1"
+  },
+  {
+    "file": "stress-before-final-dense-D.json",
+    "bytes": 1019928,
+    "sha256": "674b4fdac4792b2d7a7754d4653c82967df670f49086287b71fbeca5b8feccec"
+  },
+  {
+    "file": "stress-before-final-dense-D.warm.json",
+    "bytes": 3038,
+    "sha256": "e3dac7f1558a82459869bfc5f01684a9a2c4f3809963db9ad36918350bae6331"
+  },
+  {
+    "file": "stress-before-final-mixed-D.json",
+    "bytes": 1077233,
+    "sha256": "1c58b2adece46c0bdbeb93e6a03dc5bcab3220bd0f7c6a125ff9eae508a05c61"
+  },
+  {
+    "file": "stress-before-final-mixed-D.warm.json",
+    "bytes": 3064,
+    "sha256": "47b859b2b95ae7f67c09e700b4790861d7282e066cbf36cc0ed2f6143337026c"
+  },
+  {
+    "file": "stress-before-final-stage40-A.json",
+    "bytes": 919623,
+    "sha256": "98993b3e071e365cbaaa8cde3e9f93046ec49eaa6480bfb9a82f0ef849345151"
+  },
+  {
+    "file": "stress-before-final-stage40-A.warm.json",
+    "bytes": 3007,
+    "sha256": "ee6281313b41d519bf1e57445cf8376d0a283bfb29e4720ed7289ccc5c30aec8"
+  },
+  {
+    "file": "stress-before-mixed-corrected-D-D.json",
+    "bytes": 1075308,
+    "sha256": "53b7d33346044fd5b0a802e15de9d937c4c7a08d640ab7ed509bcb97d4b96f5c"
+  },
+  {
+    "file": "stress-before-mixed-corrected-D-D.warm.json",
+    "bytes": 3067,
+    "sha256": "260672006e4074c2c13c21f2c869e995117ccdcdcb59f92321d0b91a9d92be6f"
+  },
+  {
+    "file": "stress-before-mixed-D-D.json",
+    "bytes": 1012162,
+    "sha256": "b7e3830b074a828f73e7f13440dbea08f5f57079d3d30ec78927d07c9ef52fcc"
+  },
+  {
+    "file": "stress-before-mixed-D-D.warm.json",
+    "bytes": 2701,
+    "sha256": "a3290d079085365e4bc4e5054c7d94f4d07b49e8b55dae13842d399e3da78acf"
+  },
+  {
+    "file": "stress-before-mixed-repeat-D-D.json",
+    "bytes": 1073010,
+    "sha256": "3c392d2ec10a7795373316d74ed0f9c6d36968a7504515f3c1b7761516b741de"
+  },
+  {
+    "file": "stress-before-mixed-repeat-D-D.warm.json",
+    "bytes": 3056,
+    "sha256": "31ad819a9978d629ef0747a417009d7f50b85a443ded16a6a2843bddbde276ba"
+  },
+  {
+    "file": "stress-before-stage39-A-1-A.json",
+    "bytes": 244952,
+    "sha256": "174e54f9cddd9d7d3b7a42eed6037d9afaed7b975f47f185ef6b343d6376581a"
+  },
+  {
+    "file": "stress-before-stage40-A.json",
+    "bytes": 913869,
+    "sha256": "edd84e40c8ed5b7d4e18234091c436cccb3aba3ab9e6afb5c4f90f51386bbc4d"
+  },
+  {
+    "file": "stress-before-stage40-A.warm.json",
+    "bytes": 2985,
+    "sha256": "d045636449ac0c771343c8ccf5cc1eb5e7d30336a439cdf4f82ee01803e85bd0"
+  },
+  {
+    "file": "stress-before-stage40-repeat-A.json",
+    "bytes": 918668,
+    "sha256": "da7d06a004bfb9f1ce2ae8c16714eded07443bf56372a67ed9aca43ce518d806"
+  },
+  {
+    "file": "stress-before-stage40-repeat-A.warm.json",
+    "bytes": 2993,
+    "sha256": "4df8c26e6ed697fdc0feeab253ed7470be9a4f121d61e62b8f460f1ce5ad8deb"
+  },
+  {
+    "file": "stress-before-warm-A-1-A.json",
+    "bytes": 1018126,
+    "sha256": "72000567ef806d3e83e9fed2ba04707fb1fb6e89af96a5a941dea6409d557828"
+  },
+  {
+    "file": "stress-before-warm-A-1-A.warm.json",
+    "bytes": 2972,
+    "sha256": "66cb5854bade3bacccfb66b7e7711ebe72cac15f1e84ea9fe13508af38596a05"
+  },
+  {
+    "file": "stress-before-warm-A-2-A.json",
+    "bytes": 1024942,
+    "sha256": "b984104223205f104b2e59c3d5f8e1a3150f2d12fc1d0fba39f06626116ae1b6"
+  },
+  {
+    "file": "stress-before-warm-A-2-A.warm.json",
+    "bytes": 2990,
+    "sha256": "b9a85d54a455107646af68acc5102342e440aa3198e80c1a713b32f4063648f1"
+  },
+  {
+    "file": "stress-before-warm-A-3-A.json",
+    "bytes": 1024998,
+    "sha256": "045bbb0f1c9458036077c36901606f8962610d305ff7257e5c0b90b87c53150e"
+  },
+  {
+    "file": "stress-before-warm-A-3-A.warm.json",
+    "bytes": 2993,
+    "sha256": "d64364536559104a53978e4c497848fa93898e221bb36f317760d28ff95d3832"
+  },
+  {
+    "file": "stress-diagnostic-allocation-D.json",
+    "bytes": 354404,
+    "sha256": "7aacfdc4785c8eefe456bc10b041723c04a71be407ebfd60a06b5680b27ed58f"
+  },
+  {
+    "file": "stress-diagnostic-labels-D.json",
+    "bytes": 356440,
+    "sha256": "27c69e755959047ea590bffbd180ba892f8435818cacf2e41769eea84afa3676"
+  }
+]

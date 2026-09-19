@@ -50,6 +50,13 @@ var barrage := 0
 ## B11.2: comma-separated purely-visual switches for the isolation A/B. Empty means "everything on",
 ## which is the shipped state.
 var iso := ""
+var presentation_weapons: Array[int] = []
+var presentation_weapon := -1
+var presentation_boss_log: Array = []
+var presentation_boss_phase := ""
+var presentation_boss_entry: Dictionary = {}
+var presentation_boss_hold := false
+var presentation_ultimate_count := -1
 
 # ---- per-frame samples (parallel packed arrays: no per-frame allocation) ---------------------
 var _ms := PackedFloat32Array()
@@ -106,6 +113,9 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(18))
 		elif arg.begins_with("--stress-iso="): iso = arg.substr(14)
 		elif arg.begins_with("--stress-label="): label = arg.substr(15)
+		elif arg.begins_with("--stress-weapons="):
+			for key in arg.substr(17).split(",",false):
+				if Utils.weapon_list.has(str(int(key))): presentation_weapons.append(int(key))
 	B11Probe.enabled = true
 	_apply_iso()
 	get_tree().node_added.connect(_count_added)
@@ -191,6 +201,39 @@ func run() -> void:
 	if Utils.player != null and Utils.player.gun == null:
 		PlayerData.add_weapon(Utils.weapon_list["0"].instantiate())
 		PlayerData.changeWeapon(0,true)
+	if label == "presentation-rng":
+		# _boot_to_camp queued the initial panel for deletion. Let that complete
+		# before open_panel checks Demo.ui; a queued-but-live panel is not reusable.
+		await get_tree().process_frame
+		await get_tree().process_frame
+		# An explicit observer-only check of the complete production animation.
+		# Run in both original and changed Web exports; never an acceptance load.
+		seed(20260919)
+		var sequence: Array = []
+		for i in 9: sequence.append(randi())
+		seed(20260919)
+		Utils.player.gun._shootAnim()
+		var observed: Array = []
+		for i in 6: observed.append(randi())
+		print("[presentation-rng] ",JSON.stringify({"sequence":sequence,"observed":observed,"matches_legacy":observed==sequence.slice(3,9),"animation_ran":Utils.player.gun.tier_muzzle.remaining>0}))
+		Demo.open_panel()
+		await get_tree().create_timer(0.1).timeout
+		var camp_rows: Array = []
+		for quality in [0,1,2,3,4,5]:
+			Demo.ui.tier_filter = quality
+			seed(20260919)
+			var camp_sequence: Array = []
+			for i in 16: camp_sequence.append(randi())
+			seed(20260919)
+			Demo.ui.render()
+			var camp_observed: Array = []
+			for i in 6: camp_observed.append(randi())
+			# Pair these complete production-render sequences with the original export.
+			# Standalone particle instantiation is not a substitute for that full path.
+			camp_rows.append({"quality":quality,"draws":camp_sequence.find(camp_observed[0]),"observed":camp_observed,"tab":Demo.ui.tab,"rows":Demo.ui.detail_actions.size()})
+		print("[presentation-camp-rng] ",JSON.stringify(camp_rows))
+		_close_panels()
+		return
 	# The reward tree a Hell player owns. Without this the incoming-damage path scans an EMPTY
 	# reward group and the harness would report that path as free.
 	_grant_everything()
@@ -203,6 +246,7 @@ func run() -> void:
 	while _total_combat_s < float(seconds) and _rounds < 8:
 		await _one_round()
 	Input.action_release("shoot")
+	Utils.aim_override = null
 	print("[stress] done scenario=%s rounds=%d frames=%d combat_s=%.1f" % [
 		scenario,_rounds,_ms.size(),_total_combat_s])
 	_dump()
@@ -268,6 +312,22 @@ func _sample_round() -> void:
 		PlayerData.player_hp = PlayerData.player_hp_max
 		var now := Time.get_ticks_msec()
 		var elapsed := float(now-started)/1000.0
+		# Optional actual-weapon load profile. Default A-D keep their original gun.
+		if not presentation_weapons.is_empty():
+			var slot := int((_total_combat_s+elapsed)/8.0) % presentation_weapons.size()
+			var next_weapon: int = presentation_weapons[slot]
+			if next_weapon != presentation_weapon:
+				presentation_weapon = next_weapon
+				Utils.player.changeWeapon(next_weapon)
+				print("[stress] weapon=%d round=%d combat_s=%.2f" % [next_weapon,round_index,elapsed])
+			# A charge weapon needs a real release; holding forever only benchmarks charging.
+			if presentation_weapon == 113 and fmod(elapsed,2.0) < 0.12:
+				Input.action_release("shoot")
+			else:
+				Input.action_press("shoot")
+		if stage == 40 and label.begins_with("presentation"):
+			if presentation_boss_hold: Input.action_release("shoot")
+			else: Input.action_press("shoot")
 		if elapsed >= next_amp:
 			next_amp += 4.0
 			# Every amplifier is a TOP-UP, not a one-off volley: the player kills what arrives, so a
@@ -392,6 +452,26 @@ func _drive_movement(now: int) -> void:
 		else: Input.action_release(pair[0])
 
 func _sample_gauges() -> void:
+	if stage == 40 and label.begins_with("presentation"):
+		# Optional full-phase observation uses the established test-only aim hook.
+		# Real weapon fire and real boss AI still decide all HP and transitions.
+		var boss = instance_from_id(LevelServer.boss_instance)
+		if is_instance_valid(boss):
+			Utils.aim_override = get_viewport().get_canvas_transform()*(boss.global_position-Vector2(0,8))
+			var tier = "3" if boss.phase_three else ("2" if boss.phase_two else "1")
+			var key = str(_rounds)+":"+tier
+			if key != presentation_boss_phase:
+				presentation_boss_phase = key
+				presentation_boss_entry = boss.actions.duplicate()
+				presentation_boss_log.append({"frame":_ms.size(),"round":_rounds,"phase":tier,"actions":boss.actions.duplicate()})
+			var required = {"1":["dash","sweep","burst"],"2":["sweep","dash","cross","band"],"3":["cross_laser","sweep","band"]}[tier]
+			presentation_boss_hold = false
+			for attack in required:
+				if boss.actions.get(attack,0) <= presentation_boss_entry.get(attack,0): presentation_boss_hold = true
+			var ultimates = int(boss.actions.get("ultimate_activated",0))
+			if ultimates != presentation_ultimate_count:
+				presentation_ultimate_count = ultimates
+				presentation_boss_log.append({"frame":_ms.size(),"round":_rounds,"phase":tier,"ultimate_activated":ultimates,"actions":boss.actions.duplicate()})
 	var live := get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die).size()
 	if live > int(_peak.enemies): _peak.enemies = live
 	for spec in [["zones","hostile_zone"],["hazards",StageHazard.GROUP],["vfx","hostile_vfx"],
@@ -524,6 +604,11 @@ func _stats(values) -> Dictionary:
 ## the stutter is a burst, the conditioned rows separate from the unconditioned ones here; if it is
 ## not, they do not - and that is the answer either way.
 func _dump() -> void:
+	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
+	# Optional post-run evidence only: no allocation/serialization in measured frames.
+	# Retain the existing B11 summaries; consumers can derive an exact warm window.
+	if label.begins_with("presentation"):
+		print("[stress-frames] ",JSON.stringify({"ms":Array(_ms),"physics_ms":Array(_phys),"process_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_seconds":Array(_combat_seconds)}))
 	var all: Dictionary = _stats(_ms)
 	var phys: Dictionary = _stats(_phys)
 	var proc: Dictionary = _stats(_proc)
