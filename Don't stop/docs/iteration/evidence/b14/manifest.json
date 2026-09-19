@@ -39,7 +39,7 @@
     },
     {
       "path": "autoload/Smoke.gd",
-      "sha256": "a62b1c82f8cadc722f640d1799695212e18b49e77d0b820c594d55ac226456af"
+      "sha256": "adf886bee4b20e15e99a6bdebbb62aaf6fd40e44c536e01ab5691c85cd7a748f"
     },
     {
       "path": "autoload/Utils.gd",

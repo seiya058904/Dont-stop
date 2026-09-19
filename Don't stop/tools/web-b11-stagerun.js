@@ -53,7 +53,7 @@ function token(name, ok, detail) {
 
 	try {
 		await page.goto(url + '?stage-tour=1&probe=1', { waitUntil: 'domcontentloaded', timeout: 60000 });
-		// Four stages, ~9 s of real play each, plus the camp round trips.
+		// Four stages, >=9 simulated seconds each (<=60 wall seconds per stage).
 		const deadline = Date.now() + 300000;
 		while (Date.now() < deadline && !tourLines.some(l => l.includes('complete'))) await sleep(1000);
 		const done = tourLines.some(l => l.includes('complete'));
@@ -70,6 +70,7 @@ function token(name, ok, detail) {
 			token(`S${stage}_HELL_DARKNESS_IS_APPLIED`, f('fog') === 'true', `fog=${f('fog')}`);
 			token(`S${stage}_REALLY_SPAWNED_ENEMIES`, parseInt(f('monsters_peak'), 10) > 0, `peak=${f('monsters_peak')}`);
 			token(`S${stage}_PLAYER_COULD_MOVE`, parseInt(f('moving_frames'), 10) > 0, `moving frames=${f('moving_frames')}`);
+			token(`S${stage}_NINE_SIMULATED_SECONDS`, parseFloat(f('simulated')) >= 9, `simulated=${f('simulated')}`);
 			token(`S${stage}_LEFT_THE_CAMPAIGN_POINTER_ALONE`, f('next') === '1', `next=${f('next')}`);
 			token(`S${stage}_CLAIMED_NO_COMPLETION`, f('campaign') === 'false' && f('hell') === 'false',
 				`campaign=${f('campaign')} hell=${f('hell')}`);

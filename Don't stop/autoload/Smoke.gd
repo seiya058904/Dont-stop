@@ -18,8 +18,19 @@ extends Node
 var e2e := false
 var probe := false
 var _transients := 0
+var _tour_simulated := 0.0
+
+func _physics_process(delta: float) -> void:
+	# Enabled only by stage-tour: observe short attacks even when a renderer
+	# executes several physics ticks between two visible frames.
+	if LevelServer.state != "COMBAT": return
+	_tour_simulated += delta
+	var zones = get_tree().get_nodes_in_group("hostile_zone")
+	if not zones.is_empty():
+		print("[telegraph] count=%d rows=%s" % [zones.size(), _probe_zone_state()])
 
 func _ready() -> void:
+	set_physics_process(false)
 	var args := OS.get_cmdline_args()
 	args.append_array(OS.get_cmdline_user_args())
 	probe = "--probe" in args
@@ -51,6 +62,7 @@ func _ready() -> void:
 	# launch of `--stage-tour --probe` previously armed the channel, printed performance lines for
 	# five minutes and never started the walk.
 	if "--stage-tour" in args:
+		set_physics_process(true)
 		print("[stage-tour] mode=on")
 		_stage_tour_run.call_deferred()
 		return
@@ -1086,15 +1098,17 @@ func _stage_tour_run() -> void:
 		Utils.set_gameplay_mouse_mode()
 		var departed: bool = LevelServer.town.depart(stage,true)
 		await _wait_until(func(): return LevelServer.state == "COMBAT", 60000)
-		# Play it for a while: move, and hold the trigger so the round is a real one.
-		var until := Time.get_ticks_msec()+9000
+		# Nine simulated seconds, bounded by 60 wall seconds. A slow software
+		# renderer must not silently turn this into a one-second combat sample.
+		_tour_simulated = 0.0
+		var until := Time.get_ticks_msec()+60000
 		var monsters := 0
 		var fog := false
 		var locked_lanes := 0
 		var moving := 0
-		while Time.get_ticks_msec() < until:
+		while _tour_simulated < 9.0 and Time.get_ticks_msec() < until:
 			PlayerData.player_hp = PlayerData.player_hp_max
-			var step := ((Time.get_ticks_msec()/700)%4)
+			var step := int(_tour_simulated/0.7)%4
 			for pair in [["left",0],["right",1],["up",2],["down",3]]:
 				if step == int(pair[1]): Input.action_press(pair[0])
 				else: Input.action_release(pair[0])
@@ -1108,15 +1122,11 @@ func _stage_tour_run() -> void:
 			monsters = maxi(monsters,get_tree().get_nodes_in_group("monsters").filter(
 				func(node): return not node.is_die).size())
 			fog = fog or ArenaVisibility.fog_active()
-			# Tour-only observation: the normal 1 Hz report can miss a 0.12 s
-			# active lane now that specials are sparse. Sample this existing
-			# read-only channel at the tour's 50 ms cadence, not the perf probe.
-			print("[telegraph] count=%d rows=%s" % [get_tree().get_nodes_in_group("hostile_zone").size(), _probe_zone_state()])
 			await get_tree().create_timer(0.05).timeout
 		for action in ["left","right","up","down","shoot"]: Input.action_release(action)
-		print("[stage-tour] stage=%d departed=%s state=%s level=%d fog=%s monsters_peak=%d moving_frames=%d locked_lane_frames=%d next=%d campaign=%s hell=%s" % [
+		print("[stage-tour] stage=%d departed=%s state=%s level=%d fog=%s monsters_peak=%d moving_frames=%d locked_lane_frames=%d next=%d campaign=%s hell=%s simulated=%.3f" % [
 			stage, str(departed), LevelServer.state, LevelServer.level, str(fog), monsters, moving,
-			locked_lanes, Demo.next_stage, str(Demo.campaign_complete), str(Demo.hell_complete)])
+			locked_lanes, Demo.next_stage, str(Demo.campaign_complete), str(Demo.hell_complete), _tour_simulated])
 		await get_tree().create_timer(0.5).timeout
 	LevelServer.return_to_camp()
 	await get_tree().create_timer(1.0).timeout
