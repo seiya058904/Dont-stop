@@ -151,3 +151,13 @@ playable v12 identity above remains the one actually exercised locally.
 Owned browser/test processes and local preview servers were stopped after validation.
 Generated test sidecars and the unused baseline Windows export were removed by exact
 path; the single baseline worktree and its valid Web reference remain available.
+
+## Targeted performance closeout / visual freeze
+
+[Bounded tail analysis](evidence/presentation/performance-tail-closeout.md) reproduces
+the existing fixed-window results and aligns the saved raw frames with events and
+interval timers. No production code changed and no new runtime measurements were run.
+The three proxy failures remain FAIL. Dense, Stage40 boundary, and mixed long-frame
+attribution remain unresolved; baseline long-frame presence does not prove no regression.
+Windows v12 EXE/PCK hashes were rechecked; 1121603 and b4d0749 do not change its production code.
+Visual implementation is frozen, PR remains Draft, HUMAN_ACCEPTED=false; await human feedback.

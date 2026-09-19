@@ -41,7 +41,7 @@ The complete preceding v11 comparison is retained in `performance-comparison-v11
 ## Stage40 early-hitch timeline
 
 The fixed window contains one >50ms frame in two AFTER runs and zero in BEFORE.
-Full-run traces show the same early long-frame class in every original run:
+Full-run traces show similarly sized early long frames in every original run:
 
 | Side/run | Late early-hitch time / duration |
 |---|---:|
@@ -52,8 +52,9 @@ Full-run traces show the same early long-frame class in every original run:
 | AFTER 2 | 17.350s / 127.206ms |
 | AFTER 3 | 12.922s / 127.574ms |
 
-This supports an existing early-hitch class crossing the warmup boundary; it does
-not prove the source of that hitch or justify deleting the two hot-window flags.
+This establishes that early long frames already exist in the baseline. Whether the
+AFTER frames share their cause, and why their timing crosses the boundary, remains
+unresolved. It does not justify deleting the two hot-window flags.
 All three final Stage40 runs reach three phases and actual ultimate activations.
 Mixed runs also retain absolute 60-142ms AFTER hitches, versus original 133-149ms;
 relative improvement does not mean hitch-free gameplay.
@@ -84,3 +85,6 @@ include cold frames, per-frame samples, load counters, driver arguments, GPU and
 GPU time, true per-frame CPU time and Web release static memory: **N/A**, unavailable
 in this configured monitor/export. Peaks are full-run peaks, including warmup.
 The report does not equate absent counters to zero or infer a global performance pass.
+
+See [targeted closeout](performance-tail-closeout.md) for exact frame/event alignment,
+proxy plateau intervals, verified build coverage, and the five unresolved tail decisions.
