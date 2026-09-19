@@ -44,6 +44,10 @@
   "sha256": "5ea7580edd666ba77f0eadd22dfce76e02457a34ca01099956c0d304bb510918"
  },
  {
+  "path": "game/config/LevelProgression.gd",
+  "sha256": "d433bd46c68e4ad04823b1b0c9bc306c2cf41c041e4308b7f92c2aa1b9d4e9f6"
+ },
+ {
   "path": "game/config/WeaponCatalog.gd",
   "sha256": "ab526ec597391a5894d75e87754490ab262c569c095756078cd032f7585a3281"
  },

@@ -57,6 +57,10 @@ const REQUIRED_MEASUREMENT_INPUTS := [
 	"autoload/Demo.gd",
 	"autoload/Combat.gd",
 	"autoload/PlayerData.gd",
+	# PlayerData preloads this as PROGRESSION; every scenario resets player_level, whose
+	# setter calls PROGRESSION.damage(level) into the level-damage term of
+	# EffectiveStats.calculate - so DAMAGE_PER_LEVEL moves the measured DPS.
+	"game/config/LevelProgression.gd",
 	"autoload/Utils.gd",
 	"autoload/server/RewardServer.gd",
 	# the benchmark weapon (id 0) and its projectile/hit path
