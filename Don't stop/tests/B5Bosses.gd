@@ -26,6 +26,13 @@ const PHASES = {
 }
 const STAGE_BOSS = {10:"B01",20:"B02",30:"B03",40:"B04"}
 
+func _process(delta):
+	# The payload observer deliberately holds position until a real ultimate lands.
+	# M8Runtime's close-range dash is independent of `moving`; suppress that input
+	# too while holding, otherwise the supposedly stationary subject can evade it.
+	if driving and not moving: dash_cooldown = maxf(dash_cooldown,delta+0.1)
+	super._process(delta)
+
 func fight(stage: int, boss_id: String, durable_hp: int, budget_ms: int, observe: bool, require_clear := true) -> Dictionary:
 	stop(); dismiss()
 	if Utils.player.is_dead: PlayerData.resurrectPlayer(PlayerData.player_hp_max,100)
