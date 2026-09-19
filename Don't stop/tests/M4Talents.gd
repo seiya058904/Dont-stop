@@ -109,7 +109,7 @@ func _ready():
 	await wait(gun.effective.reload+0.1)
 	check(gun.first_round,"T12 actual completed refill primes")
 	var context = gun.shot_context()
-	check(is_equal_approx(context.damage,gun.effective.damage*1.25),"T12 first shot snapshot has 25 percent")
+	check(is_equal_approx(context.damage,gun.effective.damage*(1.0+DemoConfig.talent_value("T12",3))),"T12 first shot snapshot carries the catalog rank-3 value")
 	await wait(0.03)
 	check(is_equal_approx(gun.shot_context().damage,gun.effective.damage),"T12 later shot no bonus")
 	# Actual ordinary projectile pierces exactly one additional target.
@@ -173,7 +173,8 @@ func _ready():
 	source = enemy(origin+Vector2(35,8)); source.is_elite = true
 	secondary = enemy(origin+Vector2(100,8)); secondary.is_boss = true; secondary.is_elite = true
 	hit_enemy(source,0,10); hit_enemy(secondary,0,10)
-	check(source.HP == 88 and secondary.HP == 90,"T21 elite bonus excludes boss")
+	# B13 elite values are 0.15/0.25/0.35; rank 3 on a 10-damage hit = 13.5 -> 86.5 remains.
+	check(is_equal_approx(source.HP,86.5) and secondary.HP == 90,"T21 elite bonus excludes boss")
 	await clean()
 	ranks({"T22":3})
 	Utils.player.global_position = origin

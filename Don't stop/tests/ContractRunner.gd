@@ -60,14 +60,15 @@ func _ready():
 	for id in ["T01","T03","T04","T10","T16","T24"]:
 		var gold = PlayerData.gold
 		var points = PlayerData.reward_point
-		check(Demo.try_purchase("talent",id,"gold").success and PlayerData.gold == gold-100 and PlayerData.reward_point == points,"A07 talent gold "+id)
+		# B13: talent prices are data-driven per quality/rank; the first purchase charges rank 1.
+		check(Demo.try_purchase("talent",id,"gold").success and PlayerData.gold == gold-DemoConfig.talent_gold_price(id,1) and PlayerData.reward_point == points,"A07 talent gold "+id)
 	var gold = PlayerData.gold
 	var points = PlayerData.reward_point
 	check(Demo.try_purchase("talent","T01","points").success and PlayerData.gold == gold and PlayerData.reward_point == points-1,"A08 talent points only")
 	Demo.try_purchase("talent","T01","points")
 	points = PlayerData.reward_point
 	check(not Demo.try_purchase("talent","T01","points").success and PlayerData.reward_point == points,"A09 max talent free rejection")
-	check(is_equal_approx(gun.effective.damage,original.damage*1.24),"B05 talent damage applies to effective combat snapshot")
+	check(is_equal_approx(gun.effective.damage,original.damage*(1.0+DemoConfig.talent_value("T01",3))),"B05 talent damage applies to effective combat snapshot")
 	PlayerData.gold = 0
 	check(not Demo.try_purchase("attachment","110").success and PlayerData.gold == 0,"A10 insufficient balance")
 	Demo.replenish()
@@ -109,7 +110,8 @@ func _ready():
 		if a.am_id == 121: fuse = a
 	check(gun.addAttachMent(fuse) and fuse.gun == gun,"A15 formerly restricted attachment installs universally")
 	plasma.addAttachMent(fuse)
-	check(is_equal_approx(plasma.effective.radius,38.4),"B explosion radius changes actual value")
+	# B13 moved 扩爆引信's radius multiplier to 1.25: 32 * 1.25 = 40.
+	check(is_equal_approx(plasma.effective.radius,40.0),"B explosion radius changes actual value")
 	var save = Demo.snapshot()
 	check(Demo.valid_save(save),"A20 structured camp snapshot accepted")
 	check(not Demo.valid_save({"schema_version":1}),"save rejects partial schema")

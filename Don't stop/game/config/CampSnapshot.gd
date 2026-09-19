@@ -19,6 +19,8 @@ static func validate(data) -> bool:
 	var reserve_key = "reserve_magazines" if data.schema_version >= 5 else "ammo"
 	if not number(data.get(reserve_key),true): return false
 	if data.schema_version >= 4 and not data.get("campaign_complete") is bool: return false
+	# Optional B13 field: only constrained when present, so old saves need no migration.
+	if data.has("unequipped") and not data.unequipped is bool: return false
 	for key in ["gold","points","level","next_stage","selected_stage"]:
 		if not number(data[key],true): return false
 	for key in ["hp","hp_max","exp"]:
@@ -110,6 +112,9 @@ static func normalize(data: Dictionary) -> Dictionary:
 	# B批: Hell Mode completion is an OPTIONAL field. schema_version stays 6, so every old
 	# save still validates (validate() does not require the key) and no namespace changed.
 	result.hell_complete = data.get("hell_complete",false)
+	# B13: explicit-unequip intent is OPTIONAL the same way. Absent in old saves -> false,
+	# which restores their exact previous behaviour (first new gun auto-equips).
+	result.unequipped = data.get("unequipped",false)
 	# The Stage-30 -> Stage-31 migration lives here, between validate() and the restore, so
 	# it needs no schema bump: validate() runs first and stage 30 is still a legal stage, and
 	# stage 31 exists for every save written after this batch.

@@ -43,7 +43,7 @@ func render():
 		for child in parent.get_children(): parent.remove_child(child); child.queue_free()
 	source_buttons.clear(); values.clear()
 	if not Utils.player.gun:
-		label(listing,"装备武器后可查看完整属性。"); return
+		label(listing,"未装备武器；装备武器后可查看完整属性。"); return
 	snapshot=EffectiveStats.inspect(Utils.player.gun)
 	overview.visible=tab=="build"; columns.visible=tab!="build"
 	if tab=="build": render_build(); return
@@ -155,7 +155,7 @@ func render_build():
 		if kind=="upgrade":
 			for id in Demo.owned_global_upgrades:
 				var am=Utils.am_dict[str(id)].instantiate()
-				make_owned(grid,kind,str(id),am.am_image,tr(am.am_name),AttachmentCatalog.DEFINITIONS[int(id)].info)
+				make_owned(grid,kind,str(id),am.am_image,AttachmentCatalog.display_name(int(id)),AttachmentCatalog.DEFINITIONS[int(id)].info)
 				am.free()
 		elif kind=="talent":
 			for id in Demo.talents:

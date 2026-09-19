@@ -127,7 +127,11 @@ func _ready() -> void:
 	add_child(timer)
 
 func can_start(stage: int) -> bool:
-	return state == "CAMP" and is_instance_valid(Utils.player) and not Utils.player.is_dead and PlayerData.player_hp > 0 and Utils.player.gun != null and PlayerData.player_weapon_list.values().has(Utils.player.gun) and DemoConfig.ENCOUNTERS.has(stage)
+	# B13: an explicitly unarmed player is a legal combatant - movement/dash stay live and
+	# firing is simply impossible without a weapon. If armed, the held gun must be owned.
+	return state == "CAMP" and is_instance_valid(Utils.player) and not Utils.player.is_dead and PlayerData.player_hp > 0 \
+		and (Utils.player.gun == null or PlayerData.player_weapon_list.values().has(Utils.player.gun)) \
+		and DemoConfig.ENCOUNTERS.has(stage)
 
 func roundStart() -> bool:
 	if not can_start(Demo.selected_stage): return false

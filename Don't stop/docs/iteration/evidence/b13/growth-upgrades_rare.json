@@ -1,0 +1,53 @@
+[
+	{
+		"build": "upgrades_rare",
+		"clear_seconds": -1.0,
+		"crit": 0.08,
+		"damage": 222.75999999966,
+		"damage_stat": 3.0132,
+		"dps": 14.850666666644,
+		"magazine": 130,
+		"owned_upgrades": 18,
+		"rate": 5.0,
+		"reload_s": 0.4119984,
+		"reload_seconds": 0.0,
+		"scenario": "single",
+		"seconds": 15.0,
+		"talent_ranks": 0,
+		"volleys": 73
+	},
+	{
+		"build": "upgrades_rare",
+		"clear_seconds": 6.169,
+		"crit": 0.08,
+		"damage": 180.0,
+		"damage_stat": 3.0132,
+		"dps": 29.1781488085589,
+		"magazine": 130,
+		"owned_upgrades": 18,
+		"rate": 5.0,
+		"reload_s": 0.4119984,
+		"reload_seconds": 0.0,
+		"scenario": "crowd",
+		"seconds": 6.169,
+		"talent_ranks": 0,
+		"volleys": 30
+	},
+	{
+		"build": "upgrades_rare",
+		"clear_seconds": -1.0,
+		"crit": 0.08,
+		"damage": 222.75999999966,
+		"damage_stat": 3.0132,
+		"dps": 14.850666666644,
+		"magazine": 130,
+		"owned_upgrades": 18,
+		"rate": 5.0,
+		"reload_s": 0.4119984,
+		"reload_seconds": 0.0,
+		"scenario": "boss",
+		"seconds": 15.0,
+		"talent_ranks": 0,
+		"volleys": 73
+	}
+]

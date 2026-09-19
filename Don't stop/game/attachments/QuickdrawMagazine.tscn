@@ -5,7 +5,7 @@
 
 [node name="QuickdrawMagazine" type="Node2D"]
 script = ExtResource("1_e418f")
-am_name = "QUICKDRAW_MAGAZINE"
+am_name = "快速装填组件"
 am_image = ExtResource("2_dbkto")
 am_type = "WEAPON_AMMUNITION"
 am_info = "INFO_QUICKDRAW_MAGAZINE"

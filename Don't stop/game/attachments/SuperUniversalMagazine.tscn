@@ -15,7 +15,7 @@ func onDestroy():
 [node name="UniversalExtendedMagazines" type="Node2D"]
 script = SubResource("GDScript_e2e4j")
 am_id = 8
-am_name = "SUPER UNIVERSAL MAGAZINE"
+am_name = "超容供弹鼓"
 am_image = ExtResource("1_51hob")
 am_type = "WEAPON_AMMUNITION"
 am_info = "INFO_SUPER UNIVERSAL MAGAZINE"

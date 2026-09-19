@@ -17,10 +17,12 @@ var category = "全部"
 var owned_only = false
 var tier_filter = 0
 var sort_mode = 0
+var upgrade_quality_filter = 0
 var action_bar: VBoxContainer
 var tab_buttons = {}
 var tier_box: OptionButton
 var sort_box: OptionButton
+var quality_box: OptionButton
 var tab_state: Dictionary = {}
 var search_box: LineEdit
 var weapon_preview: TextureRect
@@ -158,6 +160,12 @@ func _ready():
 	for text in ["品质↑","品质↓","价格↑","价格↓"]: sort_box.add_item(text)
 	filters.add_child(sort_box)
 	sort_box.item_selected.connect(func(index): sort_mode = index; request_refresh())
+	# B13: the upgrade and talent shops carry their own three-quality system (普通/稀有/传说),
+	# separate from the weapon catalog's five tiers.
+	quality_box = OptionButton.new()
+	for text in ["全部品质",AttachmentCatalog.QUALITY_NAMES[0],AttachmentCatalog.QUALITY_NAMES[1],AttachmentCatalog.QUALITY_NAMES[2]]: quality_box.add_item(text)
+	filters.add_child(quality_box)
+	quality_box.item_selected.connect(func(index): upgrade_quality_filter = index; request_refresh())
 	var columns = HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(columns)
@@ -226,6 +234,7 @@ func render():
 	category_box.visible = tab == "weapon"
 	tier_box.visible = tab == "weapon"
 	sort_box.visible = tab == "weapon"
+	quality_box.visible = tab == "attachment" or tab == "talent"
 	clear_box(listing)
 	clear_box(detail)
 	for node in cached:
@@ -258,21 +267,29 @@ func render():
 				weapon_card.set_meta("weapon_id",int(id))
 				tier_style(weapon_card,WeaponCatalog.tier(int(id)))
 		"attachment":
-			for id in Utils.am_dict:
+			var upgrade_ids = Utils.am_dict.keys()
+			upgrade_ids.sort_custom(func(a,b):
+				if AttachmentCatalog.quality(int(a)) != AttachmentCatalog.quality(int(b)): return AttachmentCatalog.quality(int(a)) < AttachmentCatalog.quality(int(b))
+				return int(AttachmentCatalog.PRICES[int(a)]) < int(AttachmentCatalog.PRICES[int(b)]))
+			for id in upgrade_ids:
 				var am = Utils.am_dict[id].instantiate()
 				cached.append(am)
 				var active = id in Demo.owned_global_upgrades
-				if not matches(tr(am.am_name)+AttachmentCatalog.DEFINITIONS[am.am_id].info): continue
+				if not matches(tr(am.am_name)+AttachmentCatalog.DEFINITIONS[am.am_id].info+AttachmentCatalog.quality_name(int(id))): continue
 				if owned_only and not active: continue
-				entry(tr(am.am_name)+"\n"+("√ 已激活" if active else "%d金币 · 未激活" % am.money),id,func(): show_attachment(id,am,active))
+				if upgrade_quality_filter > 0 and AttachmentCatalog.quality(int(id)) != upgrade_quality_filter: continue
+				var card = entry("%s %s\n%s" % [AttachmentCatalog.quality_name(int(id)),tr(am.am_name),"√ 已激活" if active else "%d金币 · 未激活" % am.money],id,func(): show_attachment(id,am,active))
+				quality_style(card,AttachmentCatalog.quality(int(id)))
 		"magazine": magazine_list()
 		"talent":
 			button(listing,"重置计划天赋 / 查看退款",show_reset)
 			for id in DemoConfig.TALENTS:
 				var d = DemoConfig.TALENTS[id]
-				if not matches(id+d.name+DemoConfig.talent_info(id)): continue
+				if not matches(id+d.name+DemoConfig.talent_info(id)+DemoConfig.talent_quality_name(id)): continue
 				if owned_only and Demo.rank(id) == 0: continue
-				entry("%s %d/%d" % [d.name,Demo.rank(id),d.max],id,func(): show_talent(id))
+				if upgrade_quality_filter > 0 and DemoConfig.talent_quality(id) != upgrade_quality_filter: continue
+				var card = entry("%s %s %d/%d" % [DemoConfig.talent_quality_name(id),d.name,Demo.rank(id),d.max],id,func(): show_talent(id))
+				quality_style(card,DemoConfig.talent_quality(id))
 		"equipment": equipment_list()
 		"stage": stage_list()
 		"legacy":
@@ -325,11 +342,19 @@ func show_weapon(id: String, gun):
 	full.visible = false
 	more.toggled.connect(func(value): full.visible = value)
 	if owned:
-		var equip = button(detail,"当前装备" if gun.is_use else "已拥有 | 装备",func():
-			selected_gun = int(id)
-			if PlayerData.changeWeapon(int(id),true): message.text = "已装备「%s」" % tr(gun.weapon_name)
-			request_refresh())
-		equip.disabled = gun.is_use
+		if gun.is_use:
+			label(detail,"当前装备",8)
+			# B13 unequip: the weapon stays owned, ammo untouched - only the "current weapon"
+			# link is dropped. Re-equipping stays available right here and via hotkeys.
+			button(detail,"卸下武器",func():
+				var result = Demo.unequip_weapon()
+				message.text = result.reason
+				request_refresh())
+		else:
+			button(detail,"已拥有 | 装备",func():
+				selected_gun = int(id)
+				if PlayerData.changeWeapon(int(id),true): message.text = "已装备「%s」" % tr(gun.weapon_name)
+				request_refresh())
 	else:
 		button(detail,"%d金币 | 购买" % Utils.weapon_money_list[id],func(): purchase("weapon",id))
 
@@ -348,12 +373,24 @@ func active_gun():
 
 func show_attachment(id: String,am,_owned: bool):
 	clear_box(detail)
-	label(detail,tr(am.am_name),10)
-	label(detail,AttachmentCatalog.DEFINITIONS[am.am_id].info,8)
+	var cid = int(id)
+	label(detail,"%s · %s" % [AttachmentCatalog.display_name(cid),AttachmentCatalog.quality_name(cid)],10)
+	label(detail,AttachmentCatalog.DEFINITIONS[cid].info,8)
 	label(detail,"所有当前和未来武器自动生效",8)
 	label(detail,"价格：%d金币" % am.money,8)
 	var active = id in Demo.owned_global_upgrades
 	label(detail,"√ 已激活" if active else "未激活",9)
+	# B13 preview: the real 当前 → 购买后 delta on the player's current gun, computed from
+	# EffectiveStats, never from the card's text. Zero-delta rows are skipped.
+	if not active and Utils.player.gun:
+		var current = EffectiveStats.calculate(Utils.player.gun)
+		var boosted = EffectiveStats.calculate(Utils.player.gun,Demo.owned_global_upgrades.duplicate()+[id])
+		label(detail,"当前 → 购买后（以当前武器结算）",8)
+		for stat in ["damage","crit","magazine","reload","range","spread","impulse","pierce","shards"]:
+			var before = float(current.get(stat,0.0))
+			var after = float(boosted.get(stat,0.0))
+			if is_equal_approx(before,after): continue
+			label(detail,comparison(stat,before,after),7)
 	var action = button(detail,"√ 已激活" if active else "%d金币 | 购买" % am.money,func(): purchase("attachment",id))
 	action.disabled = active
 
@@ -361,14 +398,20 @@ func show_talent(id: String):
 	clear_box(detail)
 	var d = DemoConfig.TALENTS[id]
 	var rank = Demo.rank(id)
-	label(detail,d.name+"  %d / %d" % [rank,d.max],10)
+	label(detail,"%s · %s  %d / %d" % [d.name,DemoConfig.talent_quality_name(id),rank,d.max],10)
+	label(detail,"品质：%s（价值等级；与当前等级独立）" % DemoConfig.talent_quality_name(id),7)
 	label(detail,DemoConfig.talent_info(id))
 	label(detail,DemoConfig.talent_effect(id,rank),8)
 	label(detail,Demo.talent_status(id))
 	if id in ["T07","T08"]: label(detail,"旧头盔/蓝靴作为历史来源保留，不在原型商店重复售卖；本页退款仅针对已记录的计划天赋付款。")
 	if id == "T10": label(detail,"当前%d层，剩余%.1f秒" % [Demo.kill_stacks,Demo.stack_time])
 	if id == "T24": label(detail,"冷却剩余%.1f秒" % Demo.heal_cooldown)
-	label(detail,"已满级；不会扣款" if rank == d.max else "下一等级：%s\n等级 %d → %d\n支付任选一种：%d金币 或 1天赋点" % [DemoConfig.talent_effect(id,rank+1),rank,rank+1,DemoConfig.TALENT_GOLD_PRICE])
+	if rank == d.max:
+		label(detail,"已满级；不会扣款")
+	else:
+		# B13: per-quality, per-rank prices replace the flat 100/1. The next purchase charges
+		# exactly the price of the rank it grants; reset/refund replays recorded payments.
+		label(detail,"下一等级：%s\n等级 %d → %d\n支付任选一种：%d金币 或 %d天赋点" % [DemoConfig.talent_effect(id,rank+1),rank,rank+1,DemoConfig.talent_gold_price(id,rank+1),DemoConfig.talent_point_price(id,rank+1)])
 	button(detail,"金币购买",func(): purchase("talent",id,"gold")).disabled = rank == d.max
 	button(detail,"天赋点升级",func(): purchase("talent",id,"points")).disabled = rank == d.max
 
@@ -448,9 +491,9 @@ func _depart_with(stage: int, trial: bool):
 	if not DemoConfig.ENCOUNTERS.has(stage):
 		message.text = "该关卡不存在"
 		return
-	if not Utils.player.gun:
-		message.text = "请先购买并装备一把枪"
-		return
+	# B13: an explicitly unarmed player may still depart - movement/dash stay live, firing
+	# is simply impossible without a weapon. The old hard refusal assumed gun is never a
+	# player choice; unarmed is a first-class state now.
 	if LevelServer.state != "CAMP":
 		message.text = "当前仍在战斗；需先完成或返回营地"
 		return
@@ -494,6 +537,17 @@ func _unhandled_input(event):
 
 func tier_color(tier: int) -> Color:
 	return [Color("a8bac2"),Color("8ed8b0"),Color("79c6ef"),Color("c6a0ee"),Color("ffd47d")][clampi(tier,1,5)-1]
+## B13 three-quality palette for upgrades/talents. Reuses the weapon catalog's visual
+## language (same family colors) restricted to the three qualities this system has.
+func quality_color(quality: int) -> Color:
+	return [Color("a8bac2"),Color("79c6ef"),Color("ffd47d")][clampi(quality,1,3)-1]
+func quality_style(item: Button,quality: int):
+	for state in ["normal","hover","pressed","focus"]:
+		var style=StyleBoxFlat.new(); style.bg_color=Color("233743") if state=="normal" else Color("3a535d")
+		style.border_color=quality_color(quality); style.set_border_width_all(1); style.border_width_left=2 if quality<3 else 3
+		style.set_content_margin_all(3)
+		if quality==3: style.shadow_color=Color(1,0.74,0.3,0.15); style.shadow_size=2
+		item.add_theme_stylebox_override(state,style)
 func weapon_art(texture: Texture2D) -> Texture2D:
 	var image=texture.get_image()
 	if not image or image.get_used_rect().size==Vector2i.ZERO: return texture
@@ -507,8 +561,8 @@ func tier_style(item: Button,tier: int):
 		if tier==5: style.shadow_color=Color(1,0.74,0.3,0.15); style.shadow_size=2
 		item.add_theme_stylebox_override(state,style)
 func comparison(stat: String,current: float,candidate: float) -> String:
-	var names={"damage":"Damage","rate":"RPM","magazine":"Magazine","reload":"Reload","crit":"Crit","range":"Range"}
+	var names={"damage":"Damage","rate":"RPM","magazine":"Magazine","reload":"Reload","crit":"Crit","range":"Range","spread":"Spread","impulse":"Knockback","pierce":"Pierce","shards":"Shards"}
 	var delta=candidate-current
-	var change="%+.0f" % delta if stat=="magazine" else ("%+.1fpp" % (delta*100) if stat=="crit" else ("%+.0f%%" % (delta/current*100) if current!=0 else "%+.1f" % delta))
+	var change="%+.0f" % delta if stat in ["magazine","pierce","shards","bounces"] else ("%+.1fpp" % (delta*100) if stat=="crit" else ("%+.0f%%" % (delta/current*100) if current!=0 else "%+.1f" % delta))
 	var factor=60.0 if stat=="rate" else (100.0 if stat=="crit" else 1.0)
 	return "%s  %.1f → %.1f  %s%s" % [names[stat],current*factor,candidate*factor,"▲" if delta>0 else ("▼" if delta<0 else "="),change]

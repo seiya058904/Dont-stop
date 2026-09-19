@@ -57,7 +57,9 @@ func _ready():
 			check(PlayerData.gold == gold and PlayerData.reward_point == points and PlayerData.player_weapon_list.size() == 24 and PlayerData.player_am_list.size() == 24,"migration no resource or equipment duplication")
 			check(Utils.player.gun.weapon_id == 0 and Utils.player.gun.bullets_count == 3 and PlayerData.reserve_magazines == 77 and Demo.next_stage == 21 and Demo.selected_stage == 30,"migration ammo equipped stage preserved")
 		var refund = Demo.reset_preview()
-		check(refund.gold == (2400 if version >= 3 else 0),"historical payment never invented")
+		var paid_gold = 0
+		for id in DemoConfig.TALENTS: paid_gold += DemoConfig.talent_gold_price(id,1)
+		check(refund.gold == (paid_gold if version >= 3 else 0),"historical payment never invented")
 	for mode in ["weapon","attachment","talent","equipped","removed_reference","duplicate_instance","duplicate_weapon","stage","missing_gold","missing_payments","missing_campaign","overfull_ammo","duplicate_payment"]:
 		var bad = current.duplicate(true)
 		match mode:

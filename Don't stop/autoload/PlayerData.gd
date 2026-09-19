@@ -126,6 +126,9 @@ func changeWeapon(weapon_id: int, from_panel = false) -> bool:
 	is_change_weapon = true
 	switch_remaining = DemoConfig.SWITCH_SECONDS
 	Utils.player.changeWeapon(weapon_id)
+	# Any successful equip - panel or hotkey - is an explicit player choice: it ends the
+	# "player chose to stay unarmed" state, so a later purchase may resume default equipping.
+	Demo.explicitly_unequipped = false
 	Demo.changed.emit()
 	Demo.save_camp()
 	return true

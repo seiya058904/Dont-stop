@@ -53,6 +53,12 @@ var ammo_kills = 0
 var crowd_clock = 0.0
 var crowd_active = false
 var quitting_game = false
+## B13 unequip: set when the player explicitly drops their weapon in the camp, and cleared by
+## ANY successful equip. It is the difference between "has no weapon yet" (buying the first gun
+## auto-equips it) and "chose to be unarmed" (buying another gun must NOT silently re-arm).
+## Persisted as the OPTIONAL save key `unequipped`; schema_version stays 6 and old saves,
+## which lack the key, restore as false - exactly their previous auto-equip behaviour.
+var explicitly_unequipped = false
 
 func reset_preview() -> Dictionary:
 	var result = {"gold":0,"points":0,"unknown":0,"revision":reset_revision}
@@ -246,7 +252,9 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 		if rank(id) >= DemoConfig.TALENTS[id].max:
 			result.reason = "已满级；未扣款"
 			return result
-		price = DemoConfig.TALENT_GOLD_PRICE if currency == "gold" else 1
+		# B13: prices are data-driven per quality and rank; the next purchase is charged at
+		# the price of the rank it will grant.
+		price = DemoConfig.talent_gold_price(id,rank(id)+1) if currency == "gold" else DemoConfig.talent_point_price(id,rank(id)+1)
 	elif kind == "legacy" and RewardServer.reward_list.has(id):
 		obtained = RewardServer.reward_list[id].instantiate()
 		if not RewardServer.can_add(obtained):
@@ -271,13 +279,13 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 		"attachment":
 			owned_global_upgrades.append(id)
 			owned_global_upgrades.sort()
-			result.reason = "「%s」已激活 · %d金币\n所有当前和未来武器自动生效" % [tr(obtained.am_name),price]
+			result.reason = "「%s」（%s）已激活 · %d金币\n所有当前和未来武器自动生效" % [AttachmentCatalog.display_name(int(id)),AttachmentCatalog.quality_name(int(id)),price]
 			obtained.free()
 		"talent":
 			talents[id] = rank(id)+1
 			talent_payments.append({"id":id,"level":rank(id),"currency":currency,"amount":price})
 			reset_revision += 1
-			result.reason = "%s：%d → %d / %d\n%s" % [DemoConfig.TALENTS[id].name, rank(id)-1,rank(id), DemoConfig.TALENTS[id].max,DemoConfig.talent_info(id)]
+			result.reason = "%s（%s）：%d → %d / %d · 支付 %d%s\n%s" % [DemoConfig.TALENTS[id].name,DemoConfig.talent_quality_name(id),rank(id)-1,rank(id), DemoConfig.TALENTS[id].max,price,"金币" if currency == "gold" else "天赋点",DemoConfig.talent_info(id)]
 		"legacy":
 			if not RewardServer.addReward(obtained): return result
 			purchases.append(id)
@@ -302,6 +310,21 @@ func replenish():
 	PlayerData.reward_point = maxi(PlayerData.reward_point,9999)
 	changed.emit()
 	save_camp()
+
+## B13 unequip: the camp's "卸下武器" action. Ownership, ammo and the weapon itself are
+## untouched - the player simply has no current weapon. `set_use(false)` is what makes the
+## old gun inert (stops firing/reload processing and hides it); clearing the Hero's `gun`
+## link is what makes the state observable to every system as "unarmed".
+func unequip_weapon() -> Dictionary:
+	if LevelServer.state == "COMBAT": return {"success":false,"reason":"战斗中不可卸下；请先返回营地"}
+	if not is_instance_valid(Utils.player) or not Utils.player.gun: return {"success":false,"reason":"当前没有装备武器"}
+	var name = tr(Utils.player.gun.weapon_name)
+	Utils.player.gun.set_use(false)
+	Utils.player.gun = null
+	explicitly_unequipped = true
+	changed.emit()
+	var saved = save_camp()
+	return {"success":true,"reason":"已卸下「%s」；武器仍保留在武器页，可随时重新装备%s" % [name,"；已保存" if saved.success else "；尚未保存，请重试保存"],"saved":saved.success}
 
 func on_kill(monster, context: Dictionary):
 	if monster.training: return
@@ -333,7 +356,7 @@ func snapshot() -> Dictionary:
 	# including a brand-new one, so there is nothing here to clamp and nothing to repair on the
 	# next load. `next_stage` remains the linear campaign pointer and is still bounded by
 	# CampSnapshot.normalize(); it is deliberately NOT written from a direct stage departure.
-	return {"schema_version":6,"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":6,"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}
@@ -401,6 +424,10 @@ func load_camp() -> bool:
 		if reward.has_method("restore_state"): reward.restore_state(data.legacy_state.get(str(reward.id),{}))
 	campaign_complete = data.get("campaign_complete",false)
 	hell_complete = data.get("hell_complete",false)
+	# Optional B13 field (absent in older saves -> false, the exact old auto-equip behaviour).
+	# A save that carries an equipped weapon is armed no matter what the flag says, so the
+	# explicit-unequip intent only survives when the save really restored unarmed.
+	explicitly_unequipped = data.equipped == "" and bool(data.get("unequipped",false))
 	next_stage = int(data.next_stage)
 	selected_stage = int(data.selected_stage)
 	trial = false
@@ -447,7 +474,7 @@ func export_bad_save() -> String:
 func create_new_save() -> bool:
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
-	var fresh = {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"equipped":""}
+	var fresh = {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"unequipped":false,"equipped":""}
 	var result = save_store.save(save_path,fresh)
 	if not result.success: return false
 	return load_camp()

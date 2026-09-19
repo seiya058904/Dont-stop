@@ -133,6 +133,17 @@ jobs:
           # flag before the LOS query, freed RIDs must not survive actor churn, and a
           # real wall must still block the ray.
           run_case B12LineOfSightRegression
+          # B13 growth contracts: catalog shape, per-item real effects, exact talent
+          # magnitudes, economy bands/refunds, the unequip state machine, the shop UI,
+          # and the frozen-benchmark strength relation. B13GrowthBench stays OUT of
+          # per-PR CI on purpose (it is evidence generation, ~10 min).
+          run_case B13Catalog
+          run_case B13UpgradeEffects
+          run_case B13TalentEffects
+          run_case B13Economy
+          run_case B13Unequip
+          run_case B13UI
+          run_case B13Strength
           run_case M3Weapons
       - name: Upload contract logs
         if: always()

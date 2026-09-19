@@ -4,7 +4,7 @@
 [node name="A116" type="Node2D"]
 script = ExtResource("1")
 am_id = 116
-am_name = "抑震枪托"
+am_name = "稳定枪身组件"
 am_image = ExtResource("2")
 am_type = "WEAPON_STOCK"
 am_info = "抑震枪托：详情读取统一机制目录"
