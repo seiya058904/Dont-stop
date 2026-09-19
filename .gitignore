@@ -1,5 +1,6 @@
 # The public workspace repository contains three frozen originals and the iteration source.
 /archive/
+/.codebase-memory/
 
 # Keep each child repository's local Git metadata out of the outer repository.
 **/.git/
