@@ -1,0 +1,190 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2284
+[boot-probe] utils_ready t=2286
+[boot] title menu drawn t=2804
+[boot-probe] controlui_ready t=2804
+PASS exactly 24 weapons in the runtime list
+PASS every weapon has a tier entry
+PASS no duplicate weapon IDs
+PASS tier inside 1..5 for 121
+PASS rarity name mirrors tier for 121
+PASS positive price for 121
+PASS shop uses catalog price for 121
+PASS POWER entry exists for 121
+PASS positive POWER for 121
+PASS tier inside 1..5 for 122
+PASS rarity name mirrors tier for 122
+PASS positive price for 122
+PASS shop uses catalog price for 122
+PASS POWER entry exists for 122
+PASS positive POWER for 122
+PASS tier inside 1..5 for 124
+PASS rarity name mirrors tier for 124
+PASS positive price for 124
+PASS shop uses catalog price for 124
+PASS POWER entry exists for 124
+PASS positive POWER for 124
+PASS tier inside 1..5 for 111
+PASS rarity name mirrors tier for 111
+PASS positive price for 111
+PASS shop uses catalog price for 111
+PASS POWER entry exists for 111
+PASS positive POWER for 111
+PASS tier inside 1..5 for 113
+PASS rarity name mirrors tier for 113
+PASS positive price for 113
+PASS shop uses catalog price for 113
+PASS POWER entry exists for 113
+PASS positive POWER for 113
+PASS tier inside 1..5 for 115
+PASS rarity name mirrors tier for 115
+PASS positive price for 115
+PASS shop uses catalog price for 115
+PASS POWER entry exists for 115
+PASS positive POWER for 115
+PASS tier inside 1..5 for 116
+PASS rarity name mirrors tier for 116
+PASS positive price for 116
+PASS shop uses catalog price for 116
+PASS POWER entry exists for 116
+PASS positive POWER for 116
+PASS tier inside 1..5 for 117
+PASS rarity name mirrors tier for 117
+PASS positive price for 117
+PASS shop uses catalog price for 117
+PASS POWER entry exists for 117
+PASS positive POWER for 117
+PASS tier inside 1..5 for 118
+PASS rarity name mirrors tier for 118
+PASS positive price for 118
+PASS shop uses catalog price for 118
+PASS POWER entry exists for 118
+PASS positive POWER for 118
+PASS tier inside 1..5 for 119
+PASS rarity name mirrors tier for 119
+PASS positive price for 119
+PASS shop uses catalog price for 119
+PASS POWER entry exists for 119
+PASS positive POWER for 119
+PASS tier inside 1..5 for 120
+PASS rarity name mirrors tier for 120
+PASS positive price for 120
+PASS shop uses catalog price for 120
+PASS POWER entry exists for 120
+PASS positive POWER for 120
+PASS tier inside 1..5 for 112
+PASS rarity name mirrors tier for 112
+PASS positive price for 112
+PASS shop uses catalog price for 112
+PASS POWER entry exists for 112
+PASS positive POWER for 112
+PASS tier inside 1..5 for 114
+PASS rarity name mirrors tier for 114
+PASS positive price for 114
+PASS shop uses catalog price for 114
+PASS POWER entry exists for 114
+PASS positive POWER for 114
+PASS tier inside 1..5 for 123
+PASS rarity name mirrors tier for 123
+PASS positive price for 123
+PASS shop uses catalog price for 123
+PASS POWER entry exists for 123
+PASS positive POWER for 123
+PASS tier inside 1..5 for 0
+PASS rarity name mirrors tier for 0
+PASS positive price for 0
+PASS shop uses catalog price for 0
+PASS POWER entry exists for 0
+PASS positive POWER for 0
+PASS tier inside 1..5 for 1
+PASS rarity name mirrors tier for 1
+PASS positive price for 1
+PASS shop uses catalog price for 1
+PASS POWER entry exists for 1
+PASS positive POWER for 1
+PASS tier inside 1..5 for 2
+PASS rarity name mirrors tier for 2
+PASS positive price for 2
+PASS shop uses catalog price for 2
+PASS POWER entry exists for 2
+PASS positive POWER for 2
+PASS tier inside 1..5 for 3
+PASS rarity name mirrors tier for 3
+PASS positive price for 3
+PASS shop uses catalog price for 3
+PASS POWER entry exists for 3
+PASS positive POWER for 3
+PASS tier inside 1..5 for 4
+PASS rarity name mirrors tier for 4
+PASS positive price for 4
+PASS shop uses catalog price for 4
+PASS POWER entry exists for 4
+PASS positive POWER for 4
+PASS tier inside 1..5 for 5
+PASS rarity name mirrors tier for 5
+PASS positive price for 5
+PASS shop uses catalog price for 5
+PASS POWER entry exists for 5
+PASS positive POWER for 5
+PASS tier inside 1..5 for 6
+PASS rarity name mirrors tier for 6
+PASS positive price for 6
+PASS shop uses catalog price for 6
+PASS POWER entry exists for 6
+PASS positive POWER for 6
+PASS tier inside 1..5 for 7
+PASS rarity name mirrors tier for 7
+PASS positive price for 7
+PASS shop uses catalog price for 7
+PASS POWER entry exists for 7
+PASS positive POWER for 7
+PASS tier inside 1..5 for 8
+PASS rarity name mirrors tier for 8
+PASS positive price for 8
+PASS shop uses catalog price for 8
+PASS POWER entry exists for 8
+PASS positive POWER for 8
+PASS tier inside 1..5 for 9
+PASS rarity name mirrors tier for 9
+PASS positive price for 9
+PASS shop uses catalog price for 9
+PASS POWER entry exists for 9
+PASS positive POWER for 9
+PASS both quality bands populated for 1/2
+PASS quality 1 price band strictly below quality 2
+PASS both quality bands populated for 2/3
+PASS quality 2 price band strictly below quality 3
+PASS both quality bands populated for 3/4
+PASS quality 3 price band strictly below quality 4
+PASS both quality bands populated for 4/5
+PASS quality 4 price band strictly below quality 5
+PASS weapon name present for 121
+PASS weapon name present for 122
+PASS weapon name present for 124
+PASS weapon name present for 111
+PASS weapon name present for 113
+PASS weapon name present for 115
+PASS weapon name present for 116
+PASS weapon name present for 117
+PASS weapon name present for 118
+PASS weapon name present for 119
+PASS weapon name present for 120
+PASS weapon name present for 112
+PASS weapon name present for 114
+PASS weapon name present for 123
+PASS weapon name present for 0
+PASS weapon name present for 1
+PASS weapon name present for 2
+PASS weapon name present for 3
+PASS weapon name present for 4
+PASS weapon name present for 5
+PASS weapon name present for 6
+PASS weapon name present for 7
+PASS weapon name present for 8
+PASS weapon name present for 9
+PASS aim hook is honoured in test mode
+PASS aim hook is inert outside test mode and reads the real viewport mouse
+PASS a stray aim_override cannot move production aim
+B12_CATALOG_CHECKS 182 FAILURES 0
+[leave] save on the way out success=true web=false

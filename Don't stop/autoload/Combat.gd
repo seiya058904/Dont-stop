@@ -103,7 +103,7 @@ func secondary_hit(source, context: Dictionary, damage: float, talent: String):
 	derived.depth = 1
 	derived.crit = 0.0
 	hit(nearest,derived)
-	trace([source.global_position,nearest.global_position])
+	trace([source.global_position,nearest.global_position],Color(0.4,0.85,1) if talent=="T14" else Color(0.9,0.65,1))
 
 func clear_line(from: Vector2, to: Vector2) -> bool:
 	# B11.1 test-only counters (game/diag/B11Probe.gd). Read-only: they observe this query, they do
@@ -174,8 +174,9 @@ func trace(points: Array, color = Color(0.4,0.85,1), width = 2.0):
 
 func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: int):
 	var visited = []
+	var width = float(context.get("beam_width",gun.effective.width))
 	for lane in [0.0,-0.5,0.5]:
-		var from = start+direction.orthogonal()*gun.effective.width*lane
+		var from = start+direction.orthogonal()*width*lane
 		var end = from+direction*gun.effective.range
 		var query = PhysicsRayQueryParameters2D.create(from,end,2147483651)
 		query.exclude = [Utils.player.get_rid()]
@@ -195,7 +196,7 @@ func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: i
 			excluded.append(target.get_rid())
 			query.exclude = excluded
 			if count == limit: end = result.position
-		trace([from,end],Color(0.7,0.9,1),maxf(1,gun.effective.width/3.0))
+		trace([from,end],Color(0.7,0.9,1),maxf(1,width/3.0))
 
 func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 	var length = gun.effective.range

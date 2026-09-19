@@ -116,8 +116,10 @@ func _shoot():
 		if spec.mode == "prism":
 			for i in projectile_count(): Combat.beam(self,gun_tip.global_position,direction.rotated((i-(projectile_count()-1)*0.5)*0.1),context,1)
 		elif spec.mode == "rail":
-			context.damage *= 1.0+1.5*minf(1.0,charge_time/effective.warmup)
-			Combat.beam(self,gun_tip.global_position,direction,context,mini(8,effective.pierce+1))
+			var charged = clampf(charge_time/effective.warmup,0,1)
+			context.damage *= 1.0+1.5*charged
+			context.beam_width = effective.width*lerpf(0.3,1.0,charged)
+			Combat.beam(self,gun_tip.global_position,direction,context,mini(8,1+int(floor(effective.pierce*charged))))
 		else:
 			if spec.mode == "thermal":
 				sustained = true

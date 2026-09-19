@@ -1,0 +1,46 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2184
+[boot-probe] utils_ready t=2185
+[boot] title menu drawn t=2710
+[boot-probe] controlui_ready t=2710
+PASS all registered weapons have an owned display model
+PASS search filters the actual catalog
+PASS filtered selection has the correct preview
+PASS selected weapon row is visibly pressed
+PASS selection reuses its pixel preview texture
+PASS search does not rebuild display model 1
+PASS search does not rebuild display model 3
+PASS search does not rebuild display model 9
+PASS search does not rebuild display model 8
+PASS search does not rebuild display model 0
+PASS search does not rebuild display model 2
+PASS search does not rebuild display model 5
+PASS search does not rebuild display model 123
+PASS search does not rebuild display model 7
+PASS search does not rebuild display model 117
+PASS search does not rebuild display model 118
+PASS search does not rebuild display model 6
+PASS search does not rebuild display model 4
+PASS search does not rebuild display model 119
+PASS search does not rebuild display model 112
+PASS search does not rebuild display model 115
+PASS search does not rebuild display model 114
+PASS search does not rebuild display model 116
+PASS search does not rebuild display model 111
+PASS search does not rebuild display model 113
+PASS search does not rebuild display model 122
+PASS search does not rebuild display model 120
+PASS search does not rebuild display model 121
+PASS search does not rebuild display model 124
+PASS empty search has no stale actions
+PASS empty search cannot display the previous weapon
+PASS empty search cannot purchase the previous weapon
+PASS filtering preserves transaction feedback
+PASS selecting a result after an empty selection restores the preview header
+PASS preview fits its reserved display area
+PASS preview scales source pixels by an integer
+PASS legendary preview keeps rarity and price
+PASS presentation never changes equipped effective stats
+CAMP_PRESENTATION_CHECKS 38 FAILURES 0
+[leave] save on the way out success=true web=false

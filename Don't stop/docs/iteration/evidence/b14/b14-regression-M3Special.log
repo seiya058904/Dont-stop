@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2101
+[boot-probe] utils_ready t=2103
+[boot] title menu drawn t=2619
+[boot-probe] controlui_ready t=2619
+PASS gravity actually attracts normal enemy
+PASS gravity cannot attract through wall
+PASS gravity boss pull immunity
+PASS gravity final explosion with wall and boss damage
+PASS disc actual one hit outbound and one return
+PASS disc safely returns or expires
+DISC LIFECYCLE created {"created_ms":6499,"epoch":0,"id":315361337840,"type":"res://game/monster/Monster 2/Monster2.gd"}
+DISC LIFECYCLE created {"created_ms":6561,"epoch":0,"id":315780768179,"type":"res://game/bullets/MechanismProjectile.gd"}
+PASS disc freed-target setup has actual outbound hit
+DISC LIFECYCLE exiting {"created_ms":6499,"epoch":0,"id":315361337840,"type":"res://game/monster/Monster 2/Monster2.gd"} destroyed_ms=6665 epoch=0
+DISC LIFECYCLE exiting {"created_ms":6561,"epoch":0,"id":315780768179,"type":"res://game/bullets/MechanismProjectile.gd"} destroyed_ms=7886 epoch=0
+PASS disc returns safely after hit target is freed
+PASS rotary accelerates and caps 24 per second
+PASS rotary release gradually slows
+PASS rotary stops pause
+PASS rotary stops switch
+PASS rotary stops death
+PASS rotary stops camp
+M3 SPECIAL SUMMARY checks=14 failures=0

@@ -112,13 +112,13 @@ func _ready():
 	check(is_equal_approx(context.damage,gun.effective.damage*(1.0+DemoConfig.talent_value("T12",3))),"T12 first shot snapshot carries the catalog rank-3 value")
 	await wait(0.03)
 	check(is_equal_approx(gun.shot_context().damage,gun.effective.damage),"T12 later shot no bonus")
-	# Actual ordinary projectile pierces exactly one additional target.
+	# B14 legendary value: two additional targets, with an untouched fourth guard.
 	ranks({"T13":1})
-	var targets = [enemy(origin+Vector2(30,8)),enemy(origin+Vector2(60,8)),enemy(origin+Vector2(90,8))]
+	var targets = [enemy(origin+Vector2(30,8)),enemy(origin+Vector2(60,8)),enemy(origin+Vector2(90,8)),enemy(origin+Vector2(120,8))]
 	await wait(0.06)
 	var bullet = gun.bullet_scene.instantiate(); add_child(bullet); bullet.position = origin; bullet.rotation = 0; gun.fire(bullet)
-	await wait(0.2)
-	check(targets[0].HP < 100 and targets[1].HP < 100 and targets[2].HP == 100,"T13 real ordinary two-target penetration")
+	await wait(0.35)
+	check(targets[0].HP < 100 and targets[1].HP < 100 and targets[2].HP < 100 and targets[3].HP == 100,"T13 real ordinary three-target penetration; fourth excluded")
 	check(thermal.effective.pierce == 0,"T13 incompatible thermal unchanged")
 	await clean()
 	# Secondary arc, burn, cold, echo: root-only, bounded records and cooldown.

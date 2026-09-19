@@ -1,0 +1,806 @@
+[
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after.log",
+    "bytes": 1685,
+    "sha256": "b1986b69070a2db57e58ba42cf0c6be2b3cac05bbd51c94c4641c3f6e262af8c",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after2.log",
+    "bytes": 1216,
+    "sha256": "540dbd8223dbb071bf0a158510d507d549f7479e289742dccf94cdc0bad49b0b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after3.log",
+    "bytes": 2506,
+    "sha256": "8e4a4e1fb520d8c524d1de1138538c9b2c782461ab3875382a37c8d068fb422d",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after4.log",
+    "bytes": 2595,
+    "sha256": "686cfb9988521a34ee80283b88678556e61a6d595d00f39c3d4fde77490d2685",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after5.log",
+    "bytes": 2977,
+    "sha256": "5709101035069bac7e77a22e91299465c77a8337a0fb3eedcec2c5186a07fa32",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after6.log",
+    "bytes": 2977,
+    "sha256": "4ffe0f57fe34628964409d2db91defff0f40088a602c414769deecbbebeab7ef",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-after7.log",
+    "bytes": 3070,
+    "sha256": "3cbac1a1dd8fac3f11c718abda0289ed43625640c360b4f53ecbdb2127caf22b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after.log",
+    "bytes": 843,
+    "sha256": "470f822874ab7ccbde5b554e63887bd590243117e45157ceaf572e24e634cae8",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-before.log",
+    "bytes": 900,
+    "sha256": "1199f24d1da69546276dbcaa3b212f154f09ef486f7e626374ed1aa0387c1ce0",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-B14EncounterContracts-precalibration.log",
+    "bytes": 4628,
+    "sha256": "2a6f7b78719f3ee77e13c3113e08d413f84fedc12885d897a31282b2b8a48720",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-B14Growth-precalibration.log",
+    "bytes": 4939,
+    "sha256": "aa087e38fb5d8b23b7bf8b14217627c2bccc7eb563da1dc7bf29717195a2ef14",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-before.log",
+    "bytes": 431,
+    "sha256": "ff3d72ad1c2340efec789ad20e85e4e6a365fcf9e858b2d9e0157590202eb652",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-benchmark-reference-source.json",
+    "bytes": 1723,
+    "sha256": "0210334b7d959fb8891acc5e815bb47fc2c5da102a4b818ab457dd54ae9c1624",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-boss-before.log",
+    "bytes": 8373,
+    "sha256": "90e9cec679c638447fd2c3752af4ecbdbaf7cf73b5cfead3859b8d4c6c896843",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-camp-regression.log",
+    "bytes": 2100,
+    "sha256": "c71a9172874b760a82101c3b8b3003a5eea2212ede5813588fc8c5c3cb2fa089",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-catalog-after.json",
+    "bytes": 21922,
+    "sha256": "0e17971006c7aea0d504723c6006ee8a21ff9cafa9fa1bcc5ed359f426c926d1",
+    "remote_copy": "intermediate observation retained locally; complete original and release matrices included"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-catalog-final.json",
+    "bytes": 24623,
+    "sha256": "be675800efeb0b6caf933f9f2b5dd8446d965b7b83d6b75db22adb68e8bc723f",
+    "remote_copy": "intermediate observation retained locally; complete original and release matrices included"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-catalog-release.json",
+    "bytes": 24714,
+    "sha256": "df39c7f827be0c564dd17c66fff3a8137661d8a127120afbc20a647ec56d3cfb",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-growth-final.log",
+    "bytes": 32494,
+    "sha256": "593671801abc2cda4d3852fa8f19de30163f5bfcd39c23c67b2efcbc25258a91",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-growth.log",
+    "bytes": 32494,
+    "sha256": "aff9b38bd6228e6b74b030cfae8cb4cf5dd8eca0597dc839c571590759bf0029",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-weapons-final.log",
+    "bytes": 39592,
+    "sha256": "a4fdff3e7efe7ef46f4d1ec178dd1f338510123fbef406e6a51b3ff29cfb97b3",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-current-weapons.log",
+    "bytes": 39592,
+    "sha256": "301bed3f32a4a58bd543ccaa0d117f1623b1d654f9d0adcbf7a2170febd19503",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-elite-before.log",
+    "bytes": 7214,
+    "sha256": "311b14e1a2af5f81376a55d390c3e6a8178abd8485c5be8e2e1d6ff1e8f81aa4",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-after.json",
+    "bytes": 43537,
+    "sha256": "db0b7bb82c66d0b224626e91f81ad3b5a594bdffdb1d8282be807d05ec10ac8a",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-after.log",
+    "bytes": 4151501,
+    "sha256": "cd6d3ea619a990d9e3e136c1c0bec86c76a87c994efb9d722c6b14c72ed4e028",
+    "remote_copy": "head/tail excerpt; full raw retained at original path"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-after2.json",
+    "bytes": 100893,
+    "sha256": "599a6a96d239aafc6eee2e5f3aa6d6492938c07401ea4e95aa598eb105845d08",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-after2.log",
+    "bytes": 62835,
+    "sha256": "542e555e1a4ee9e4001b9af8bc881d6941350b0b17e82d4a9f3f7193f35b3c17",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-before.json",
+    "bytes": 56374,
+    "sha256": "57c71b76529381b62d314c1b7df1231a3af881e48474e0b7314ab64a25619076",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-before.log",
+    "bytes": 35039,
+    "sha256": "e89b09e25d35f8613485db9d00f2ebbbfc6f310498dc2968e68515fcd76e81e3",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-contracts-final.log",
+    "bytes": 4628,
+    "sha256": "b9cfcb5eb957c20544206d1af2ca8166255bda353ff0a1c47d6acab1121e5b5a",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-coverage.json",
+    "bytes": 92667,
+    "sha256": "5552f09fe14adf011c058354cd10bb8969229ff96453074b35af0ec195e18ed9",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-encounter-coverage.log",
+    "bytes": 57805,
+    "sha256": "9d2784d9451a3a0c0eb931fcc08b2db1f5a6ab1f9ac1c78888c40b0583be9a98",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-boss-before.json",
+    "bytes": 10434,
+    "sha256": "ff068e9bb7a3d0f41b4e91537a4fc3341108adc48a85c757ee43dbb7b7675cc6",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-boss-calibrated.json",
+    "bytes": 16214,
+    "sha256": "75dba09b19531a34ef164844dbca46b7f477c5f7667cc946609d7165aa64d188",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-boss-calibrated.log",
+    "bytes": 12898,
+    "sha256": "f87d1cd6713b22f5b845d10463faed6ca7448af3d3ae70e21565abd701543135",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-elite-all.json",
+    "bytes": 37487,
+    "sha256": "13eff8cef1ff0cf083c2f079da1e5e50f6c6b6431579bfc3568fdd653bccd205",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-elite-all.log",
+    "bytes": 29199,
+    "sha256": "a49bd6fb12ab32aca74ce2a6ada3d5c72d08c0746826f6f1392162b194fa78f7",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-elite-before.json",
+    "bytes": 9053,
+    "sha256": "653c145c8ee4036858062706643b3293cfcd0b8aafa450674370bd2502d43c6e",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-wave-after.json",
+    "bytes": 4202,
+    "sha256": "d58d8b1de2f3a62c0c4201b7318bf392bd020c5269a9fba073843996271cfc61",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-wave-after.log",
+    "bytes": 3497,
+    "sha256": "fb4746ed7ffc52e4602d99ec3942842c5b6a8587ce90d125ee5f4f33c5f261d1",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-wave-before.json",
+    "bytes": 8133,
+    "sha256": "da8c1796aa226036ced33392baa4af3d0dadc468ec01427145754ec64e7bb43f",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-wave-half-after.json",
+    "bytes": 1348,
+    "sha256": "617ee2659da1d14d74ade6d0840c34ccd1f1fb8a96a9ae8723e7823f2ee80527",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-wave-half-after.log",
+    "bytes": 1271,
+    "sha256": "84eee1173b5d5ae1969b8630ce744e513622786b393a6dad5892ed7d4863e6f5",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-extension-wave-half-before.json",
+    "bytes": 1360,
+    "sha256": "85efbfd9cf08f09b673056afe86211be9539921e296f47048b5d767ea32fb6c9",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-feedback-after.log",
+    "bytes": 563,
+    "sha256": "1d9f864ed080b428ecaabb257c193f7bedf85a3ca6f1afa70ac4a477a2d75ef1",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-feedback-after2.log",
+    "bytes": 563,
+    "sha256": "85ffa4c6b72ff2071ed6e778910181d2fd2a686589444b3ab6655b582e2bb125",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-fixed-perf-after.json",
+    "bytes": 604620,
+    "sha256": "9f9a45333a241a5287197e37ea7ea55d98f5b6ae7fce1dea1805d9f170a1a61e",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-fixed-perf-after.log",
+    "bytes": 317,
+    "sha256": "6889a28d08824b1d87171baac7b1d12f81c16c26a91bbdd8965b271fb61b500f",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-fixed-perf-before.json",
+    "bytes": 605489,
+    "sha256": "88c99d53e53d7fb3732aa095263e60280e3694111d2f290b79b2c29d554fd37f",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-fixed-perf-before.log",
+    "bytes": 318,
+    "sha256": "dfd174a4481c31f34de011f7db98105eea1d06169758d4824aa18b5cea42d211",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-fixed-perf-comparison.json",
+    "bytes": 3471,
+    "sha256": "5048c08c486531e7dd97e397961fd350a1f962670bfed749465da222dec0ce83",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-after.log",
+    "bytes": 2664,
+    "sha256": "6a152d12d240a0853c436a80478b75b8856ecb984ef94997d61bc468d2d6a2b2",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-before.log",
+    "bytes": 2606,
+    "sha256": "badba9141f82dae5f0a83c1b4204d69c9fb987648a83318d7776ffab501be297",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-bounce-before.log",
+    "bytes": 3700,
+    "sha256": "1f2ee6c679aef372b3e8facb6b48fea2103777501b6779108e859eac7f218eaa",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-calibrated.log",
+    "bytes": 4940,
+    "sha256": "0da82dc23aa32e55e2f6a9e0f0a607dd240e7aca9878448bdcda499fbe90f778",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-calibrated2.log",
+    "bytes": 5439,
+    "sha256": "c6b3b993eaeb6d12381d8c284f0ff316d28b8679ebcce50f79a938950cdfaec1",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-calibrated3.log",
+    "bytes": 5484,
+    "sha256": "dacb7e56e234620a74d11dfc775198933b5da4675efb117da6332c6af855c90c",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-catalog-final.log",
+    "bytes": 19657,
+    "sha256": "2453e5fa3f577cf5503082bdfd06b6f81ff76ad860d42db82b6f6abf5473766a",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-catalog-fixed.log",
+    "bytes": 19708,
+    "sha256": "684919f4a01c2f72b2e9bd0fd1e0c462df44c6e009aa21d4499c6f9326996754",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix-after.json",
+    "bytes": 1135373,
+    "sha256": "fd708774c8a5dfafdd51694ccf00f81d4e568adac0a9fa60e12109d7d1346917",
+    "remote_copy": "intermediate observation retained locally; complete original and release matrices included"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix-after.log",
+    "bytes": 271,
+    "sha256": "03e2693fff9d31342666ffe0fe73c2e6fdf73f82de6b4b747da907958b0a5efb",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix-final.json",
+    "bytes": 1135373,
+    "sha256": "fd708774c8a5dfafdd51694ccf00f81d4e568adac0a9fa60e12109d7d1346917",
+    "remote_copy": "intermediate observation retained locally; complete original and release matrices included"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix-final.log",
+    "bytes": 271,
+    "sha256": "1b0ceaea5d61500cab20b5cba0106aafd0069549f1fa0b15bcb7fe4f7be15bc9",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix-release.json",
+    "bytes": 1135373,
+    "sha256": "fd708774c8a5dfafdd51694ccf00f81d4e568adac0a9fa60e12109d7d1346917",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix-release.log",
+    "bytes": 271,
+    "sha256": "d682faa5ea00e2536418a5260d38e21c72f384cc9ef12ba30647155ee22d3d96",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix.json",
+    "bytes": 1137261,
+    "sha256": "1a515f9ac821a514f6c879e5e35c8025cdad86aba2e813a71d422924de9cead6",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-matrix.log",
+    "bytes": 271,
+    "sha256": "23b490d6aae609ddf63723808b899d8366eb3d34d615153135ee8cdc43692317",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-growth-t13-diagnostic.log",
+    "bytes": 5439,
+    "sha256": "f3804c7fdc7363a62f3f1ee53c0e8dfc0ed3b3a3be13ccf0b1ffb71554b733db",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-historical-b12-current.log",
+    "bytes": 12101,
+    "sha256": "35bfd8a3a4e4d651cfa306bea7f961db1c8e8a72a2f59386c95256e79d222848",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-historical-b13-current.log",
+    "bytes": 10524,
+    "sha256": "4562ca5cad5f2c00e4bd27e918519c8effab17ecd8dde116b4f140ef1de9f901",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-calibrated.json",
+    "bytes": 8929,
+    "sha256": "92a41903e59aad0b596675067f9516704351acbcef91725fbc02db8f7496af4e",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-calibrated.log",
+    "bytes": 7066,
+    "sha256": "b7d504e1b8ed9a0925ca4f8d5bb39c5e0288f877100526a0e6ce623f73a1da32",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-pilot.json",
+    "bytes": 1311,
+    "sha256": "78ce0838fd741d0efb1fb112aecd0d6542397105f0e08eace6cda07cf5b94e8b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-pilot.log",
+    "bytes": 1233,
+    "sha256": "5207a65c50b99b374b2d8882d3eaffca1810f1770013b67fb89d7eb76abfe43f",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-reference.json",
+    "bytes": 70930,
+    "sha256": "90c0283f6c0fba91bf118ad2dd8e5d32ed60531f8ff0d6d8b87b986b225345e7",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-reference.log",
+    "bytes": 57884,
+    "sha256": "5615ec4cf7d0db0f85e5e2efc991970d26e97678f247bdfcd8a0d1276ee76322",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-second-seed.json",
+    "bytes": 17229,
+    "sha256": "f6c94404380762ae92ade10d9a2995db487705899b66fd644b494913b7d780f0",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-horde-second-seed.log",
+    "bytes": 13381,
+    "sha256": "cc9a52e8421e61149e64376e6314768f12bb204899e8db8cb9c3f3c8833c4d19",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-import-release.log",
+    "bytes": 2527,
+    "sha256": "eb1c34ccad59e1e997300e1835aa8ac3b49966061cba3691858c294a85796251",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-legacy-unequip.log",
+    "bytes": 2319,
+    "sha256": "243191430f887b76d28e51679cb458bea0efaa8f056b8d10e84a45b675d3ab78",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-legacy-unequip2.log",
+    "bytes": 2508,
+    "sha256": "c3cce700f194fed211061181601fefde5713fe51983efb7000709dbf38d720c8",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-loadout-final.log",
+    "bytes": 3070,
+    "sha256": "688b8d016b3fc045fe6a464074e4c6817b1055392539cab3217a5ad62f4f38ea",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-m4-talents-after.log",
+    "bytes": 8397,
+    "sha256": "840a0d4ad928972c49fa23b85b3f112c875a0c91e235d96d595baceaae20147d",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-m4-talents-after2.log",
+    "bytes": 8397,
+    "sha256": "0a51f2d14ca36cfd9be1ba56ff7d1e9be58ea32d76b53fbcc0f4609a9d56bd05",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-m8-mechanics-after.log",
+    "bytes": 728,
+    "sha256": "45a675fb000b153a702edd5b646012fbd76fc4ad1dd78a3911dd81ff0c11164c",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-rail-after.log",
+    "bytes": 607,
+    "sha256": "6efd256cb4dff33bc2e56f97eff6423e475e6318e920206ea7bcde95fb14ed55",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-rail-half-before.log",
+    "bytes": 1283,
+    "sha256": "b0eab287b102ef16f2a1d934b5d179689090cc648202a50d40efe6ab7624195b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-B11ShotLayer.log",
+    "bytes": 4438,
+    "sha256": "2cab78b2f5fc815db0636c4794c9e5664949056f182d45fd8f63ad3772b5a893",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-B12Save.log",
+    "bytes": 983,
+    "sha256": "edd3f0d16d067a96cb3fe7306b93f76d95c4a9bfb6db565d1ce81dc431cbb472",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-B13Economy.log",
+    "bytes": 8308,
+    "sha256": "2a1b80f02e105427587c328f66fb0d7d0eb23bf77414ac2ef40dfb6609d4f8b3",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-B13UI.log",
+    "bytes": 9265,
+    "sha256": "f9626e5855c75c2e974d57d156ba55be6f4b46430c93652a62a0b29012ac45e1",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-CampPresentation.log",
+    "bytes": 2100,
+    "sha256": "b268de9fff6d2d50f7e47d593b2a0886b688cfc543c94ddbb5893ff9f403d80a",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-M3Energy.log",
+    "bytes": 797,
+    "sha256": "ef60e4d9bb008d0f8f038b4bbf1a1f4911a7170d4c3fd688d6d6b1900f7975ab",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-M3Special.log",
+    "bytes": 1321,
+    "sha256": "22995c1ef7e4f7015815cba3d1b3d648a4802ee6c80aaed0a8028563000165d8",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-M3Weapons.log",
+    "bytes": 2357,
+    "sha256": "3ba5776b81eb97eb57b3347077a9e7795096c0b86c9517a05836bd4ecc4d7d7b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-M4ThermalClock.log",
+    "bytes": 841,
+    "sha256": "2d19f086451675eb48b3854370a5e2f9033d4b2d0799a544869bbc4c17868ff2",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-M6BossStops.log",
+    "bytes": 1356,
+    "sha256": "1245f6be29745026f578fa218dea6086ad05ca8df972043b9387cd586ba7fad5",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-PresentationContracts.log",
+    "bytes": 2208,
+    "sha256": "a5c8c3ba66af9351d9bc76954905d5b42681c9cf2a4ea50d2455e0a9f1f97ced",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-PresentationLifecycle.log",
+    "bytes": 2640,
+    "sha256": "85922652dc96eaa06e1aad98007b62562f03230789488d15c12f7c57b3829448",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-regression-PresentationRng.log",
+    "bytes": 1905,
+    "sha256": "6ea97bbfbb7d0733b07ee574ce6cd5a047e5c9428ae56884b4bc6aa0b4d829b6",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-talent-effects-after.log",
+    "bytes": 1887,
+    "sha256": "4277bac9b413a2b3def21770610ad8bcdb3a1389d29dcdbadd48cbfb2e4db3e1",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-talent-effects-after2.log",
+    "bytes": 1887,
+    "sha256": "354cd663b318524e0703a6a2872604ada54810ae362c6b33436974d8da3af1d9",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-upgrade-effects-after.log",
+    "bytes": 3760,
+    "sha256": "ee3fa5cf02eec91190fef7afb7366b46008e7da73231ac0c2b6e6372a2756ae5",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-wave-before.log",
+    "bytes": 6546,
+    "sha256": "cae96394a79ea819068547f44685bb7dc2ab1a1a34faf4325c81eff05fd119ca",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-weapon-catalog-final.log",
+    "bytes": 6219,
+    "sha256": "241511facbf8e1384f83cba68dc208dd1cd5e54b3b9950b2f7aa380519e5c70b",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-66f69e2-export.log",
+    "bytes": 282828,
+    "sha256": "064fa7d47dbe756a16917e184d4d354045ca281333e8d5d39fed8d7790115b31",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-build.json",
+    "bytes": 620,
+    "sha256": "c5c9e5381a3ff13a48365b67a1f46a5da8c91fa349a9ef6b1f45cdf1b50153be",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-export.log",
+    "bytes": 284608,
+    "sha256": "64f56a097320c526587126c6df1a7bc4439e7039f80fc162ada3d90f60be8a25",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-export2.log",
+    "bytes": 283300,
+    "sha256": "7c83eb78915693c797b8f0fa7c8e6a0a378df8e5f8cc601d3a60db23d593e003",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-export3.log",
+    "bytes": 283370,
+    "sha256": "3fd2c6860a44b35a78a2a52d9b3f731c01dd8561e26a8407d0bf8c4a731387d3",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-export4.log",
+    "bytes": 283082,
+    "sha256": "07587d4f4d2d64b4e7316d1082507dbf50d9cf44988ccf48402e978512ff5e0e",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-export5.log",
+    "bytes": 283265,
+    "sha256": "e1da6d76703872b4e904de26a87d814ef9f758b60484838c62cb8b854e358c62",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final-export.log",
+    "bytes": 282828,
+    "sha256": "064fa7d47dbe756a16917e184d4d354045ca281333e8d5d39fed8d7790115b31",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-66f69e2-export.log",
+    "bytes": 282828,
+    "sha256": "064fa7d47dbe756a16917e184d4d354045ca281333e8d5d39fed8d7790115b31",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-export.log",
+    "bytes": 283335,
+    "sha256": "51e149a8e71fd4b2a086054cf464a332b1dd8732569a41579f8447b3531e1632",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-final-export.log",
+    "bytes": 283082,
+    "sha256": "07587d4f4d2d64b4e7316d1082507dbf50d9cf44988ccf48402e978512ff5e0e",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-smoke.log",
+    "bytes": 1244,
+    "sha256": "8fdf6d7745647e9c3b3129b63de12f30c1de66395fc945a93a38673e67ae80f7",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-windows-smoke2.log",
+    "bytes": 1357,
+    "sha256": "f9a57129b0b8d39837859fe0f677f64f54a696b1b725e0bda7a3e52a2913eb8f",
+    "remote_copy": "complete"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final/02-full.png",
+    "bytes": 65815,
+    "sha256": "e15b025e42adec8d7ecafa5786766d9244349bdf69a1e21b7e7cc879c38464cb",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final/03-replaced.png",
+    "bytes": 59402,
+    "sha256": "d835b29e40932f8db923543557deb2e94c41301c8809aa16467820e7b452224b",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final/04-cleared.png",
+    "bytes": 61705,
+    "sha256": "85bd5bd7b529fab8795770c52bbf2af3c741564f14c03bba7dae5363e086a10d",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final/05-restored-reconfigured.png",
+    "bytes": 64645,
+    "sha256": "81c5c58a5d0ebccebc280d5d96dcebe5703ee7ffa5dfcdd978c05a8153c9d5b3",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final/06-combat-hud.png",
+    "bytes": 333296,
+    "sha256": "cbaa51b2c1a9293a698d75b5ebd3800b3f4dba86e511d348e32ebfc396ad0f40",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-web-final/result.json",
+    "bytes": 441,
+    "sha256": "92741b89d0d795ad51d7cabbd5ef0fc51e545f29084c59f37fbda21abd6e4c06",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-before/B04-3-ultimate-active.png",
+    "bytes": 59120,
+    "sha256": "6eadd696e104556e09d94a7c95292069893609b79e1e5ee11ee9336a77c8d305",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-before/B04-3-ultimate-early-warning.png",
+    "bytes": 62265,
+    "sha256": "613f37f4a45558e2df481187961210e2b5570433b73f012ea3383d7c97f3b902",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-before/E14-warn-beam-locked.png",
+    "bytes": 69860,
+    "sha256": "b1d3ab92131e5de30494e00a243b26598060ee372e3127f90d9b646f9acefb84",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-before/index.json",
+    "bytes": 17971,
+    "sha256": "c7f30311908ee556e4d7b8de26a31843232d83a5db1ed0bec272ac9db67b25a0",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after/B04-3-ultimate-active.png",
+    "bytes": 60425,
+    "sha256": "ff2e4291ec2791ec106096c405e6ff912e3ff2266b2f3e37c56fe54585bbbfee",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after/B04-3-ultimate-early-warning.png",
+    "bytes": 59425,
+    "sha256": "23478fe6375809dc56a80dcea9b2cba9d124c3bef7d7c8d39e267978a2ea82cd",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after/B04-1-warn-dash-locked.png",
+    "bytes": 59141,
+    "sha256": "b25dedcf97741a7566db77dab64b74b7985ac2b282fede182cb025214fb3bacf",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after/E14-warn-beam-locked.png",
+    "bytes": 62616,
+    "sha256": "6a6185418de5624aa3faa34afcdc26fd89371a4fb622a1daf8b1fe404783289f",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after/E14-recover-beam-locked.png",
+    "bytes": 80508,
+    "sha256": "98f017792189c9f3daaa4b370d2ef1f0dd74af67c33383ea34368b64e721fd5e",
+    "remote_copy": "complete selected frame"
+  },
+  {
+    "path": "evidence/visual-upgrade-20260919/b14-attack-after/index.json",
+    "bytes": 17764,
+    "sha256": "37807833839118c6defda8a455c6019ecd85abf9e3addcd959d1e7bc62c14e8e",
+    "remote_copy": "complete selected frame"
+  }
+]

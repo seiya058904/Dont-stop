@@ -1,0 +1,13 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2219
+[boot-probe] utils_ready t=2221
+[boot] title menu drawn t=2737
+[boot-probe] controlui_ready t=2737
+PASS actual shield block emits one fracture without HP damage
+PASS cooldown hit cannot fake a second shield fracture
+PASS real ammo and HP increases emit distinct feedback
+PASS full ammo/full HP cannot show fake refill or treatment
+FAIL real reload exposes first-shot ready status
+PASS consumed first shot removes ready status
+B14_FEEDBACK_CHECKS 6 FAILURES 1

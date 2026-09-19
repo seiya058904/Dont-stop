@@ -74,7 +74,7 @@ func _ready():
 	Demo.try_purchase("attachment","115")
 	Utils.player.changeWeapon(113)
 	var rail = Utils.player.gun
-	check(rail.weapon_id == 113 and is_equal_approx(float(rail.effective.warmup),1.2*0.9),"115 warmup secondary is real on the charged rail")
+	check(rail.weapon_id == 113 and is_equal_approx(float(rail.effective.warmup),0.8*0.9),"115 warmup secondary is real on the B14 0.8s charged rail")
 	ranks_clear()
 	Demo.try_purchase("attachment","119")
 	Utils.player.changeWeapon(117)

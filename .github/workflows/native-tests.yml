@@ -129,7 +129,9 @@ jobs:
           # CI on purpose (it is evidence generation, ~30 min); these assert the frozen
           # evidence against the live catalog and the shop UI instead.
           run_case B12Catalog
-          run_case B12Strength
+          # B14 user-approved moving-horde expectations; default legacy assertions
+          # and their frozen evidence remain available without --b14.
+          run_case B12Strength --b14
           run_case B12Save
           run_case B12UI
           # Pins the B12 clear_line fix: footprint consumes the shared exclusions_dirty
@@ -153,7 +155,12 @@ jobs:
           # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
           # job as the B13 contracts that pin their new magnitudes.
           run_case M4Talents
-          run_case B13Strength
+          run_case B13Strength --b14
+          run_case B14Loadout
+          run_case B14Growth
+          run_case B14Rail
+          run_case B14Feedback
+          run_case B14EncounterContracts
           run_case M3Weapons
       - name: Upload contract logs
         if: always()

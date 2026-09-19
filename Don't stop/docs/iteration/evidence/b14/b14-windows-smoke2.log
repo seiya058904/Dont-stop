@@ -1,0 +1,32 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.277 - Forward+ - Using Device #0: AMD - AMD Radeon RX 7900 XT
+
+[boot-probe] demo_ready t=1149
+[boot-probe] utils_ready t=1150
+[smoke] user_dir=C:/Users/admin/AppData/Roaming/TowDownGame
+[smoke] renderer=forward_plus
+[smoke] save_state gold="209.0" equipped="8"
+[boot] transition patterns loaded=8
+[boot] shell drawn at t=1151
+[smoke] isolated=true save_writes=false
+[boot] scene loaded in 97 ms
+[warmup] starting total=32
+[warmup] instantiated 32 scenes
+[boot] warmup finished in 77 ms
+[warmup] finished t=1407
+[boot] title menu handed over at t=434 ms total
+[boot] title menu drawn t=1592
+[boot-probe] controlui_ready t=1592
+[smoke] stage=camp state=CAMP
+[smoke] depart=true
+[smoke-frames] first-combat first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] stage=combat state=COMBAT monsters=1
+[smoke-frames] first-switch first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] switch=true gun=1
+[smoke-frames] first-shot first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke] fire transient=0->11
+[smoke-frames] second-switch first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-frames] second-shot first30 max=6.3 p95=6.3 | next60 max=6.3 p95=6.3
+[smoke-perf] n=1600 p50=6.3 p95=6.3 p99=6.3 max=6.3 fps=160.0 enemies=6
+[smoke] done pass=true
+[smoke] result=PASS

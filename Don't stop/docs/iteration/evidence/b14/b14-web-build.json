@@ -1,0 +1,19 @@
+{
+  "build_sha": "66f69e2",
+  "artifact_digest": "ea59739d3978e4d71c7def9d68c321573f1e8a6913a3c3942dc3ab44e93a1de6",
+  "digest_algo": "sha256(index.wasm || index.pck || index.js)",
+  "payload": {
+    "index.wasm": {
+      "bytes": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.pck": {
+      "bytes": 41294064,
+      "sha256": "d26b659ee577a4ff44d1e61db86ecfb606900c773095944983e9f28ea4fc91ed"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    }
+  }
+}

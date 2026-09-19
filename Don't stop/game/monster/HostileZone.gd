@@ -206,7 +206,9 @@ func step(delta):
 		if profiling: profile_stats.redraw_requests += 1
 		probe_firing = B11Probe.enabled
 		if probe_firing: B11Probe.note_beam_active(true)
-		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if mode == "circle" else 18,direction)
+		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if mode == "circle" else 18,direction,style)
+		if mode=="line" and length<maximum_length-0.5:
+			preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position+direction*length,9,-direction,style)
 	active_elapsed += delta
 	if not friendly_context.is_empty():
 		if not resolved: resolved = true; Combat.explosion_context(global_position,radius,friendly_context)

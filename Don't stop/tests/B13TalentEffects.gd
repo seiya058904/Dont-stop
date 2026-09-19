@@ -97,11 +97,11 @@ func _ready():
 	await clean()
 	# --- legendary mechanisms, exact ----------------------------------------------------
 	ranks({"T13":1})
-	var straight = [enemy(origin+Vector2(30,8)),enemy(origin+Vector2(60,8)),enemy(origin+Vector2(90,8))]
+	var straight = [enemy(origin+Vector2(30,8)),enemy(origin+Vector2(60,8)),enemy(origin+Vector2(90,8)),enemy(origin+Vector2(120,8))]
 	await wait(0.06)
 	var bullet = gun.bullet_scene.instantiate(); add_child(bullet); bullet.position = origin; bullet.rotation = 0; gun.fire(bullet)
-	await wait(0.2)
-	check(straight[0].HP < 100 and straight[1].HP < 100 and straight[2].HP == 100,"T13 pierce reaches exactly one extra target")
+	await wait(0.35)
+	check(straight[0].HP < 100 and straight[1].HP < 100 and straight[2].HP < 100 and straight[3].HP == 100,"T13 B14 value: exactly two extra targets; fourth remains unharmed")
 	await clean()
 	ranks({"T14":1})
 	var arc_source = enemy(origin+Vector2(40,8),100000)

@@ -1,0 +1,161 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2281
+[boot-probe] utils_ready t=2282
+[boot] title menu drawn t=2811
+[boot-probe] controlui_ready t=2811
+PASS real encounter departure 29
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+[EXCERPT: full original retained locally; hash/size in index]
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:593)
+ERROR: Drawing is only allowed inside this node's `_draw()`, functions connected to its `draw` signal, or when it receives NOTIFICATION_DRAW.
+   at: draw_line (scene/main/canvas_item.cpp:857)
+   GDScript backtrace (most recent call first):
+       [0] _physics_process (res://game/monster/TacticalEnemy.gd:594)

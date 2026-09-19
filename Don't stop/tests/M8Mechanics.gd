@@ -20,7 +20,7 @@ func _ready():
 	await wait(0.06)
 	gun._shoot()
 	await wait(0.6)
-	check(is_equal_approx(100-target.HP,snappedf(gun.effective.damage*0.85,0.01)),"A19 actual reflected hit retains 85 percent")
+	check(is_equal_approx(100-target.HP,snappedf(gun.effective.damage,0.01)),"A19 actual reflected hit retains 100 percent; purchased core no longer weakens native bounce")
 	barrier.queue_free(); Demo.owned_global_upgrades.clear(); Demo.refresh()
 	await clean()
 	gun = PlayerData.player_weapon_list[120]

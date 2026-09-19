@@ -123,6 +123,10 @@ func growth_score(build: String) -> float:
 	return pow(single*boss*crowd,1.0/3.0)
 
 func _ready():
+	if "--b14" in OS.get_cmdline_user_args():
+		var current=load("res://tests/B14Evidence.gd").new()
+		current.scope="growth";add_child(current)
+		return
 	for build in BUILDS:
 		data[build] = load_rows("res://docs/iteration/evidence/b13/growth-%s.json" % build)
 		check(not data[build].is_empty(),"evidence present for "+build)

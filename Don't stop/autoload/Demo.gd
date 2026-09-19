@@ -348,10 +348,16 @@ func on_kill(monster, context: Dictionary):
 	var gun = context.get("gun")
 	if is_instance_valid(gun) and context.get("refill",0) > 0 and cooldown("A24") <= 0:
 		talent_cooldowns.A24 = AttachmentCatalog.DEFINITIONS[124].cooldown
+		var ammo_before=gun.bullets_count
 		gun.bullets_count = mini(gun.bullets_max_count,gun.bullets_count+1)
+		if gun.bullets_count>ammo_before:
+			preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,Utils.player.global_position,12,Vector2.UP,"refill")
 	if rank("T24") > 0 and heal_cooldown <= 0:
 		heal_cooldown = DemoConfig.TALENTS.T24.cooldown
+		var hp_before=PlayerData.player_hp
 		PlayerData.addPlayerHp(DemoConfig.talent_value("T24",rank("T24")))
+		if PlayerData.player_hp>hp_before:
+			preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,Utils.player.global_position,12,Vector2.UP,"heal")
 	if rank("T16") > 0 and blast_cooldown <= 0:
 		blast_cooldown = DemoConfig.TALENTS.T16.cooldown
 		Combat.explosion(monster.global_position,DemoConfig.TALENTS.T16.radius,DemoConfig.TALENTS.T16.damage,context.get("gun"),1)

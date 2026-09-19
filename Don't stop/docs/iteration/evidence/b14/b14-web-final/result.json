@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "state": {
+    "equipped": 124,
+    "gold": 9999,
+    "message": "已装备至槽位1；已保存",
+    "owned": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      124
+    ],
+    "saved": true,
+    "slots": [
+      124,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      7
+    ]
+  },
+  "method": "Playwright Chromium ANGLE D3D11; real mouse/keyboard; isolated fresh browser profile"
+}

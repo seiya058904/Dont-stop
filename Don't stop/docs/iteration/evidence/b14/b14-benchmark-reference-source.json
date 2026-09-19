@@ -1,0 +1,38 @@
+[
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\tests\\B14HordeBench.gd",
+    "Hash": "1F66A52713C0C88D3D329D3381D098161AC89FB0F2DB970788D07EF55A67F986"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\tests\\B12WeaponBench.gd",
+    "Hash": "8C4D686C7FDED3B0C8AFD4DCF56682070D4F1316213A6E4589009C37F95C8C55"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\tests\\M8Runtime.gd",
+    "Hash": "13C3003171C9DF6BF1052DC512A02A896FF0BEA531F56A4F8BC81D0E35382475"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\game\\config\\WeaponCatalog.gd",
+    "Hash": "AB526EC597391A5894D75E87754490AB262C569C095756078CD032F7585A3281"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\game\\config\\EffectiveStats.gd",
+    "Hash": "A065D90FD1E838B05E841B3D324F05F5DB853C7A57FCC60199E3AC35C9C044A3"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\game\\bullets\\MechanismProjectile.gd",
+    "Hash": "833EF4B6308F520C766ACD085F8AF8B4CB69218C6F3E76F2A226E898D5E009A7"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\game\\config\\AttachmentCatalog.gd",
+    "Hash": "EF1E03003EC462DD34320461FE27F289C65C2C480457092D14BDE21EA6F41117"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\game\\config\\DemoConfig.gd",
+    "Hash": "31CC00CF5C0D02119B1DAF36BFAF1D4A2003A3E02BB4025299C5ECD6FC48D96C"
+  },
+  {
+    "Path": "D:\\xia zai\\AI project\\8.30 Backup game\\Don't stop\\game\\config\\M5Content.gd",
+    "Hash": "321574353DFD55CF294159131D3DAB351726AA389C9370B79310D3E8D6BDCF93"
+  }
+]

@@ -14,7 +14,7 @@ extends "res://tests/M9Power.gd"
 ##       keep slow starters below fast starters inside the same window.)
 ##   S = single-scenario damage / elapsed seconds over the full window (sustained, reloads included)
 ##   C = 6 targets / crowd clear seconds (clearing speed; if the window expires uncleared,
-##       the equivalent speed damage/window * 6/30 is used)
+##       the equivalent speed damage/(30*window) is used)
 ##   X = boss-scenario damage / elapsed seconds (high-health target output)
 ## Each is normalised by the MEDIAN across the 24 weapons; the score is the geometric mean
 ## (b*s*c*x)^(1/4), so no single extreme scenario can carry a weapon alone. It is a test /
@@ -151,7 +151,7 @@ func gps_summary(rows: Array) -> Dictionary:
 		var burst := float(single.burst.get("3",0.0))
 		var sustain := float(single.dps)
 		var clear := float(crowd.clear_seconds)
-		var crowd_speed := 6.0/clear if clear > 0.0 else float(crowd.damage)/maxf(0.01,float(crowd.seconds))*6.0/30.0
+		var crowd_speed := 6.0/clear if clear > 0.0 else float(crowd.damage)/(30.0*maxf(0.01,float(crowd.seconds)))
 		var boss_dps := float(boss.dps)
 		raw[int(id)] = {"burst":burst,"sustain":sustain,"crowd":crowd_speed,"boss":boss_dps,
 			"name":single.get("name",""),"tier":int(single.tier),"price":int(single.price)}

@@ -1,0 +1,1261 @@
+{
+	"talents": [
+		{
+			"definition": {
+				"info": "每级射速+10%；热流转为每tick伤害，转管超过24发/秒的部分转单发伤害；原激光提升脉冲频率，轨道炮只缩短发射后冷却。",
+				"max": 3,
+				"name": "快速循环",
+				"step": 0.1,
+				"unit": "射速/DPS"
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T02",
+			"info": "每级射速+10%；热流转为每tick伤害，转管超过24发/秒的部分转单发伤害；原激光提升脉冲频率，轨道炮只缩短发射后冷却。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"info": "每级有效射程/实体弹寿命+10%；墙仍阻断。",
+				"max": 3,
+				"name": "弹道延展",
+				"step": 0.1,
+				"unit": "射程"
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T05",
+			"info": "每级有效射程/实体弹寿命+10%；墙仍阻断。",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "每级暴击率+6个百分点；每次命中只采样一次，暴击×1.5。",
+				"max": 3,
+				"name": "弱点识别",
+				"step": 0.06,
+				"unit": "暴击率百分点"
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T06",
+			"info": "每级暴击率+6个百分点；每次命中只采样一次，暴击×1.5。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"info": "每级最大生命+1（初始基础5的20%），购买补该增量；旧头盔生命增量作为历史来源保留。",
+				"max": 3,
+				"name": "生存余量",
+				"step": 1.0,
+				"unit": "生命"
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T07",
+			"info": "每级最大生命+1（初始基础5的20%），购买补该增量；旧头盔生命增量作为历史来源保留。",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "每级基础移速+3%；不改变冲刺。旧蓝靴来源保留，详情另列。",
+				"max": 3,
+				"name": "轻装移动",
+				"step": 0.03,
+				"unit": "基础移速"
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T08",
+			"info": "每级基础移速+3%；不改变冲刺。旧蓝靴来源保留，详情另列。",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "金币/回血拾取半径每级+20%；隔墙不可吸附，不执行寻路。",
+				"max": 3,
+				"name": "拾取磁场",
+				"step": 0.2,
+				"unit": "拾取范围"
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T09",
+			"info": "金币/回血拾取半径每级+20%；隔墙不可吸附，不执行寻路。",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "每5次有效直接击杀补1×等级备用弹匣；假人、派生击杀不计，不填弹匣。",
+				"kills": 5,
+				"max": 3,
+				"name": "弹药回流",
+				"step": 1.0,
+				"unit": "每5杀弹匣"
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T11",
+			"info": "每5次有效直接击杀补1×等级备用弹匣；假人、派生击杀不计，不填弹匣。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"info": "完成实际补弹后的第一发伤害+25/40/55%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。",
+				"max": 3,
+				"name": "首发重击",
+				"unit": "首发伤害",
+				"values": [
+					0.25,
+					0.4,
+					0.55
+				]
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T12",
+			"info": "完成实际补弹后的第一发伤害+25/40/55%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"info": "明确兼容的直射攻击+2贯穿；总目标最多8，实墙阻断，不影响爆炸/跟踪/锯盘。轨道炮按蓄力比例兑现；已达上限时不继续增加。",
+				"max": 1,
+				"name": "贯穿专精",
+				"step": 2.0,
+				"unit": "额外贯穿"
+			},
+			"gold": [
+				2400
+			],
+			"id": "T13",
+			"info": "明确兼容的直射攻击+2贯穿；总目标最多8，实墙阻断，不影响爆炸/跟踪/锯盘。轨道炮按蓄力比例兑现；已达上限时不继续增加。",
+			"points": [
+				5
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"cooldown": 0.5,
+				"damage": 0.5,
+				"info": "直接命中25%概率电弧到附近一个不同目标，50%命中伤害；冷却0.5秒，墙阻挡；派生不触发。",
+				"max": 1,
+				"name": "静电跃迁",
+				"radius": 80.0,
+				"step": 0.25,
+				"unit": "触发概率"
+			},
+			"gold": [
+				2400
+			],
+			"id": "T14",
+			"info": "直接命中25%概率电弧到附近一个不同目标，50%命中伤害；冷却0.5秒，墙阻挡；派生不触发。",
+			"points": [
+				5
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"info": "直接命中施加1.5秒灼烧，每0.25秒伤害0.3×等级；同来源刷新，一条计时记录。",
+				"max": 3,
+				"name": "灼热弹道",
+				"seconds": 1.5,
+				"step": 0.3,
+				"tick": 0.25,
+				"unit": "每次灼烧tick"
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T15",
+			"info": "直接命中施加1.5秒灼烧，每0.25秒伤害0.3×等级；同来源刷新，一条计时记录。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"info": "直接命中减速8%×等级，1.5秒；最高24%，Boss仅四分之一，不叠无限层。",
+				"max": 3,
+				"name": "低温冲击",
+				"seconds": 1.5,
+				"step": 0.08,
+				"unit": "减速"
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T17",
+			"info": "直接命中减速8%×等级，1.5秒；最高24%，Boss仅四分之一，不叠无限层。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"info": "普通敌人冲量每级+15%；Boss免推移。",
+				"max": 3,
+				"name": "冲击放大",
+				"step": 0.15,
+				"unit": "冲量"
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T18",
+			"info": "普通敌人冲量每级+15%；Boss免推移。",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"cooldown": 6.0,
+				"info": "战斗抵消一次正伤害，冷却6秒；先占用冷却再反馈，同帧下一击仍受伤。",
+				"max": 1,
+				"name": "应急护盾",
+				"step": 1.0,
+				"unit": "抵消次数"
+			},
+			"gold": [
+				2400
+			],
+			"id": "T19",
+			"info": "战斗抵消一次正伤害，冷却6秒；先占用冷却再反馈，同帧下一击仍受伤。",
+			"points": [
+				5
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"info": "有效遭遇胜利回复最大生命10%×等级；手动回营、选关和重复结算不触发。",
+				"max": 3,
+				"name": "战后修复",
+				"step": 0.1,
+				"unit": "胜利回复生命比例"
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T20",
+			"info": "有效遭遇胜利回复最大生命10%×等级；手动回营、选关和重复结算不触发。",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "对精英目标伤害+15/25/35%；Boss不适用。精英按关卡计划与存活预算出现，并非所有特殊怪都是精英。",
+				"max": 3,
+				"name": "精英猎手",
+				"unit": "对精英伤害",
+				"values": [
+					0.15,
+					0.25,
+					0.35
+				]
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T21",
+			"info": "对精英目标伤害+15/25/35%；Boss不适用。精英按关卡计划与存活预算出现，并非所有特殊怪都是精英。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"count": 3,
+				"info": "100范围内至少3名存活敌人时伤害+8%×等级；每0.2秒更新，发射快照保留该次状态。",
+				"interval": 0.2,
+				"max": 3,
+				"name": "密集火网",
+				"radius": 100.0,
+				"step": 0.08,
+				"unit": "条件伤害"
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T22",
+			"info": "100范围内至少3名存活敌人时伤害+8%×等级；每0.2秒更新，发射快照保留该次状态。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"cooldown": 0.15,
+				"info": "直接暴击向附近一个不同目标回响40%该次伤害，冷却0.15秒；墙阻挡，回响不暴击、不递归。",
+				"max": 1,
+				"name": "暴击回响",
+				"radius": 85.0,
+				"step": 0.4,
+				"unit": "回响伤害比例"
+			},
+			"gold": [
+				2400
+			],
+			"id": "T23",
+			"info": "直接暴击向附近一个不同目标回响40%该次伤害，冷却0.15秒；墙阻挡，回响不暴击、不递归。",
+			"points": [
+				5
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"max": 3,
+				"name": "火力强化",
+				"step": 0.15
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T01",
+			"info": "常驻：每级武器伤害 +15%（含基础伤害）",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"max": 3,
+				"name": "熟练装填",
+				"step": 0.08
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T03",
+			"info": "常驻：每级装填时间 -8%，最低 0.15 秒",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"max": 3,
+				"name": "扩充弹匣",
+				"step": 0.18
+			},
+			"gold": [
+				150,
+				250,
+				350
+			],
+			"id": "T04",
+			"info": "常驻：每级弹匣 +18%；不会凭空补弹",
+			"points": [
+				1,
+				1,
+				2
+			],
+			"tier": 1
+		},
+		{
+			"definition": {
+				"max": 3,
+				"name": "连杀加速",
+				"seconds": 4.0,
+				"stacks": 5,
+				"step": 0.04
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T10",
+			"info": "有效击杀：每层射速 +4% × 等级，最多5层；4.0秒刷新，超时归零。热流及封顶转管转换为单次伤害。",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		},
+		{
+			"definition": {
+				"cooldown": 0.4,
+				"damage": 2.6,
+				"max": 1,
+				"name": "连锁爆破",
+				"radius": 40.0
+			},
+			"gold": [
+				2400
+			],
+			"id": "T16",
+			"info": "直接击杀：半径40的小爆炸（伤害2.60），冷却0.4秒；派生击杀不再爆破",
+			"points": [
+				5
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"cooldown": 0.5,
+				"max": 3,
+				"name": "吸能修复",
+				"step": 0.2
+			},
+			"gold": [
+				400,
+				550,
+				700
+			],
+			"id": "T24",
+			"info": "直接击杀回复 0.20 × 等级 生命，冷却0.5秒；假人不触发",
+			"points": [
+				2,
+				3,
+				4
+			],
+			"tier": 2
+		}
+	],
+	"upgrades": [
+		{
+			"definition": {
+				"info": "所有武器装填时间-20%。",
+				"name": "快速装填组件",
+				"reload_mul": 0.8
+			},
+			"id": 0,
+			"price": 320,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器弹匣容量+20%。",
+				"magazine_mul": 1.2,
+				"name": "扩容供弹组件"
+			},
+			"id": 1,
+			"price": 280,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器弹匣容量+45%。",
+				"magazine_mul": 1.45,
+				"name": "高容量供弹系统"
+			},
+			"id": 2,
+			"price": 850,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.06,
+				"info": "所有武器伤害+6%，装填时间-15%。",
+				"name": "火力循环组件",
+				"reload_mul": 0.85
+			},
+			"id": 3,
+			"price": 720,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.08,
+				"info": "所有武器伤害+8%；右键发射榴弹，冷却2秒，伤害为当前武器35%。",
+				"name": "下挂榴弹模块"
+			},
+			"id": 9,
+			"price": 2000,
+			"tier": 3
+		},
+		{
+			"definition": {
+				"info": "所有武器弹匣+15%，装填时间-20%。",
+				"magazine_mul": 1.15,
+				"name": "轻量快装弹鼓",
+				"reload_mul": 0.8
+			},
+			"id": 5,
+			"price": 520,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器弹匣+25%，装填时间-10%。",
+				"magazine_mul": 1.25,
+				"name": "效率弹链",
+				"reload_mul": 0.9
+			},
+			"id": 6,
+			"price": 500,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器弹匣容量+30%。",
+				"magazine_mul": 1.3,
+				"name": "双排供弹模块"
+			},
+			"id": 7,
+			"price": 470,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器弹匣容量+60%。",
+				"magazine_mul": 1.6,
+				"name": "超容供弹鼓"
+			},
+			"id": 8,
+			"price": 1250,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"crit": 0.08,
+				"damage": 0.02,
+				"info": "所有武器暴击+8个百分点、伤害+2%。",
+				"name": "精密瞄具"
+			},
+			"id": 110,
+			"price": 480,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"damage": 0.06,
+				"info": "所有武器伤害+6%、有效射程+25%。",
+				"name": "焦距校准器",
+				"range_mul": 1.25
+			},
+			"id": 111,
+			"price": 880,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.06,
+				"info": "所有武器伤害+6%；散布角-25%。",
+				"name": "稳定瞄准模块",
+				"spread_mul": 0.75
+			},
+			"id": 112,
+			"price": 780,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"angle_mul": 1.35,
+				"damage_mul": 1.08,
+				"info": "所有武器伤害+8%；棱镜/轨道束宽及扇面角+35%；原型激光不扩宽，不扩大爆炸半径。",
+				"name": "宽域扩束模块",
+				"width_mul": 1.35
+			},
+			"id": 113,
+			"price": 900,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.15,
+				"info": "所有武器伤害+15%；装填时间+10%。",
+				"name": "强化枪管",
+				"reload_mul": 1.1
+			},
+			"id": 114,
+			"price": 440,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器装填时间-15%；有预热/蓄力时等待-10%。",
+				"name": "冷却导管",
+				"reload_mul": 0.85,
+				"warmup_mul": 0.9
+			},
+			"id": 115,
+			"price": 460,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"info": "所有武器装填时间-10%；射击后回正动画时间-25%，不缩短实际射击间隔。",
+				"name": "稳定枪身组件",
+				"recovery_mul": 0.75,
+				"reload_mul": 0.9
+			},
+			"id": 116,
+			"price": 420,
+			"tier": 1
+		},
+		{
+			"definition": {
+				"damage": 0.06,
+				"impulse_mul": 1.4,
+				"info": "所有武器伤害+6%；对普通敌人击退+40%。",
+				"name": "冲击载荷模块"
+			},
+			"id": 117,
+			"price": 820,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.06,
+				"info": "所有武器伤害+6%；直射攻击额外贯穿1个目标。",
+				"name": "贯穿弹药包",
+				"pierce": 1
+			},
+			"id": 118,
+			"price": 1080,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"bounce_retention": 1.0,
+				"bounces": 1,
+				"damage": 0.08,
+				"info": "所有武器伤害+8%；反弹重弹枪多1次墙面反弹（最多4次），每次保留100%伤害；不增加锯盘返回次数。",
+				"name": "墙面反弹核心"
+			},
+			"id": 119,
+			"price": 900,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.08,
+				"info": "所有武器伤害+8%；直射实体弹首次命中追加2枚25%裂片，原生裂片保留35%，总数最多5枚、仅一代；爆破/束流/锯盘不分裂。",
+				"name": "裂片弹药核心",
+				"shard_ratio": 0.25,
+				"shards": 2
+			},
+			"id": 120,
+			"price": 1600,
+			"tier": 3
+		},
+		{
+			"definition": {
+				"damage": 0.08,
+				"info": "所有武器伤害+8%；爆炸半径+25%。",
+				"name": "扩爆引信",
+				"radius_mul": 1.25
+			},
+			"id": 121,
+			"price": 1050,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.08,
+				"info": "所有武器伤害+8%；链电武器多跳1个目标。",
+				"jumps": 1,
+				"name": "电弧传导核心"
+			},
+			"id": 122,
+			"price": 1100,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"damage": 0.08,
+				"info": "所有武器伤害+8%；追踪转向+30%、寻找角+20%。",
+				"lock_mul": 1.2,
+				"name": "制导校准核心",
+				"turn_mul": 1.3
+			},
+			"id": 123,
+			"price": 900,
+			"tier": 2
+		},
+		{
+			"definition": {
+				"cooldown": 0.2,
+				"damage": 0.06,
+				"info": "所有武器伤害+6%；有效直接击杀最多每0.2秒向弹匣返还1发，不超容量；派生与假人不触发。",
+				"name": "击杀回填核心",
+				"refill": 1
+			},
+			"id": 124,
+			"price": 1900,
+			"tier": 3
+		}
+	],
+	"weapons": [
+		{
+			"definition": {},
+			"id": 3,
+			"name": "Baby冲锋枪",
+			"price": 90,
+			"tags": [
+				"projectile",
+				"straight"
+			],
+			"tier": 1
+		},
+		{
+			"definition": {},
+			"id": 1,
+			"name": "冲击波霰弹枪",
+			"price": 60,
+			"tags": [
+				"projectile",
+				"spread",
+				"straight"
+			],
+			"tier": 1
+		},
+		{
+			"definition": {},
+			"id": 0,
+			"name": "冲击波步枪",
+			"price": 240,
+			"tags": [
+				"projectile",
+				"straight"
+			],
+			"tier": 2
+		},
+		{
+			"definition": {},
+			"id": 9,
+			"name": "Uzi",
+			"price": 120,
+			"tags": [
+				"projectile",
+				"straight"
+			],
+			"tier": 1
+		},
+		{
+			"definition": {},
+			"id": 2,
+			"name": "轻型狙击枪",
+			"price": 260,
+			"tags": [
+				"projectile",
+				"straight"
+			],
+			"tier": 2
+		},
+		{
+			"definition": {},
+			"id": 5,
+			"name": "帝国霰弹枪",
+			"price": 290,
+			"tags": [
+				"projectile",
+				"spread",
+				"straight"
+			],
+			"tier": 2
+		},
+		{
+			"definition": {},
+			"id": 8,
+			"name": "RebalShotgun",
+			"price": 150,
+			"tags": [
+				"projectile",
+				"spread",
+				"straight"
+			],
+			"tier": 1
+		},
+		{
+			"definition": {},
+			"id": 123,
+			"name": "三连发卡宾",
+			"price": 350,
+			"tags": [
+				"projectile",
+				"spread",
+				"burst",
+				"straight"
+			],
+			"tier": 2
+		},
+		{
+			"definition": {},
+			"id": 7,
+			"name": "异形者机枪",
+			"price": 380,
+			"tags": [
+				"projectile",
+				"straight"
+			],
+			"tier": 2
+		},
+		{
+			"definition": {},
+			"id": 4,
+			"name": "异形者枪步",
+			"price": 840,
+			"tags": [
+				"projectile",
+				"straight"
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"bounces": 2,
+				"damage": 4.0,
+				"info": "重弹最多反弹2次；墙角接触结束，寿命2秒；直接命中冲击。",
+				"magazine": 10,
+				"mode": "ricochet",
+				"name": "反弹重弹枪",
+				"plan": "W17",
+				"rate": 2.0,
+				"reload": 1.4,
+				"speed": 150,
+				"tags": [
+					"projectile",
+					"ricochet",
+					"straight"
+				]
+			},
+			"id": 117,
+			"name": "反弹重弹枪",
+			"price": 700,
+			"tags": [
+				"projectile",
+				"ricochet",
+				"straight"
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"damage": 3.5,
+				"info": "母弹首次命中产生3枚前向裂片，各为母弹35%伤害；裂片不再分裂。",
+				"magazine": 12,
+				"mode": "shard",
+				"name": "裂片发射器",
+				"plan": "W18",
+				"rate": 2.5,
+				"reload": 1.4,
+				"shards": 3,
+				"speed": 160,
+				"tags": [
+					"projectile",
+					"split",
+					"straight"
+				]
+			},
+			"id": 118,
+			"name": "裂片发射器",
+			"price": 760,
+			"tags": [
+				"projectile",
+				"split",
+				"straight"
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"angle": 0.65,
+				"damage": 4.2,
+				"info": "一次短程宽扇面冲击；半角37度、距离105，角度/距离/遮墙分别判定，每目标一次。",
+				"magazine": 12,
+				"mode": "cone",
+				"name": "扇面脉冲炮",
+				"plan": "W15",
+				"range": 105.0,
+				"rate": 2.0,
+				"reload": 1.5,
+				"speed": 100,
+				"tags": [
+					"pulse_cone",
+					"energy"
+				]
+			},
+			"id": 115,
+			"name": "扇面脉冲炮",
+			"price": 1550,
+			"tags": [
+				"pulse_cone",
+				"energy"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {},
+			"id": 6,
+			"name": "BoomBoi",
+			"price": 2600,
+			"tags": [
+				"beam",
+				"energy"
+			],
+			"tier": 5
+		},
+		{
+			"definition": {
+				"damage": 2.2,
+				"info": "一次耗1发，3条轻微分叉束独立阻墙；同一目标可承受实际相交的多束。",
+				"magazine": 16,
+				"mode": "prism",
+				"name": "棱镜脉冲枪",
+				"plan": "W11",
+				"range": 280.0,
+				"rate": 2.4,
+				"reload": 1.4,
+				"speed": 100,
+				"tags": [
+					"beam",
+					"energy",
+					"pulse"
+				],
+				"width": 3.0
+			},
+			"id": 111,
+			"name": "棱镜脉冲枪",
+			"price": 1500,
+			"tags": [
+				"beam",
+				"energy",
+				"pulse"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {},
+			"id": 112,
+			"name": "跃迁电弧枪",
+			"price": 3000,
+			"tags": [
+				"chain",
+				"energy"
+			],
+			"tier": 5
+		},
+		{
+			"definition": {},
+			"id": 114,
+			"name": "等离子榴炮",
+			"price": 1600,
+			"tags": [
+				"projectile",
+				"energy",
+				"explosive"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {
+				"angle": 0.4,
+				"burn": 0.35,
+				"damage": 0.7,
+				"info": "按住近程喷流，每0.1秒tick消耗1发；目标灼烧1秒，每0.25秒0.35伤害，同来源刷新不叠无限层。",
+				"magazine": 70,
+				"mode": "thermal",
+				"name": "热流喷射器",
+				"plan": "W16",
+				"range": 85.0,
+				"rate": 10.0,
+				"reload": 1.8,
+				"speed": 100,
+				"tags": [
+					"pulse_cone",
+					"energy",
+					"continuous"
+				]
+			},
+			"id": 116,
+			"name": "热流喷射器",
+			"price": 3200,
+			"tags": [
+				"pulse_cone",
+				"energy",
+				"continuous"
+			],
+			"tier": 5
+		},
+		{
+			"definition": {
+				"damage": 3.0,
+				"info": "锯盘0.55秒后返回角色；出/回各对同一目标最多一次。触墙提前回返，回程触墙结束，最长2秒。",
+				"magazine": 12,
+				"mode": "disc",
+				"name": "回旋锯盘",
+				"plan": "W22",
+				"rate": 2.0,
+				"reload": 1.3,
+				"speed": 180,
+				"tags": [
+					"projectile",
+					"returning"
+				]
+			},
+			"id": 122,
+			"name": "回旋锯盘",
+			"price": 1850,
+			"tags": [
+				"projectile",
+				"returning"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {
+				"charge": 0.8,
+				"damage": 5.0,
+				"info": "按住最多蓄力0.8秒，松开发射；蓄力同时加宽束线并增加贯穿。轻点1目标、满蓄最多8目标且伤害×2.5；基础发射后冷却0.5秒。实墙阻断，切枪取消。",
+				"magazine": 6,
+				"mode": "rail",
+				"name": "蓄能轨道炮",
+				"pierce": 7,
+				"plan": "W13",
+				"range": 420.0,
+				"rate": 2.0,
+				"reload": 1.8,
+				"speed": 100,
+				"tags": [
+					"beam",
+					"energy",
+					"charged",
+					"straight"
+				],
+				"width": 14.0
+			},
+			"id": 113,
+			"name": "蓄能轨道炮",
+			"price": 1800,
+			"tags": [
+				"beam",
+				"energy",
+				"charged",
+				"straight"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {
+				"count": 3,
+				"damage": 3.0,
+				"fan": 0.28,
+				"info": "每次耗1发，扇形射出3枚火箭；每枚半径32独立爆炸，各目标每枚至多一次。较快飞行追上移动怪，墙体仍终止火箭并裁剪爆炸。",
+				"magazine": 9,
+				"mode": "rocket",
+				"name": "散射火箭炮",
+				"plan": "W19",
+				"radius": 32.0,
+				"rate": 1.4,
+				"reload": 1.8,
+				"speed": 150,
+				"tags": [
+					"projectile",
+					"explosive",
+					"spread"
+				]
+			},
+			"id": 119,
+			"name": "散射火箭炮",
+			"price": 920,
+			"tags": [
+				"projectile",
+				"explosive",
+				"spread"
+			],
+			"tier": 3
+		},
+		{
+			"definition": {
+				"count": 2,
+				"damage": 2.8,
+				"fan": 0.12,
+				"info": "每次耗1发射2枚；前方视角内锁定，有限转向；目标消失保持前向，不穿墙。",
+				"lock_angle": 0.65,
+				"magazine": 12,
+				"mode": "missile",
+				"name": "微型追踪导弹",
+				"plan": "W20",
+				"radius": 22.0,
+				"rate": 1.8,
+				"reload": 1.5,
+				"speed": 130,
+				"tags": [
+					"projectile",
+					"explosive",
+					"homing"
+				],
+				"turn": 2.2
+			},
+			"id": 120,
+			"name": "微型追踪导弹",
+			"price": 1750,
+			"tags": [
+				"projectile",
+				"explosive",
+				"homing"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {
+				"damage": 5.0,
+				"info": "榴弹命中或飞行0.45秒后形成0.9秒聚拢场，再爆开；拉拽经碰撞检测且不隔墙，Boss免拉拽。",
+				"magazine": 8,
+				"mode": "gravity",
+				"name": "引力榴弹器",
+				"plan": "W21",
+				"radius": 64.0,
+				"rate": 1.2,
+				"reload": 1.7,
+				"speed": 90,
+				"tags": [
+					"projectile",
+					"explosive",
+					"gravity"
+				]
+			},
+			"id": 121,
+			"name": "引力榴弹器",
+			"price": 1850,
+			"tags": [
+				"projectile",
+				"explosive",
+				"gravity"
+			],
+			"tier": 4
+		},
+		{
+			"definition": {
+				"damage": 1.2,
+				"info": "按住由每秒6发逐渐加速，1.2秒到每秒24发上限；超过24发的射速成长转为单发伤害。松手转速回落，不降低角色移速。",
+				"magazine": 100,
+				"max_rate": 24.0,
+				"mode": "rotary",
+				"name": "加速转管机枪",
+				"plan": "W24",
+				"rate": 24.0,
+				"reload": 2.0,
+				"speed": 220,
+				"tags": [
+					"projectile",
+					"rotary",
+					"straight"
+				],
+				"warmup": 1.2
+			},
+			"id": 124,
+			"name": "加速转管机枪",
+			"price": 3600,
+			"tags": [
+				"projectile",
+				"rotary",
+				"straight"
+			],
+			"tier": 5
+		}
+	]
+}

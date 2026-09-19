@@ -296,6 +296,7 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 		return
 	if Demo.shield_hit(hurt):
 		Utils.showHitLabel("护盾",self)
+		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,14,Vector2.RIGHT,"shield")
 		return
 	# Armed only for a hit that is really about to land, so a shield or a bad-save refusal can
 	# never start the window on the player's behalf.

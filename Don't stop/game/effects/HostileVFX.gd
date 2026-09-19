@@ -21,7 +21,9 @@ const INK = {
 	"ice":Color(0.66,0.96,1.0),
 	"shock":Color(0.68,0.54,1.0),
 	"summon":Color(0.64,0.84,1.0),
-	"heal":Color(0.3,1,0.6)
+	"heal":Color(0.3,1,0.6),
+	"shield":Color(0.35,0.8,1),
+	"refill":Color(0.95,0.8,0.3)
 }
 static func emit_at(parent: Node, point: Vector2, reach = 18.0, dir = Vector2.RIGHT, family := "generic"):
 	if alive >= 32: return
@@ -45,6 +47,17 @@ func _draw():
 	if B11Probe.iso_vfx: return
 	var p = age/lifetime
 	var color = Color(tint.r,minf(1.0,tint.g+0.28*(1-p)),tint.b,(1-p)*0.7)
+	if style in ["shield","refill","heal"]:
+		if style=="shield":
+			for i in 6:
+				var a=i*TAU/6
+				draw_arc(Vector2.ZERO,radius*(1+0.3*p),a+0.1,a+0.8,4,color,2,true)
+		else:
+			var at=Vector2(0,-radius*p)
+			draw_line(at-Vector2(4,0),at+Vector2(4,0),color,2)
+			if style=="heal":draw_line(at-Vector2(0,4),at+Vector2(0,4),color,2)
+			else:draw_line(at+Vector2(-4,3),at+Vector2(4,3),color,2)
+		return
 	draw_arc(Vector2.ZERO,radius*(0.25+0.75*p),0,TAU,28,color,1.8*(1-p)+0.5,true)
 	var sparks = PackedVector2Array()
 	for i in 8:

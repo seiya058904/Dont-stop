@@ -1,0 +1,156 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2068
+[boot-probe] utils_ready t=2069
+PASS evidence present for baseline
+PASS evidence present for upgrades_common
+PASS evidence present for upgrades_rare
+PASS evidence present for upgrades_full
+PASS evidence present for talents_common
+PASS evidence present for talents_rare
+PASS evidence present for talents_full
+PASS evidence present for both_full
+PASS upgrades_common beats baseline by >10% in single
+PASS upgrades_common beats baseline by >10% in boss
+PASS upgrades_rare beats baseline by >10% in single
+PASS upgrades_rare beats baseline by >10% in boss
+PASS upgrades_full beats baseline by >10% in single
+PASS upgrades_full beats baseline by >10% in boss
+PASS talents_common beats baseline by >10% in single
+PASS talents_common beats baseline by >10% in boss
+PASS talents_rare beats baseline by >10% in single
+PASS talents_rare beats baseline by >10% in boss
+PASS talents_full beats baseline by >10% in single
+PASS talents_full beats baseline by >10% in boss
+PASS both_full beats baseline by >10% in single
+PASS both_full beats baseline by >10% in boss
+B13_GROWTH_SCORE baseline 1.000
+B13_GROWTH_SCORE upgrades_common 1.374
+B13_GROWTH_SCORE upgrades_rare 2.503
+B13_GROWTH_SCORE upgrades_full 3.290
+B13_GROWTH_SCORE talents_common 1.594
+B13_GROWTH_SCORE talents_rare 2.938
+B13_GROWTH_SCORE talents_full 3.927
+B13_GROWTH_SCORE both_full 7.903
+PASS upgrade GrowthScore rises 普通 → 稀有
+PASS upgrade GrowthScore rises 稀有 → 全档
+PASS talent GrowthScore rises 普通 → 稀有
+PASS talent GrowthScore rises 稀有 → 全档
+PASS talent commons outgain upgrade commons across the three scenarios (1.59 vs 1.37)
+PASS talent rares outgain upgrade rares across the three scenarios (2.94 vs 2.50)
+PASS the full talent build outgains the full upgrade build across the three scenarios (3.93 vs 3.29)
+PASS Talent Full / Upgrade Full GrowthScore >= 1.15 (measured 1.19)
+PASS the full account compounds beyond either system alone (single)
+PASS the full account compounds beyond either system alone (boss)
+PASS legendary talents keep >=90% of the rare build's single DPS (0.96x)
+PASS legendary talents keep >=90% of the rare build's boss DPS (0.96x)
+PASS legendary talents clearly improve the crowd clear (>10%% faster)
+PASS the legendary mechanisms cut the crowd clear by >30%% vs the rare build
+PASS baseline crowd clear is finite and bounded (25.07s)
+PASS upgrades_common crowd clear is finite and bounded (17.83s)
+PASS upgrades_rare crowd clear is finite and bounded (6.17s)
+PASS upgrades_full crowd clear is finite and bounded (4.71s)
+PASS talents_common crowd clear is finite and bounded (15.62s)
+PASS talents_rare crowd clear is finite and bounded (7.34s)
+PASS talents_full crowd clear is finite and bounded (2.84s)
+PASS both_full crowd clear is finite and bounded (1.35s)
+PASS the strongest account stays inside a 12x envelope (no exponential growth)
+PASS the B13 measurement-input manifest exists and is not empty
+PASS manifest entry carries a unique path: autoload/Combat.gd
+PASS manifest entry carries a unique path: autoload/Demo.gd
+PASS manifest entry carries a unique path: autoload/PlayerData.gd
+PASS manifest entry carries a unique path: autoload/Utils.gd
+PASS manifest entry carries a unique path: autoload/server/RewardServer.gd
+PASS manifest entry carries a unique path: game/bullets/Bullet.gd
+PASS manifest entry carries a unique path: game/bullets/SmpBullet.gd
+PASS manifest entry carries a unique path: game/bullets/SmpBullet.tscn
+PASS manifest entry carries a unique path: game/config/AttachmentCatalog.gd
+PASS manifest entry carries a unique path: game/config/DemoConfig.gd
+PASS manifest entry carries a unique path: game/config/EffectiveStats.gd
+PASS manifest entry carries a unique path: game/config/LevelProgression.gd
+PASS manifest entry carries a unique path: game/config/WeaponCatalog.gd
+PASS manifest entry carries a unique path: game/guns/BaseGun.gd
+PASS manifest entry carries a unique path: game/guns/GunSprite.gd
+PASS manifest entry carries a unique path: game/guns/GunSprite.tscn
+PASS manifest entry carries a unique path: game/monster/BaseMonster.gd
+PASS manifest entry carries a unique path: game/monster/Monster 2/Monster2.gd
+PASS manifest entry carries a unique path: game/monster/Monster 2/Monster2.tscn
+PASS manifest entry carries a unique path: tests/B13GrowthBench.gd
+PASS manifest entry carries a unique path: tests/B13GrowthBench.tscn
+PASS manifest entry carries a unique path: tests/M3Weapons.gd
+PASS manifest entry carries a unique path: tests/M8Runtime.gd
+PASS manifest entry carries a unique path: tests/M9Power.gd
+PASS manifest covers the required measurement input tests/B13GrowthBench.gd
+PASS manifest covers the required measurement input tests/B13GrowthBench.tscn
+PASS manifest covers the required measurement input tests/M9Power.gd
+PASS manifest covers the required measurement input tests/M8Runtime.gd
+PASS manifest covers the required measurement input tests/M3Weapons.gd
+PASS manifest covers the required measurement input game/config/DemoConfig.gd
+PASS manifest covers the required measurement input game/config/AttachmentCatalog.gd
+PASS manifest covers the required measurement input game/config/EffectiveStats.gd
+PASS manifest covers the required measurement input game/config/WeaponCatalog.gd
+PASS manifest covers the required measurement input autoload/Demo.gd
+PASS manifest covers the required measurement input autoload/Combat.gd
+PASS manifest covers the required measurement input autoload/PlayerData.gd
+PASS manifest covers the required measurement input game/config/LevelProgression.gd
+PASS manifest covers the required measurement input autoload/Utils.gd
+PASS manifest covers the required measurement input autoload/server/RewardServer.gd
+PASS manifest covers the required measurement input game/guns/BaseGun.gd
+PASS manifest covers the required measurement input game/guns/GunSprite.gd
+PASS manifest covers the required measurement input game/guns/GunSprite.tscn
+PASS manifest covers the required measurement input game/bullets/Bullet.gd
+PASS manifest covers the required measurement input game/bullets/SmpBullet.gd
+PASS manifest covers the required measurement input game/bullets/SmpBullet.tscn
+PASS manifest covers the required measurement input game/monster/BaseMonster.gd
+PASS manifest covers the required measurement input game/monster/Monster 2/Monster2.gd
+PASS manifest covers the required measurement input game/monster/Monster 2/Monster2.tscn
+PASS measured input still exists on disk: autoload/Combat.gd
+FAIL manifest sha256 matches the current file: autoload/Combat.gd (now 7c4420908b3b…)
+PASS measured input still exists on disk: autoload/Demo.gd
+FAIL manifest sha256 matches the current file: autoload/Demo.gd (now 149869d24af5…)
+PASS measured input still exists on disk: autoload/PlayerData.gd
+FAIL manifest sha256 matches the current file: autoload/PlayerData.gd (now 3952a6e64b47…)
+PASS measured input still exists on disk: autoload/Utils.gd
+PASS manifest sha256 matches the current file: autoload/Utils.gd (now 985ac0be884b…)
+PASS measured input still exists on disk: autoload/server/RewardServer.gd
+PASS manifest sha256 matches the current file: autoload/server/RewardServer.gd (now c1efde17310e…)
+PASS measured input still exists on disk: game/bullets/Bullet.gd
+PASS manifest sha256 matches the current file: game/bullets/Bullet.gd (now 8cab12552ab8…)
+PASS measured input still exists on disk: game/bullets/SmpBullet.gd
+PASS manifest sha256 matches the current file: game/bullets/SmpBullet.gd (now 95015d2ba4c6…)
+PASS measured input still exists on disk: game/bullets/SmpBullet.tscn
+PASS manifest sha256 matches the current file: game/bullets/SmpBullet.tscn (now 12ff97dc289b…)
+PASS measured input still exists on disk: game/config/AttachmentCatalog.gd
+FAIL manifest sha256 matches the current file: game/config/AttachmentCatalog.gd (now 3882f128b8d3…)
+PASS measured input still exists on disk: game/config/DemoConfig.gd
+FAIL manifest sha256 matches the current file: game/config/DemoConfig.gd (now 56812de3cb3c…)
+PASS measured input still exists on disk: game/config/EffectiveStats.gd
+FAIL manifest sha256 matches the current file: game/config/EffectiveStats.gd (now dbf48a31d495…)
+PASS measured input still exists on disk: game/config/LevelProgression.gd
+PASS manifest sha256 matches the current file: game/config/LevelProgression.gd (now d433bd46c68e…)
+PASS measured input still exists on disk: game/config/WeaponCatalog.gd
+FAIL manifest sha256 matches the current file: game/config/WeaponCatalog.gd (now a3e29258432b…)
+PASS measured input still exists on disk: game/guns/BaseGun.gd
+FAIL manifest sha256 matches the current file: game/guns/BaseGun.gd (now 92aa169a3609…)
+PASS measured input still exists on disk: game/guns/GunSprite.gd
+PASS manifest sha256 matches the current file: game/guns/GunSprite.gd (now e44891569d31…)
+PASS measured input still exists on disk: game/guns/GunSprite.tscn
+PASS manifest sha256 matches the current file: game/guns/GunSprite.tscn (now 895ffe58b76b…)
+PASS measured input still exists on disk: game/monster/BaseMonster.gd
+PASS manifest sha256 matches the current file: game/monster/BaseMonster.gd (now 281b7ef1d251…)
+PASS measured input still exists on disk: game/monster/Monster 2/Monster2.gd
+PASS manifest sha256 matches the current file: game/monster/Monster 2/Monster2.gd (now 41046899894e…)
+PASS measured input still exists on disk: game/monster/Monster 2/Monster2.tscn
+PASS manifest sha256 matches the current file: game/monster/Monster 2/Monster2.tscn (now 57737ea8e17e…)
+PASS measured input still exists on disk: tests/B13GrowthBench.gd
+PASS manifest sha256 matches the current file: tests/B13GrowthBench.gd (now 53ca91c771f7…)
+PASS measured input still exists on disk: tests/B13GrowthBench.tscn
+PASS manifest sha256 matches the current file: tests/B13GrowthBench.tscn (now cda586cb4dee…)
+PASS measured input still exists on disk: tests/M3Weapons.gd
+PASS manifest sha256 matches the current file: tests/M3Weapons.gd (now 393a75940a14…)
+PASS measured input still exists on disk: tests/M8Runtime.gd
+PASS manifest sha256 matches the current file: tests/M8Runtime.gd (now 13c3003171c9…)
+PASS measured input still exists on disk: tests/M9Power.gd
+PASS manifest sha256 matches the current file: tests/M9Power.gd (now 2f482d9da3d8…)
+PASS manifest covers exactly the required measurement set (no extras, no gaps)
+B13_STRENGTH_CHECKS 143 FAILURES 8

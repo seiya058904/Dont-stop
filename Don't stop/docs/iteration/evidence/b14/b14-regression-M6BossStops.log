@@ -1,0 +1,32 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2111
+[boot-probe] utils_ready t=2113
+[boot] title menu drawn t=2629
+[boot-probe] controlui_ready t=2630
+PASS live Boss death-flow starts 10
+PASS actual player death retains living Boss
+PASS living Boss stops even with death menu dismissed
+PASS player death clears pending warning
+PASS revive retains existing Boss HP
+PASS Boss resumes active phase after revive
+PASS abandon living Boss gives no victory reward
+PASS living Boss return clears ownership graph
+PASS live Boss death-flow starts 20
+PASS actual player death retains living Boss
+PASS living Boss stops even with death menu dismissed
+PASS player death clears pending warning
+PASS revive retains existing Boss HP
+PASS Boss resumes active phase after revive
+PASS abandon living Boss gives no victory reward
+PASS living Boss return clears ownership graph
+PASS live Boss death-flow starts 30
+PASS actual player death retains living Boss
+PASS living Boss stops even with death menu dismissed
+PASS player death clears pending warning
+PASS revive retains existing Boss HP
+PASS Boss resumes active phase after revive
+PASS abandon living Boss gives no victory reward
+PASS living Boss return clears ownership graph
+M6 BOSS STOPS SUMMARY checks=24 failures=0
+[leave] save on the way out success=true web=false

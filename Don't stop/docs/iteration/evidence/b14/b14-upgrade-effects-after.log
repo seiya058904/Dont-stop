@@ -1,0 +1,93 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2228
+[boot-probe] utils_ready t=2230
+[boot] title menu drawn t=2745
+[boot-probe] controlui_ready t=2745
+PASS baseline damage is the unupgraded build (got 1.8000, expected 1.8000)
+PASS purchase 111
+PASS upgrade 111 on gun 0 really changes the build
+PASS upgrade 111 on gun 6 really changes the build
+PASS purchase 113
+PASS upgrade 113 on gun 0 really changes the build
+PASS upgrade 113 on gun 6 really changes the build
+PASS purchase 115
+PASS upgrade 115 on gun 0 really changes the build
+PASS upgrade 115 on gun 6 really changes the build
+PASS purchase 116
+PASS upgrade 116 on gun 0 really changes the build
+PASS upgrade 116 on gun 6 really changes the build
+PASS purchase 118
+PASS upgrade 118 on gun 0 really changes the build
+PASS upgrade 118 on gun 6 really changes the build
+PASS purchase 119
+PASS upgrade 119 on gun 0 really changes the build
+PASS upgrade 119 on gun 6 really changes the build
+PASS purchase 120
+PASS upgrade 120 on gun 0 really changes the build
+PASS upgrade 120 on gun 6 really changes the build
+PASS purchase 123
+PASS upgrade 123 on gun 0 really changes the build
+PASS upgrade 123 on gun 6 really changes the build
+PASS purchase 124
+PASS upgrade 124 on gun 0 really changes the build
+PASS upgrade 124 on gun 6 really changes the build
+PASS purchase 110
+PASS upgrade 110 on gun 0 really changes the build
+PASS upgrade 110 on gun 6 really changes the build
+PASS purchase 112
+PASS upgrade 112 on gun 0 really changes the build
+PASS upgrade 112 on gun 6 really changes the build
+PASS purchase 114
+PASS upgrade 114 on gun 0 really changes the build
+PASS upgrade 114 on gun 6 really changes the build
+PASS purchase 117
+PASS upgrade 117 on gun 0 really changes the build
+PASS upgrade 117 on gun 6 really changes the build
+PASS purchase 121
+PASS upgrade 121 on gun 0 really changes the build
+PASS upgrade 121 on gun 6 really changes the build
+PASS purchase 122
+PASS upgrade 122 on gun 0 really changes the build
+PASS upgrade 122 on gun 6 really changes the build
+PASS purchase 0
+PASS upgrade 0 on gun 0 really changes the build
+PASS upgrade 0 on gun 6 really changes the build
+PASS purchase 1
+PASS upgrade 1 on gun 0 really changes the build
+PASS upgrade 1 on gun 6 really changes the build
+PASS purchase 2
+PASS upgrade 2 on gun 0 really changes the build
+PASS upgrade 2 on gun 6 really changes the build
+PASS purchase 3
+PASS upgrade 3 on gun 0 really changes the build
+PASS upgrade 3 on gun 6 really changes the build
+PASS purchase 5
+PASS upgrade 5 on gun 0 really changes the build
+PASS upgrade 5 on gun 6 really changes the build
+PASS purchase 6
+PASS upgrade 6 on gun 0 really changes the build
+PASS upgrade 6 on gun 6 really changes the build
+PASS purchase 7
+PASS upgrade 7 on gun 0 really changes the build
+PASS upgrade 7 on gun 6 really changes the build
+PASS purchase 8
+PASS upgrade 8 on gun 0 really changes the build
+PASS upgrade 8 on gun 6 really changes the build
+PASS purchase 9
+PASS upgrade 9 on gun 0 really changes the build
+PASS upgrade 9 on gun 6 really changes the build
+PASS 115 warmup secondary is real on the B14 0.8s charged rail
+PASS 119 bounce secondary adds the ricochet bounce
+PASS 123 homing secondary is real on the missile rack
+PASS grenade locked without upgrade 9
+PASS upgrade 9 purchases in camp
+PASS upgrade 9 unlocks the right-click grenade
+PASS grenade entered its cooldown
+PASS crit stays capped with the full account
+PASS reload stays above the floor with the full account
+PASS rate stays under the non-rotary cap
+PASS magazine stays a positive integer
+PASS derivation depth never exceeded the B11 bound
+B13_UPGRADE_EFFECTS_CHECKS 85 FAILURES 0 max_depth=0
+[leave] save on the way out success=true web=false

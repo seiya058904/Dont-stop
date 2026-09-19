@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2480
+[boot-probe] utils_ready t=2481
+[boot] title menu drawn t=3002
+[boot-probe] controlui_ready t=3003
+B14_HORDE_ROW {"alive_end":14,"alive_mean":14.1133587021831,"alive_peak":20,"ammo_used":10,"attacks":10,"build":"bare","charge_s":0.0,"effective":{"angle":0.65,"bounce_retention":1.0,"bounces":0,"crit":0.0,"damage":8.55,"impulse":80.0,"jumps":3,"lock_angle":0.0,"magazine":12,"pierce":0,"radius":32.0,"range":105.0,"rate":2.0,"recovery":1.0,"refill":0,"reload":1.5,"shard_ratio":0.35,"shards":0,"spread":1.0,"tags":["pulse_cone","energy"],"turn":0.0,"warmup":0.0,"width":6.0},"first_kill_s":0.508,"fixture":"moving E01/E02, invulnerable observer, no claim of survival","hit_events":22,"hp_damage":0.0,"id":115,"kills":22,"kills_3s":12,"kills_per_s":4.40616863609053,"level":1,"map":"R8","movement":494.875707149506,"nearest_enemy":30.926700592041,"overkill":152.1,"pressure_under45_s":0.691000000000001,"reload_s":0.0,"reloads":0,"role_stats":[{"hp":2.0,"role":"E01","speed":103.5},{"hp":1.2,"role":"E02","speed":105.0}],"seconds":4.993,"seed":20260920,"spawned":36,"tag":"pilot","talents":{},"upgrades":[]}
+B14_HORDE_DONE rows=1

@@ -12,14 +12,14 @@ func _ready():
 	var rail = PlayerData.player_weapon_list[113]
 	aim(rail)
 	var targets = []
-	for i in 7: targets.append(enemy(origin+Vector2(30+i*25,8)))
+	for i in 9: targets.append(enemy(origin+Vector2(30+i*25,8)))
 	await wait(0.06)
 	rail.handle_charge(true,2.0)
-	check(is_equal_approx(rail.charge_time,1.2),"charge capped at 1.2 seconds")
+	check(is_equal_approx(rail.charge_time,0.8),"B14 charge capped at 0.8 seconds")
 	var ammo = rail.bullets_count
 	rail.handle_charge(false,0)
 	check(rail.bullets_count == ammo-1 and not rail.charging,"release consumes once")
-	check(targets.slice(0,6).all(func(t): return t.HP < 100) and targets[6].HP == 100,"rail max six distinct actual hits")
+	check(targets.slice(0,8).all(func(t): return t.HP < 100) and targets[8].HP == 100,"B14 full rail max eight distinct actual hits; ninth excluded")
 	check(is_equal_approx(100-targets[0].HP,snappedf(rail.effective.damage*2.5,0.01)),"full charge actual 2.5 multiplier")
 	for stop in ["switch","pause","reload","death","camp"]:
 		rail.can_shoot = true

@@ -63,7 +63,7 @@ func gps_scores(w: Dictionary) -> Dictionary:
 	for id in w:
 		var d: Dictionary = w[id]
 		if d.clear > 0.0: d["crowd"] = 6.0/d.clear
-		else: d["crowd"] = d.crowd_dmg/maxf(0.01,d.crowd_secs)*6.0/30.0
+		else: d["crowd"] = d.crowd_dmg/(30.0*maxf(0.01,d.crowd_secs))
 		bursts.append(d.burst); sustains.append(d.sustain)
 		crowds.append(d.crowd); bosses.append(d.boss)
 	bursts.sort(); sustains.sort(); crowds.sort(); bosses.sort()
@@ -136,6 +136,10 @@ func verify_manifest():
 	check(str(covered)==str(expected),"manifest covers the whole measurement set (catalog + stats + combat + bench + 24 gun scenes/scripts)")
 
 func _ready():
+	if "--b14" in OS.get_cmdline_user_args():
+		var current=load("res://tests/B14Evidence.gd").new()
+		current.scope="weapons";add_child(current)
+		return
 	var before_rows: Array = load_rows("res://docs/iteration/evidence/b12/before/power-before.json")
 	var after_rows: Array = load_rows("res://docs/iteration/evidence/b12/after/power-after.json")
 	check(before_rows.size()==72,"BEFORE benchmark holds 24 weapons x 3 scenarios")

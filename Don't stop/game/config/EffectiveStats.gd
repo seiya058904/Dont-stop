@@ -21,8 +21,9 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = nul
 	impulse += DemoConfig.talent_value("T18",int(ranks.get("T18",0)))
 	extras.range *= 1.0+DemoConfig.talent_value("T05",int(ranks.get("T05",0)))
 	if gun.weapon_id == 6: extras.range *= 1000.0/320.0
-	if "straight" in gun.tags: extras.pierce += int(ranks.get("T13",0))
+	if "straight" in gun.tags: extras.pierce += int(DemoConfig.talent_value("T13",int(ranks.get("T13",0))))
 	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))+RewardServer.momentum()+PlayerData.player_fire_rate-1.0
+	cycle *= 1.0+Demo.kill_stacks*DemoConfig.talent_value("T10",int(ranks.get("T10",0)))
 	if ledger:
 		for stat in ["damage","magazine","reload","rate","impulse"]: ledger.add(stat,"base","weapon",TranslationServer.translate(gun.weapon_name),"flat",b[stat])
 		ledger.add("damage","level","level","等级成长","flat",level_damage)
@@ -44,6 +45,10 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = nul
 	if "continuous" in gun.tags:
 		damage_mul *= cycle
 		if ledger: ledger.add("damage","condition","thermal_cycle","热流射速转每tick伤害","multiplier",cycle,true,"固定0.1秒tick；射速来源在射频项展开")
+	elif "rotary" in gun.tags and b.rate*cycle > 24.0:
+		var overflow = b.rate*cycle/24.0
+		damage_mul *= overflow
+		if ledger: ledger.add("damage","condition","rotary_cycle","转管超限射速转单发伤害","multiplier",overflow,true,"发射上限仍为24/s")
 	var applied = {}
 	for upgrade in upgrades:
 		var id = int(upgrade) if upgrade is String or upgrade is StringName or upgrade is int else upgrade.am_id
@@ -70,13 +75,16 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = nul
 			extras.recovery *= d.get("recovery_mul",1.0)
 			for key in ["pierce","bounces","shards","refill"]: extras[key] += d.get(key,0)
 			for key in ["shard_ratio","bounce_retention"]:
-				if d.has(key): extras[key] = d[key]
+				if d.has(key):
+					# A purchased shard core adds fragments; it must not downgrade a
+					# weapon's native fragments from 35% to the generic core's 25%.
+					extras[key] = maxf(extras[key],d[key]) if key == "shard_ratio" and spec.get("shards",0) > 0 else d[key]
 
 	var result = {
 		"tags":gun.tags, "damage": (b.damage + level_damage) * WeaponCatalog.power(gun.weapon_id) * (1.0 + damage_percent)*damage_mul,
 		"magazine": maxi(1, int((b.magazine * magazine_mul) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
 		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
-		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle * (1.0 + Demo.kill_stacks * DemoConfig.talent_value("T10",int(ranks.get("T10",0)))), 0.1, 24.0 if "rotary" in gun.tags else 60.0),
+		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle, 0.1, 24.0 if "rotary" in gun.tags else 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,
 		"impulse": b.impulse * impulse, "radius":WeaponCatalog.definition(gun.weapon_id).get("radius",32.0) * radius, "jumps":jumps
 	}
@@ -137,7 +145,7 @@ static func inspect(gun) -> Dictionary:
 	ledger.add("projectile_count","base","weapon","当前武器发射机制","flat",final.projectile_count,true,"每次发射；连续束流显示1条，后续裂片另列")
 	ledger.add("shards","base","weapon","武器基础裂片","flat",WeaponCatalog.definition(gun.weapon_id).get("shards",0))
 	ledger.add("pierce","base","weapon","武器基础贯穿","flat",WeaponCatalog.definition(gun.weapon_id).get("pierce",0))
-	ledger.add("pierce","talent","T13",DemoConfig.TALENTS.T13.name,"flat",Demo.rank("T13"),"straight" in gun.tags,"仅直射")
+	ledger.add("pierce","talent","T13",DemoConfig.TALENTS.T13.name,"flat",DemoConfig.talent_value("T13",Demo.rank("T13")),"straight" in gun.tags,"仅直射；最多8目标")
 	for stat in ["magazine","reload","rate","crit"]:
 		ledger.add(stat,"rule","bounds","运行时边界/取整","rule",{"magazine":"取整，至少1发","reload":"至少%.2f秒" % DemoConfig.MIN_RELOAD_SECONDS,"rate":"热流10 tick/s；转管至多24，其余60","crit":"0–100%"}[stat])
 	var upgrade_deltas={}
@@ -168,6 +176,8 @@ static func describe(s: Dictionary) -> String:
 	if "projectile" in s.tags: text += "\n弹速 %.0f像素/秒 · 最长飞行 %.2f秒\n无提前碰撞时累计路径上限 %.0f像素（引力落地/锯盘回收可提前结束）" % [s.projectile_speed,s.projectile_seconds,s.projectile_path_limit]
 	if "pulse_cone" in s.tags: text += " · 扇面全角 %.1f度" % rad_to_deg(s.angle*2)
 	if "straight" in s.tags: text += "\n总目标上限 %d；不穿墙" % mini(8,s.pierce+1)
+	if "charged" in s.tags: text += "\n满蓄循环至少 %.2f秒（蓄力+冷却，不含装填）；轻点减少宽度/贯穿" % (s.warmup+1.0/s.rate)
+	if "rotary" in s.tags: text += "\n24发/秒封顶；超限射速已转为单发伤害"
 	if "ricochet" in s.tags: text += "\n墙面反弹 %d次，反弹伤害保留 %.0f%%" % [mini(4,s.bounces),s.bounce_retention*100]
 	if "homing" in s.tags: text += "\n转向 %.2f弧度/秒 · 寻找半角 %.1f度" % [s.turn,rad_to_deg(s.lock_angle)]
 	if s.warmup > 0: text += "\n蓄力/预热上限 %.2f秒" % s.warmup

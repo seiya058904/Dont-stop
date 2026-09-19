@@ -1,0 +1,145 @@
+{
+  "method": "Windows native Godot Forward+/Vulkan, one fixed technical pair, no simultaneous screenshots or other owned test workloads",
+  "pair": {
+    "before": {
+      "renderer": "forward_plus",
+      "window": [
+        15,
+        105
+      ],
+      "zones_emitted": 430,
+      "transient_peak": 22,
+      "frame": {
+        "n": 14383,
+        "mean": 6.257412500869082,
+        "p95": 7.03,
+        "p99": 7.384,
+        "max": 14.106,
+        "over33_3": 0,
+        "over50": 0
+      },
+      "process_proxy": {
+        "n": 14383,
+        "mean": 8.06880184940555,
+        "p95": 13.191,
+        "p99": 13.499,
+        "max": 13.499,
+        "over33_3": 0,
+        "over50": 0
+      },
+      "physics_proxy": {
+        "n": 14383,
+        "mean": 0.7677614544948898,
+        "p95": 1.186,
+        "p99": 1.339,
+        "max": 1.339,
+        "over33_3": 0,
+        "over50": 0
+      },
+      "draw_calls": {
+        "n": 14383,
+        "mean": 329.69123270527706,
+        "p95": 390.0,
+        "p99": 390.0,
+        "max": 390.0,
+        "over33_3": 14383,
+        "over50": 14383
+      },
+      "full_timeline_max_ms": 48.402,
+      "long_frames": [
+        {
+          "elapsed": 0.048403,
+          "ms": 48.402,
+          "in_original_window": false
+        }
+      ]
+    },
+    "after": {
+      "renderer": "forward_plus",
+      "window": [
+        15,
+        105
+      ],
+      "zones_emitted": 430,
+      "transient_peak": 24,
+      "frame": {
+        "n": 14383,
+        "mean": 6.257393659180977,
+        "p95": 7.026,
+        "p99": 7.399,
+        "max": 13.036,
+        "over33_3": 0,
+        "over50": 0
+      },
+      "process_proxy": {
+        "n": 14383,
+        "mean": 7.899908155461309,
+        "p95": 12.482,
+        "p99": 13.026,
+        "max": 13.761,
+        "over33_3": 0,
+        "over50": 0
+      },
+      "physics_proxy": {
+        "n": 14383,
+        "mean": 0.9469858165890287,
+        "p95": 1.311,
+        "p99": 1.39,
+        "max": 1.39,
+        "over33_3": 0,
+        "over50": 0
+      },
+      "draw_calls": {
+        "n": 14383,
+        "mean": 328.26204547034695,
+        "p95": 392.0,
+        "p99": 400.0,
+        "max": 400.0,
+        "over33_3": 14383,
+        "over50": 14383
+      },
+      "full_timeline_max_ms": 49.589,
+      "long_frames": [
+        {
+          "elapsed": 0.04959,
+          "ms": 49.589,
+          "in_original_window": false
+        }
+      ]
+    }
+  },
+  "gates": {
+    "frame_p95": {
+      "before": 7.03,
+      "after": 7.026,
+      "allowed_delta": 0.8,
+      "pass": true
+    },
+    "frame_p99": {
+      "before": 7.384,
+      "after": 7.399,
+      "allowed_delta": 1.5,
+      "pass": true
+    },
+    "process_proxy_p95": {
+      "before": 13.191,
+      "after": 12.482,
+      "allowed_delta": 0.6595500000000001,
+      "pass": true
+    },
+    "physics_proxy_p95": {
+      "before": 1.186,
+      "after": 1.311,
+      "allowed_delta": 0.5,
+      "pass": true
+    },
+    "extra_over33_3": {
+      "delta": 0,
+      "allowed": 2,
+      "pass": true
+    }
+  },
+  "true_per_frame_cpu": "N/A",
+  "gpu_ms": "N/A",
+  "limitations": "One pair is not repeatability proof. Per-second published CPU maxima are proxies, not independent frame timings. Gameplay workload, historic Web three FAILs and long-frame attribution remain separate; no exemption."
+}

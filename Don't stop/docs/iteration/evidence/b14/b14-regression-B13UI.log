@@ -1,0 +1,193 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2198
+[boot-probe] utils_ready t=2199
+[boot] title menu drawn t=2715
+[boot-probe] controlui_ready t=2715
+PASS upgrade filter carries exactly the three qualities
+PASS all 24 upgrade cards render
+PASS upgrade card carries a quality prefix: 普通 扩容供弹组件
+280金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 扩容供弹组件
+280金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 快速装填组件
+320金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 快速装填组件
+320金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 稳定枪身组件
+420金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 稳定枪身组件
+420金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 强化枪管
+440金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 强化枪管
+440金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 冷却导管
+460金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 冷却导管
+460金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 双排供弹模块
+470金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 双排供弹模块
+470金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 精密瞄具
+480金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 精密瞄具
+480金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 效率弹链
+500金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 效率弹链
+500金币 · 未激活
+PASS upgrade card carries a quality prefix: 普通 轻量快装弹鼓
+520金币 · 未激活
+PASS upgrade card carries the price or owned marker: 普通 轻量快装弹鼓
+520金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 火力循环组件
+720金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 火力循环组件
+720金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 稳定瞄准模块
+780金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 稳定瞄准模块
+780金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 冲击载荷模块
+820金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 冲击载荷模块
+820金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 高容量供弹系统
+850金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 高容量供弹系统
+850金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 焦距校准器
+880金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 焦距校准器
+880金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 制导校准核心
+900金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 制导校准核心
+900金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 墙面反弹核心
+900金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 墙面反弹核心
+900金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 宽域扩束模块
+900金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 宽域扩束模块
+900金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 扩爆引信
+1050金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 扩爆引信
+1050金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 贯穿弹药包
+1080金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 贯穿弹药包
+1080金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 电弧传导核心
+1100金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 电弧传导核心
+1100金币 · 未激活
+PASS upgrade card carries a quality prefix: 稀有 超容供弹鼓
+1250金币 · 未激活
+PASS upgrade card carries the price or owned marker: 稀有 超容供弹鼓
+1250金币 · 未激活
+PASS upgrade card carries a quality prefix: 传说 裂片弹药核心
+1600金币 · 未激活
+PASS upgrade card carries the price or owned marker: 传说 裂片弹药核心
+1600金币 · 未激活
+PASS upgrade card carries a quality prefix: 传说 击杀回填核心
+1900金币 · 未激活
+PASS upgrade card carries the price or owned marker: 传说 击杀回填核心
+1900金币 · 未激活
+PASS upgrade card carries a quality prefix: 传说 下挂榴弹模块
+2000金币 · 未激活
+PASS upgrade card carries the price or owned marker: 传说 下挂榴弹模块
+2000金币 · 未激活
+PASS quality filter 1 shows exactly its members
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS quality filter 2 shows exactly its members
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS quality filter 3 shows exactly its members
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS filtered card keeps the quality prefix
+PASS upgrade detail names the entry and its quality
+PASS upgrade detail shows the catalog price
+PASS upgrade detail shows the real effect
+PASS upgrade detail states the global rule
+PASS an unowned upgrade previews the real delta on the current gun
+PASS purchase button carries the price
+PASS owned upgrade shows the activated state
+PASS no purchase preview for an owned upgrade
+PASS all 24 talent cards carry quality and rank
+PASS talent card shows rank x/y: 稀有 快速循环 0/3
+PASS talent card shows rank x/y: 普通 弹道延展 0/3
+PASS talent card shows rank x/y: 稀有 弱点识别 0/3
+PASS talent card shows rank x/y: 普通 生存余量 0/3
+PASS talent card shows rank x/y: 普通 轻装移动 0/3
+PASS talent card shows rank x/y: 普通 拾取磁场 0/3
+PASS talent card shows rank x/y: 稀有 弹药回流 0/3
+PASS talent card shows rank x/y: 稀有 首发重击 0/3
+PASS talent card shows rank x/y: 传说 贯穿专精 0/1
+PASS talent card shows rank x/y: 传说 静电跃迁 0/1
+PASS talent card shows rank x/y: 稀有 灼热弹道 0/3
+PASS talent card shows rank x/y: 稀有 低温冲击 0/3
+PASS talent card shows rank x/y: 普通 冲击放大 0/3
+PASS talent card shows rank x/y: 传说 应急护盾 0/1
+PASS talent card shows rank x/y: 普通 战后修复 0/3
+PASS talent card shows rank x/y: 稀有 精英猎手 0/3
+PASS talent card shows rank x/y: 稀有 密集火网 0/3
+PASS talent card shows rank x/y: 传说 暴击回响 0/1
+PASS talent card shows rank x/y: 普通 火力强化 0/3
+PASS talent card shows rank x/y: 普通 熟练装填 0/3
+PASS talent card shows rank x/y: 普通 扩充弹匣 0/3
+PASS talent card shows rank x/y: 稀有 连杀加速 0/3
+PASS talent card shows rank x/y: 传说 连锁爆破 0/1
+PASS talent card shows rank x/y: 稀有 吸能修复 0/3
+PASS the legendary filter shows exactly the legendary talents
+PASS legendary cards are prefixed 传说
+PASS legendary cards are prefixed 传说
+PASS legendary cards are prefixed 传说
+PASS legendary cards are prefixed 传说
+PASS legendary cards are prefixed 传说
+PASS talent detail names its quality
+PASS talent detail separates quality from rank
+PASS talent detail shows the current rank
+PASS talent detail shows the next-rank gold and point prices
+PASS talent detail states the next-rank effect
+PASS both purchase routes are offered
+PASS a weapon-stat talent shows the real preview section
+PASS T01 preview shows the real post-purchase damage (2.2)
+PASS T01 was bought for the preview comparison
+PASS the real purchased damage equals the previewed value
+PASS a player-stat talent shows the real preview section
+PASS T07 preview shows the real post-purchase max HP (6.0)
+PASS T07 was bought for the preview comparison
+PASS the real purchased max HP equals the previewed value
+PASS the equipped weapon offers 卸下武器
+PASS the freshly equipped weapon offers 卸下武器
+PASS clicking 卸下武器 leaves the player unarmed
+PASS the panel unequip records the intent
+PASS unarmed weapon page offers re-equip
+PASS stat panel opens
+PASS stat panel names the unarmed state
+B13_UI_CHECKS 137 FAILURES 0
+[leave] save on the way out success=true web=false

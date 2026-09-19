@@ -487,7 +487,10 @@ func refresh_zones() -> void:
 
 func perform_attack():
 	remember("attack"); remember(attack_kind)
-	preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,24 if is_boss else 12,locked_direction,"charge" if attack_kind == "charge" else "projectile")
+	# E14's zone can extend its warning for visibility. Only that zone's real
+	# activation may flash its laser source; the actor timer is not proof of firing.
+	if role!="E14":
+		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,24 if is_boss else 12,locked_direction,"charge" if attack_kind == "charge" else "projectile")
 	# Phase II starts earlier (70%) than the original 50%, so its per-attack pacing is a
 	# little GENTLER than the original to keep the total pressure curve rising instead of
 	# spiking. Phase III is the fast one, and only by a small step.
@@ -761,6 +764,17 @@ func onDie(effects = true):
 func _draw():
 	super._draw()
 	if is_die: return
+	# Source-only charge brackets use the actual tracking/frozen state. The
+	# footprint still owns the firing edge (including the fog fairness extension).
+	if phase=="warn" and attack_kind!="ultimate":
+		var ink=Color(0.95,0.78,0.35) if not lock_frozen else Color(0.9,0.98,1)
+		var extent=16.0 if lock_frozen else 21.0
+		var center=Vector2(0,-8)
+		for i in 4:
+			var dir=Vector2.RIGHT.rotated(PI/4+i*PI/2)
+			var point=center+dir*extent
+			draw_line(point,point-dir.rotated(-0.65)*5,ink,1.5,true)
+			draw_line(point,point-dir.rotated(0.65)*5,ink,1.5,true)
 	var color = Color(0.4,0.9,1) if armor <= 0 else Color(1,0.8,0.3)
 	if role in ["E03","E09","B01"]:
 		var dir = facing.angle(); draw_arc(Vector2(0,-7),28 if is_boss else 18,dir-1.05,dir+1.05,12,color,3)

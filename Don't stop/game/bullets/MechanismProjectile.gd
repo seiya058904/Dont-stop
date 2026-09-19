@@ -114,7 +114,7 @@ func _physics_process(delta):
 		queue_free()
 
 func split():
-	var count = mini(3,int(spec.get("shards",0)))
+	var count = mini(5,int(spec.get("shards",0)))
 	spec.shards = 0
 	for i in count:
 		var shard = load("res://game/bullets/SmpBullet.tscn").instantiate()

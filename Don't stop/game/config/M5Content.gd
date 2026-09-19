@@ -1,9 +1,8 @@
 extends RefCounted
 class_name M5Content
 
-## Additional timed arrivals overlap living cohorts; HP and the roster remain frozen.
-## B批: the windows overlap more and the simple-chaser share drops with stage, because the
-## measured problem was never the cap (Stage 29 caps at 145 and peaked at 41 alive).
+## Timed arrivals overlap living cohorts. B14 retains these arrival/cap values and
+## replaces late special saturation with a bounded, ordinary-chaser-led roster.
 const HORDES = {
 	21:{"batch":4,"window":4.6,"step":0.34,"floor":6,"windows":2},
 	22:{"batch":4,"window":4.5,"step":0.34,"floor":6,"windows":2},
@@ -123,6 +122,15 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 		audit_refused += 1
 		push_warning("[spawn] %s refused: non-finite point %s" % [id, str(point)])
 		return null
+	var requested_id = id
+	var pressure = encounter_pressure(LevelServer.level)
+	if pressure.has("special_cap"):
+		var mix = living_mix(parent.get_tree())
+		if mix.total >= DemoConfig.ENCOUNTERS[LevelServer.level].cap: return null
+		# The shared factory covers regular, horde, flank and summoned arrivals.
+		# An occupied special budget becomes a real plain chaser, never a renamed special.
+		if id not in ["E01","E02"] and not id.begins_with("B") and mix.special >= special_budget(mix):
+			id = "E01" if mix.ordinary%2 == 0 else "E02"
 	var actor = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
 	if id in ["E02","E04","E05"]:
 		actor.set_script(load("res://game/monster/DemoEnemy.gd")); actor.role = id
@@ -144,17 +152,40 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 		actor.set_meta("hell",LevelServer.level)
 	actor.setData({"speed":d.speed,"hp":d.hp,"hurt":contact})
 	actor.set_meta("content_id",id)
+	actor.set_meta("requested_content_id",requested_id)
 	actor.set_meta("summoned",summoned)
 	actor.set_meta("spawn_epoch",LevelServer.epoch)
 	actor.set_meta("born_ms",Time.get_ticks_msec())
 	actor.position = parent.to_local(point)
 	# Per-stage chase pressure, table driven instead of the old hardcoded [27,28,29].
-	var pressure = encounter_pressure(LevelServer.level)
 	if float(pressure.get("chase_speed",1.0)) != 1.0 and id in ["E01","E02"]:
 		actor.SPEED *= float(pressure.chase_speed)
 	if is_instance_valid(LevelServer.town): actor.setDeathCallBack(LevelServer.town.onMonsterDeath)
 	parent.add_child(actor)
+	# E02's _ready restores its base speed. Apply the authorized late chase tuning
+	# AFTER initialization, with an absolute ceiling; leave stages 1/2 and HP alone.
+	if pressure.has("special_cap") and id in ["E01","E02"]:
+		actor.SPEED = minf(112.0,d.speed*float(pressure.chase_speed))
 	return actor
+
+static func living_mix(tree: SceneTree) -> Dictionary:
+	var mix = {"ordinary":0,"special":0,"total":0}
+	for actor in tree.get_nodes_in_group("monsters"):
+		if actor.is_die or actor.training or actor.is_queued_for_deletion(): continue
+		mix.total += 1
+		if actor.is_elite or actor.get_meta("content_id","") not in ["E01","E02"]: mix.special += 1
+		else: mix.ordinary += 1
+	return mix
+
+static func special_budget(mix: Dictionary) -> int:
+	var cap = int(encounter_pressure(LevelServer.level).get("special_cap",100000))
+	return mini(cap,maxi(1,int(floor((mix.ordinary+1)*0.18))))
+
+static func can_promote(actor) -> bool:
+	if not encounter_pressure(LevelServer.level).has("special_cap"): return true
+	if actor.get_meta("content_id","") not in ["E01","E02"]: return true
+	var mix = living_mix(actor.get_tree())
+	return mix.special < special_budget(mix)
 
 ## Elite promotion. The mechanism is the point: every elite gets exactly one named extra
 ## behaviour (TacticalEnemy.ELITE_MODIFIERS), a coloured aura so it can be identified before
@@ -162,6 +193,7 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 static func promote_elite(actor, modifier := ""):
 	if actor == null or not is_instance_valid(actor): return
 	if actor.get("is_elite") == true: return
+	if not can_promote(actor): return
 	actor.is_elite = true
 	actor.HP *= 1.5
 	actor.set_meta("elite_modifier",modifier)
@@ -229,7 +261,7 @@ const WALLS = {
 ## The roster is authored as the exact cycle the spawn loop walks, so the intended mix is
 ## readable instead of emergent.
 static func encounters() -> Dictionary:
-	return {
+	var table = {
 		1:{"name":"R1 · 01 街口接敌","region":"R1","info":"生存45秒；渐进；敌群 E01 E01 E02","seconds":45,"roles":["E01", "E01", "E02"],"cap":35,"interval":0.70,"rhythm":"渐进","pressure":{"horde_simple":0.70,"ring_min":145.0,"chase_speed":1.0}},
 		2:{"name":"R1 · 02 蜂群分流","region":"R1","info":"生存45秒；轮换；敌群 E02 E02 E01","seconds":45,"roles":["E02", "E02", "E01"],"cap":38,"interval":0.57,"rhythm":"轮换","pressure":{"horde_simple":0.70,"ring_min":145.0,"chase_speed":1.0}},
 		3:{"name":"R1 · 03 远程交错","region":"R1","info":"生存45秒；渐进；敌群 E01 E02 E01 E05","seconds":45,"roles":["E01", "E02", "E01", "E05"],"cap":40,"interval":0.61,"rhythm":"渐进","pressure":{"horde_simple":0.70,"ring_min":145.0,"chase_speed":1.0}},
@@ -272,3 +304,20 @@ static func encounters() -> Dictionary:
 		39:{"name":"R8 · 39 核心暴走","region":"R8","info":"HELL；生存45秒；高密度精英配合危险带，必须靠视野判断；敌群 E01 E02 E14 E02 E13 E01 E02 E15 E02 E10","seconds":45,"roles":["E01","E02","E14","E02","E13","E01","E02","E15","E02","E10"],"cap":84,"interval":0.26,"rhythm":"三段","hell":true,"flank":true,"elite":{"start":14.0,"interval":10.0,"cap":3},"pressure":{"horde_simple":0.42,"ring_min":110.0,"chase_speed":1.15}},
 		40:{"name":"R8 · 40 深渊核心体","region":"R8","info":"HELL FINAL BOSS；三阶段；迷雾中移动安全区；击败后 HELL COMPLETE；敌群 ","seconds":0,"roles":[],"cap":24,"interval":1.40,"rhythm":"Boss","boss":"B04","hell":true,"flank":true}
 	}
+	for stage in range(21,40):
+		var row = table[stage]
+		if row.has("boss"): continue
+		var specials = row.roles.filter(func(id): return id not in ["E01","E02"])
+		var cycle = []
+		# Keep each stage's existing special identities, one per ten regular arrivals.
+		for i in maxi(1,specials.size())*10:
+			cycle.append(specials[i/10] if i%10==9 and not specials.is_empty() else ("E01" if i%2==0 else "E02"))
+		row.roles = cycle
+		row.pressure.horde_simple = 0.9
+		row.pressure.special_cap = 2 if stage<31 else 3
+		row.pressure.chase_speed = lerpf(1.12,1.25,(stage-21)/18.0)
+		if row.has("elite"):
+			row.elite.cap = 1 if stage<31 else 2
+			row.elite.interval = maxf(14.0,row.elite.interval)
+		row.info = "生存45秒；快速普通追击为主，多方向分批进入；特殊威胁同时至多%d名（含精英）。" % row.pressure.special_cap
+	return table

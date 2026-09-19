@@ -1,0 +1,7206 @@
+[
+	{
+		"arrivals": [
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": true,
+				"hp": 1.8,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 4.0,
+				"role": "E11",
+				"speed": 122.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": true,
+				"hp": 1.8,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3,
+				"role": "E05",
+				"speed": 50
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 4.0,
+				"role": "E11",
+				"speed": 122.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E06",
+				"speed": 125.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 8.0,
+				"role": "E07",
+				"speed": 72.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 106.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			}
+		],
+		"completed": true,
+		"damage_received": 2.8,
+		"dead": false,
+		"event_sources": {
+			"horde": 275,
+			"regular-or-flank": 180,
+			"rush": 8
+		},
+		"level_at_end": 20,
+		"level_at_start": 20,
+		"live_peak": 45,
+		"movement": 4830.27015027683,
+		"observer": "real encounter, normal HP, autonomous walking/dodging, no human acceptance",
+		"ordinary_alive_time_fraction": 0.934331069496267,
+		"ordinary_spawn_fraction": 0.948164146868251,
+		"seconds": 44.945,
+		"seed": 20260922,
+		"spawned": 463,
+		"special_peak": 2,
+		"special_spawned": 24,
+		"stage": 29,
+		"tag": "after2",
+		"talents": {
+			"T01": 3,
+			"T02": 3,
+			"T03": 3,
+			"T04": 3,
+			"T08": 3,
+			"T10": 1,
+			"T19": 1,
+			"T24": 3
+		},
+		"timeline": [
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 0,
+				"s": 0.0,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 1,
+				"s": 1.005,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 6,
+				"s": 2.005,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 9,
+				"s": 3.006,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 12,
+				"s": 4.0,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 17,
+				"s": 5.004,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 18,
+				"s": 6.004,
+				"special": 2
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 17,
+				"s": 7.001,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 17,
+				"s": 8.001,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 20,
+				"s": 9.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 23,
+				"s": 10.002,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 15,
+				"s": 11.002,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 18,
+				"s": 12.003,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 18,
+				"s": 13.003,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 12,
+				"s": 14.004,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 15,
+				"s": 15.004,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 21,
+				"s": 16.005,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 27,
+				"s": 17.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.225,
+				"live": 23,
+				"s": 18.001,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.05,
+				"live": 20,
+				"s": 19.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 20,
+				"s": 20.002,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 25,
+				"s": 21.002,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 27,
+				"s": 22.002,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 31,
+				"s": 23.003,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 32,
+				"s": 24.003,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 36,
+				"s": 25.004,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 33,
+				"s": 26.004,
+				"special": 2
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 40,
+				"s": 27.005,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.225,
+				"live": 29,
+				"s": 28.005,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 27,
+				"s": 29.006,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 25,
+				"s": 30.0,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 24,
+				"s": 31.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 31,
+				"s": 32.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 37,
+				"s": 33.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 39,
+				"s": 34.001,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 35,
+				"s": 35.002,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 30,
+				"s": 36.002,
+				"special": 2
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 24,
+				"s": 37.003,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 22,
+				"s": 38.003,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 19,
+				"s": 39.004,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 19,
+				"s": 40.004,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 27,
+				"s": 41.005,
+				"special": 2
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 21,
+				"s": 42.005,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 16,
+				"s": 43.0,
+				"special": 1
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 14,
+				"s": 44.0,
+				"special": 1
+			}
+		],
+		"upgrades": [
+			"0",
+			"1",
+			"111",
+			"115",
+			"118",
+			"120"
+		],
+		"weapon": 115
+	},
+	{
+		"arrivals": [
+			{
+				"elite": false,
+				"hp": -29.98,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": -30.78,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E13",
+				"speed": 56.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 4.0,
+				"role": "E10",
+				"speed": 78.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 4.0,
+				"role": "E10",
+				"speed": 78.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": true,
+				"hp": 1.8,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 4.0,
+				"role": "E10",
+				"speed": 78.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": -29.98,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 4.0,
+				"role": "E10",
+				"speed": 78.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E13",
+				"speed": 56.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 3.0,
+				"role": "E13",
+				"speed": 56.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": -30.78,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 2.0,
+				"role": "E01",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			},
+			{
+				"elite": false,
+				"hp": 1.2,
+				"role": "E02",
+				"speed": 112.0
+			}
+		],
+		"completed": true,
+		"damage_received": 5.4271875,
+		"dead": false,
+		"event_sources": {
+			"horde": 456,
+			"regular-or-flank": 160
+		},
+		"level_at_end": 20,
+		"level_at_start": 20,
+		"live_peak": 84,
+		"movement": 4620.29936440289,
+		"observer": "real encounter, normal HP, autonomous walking/dodging, no human acceptance",
+		"ordinary_alive_time_fraction": 0.936769310090493,
+		"ordinary_spawn_fraction": 0.987012987012987,
+		"seconds": 45.015,
+		"seed": 20260922,
+		"spawned": 616,
+		"special_peak": 3,
+		"special_spawned": 8,
+		"stage": 39,
+		"tag": "after2",
+		"talents": {
+			"T01": 3,
+			"T02": 3,
+			"T03": 3,
+			"T04": 3,
+			"T08": 3,
+			"T10": 1,
+			"T19": 1,
+			"T24": 3
+		},
+		"timeline": [
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 0,
+				"s": 0.0,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 1,
+				"s": 1.005,
+				"special": 0
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 7,
+				"s": 2.005,
+				"special": 0
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 18,
+				"s": 3.006,
+				"special": 1
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 30,
+				"s": 4.007,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 37,
+				"s": 5.0,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 42,
+				"s": 6.0,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 45,
+				"s": 7.001,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 51,
+				"s": 8.001,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 51,
+				"s": 9.002,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 61,
+				"s": 10.002,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 69,
+				"s": 11.004,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 80,
+				"s": 12.005,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 80,
+				"s": 13.006,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 70,
+				"s": 14.006,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 69,
+				"s": 15.007,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 72,
+				"s": 16.007,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 75,
+				"s": 17.008,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 77,
+				"s": 18.009,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 64,
+				"s": 19.0,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 63,
+				"s": 20.0,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 13.625,
+				"live": 55,
+				"s": 21.001,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 54,
+				"s": 22.003,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 47,
+				"s": 23.004,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 42,
+				"s": 24.004,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 48,
+				"s": 25.005,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 43,
+				"s": 26.005,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 40,
+				"s": 27.005,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 41,
+				"s": 28.006,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 38,
+				"s": 29.006,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.150275,
+				"live": 39,
+				"s": 30.007,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 26,
+				"s": 31.007,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 21,
+				"s": 32.008,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 13.31705625,
+				"live": 25,
+				"s": 33.0,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 13.91705625,
+				"live": 20,
+				"s": 34.0,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 23,
+				"s": 35.002,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 26,
+				"s": 36.002,
+				"special": 2
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 27,
+				"s": 37.003,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 35,
+				"s": 38.004,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 41,
+				"s": 39.004,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 41,
+				"s": 40.005,
+				"special": 3
+			},
+			{
+				"hazards": 1,
+				"hp": 14.5,
+				"live": 42,
+				"s": 41.006,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 41,
+				"s": 42.006,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 35,
+				"s": 43.007,
+				"special": 3
+			},
+			{
+				"hazards": 0,
+				"hp": 14.5,
+				"live": 34,
+				"s": 44.007,
+				"special": 3
+			},
+			{
+				"hazards": 2,
+				"hp": 14.5,
+				"live": 30,
+				"s": 45.007,
+				"special": 3
+			}
+		],
+		"upgrades": [
+			"0",
+			"1",
+			"111",
+			"115",
+			"118",
+			"120"
+		],
+		"weapon": 115
+	}
+]

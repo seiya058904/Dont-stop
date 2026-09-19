@@ -184,7 +184,7 @@ func monsterCreate():
 	LevelServer.spawn_index += 1
 	var ins = M5Content.spawn(role,monster_root,point)
 	if ins == null: return
-	_promote_if_elite(ins,role)
+	_promote_if_elite(ins,ins.get_meta("content_id",role))
 
 ## Elites are a rate now, not a single mid-round flag. The plan gives a start time, an
 ## interval and a simultaneous ceiling; every promoted actor also receives one named extra
@@ -193,6 +193,7 @@ func _promote_if_elite(ins,role: String) -> void:
 	var plan = M5Content.elite_plan(LevelServer.level)
 	if plan.is_empty() or ins.get("is_elite") == true: return
 	if LevelServer.level_info.time < float(plan.get("start",1e9)) or LevelServer.elite_clock > 0.0: return
+	if not M5Content.can_promote(ins): return
 	var alive = 0
 	for enemy in get_tree().get_nodes_in_group("monsters"):
 		if not enemy.is_die and enemy.get("is_elite") == true: alive += 1

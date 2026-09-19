@@ -245,7 +245,8 @@ func tick_horde(config: Dictionary):
 		job.next-=0.1
 		if job.next>0: continue
 		horde_active=true; horde_side=(job.side+horde_index)%M5Content.REGIONS[config.region].sides.size()
-		horde_role=("E02" if horde_index%2==0 else "E01") if horde_index%10<7 else specials[horde_index%specials.size()]
+		var ordinary_slots=clampi(roundi(float(config.get("pressure",{}).get("horde_simple",0.7))*10),0,10)
+		horde_role=("E02" if horde_index%2==0 else "E01") if specials.is_empty() or horde_index%10<ordinary_slots else specials[horde_index%specials.size()]
 		monsterCreate.emit(); horde_active=false
 		horde_index+=1; job.remaining-=1; job.next=h.step
 	horde_jobs=horde_jobs.filter(func(job): return job.remaining>0)

@@ -1,0 +1,240 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[boot-probe] demo_ready t=2227
+[boot-probe] utils_ready t=2229
+[boot] title menu drawn t=2744
+[boot-probe] controlui_ready t=2744
+PASS 24 persistent talent definitions
+PASS unowned and explicit condition T02
+PASS purchase level T02/1
+PASS purchase level T02/2
+PASS purchase level T02/3
+PASS max rank rejects without charge T02
+PASS reset removes effect source T02
+PASS refund exact mixed currencies T02
+PASS repeat reset rejected T02
+PASS unowned and explicit condition T05
+PASS purchase level T05/1
+PASS purchase level T05/2
+PASS purchase level T05/3
+PASS max rank rejects without charge T05
+PASS reset removes effect source T05
+PASS refund exact mixed currencies T05
+PASS repeat reset rejected T05
+PASS unowned and explicit condition T06
+PASS purchase level T06/1
+PASS purchase level T06/2
+PASS purchase level T06/3
+PASS max rank rejects without charge T06
+PASS reset removes effect source T06
+PASS refund exact mixed currencies T06
+PASS repeat reset rejected T06
+PASS unowned and explicit condition T07
+PASS purchase level T07/1
+PASS purchase level T07/2
+PASS purchase level T07/3
+PASS max rank rejects without charge T07
+PASS reset removes effect source T07
+PASS refund exact mixed currencies T07
+PASS repeat reset rejected T07
+PASS unowned and explicit condition T08
+PASS purchase level T08/1
+PASS purchase level T08/2
+PASS purchase level T08/3
+PASS max rank rejects without charge T08
+PASS reset removes effect source T08
+PASS refund exact mixed currencies T08
+PASS repeat reset rejected T08
+PASS unowned and explicit condition T09
+PASS purchase level T09/1
+PASS purchase level T09/2
+PASS purchase level T09/3
+PASS max rank rejects without charge T09
+PASS reset removes effect source T09
+PASS refund exact mixed currencies T09
+PASS repeat reset rejected T09
+PASS unowned and explicit condition T11
+PASS purchase level T11/1
+PASS purchase level T11/2
+PASS purchase level T11/3
+PASS max rank rejects without charge T11
+PASS reset removes effect source T11
+PASS refund exact mixed currencies T11
+PASS repeat reset rejected T11
+PASS unowned and explicit condition T12
+PASS purchase level T12/1
+PASS purchase level T12/2
+PASS purchase level T12/3
+PASS max rank rejects without charge T12
+PASS reset removes effect source T12
+PASS refund exact mixed currencies T12
+PASS repeat reset rejected T12
+PASS unowned and explicit condition T13
+PASS purchase level T13/1
+PASS max rank rejects without charge T13
+PASS reset removes effect source T13
+PASS refund exact mixed currencies T13
+PASS repeat reset rejected T13
+PASS unowned and explicit condition T14
+PASS purchase level T14/1
+PASS max rank rejects without charge T14
+PASS reset removes effect source T14
+PASS refund exact mixed currencies T14
+PASS repeat reset rejected T14
+PASS unowned and explicit condition T15
+PASS purchase level T15/1
+PASS purchase level T15/2
+PASS purchase level T15/3
+PASS max rank rejects without charge T15
+PASS reset removes effect source T15
+PASS refund exact mixed currencies T15
+PASS repeat reset rejected T15
+PASS unowned and explicit condition T17
+PASS purchase level T17/1
+PASS purchase level T17/2
+PASS purchase level T17/3
+PASS max rank rejects without charge T17
+PASS reset removes effect source T17
+PASS refund exact mixed currencies T17
+PASS repeat reset rejected T17
+PASS unowned and explicit condition T18
+PASS purchase level T18/1
+PASS purchase level T18/2
+PASS purchase level T18/3
+PASS max rank rejects without charge T18
+PASS reset removes effect source T18
+PASS refund exact mixed currencies T18
+PASS repeat reset rejected T18
+PASS unowned and explicit condition T19
+PASS purchase level T19/1
+PASS max rank rejects without charge T19
+PASS reset removes effect source T19
+PASS refund exact mixed currencies T19
+PASS repeat reset rejected T19
+PASS unowned and explicit condition T20
+PASS purchase level T20/1
+PASS purchase level T20/2
+PASS purchase level T20/3
+PASS max rank rejects without charge T20
+PASS reset removes effect source T20
+PASS refund exact mixed currencies T20
+PASS repeat reset rejected T20
+PASS unowned and explicit condition T21
+PASS purchase level T21/1
+PASS purchase level T21/2
+PASS purchase level T21/3
+PASS max rank rejects without charge T21
+PASS reset removes effect source T21
+PASS refund exact mixed currencies T21
+PASS repeat reset rejected T21
+PASS unowned and explicit condition T22
+PASS purchase level T22/1
+PASS purchase level T22/2
+PASS purchase level T22/3
+PASS max rank rejects without charge T22
+PASS reset removes effect source T22
+PASS refund exact mixed currencies T22
+PASS repeat reset rejected T22
+PASS unowned and explicit condition T23
+PASS purchase level T23/1
+PASS max rank rejects without charge T23
+PASS reset removes effect source T23
+PASS refund exact mixed currencies T23
+PASS repeat reset rejected T23
+PASS unowned and explicit condition T01
+PASS purchase level T01/1
+PASS purchase level T01/2
+PASS purchase level T01/3
+PASS max rank rejects without charge T01
+PASS reset removes effect source T01
+PASS refund exact mixed currencies T01
+PASS repeat reset rejected T01
+PASS unowned and explicit condition T03
+PASS purchase level T03/1
+PASS purchase level T03/2
+PASS purchase level T03/3
+PASS max rank rejects without charge T03
+PASS reset removes effect source T03
+PASS refund exact mixed currencies T03
+PASS repeat reset rejected T03
+PASS unowned and explicit condition T04
+PASS purchase level T04/1
+PASS purchase level T04/2
+PASS purchase level T04/3
+PASS max rank rejects without charge T04
+PASS reset removes effect source T04
+PASS refund exact mixed currencies T04
+PASS repeat reset rejected T04
+PASS unowned and explicit condition T10
+PASS purchase level T10/1
+PASS purchase level T10/2
+PASS purchase level T10/3
+PASS max rank rejects without charge T10
+PASS reset removes effect source T10
+PASS refund exact mixed currencies T10
+PASS repeat reset rejected T10
+PASS unowned and explicit condition T16
+PASS purchase level T16/1
+PASS max rank rejects without charge T16
+PASS reset removes effect source T16
+PASS refund exact mixed currencies T16
+PASS repeat reset rejected T16
+PASS unowned and explicit condition T24
+PASS purchase level T24/1
+PASS purchase level T24/2
+PASS purchase level T24/3
+PASS max rank rejects without charge T24
+PASS reset removes effect source T24
+PASS refund exact mixed currencies T24
+PASS repeat reset rejected T24
+PASS passive actual calculated effect T01
+PASS passive inactive/restored T01
+PASS passive actual calculated effect T02
+PASS passive inactive/restored T02
+PASS passive actual calculated effect T03
+PASS passive inactive/restored T03
+PASS passive actual calculated effect T04
+PASS passive inactive/restored T04
+PASS passive actual calculated effect T05
+PASS passive inactive/restored T05
+PASS passive actual calculated effect T06
+PASS passive inactive/restored T06
+PASS passive actual calculated effect T18
+PASS passive inactive/restored T18
+PASS T02 continuous fixed tick uses damage strategy
+PASS T07 T08 real health and movement
+PASS T07 T08 repeat refresh no drift
+PASS T07 T08 removal restores
+PASS T09 absent does not collect outside base radius
+PASS T09 expanded radius collects actual coin
+PASS T09 obstacle blocks pickup
+PASS T10 kill stack active
+PASS T16 direct kill explosion hits neighbour
+PASS T24 direct kill heal
+PASS T11 T24 derived kill exclusion
+PASS T11 five direct kills restore reserve
+PASS T10 bounded stacks
+PASS training cannot give kill benefits
+PASS T10 expiry removes rate stack
+PASS T12 cancelled reload does not prime
+PASS T12 actual completed refill primes
+PASS T12 first shot snapshot carries the catalog rank-3 value
+PASS T12 later shot no bonus
+FAIL T13 real ordinary three-target penetration; fourth excluded
+PASS T13 incompatible thermal unchanged
+PASS T14 seeded chance creates real secondary damage
+PASS T23 actual critical echo triggers cooldown
+PASS T15 T17 finite burn and capped slow
+PASS secondary cannot re-arc echo burn or slow
+PASS T15 burn tick causes actual damage
+PASS T15 T17 conditions expire
+PASS unowned secondary talents do not trigger
+PASS T19 one shield then same-frame damage
+PASS T19 absent does not prevent damage
+PASS T20 ordinary camp return no heal
+PASS T20 actual victory resolves
+PASS T20 victory heal once
+PASS T21 elite bonus excludes boss
+PASS T22 insufficient density inactive
+PASS T22 cached density modifies emitted context
+M4 TALENTS SUMMARY checks=233 failures=1

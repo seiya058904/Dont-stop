@@ -1,0 +1,524 @@
+[
+	{
+		"key": "B04-1-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 0.091
+	},
+	{
+		"key": "B04-1-warn-dash-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 0.585
+	},
+	{
+		"key": "B04-1-warn-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 0.935
+	},
+	{
+		"key": "B04-1-dash-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 1.748
+	},
+	{
+		"key": "B04-1-recover-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 1.878
+	},
+	{
+		"key": "B04-1-move-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 2.328
+	},
+	{
+		"key": "B04-1-warn-sweep-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 2.454
+	},
+	{
+		"key": "B04-1-warn-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 2.841
+	},
+	{
+		"key": "B04-1-recover-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 3.511
+	},
+	{
+		"key": "B04-1-move-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 4.441
+	},
+	{
+		"key": "B04-1-warn-burst-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 4.567
+	},
+	{
+		"key": "B04-1-warn-burst-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 5.123
+	},
+	{
+		"key": "B04-1-recover-burst-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 9.531
+	},
+	{
+		"key": "B04-1-move-burst-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-1",
+		"seconds": 10.537
+	},
+	{
+		"key": "B04-2-transition--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 0.085
+	},
+	{
+		"key": "B04-2-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 0.879
+	},
+	{
+		"key": "B04-2-warn-sweep-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 1.26
+	},
+	{
+		"key": "B04-2-warn-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 1.628
+	},
+	{
+		"key": "B04-2-recover-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 2.192
+	},
+	{
+		"key": "B04-2-move-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 2.773
+	},
+	{
+		"key": "B04-2-ultimate-early-warning",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 3.005
+	},
+	{
+		"key": "B04-2-ultimate-late-warning",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 4.242
+	},
+	{
+		"key": "B04-2-ultimate-active",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 4.836
+	},
+	{
+		"key": "B04-2-recover-ultimate-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 5.167
+	},
+	{
+		"key": "B04-2-move-ultimate-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 5.523
+	},
+	{
+		"key": "B04-2-warn-dash-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 5.654
+	},
+	{
+		"key": "B04-2-warn-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 6.048
+	},
+	{
+		"key": "B04-2-dash-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 6.854
+	},
+	{
+		"key": "B04-2-recover-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 7.416
+	},
+	{
+		"key": "B04-2-move-dash-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 7.997
+	},
+	{
+		"key": "B04-2-warn-cross-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 8.123
+	},
+	{
+		"key": "B04-2-warn-cross-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 8.473
+	},
+	{
+		"key": "B04-2-recover-cross-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 9.091
+	},
+	{
+		"key": "B04-2-move-cross-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 9.684
+	},
+	{
+		"key": "B04-2-warn-band-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 9.923
+	},
+	{
+		"key": "B04-2-warn-band-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 10.263
+	},
+	{
+		"key": "B04-2-recover-band-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 10.842
+	},
+	{
+		"key": "B04-2-move-band-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-2",
+		"seconds": 11.446
+	},
+	{
+		"key": "B04-3-transition--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 0.085
+	},
+	{
+		"key": "B04-3-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 0.86
+	},
+	{
+		"key": "B04-3-warn-cross_laser-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 1.222
+	},
+	{
+		"key": "B04-3-warn-cross_laser-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 1.56
+	},
+	{
+		"key": "B04-3-recover-cross_laser-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 2.254
+	},
+	{
+		"key": "B04-3-move-cross_laser-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 2.822
+	},
+	{
+		"key": "B04-3-warn-sweep-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 2.948
+	},
+	{
+		"key": "B04-3-warn-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 3.298
+	},
+	{
+		"key": "B04-3-recover-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 3.967
+	},
+	{
+		"key": "B04-3-move-sweep-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 4.528
+	},
+	{
+		"key": "B04-3-ultimate-early-warning",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 4.666
+	},
+	{
+		"key": "B04-3-ultimate-late-warning",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 5.916
+	},
+	{
+		"key": "B04-3-ultimate-active",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 6.586
+	},
+	{
+		"key": "B04-3-recover-ultimate-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 6.941
+	},
+	{
+		"key": "B04-3-move-ultimate-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 7.178
+	},
+	{
+		"key": "B04-3-warn-band-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 7.41
+	},
+	{
+		"key": "B04-3-warn-band-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 7.76
+	},
+	{
+		"key": "B04-3-recover-band-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 8.334
+	},
+	{
+		"key": "B04-3-move-band-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "B04-3",
+		"seconds": 8.91
+	},
+	{
+		"key": "E14-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E14",
+		"seconds": 0.085
+	},
+	{
+		"key": "E14-warn-beam-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E14",
+		"seconds": 0.223
+	},
+	{
+		"key": "E14-warn-beam-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E14",
+		"seconds": 0.573
+	},
+	{
+		"key": "E14-recover-beam-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E14",
+		"seconds": 1.249
+	},
+	{
+		"key": "E14-move-beam-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E14",
+		"seconds": 3.391
+	},
+	{
+		"key": "E13-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E13",
+		"seconds": 0.086
+	},
+	{
+		"key": "E13-warn-tremor-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E13",
+		"seconds": 0.216
+	},
+	{
+		"key": "E13-warn-tremor-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E13",
+		"seconds": 0.561
+	},
+	{
+		"key": "E13-recover-tremor-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E13",
+		"seconds": 1.237
+	},
+	{
+		"key": "E13-move-tremor-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E13",
+		"seconds": 2.604
+	},
+	{
+		"key": "E04-spawn-E04-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E04",
+		"seconds": 0.086
+	},
+	{
+		"key": "E04-warn-E04-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E04",
+		"seconds": 0.217
+	},
+	{
+		"key": "E04-warn-E04-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E04",
+		"seconds": 0.542
+	},
+	{
+		"key": "E04-dash-E04-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E04",
+		"seconds": 1.004
+	},
+	{
+		"key": "E04-recover-E04-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E04",
+		"seconds": 1.586
+	},
+	{
+		"key": "E04-move-E04-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E04",
+		"seconds": 2.317
+	},
+	{
+		"key": "E06-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E06",
+		"seconds": 0.085
+	},
+	{
+		"key": "E06-warn-detonate-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E06",
+		"seconds": 1.222
+	},
+	{
+		"key": "E06-warn-detonate-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E06",
+		"seconds": 1.572
+	},
+	{
+		"key": "E06-recover-detonate-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E06",
+		"seconds": 2.916
+	},
+	{
+		"key": "E07-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E07",
+		"seconds": 0.085
+	},
+	{
+		"key": "E07-warn-summon-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E07",
+		"seconds": 0.211
+	},
+	{
+		"key": "E07-warn-summon-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E07",
+		"seconds": 0.548
+	},
+	{
+		"key": "E07-recover-summon-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E07",
+		"seconds": 1.016
+	},
+	{
+		"key": "E07-move-summon-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E07",
+		"seconds": 3.035
+	},
+	{
+		"key": "E15-move--locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E15",
+		"seconds": 0.085
+	},
+	{
+		"key": "E15-warn-toxin-tracking",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E15",
+		"seconds": 0.773
+	},
+	{
+		"key": "E15-warn-toxin-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E15",
+		"seconds": 1.123
+	},
+	{
+		"key": "E15-recover-toxin-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E15",
+		"seconds": 2.823
+	},
+	{
+		"key": "E15-move-toxin-locked",
+		"observer": "scripted phase HP setup, invulnerable moving observer, real AI/timing/render; not clear or performance proof",
+		"role": "E15",
+		"seconds": 4.513
+	}
+]

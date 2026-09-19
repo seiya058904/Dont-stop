@@ -1,0 +1,62 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started 项目初始化 (5 steps)
+[   0% ] first_scan_filesystem | 正在扫描文件结构……
+[  16% ] first_scan_filesystem | 正在加载全局类名……
+[  33% ] first_scan_filesystem | 正在校验 GDExtension……
+[  50% ] first_scan_filesystem | 正在创建自动加载脚本……
+[  66% ] first_scan_filesystem | 正在初始化插件……
+[  83% ] first_scan_filesystem | 正在启动文件扫描……
+[ DONE ] first_scan_filesystem
+
+[   0% ] update_scripts_classes | Started 正在注册全局类…… (37 steps)
+[   0% ] update_scripts_classes | 
+[   2% ] update_scripts_classes | 
+[   5% ] update_scripts_classes | 
+[   7% ] update_scripts_classes | 
+[  10% ] update_scripts_classes | AttachmentCatalog
+[  13% ] update_scripts_classes | 
+[  15% ] update_scripts_classes | DemoConfig
+[  18% ] update_scripts_classes | EffectiveStats
+[  21% ] update_scripts_classes | M5Content
+[  23% ] update_scripts_classes | WeaponCatalog
+[  26% ] update_scripts_classes | 
+[  28% ] update_scripts_classes | 
+[  31% ] update_scripts_classes | Player
+[  34% ] update_scripts_classes | 
+[  36% ] update_scripts_classes | 
+[  39% ] update_scripts_classes | 
+[  42% ] update_scripts_classes | 
+[  44% ] update_scripts_classes | 
+[  47% ] update_scripts_classes | 
+[  50% ] update_scripts_classes | 
+[  52% ] update_scripts_classes | 
+[  55% ] update_scripts_classes | 
+[  57% ] update_scripts_classes | 
+[  60% ] update_scripts_classes | 
+[  63% ] update_scripts_classes | 
+[  65% ] update_scripts_classes | 
+[  68% ] update_scripts_classes | 
+[  71% ] update_scripts_classes | 
+[  73% ] update_scripts_classes | 
+[  76% ] update_scripts_classes | 
+[  78% ] update_scripts_classes | 
+[  81% ] update_scripts_classes | 
+[  84% ] update_scripts_classes | 
+[  86% ] update_scripts_classes | 
+[  89% ] update_scripts_classes | 
+[  92% ] update_scripts_classes | 
+[  94% ] update_scripts_classes | 
+[ DONE ] update_scripts_classes
+
+[   0% ] _update_scan_actions | Started 正在扫描动作…… (3 steps)
+[   0% ] _update_scan_actions | index.apple-touch-icon.png
+[  25% ] _update_scan_actions | index.icon.png
+[  50% ] _update_scan_actions | index.png
+[ DONE ] _update_scan_actions
+
+[   0% ] loading_editor_layout | Started 正在加载编辑器 (5 steps)
+[   0% ] loading_editor_layout | 正在加载编辑器布局……
+[  16% ] loading_editor_layout | 正在加载停靠面板……
+[ DONE ] loading_editor_layout
+

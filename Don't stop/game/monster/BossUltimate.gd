@@ -146,13 +146,30 @@ func _draw_abyss(color: Color, active: bool) -> void:
 	var p = clampf(elapsed/warning,0,1)
 	var local_safe = to_local(safe_center)
 	draw_circle(Vector2.ZERO,radius,Color(0.16,0.04,0.30,0.16 if active else 0.05+0.10*p))
-	for i in 3:
-		draw_arc(Vector2.ZERO,radius*(0.45+i*0.28)+radius*0.12*sin(elapsed*3.0+i),0,TAU,64,Color(color.r,color.g,color.b,0.25+0.35*p),2,true)
+	# B14: energy flows toward the source during wind-up, then outward on the
+	# real activation edge. These broken spokes are material, never a hit boundary.
+	for i in 12:
+		var ray=Vector2.RIGHT.rotated(i*TAU/12)
+		var travel=fmod(elapsed*0.8+i*0.137,1.0)
+		var reach=lerpf(28.0,radius,travel if active else 1.0-travel)
+		var a=ray*reach
+		var b=ray*maxf(24.0,reach-18.0-14.0*p)
+		# Do not draw danger material inside the true safe circle.
+		if Geometry2D.get_closest_point_to_segment(local_safe,a,b).distance_to(local_safe)>safe_radius+4:
+			draw_line(a,b,Color(color,0.28 if active else 0.10+0.16*p),1.5,true)
+	var core=12.0+8.0*p
+	for i in 4:
+		var ray=Vector2.RIGHT.rotated(i*PI/2)
+		draw_line(ray*(core+7),ray*core,Color(color,0.9),2,true)
+	draw_circle(Vector2.ZERO,5+5*p,Color(color,0.6 if active else 0.3))
 	draw_arc(Vector2.ZERO,radius,0,TAU,64,Color(0.1,0.02,0.16),6)
 	draw_arc(Vector2.ZERO,radius,0,TAU,64,color,3)
 	# The safe circle: filled, ringed, and labelled by shape alone.
 	draw_circle(local_safe,safe_radius,Color(0.25,0.95,0.7,0.20 if not active else 0.30))
 	draw_arc(local_safe,safe_radius,0,TAU,40,Color(0.4,1,0.8,0.95),3,true)
-	draw_arc(local_safe,safe_radius*clampf(p,0.12,1.0),0,TAU,40,Color(0.85,1,0.95,0.9),1.5,true)
+	# Countdown stays ON the true boundary; an expanding inner ring looked like
+	# a second, smaller safe area. No change to the safe test, drift or timing.
+	draw_arc(local_safe,safe_radius,-PI/2,-PI/2+TAU*p,40,Color(0.85,1,0.95,0.9),1.5,true)
+	draw_string(ThemeDB.fallback_font,local_safe+Vector2(-15,3),"安全区",HORIZONTAL_ALIGNMENT_LEFT,-1,9,Color(0.85,1,0.95))
 	# Above the fog, so the answer is never hidden by the very thing this mode is about.
 	preload("res://game/map/FogPierce.gd").push_circle(safe_center,safe_radius,Color(0.4,1,0.8,0.85),2.4)
