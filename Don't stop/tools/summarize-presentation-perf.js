@@ -33,7 +33,7 @@ for (const input of inputs) {
     protocol:{warmup_combat_seconds:15,window_combat_seconds:90,viewport:'1280x760',seed:20260918},
     frame_ms:stats(pick('ms')),physics_ms:stats(pick('physics_ms')),process_ms:stats(pick('process_ms')),
     draw_calls:((s)=>({n:s.n,p50:s.p50,p95:s.p95,p99:s.p99,max:s.max}))(stats(pick('draws'))),full_run_peaks:{...source.load},errors:source.errors,
-    unavailable:{gpu_time_ms:'N/A: no GPU timer instrumentation',peak_window:'Peaks cover the full run, including warmup',cpu_resolution:'Engine monitor gauges sampled each frame; not independent per-frame CPU timings'},
+    unavailable:{gpu_time_ms:'N/A: no GPU timer instrumentation',peak_window:'Peaks cover the full run, including warmup',cpu_resolution:'Godot 4.7.2 publishes one-second maxima; repeated reads are not per-frame CPU durations'},
     gates:{p95_delta_ms:'max(0.8, BEFORE * 0.05)',p99_delta_ms:'max(1.5, BEFORE * 0.10)',
       extra_over33_3:2,repeatable_new_over50:'not accepted',cpu_p95_delta_ms:'max(0.5, BEFORE * 0.05)'}};
   result.fps=1000/result.frame_ms.avg;

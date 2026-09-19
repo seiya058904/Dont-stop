@@ -1,0 +1,20 @@
+{
+  "method": "Playwright + Chromium actual input; screenshots inspected",
+  "sha": "5d5d3eb9506671250e8fbd3ac19b8f8fbde0c53c",
+  "viewport": "1280x760",
+  "purchase": {
+    "normal": [
+      9999,
+      9939
+    ],
+    "legendary": [
+      9939,
+      6339
+    ]
+  },
+  "unload_saved": true,
+  "reload_owned_normal_and_legendary": true,
+  "legendary_equip": true,
+  "startup_refill": "Original Demo.gd start rule max(gold, INITIAL_GOLD), unchanged",
+  "human_accepted": false
+}

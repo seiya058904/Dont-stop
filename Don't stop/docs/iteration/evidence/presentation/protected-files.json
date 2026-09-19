@@ -1,0 +1,80 @@
+[
+  {
+    "path": "ui/BossHUD.gd",
+    "sha256": "2895002c4408d4fb985f39a52e016420b38aa8dad380415d4ed336e698c30133",
+    "baseline_sha256": "2895002c4408d4fb985f39a52e016420b38aa8dad380415d4ed336e698c30133",
+    "identical": true
+  },
+  {
+    "path": "game/effects/CombatFootprint.gd",
+    "sha256": "3513ba6f4c0ea5ae62acffb90c53ca93c0f703f712346767fababf770005b151",
+    "baseline_sha256": "3513ba6f4c0ea5ae62acffb90c53ca93c0f703f712346767fababf770005b151",
+    "identical": true
+  },
+  {
+    "path": "game/hero/Hero.gd",
+    "sha256": "780798c3c7ba9427e81af45e0a16ae944dfcfb1419c0c331265080604b4e4cbb",
+    "baseline_sha256": "780798c3c7ba9427e81af45e0a16ae944dfcfb1419c0c331265080604b4e4cbb",
+    "identical": true
+  },
+  {
+    "path": "game/config/WeaponCatalog.gd",
+    "sha256": "ab526ec597391a5894d75e87754490ab262c569c095756078cd032f7585a3281",
+    "baseline_sha256": "ab526ec597391a5894d75e87754490ab262c569c095756078cd032f7585a3281",
+    "identical": true
+  },
+  {
+    "path": "game/config/M5Content.gd",
+    "sha256": "321574353dfd55cf294159131d3dab351726aa389c9370b79310d3e8d6bdcf93",
+    "baseline_sha256": "321574353dfd55cf294159131d3dab351726aa389c9370b79310d3e8d6bdcf93",
+    "identical": true
+  },
+  {
+    "path": "game/config/EffectiveStats.gd",
+    "sha256": "5ea7580edd666ba77f0eadd22dfce76e02457a34ca01099956c0d304bb510918",
+    "baseline_sha256": "5ea7580edd666ba77f0eadd22dfce76e02457a34ca01099956c0d304bb510918",
+    "identical": true
+  },
+  {
+    "path": "game/config/DemoConfig.gd",
+    "sha256": "31cc00cf5c0d02119b1daf36bfaf1d4a2003a3e02bb4025299c5ecd6fc48d96c",
+    "baseline_sha256": "31cc00cf5c0d02119b1daf36bfaf1d4a2003a3e02bb4025299c5ecd6fc48d96c",
+    "identical": true
+  },
+  {
+    "path": "game/monster/TacticalEnemy.gd",
+    "sha256": "33b530af147ff9f2246a9b0c4f1a0f621076f60a5c4bb4246e12df81f3fe1f39",
+    "baseline_sha256": "33b530af147ff9f2246a9b0c4f1a0f621076f60a5c4bb4246e12df81f3fe1f39",
+    "identical": true
+  },
+  {
+    "path": "autoload/server/LevelServer.gd",
+    "sha256": "4fb0919e8549a7417190ae759f8f24c290b7c29cceafea34eb7b561217368a53",
+    "baseline_sha256": "4fb0919e8549a7417190ae759f8f24c290b7c29cceafea34eb7b561217368a53",
+    "identical": true
+  },
+  {
+    "path": "autoload/PlayerData.gd",
+    "sha256": "7046ba6c15cbd70d8259ab408fc16fc7d4d83a68b0f5087318c4466f355d1140",
+    "baseline_sha256": "7046ba6c15cbd70d8259ab408fc16fc7d4d83a68b0f5087318c4466f355d1140",
+    "identical": true
+  },
+  {
+    "path": "autoload/Demo.gd",
+    "sha256": "27eb9ede1e6e61fe8a57e9ae3e1bf3148bdd3c5ed50f21b2a62dbf318266a8b8",
+    "baseline_sha256": "27eb9ede1e6e61fe8a57e9ae3e1bf3148bdd3c5ed50f21b2a62dbf318266a8b8",
+    "identical": true
+  },
+  {
+    "path": "game/map/FogPierce.gd",
+    "sha256": "c0416d55b1a916a09bac817994f2b9a9391627ecfb2539380bb7e3895f5d4540",
+    "baseline_sha256": "c0416d55b1a916a09bac817994f2b9a9391627ecfb2539380bb7e3895f5d4540",
+    "identical": true
+  },
+  {
+    "path": "game/map/ArenaVisibility.gd",
+    "sha256": "bed1d1638e888b49f16143171317ecea95936313fe210bc37fdb3df8bb238b18",
+    "baseline_sha256": "bed1d1638e888b49f16143171317ecea95936313fe210bc37fdb3df8bb238b18",
+    "identical": true
+  }
+]

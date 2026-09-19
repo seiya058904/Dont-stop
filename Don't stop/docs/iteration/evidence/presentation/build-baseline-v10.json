@@ -1,0 +1,19 @@
+{
+  "build_sha": "c2ace9c99419a87746e1809517336bdab5ce9d0f-observer-v10",
+  "artifact_digest": "13140664259d3e1d668726c6d87b0968060c01a1f56ce3c155baad218f4f14ec",
+  "digest_algo": "sha256(index.wasm || index.pck || index.js)",
+  "payload": {
+    "index.wasm": {
+      "bytes": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.pck": {
+      "bytes": 41264180,
+      "sha256": "8f0e4f541e9ee09a7850a60a661288f7f2baa0c8e546d38b27addbdef564b686"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    }
+  }
+}

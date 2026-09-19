@@ -1,0 +1,8 @@
+{
+  "interfered_run": "stress-after-cache-dense-1-D.json",
+  "reason": "Evidence archive compression overlapped this measurement. Numeric results/failures are retained; this is not acceptance evidence.",
+  "clean_replacement": "stress-after-cache-dense-clean-1-D.json",
+  "replacement_chosen_before_reading_its_result": true,
+  "production_sha_v12": "5d5d3eb9506671250e8fbd3ac19b8f8fbde0c53c",
+  "production_sha_v11": "0ad7c989cfa5a0ae309e5c081410641deca55ee0"
+}

@@ -1,0 +1,3779 @@
+{
+  "method": "Exact 15..105 combat-second hot windows; full/cold raw reports retained.",
+  "cpu_note": "Godot 4.7.2 publishes one-second maxima; these frame-weighted repeated gauges are not per-frame CPU durations. Proxy failures are retained.",
+  "memory": "N/A when the Web monitor reports zero; no zero-memory or GPU-time claim.",
+  "pairs": [
+    {
+      "name": "normal-1",
+      "before": "before-warm-A-1-A",
+      "after": "after-material-A-1-A",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 1.66666660308838,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 7.73999977111816,
+          "after": 6.46500015258789,
+          "delta": -1.2749996185302699,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 15.7250003814697,
+          "after": 9.50500011444092,
+          "delta": -6.22000026702878,
+          "allowed_delta": 0.786250019073485,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5402,
+        "avg": 16.667966530173853,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 18.0555553436279,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "after_frame": {
+        "n": 5402,
+        "avg": 16.666164934171743,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "before_draw_calls": {
+        "n": 5402,
+        "p50": 611,
+        "p95": 694,
+        "p99": 720,
+        "max": 759
+      },
+      "after_draw_calls": {
+        "n": 5402,
+        "p50": 578,
+        "p95": 684,
+        "p99": 711,
+        "max": 744
+      },
+      "before_load": {
+        "frames": "8073",
+        "combat_s": "136.3",
+        "objects_peak": "8203",
+        "orphans_peak": "0",
+        "canvas_items_peak": "6381",
+        "mem_static_peak_mb": null,
+        "draws_avg": "579.7",
+        "draws_peak": "759",
+        "path_queries": "14799",
+        "path_per_s": "108.6",
+        "created": "11111",
+        "removed": "10515",
+        "created_per_s": "81.5",
+        "removed_per_s": "77.1",
+        "enemies_peak": "84",
+        "projectiles_peak": "27",
+        "hazards_peak": "5",
+        "zones_peak": "16",
+        "beams_peak": "7",
+        "vfx_peak": "19",
+        "labels_peak": "27",
+        "transients_peak": "59",
+        "rewards_peak": "22",
+        "nodes_peak": "1664",
+        "topped_up": "0"
+      },
+      "after_load": {
+        "frames": "8078",
+        "combat_s": "136.3",
+        "objects_peak": "8340",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4998",
+        "mem_static_peak_mb": null,
+        "draws_avg": "550.3",
+        "draws_peak": "744",
+        "path_queries": "16373",
+        "path_per_s": "120.1",
+        "created": "9583",
+        "removed": "8986",
+        "created_per_s": "70.3",
+        "removed_per_s": "65.9",
+        "enemies_peak": "84",
+        "projectiles_peak": "30",
+        "hazards_peak": "5",
+        "zones_peak": "12",
+        "beams_peak": "6",
+        "vfx_peak": "14",
+        "labels_peak": "23",
+        "transients_peak": "52",
+        "rewards_peak": "22",
+        "nodes_peak": "1645",
+        "topped_up": "0"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41261156,
+          "sha256": "a4deb771b619f008ac73319383fc52bffca477c1a15b5177f73e994fc4119f72"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "2c8e9c0ad26152ef67e3be99268ea54fb4155aba84cd985e644781a8acb143a8"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "normal-2",
+      "before": "before-warm-A-2-A",
+      "after": "after-material-A-2-A",
+      "gates": {
+        "p95": {
+          "before": 16.6660003662109,
+          "after": 16.6666660308838,
+          "delta": 0.0006656646729013005,
+          "allowed_delta": 0.833300018310545,
+          "pass": true
+        },
+        "p99": {
+          "before": 16.6660003662109,
+          "after": 16.6666660308838,
+          "delta": 0.0006656646729013005,
+          "allowed_delta": 1.66660003662109,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 7.52500009536743,
+          "after": 6.82000017166138,
+          "delta": -0.7049999237060502,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 11.9849996566772,
+          "after": 11.2250003814697,
+          "delta": -0.7599992752075,
+          "allowed_delta": 0.59924998283386,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5402,
+        "avg": 16.666000366210934,
+        "p50": 16.6660003662109,
+        "p95": 16.6660003662109,
+        "p99": 16.6660003662109,
+        "max": 16.6660003662109,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "after_frame": {
+        "n": 5402,
+        "avg": 16.666108558284755,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "before_draw_calls": {
+        "n": 5402,
+        "p50": 556,
+        "p95": 629,
+        "p99": 674,
+        "max": 715
+      },
+      "after_draw_calls": {
+        "n": 5402,
+        "p50": 575,
+        "p95": 672,
+        "p99": 708,
+        "max": 739
+      },
+      "before_load": {
+        "frames": "8078",
+        "combat_s": "136.5",
+        "objects_peak": "8215",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4233",
+        "mem_static_peak_mb": null,
+        "draws_avg": "529.8",
+        "draws_peak": "715",
+        "path_queries": "15651",
+        "path_per_s": "114.7",
+        "created": "9366",
+        "removed": "8773",
+        "created_per_s": "68.6",
+        "removed_per_s": "64.3",
+        "enemies_peak": "84",
+        "projectiles_peak": "23",
+        "hazards_peak": "5",
+        "zones_peak": "14",
+        "beams_peak": "5",
+        "vfx_peak": "17",
+        "labels_peak": "26",
+        "transients_peak": "48",
+        "rewards_peak": "22",
+        "nodes_peak": "1637",
+        "topped_up": "0"
+      },
+      "after_load": {
+        "frames": "8078",
+        "combat_s": "136.3",
+        "objects_peak": "8252",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4995",
+        "mem_static_peak_mb": null,
+        "draws_avg": "575.1",
+        "draws_peak": "810",
+        "path_queries": "17351",
+        "path_per_s": "127.3",
+        "created": "10046",
+        "removed": "9446",
+        "created_per_s": "73.7",
+        "removed_per_s": "69.3",
+        "enemies_peak": "84",
+        "projectiles_peak": "26",
+        "hazards_peak": "5",
+        "zones_peak": "15",
+        "beams_peak": "7",
+        "vfx_peak": "19",
+        "labels_peak": "22",
+        "transients_peak": "59",
+        "rewards_peak": "22",
+        "nodes_peak": "1659",
+        "topped_up": "0"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41261156,
+          "sha256": "a4deb771b619f008ac73319383fc52bffca477c1a15b5177f73e994fc4119f72"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "2c8e9c0ad26152ef67e3be99268ea54fb4155aba84cd985e644781a8acb143a8"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "normal-3",
+      "before": "before-warm-A-3-A",
+      "after": "after-material-A-3-A",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6660003662109,
+          "delta": -0.0006656646729013005,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 16.6666660308838,
+          "after": 16.6660003662109,
+          "delta": -0.0006656646729013005,
+          "allowed_delta": 1.66666660308838,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 8.28999996185303,
+          "after": 7.24499988555908,
+          "delta": -1.0450000762939489,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 12.1750001907349,
+          "after": 12.4300003051758,
+          "delta": 0.2550001144409002,
+          "allowed_delta": 0.6087500095367451,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5402,
+        "avg": 16.66604713050139,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "after_frame": {
+        "n": 5402,
+        "avg": 16.666000366210934,
+        "p50": 16.6660003662109,
+        "p95": 16.6660003662109,
+        "p99": 16.6660003662109,
+        "max": 16.6660003662109,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "before_draw_calls": {
+        "n": 5402,
+        "p50": 580,
+        "p95": 662,
+        "p99": 690,
+        "max": 736
+      },
+      "after_draw_calls": {
+        "n": 5402,
+        "p50": 597,
+        "p95": 659,
+        "p99": 684,
+        "max": 710
+      },
+      "before_load": {
+        "frames": "8075",
+        "combat_s": "136.3",
+        "objects_peak": "8261",
+        "orphans_peak": "0",
+        "canvas_items_peak": "5632",
+        "mem_static_peak_mb": null,
+        "draws_avg": "544.1",
+        "draws_peak": "736",
+        "path_queries": "15415",
+        "path_per_s": "113.1",
+        "created": "10736",
+        "removed": "10144",
+        "created_per_s": "78.7",
+        "removed_per_s": "74.4",
+        "enemies_peak": "84",
+        "projectiles_peak": "31",
+        "hazards_peak": "5",
+        "zones_peak": "16",
+        "beams_peak": "6",
+        "vfx_peak": "19",
+        "labels_peak": "27",
+        "transients_peak": "65",
+        "rewards_peak": "22",
+        "nodes_peak": "1671",
+        "topped_up": "0"
+      },
+      "after_load": {
+        "frames": "8075",
+        "combat_s": "136.3",
+        "objects_peak": "8348",
+        "orphans_peak": "0",
+        "canvas_items_peak": "5422",
+        "mem_static_peak_mb": null,
+        "draws_avg": "558.4",
+        "draws_peak": "710",
+        "path_queries": "16484",
+        "path_per_s": "121.0",
+        "created": "9860",
+        "removed": "9264",
+        "created_per_s": "72.3",
+        "removed_per_s": "68.0",
+        "enemies_peak": "84",
+        "projectiles_peak": "29",
+        "hazards_peak": "5",
+        "zones_peak": "17",
+        "beams_peak": "6",
+        "vfx_peak": "17",
+        "labels_peak": "25",
+        "transients_peak": "57",
+        "rewards_peak": "22",
+        "nodes_peak": "1657",
+        "topped_up": "0"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41261156,
+          "sha256": "a4deb771b619f008ac73319383fc52bffca477c1a15b5177f73e994fc4119f72"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "2c8e9c0ad26152ef67e3be99268ea54fb4155aba84cd985e644781a8acb143a8"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "dense-1",
+      "before": "before-final-dense-D",
+      "after": "after-material-dense-1-D",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 19.3675918579102,
+          "after": 16.6666660308838,
+          "delta": -2.700925827026399,
+          "allowed_delta": 1.93675918579102,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 4,
+          "after": 3,
+          "delta": -1,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 7.70499992370605,
+          "after": 6.89499998092651,
+          "delta": -0.8099999427795401,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 22.6200008392334,
+          "after": 29.6100006103516,
+          "delta": 6.989999771118203,
+          "allowed_delta": 1.13100004196167,
+          "pass": false
+        }
+      },
+      "numerical_gates_pass": false,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5362,
+        "avg": 16.789516593928838,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 19.3675918579102,
+        "max": 41.6433334350586,
+        "over25": 23,
+        "over33_3": 4,
+        "over50": 0,
+        "longest_slow_run_ms": 41.6433334350586
+      },
+      "after_frame": {
+        "n": 5389,
+        "avg": 16.70942568004762,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 49.681999206543,
+        "over25": 8,
+        "over33_3": 3,
+        "over50": 0,
+        "longest_slow_run_ms": 49.681999206543
+      },
+      "before_draw_calls": {
+        "n": 5362,
+        "p50": 742,
+        "p95": 875,
+        "p99": 942,
+        "max": 1056
+      },
+      "after_draw_calls": {
+        "n": 5389,
+        "p50": 782,
+        "p95": 877,
+        "p99": 932,
+        "max": 1022
+      },
+      "before_load": {
+        "frames": "8002",
+        "combat_s": "135.1",
+        "objects_peak": "8564",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8614",
+        "mem_static_peak_mb": null,
+        "draws_avg": "725.1",
+        "draws_peak": "1056",
+        "path_queries": "14926",
+        "path_per_s": "110.5",
+        "created": "13291",
+        "removed": "12689",
+        "created_per_s": "98.4",
+        "removed_per_s": "93.9",
+        "enemies_peak": "84",
+        "projectiles_peak": "45",
+        "hazards_peak": "5",
+        "zones_peak": "30",
+        "beams_peak": "19",
+        "vfx_peak": "32",
+        "labels_peak": "46",
+        "transients_peak": "106",
+        "rewards_peak": "22",
+        "nodes_peak": "1742",
+        "topped_up": "144"
+      },
+      "after_load": {
+        "frames": "8055",
+        "combat_s": "135.2",
+        "objects_peak": "8449",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8793",
+        "mem_static_peak_mb": null,
+        "draws_avg": "742.1",
+        "draws_peak": "1022",
+        "path_queries": "15529",
+        "path_per_s": "114.9",
+        "created": "12007",
+        "removed": "11403",
+        "created_per_s": "88.8",
+        "removed_per_s": "84.4",
+        "enemies_peak": "84",
+        "projectiles_peak": "42",
+        "hazards_peak": "5",
+        "zones_peak": "28",
+        "beams_peak": "18",
+        "vfx_peak": "32",
+        "labels_peak": "42",
+        "transients_peak": "102",
+        "rewards_peak": "22",
+        "nodes_peak": "1737",
+        "topped_up": "144"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41264180,
+          "sha256": "8f0e4f541e9ee09a7850a60a661288f7f2baa0c8e546d38b27addbdef564b686"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "c2f30e5284bad64a46b3b0e1f1ab4bbfba154a39fc6f21e00732cfe42f95c57e"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "dense-2",
+      "before": "before-dense-repeat-D-D",
+      "after": "after-material-dense-2-D",
+      "gates": {
+        "p95": {
+          "before": 18.0555553436279,
+          "after": 16.6666660308838,
+          "delta": -1.3888893127441015,
+          "allowed_delta": 0.9027777671813951,
+          "pass": true
+        },
+        "p99": {
+          "before": 22.4093341827393,
+          "after": 18.0555553436279,
+          "delta": -4.353778839111399,
+          "allowed_delta": 2.2409334182739302,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 5,
+          "after": 4,
+          "delta": -1,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 7.05499982833862,
+          "after": 6.94500017166138,
+          "delta": -0.10999965667724076,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 36.0699996948242,
+          "after": 18.7000007629395,
+          "delta": -17.369998931884698,
+          "allowed_delta": 1.8034999847412099,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5337,
+        "avg": 16.865854314768697,
+        "p50": 16.6666660308838,
+        "p95": 18.0555553436279,
+        "p99": 22.4093341827393,
+        "max": 49.9913330078125,
+        "over25": 35,
+        "over33_3": 5,
+        "over50": 0,
+        "longest_slow_run_ms": 49.9913330078125
+      },
+      "after_frame": {
+        "n": 5379,
+        "avg": 16.737398896835224,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 18.0555553436279,
+        "max": 48.3733329772949,
+        "over25": 13,
+        "over33_3": 4,
+        "over50": 0,
+        "longest_slow_run_ms": 81.7053337097168
+      },
+      "before_draw_calls": {
+        "n": 5337,
+        "p50": 772,
+        "p95": 920,
+        "p99": 1001,
+        "max": 1143
+      },
+      "after_draw_calls": {
+        "n": 5379,
+        "p50": 714,
+        "p95": 894,
+        "p99": 954,
+        "max": 1059
+      },
+      "before_load": {
+        "frames": "7987",
+        "combat_s": "135.1",
+        "objects_peak": "8448",
+        "orphans_peak": "0",
+        "canvas_items_peak": "9275",
+        "mem_static_peak_mb": null,
+        "draws_avg": "733.8",
+        "draws_peak": "1143",
+        "path_queries": "14928",
+        "path_per_s": "110.5",
+        "created": "13947",
+        "removed": "13342",
+        "created_per_s": "103.2",
+        "removed_per_s": "98.7",
+        "enemies_peak": "84",
+        "projectiles_peak": "46",
+        "hazards_peak": "5",
+        "zones_peak": "29",
+        "beams_peak": "19",
+        "vfx_peak": "32",
+        "labels_peak": "45",
+        "transients_peak": "107",
+        "rewards_peak": "22",
+        "nodes_peak": "1744",
+        "topped_up": "144"
+      },
+      "after_load": {
+        "frames": "8048",
+        "combat_s": "135.2",
+        "objects_peak": "8424",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8944",
+        "mem_static_peak_mb": null,
+        "draws_avg": "727.7",
+        "draws_peak": "1059",
+        "path_queries": "15447",
+        "path_per_s": "114.3",
+        "created": "11650",
+        "removed": "11044",
+        "created_per_s": "86.2",
+        "removed_per_s": "81.7",
+        "enemies_peak": "84",
+        "projectiles_peak": "41",
+        "hazards_peak": "5",
+        "zones_peak": "30",
+        "beams_peak": "18",
+        "vfx_peak": "32",
+        "labels_peak": "41",
+        "transients_peak": "103",
+        "rewards_peak": "22",
+        "nodes_peak": "1736",
+        "topped_up": "144"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41262980,
+          "sha256": "f92013f33f7ec4addb9fb3e19fcc50b7a4cb7f88872673095ca006203a9cceed"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "7e55098dc10aa57f27d2ec459b88700ce7a54fbebf14ca171f635c3d75cdd332"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "dense-3",
+      "before": "before-dense-D-D",
+      "after": "after-material-dense-3-D",
+      "gates": {
+        "p95": {
+          "before": 18.0555553436279,
+          "after": 16.6666660308838,
+          "delta": -1.3888893127441015,
+          "allowed_delta": 0.9027777671813951,
+          "pass": true
+        },
+        "p99": {
+          "before": 22.2222213745117,
+          "after": 18.0555553436279,
+          "delta": -4.1666660308838,
+          "allowed_delta": 2.2222221374511704,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 4,
+          "after": 3,
+          "delta": -1,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 7.86499977111816,
+          "after": 11.0349998474121,
+          "delta": 3.170000076293941,
+          "allowed_delta": 0.5,
+          "pass": false
+        },
+        "process_p95": {
+          "before": 27.3250007629395,
+          "after": 29.9150009155273,
+          "delta": 2.590000152587802,
+          "allowed_delta": 1.366250038146975,
+          "pass": false
+        }
+      },
+      "numerical_gates_pass": false,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5333,
+        "avg": 16.88387600101004,
+        "p50": 16.6666660308838,
+        "p95": 18.0555553436279,
+        "p99": 22.2222213745117,
+        "max": 49.9780006408691,
+        "over25": 22,
+        "over33_3": 4,
+        "over50": 0,
+        "longest_slow_run_ms": 49.9780006408691
+      },
+      "after_frame": {
+        "n": 5387,
+        "avg": 16.71410957444062,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 18.0555553436279,
+        "max": 41.240665435791,
+        "over25": 12,
+        "over33_3": 3,
+        "over50": 0,
+        "longest_slow_run_ms": 41.240665435791
+      },
+      "before_draw_calls": {
+        "n": 5333,
+        "p50": 750,
+        "p95": 888,
+        "p99": 959,
+        "max": 1058
+      },
+      "after_draw_calls": {
+        "n": 5387,
+        "p50": 723,
+        "p95": 848,
+        "p99": 916,
+        "max": 1060
+      },
+      "before_load": {
+        "frames": "7999",
+        "combat_s": "135.2",
+        "objects_peak": "8528",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8631",
+        "mem_static_peak_mb": null,
+        "draws_avg": "723.7",
+        "draws_peak": "1058",
+        "path_queries": "15186",
+        "path_per_s": "112.3",
+        "created": "12685",
+        "removed": "12080",
+        "created_per_s": "93.8",
+        "removed_per_s": "89.3",
+        "enemies_peak": "84",
+        "projectiles_peak": "47",
+        "hazards_peak": "5",
+        "zones_peak": "29",
+        "beams_peak": "19",
+        "vfx_peak": "32",
+        "labels_peak": "42",
+        "transients_peak": "105",
+        "rewards_peak": "22",
+        "nodes_peak": "1741",
+        "topped_up": "144"
+      },
+      "after_load": {
+        "frames": "8040",
+        "combat_s": "135.2",
+        "objects_peak": "8466",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8902",
+        "mem_static_peak_mb": null,
+        "draws_avg": "711.3",
+        "draws_peak": "1060",
+        "path_queries": "15397",
+        "path_per_s": "113.9",
+        "created": "12267",
+        "removed": "11666",
+        "created_per_s": "90.8",
+        "removed_per_s": "86.3",
+        "enemies_peak": "84",
+        "projectiles_peak": "41",
+        "hazards_peak": "5",
+        "zones_peak": "28",
+        "beams_peak": "17",
+        "vfx_peak": "32",
+        "labels_peak": "45",
+        "transients_peak": "99",
+        "rewards_peak": "22",
+        "nodes_peak": "1731",
+        "topped_up": "144"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41261156,
+          "sha256": "a4deb771b619f008ac73319383fc52bffca477c1a15b5177f73e994fc4119f72"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "2c8e9c0ad26152ef67e3be99268ea54fb4155aba84cd985e644781a8acb143a8"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "mixed-1",
+      "before": "before-final-mixed-D",
+      "after": "after-material-mixed-1-D",
+      "gates": {
+        "p95": {
+          "before": 17.9876670837402,
+          "after": 16.6666660308838,
+          "delta": -1.3210010528563991,
+          "allowed_delta": 0.89938335418701,
+          "pass": true
+        },
+        "p99": {
+          "before": 24.2250003814697,
+          "after": 18.0555553436279,
+          "delta": -6.1694450378418,
+          "allowed_delta": 2.4225000381469703,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 12,
+          "after": 8,
+          "delta": -4,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 13.9899997711182,
+          "after": 20.1350002288818,
+          "delta": 6.145000457763601,
+          "allowed_delta": 0.69949998855591,
+          "pass": false
+        },
+        "process_p95": {
+          "before": 49.1150016784668,
+          "after": 47.0900001525879,
+          "delta": -2.025001525878899,
+          "allowed_delta": 2.45575008392334,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": false,
+      "over50": {
+        "before": 4,
+        "after": 1,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5319,
+        "avg": 16.920483943281553,
+        "p50": 16.6666660308838,
+        "p95": 17.9876670837402,
+        "p99": 24.2250003814697,
+        "max": 148.897659301758,
+        "over25": 31,
+        "over33_3": 12,
+        "over50": 4,
+        "longest_slow_run_ms": 183.3239936828615
+      },
+      "after_frame": {
+        "n": 5366,
+        "avg": 16.773742769975694,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 18.0555553436279,
+        "max": 142.371994018555,
+        "over25": 13,
+        "over33_3": 8,
+        "over50": 1,
+        "longest_slow_run_ms": 216.6533279418949
+      },
+      "before_draw_calls": {
+        "n": 5319,
+        "p50": 754,
+        "p95": 899,
+        "p99": 968,
+        "max": 1076
+      },
+      "after_draw_calls": {
+        "n": 5366,
+        "p50": 796,
+        "p95": 941,
+        "p99": 1007,
+        "max": 1073
+      },
+      "before_load": {
+        "frames": "7984",
+        "combat_s": "135.2",
+        "objects_peak": "9248",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8944",
+        "mem_static_peak_mb": null,
+        "draws_avg": "716.4",
+        "draws_peak": "1076",
+        "path_queries": "15468",
+        "path_per_s": "114.4",
+        "created": "19190",
+        "removed": "18589",
+        "created_per_s": "142.0",
+        "removed_per_s": "137.5",
+        "enemies_peak": "90",
+        "projectiles_peak": "46",
+        "hazards_peak": "5",
+        "zones_peak": "29",
+        "beams_peak": "19",
+        "vfx_peak": "32",
+        "labels_peak": "85",
+        "transients_peak": "120",
+        "rewards_peak": "22",
+        "nodes_peak": "2054",
+        "topped_up": "164"
+      },
+      "after_load": {
+        "frames": "8028",
+        "combat_s": "135.1",
+        "objects_peak": "8907",
+        "orphans_peak": "0",
+        "canvas_items_peak": "9175",
+        "mem_static_peak_mb": null,
+        "draws_avg": "757.7",
+        "draws_peak": "1073",
+        "path_queries": "15452",
+        "path_per_s": "114.3",
+        "created": "18918",
+        "removed": "18318",
+        "created_per_s": "140.0",
+        "removed_per_s": "135.5",
+        "enemies_peak": "92",
+        "projectiles_peak": "44",
+        "hazards_peak": "5",
+        "zones_peak": "27",
+        "beams_peak": "18",
+        "vfx_peak": "32",
+        "labels_peak": "56",
+        "transients_peak": "119",
+        "rewards_peak": "22",
+        "nodes_peak": "1962",
+        "topped_up": "155"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41264180,
+          "sha256": "8f0e4f541e9ee09a7850a60a661288f7f2baa0c8e546d38b27addbdef564b686"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "c2f30e5284bad64a46b3b0e1f1ab4bbfba154a39fc6f21e00732cfe42f95c57e"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "mixed-2",
+      "before": "before-mixed-repeat-D-D",
+      "after": "after-material-mixed-2-D",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 24.7553329467773,
+          "after": 18.0555553436279,
+          "delta": -6.6997776031494,
+          "allowed_delta": 2.47553329467773,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 14,
+          "after": 5,
+          "delta": -9,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 15.6899995803833,
+          "after": 9.29500007629395,
+          "delta": -6.39499950408935,
+          "allowed_delta": 0.7844999790191651,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 45.375,
+          "after": 48.8400001525879,
+          "delta": 3.4650001525878977,
+          "allowed_delta": 2.2687500000000003,
+          "pass": false
+        }
+      },
+      "numerical_gates_pass": false,
+      "over50": {
+        "before": 3,
+        "after": 2,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5326,
+        "avg": 16.897513213392227,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 24.7553329467773,
+        "max": 141.66667175293,
+        "over25": 47,
+        "over33_3": 14,
+        "over50": 3,
+        "longest_slow_run_ms": 228.3190040588382
+      },
+      "after_frame": {
+        "n": 5378,
+        "avg": 16.744132601758196,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 18.0555553436279,
+        "max": 60.7060012817383,
+        "over25": 13,
+        "over33_3": 5,
+        "over50": 2,
+        "longest_slow_run_ms": 60.7060012817383
+      },
+      "before_draw_calls": {
+        "n": 5326,
+        "p50": 737,
+        "p95": 881,
+        "p99": 939,
+        "max": 1083
+      },
+      "after_draw_calls": {
+        "n": 5378,
+        "p50": 778,
+        "p95": 925,
+        "p99": 971,
+        "max": 1012
+      },
+      "before_load": {
+        "frames": "7910",
+        "combat_s": "135.2",
+        "objects_peak": "9017",
+        "orphans_peak": "0",
+        "canvas_items_peak": "9781",
+        "mem_static_peak_mb": null,
+        "draws_avg": "716.7",
+        "draws_peak": "1083",
+        "path_queries": "15118",
+        "path_per_s": "111.8",
+        "created": "19666",
+        "removed": "19026",
+        "created_per_s": "145.5",
+        "removed_per_s": "140.7",
+        "enemies_peak": "89",
+        "projectiles_peak": "46",
+        "hazards_peak": "5",
+        "zones_peak": "35",
+        "beams_peak": "19",
+        "vfx_peak": "32",
+        "labels_peak": "62",
+        "transients_peak": "123",
+        "rewards_peak": "22",
+        "nodes_peak": "1968",
+        "topped_up": "152"
+      },
+      "after_load": {
+        "frames": "8035",
+        "combat_s": "135.2",
+        "objects_peak": "8968",
+        "orphans_peak": "0",
+        "canvas_items_peak": "9269",
+        "mem_static_peak_mb": null,
+        "draws_avg": "742.9",
+        "draws_peak": "1012",
+        "path_queries": "15437",
+        "path_per_s": "114.2",
+        "created": "17070",
+        "removed": "16448",
+        "created_per_s": "126.3",
+        "removed_per_s": "121.7",
+        "enemies_peak": "88",
+        "projectiles_peak": "47",
+        "hazards_peak": "5",
+        "zones_peak": "33",
+        "beams_peak": "18",
+        "vfx_peak": "32",
+        "labels_peak": "63",
+        "transients_peak": "134",
+        "rewards_peak": "22",
+        "nodes_peak": "2007",
+        "topped_up": "171"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41262980,
+          "sha256": "f92013f33f7ec4addb9fb3e19fcc50b7a4cb7f88872673095ca006203a9cceed"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "7e55098dc10aa57f27d2ec459b88700ce7a54fbebf14ca171f635c3d75cdd332"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "mixed-3",
+      "before": "before-mixed-corrected-D-D",
+      "after": "after-material-mixed-3-D",
+      "gates": {
+        "p95": {
+          "before": 18.0555553436279,
+          "after": 16.6666660308838,
+          "delta": -1.3888893127441015,
+          "allowed_delta": 0.9027777671813951,
+          "pass": true
+        },
+        "p99": {
+          "before": 24.9993324279785,
+          "after": 18.0555553436279,
+          "delta": -6.9437770843506,
+          "allowed_delta": 2.4999332427978502,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 13,
+          "after": 6,
+          "delta": -7,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 10.2700004577637,
+          "after": 10.2399997711182,
+          "delta": -0.030000686645500707,
+          "allowed_delta": 0.5135000228881851,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 46.5800018310547,
+          "after": 34.6349983215332,
+          "delta": -11.945003509521499,
+          "allowed_delta": 2.3290000915527354,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 5,
+        "after": 1,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5296,
+        "avg": 16.992333678140383,
+        "p50": 16.6666660308838,
+        "p95": 18.0555553436279,
+        "p99": 24.9993324279785,
+        "max": 133.283996582031,
+        "over25": 50,
+        "over33_3": 13,
+        "over50": 5,
+        "longest_slow_run_ms": 217.624328613281
+      },
+      "after_frame": {
+        "n": 5375,
+        "avg": 16.746920134256055,
+        "p50": 16.6666660308838,
+        "p95": 16.6666660308838,
+        "p99": 18.0555553436279,
+        "max": 81.2786636352539,
+        "over25": 15,
+        "over33_3": 6,
+        "over50": 1,
+        "longest_slow_run_ms": 81.2786636352539
+      },
+      "before_draw_calls": {
+        "n": 5296,
+        "p50": 748,
+        "p95": 886,
+        "p99": 948,
+        "max": 1016
+      },
+      "after_draw_calls": {
+        "n": 5375,
+        "p50": 768,
+        "p95": 903,
+        "p99": 969,
+        "max": 1049
+      },
+      "before_load": {
+        "frames": "7955",
+        "combat_s": "135.2",
+        "objects_peak": "9039",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8434",
+        "mem_static_peak_mb": null,
+        "draws_avg": "698.5",
+        "draws_peak": "1016",
+        "path_queries": "15205",
+        "path_per_s": "112.5",
+        "created": "20507",
+        "removed": "19866",
+        "created_per_s": "151.7",
+        "removed_per_s": "147.0",
+        "enemies_peak": "89",
+        "projectiles_peak": "46",
+        "hazards_peak": "5",
+        "zones_peak": "32",
+        "beams_peak": "19",
+        "vfx_peak": "32",
+        "labels_peak": "68",
+        "transients_peak": "118",
+        "rewards_peak": "22",
+        "nodes_peak": "1970",
+        "topped_up": "155"
+      },
+      "after_load": {
+        "frames": "8033",
+        "combat_s": "135.2",
+        "objects_peak": "8929",
+        "orphans_peak": "0",
+        "canvas_items_peak": "8678",
+        "mem_static_peak_mb": null,
+        "draws_avg": "724.8",
+        "draws_peak": "1049",
+        "path_queries": "15723",
+        "path_per_s": "116.3",
+        "created": "18654",
+        "removed": "18037",
+        "created_per_s": "138.0",
+        "removed_per_s": "133.4",
+        "enemies_peak": "92",
+        "projectiles_peak": "41",
+        "hazards_peak": "5",
+        "zones_peak": "27",
+        "beams_peak": "18",
+        "vfx_peak": "32",
+        "labels_peak": "59",
+        "transients_peak": "107",
+        "rewards_peak": "22",
+        "nodes_peak": "1937",
+        "topped_up": "144"
+      },
+      "before_boss": null,
+      "after_boss": null,
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41262980,
+          "sha256": "f92013f33f7ec4addb9fb3e19fcc50b7a4cb7f88872673095ca006203a9cceed"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "7e55098dc10aa57f27d2ec459b88700ce7a54fbebf14ca171f635c3d75cdd332"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "stage40-1",
+      "before": "before-final-stage40-A",
+      "after": "after-material-stage40-1-A",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 1.66666660308838,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 2.98499989509583,
+          "after": 3.13000011444092,
+          "delta": 0.1450002193450901,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 8.5,
+          "after": 8.24499988555908,
+          "delta": -0.25500011444091975,
+          "allowed_delta": 0.5,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 1,
+        "repeatability_review_needed": true
+      },
+      "before_frame": {
+        "n": 5400,
+        "avg": 16.666076208750408,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "after_frame": {
+        "n": 5401,
+        "avg": 16.688875178234863,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 131.45166015625,
+        "over25": 1,
+        "over33_3": 1,
+        "over50": 1,
+        "longest_slow_run_ms": 131.45166015625
+      },
+      "before_draw_calls": {
+        "n": 5400,
+        "p50": 418,
+        "p95": 485,
+        "p99": 563,
+        "max": 603
+      },
+      "after_draw_calls": {
+        "n": 5401,
+        "p50": 435,
+        "p95": 523,
+        "p99": 569,
+        "max": 589
+      },
+      "before_load": {
+        "frames": "6861",
+        "combat_s": "116.1",
+        "objects_peak": "7657",
+        "orphans_peak": "0",
+        "canvas_items_peak": "5117",
+        "mem_static_peak_mb": null,
+        "draws_avg": "406.9",
+        "draws_peak": "603",
+        "path_queries": "322",
+        "path_per_s": "2.8",
+        "created": "39789",
+        "removed": "39197",
+        "created_per_s": "342.8",
+        "removed_per_s": "337.7",
+        "enemies_peak": "1",
+        "projectiles_peak": "46",
+        "hazards_peak": "6",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "7",
+        "labels_peak": "27",
+        "transients_peak": "145",
+        "rewards_peak": "22",
+        "nodes_peak": "1185",
+        "topped_up": "0"
+      },
+      "after_load": {
+        "frames": "6978",
+        "combat_s": "118.0",
+        "objects_peak": "7623",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4739",
+        "mem_static_peak_mb": null,
+        "draws_avg": "426.2",
+        "draws_peak": "589",
+        "path_queries": "312",
+        "path_per_s": "2.6",
+        "created": "38680",
+        "removed": "38091",
+        "created_per_s": "327.7",
+        "removed_per_s": "322.7",
+        "enemies_peak": "1",
+        "projectiles_peak": "46",
+        "hazards_peak": "6",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "6",
+        "labels_peak": "28",
+        "transients_peak": "146",
+        "rewards_peak": "22",
+        "nodes_peak": "1173",
+        "topped_up": "0"
+      },
+      "before_boss": {
+        "phases": [
+          "1",
+          "2",
+          "3"
+        ],
+        "ultimate_activations": 5,
+        "complete": true,
+        "events": [
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1
+          },
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1,
+            "ultimate_activated": 0
+          },
+          {
+            "actions": {
+              "attack": 11,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 1,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 4,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 4,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 4
+            },
+            "frame": 2096,
+            "phase": "2",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 13,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 1,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 5,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 5,
+              "ultimate": 1,
+              "ultimate_activated": 1,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 5,
+              "windup_ultimate": 1
+            },
+            "frame": 2413,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 1
+          },
+          {
+            "actions": {
+              "attack": 21,
+              "band": 2,
+              "barrage_projectiles": 182,
+              "barrage_wave": 10,
+              "burst": 3,
+              "charge": 6,
+              "cone": 4,
+              "contact": 7,
+              "cross": 2,
+              "dash": 6,
+              "dash_end": 6,
+              "line": 16,
+              "phase_two": 1,
+              "shot": 182,
+              "sweep": 6,
+              "ultimate": 2,
+              "ultimate_activated": 2,
+              "windup_band": 2,
+              "windup_burst": 4,
+              "windup_cross": 2,
+              "windup_dash": 6,
+              "windup_sweep": 6,
+              "windup_ultimate": 2
+            },
+            "frame": 3376,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 2
+          },
+          {
+            "actions": {
+              "attack": 29,
+              "band": 3,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 9,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 27,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "windup_band": 3,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 8,
+              "windup_ultimate": 3
+            },
+            "frame": 4302,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 3
+          },
+          {
+            "actions": {
+              "attack": 31,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 11,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 29,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 9,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 9,
+              "windup_ultimate": 3
+            },
+            "frame": 4522,
+            "phase": "3",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 34,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 12,
+              "cross": 4,
+              "cross_laser": 1,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 34,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 10,
+              "ultimate": 4,
+              "ultimate_activated": 4,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 1,
+              "windup_dash": 8,
+              "windup_sweep": 10,
+              "windup_ultimate": 4
+            },
+            "frame": 4940,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 4
+          },
+          {
+            "actions": {
+              "attack": 43,
+              "band": 7,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 19,
+              "cross": 4,
+              "cross_laser": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 51,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 12,
+              "ultimate": 5,
+              "ultimate_activated": 5,
+              "ultimate_hit": 1,
+              "windup_band": 7,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 4,
+              "windup_dash": 8,
+              "windup_sweep": 12,
+              "windup_ultimate": 5
+            },
+            "frame": 5905,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 5
+          }
+        ],
+        "phase_samples": [
+          {
+            "round": 1,
+            "phase": "1",
+            "frames": 2095,
+            "ms_total": 35433.85871183872,
+            "p95": 16.6666660308838,
+            "p99": 16.7849998474121,
+            "max": 147.222229003906,
+            "over33_3": 5
+          },
+          {
+            "round": 1,
+            "phase": "2",
+            "frames": 2426,
+            "ms_total": 40431.83304786682,
+            "p95": 16.6666660308838,
+            "p99": 16.6666660308838,
+            "max": 16.6666660308838,
+            "over33_3": 0
+          },
+          {
+            "round": 1,
+            "phase": "3",
+            "frames": 2340,
+            "ms_total": 38998.44085693359,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          }
+        ]
+      },
+      "after_boss": {
+        "phases": [
+          "1",
+          "2",
+          "3"
+        ],
+        "ultimate_activations": 6,
+        "complete": true,
+        "events": [
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1
+          },
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1,
+            "ultimate_activated": 0
+          },
+          {
+            "actions": {
+              "attack": 11,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 3,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 4,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 4,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 4
+            },
+            "frame": 2069,
+            "phase": "2",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 13,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 3,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 5,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 5,
+              "ultimate": 1,
+              "ultimate_activated": 1,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 5,
+              "windup_ultimate": 1
+            },
+            "frame": 2383,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 1
+          },
+          {
+            "actions": {
+              "attack": 21,
+              "band": 2,
+              "barrage_projectiles": 182,
+              "barrage_wave": 10,
+              "burst": 3,
+              "charge": 6,
+              "cone": 4,
+              "contact": 4,
+              "cross": 2,
+              "dash": 6,
+              "dash_end": 6,
+              "line": 16,
+              "phase_two": 1,
+              "shot": 182,
+              "sweep": 6,
+              "ultimate": 2,
+              "ultimate_activated": 2,
+              "windup_band": 2,
+              "windup_burst": 4,
+              "windup_cross": 2,
+              "windup_dash": 6,
+              "windup_sweep": 6,
+              "windup_ultimate": 2
+            },
+            "frame": 3288,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 2
+          },
+          {
+            "actions": {
+              "attack": 29,
+              "band": 3,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 6,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 27,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "windup_band": 3,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 8,
+              "windup_ultimate": 3
+            },
+            "frame": 4210,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 3
+          },
+          {
+            "actions": {
+              "attack": 32,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 8,
+              "cross": 4,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 33,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 9,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 5,
+              "windup_dash": 9,
+              "windup_sweep": 9,
+              "windup_ultimate": 3
+            },
+            "frame": 4578,
+            "phase": "3",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 35,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 9,
+              "cross": 4,
+              "cross_laser": 1,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 38,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 10,
+              "ultimate": 4,
+              "ultimate_activated": 4,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 5,
+              "windup_cross_laser": 1,
+              "windup_dash": 9,
+              "windup_sweep": 10,
+              "windup_ultimate": 4
+            },
+            "frame": 4998,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 4
+          },
+          {
+            "actions": {
+              "attack": 44,
+              "band": 7,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 13,
+              "cross": 4,
+              "cross_laser": 4,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 55,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 12,
+              "ultimate": 5,
+              "ultimate_activated": 5,
+              "windup_band": 7,
+              "windup_burst": 4,
+              "windup_cross": 5,
+              "windup_cross_laser": 4,
+              "windup_dash": 9,
+              "windup_sweep": 12,
+              "windup_ultimate": 5
+            },
+            "frame": 5982,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 5
+          },
+          {
+            "actions": {
+              "attack": 53,
+              "band": 10,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 17,
+              "cross": 4,
+              "cross_laser": 6,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 69,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 15,
+              "ultimate": 6,
+              "ultimate_activated": 6,
+              "windup_band": 10,
+              "windup_burst": 4,
+              "windup_cross": 5,
+              "windup_cross_laser": 6,
+              "windup_dash": 9,
+              "windup_sweep": 15,
+              "windup_ultimate": 6
+            },
+            "frame": 6949,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 6
+          }
+        ],
+        "phase_samples": [
+          {
+            "round": 1,
+            "phase": "1",
+            "frames": 2068,
+            "ms_total": 34999.33917045593,
+            "p95": 16.6666660308838,
+            "p99": 16.7666664123535,
+            "max": 140.656112670898,
+            "over33_3": 5
+          },
+          {
+            "round": 1,
+            "phase": "2",
+            "frames": 2509,
+            "ms_total": 41814.994918823235,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          },
+          {
+            "round": 1,
+            "phase": "3",
+            "frames": 2401,
+            "ms_total": 40015.066879272454,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          }
+        ]
+      },
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41264180,
+          "sha256": "8f0e4f541e9ee09a7850a60a661288f7f2baa0c8e546d38b27addbdef564b686"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "c2f30e5284bad64a46b3b0e1f1ab4bbfba154a39fc6f21e00732cfe42f95c57e"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "stage40-2",
+      "before": "before-stage40-repeat-A",
+      "after": "after-material-stage40-2-A",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 1.66666660308838,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 0,
+          "after": 1,
+          "delta": 1,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 3.34500002861023,
+          "after": 3.28999996185303,
+          "delta": -0.05500006675719993,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 8.30500030517578,
+          "after": 8.29500007629395,
+          "delta": -0.010000228881828832,
+          "allowed_delta": 0.5,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 1,
+        "repeatability_review_needed": true
+      },
+      "before_frame": {
+        "n": 5400,
+        "avg": 16.66616869325991,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "after_frame": {
+        "n": 5394,
+        "avg": 16.686558928717762,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 127.205665588379,
+        "over25": 1,
+        "over33_3": 1,
+        "over50": 1,
+        "longest_slow_run_ms": 127.205665588379
+      },
+      "before_draw_calls": {
+        "n": 5400,
+        "p50": 386,
+        "p95": 466,
+        "p99": 514,
+        "max": 561
+      },
+      "after_draw_calls": {
+        "n": 5394,
+        "p50": 409,
+        "p95": 488,
+        "p99": 552,
+        "max": 593
+      },
+      "before_load": {
+        "frames": "6839",
+        "combat_s": "115.8",
+        "objects_peak": "7814",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4712",
+        "mem_static_peak_mb": null,
+        "draws_avg": "377.5",
+        "draws_peak": "561",
+        "path_queries": "255",
+        "path_per_s": "2.2",
+        "created": "39667",
+        "removed": "39076",
+        "created_per_s": "342.7",
+        "removed_per_s": "337.6",
+        "enemies_peak": "1",
+        "projectiles_peak": "46",
+        "hazards_peak": "6",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "6",
+        "labels_peak": "28",
+        "transients_peak": "164",
+        "rewards_peak": "22",
+        "nodes_peak": "1278",
+        "topped_up": "0"
+      },
+      "after_load": {
+        "frames": "6851",
+        "combat_s": "115.9",
+        "objects_peak": "7637",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4961",
+        "mem_static_peak_mb": null,
+        "draws_avg": "400.9",
+        "draws_peak": "593",
+        "path_queries": "292",
+        "path_per_s": "2.5",
+        "created": "38720",
+        "removed": "38123",
+        "created_per_s": "334.1",
+        "removed_per_s": "328.9",
+        "enemies_peak": "1",
+        "projectiles_peak": "46",
+        "hazards_peak": "6",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "9",
+        "labels_peak": "25",
+        "transients_peak": "152",
+        "rewards_peak": "22",
+        "nodes_peak": "1164",
+        "topped_up": "0"
+      },
+      "before_boss": {
+        "phases": [
+          "1",
+          "2",
+          "3"
+        ],
+        "ultimate_activations": 5,
+        "complete": true,
+        "events": [
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1
+          },
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1,
+            "ultimate_activated": 0
+          },
+          {
+            "actions": {
+              "attack": 11,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 4,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 4,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 4,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 4
+            },
+            "frame": 2186,
+            "phase": "2",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 13,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 4,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 5,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 5,
+              "ultimate": 1,
+              "ultimate_activated": 1,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 5,
+              "windup_ultimate": 1
+            },
+            "frame": 2503,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 1
+          },
+          {
+            "actions": {
+              "attack": 21,
+              "band": 2,
+              "barrage_projectiles": 182,
+              "barrage_wave": 10,
+              "burst": 3,
+              "charge": 6,
+              "cone": 4,
+              "contact": 8,
+              "cross": 2,
+              "dash": 6,
+              "dash_end": 6,
+              "line": 16,
+              "phase_two": 1,
+              "shot": 182,
+              "sweep": 6,
+              "ultimate": 2,
+              "ultimate_activated": 2,
+              "windup_band": 2,
+              "windup_burst": 4,
+              "windup_cross": 2,
+              "windup_dash": 6,
+              "windup_sweep": 6,
+              "windup_ultimate": 2
+            },
+            "frame": 3418,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 2
+          },
+          {
+            "actions": {
+              "attack": 29,
+              "band": 3,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 14,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 27,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 3,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 8,
+              "windup_ultimate": 3
+            },
+            "frame": 4340,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 3
+          },
+          {
+            "actions": {
+              "attack": 30,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 14,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 29,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 9,
+              "windup_ultimate": 3
+            },
+            "frame": 4531,
+            "phase": "3",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 33,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 15,
+              "cross": 4,
+              "cross_laser": 1,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 34,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 9,
+              "ultimate": 4,
+              "ultimate_activated": 4,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 1,
+              "windup_dash": 8,
+              "windup_sweep": 10,
+              "windup_ultimate": 4
+            },
+            "frame": 4953,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 4
+          },
+          {
+            "actions": {
+              "attack": 42,
+              "band": 7,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 18,
+              "cross": 4,
+              "cross_laser": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 51,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 11,
+              "ultimate": 5,
+              "ultimate_activated": 5,
+              "ultimate_hit": 2,
+              "windup_band": 7,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 4,
+              "windup_dash": 8,
+              "windup_sweep": 12,
+              "windup_ultimate": 5
+            },
+            "frame": 5924,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 5
+          }
+        ],
+        "phase_samples": [
+          {
+            "round": 1,
+            "phase": "1",
+            "frames": 2185,
+            "ms_total": 36939.124017477036,
+            "p95": 16.6666660308838,
+            "p99": 16.9516658782959,
+            "max": 145.330551147461,
+            "over33_3": 5
+          },
+          {
+            "round": 1,
+            "phase": "2",
+            "frames": 2345,
+            "ms_total": 39081.77085876464,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          },
+          {
+            "round": 1,
+            "phase": "3",
+            "frames": 2309,
+            "ms_total": 38481.79484558105,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          }
+        ]
+      },
+      "after_boss": {
+        "phases": [
+          "1",
+          "2",
+          "3"
+        ],
+        "ultimate_activations": 5,
+        "complete": true,
+        "events": [
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1
+          },
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1,
+            "ultimate_activated": 0
+          },
+          {
+            "actions": {
+              "attack": 11,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 5,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 4,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 4,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 4
+            },
+            "frame": 2060,
+            "phase": "2",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 13,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 5,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 5,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 5,
+              "ultimate": 1,
+              "ultimate_activated": 1,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 5,
+              "windup_ultimate": 1
+            },
+            "frame": 2381,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 1
+          },
+          {
+            "actions": {
+              "attack": 22,
+              "band": 2,
+              "barrage_projectiles": 182,
+              "barrage_wave": 10,
+              "burst": 3,
+              "charge": 6,
+              "cone": 4,
+              "contact": 9,
+              "cross": 2,
+              "dash": 6,
+              "dash_end": 6,
+              "line": 17,
+              "phase_two": 1,
+              "shot": 182,
+              "sweep": 7,
+              "ultimate": 2,
+              "ultimate_activated": 2,
+              "ultimate_hit": 1,
+              "windup_band": 2,
+              "windup_burst": 4,
+              "windup_cross": 2,
+              "windup_dash": 6,
+              "windup_sweep": 7,
+              "windup_ultimate": 2
+            },
+            "frame": 3373,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 2
+          },
+          {
+            "actions": {
+              "attack": 30,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 14,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 28,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 8,
+              "windup_ultimate": 3
+            },
+            "frame": 4287,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 3
+          },
+          {
+            "actions": {
+              "attack": 32,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 16,
+              "cross": 4,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 29,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 9,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 9,
+              "windup_sweep": 9,
+              "windup_ultimate": 3
+            },
+            "frame": 4518,
+            "phase": "3",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 35,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 16,
+              "cross": 4,
+              "cross_laser": 1,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 34,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 10,
+              "ultimate": 4,
+              "ultimate_activated": 4,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 1,
+              "windup_dash": 9,
+              "windup_sweep": 10,
+              "windup_ultimate": 4
+            },
+            "frame": 4940,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 4
+          },
+          {
+            "actions": {
+              "attack": 44,
+              "band": 7,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 19,
+              "cross": 4,
+              "cross_laser": 4,
+              "dash": 9,
+              "dash_end": 9,
+              "line": 51,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 12,
+              "ultimate": 5,
+              "ultimate_activated": 5,
+              "ultimate_hit": 1,
+              "windup_band": 7,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 4,
+              "windup_dash": 9,
+              "windup_sweep": 12,
+              "windup_ultimate": 5
+            },
+            "frame": 5907,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 5
+          }
+        ],
+        "phase_samples": [
+          {
+            "round": 1,
+            "phase": "1",
+            "frames": 2059,
+            "ms_total": 34848.65671110153,
+            "p95": 16.6666660308838,
+            "p99": 16.6666660308838,
+            "max": 147.089996337891,
+            "over33_3": 5
+          },
+          {
+            "round": 1,
+            "phase": "2",
+            "frames": 2458,
+            "ms_total": 40965.15937042236,
+            "p95": 16.6666660308838,
+            "p99": 16.6666660308838,
+            "max": 16.6666660308838,
+            "over33_3": 0
+          },
+          {
+            "round": 1,
+            "phase": "3",
+            "frames": 2334,
+            "ms_total": 38890.111518859856,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          }
+        ]
+      },
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41262980,
+          "sha256": "f92013f33f7ec4addb9fb3e19fcc50b7a4cb7f88872673095ca006203a9cceed"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "7e55098dc10aa57f27d2ec459b88700ce7a54fbebf14ca171f635c3d75cdd332"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    },
+    {
+      "name": "stage40-3",
+      "before": "before-stage40-A",
+      "after": "after-material-stage40-3-A",
+      "gates": {
+        "p95": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 0.83333330154419,
+          "pass": true
+        },
+        "p99": {
+          "before": 16.6666660308838,
+          "after": 16.6666660308838,
+          "delta": 0,
+          "allowed_delta": 1.66666660308838,
+          "pass": true
+        },
+        "over33_3": {
+          "before": 0,
+          "after": 0,
+          "delta": 0,
+          "allowed_delta": 2,
+          "pass": true
+        },
+        "physics_p95": {
+          "before": 3.21499991416931,
+          "after": 3.21499991416931,
+          "delta": 0,
+          "allowed_delta": 0.5,
+          "pass": true
+        },
+        "process_p95": {
+          "before": 8.29500007629395,
+          "after": 7.30000019073486,
+          "delta": -0.9949998855590909,
+          "allowed_delta": 0.5,
+          "pass": true
+        }
+      },
+      "numerical_gates_pass": true,
+      "over50": {
+        "before": 0,
+        "after": 0,
+        "repeatability_review_needed": false
+      },
+      "before_frame": {
+        "n": 5400,
+        "avg": 16.66607093916999,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "after_frame": {
+        "n": 5401,
+        "avg": 16.666098964940485,
+        "p50": 16.6660003662109,
+        "p95": 16.6666660308838,
+        "p99": 16.6666660308838,
+        "max": 16.6666660308838,
+        "over25": 0,
+        "over33_3": 0,
+        "over50": 0,
+        "longest_slow_run_ms": 0
+      },
+      "before_draw_calls": {
+        "n": 5400,
+        "p50": 382,
+        "p95": 472,
+        "p99": 517,
+        "max": 575
+      },
+      "after_draw_calls": {
+        "n": 5401,
+        "p50": 424,
+        "p95": 515,
+        "p99": 540,
+        "max": 579
+      },
+      "before_load": {
+        "frames": "6793",
+        "combat_s": "115.0",
+        "objects_peak": "7703",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4881",
+        "mem_static_peak_mb": null,
+        "draws_avg": "378.6",
+        "draws_peak": "575",
+        "path_queries": "315",
+        "path_per_s": "2.7",
+        "created": "39389",
+        "removed": "38798",
+        "created_per_s": "342.5",
+        "removed_per_s": "337.4",
+        "enemies_peak": "1",
+        "projectiles_peak": "46",
+        "hazards_peak": "6",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "6",
+        "labels_peak": "25",
+        "transients_peak": "151",
+        "rewards_peak": "22",
+        "nodes_peak": "1201",
+        "topped_up": "0"
+      },
+      "after_load": {
+        "frames": "6861",
+        "combat_s": "116.1",
+        "objects_peak": "7682",
+        "orphans_peak": "0",
+        "canvas_items_peak": "4966",
+        "mem_static_peak_mb": null,
+        "draws_avg": "412.7",
+        "draws_peak": "579",
+        "path_queries": "313",
+        "path_per_s": "2.7",
+        "created": "38828",
+        "removed": "38238",
+        "created_per_s": "334.4",
+        "removed_per_s": "329.4",
+        "enemies_peak": "1",
+        "projectiles_peak": "46",
+        "hazards_peak": "6",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "6",
+        "labels_peak": "25",
+        "transients_peak": "151",
+        "rewards_peak": "22",
+        "nodes_peak": "1193",
+        "topped_up": "0"
+      },
+      "before_boss": {
+        "phases": [
+          "1",
+          "2",
+          "3"
+        ],
+        "ultimate_activations": 5,
+        "complete": true,
+        "events": [
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1
+          },
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1,
+            "ultimate_activated": 0
+          },
+          {
+            "actions": {
+              "attack": 11,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 1,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 4,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 4,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 4
+            },
+            "frame": 2064,
+            "phase": "2",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 13,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 3,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 5,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 5,
+              "ultimate": 1,
+              "ultimate_activated": 1,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 5,
+              "windup_ultimate": 1
+            },
+            "frame": 2381,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 1
+          },
+          {
+            "actions": {
+              "attack": 22,
+              "band": 2,
+              "barrage_projectiles": 182,
+              "barrage_wave": 10,
+              "burst": 3,
+              "charge": 6,
+              "cone": 4,
+              "contact": 6,
+              "cross": 2,
+              "dash": 6,
+              "dash_end": 6,
+              "line": 17,
+              "phase_two": 1,
+              "shot": 182,
+              "sweep": 7,
+              "ultimate": 2,
+              "ultimate_activated": 2,
+              "windup_band": 2,
+              "windup_burst": 4,
+              "windup_cross": 2,
+              "windup_dash": 6,
+              "windup_sweep": 7,
+              "windup_ultimate": 2
+            },
+            "frame": 3378,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 2
+          },
+          {
+            "actions": {
+              "attack": 30,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 8,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 28,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 8,
+              "windup_ultimate": 3
+            },
+            "frame": 4332,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 3
+          },
+          {
+            "actions": {
+              "attack": 31,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 8,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 29,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 9,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 9,
+              "windup_sweep": 9,
+              "windup_ultimate": 3
+            },
+            "frame": 4485,
+            "phase": "3",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 34,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 8,
+              "cross": 4,
+              "cross_laser": 1,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 34,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 10,
+              "ultimate": 4,
+              "ultimate_activated": 4,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 1,
+              "windup_dash": 9,
+              "windup_sweep": 10,
+              "windup_ultimate": 4
+            },
+            "frame": 4904,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 4
+          },
+          {
+            "actions": {
+              "attack": 43,
+              "band": 7,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 11,
+              "cross": 4,
+              "cross_laser": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 51,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 12,
+              "ultimate": 5,
+              "ultimate_activated": 5,
+              "ultimate_hit": 1,
+              "windup_band": 7,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 4,
+              "windup_dash": 9,
+              "windup_sweep": 12,
+              "windup_ultimate": 5
+            },
+            "frame": 5877,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 5
+          }
+        ],
+        "phase_samples": [
+          {
+            "round": 1,
+            "phase": "1",
+            "frames": 2063,
+            "ms_total": 34921.61812496185,
+            "p95": 16.6666660308838,
+            "p99": 16.6666660308838,
+            "max": 143.562774658203,
+            "over33_3": 5
+          },
+          {
+            "round": 1,
+            "phase": "2",
+            "frames": 2421,
+            "ms_total": 40348.38688659667,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          },
+          {
+            "round": 1,
+            "phase": "3",
+            "frames": 2309,
+            "ms_total": 38481.79484558105,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          }
+        ]
+      },
+      "after_boss": {
+        "phases": [
+          "1",
+          "2",
+          "3"
+        ],
+        "ultimate_activations": 6,
+        "complete": true,
+        "events": [
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1
+          },
+          {
+            "actions": {},
+            "frame": 1,
+            "phase": "1",
+            "round": 1,
+            "ultimate_activated": 0
+          },
+          {
+            "actions": {
+              "attack": 11,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 5,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 4,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 4,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 4
+            },
+            "frame": 2058,
+            "phase": "2",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 13,
+              "barrage_projectiles": 90,
+              "barrage_wave": 6,
+              "burst": 3,
+              "charge": 4,
+              "cone": 4,
+              "contact": 5,
+              "dash": 4,
+              "dash_end": 4,
+              "line": 5,
+              "phase_two": 1,
+              "shot": 90,
+              "sweep": 5,
+              "ultimate": 1,
+              "ultimate_activated": 1,
+              "windup_burst": 4,
+              "windup_dash": 4,
+              "windup_sweep": 5,
+              "windup_ultimate": 1
+            },
+            "frame": 2374,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 1
+          },
+          {
+            "actions": {
+              "attack": 22,
+              "band": 2,
+              "barrage_projectiles": 182,
+              "barrage_wave": 10,
+              "burst": 3,
+              "charge": 6,
+              "cone": 4,
+              "contact": 9,
+              "cross": 2,
+              "dash": 6,
+              "dash_end": 6,
+              "line": 17,
+              "phase_two": 1,
+              "shot": 182,
+              "sweep": 7,
+              "ultimate": 2,
+              "ultimate_activated": 2,
+              "windup_band": 2,
+              "windup_burst": 4,
+              "windup_cross": 2,
+              "windup_dash": 6,
+              "windup_sweep": 7,
+              "windup_ultimate": 2
+            },
+            "frame": 3372,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 2
+          },
+          {
+            "actions": {
+              "attack": 30,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 8,
+              "cone": 4,
+              "contact": 10,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 28,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 8,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 8,
+              "windup_sweep": 8,
+              "windup_ultimate": 3
+            },
+            "frame": 4293,
+            "phase": "2",
+            "round": 1,
+            "ultimate_activated": 3
+          },
+          {
+            "actions": {
+              "attack": 31,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 12,
+              "cross": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 29,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 9,
+              "ultimate": 3,
+              "ultimate_activated": 3,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_dash": 9,
+              "windup_sweep": 9,
+              "windup_ultimate": 3
+            },
+            "frame": 4486,
+            "phase": "3",
+            "round": 1
+          },
+          {
+            "actions": {
+              "attack": 34,
+              "band": 4,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 13,
+              "cross": 4,
+              "cross_laser": 1,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 34,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 10,
+              "ultimate": 4,
+              "ultimate_activated": 4,
+              "ultimate_hit": 1,
+              "windup_band": 4,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 1,
+              "windup_dash": 9,
+              "windup_sweep": 10,
+              "windup_ultimate": 4
+            },
+            "frame": 4903,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 4
+          },
+          {
+            "actions": {
+              "attack": 43,
+              "band": 7,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 17,
+              "cross": 4,
+              "cross_laser": 4,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 51,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 12,
+              "ultimate": 5,
+              "ultimate_activated": 5,
+              "ultimate_hit": 1,
+              "windup_band": 7,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 4,
+              "windup_dash": 9,
+              "windup_sweep": 12,
+              "windup_ultimate": 5
+            },
+            "frame": 5873,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 5
+          },
+          {
+            "actions": {
+              "attack": 52,
+              "band": 10,
+              "barrage_projectiles": 274,
+              "barrage_wave": 14,
+              "burst": 3,
+              "charge": 9,
+              "cone": 4,
+              "contact": 22,
+              "cross": 4,
+              "cross_laser": 6,
+              "dash": 8,
+              "dash_end": 8,
+              "line": 65,
+              "phase_three": 1,
+              "phase_two": 1,
+              "shot": 274,
+              "sweep": 15,
+              "ultimate": 6,
+              "ultimate_activated": 6,
+              "ultimate_hit": 1,
+              "windup_band": 10,
+              "windup_burst": 4,
+              "windup_cross": 4,
+              "windup_cross_laser": 6,
+              "windup_dash": 9,
+              "windup_sweep": 15,
+              "windup_ultimate": 6
+            },
+            "frame": 6839,
+            "phase": "3",
+            "round": 1,
+            "ultimate_activated": 6
+          }
+        ],
+        "phase_samples": [
+          {
+            "round": 1,
+            "phase": "1",
+            "frames": 2057,
+            "ms_total": 34804.90919327736,
+            "p95": 16.6666660308838,
+            "p99": 16.6666660308838,
+            "max": 144.754440307617,
+            "over33_3": 5
+          },
+          {
+            "round": 1,
+            "phase": "2",
+            "frames": 2428,
+            "ms_total": 40465.04888916015,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          },
+          {
+            "round": 1,
+            "phase": "3",
+            "frames": 2376,
+            "ms_total": 39598.41687011718,
+            "p95": 16.6660003662109,
+            "p99": 16.6660003662109,
+            "max": 16.6660003662109,
+            "over33_3": 0
+          }
+        ]
+      },
+      "before_errors": [],
+      "after_errors": [],
+      "before_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41262980,
+          "sha256": "f92013f33f7ec4addb9fb3e19fcc50b7a4cb7f88872673095ca006203a9cceed"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "7e55098dc10aa57f27d2ec459b88700ce7a54fbebf14ca171f635c3d75cdd332"
+      },
+      "after_build": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41286064,
+          "sha256": "3bd97bb2e0992d857ca796ac979afdd4358eb987a73cb739f3707cca4b0f1616"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "b41de346251325420485c9fd21683c5983c79420273f14d0e7f5be9601d310e6"
+      }
+    }
+  ]
+}

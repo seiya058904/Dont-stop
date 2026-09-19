@@ -1,0 +1,16 @@
+{
+  "production_sha": "5d5d3eb9506671250e8fbd3ac19b8f8fbde0c53c",
+  "method": "Windows x64 Release export; Vulkan/Forward+ smoke passed",
+  "files": [
+    {
+      "file": "Don't stop.exe",
+      "bytes": 109197312,
+      "sha256": "ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655"
+    },
+    {
+      "file": "Don't stop.pck",
+      "bytes": 41286064,
+      "sha256": "d4c34d839407e4658202302525de7bed67e0ee64522e22681eae9612d24ceb18"
+    }
+  ]
+}

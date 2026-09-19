@@ -1,0 +1,1239 @@
+{
+	"cycles": [
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8504.0,
+			"cycle": 0,
+			"orphans": 0.0,
+			"static_memory_bytes": 93445839.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8502.0,
+			"cycle": 1,
+			"orphans": 0.0,
+			"static_memory_bytes": 93463743.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8502.0,
+			"cycle": 2,
+			"orphans": 0.0,
+			"static_memory_bytes": 93482951.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8502.0,
+			"cycle": 3,
+			"orphans": 0.0,
+			"static_memory_bytes": 93502567.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8502.0,
+			"cycle": 4,
+			"orphans": 0.0,
+			"static_memory_bytes": 93522759.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8502.0,
+			"cycle": 5,
+			"orphans": 0.0,
+			"static_memory_bytes": 93541223.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8502.0,
+			"cycle": 6,
+			"orphans": 0.0,
+			"static_memory_bytes": 93559759.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8500.0,
+			"cycle": 7,
+			"orphans": 0.0,
+			"static_memory_bytes": 93579391.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8500.0,
+			"cycle": 8,
+			"orphans": 0.0,
+			"static_memory_bytes": 93597855.0
+		},
+		{
+			"closed_nodes": 281,
+			"closed_objects": 8500.0,
+			"cycle": 9,
+			"orphans": 0.0,
+			"static_memory_bytes": 93616415.0
+		}
+	],
+	"method": "Godot UI-driver synchronous call cost; excludes physical input and GPU frame completion",
+	"peak_nodes": 439,
+	"peak_objects": 9373,
+	"samples": [
+		{
+			"action": "search-3",
+			"call_ms": 10.451
+		},
+		{
+			"action": "search-0",
+			"call_ms": 9.072
+		},
+		{
+			"action": "search-123",
+			"call_ms": 7.402
+		},
+		{
+			"action": "search-114",
+			"call_ms": 6.519
+		},
+		{
+			"action": "search-112",
+			"call_ms": 6.503
+		},
+		{
+			"action": "search-120",
+			"call_ms": 6.854
+		},
+		{
+			"action": "search-119",
+			"call_ms": 6.838
+		},
+		{
+			"action": "search-118",
+			"call_ms": 6.827
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.081
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.569
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.454
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.515
+		},
+		{
+			"action": "search-111",
+			"call_ms": 6.949
+		},
+		{
+			"action": "search-124",
+			"call_ms": 7.913
+		},
+		{
+			"action": "search-122",
+			"call_ms": 6.804
+		},
+		{
+			"action": "search-121",
+			"call_ms": 6.437
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.382
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.527
+		},
+		{
+			"action": "search-7",
+			"call_ms": 6.661
+		},
+		{
+			"action": "search-6",
+			"call_ms": 6.74
+		},
+		{
+			"action": "search-5",
+			"call_ms": 7.747
+		},
+		{
+			"action": "search-4",
+			"call_ms": 7.322
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.14
+		},
+		{
+			"action": "search-1",
+			"call_ms": 9.781
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 11.038
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 7.253
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.752
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.876
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 7.24
+		},
+		{
+			"action": "search-3",
+			"call_ms": 10.368
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.953
+		},
+		{
+			"action": "search-123",
+			"call_ms": 6.965
+		},
+		{
+			"action": "search-114",
+			"call_ms": 7.134
+		},
+		{
+			"action": "search-112",
+			"call_ms": 6.647
+		},
+		{
+			"action": "search-120",
+			"call_ms": 7.07
+		},
+		{
+			"action": "search-119",
+			"call_ms": 9.067
+		},
+		{
+			"action": "search-118",
+			"call_ms": 6.522
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.004
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.891
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.756
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.458
+		},
+		{
+			"action": "search-111",
+			"call_ms": 8.466
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.65
+		},
+		{
+			"action": "search-122",
+			"call_ms": 7.145
+		},
+		{
+			"action": "search-121",
+			"call_ms": 7.24
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.295
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.041
+		},
+		{
+			"action": "search-7",
+			"call_ms": 8.567
+		},
+		{
+			"action": "search-6",
+			"call_ms": 8.164
+		},
+		{
+			"action": "search-5",
+			"call_ms": 9.672
+		},
+		{
+			"action": "search-4",
+			"call_ms": 7.372
+		},
+		{
+			"action": "search-2",
+			"call_ms": 11.707
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.574
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 13.412
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 6.791
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.677
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 6.809
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.616
+		},
+		{
+			"action": "search-3",
+			"call_ms": 10.363
+		},
+		{
+			"action": "search-0",
+			"call_ms": 9.072
+		},
+		{
+			"action": "search-123",
+			"call_ms": 9.414
+		},
+		{
+			"action": "search-114",
+			"call_ms": 7.473
+		},
+		{
+			"action": "search-112",
+			"call_ms": 7.837
+		},
+		{
+			"action": "search-120",
+			"call_ms": 7.153
+		},
+		{
+			"action": "search-119",
+			"call_ms": 7.295
+		},
+		{
+			"action": "search-118",
+			"call_ms": 7.475
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.226
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.989
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.852
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.202
+		},
+		{
+			"action": "search-111",
+			"call_ms": 6.775
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.774
+		},
+		{
+			"action": "search-122",
+			"call_ms": 6.928
+		},
+		{
+			"action": "search-121",
+			"call_ms": 7.514
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.679
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.406
+		},
+		{
+			"action": "search-7",
+			"call_ms": 9.002
+		},
+		{
+			"action": "search-6",
+			"call_ms": 8.305
+		},
+		{
+			"action": "search-5",
+			"call_ms": 9.721
+		},
+		{
+			"action": "search-4",
+			"call_ms": 8.33
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.377
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.416
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 12.632
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 7.806
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.769
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.967
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.365
+		},
+		{
+			"action": "search-3",
+			"call_ms": 9.72
+		},
+		{
+			"action": "search-0",
+			"call_ms": 9.272
+		},
+		{
+			"action": "search-123",
+			"call_ms": 7.082
+		},
+		{
+			"action": "search-114",
+			"call_ms": 7.715
+		},
+		{
+			"action": "search-112",
+			"call_ms": 7.353
+		},
+		{
+			"action": "search-120",
+			"call_ms": 7.245
+		},
+		{
+			"action": "search-119",
+			"call_ms": 8.168
+		},
+		{
+			"action": "search-118",
+			"call_ms": 7.376
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.664
+		},
+		{
+			"action": "search-116",
+			"call_ms": 7.281
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.941
+		},
+		{
+			"action": "search-113",
+			"call_ms": 7.516
+		},
+		{
+			"action": "search-111",
+			"call_ms": 6.661
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.345
+		},
+		{
+			"action": "search-122",
+			"call_ms": 6.42
+		},
+		{
+			"action": "search-121",
+			"call_ms": 6.793
+		},
+		{
+			"action": "search-9",
+			"call_ms": 8.851
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.458
+		},
+		{
+			"action": "search-7",
+			"call_ms": 8.468
+		},
+		{
+			"action": "search-6",
+			"call_ms": 9.857
+		},
+		{
+			"action": "search-5",
+			"call_ms": 8.476
+		},
+		{
+			"action": "search-4",
+			"call_ms": 8.721
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.771
+		},
+		{
+			"action": "search-1",
+			"call_ms": 11.977
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 12.741
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 8.629
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.953
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.96
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.401
+		},
+		{
+			"action": "search-3",
+			"call_ms": 9.358
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.731
+		},
+		{
+			"action": "search-123",
+			"call_ms": 6.987
+		},
+		{
+			"action": "search-114",
+			"call_ms": 6.295
+		},
+		{
+			"action": "search-112",
+			"call_ms": 7.092
+		},
+		{
+			"action": "search-120",
+			"call_ms": 7.404
+		},
+		{
+			"action": "search-119",
+			"call_ms": 6.234
+		},
+		{
+			"action": "search-118",
+			"call_ms": 7.458
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.604
+		},
+		{
+			"action": "search-116",
+			"call_ms": 7.816
+		},
+		{
+			"action": "search-115",
+			"call_ms": 7.589
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.959
+		},
+		{
+			"action": "search-111",
+			"call_ms": 7.296
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.711
+		},
+		{
+			"action": "search-122",
+			"call_ms": 7.111
+		},
+		{
+			"action": "search-121",
+			"call_ms": 6.789
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.558
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.87
+		},
+		{
+			"action": "search-7",
+			"call_ms": 7.378
+		},
+		{
+			"action": "search-6",
+			"call_ms": 7.916
+		},
+		{
+			"action": "search-5",
+			"call_ms": 8.08
+		},
+		{
+			"action": "search-4",
+			"call_ms": 7.76
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.942
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.904
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 12.72
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 6.556
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.69
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.799
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.216
+		},
+		{
+			"action": "search-3",
+			"call_ms": 9.451
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.913
+		},
+		{
+			"action": "search-123",
+			"call_ms": 7.011
+		},
+		{
+			"action": "search-114",
+			"call_ms": 7.817
+		},
+		{
+			"action": "search-112",
+			"call_ms": 6.932
+		},
+		{
+			"action": "search-120",
+			"call_ms": 7.025
+		},
+		{
+			"action": "search-119",
+			"call_ms": 7.105
+		},
+		{
+			"action": "search-118",
+			"call_ms": 7.317
+		},
+		{
+			"action": "search-117",
+			"call_ms": 6.843
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.804
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.699
+		},
+		{
+			"action": "search-113",
+			"call_ms": 7.432
+		},
+		{
+			"action": "search-111",
+			"call_ms": 7.207
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.371
+		},
+		{
+			"action": "search-122",
+			"call_ms": 7.469
+		},
+		{
+			"action": "search-121",
+			"call_ms": 7.463
+		},
+		{
+			"action": "search-9",
+			"call_ms": 8.042
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.271
+		},
+		{
+			"action": "search-7",
+			"call_ms": 7.009
+		},
+		{
+			"action": "search-6",
+			"call_ms": 7.196
+		},
+		{
+			"action": "search-5",
+			"call_ms": 7.992
+		},
+		{
+			"action": "search-4",
+			"call_ms": 7.819
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.098
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.981
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 14.002
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 6.406
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.756
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.941
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 5.877
+		},
+		{
+			"action": "search-3",
+			"call_ms": 10.147
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.272
+		},
+		{
+			"action": "search-123",
+			"call_ms": 6.927
+		},
+		{
+			"action": "search-114",
+			"call_ms": 10.893
+		},
+		{
+			"action": "search-112",
+			"call_ms": 7.503
+		},
+		{
+			"action": "search-120",
+			"call_ms": 8.474
+		},
+		{
+			"action": "search-119",
+			"call_ms": 7.19
+		},
+		{
+			"action": "search-118",
+			"call_ms": 6.517
+		},
+		{
+			"action": "search-117",
+			"call_ms": 6.593
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.456
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.784
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.425
+		},
+		{
+			"action": "search-111",
+			"call_ms": 6.221
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.607
+		},
+		{
+			"action": "search-122",
+			"call_ms": 6.833
+		},
+		{
+			"action": "search-121",
+			"call_ms": 7.184
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.726
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.628
+		},
+		{
+			"action": "search-7",
+			"call_ms": 7.909
+		},
+		{
+			"action": "search-6",
+			"call_ms": 7.439
+		},
+		{
+			"action": "search-5",
+			"call_ms": 8.766
+		},
+		{
+			"action": "search-4",
+			"call_ms": 7.567
+		},
+		{
+			"action": "search-2",
+			"call_ms": 8.772
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.201
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 11.69
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 6.083
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.515
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 6.305
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.261
+		},
+		{
+			"action": "search-3",
+			"call_ms": 9.146
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.309
+		},
+		{
+			"action": "search-123",
+			"call_ms": 5.93
+		},
+		{
+			"action": "search-114",
+			"call_ms": 7.102
+		},
+		{
+			"action": "search-112",
+			"call_ms": 6.722
+		},
+		{
+			"action": "search-120",
+			"call_ms": 7.168
+		},
+		{
+			"action": "search-119",
+			"call_ms": 7.643
+		},
+		{
+			"action": "search-118",
+			"call_ms": 6.67
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.436
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.659
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.389
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.729
+		},
+		{
+			"action": "search-111",
+			"call_ms": 6.863
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.284
+		},
+		{
+			"action": "search-122",
+			"call_ms": 7.079
+		},
+		{
+			"action": "search-121",
+			"call_ms": 6.941
+		},
+		{
+			"action": "search-9",
+			"call_ms": 6.6
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.236
+		},
+		{
+			"action": "search-7",
+			"call_ms": 6.914
+		},
+		{
+			"action": "search-6",
+			"call_ms": 7.497
+		},
+		{
+			"action": "search-5",
+			"call_ms": 8.669
+		},
+		{
+			"action": "search-4",
+			"call_ms": 8.204
+		},
+		{
+			"action": "search-2",
+			"call_ms": 8.962
+		},
+		{
+			"action": "search-1",
+			"call_ms": 11.351
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 13.152
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 6.394
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.762
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.478
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.969
+		},
+		{
+			"action": "search-3",
+			"call_ms": 9.672
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.57
+		},
+		{
+			"action": "search-123",
+			"call_ms": 6.434
+		},
+		{
+			"action": "search-114",
+			"call_ms": 7.334
+		},
+		{
+			"action": "search-112",
+			"call_ms": 6.082
+		},
+		{
+			"action": "search-120",
+			"call_ms": 6.754
+		},
+		{
+			"action": "search-119",
+			"call_ms": 6.931
+		},
+		{
+			"action": "search-118",
+			"call_ms": 7.195
+		},
+		{
+			"action": "search-117",
+			"call_ms": 6.417
+		},
+		{
+			"action": "search-116",
+			"call_ms": 6.72
+		},
+		{
+			"action": "search-115",
+			"call_ms": 8.065
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.463
+		},
+		{
+			"action": "search-111",
+			"call_ms": 6.783
+		},
+		{
+			"action": "search-124",
+			"call_ms": 6.573
+		},
+		{
+			"action": "search-122",
+			"call_ms": 6.6
+		},
+		{
+			"action": "search-121",
+			"call_ms": 6.922
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.728
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.733
+		},
+		{
+			"action": "search-7",
+			"call_ms": 7.991
+		},
+		{
+			"action": "search-6",
+			"call_ms": 7.819
+		},
+		{
+			"action": "search-5",
+			"call_ms": 9.276
+		},
+		{
+			"action": "search-4",
+			"call_ms": 8.386
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.346
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.346
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 12.973
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 6.598
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.629
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 5.853
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.786
+		},
+		{
+			"action": "search-3",
+			"call_ms": 9.396
+		},
+		{
+			"action": "search-0",
+			"call_ms": 8.59
+		},
+		{
+			"action": "search-123",
+			"call_ms": 7.408
+		},
+		{
+			"action": "search-114",
+			"call_ms": 6.239
+		},
+		{
+			"action": "search-112",
+			"call_ms": 6.466
+		},
+		{
+			"action": "search-120",
+			"call_ms": 6.854
+		},
+		{
+			"action": "search-119",
+			"call_ms": 7.196
+		},
+		{
+			"action": "search-118",
+			"call_ms": 6.944
+		},
+		{
+			"action": "search-117",
+			"call_ms": 7.534
+		},
+		{
+			"action": "search-116",
+			"call_ms": 7.114
+		},
+		{
+			"action": "search-115",
+			"call_ms": 6.699
+		},
+		{
+			"action": "search-113",
+			"call_ms": 6.707
+		},
+		{
+			"action": "search-111",
+			"call_ms": 7.326
+		},
+		{
+			"action": "search-124",
+			"call_ms": 7.053
+		},
+		{
+			"action": "search-122",
+			"call_ms": 6.633
+		},
+		{
+			"action": "search-121",
+			"call_ms": 7.214
+		},
+		{
+			"action": "search-9",
+			"call_ms": 7.302
+		},
+		{
+			"action": "search-8",
+			"call_ms": 7.21
+		},
+		{
+			"action": "search-7",
+			"call_ms": 7.666
+		},
+		{
+			"action": "search-6",
+			"call_ms": 7.736
+		},
+		{
+			"action": "search-5",
+			"call_ms": 8.67
+		},
+		{
+			"action": "search-4",
+			"call_ms": 8.434
+		},
+		{
+			"action": "search-2",
+			"call_ms": 9.339
+		},
+		{
+			"action": "search-1",
+			"call_ms": 10.421
+		},
+		{
+			"action": "tab-weapon",
+			"call_ms": 12.493
+		},
+		{
+			"action": "tab-attachment",
+			"call_ms": 7.389
+		},
+		{
+			"action": "tab-supply",
+			"call_ms": 0.696
+		},
+		{
+			"action": "tab-talent",
+			"call_ms": 7.06
+		},
+		{
+			"action": "tab-stage",
+			"call_ms": 6.241
+		}
+	]
+}
