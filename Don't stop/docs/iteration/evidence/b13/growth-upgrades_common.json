@@ -10,7 +10,7 @@
 		"owned_upgrades": 9,
 		"rate": 5.0,
 		"reload_s": 0.484704,
-		"reload_seconds": 0.482,
+		"reload_seconds": 0.483,
 		"scenario": "single",
 		"seconds": 15.0,
 		"talent_ranks": 0,
@@ -18,20 +18,20 @@
 	},
 	{
 		"build": "upgrades_common",
-		"clear_seconds": 18.244,
+		"clear_seconds": 17.83,
 		"crit": 0.08,
 		"damage": 180.0,
 		"damage_stat": 2.106,
-		"dps": 9.86625739969305,
+		"dps": 10.0953449242849,
 		"magazine": 56,
 		"owned_upgrades": 9,
 		"rate": 5.0,
 		"reload_s": 0.484704,
 		"reload_seconds": 0.483,
 		"scenario": "crowd",
-		"seconds": 18.244,
+		"seconds": 17.83,
 		"talent_ranks": 0,
-		"volleys": 86
+		"volleys": 84
 	},
 	{
 		"build": "upgrades_common",

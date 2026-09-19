@@ -53,7 +53,7 @@
  },
  {
   "path": "game/guns/BaseGun.gd",
-  "sha256": "756b6d4acada766a0ec5f6a516d7564b6a26f5e0603029dcca31d9baed6eaa95"
+  "sha256": "e893bcf0d51c3444cf9fb0d62ec78655102831ad0c3c979d0ee6e5c06b42a82c"
  },
  {
   "path": "game/guns/GunSprite.gd",

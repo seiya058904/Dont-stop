@@ -41,7 +41,12 @@ func _ready():
 		Demo.ui.render()
 		var camp_observed: Array = []
 		for i in 6: camp_observed.append(randi())
-		var expected_draws = 4 if quality == 0 or quality == WeaponCatalog.tier(6) else 0
+		# Measure the original display-scene lifecycle on this actual backend.
+		seed(20260919)
+		if quality == 0 or quality == WeaponCatalog.tier(6):
+			var legacy_model = Utils.weapon_list["6"].instantiate()
+			legacy_model.free()
+		var expected_draws = camp_sequence.find(randi())
 		check(camp_observed == camp_sequence.slice(expected_draws,expected_draws+6),"cached Camp preserves the baseline RNG sequence for quality "+str(quality))
 		print("PRESENTATION_CAMP_RNG ",JSON.stringify({"quality":quality,"draws":camp_sequence.find(camp_observed[0]),"expected_draws":expected_draws,"observed":camp_observed}))
 	dismiss()

@@ -224,7 +224,12 @@ func run() -> void:
 			Demo.ui.render()
 			var camp_observed: Array = []
 			for i in 6: camp_observed.append(randi())
-			var expected_draws = 4 if quality == 0 or quality == WeaponCatalog.tier(6) else 0
+			# Measure the original display-scene lifecycle on this actual backend.
+			seed(20260919)
+			if quality == 0 or quality == WeaponCatalog.tier(6):
+				var legacy_model = Utils.weapon_list["6"].instantiate()
+				legacy_model.free()
+			var expected_draws = camp_sequence.find(randi())
 			camp_rows.append({"quality":quality,"draws":camp_sequence.find(camp_observed[0]),"matches_legacy":camp_observed==camp_sequence.slice(expected_draws,expected_draws+6)})
 		print("[presentation-camp-rng] ",JSON.stringify(camp_rows))
 		_close_panels()
