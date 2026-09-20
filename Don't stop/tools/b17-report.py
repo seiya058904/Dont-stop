@@ -58,6 +58,7 @@ write('test-log-index.json',logs)
 mapping={'b17-sources.json':'sources.json','b17-reward-matrix.json':'reward-matrix.json',
          'b14-growth-matrix-b17.json':'growth-matrix.json','b14-horde-b17-current.json':'horde.json',
          'b14-encounter-b17-current.json':'encounters.json','b17-bosses.json':'bosses.json','b17-boss-survival.json':'boss-survival.json'}
+mapping['b17-boss-late.json']='boss-late.json'
 for source,dest in mapping.items():
     if (RAW/source).exists():
         value=read(source)

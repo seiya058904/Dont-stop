@@ -12,7 +12,10 @@ source = []
 for directory in ['autoload','game','ui']:
     source.extend(p for p in (root/directory).rglob('*') if p.suffix in ['.gd','.tscn'])
 source.extend(root/'tests'/name for name in ['M8Runtime.gd','M9Power.gd','B12WeaponBench.gd','B14HordeBench.gd','B14GrowthMatrix.gd','B14EncounterBench.gd','B17Sources.gd','B17RewardMatrix.gd'])
-data = [out/name for name in ['sources.json','reward-matrix.json','growth-matrix.json','horde.json','encounters.json','bosses.json','boss-survival.json','performance.json']]
+source.extend((root/'tests').glob('B17*.gd'))
+source.extend(root/'tools'/name for name in ['b17-report.py','b17-manifest.py'])
+source=list(set(source))
+data = [out/name for name in ['sources.json','reward-matrix.json','growth-matrix.json','horde.json','encounters.json','bosses.json','boss-survival.json','boss-late.json','tables.json','performance.json']]
 manifest = {'version':'B17','source':[entry(p) for p in sorted(source)],'data':[entry(p) for p in data],
             'status':'Measured candidate; failures retained, HUMAN_ACCEPTED=false',
             'benchmark_note':'Horde/encounters are new B17 runs. Saved-only isolation added subsequently; live firing path unchanged by that correction. Performance methods differ and are labelled separately.'}

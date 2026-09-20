@@ -1,6 +1,6 @@
 {
-  "build_sha": "9c3e40ca8d21063b60eca82cc0d534e93945d25b",
-  "artifact_digest": "30468e70706effc0666ae9f955cb67ad5b35e41f2b2f99b6fe36d86f18a52919",
+  "build_sha": "80aae7255ac16256df944af6e68f04adbdd68696",
+  "artifact_digest": "b3e597c2c451a9693f8c5c98b58f6acd0124dcdc3b1885232c242deb65af2495",
   "digest_algo": "sha256(index.wasm || index.pck || index.js)",
   "payload": {
     "index.wasm": {
@@ -9,7 +9,7 @@
     },
     "index.pck": {
       "bytes": 41338516,
-      "sha256": "3680cb41a3fcc48933a0ae032966549b0cd87bd091f56d1c26a834437d560820"
+      "sha256": "b50ab723786acc29d27bf19d4dccedc9d6eba5079b8af5308ab71406ce16adae"
     },
     "index.js": {
       "bytes": 279815,

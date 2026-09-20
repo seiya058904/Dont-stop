@@ -934,12 +934,72 @@
    "sha256": "ffb2ec4a887d7ccbac52973e9e97017419aca30e056353e97dbc5188527290fe"
   },
   {
+   "path": "tests/B17Auras.gd",
+   "sha256": "60cadc681dff92b0b5590a17e7406d17b1c7ee15001d27d2d084ce74148b0f78"
+  },
+  {
+   "path": "tests/B17Bosses.gd",
+   "sha256": "386410987b697ca6b5d3a3724f433161bf51afb6bc2a6d1e5c4d04d49737f7d6"
+  },
+  {
+   "path": "tests/B17BossLate.gd",
+   "sha256": "c88cd6b921acb51b9f42d9da521e8f57caa864ddbf72f4d39ef8e08a0be14dfb"
+  },
+  {
+   "path": "tests/B17BossSurvival.gd",
+   "sha256": "1e3b0a73c02524c0aa018270ddf723094d23cebdc0ae31cac9efed0a7fc9e45e"
+  },
+  {
+   "path": "tests/B17Capacity.gd",
+   "sha256": "07e6fe9cb515dc133bc0eaf6c0a60e2dbcf3a541115c646a5ee504320a21ff32"
+  },
+  {
+   "path": "tests/B17CombatMix.gd",
+   "sha256": "b94d5fb7a94c121394e901a2890237421f6d777ac87f643b07b53911e40cdb63"
+  },
+  {
+   "path": "tests/B17Contracts.gd",
+   "sha256": "210c99246afd657a74ebc618d3d65774baa682365be0a29ecd43576fc912596e"
+  },
+  {
+   "path": "tests/B17Density.gd",
+   "sha256": "6d1bde44c67a88c1a7b917c8e2cb4b888db0301dd00ce9dab00bed3d89176834"
+  },
+  {
+   "path": "tests/B17Evidence.gd",
+   "sha256": "ea079c4e97a0906236ae9e48fc9f7655419f71fa56e4b7f98fbc64fa07c3fa96"
+  },
+  {
+   "path": "tests/B17NativeRules.gd",
+   "sha256": "0b62a32a8b149f4a9a92c9d149fb95e4ec004e352f5fce0910df59ad9c77497f"
+  },
+  {
+   "path": "tests/B17ProductPerf.gd",
+   "sha256": "a8289e7f4902414bbc85ac2525027d35ceff5d84cdabc4979f9995155f507c96"
+  },
+  {
+   "path": "tests/B17Resources.gd",
+   "sha256": "3b6a3d575aaefa9b05af1b42b3bd66357993f11a5db1e929e46991f2e0c4439a"
+  },
+  {
    "path": "tests/B17RewardMatrix.gd",
    "sha256": "40dcd7e64c0ffc4f21ff04d45f881ef0e49f281026c5d8412604cc49194f222a"
   },
   {
+   "path": "tests/B17Saved.gd",
+   "sha256": "2802194489e9fd17c98a84bf717a864d8d7df19b321236b4d778455d38f9f27f"
+  },
+  {
    "path": "tests/B17Sources.gd",
    "sha256": "b41ff828ab12becd7a55ee40c05c06b63709d29d6250fdd934a992f2de04ca85"
+  },
+  {
+   "path": "tests/B17Tables.gd",
+   "sha256": "8674b02756537014a316735616bbb6aa11e560878e20bcf045d82ef5a4e25c0b"
+  },
+  {
+   "path": "tests/B17Upper.gd",
+   "sha256": "007b9586c778a09d71cb2415850426b5ea019d610d1c1d26fddb6ad672072127"
   },
   {
    "path": "tests/M8Runtime.gd",
@@ -948,6 +1008,14 @@
   {
    "path": "tests/M9Power.gd",
    "sha256": "2f482d9da3d87280797228893d2baf4a0101f9cd5afead26199b7a04543cbd3a"
+  },
+  {
+   "path": "tools/b17-manifest.py",
+   "sha256": "51f4d657347c19b189cd9c88a8e41fe54c3ae18700aba00b44b63b52ad45ffa1"
+  },
+  {
+   "path": "tools/b17-report.py",
+   "sha256": "856300e90bdcff59145cf135fd2ccb5871fa55b8c6913a1b8507c0b8fa449678"
   },
   {
    "path": "ui/BossHUD.gd",
@@ -1214,6 +1282,14 @@
   {
    "path": "docs/iteration/evidence/b17/boss-survival.json",
    "sha256": "a8189733ef551da3264e5c3456cfbc14743d4b9ae71a009f3d799709a8d03abb"
+  },
+  {
+   "path": "docs/iteration/evidence/b17/boss-late.json",
+   "sha256": "84184060281c0cc0b3490c62872d51f34858cd05521ad4bc9cfc37c4e45c11ef"
+  },
+  {
+   "path": "docs/iteration/evidence/b17/tables.json",
+   "sha256": "70e53fe6a9d54e014aea63c8b82068a071e34edd51f3d593ab8fdf1c8ba0531f"
   },
   {
    "path": "docs/iteration/evidence/b17/performance.json",

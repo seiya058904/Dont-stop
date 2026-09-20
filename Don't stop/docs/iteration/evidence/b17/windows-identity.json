@@ -1,5 +1,5 @@
 {
-  "production_commit": "9c3e40ca8d21063b60eca82cc0d534e93945d25b",
+  "production_commit": "80aae7255ac16256df944af6e68f04adbdd68696",
   "HUMAN_ACCEPTED": false,
   "files": {
     "Don't stop.exe": {
@@ -8,12 +8,12 @@
     },
     "Don't stop.pck": {
       "bytes": 41338516,
-      "sha256": "3680cb41a3fcc48933a0ae032966549b0cd87bd091f56d1c26a834437d560820"
+      "sha256": "b50ab723786acc29d27bf19d4dccedc9d6eba5079b8af5308ab71406ce16adae"
     }
   },
   "known_open": [
-    "rail late horde 81 below 85",
-    "B04 autonomous normal-health death",
-    "ObjectDB exit warnings"
+    "rail late horde 81 below retained floor85",
+    "ObjectDB exit RefCounted warnings, ownership unresolved",
+    "human visual and safe-route acceptance"
   ]
 }

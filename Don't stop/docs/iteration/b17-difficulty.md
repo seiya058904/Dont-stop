@@ -35,7 +35,7 @@ Meteor radius 56; live allowance 3; only legal visible candidates are admitted. 
 
 Counts are phase-window deltas; the action dictionary in the raw record is cumulative. Controlled windows replenish HP and can carry an already issued warning/wave across phase transition. They prove scheduling/admission, not normal-health safe routes.
 
-Ring opening uses abs(angle)<0.42 radians and rotates as a whole with each wave. Geometry checks at radius80 exceed the combined 24px hit threshold for 20..64 slots. Normal-health autonomous completion passed bosses10/20/30 and failed40; a human safe-route judgement is still required.
+Ring opening uses abs(angle)<0.42 radians and rotates as a whole with each wave. Geometry checks at radius80 exceed the combined 24px hit threshold for 20..64 slots. The first non-fixed-level normal-health observer passed10/20/30 and failed40. A separately retained fixed-level20 full-growth observer subsequently completed all four without HP refill. A human safe-route judgement is still required.
 
 |Elite base role|Retained attack modifier|
 |---|---|

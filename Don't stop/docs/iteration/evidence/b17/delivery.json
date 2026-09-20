@@ -1,0 +1,85 @@
+{
+ "production_commit": "80aae7255ac16256df944af6e68f04adbdd68696",
+ "native_exit": 0,
+ "physical_capture_count": 50,
+ "native_errors": [],
+ "native_warnings": [
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGBFloat not supported by hardware, converting to RGBAFloat.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: Image format RGB8 not supported by hardware, converting to RGBA8.",
+  "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+ ],
+ "leaked_types": [
+  "Leaked instance: RefCounted:9223372190030760032 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372213602748524 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372210549295215 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372189527443568 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372193621084294 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372196523542701 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372197060413636 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372203737745875 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372205717457449 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372205700680234 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372206455654962 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372206438877748 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372212294126249 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372212747111128 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372223836851006 - Reference count: 0",
+  "Leaked instance: RefCounted:9223372224306613055 - Reference count: 0"
+ ],
+ "four_windows": [
+  {
+   "requested_width": 1280,
+   "capture_pixels": [
+    1304,
+    784
+   ],
+   "sha256": "cb02994b0c51d6826038432f7f532a93d99a5273b34c1969541e076b279fdadc"
+  },
+  {
+   "requested_width": 1366,
+   "capture_pixels": [
+    1390,
+    832
+   ],
+   "sha256": "0e12975a0ccc2fd5c0538cdba64a85c578fb89524437f7c13e1b5919f56d419d"
+  },
+  {
+   "requested_width": 1536,
+   "capture_pixels": [
+    1560,
+    928
+   ],
+   "sha256": "492fbbb4890ede6591db6649952ec80d6370ad728f5d09f08f41376ff3d56f20"
+  },
+  {
+   "requested_width": 1920,
+   "capture_pixels": [
+    1944,
+    1144
+   ],
+   "sha256": "734ce5e9ee54856441969eeef06faf8b4034fbb99521ee57d7bdae3b0aca198f"
+  }
+ ],
+ "motion_clips": 12,
+ "web_success": true,
+ "zip_sha256": "66c3498e43f97d7e3d27f0dada8bd6a7fdece0076f1c510f80a47db473a59f3b",
+ "raw_directory": "evidence/visual-upgrade-20260919",
+ "HUMAN_ACCEPTED": false
+}
