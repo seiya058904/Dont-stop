@@ -1,0 +1,42 @@
+[
+  {
+    "conclusion": "",
+    "databaseId": 35521207081,
+    "headSha": "594a4290a935651043c4c730ce6aa90fde3cde4a",
+    "name": "Build and deploy Web release",
+    "status": "in_progress",
+    "url": "https://github.com/seiya058904/Dont-stop/actions/runs/35521207081"
+  },
+  {
+    "conclusion": "",
+    "databaseId": 35521207077,
+    "headSha": "594a4290a935651043c4c730ce6aa90fde3cde4a",
+    "name": "Native gameplay tests",
+    "status": "in_progress",
+    "url": "https://github.com/seiya058904/Dont-stop/actions/runs/35521207077"
+  },
+  {
+    "conclusion": "",
+    "databaseId": 35521204230,
+    "headSha": "594a4290a935651043c4c730ce6aa90fde3cde4a",
+    "name": "Native gameplay tests",
+    "status": "in_progress",
+    "url": "https://github.com/seiya058904/Dont-stop/actions/runs/35521204230"
+  },
+  {
+    "conclusion": "failure",
+    "databaseId": 35512896570,
+    "headSha": "974b0d533b4771e7abca780801bae131eb0ba3c7",
+    "name": "Native gameplay tests",
+    "status": "completed",
+    "url": "https://github.com/seiya058904/Dont-stop/actions/runs/35512896570"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 35512896579,
+    "headSha": "974b0d533b4771e7abca780801bae131eb0ba3c7",
+    "name": "Build and deploy Web release",
+    "status": "completed",
+    "url": "https://github.com/seiya058904/Dont-stop/actions/runs/35512896579"
+  }
+]

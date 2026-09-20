@@ -51,6 +51,8 @@
 
 原生/Windows 的 ObjectDB 退出警告原文保留。关闭预热的对照仍有12个 RefCounted、reference count 0。追加的仅加载 Main、不实例化战斗的场景对照：subthreads=true有14个残留，false仍有1个；两者无脚本错误。这个差分与 [Godot #120661](https://github.com/godotengine/godot/issues/120661) 的 LoadToken 问题相符，但未拿到本机C++对象类型/调用栈，不能把全部18–22个退出残留都确证归给引擎。早先 --script 版本触发 SceneManager 空 current_scene，已剔除，不用它作无错证明。运行期10轮稳定与退出警告是两个判断，不伪造零警告。Web release static-memory/orphan 为 N/A。进程内存为原生精确PID或本次独立浏览器PID及其子进程，非整个用户浏览器。
 
+本轮产品提交 `594a4290a935651043c4c730ce6aa90fde3cde4a` 已推送。新CI现场快照见 `ci-snapshot.json`：[native 35521207077](https://github.com/seiya058904/Dont-stop/actions/runs/35521207077)、[Web 35521207081](https://github.com/seiya058904/Dont-stop/actions/runs/35521207081)。记录时尚未全部完成，不能写全绿；本地通过项与基线旧失败已分列。后续报告/索引提交不改变生产源码或测试包身份。
+
 ## 终验结果
 
 |平台/工况|热窗 p95 / p99 ms|热窗 >33.3%|全场最大 ms|最差5秒 p95|模拟/墙钟|弹峰值 / ≥162占用%|时间与负载门槛*|
