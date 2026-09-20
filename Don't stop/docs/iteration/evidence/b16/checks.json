@@ -1,0 +1,828 @@
+[
+  {
+    "log": "b16-aim-final.log",
+    "passes": 13,
+    "failures": [],
+    "warnings": [],
+    "sha256": "211e93e1a3c18159f20d607b6cd63d9b4fff919ce1347ab807b1e009ad01c253",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-b12-catalog-final.log",
+    "passes": 182,
+    "failures": [],
+    "warnings": [],
+    "sha256": "475587259e4057c7bc63ecd32645c05f81730d941f29a0c7a3a5bf853006f8c8",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-camp-after.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "a0261da9a324077b303e89b115a8c48263460d4e1edd2bb3b095cb04ba1ea8be",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-camp-before.log",
+    "passes": 5,
+    "failures": [
+      {
+        "reason": "FAIL talents ordered by quality then stable ID",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL T04 readable height rank 0",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL compact payment button rank 0",
+        "occurrences": 2
+      },
+      {
+        "reason": "FAIL T04 readable height rank 1",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL compact payment button rank 1",
+        "occurrences": 2
+      },
+      {
+        "reason": "FAIL T04 readable height rank 3",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL compact payment button rank 3",
+        "occurrences": 2
+      },
+      {
+        "reason": "FAIL max rank has no redundant payment buttons",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL readable detail on talent",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "40b5c4a76a0415f0d8791c77e45ffca41ec9ee5d01808d83f81e2103532ac7bf",
+    "failure_count": 12
+  },
+  {
+    "log": "b16-camp-final.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "4a3320606e59221a4602d2f21856d3b774d5ca52e71c4a25cf0edabb7af99024",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-camp-growth.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "a27e4042f58fa1b32e648ad1b3c1e8308d0fd8385a7a535d209cbefae5780245",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-camp-render.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "5a0609884a8f8c984df109410d1748fb0a9266b8cb1c52d376b44cb8c2ba7933",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate-import.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [
+      "WARNING: Missing .uid file for path \"res://tests/B12Catalog.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12LineOfSightRegression.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12Save.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12Strength.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12UI.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12Visual.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12WeaponBench.gd\". The file was re-created from cache."
+    ],
+    "sha256": "cadea55a8fdb1b855f1cc65cf53b7de09da34ca36a30194247e716817c737c2a",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate-web.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "bc9eac86833ae7585b4929f4dfc4c9a32c4268632e366e81eb96e1eadeda74e4",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate-windows.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "bc9eac86833ae7585b4929f4dfc4c9a32c4268632e366e81eb96e1eadeda74e4",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate2-import.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "541a79650d3f2b8b0916e3bfb9d1409ab1589cb1188eaa604775003c33533990",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate2-web.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "0a471bd562c90df9342e09daf69962104ed7f73a982340b4586391107e350fc4",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate2-windows.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "0a471bd562c90df9342e09daf69962104ed7f73a982340b4586391107e350fc4",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate3-windows.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "b49dba3fabaac01750bf494b4d174d58fbfa68fba8cf30c56f22de518dd24d62",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-candidate4-windows.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "7e2cacc0f2349c8592d79f0d8dd87989b48e5e0ee4c1092a93c7b942c9e0e87e",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-catalog-final.log",
+    "passes": 532,
+    "failures": [],
+    "warnings": [],
+    "sha256": "98a97a59d54ecb868870f224c02a4ad67e74b7f441c1f0c4826f4ff61e0bf756",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-effects-final.log",
+    "passes": 5,
+    "failures": [],
+    "warnings": [],
+    "sha256": "ef770acdca4fe1aa094ef7cfc6514caa7e4dbf502cbba4916424e3235e09a62c",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-effects.log",
+    "passes": 5,
+    "failures": [],
+    "warnings": [],
+    "sha256": "23df3bf5b8ec7cb5534c7d29582eca40ffa69308cc230373f07edc9a6ec0a7ea",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-encounters-aim.log",
+    "passes": 2,
+    "failures": [],
+    "warnings": [],
+    "sha256": "ec6d72d9af21441dfba58f0f52a9d890fa14950b905513f2f08c37bfe60ec471",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-encounters-complete.log",
+    "passes": 19,
+    "failures": [],
+    "warnings": [],
+    "sha256": "859f35708eead8215699be51833245a7d4641a43703f856c216508c98ba00a6c",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-encounters-first.log",
+    "passes": 8,
+    "failures": [
+      {
+        "reason": "FAIL normal visible meteor 31 seed 808",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 35 seed 808",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 39 seed 808",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 40 seed 808",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 31 seed 809",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 35 seed 809",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 39 seed 809",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL normal visible meteor 40 seed 809",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "14baaf1a14311c5ca2e82e2ae70a522130bb35ebac3870ae59d4b82380cee0b2",
+    "failure_count": 8
+  },
+  {
+    "log": "b16-encounters-multiseed.log",
+    "passes": 9,
+    "failures": [
+      {
+        "reason": "ERROR: String formatting error: unsupported format character.",
+        "occurrences": 1134
+      }
+    ],
+    "warnings": [],
+    "sha256": "0aa6471c7dbe2865d611c2dfbcac0d1a136672bda43cbdcc0215a0dbc51b2310",
+    "failure_count": 1134
+  },
+  {
+    "log": "b16-encounters-viewport.log",
+    "passes": 1,
+    "failures": [
+      {
+        "reason": "FAIL normal visible meteor 31 seed 808",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "172e8b58f48fb109ad409f3b74d0b6412b710e11b4fcdc947147b64635c2f8a2",
+    "failure_count": 1
+  },
+  {
+    "log": "b16-final-import.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [
+      "WARNING: Missing .uid file for path \"res://tests/B12Catalog.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12LineOfSightRegression.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12Save.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12Strength.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12UI.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12Visual.gd\". The file was re-created from cache.",
+      "WARNING: Missing .uid file for path \"res://tests/B12WeaponBench.gd\". The file was re-created from cache."
+    ],
+    "sha256": "8083a21229c59fea3e58e176d4e99d733d7a1a2c856f8a6fe74ae4bb7df67df5",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-final-native-smoke.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [
+      "WARNING: 17 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    ],
+    "sha256": "5da69de61f116a5d4c03cebf56ad67495640a1cc2a0a94e2f1b91f66649c9959",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-final-web.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "6205b2e1d5d20e5fe3da6745ad9a34773f4bd372daa3da82d4081044ed7a8ed8",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-final-windows.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "6205b2e1d5d20e5fe3da6745ad9a34773f4bd372daa3da82d4081044ed7a8ed8",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-fixed-perf.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "dbdb8db87139c6fb5b32e76779f0659824a31c248795e7e22ead1c8d0eb5c1a8",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-growth-after.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "0100d970ffd973535748e75c9207b5734b877942cf20657cd044db53efab1730",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-growth-before.log",
+    "passes": 2,
+    "failures": [
+      {
+        "reason": "FAIL A9 actual hit automatically damages nearby enemy",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL native branch kill heals",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL native kill charges shield recovery",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL native branch counts for reserve magazines",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL T09 legendary keeps three ranks",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "b916ff4e1220275e3df8c751212d72faacaaed3772782f432b0389f954d47a39",
+    "failure_count": 5
+  },
+  {
+    "log": "b16-growth-coins.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "d61931a3eaac91c626597a456a9f0b34f16ceeead640cec003d204eaeba839ce",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-growth-final.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "d47aa5948e17dcf4ef81d968eec3e61ecba4dda097810e808d22b5eade4805b7",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-growth-fission.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "aef0e912634abf7ffb08bcb1a85f8780fc2dc50c4c722c778ec9cb4555860a5d",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-hazard-regression.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "b71311a021a903b35731ad61188a4b0213dddb69b42172a4810f0fd30b42b845",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-hazards-final.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "6fcafe45fac99d4c07fb11505ff4848119dedd3d20c2306a3adb59e3a0929f8b",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-historical-evidence-check.log",
+    "passes": 561,
+    "failures": [
+      {
+        "reason": "FAIL B14 source fingerprint autoload/Combat.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint autoload/Demo.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint autoload/server/RewardServer.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint autoload/Smoke.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/attachments/A120.tscn",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/attachments/GrenadeLauncher.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/attachments/GrenadeLauncher.tscn",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/bullets/MechanismProjectile.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/ArenaHazards.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/AttachmentCatalog.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/CampSnapshot.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/CombatStatus.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/DemoConfig.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/EffectiveStats.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/M5Content.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/config/WeaponCatalog.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/effects/CombatEffect.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/guns/ArcCaster.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/guns/ArcCaster.tscn",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/guns/BaseGun.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/guns/MechanismGun.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/items/Gold.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/items/HpPack.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/map/ArenaHazardDirector.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/map/StageHazard.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/monster/BaseMonster.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint game/monster/BossUltimate.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/AimProvider.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B11Fairness.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B13Economy.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B13TalentEffects.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B13UI.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B13UpgradeEffects.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B14EncounterBench.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B14EncounterContracts.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B14HordeBench.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/B14Loadout.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/M4Talents.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/M8Runtime.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/M8Supply.gd",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL B14 source fingerprint tests/R1Timeline.gd",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "986c51909ffb76d1f50ad804b48ee6c1b77ebf36550863715f0f0438ab79369e",
+    "failure_count": 41
+  },
+  {
+    "log": "b16-mix-final.log",
+    "passes": 27,
+    "failures": [],
+    "warnings": [],
+    "sha256": "2e0d578517c48288e09309131a7c9bcc04fff6874eeae7720530f3c7b3600a11",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-mix.log",
+    "passes": 27,
+    "failures": [],
+    "warnings": [],
+    "sha256": "4c7c2a870dbb06c9064a498edc36f23f00e7416167c2229e65ade9921c64d5e9",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-passive-final.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "3ce341c370afc343f94b7483c1d5e31f9d48eebcf0541165d3691932f11e7ce6",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-pickup-first.log",
+    "passes": 12,
+    "failures": [],
+    "warnings": [],
+    "sha256": "71e13caf56c1bbfb9ccd6a244a30a2bb1c9401a3d0b3e869fc4a2b7937d5b91f",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-price-bench.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "f3ac9bc49ce8a41b27f4f9973f40b597e68e064071ee081f245a5d6f77079c52",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-product-perf.log",
+    "passes": 0,
+    "failures": [],
+    "warnings": [],
+    "sha256": "f132ba8ddde486a3897b6b038db3f525ef733c9720fa64810def98644fb12254",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b11fairness.log",
+    "passes": 61,
+    "failures": [],
+    "warnings": [],
+    "sha256": "a12734868e0d59220a55282e6909c75d014386760a13bb44c8d6c320b1d7cc5d",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b13catalog.log",
+    "passes": 530,
+    "failures": [
+      {
+        "reason": "FAIL scene display name matches catalog 120",
+        "occurrences": 1
+      },
+      {
+        "reason": "FAIL scene display name matches catalog 9",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "044aab51a1187cc3730649ce2ec3aff9b57ae1feeec6391d47e18f588a705393",
+    "failure_count": 2
+  },
+  {
+    "log": "b16-suite-b13economy.log",
+    "passes": 159,
+    "failures": [],
+    "warnings": [],
+    "sha256": "abef967152210b7d9f01ffba6afd61da6da7c08742a48c3e50871fb662c2f331",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b13talenteffects.log",
+    "passes": 37,
+    "failures": [],
+    "warnings": [],
+    "sha256": "6b759914e089fbaa8c227400de8f5ee23da39c27ee45291690ab51729b118c33",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b13ui.log",
+    "passes": 138,
+    "failures": [],
+    "warnings": [],
+    "sha256": "2ff77d587df964911f9c6baa6af6787f7d4aff4f8a7303b0c6559759cc6cfa27",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b13upgradeeffects.log",
+    "passes": 85,
+    "failures": [],
+    "warnings": [],
+    "sha256": "f8ee4c7c53633b7f5112baa1129d807a08bdfd3eab5cf108c88c98cdcdca246c",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b14growth.log",
+    "passes": 13,
+    "failures": [],
+    "warnings": [],
+    "sha256": "0c6b461df03c383369b51553865f62e59720ceabb8778142470440c5c9e17ed5",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b14loadout.log",
+    "passes": 86,
+    "failures": [],
+    "warnings": [],
+    "sha256": "75532bcc7a21d8edd61f86d73d4b065fc6134c2c81820c266e397b9fcdafb3f0",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b14rail.log",
+    "passes": 8,
+    "failures": [],
+    "warnings": [],
+    "sha256": "b23d4c9bd94251b2f6598354958005225674a000c819a0c4cc5828792fe29586",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b15arc.log",
+    "passes": 4,
+    "failures": [],
+    "warnings": [],
+    "sha256": "82d20662290dfa4d8c38ee58e112cde6a1ef6803e15ae3c0e8e4c02b9dfa1900",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b15hazards.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "0889b72cd8cadabfb063edaf9519d47827959169c6b960baecec10ebe6559425",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b15save.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "059b4c70b327efc837b38cf4d4927a06911b3a3e7121f3750cb8188192dacf1d",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b16camp.log",
+    "passes": 15,
+    "failures": [],
+    "warnings": [],
+    "sha256": "e984cedd5a4d2086527a5abb6fed2f0e684ac9fe1aae52c5870d6a56b67bfdd5",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b16growth.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "c29cc7131b2d27c46c066dd3012c9b053aa440c3e9f89bd299785df1b7668b51",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b16pickup.log",
+    "passes": 12,
+    "failures": [],
+    "warnings": [],
+    "sha256": "c1330b089dbd5af11c9e0ec3fbb1723eed06a38783046e34a6a619a86840c8ab",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-b16save.log",
+    "passes": 80,
+    "failures": [],
+    "warnings": [],
+    "sha256": "9d378bfc670895fd0283aa97ea001183f19118d9720fae86237eb91a78c273ed",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-m3weapons.log",
+    "passes": 72,
+    "failures": [],
+    "warnings": [],
+    "sha256": "4f6ee7423de13a628c382f3fc912ef22f4cd0f11bf42eb026985a524f79bcb2e",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-m4talents.log",
+    "passes": 233,
+    "failures": [],
+    "warnings": [],
+    "sha256": "42417cf4977e862454b8bd720880ca098d07800134ec895415cd68d179723f96",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-presentationcontracts.log",
+    "passes": 52,
+    "failures": [],
+    "warnings": [],
+    "sha256": "47b7afdd4f123967dcb2524da6204da0e69aac36cdabf8eadd72daa10cd377fe",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-suite-presentationlifecycle.log",
+    "passes": 52,
+    "failures": [],
+    "warnings": [],
+    "sha256": "b05a034396a6afa9de522dfaf5f20d487eed7ec01f640b05f44293032fb7cc34",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-supply-final.log",
+    "passes": 147,
+    "failures": [],
+    "warnings": [],
+    "sha256": "fa336c527f553a1d6887fc50d601aec2af17514779b2271cce670e0ba69ec5bb",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-talents-final.log",
+    "passes": 37,
+    "failures": [],
+    "warnings": [],
+    "sha256": "622b0709fc43a20b0f7846ba153d9bf5952536557ae8996719a6f56fd05701cf",
+    "failure_count": 0
+  },
+  {
+    "log": "b16-timeline-final.log",
+    "passes": 0,
+    "failures": [
+      {
+        "reason": "SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array')",
+        "occurrences": 1
+      }
+    ],
+    "warnings": [],
+    "sha256": "aaa2aa89770804514c368c8954dedbbfc92889f68d243c630e2710592b88c6d7",
+    "failure_count": 1
+  },
+  {
+    "log": "b16-weapon-regression.log",
+    "passes": 7,
+    "failures": [],
+    "warnings": [],
+    "sha256": "1f0ea140a9f36b79de4ba49f1d51bc0f0eb3abfe5fb91913ce1240ce75f0ccf6",
+    "failure_count": 0
+  }
+]

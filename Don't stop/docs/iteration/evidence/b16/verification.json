@@ -1,0 +1,139 @@
+{
+  "production_sha": "31a65f4146139938e412253495fe0f04f08bb1d1",
+  "HUMAN_ACCEPTED": false,
+  "web": {
+    "success": true,
+    "checks": [
+      {
+        "rank": 0,
+        "actions": 16,
+        "detail": 105,
+        "order": [
+          "T04"
+        ],
+        "selection": "T04",
+        "status": "选择一种支付方式",
+        "tab": "talent"
+      },
+      {
+        "rank": 1,
+        "actions": 16,
+        "detail": 105,
+        "order": [
+          "T04"
+        ],
+        "selection": "T04",
+        "status": "选择一种支付方式",
+        "tab": "talent"
+      },
+      {
+        "rank": 2,
+        "actions": 16,
+        "detail": 105,
+        "order": [
+          "T04"
+        ],
+        "selection": "T04",
+        "status": "选择一种支付方式",
+        "tab": "talent"
+      },
+      {
+        "rank": 3,
+        "actions": 0,
+        "detail": 121,
+        "order": [
+          "T04"
+        ],
+        "selection": "T04",
+        "status": "已满级",
+        "tab": "talent"
+      }
+    ],
+    "meteors": [
+      {
+        "elapsed": 0,
+        "event": "descent",
+        "phase": "warning",
+        "stage": 31,
+        "visible_warning": 0,
+        "x": 17079.36328125,
+        "y": -5784.51025390625
+      },
+      {
+        "elapsed": 1.51666666666667,
+        "event": "impact",
+        "phase": "active",
+        "stage": 31,
+        "visible_warning": 1.51666666666667,
+        "x": 17079.36328125,
+        "y": -5784.51025390625
+      },
+      {
+        "elapsed": 0,
+        "event": "descent",
+        "phase": "warning",
+        "stage": 31,
+        "visible_warning": 0,
+        "x": 17243.1328125,
+        "y": -6066.44580078125
+      },
+      {
+        "elapsed": 1.51666666666667,
+        "event": "impact",
+        "phase": "active",
+        "stage": 31,
+        "visible_warning": 1.51666666666667,
+        "x": 17243.1328125,
+        "y": -6066.44580078125
+      }
+    ],
+    "method": "exported Web; real input; fresh storage; normal stage31"
+  },
+  "native": {
+    "window_sizes": [
+      [
+        1280,
+        720
+      ],
+      [
+        1366,
+        768
+      ],
+      [
+        1536,
+        864
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "pages": 5,
+    "viewport_capture_sizes": [
+      [
+        1280,
+        718
+      ],
+      [
+        1366,
+        766
+      ],
+      [
+        1536,
+        861
+      ],
+      [
+        1920,
+        1077
+      ]
+    ],
+    "smoke": "PASS camp/depart/switch/fire",
+    "ui_exit_warning": "18 ObjectDB instances",
+    "combat_smoke_exit_warning": "17 ObjectDB instances"
+  },
+  "known_failed_gates": [
+    "B13Strength --b14: 41 stale source fingerprint failures",
+    "R1Timeline: obsolete local attachment fixture array access"
+  ],
+  "raw_root": "evidence/visual-upgrade-20260919"
+}

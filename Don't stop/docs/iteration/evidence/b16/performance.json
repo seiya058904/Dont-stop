@@ -1,0 +1,65 @@
+{
+  "fixed": {
+    "renderer": "forward_plus",
+    "window": [
+      15,
+      105
+    ],
+    "frame_ms": {
+      "p95": 7.189,
+      "p99": 7.597,
+      "max": 13.717
+    },
+    "process_proxy_ms": {
+      "p95": 12.708,
+      "p99": 13.284,
+      "max": 13.284
+    },
+    "physics_proxy_ms": {
+      "p95": 1.281,
+      "p99": 1.354,
+      "max": 1.354
+    },
+    "zones_emitted": 430,
+    "transient_peak": 24
+  },
+  "product": [
+    {
+      "stage": 39,
+      "weapon": 116,
+      "seconds": 44.905023,
+      "frame_ms_after_5s": {
+        "p95": 8.394,
+        "p99": 9.095,
+        "max": 15.797
+      },
+      "peak_counts": {
+        "enemies": 74,
+        "nodes": 1270,
+        "heat_cells": 20,
+        "transients": 71
+      },
+      "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture"
+    },
+    {
+      "stage": 40,
+      "weapon": 112,
+      "seconds": 40.23123,
+      "frame_ms_after_5s": {
+        "p95": 7.427,
+        "p99": 8.071,
+        "max": 14.057
+      },
+      "peak_counts": {
+        "enemies": 1,
+        "nodes": 446,
+        "heat_cells": 1,
+        "transients": 46
+      },
+      "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture"
+    }
+  ],
+  "historical_cpu_proxy_failures": "UNRESOLVED",
+  "true_per_frame_cpu": null,
+  "gpu_ms": null
+}

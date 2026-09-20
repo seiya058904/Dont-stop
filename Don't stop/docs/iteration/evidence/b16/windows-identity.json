@@ -1,0 +1,13 @@
+{
+  "production_sha": "31a65f4146139938e412253495fe0f04f08bb1d1",
+  "files": {
+    "Don't stop.exe": {
+      "bytes": 109197312,
+      "sha256": "ddaca81def3824832bd659cfda86e9d78cf2b2317743d58fc99bd545a6151655"
+    },
+    "Don't stop.pck": {
+      "bytes": 41327456,
+      "sha256": "24abc16957c9873cbe3eb145cbe152a9a438594d6cf5116d99eb464903e1e149"
+    }
+  }
+}
