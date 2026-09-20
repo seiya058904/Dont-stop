@@ -18,6 +18,7 @@ var burns: Dictionary = {}
 var slow_time = 0.0
 var slow_amount = 0.0
 var slows: Dictionary = {}
+var knockback_time = 0.0
 func apply_slow(source: String, amount: float, seconds: float):
 	slows[source] = {"amount":amount,"seconds":seconds}
 	refresh_slow()
@@ -46,7 +47,11 @@ func apply_burn(source: String, amount: float, seconds: float, context: Dictiona
 	var old = burns.get(source,{"tick":0.25})
 	burns[source] = {"remaining":seconds,"tick":old.tick,"context":saved}
 
-var audio_hit: AudioStreamPlayer2D
+const HIT_SOUND = preload("res://audio/body_hit_finisher_52.wav")
+const HIT_SHADER = preload("res://shader/HitFlash.gdshader")
+static var body_materials: Dictionary = {}
+var enchantment_tier := 0
+var enchantment_phase := 0
 @onready var sprite_body = get_node("body")
 @onready var anim :AnimatedSprite2D = get_node("body/AnimatedSprite2D")
 
@@ -61,17 +66,12 @@ var death_callback :Callable
 
 func _ready():
 	add_to_group("monsters")
-	var flash = ShaderMaterial.new()
-	flash.shader = load("res://shader/HitFlash.gdshader")
-	anim.material = flash
-	audio_hit = AudioStreamPlayer2D.new()
-	audio_hit.bus = "SFX"
+	Combat.invalidate_group_cache()
+	_update_body_material()
 	var node = Node2D.new()
 	node.name = "EffectRoot"
 	add_child(node)
 	name = str(Time.get_ticks_usec())
-	audio_hit.stream = load("res://audio/body_hit_finisher_52.wav")
-	add_child(audio_hit)
 
 func setData(data):
 	SPEED = data['speed']
@@ -80,6 +80,10 @@ func setData(data):
 	knockback_def = 5
 
 func _process(delta):
+	var measured := Time.get_ticks_usec() if B11Probe.enabled else 0
+	if knockback_time > 0.0:
+		knockback_time = maxf(0.0,knockback_time-delta)
+		if knockback_time <= 0.0: hit = false
 	# B11.2 test-only counters (game/diag/B11Probe.gd): how often the status walks ran, and how
 	# often they ran over an EMPTY status set. The second number is the whole question - an actor
 	# carrying no status at all should not be paying for a walk.
@@ -116,7 +120,7 @@ func _process(delta):
 	if displayed_flash != visible_flash:
 		displayed_flash = visible_flash
 		queue_redraw()
-		anim.material.set_shader_parameter("flash",0.7 if visible_flash == 0.7 else 0.0)
+		_update_body_material()
 		anim.scale = Vector2(1.08,0.92) if flash_time > 0 else Vector2.ONE
 	label_time -= delta
 	if label_time <= 0:
@@ -125,6 +129,7 @@ func _process(delta):
 		idle_frame_num = 0
 		critical_total = 0
 		label_time = 0.2
+	if B11Probe.enabled: B11Probe.cost("monster_process_inclusive",measured)
 
 func _physics_process(delta):
 	if training: return
@@ -132,7 +137,7 @@ func _physics_process(delta):
 	if is_atk || is_die:
 		return
 	if hit:
-		move_and_slide()
+		_measured_move()
 	elif target_player != null:
 		var next_path_position = target_player.global_position
 		path_refresh -= delta
@@ -160,7 +165,7 @@ func _on_velocity_computed(safe_velocity: Vector2) -> void:
 		anim.play("idle")
 		return
 	velocity = safe_velocity
-	move_and_slide()
+	_measured_move()
 
 func flip_h(flip:bool):
 	if is_flip == flip:
@@ -185,12 +190,12 @@ func receive_damage(amount: float, critical: bool, context: Dictionary):
 	if critical: critical_total += amount
 	else: idle_frame_num += amount
 	flash_time = 0.08
-	Combat.sound(audio_hit.stream,global_position)
+	Combat.sound(HIT_SOUND,global_position)
 	var impulse = context.get("impulse",0.0)-knockback_def
 	if impulse > 0 and not training and not is_boss:
 		velocity = Utils.player.global_position.direction_to(global_position)*impulse
 		hit = true
-		get_tree().create_timer(context.get("impulse_time",0.1), false).timeout.connect(func(): hit = false)
+		knockback_time = maxf(0.05,float(context.get("impulse_time",0.1)))
 	if training:
 		HP = 1000
 		return
@@ -200,6 +205,7 @@ func receive_damage(amount: float, critical: bool, context: Dictionary):
 func onDie(is_death_effect = true):
 	if is_die or training: return
 	is_die = true
+	set_enchantment_visual(0,0)
 	get_tree().call_group("reward","target_removed",self)
 	Combat.kill_events += 1
 	Demo.on_kill(self,last_context)
@@ -228,17 +234,6 @@ func addEffect(node):
 	get_node("EffectRoot").add_child(node)
 
 func _draw():
-	if not is_die and get_meta("variant_applied",false):
-		var giant = get_meta("giant",false)
-		var tier = int(get_meta("enchantment",0))
-		var color = Color("eeb65d") if giant else (Color("8fed74") if tier == 1 else Color("ed77c9"))
-		var center = Vector2(0,-18 if giant else -9)
-		var radius = 23.0 if giant else 13.0
-		draw_arc(center,radius,0,TAU,12,color,1.0)
-		for rune in (2 if tier == 2 else 1):
-			draw_line(center+Vector2(-3+rune*6,-radius-4),center+Vector2(-3+rune*6,-radius),color,2)
-		var fraction = clampf(HP/maxf(1.0,float(get_meta("initialized_hp",HP))),0,1)
-		draw_line(center+Vector2(-radius,-radius-7),center+Vector2(-radius+radius*2*fraction,-radius-7),color,2)
 	# Compact contact bracket remains visible with flash and shake disabled.
 	if flash_time > 0 and not is_die:
 		var tier = int(last_context.get("tier",1))
@@ -247,3 +242,27 @@ func _draw():
 			draw_arc(Vector2(0,-8),9+tier,-1.3,1.3,8,color,1.3)
 		draw_arc(Vector2(0,-8),10,-0.6,0.6,5,Color(1,0.85,0.5),1)
 		draw_arc(Vector2(0,-8),10,PI-0.6,PI+0.6,5,Color(1,0.85,0.5),1)
+
+func _measured_move() -> void:
+	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	move_and_slide()
+	if B11Probe.enabled: B11Probe.cost("monster_move",started)
+
+func set_enchantment_visual(tier: int, phase: int) -> void:
+	enchantment_tier = tier
+	enchantment_phase = phase if tier > 0 else 0
+	_update_body_material()
+
+func _update_body_material() -> void:
+	# Immutable palette: sharing must never flash or enchant another actor.
+	# The original eight phases, both tiers and hit appearance remain identical.
+	var flashing: bool = displayed_flash == 0.7
+	var key := enchantment_tier*16+enchantment_phase*2+int(flashing)
+	if not body_materials.has(key):
+		var material := ShaderMaterial.new()
+		material.shader = HIT_SHADER
+		material.set_shader_parameter("enchantment_tier",float(enchantment_tier))
+		material.set_shader_parameter("enchantment_phase",float(enchantment_phase)/8.0)
+		material.set_shader_parameter("flash",0.7 if flashing else 0.0)
+		body_materials[key] = material
+	anim.material = body_materials[key]

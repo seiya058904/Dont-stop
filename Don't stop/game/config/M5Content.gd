@@ -46,11 +46,25 @@ const ENEMIES = {
 	"E15":{"name":"毒囊携带者","hp":5.0,"speed":84.0,"role":"推进毒囊；近身或死亡释放短时毒区，受全局毒区上限约束"}
 }
 const BOSSES = {
-	"B01":{"name":"破城机甲","hp":5600.0,"speed":84.0,"role":"三阶段：冲锋、重扇斩、震地；中段护卫与环状冲击；末段连招加速","armor":120.0},
-	"B02":{"name":"蜂巢聚合体","hp":9000.0,"speed":76.0,"role":"三阶段：追击召唤、连续封区、扇面脉冲；中段自爆蜂群；末段毒区与束缚弹"},
-	"B03":{"name":"棱镜核心","hp":9800.0,"speed":115.0,"role":"三阶段：切侧突进、方向扫束、快速扇射；中段反向压迫；末段十字激光、旋转扫束、侧翼突进"},
-	"B04":{"name":"深渊核心体","hp":16000.0,"speed":96.0,"role":"地狱终局：三阶段；战争迷雾内移动安全区、激光网、移动危险带与百分比终极"}
+	"B01":{"name":"破城机甲","hp":5600.0,"final_hp":7000.0,"speed":84.0,"role":"三阶段：冲锋、重扇斩、震地；中段护卫与环状冲击；末段连招加速","armor":120.0},
+	"B02":{"name":"蜂巢聚合体","hp":9000.0,"final_hp":11250.0,"speed":76.0,"role":"三阶段：追击召唤、连续封区、扇面脉冲；中段自爆蜂群；末段毒区与束缚弹"},
+	"B03":{"name":"棱镜核心","hp":9800.0,"final_hp":12250.0,"speed":115.0,"role":"三阶段：切侧突进、方向扫束、快速扇射；中段反向压迫；末段十字激光、旋转扫束、侧翼突进"},
+	"B04":{"name":"深渊核心体","hp":16000.0,"final_hp":20000.0,"speed":96.0,"role":"地狱终局：三阶段；战争迷雾内移动安全区、激光网、移动危险带与百分比终极"}
 }
+
+## Bosses keep an authored base value for content history, but production actors use the
+## explicit final value.  Keeping both fields prevents tests and balance tools from silently
+## disagreeing about the extra B18 generation multiplier.
+const GIANT_BOSS_REFERENCE_RATIOS = {
+	33:0.30, 34:0.30, 35:0.35, 36:0.40, 37:0.45, 38:0.50, 39:0.55
+}
+
+static func boss_reference_max_hp(_stage: int) -> float:
+	return float(BOSSES["B04"].get("final_hp",BOSSES["B04"].hp))
+
+static func giant_final_hp(stage: int) -> float:
+	return boss_reference_max_hp(stage)*float(GIANT_BOSS_REFERENCE_RATIOS.get(stage,0.30))
+
 static func definition(id: String) -> Dictionary:
 	return ENEMIES.get(id,BOSSES.get(id,{}))
 ## Instrumentation for tests/R3SpawnAudit.gd. Counters only - no behaviour change.
@@ -114,6 +128,7 @@ static func _shape_extent(shape: Shape2D) -> float:
 	return 7.0
 
 static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
+	var measured := Time.get_ticks_usec() if B11Probe.enabled else 0
 	if definition(id).is_empty(): return null
 	# Shared guard for every spawn path. Callers are supposed to validate their
 	# candidate first, but a missed check used to create the actor at whatever
@@ -136,7 +151,11 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 			id = "E01" if mix.ordinary%2 == 0 else "E02"
 	var variant = preload("res://game/config/B18Variants.gd").select(id,parent.get_tree(),point,summoned,radius_for(id))
 	point = variant.point
+	if B11Probe.enabled: B11Probe.cost("spawn_prepare",measured)
+	measured = Time.get_ticks_usec() if B11Probe.enabled else 0
 	var actor = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
+	if B11Probe.enabled: B11Probe.cost("spawn_instantiate",measured)
+	measured = Time.get_ticks_usec() if B11Probe.enabled else 0
 	if id in ["E02","E04","E05"]:
 		actor.set_script(load("res://game/monster/DemoEnemy.gd")); actor.role = id
 	elif id != "E01":
@@ -162,20 +181,30 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	actor.position = parent.to_local(point)
 	if is_instance_valid(LevelServer.town): actor.setDeathCallBack(LevelServer.town.onMonsterDeath)
 	parent.add_child(actor)
+	if B11Probe.enabled: B11Probe.cost("spawn_ready",measured)
+	measured = Time.get_ticks_usec() if B11Probe.enabled else 0
 	# All subclass ready methods have finished. Apply the authored final values once.
 	var hp_scale = HellMode.hp_scale(LevelServer.level) if hell else 1.0
 	if id in ["E01","E02"]: hp_scale *= float(pressure.get("ordinary_hp",1.0))
 	if id in ["E01","E02"] and pressure.has("final_ordinary_hp"):
 		hp_scale = float(pressure.final_ordinary_hp)
-	if id.begins_with("B"): hp_scale = 1.25
+	if id.begins_with("B"): hp_scale = 1.0
 	var speed_scale = HellMode.speed_scale(LevelServer.level) if hell else 1.0
 	if id in ["E01","E02"]: speed_scale *= float(pressure.get("chase_speed",1.0))
-	actor.HP = d.hp*hp_scale
+	if id.begins_with("B"):
+		actor.HP = float(d.get("final_hp",d.hp))
+	elif id in ["E01","E02"] and pressure.has("final_ordinary_hp"):
+		# B19's ordinary axis is already the final actor HP (2.0 -> 8.0), not a
+		# multiplier to apply a second time to each content definition.
+		actor.HP = float(pressure.final_ordinary_hp)
+	else:
+		actor.HP = d.hp*hp_scale
 	actor.SPEED = minf(132.0,d.speed*speed_scale) if id in ["E01","E02"] else d.speed*speed_scale
 	if actor.get("max_hp") != null: actor.max_hp = actor.HP
 	actor.set_meta("initialized_hp",actor.HP)
 	actor.set_meta("initialized_speed",actor.SPEED)
-	preload("res://game/config/B18Variants.gd").apply(actor,variant.kind)
+	preload("res://game/config/B18Variants.gd").apply(actor,variant.kind,int(variant.get("enchantment",0)))
+	if B11Probe.enabled: B11Probe.cost("spawn_finalize",measured)
 	return actor
 
 static func living_mix(tree: SceneTree) -> Dictionary:
@@ -210,6 +239,7 @@ static func promote_elite(actor, modifier := ""):
 	if actor.get("is_elite") == true: return
 	if not can_promote(actor): return
 	actor.is_elite = true
+	if actor.has_method("_ensure_continuous_barrage"): actor._ensure_continuous_barrage()
 	actor.HP *= 1.5
 	actor.set_meta("elite_modifier",modifier)
 	var aura = load("res://game/effects/EliteAura.gd").new()
@@ -345,7 +375,7 @@ static func encounters() -> Dictionary:
 		row.horde = HORDES[stage].duplicate()
 		row.horde.batch = ceili(row.horde.batch*density)
 		row.horde.floor = ceili(row.horde.floor*density)
-	# B18: final HP replaces (rather than multiplies) the prior Hell/ordinary axes.
+	# B19: final HP replaces (rather than multiplies) the prior Hell/ordinary axes.
 	# Additional arrivals are ordinary; mechanism/elite caps and fog stay unchanged.
 	for stage in range(31,40):
 		var row = table[stage]

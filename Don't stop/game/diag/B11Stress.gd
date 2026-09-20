@@ -60,6 +60,45 @@ var presentation_ultimate_count := -1
 
 # ---- per-frame samples (parallel packed arrays: no per-frame allocation) ---------------------
 var _ms := PackedFloat32Array()
+var _engine_ms := PackedFloat32Array()
+var _ticks := PackedInt64Array()
+var _load_samples: Array = []
+var _sample_tick_start := 0
+var _driver_active := false
+var source_variant := "b19-1-correct-reference"
+var normal_hp := false
+var measurement_timeout := false
+
+var _release_until_tick := 0
+var _next_aim_tick := 0
+func _physics_process(_delta: float) -> void:
+	if not _driver_active or get_tree().paused or LevelServer.state != "COMBAT": return
+	var tick := Engine.get_physics_frames()-_sample_tick_start
+	if not park: _drive_movement(int(tick*1000/Engine.physics_ticks_per_second))
+	if not label.begins_with("b19-1"): return
+	if stage == 40 and tick >= seconds*Engine.physics_ticks_per_second:
+		LevelServer.return_to_camp()
+		return
+	if not presentation_weapons.is_empty():
+		var slot := int(tick/(8*Engine.physics_ticks_per_second)) % presentation_weapons.size()
+		if presentation_weapon != presentation_weapons[slot]:
+			presentation_weapon = presentation_weapons[slot]
+			Utils.player.changeWeapon(presentation_weapon)
+			_release_until_tick = tick+10
+	if (stage == 40 and presentation_boss_hold) or tick < _release_until_tick or (presentation_weapon == 113 and tick % (Engine.physics_ticks_per_second*2) < 7):
+		Input.action_release("shoot")
+	else: Input.action_press("shoot")
+	if tick >= _next_aim_tick:
+		_next_aim_tick = tick+6
+		var nearest = null
+		var best := INF
+		for actor in get_tree().get_nodes_in_group("monsters"):
+			if actor.is_die or actor.is_queued_for_deletion(): continue
+			var distance: float = actor.global_position.distance_squared_to(Utils.player.global_position)
+			if distance < best:
+				best = distance; nearest = actor
+		if is_instance_valid(nearest): Utils.aim_override = get_viewport().get_canvas_transform()*(nearest.global_position-Vector2(0,8))
+
 ## The engine's own CPU cost for this frame's physics step and idle step, in milliseconds. These
 ## are the readings that survive a vsync lock: the browser build is capped at 60 Hz here, so a frame
 ## that costs 8 ms and one that costs 16.6 ms are both reported as 16.67 ms. `_phys` and `_proc`
@@ -81,7 +120,7 @@ const F_LANE := 16
 
 # ---- gauges sampled at 10 Hz: peaks matter, per-frame group scans would perturb the thing ----
 var _peak := {"enemies":0,"zones":0,"beams":0,"hazards":0,"vfx":0,"transients":0,"labels":0,
-	"projectiles":0,"nodes":0,"rewards":0,"objects":0,"orphans":0,"mem":0.0,"canvas_items":0}
+	"projectiles":0,"nodes":0,"rewards":0,"objects":0,"orphans":0,"mem":0.0,"render_objects":0}
 var _created := 0
 var _removed := 0
 var _prev := {}
@@ -113,6 +152,8 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(17))
 		elif arg.begins_with("--stress-iso="): iso = arg.substr(14)
 		elif arg.begins_with("--stress-label="): label = arg.substr(15)
+		elif arg.begins_with("--stress-source="): source_variant = arg.substr(16)
+		elif arg == "--stress-normal-hp": normal_hp = true
 		elif arg.begins_with("--stress-weapons="):
 			for key in arg.substr(17).split(",",false):
 				if Utils.weapon_list.has(str(int(key))): presentation_weapons.append(int(key))
@@ -237,13 +278,14 @@ func run() -> void:
 	# The reward tree a Hell player owns. Without this the incoming-damage path scans an EMPTY
 	# reward group and the harness would report that path as free.
 	_grant_everything()
-	PlayerData.player_hp_max = 1000000.0
-	PlayerData.player_hp = 1000000.0
+	if not normal_hp:
+		PlayerData.player_hp_max = 1000000.0
+		PlayerData.player_hp = 1000000.0
 	Utils.set_gameplay_mouse_mode()
 	await get_tree().create_timer(0.6).timeout
 	# Stage 39 is a 45 s survival round, so the requested window is accumulated over consecutive
 	# rounds. The protocol is identical in the BEFORE and the AFTER build.
-	while _total_combat_s < float(seconds) and _rounds < 8:
+	while _total_combat_s < float(seconds) and _rounds < (1 if label.begins_with("b19-1") else 8):
 		await _one_round()
 	Input.action_release("shoot")
 	Utils.aim_override = null
@@ -256,7 +298,7 @@ func run() -> void:
 	if b18_mode:
 		await Demo.quit_game()
 		return
-	get_tree().quit(0)
+	await Demo.quit_game()
 
 func _boot_to_camp() -> void:
 	if not Utils.is_game_start:
@@ -300,6 +342,11 @@ func _one_round() -> void:
 func _sample_round() -> void:
 	var round_index := _rounds
 	var started := Time.get_ticks_msec()
+	var previous_usec := Time.get_ticks_usec()
+	_sample_tick_start = Engine.get_physics_frames()
+	_driver_active = true
+	_release_until_tick = 10
+	_next_aim_tick = 0
 	var next_report := started + 1000
 	var next_gauge := 0
 	var next_root := 0.0
@@ -307,20 +354,23 @@ func _sample_round() -> void:
 	var ray_prev: int = B11Probe.raycasts
 	var clear_prev: int = B11Probe.clear_line_calls
 	var hit_prev: int = B11Probe.player_hits
-	if lasers > 0: _amplify_lasers()
-	if barrage > 0: _amplify_barrage()
 	if enemies > 0: _top_up_enemies()
+	if barrage > 0: _amplify_barrage()
+	if lasers > 0: _amplify_lasers()
 	if B11Probe.iso_particles: _collect_particles()
 	Input.action_press("shoot")
 	var next_amp := 4.0
 	while LevelServer.state == "COMBAT" and is_instance_valid(Utils.player) and not Utils.player.is_dead:
 		# The rig cannot die: a level-1 health bar would end the round before the peak.
-		PlayerData.player_hp = PlayerData.player_hp_max
+		if not normal_hp: PlayerData.player_hp = PlayerData.player_hp_max
 		var now := Time.get_ticks_msec()
 		var elapsed := float(now-started)/1000.0
+		if label.begins_with("b19-1") and elapsed > maxf(90.0,seconds+45.0):
+			measurement_timeout = true
+			break
 		# Optional actual-weapon load profile. Default A-D keep their original gun.
-		if not presentation_weapons.is_empty():
-			var slot := int((_total_combat_s+elapsed)/8.0) % presentation_weapons.size()
+		if not presentation_weapons.is_empty() and not label.begins_with("b19-1"):
+			var slot := int(float(Engine.get_physics_frames()-_sample_tick_start)/Engine.physics_ticks_per_second/8.0) % presentation_weapons.size()
 			var next_weapon: int = presentation_weapons[slot]
 			if next_weapon != presentation_weapon:
 				presentation_weapon = next_weapon
@@ -328,11 +378,11 @@ func _sample_round() -> void:
 				if has_method("release_after_switch"): await call("release_after_switch")
 				print("[stress] weapon=%d round=%d combat_s=%.2f" % [next_weapon,round_index,elapsed])
 			# A charge weapon needs a real release; holding forever only benchmarks charging.
-			if presentation_weapon == 113 and fmod(elapsed,2.0) < 0.12:
+			if presentation_weapon == 113 and (Engine.get_physics_frames()-_sample_tick_start) % (Engine.physics_ticks_per_second*2) < 7:
 				Input.action_release("shoot")
 			else:
 				Input.action_press("shoot")
-		if stage == 40 and label.begins_with("presentation"):
+		if stage == 40 and (label.begins_with("presentation") or label.begins_with("b19-1")):
 			if presentation_boss_hold: Input.action_release("shoot")
 			else: Input.action_press("shoot")
 		if elapsed >= next_amp:
@@ -359,7 +409,11 @@ func _sample_round() -> void:
 		if B11Probe.clear_line_calls != clear_prev: flags |= F_CLEAR; clear_prev = B11Probe.clear_line_calls
 		var beams: int = B11Probe.beams_active
 		if beams >= 1: flags |= F_LANE
-		_ms.append(get_process_delta_time()*1000.0)
+		var current_usec := Time.get_ticks_usec()
+		_ms.append(float(current_usec-previous_usec)/1000.0)
+		previous_usec = current_usec
+		_engine_ms.append(get_process_delta_time()*1000.0)
+		_ticks.append(Engine.get_physics_frames()-_sample_tick_start)
 		_phys.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)*1000.0)
 		_proc.append(Performance.get_monitor(Performance.TIME_PROCESS)*1000.0)
 		_draws.append(int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)))
@@ -373,8 +427,8 @@ func _sample_round() -> void:
 		if now >= next_report:
 			next_report = now + 1000
 			_report_second(round_index)
-		if not park: _drive_movement(now)
 		await get_tree().process_frame
+	_driver_active = false
 	Input.action_release("shoot")
 	for action in ["left","right","up","down"]: Input.action_release(action)
 	var round_s := 0.0
@@ -403,7 +457,7 @@ func _amplify_lasers() -> void:
 ## (`lingering_poison`) - held alive together. Their telegraphs, projectiles, hostile zones and
 ## impact VFX are all produced by the actors themselves, so nothing here fakes a load.
 func _amplify_barrage() -> void:
-	var pool := ["E14","E13","E10","E13","E15","E13"]
+	var pool := ["E14","E10","E13","E15"]
 	var i := 0
 	while _meta_alive("b11_barrage") < barrage and i < pool.size():
 		_spawn_amplified(pool[i],"b11_barrage")
@@ -436,12 +490,28 @@ func _top_up_enemies() -> void:
 func _spawn_amplified(role: String, meta_key: String) -> bool:
 	var town = LevelServer.town
 	if not is_instance_valid(town): return false
-	var point: Vector2 = town.spawn_point(M5Content.radius_for(role))
-	if point == Vector2.INF: return false
-	var actor: Node = M5Content.spawn(role,town.monster_root,point)
-	if actor == null: return false
-	actor.set_meta(meta_key,true)
+	# Reuse a real eligible actor before asking the factory for another special.
+	# The factory legitimately replaces requests when the four-special budget is full.
+	var actor: Node = null
+	for existing in get_tree().get_nodes_in_group("monsters"):
+		if existing.is_die or existing.is_queued_for_deletion(): continue
+		if str(existing.get_meta("content_id","")) != role: continue
+		if existing.get_meta(meta_key,false): continue
+		if existing.is_elite or M5Content.can_promote(existing):
+			actor = existing; break
+	if actor == null:
+		var point: Vector2 = town.spawn_point(M5Content.radius_for(role))
+		if point == Vector2.INF: return false
+		actor = M5Content.spawn(role,town.monster_root,point)
+	if actor == null or str(actor.get_meta("content_id","")) != role: return false
 	M5Content.promote_elite(actor,M5Content.elite_modifier_for(role))
+	if not actor.is_elite: return false
+	actor.set_meta(meta_key,true)
+	if label.begins_with("b19-1"):
+		# Explicit HP-only load fixture; leaves AI, attacks and production admission intact.
+		actor.HP = 1000000.0
+		if actor.get("max_hp") != null: actor.max_hp = actor.HP
+		actor.set_meta("b191_hp_fixture",true)
 	_amplified += 1
 	return true
 
@@ -459,7 +529,7 @@ func _drive_movement(now: int) -> void:
 		else: Input.action_release(pair[0])
 
 func _sample_gauges() -> void:
-	if stage == 40 and label.begins_with("presentation"):
+	if stage == 40 and (label.begins_with("presentation") or label.begins_with("b19-1")):
 		# Optional full-phase observation uses the established test-only aim hook.
 		# Real weapon fire and real boss AI still decide all HP and transitions.
 		var boss = instance_from_id(LevelServer.boss_instance)
@@ -498,7 +568,31 @@ func _sample_gauges() -> void:
 	var mem := Performance.get_monitor(Performance.MEMORY_STATIC)
 	if mem > float(_peak.mem): _peak.mem = mem
 	var canvas_items := int(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
-	if canvas_items > int(_peak.canvas_items): _peak.canvas_items = canvas_items
+	if canvas_items > int(_peak.render_objects): _peak.render_objects = canvas_items
+	var row := {"wall_s":_combat_seconds[-1],"tick":(_ticks[-1] if not _ticks.is_empty() else Engine.get_physics_frames()),"round":_rounds,"ordinary":0,"elite":0,"boss":0,"giant":0,"tier1":0,"tier2":0,"visible":0,"sources":0,"continuous_emitted":0,"continuous_deferred":0,"shots_live":preload("res://game/monster/EnemyShot.gd").live_count,"shots_group":get_tree().get_nodes_in_group("enemy_projectiles").size(),"shots_near":0,"shots_screen":0,"damage_events":Combat.damage_events,"kills":Combat.kill_events,"gold":PlayerData.gold,"status_walks":B11Probe.status_walks,"status_empty":B11Probe.status_walks_empty,"flame_draw_usec":0,"flame_draw_passes":0,"fire_released":Demo.fire_released,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"continuous_planned":0,"continuous_cancelled":0}
+	var view_rect := get_viewport().get_visible_rect()
+	for actor in get_tree().get_nodes_in_group("monsters"):
+		if actor.is_die: continue
+		row["boss" if actor.is_boss else ("elite" if actor.is_elite else "ordinary")] += 1
+		if actor.get_meta("giant",false): row.giant += 1
+		var tier := int(actor.get_meta("enchantment",0))
+		if tier > 0: row["tier"+str(tier)] += 1
+		if actor.is_visible_in_tree() and view_rect.has_point(actor.get_global_transform_with_canvas().origin): row.visible += 1
+		var stream = actor.get_node_or_null("ContinuousBarrage")
+		if is_instance_valid(stream):
+			row.sources += 1
+			row.continuous_planned += int(actor.actions.get("continuous_barrage_planned",0))
+			row.continuous_cancelled += int(actor.actions.get("continuous_barrage_cancelled",0))
+			row.continuous_emitted += int(actor.actions.get("continuous_barrage_emitted",0))
+			row.continuous_deferred += int(actor.actions.get("continuous_barrage_deferred",0))
+	for shot in get_tree().get_nodes_in_group("enemy_projectiles"):
+		if shot.global_position.distance_squared_to(Utils.player.global_position) < 14400: row.shots_near += 1
+		if view_rect.has_point(shot.get_global_transform_with_canvas().origin): row.shots_screen += 1
+	var layer = LevelServer.town.monster_root.get_node_or_null("B19EnchantmentLayer")
+	if is_instance_valid(layer):
+		row.flame_draw_usec = layer.draw_usec
+		row.flame_draw_passes = layer.draw_passes
+	_load_samples.append(row)
 	if B11Probe.iso_particles: _silence_particles()
 
 ## B11.2 visual isolation for particles. There are real GPUParticles2D emitters on the rig and on
@@ -522,6 +616,8 @@ func _collect_particles() -> void:
 ## One line per second. It exists so a run can be read as a TIMELINE - which second the hitch was
 ## in - instead of as one number for the whole round.
 func _report_second(round_index: int) -> void:
+	if label.begins_with("b19-1"):
+		print("[stress] input tick=",Engine.get_physics_frames()-_sample_tick_start," released=",Demo.fire_released," shoot=",Input.is_action_pressed("shoot")," mouse=",Utils.is_gameplay_mouse_mode()," damage=",Combat.damage_events," kills=",Combat.kill_events," paused=",get_tree().paused)
 	var from := _last_report_index
 	var count := _ms.size()-from
 	if count <= 0: return
@@ -614,8 +710,7 @@ func _dump() -> void:
 	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.
-	if label.begins_with("presentation"):
-		print("[stress-frames] ",JSON.stringify({"ms":Array(_ms),"physics_ms":Array(_phys),"process_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_seconds":Array(_combat_seconds)}))
+	print("[stress-frames] ",JSON.stringify({"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"physics_hz":Engine.physics_ticks_per_second,"physics_monitor_proxy_ms":Array(_phys),"process_monitor_proxy_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; monitor proxies overlap"}))
 	var all: Dictionary = _stats(_ms)
 	var phys: Dictionary = _stats(_phys)
 	var proc: Dictionary = _stats(_proc)
@@ -649,7 +744,7 @@ func _dump() -> void:
 	var pq := _path_queries()
 	var per_s := maxf(total_s,0.001)
 	print("[stress-load] frames=%d combat_s=%.1f objects_peak=%d orphans_peak=%d canvas_items_peak=%d mem_static_peak_mb=%.1f draws_avg=%.1f draws_peak=%d path_queries=%d path_per_s=%.1f created=%d removed=%d created_per_s=%.1f removed_per_s=%.1f enemies_peak=%d projectiles_peak=%d hazards_peak=%d zones_peak=%d beams_peak=%d vfx_peak=%d labels_peak=%d transients_peak=%d rewards_peak=%d nodes_peak=%d topped_up=%d" % [
-		_ms.size(),total_s,_peak.objects,_peak.orphans,_peak.canvas_items,float(_peak.mem)/1048576.0,
+		_ms.size(),total_s,_peak.objects,_peak.orphans,_peak.render_objects,float(_peak.mem)/1048576.0,
 		draws_avg,_draws_peak(),pq,float(pq)/per_s,_created,_removed,
 		float(_created)/per_s,float(_removed)/per_s,
 		_peak.enemies,_peak.projectiles,_peak.hazards,_peak.zones,_peak.beams,_peak.vfx,

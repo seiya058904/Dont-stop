@@ -35,6 +35,8 @@ const EFFECT_INFO = {
 
 func _ready():
 	add_to_group("reward")
+	Combat.invalidate_group_cache()
+	tree_exited.connect(Combat.invalidate_group_cache,CONNECT_ONE_SHOT)
 	onRewardStart()
 	if only_start:
 		RewardServer.removeReward(self)

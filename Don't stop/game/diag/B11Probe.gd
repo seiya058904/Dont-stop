@@ -209,7 +209,7 @@ static func snapshot() -> Dictionary:
 		"telegraph_cache_hits":telegraph_cache_hits,
 		"telegraph_cache_rebuilds":telegraph_cache_rebuilds,
 		"status_walks":status_walks, "status_walks_empty":status_walks_empty,
-		"path_usec":path_usec,
+		"path_usec":path_usec, "scoped_usec":scoped_usec.duplicate(), "scoped_calls":scoped_calls.duplicate(),
 	}
 
 ## Worst single-observation costs are peaks, not sums, so they are read and reset by the driver
@@ -219,3 +219,11 @@ static func take_worst() -> Array:
 	zone_step_usec_worst = 0
 	onhit_usec_worst = 0
 	return result
+
+# B19.1 scoped costs; accumulated only by the explicit stress driver.
+static var scoped_usec: Dictionary = {}
+static var scoped_calls: Dictionary = {}
+static func cost(name: String, started: int) -> void:
+	if not enabled: return
+	scoped_usec[name] = int(scoped_usec.get(name,0))+Time.get_ticks_usec()-started
+	scoped_calls[name] = int(scoped_calls.get(name,0))+1

@@ -1,5 +1,13 @@
 extends Label
 
+static var live_count := 0
+
+func _enter_tree() -> void:
+	live_count += 1
+
+func _exit_tree() -> void:
+	live_count -= 1
+
 func _ready() -> void:
 	add_to_group("damage_labels")
 	# The arena is 410x230: the theme's default 16px obscures the actor on fast fire.

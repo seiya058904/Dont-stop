@@ -84,14 +84,9 @@ func _ready():
 	check(card_ids(panel)==[124],"plan-ID search still resolves W24 -> 124")
 	panel.search_text = ""; panel.search_box.text = ""; panel.render()
 	# --- equipped / owned markers ---------------------------------------------------------
-	var markers_ok := false
-	for text in card_texts(panel):
-		if text.begins_with("▶ "): markers_ok = true
-	check(markers_ok,"equipped weapon carries the ▶ marker")
-	var owned_ok := false
-	for text in card_texts(panel):
-		if text.begins_with("√ ") or text.begins_with("▶ "): owned_ok = true
-	check(owned_ok,"owned weapons carry a marker")
+	var status_text = "".join(card_texts(panel))
+	check("当前手持" in status_text or "已携带" in status_text,"equipped weapon carries a semantic loadout status")
+	check("已拥有" in status_text or "已携带" in status_text or "当前手持" in status_text,"owned weapons carry a semantic loadout status")
 	# --- detail badge speaks quality -------------------------------------------------------
 	panel.show_weapon("124",Utils.weapon_list["124"].instantiate())
 	var badge: String = panel.weapon_badge.text

@@ -97,7 +97,7 @@ function parseKv(line) {
 	const allConsole = [];
 
 	const browser = await chromium.launch({
-		headless: true,
+		headless: process.env.B19_HEADLESS === "1",
 		args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'],
 	});
 	const context = await browser.newContext({ viewport: { width: 1280, height: 760 } });
@@ -111,6 +111,7 @@ function parseKv(line) {
 
 	page.on('console', m => {
 		const t = m.text();
+		if (m.type() === "error" || t.startsWith("[stress] ")) console.log(t);
 		if (t.startsWith('[stress-frames] ')) {
 			rawFrames = JSON.parse(t.slice('[stress-frames] '.length));
 			return; // Store once, outside the bounded human-readable console log.
@@ -125,7 +126,7 @@ function parseKv(line) {
 		else if (t.startsWith('[stress-ink] ')) { ink = parseKv(t.slice('[stress-ink] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress] ') || t.startsWith('[stress-')) markers.push(t);
 	});
-	page.on('pageerror', e => { if (!/currentTime/.test(e.message)) errors.push(e.message); });
+	page.on('pageerror', e => errors.push(e.stack || e.message));
 
 	const gpu = await page.evaluate(() => {
 		const c = document.createElement('canvas');
@@ -135,18 +136,32 @@ function parseKv(line) {
 		return dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
 	}).catch(() => null);
 
+	const visibilityEvents = [];
+	await page.exposeFunction('b191Visibility', value => visibilityEvents.push(value));
+	await page.addInitScript(() => {
+		const report = () => window.b191Visibility({time:performance.now(),visibility:document.visibilityState,focus:document.hasFocus(),dpr:devicePixelRatio});
+		document.addEventListener('visibilitychange',report); window.addEventListener('focus',report); window.addEventListener('blur',report);
+	});
 	const started = Date.now();
 	await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+	await page.bringToFront();
+	await page.locator('canvas').click({ position: { x: 12, y: 12 }, timeout: 60000 });
 	// A round is 45 s and the driver runs rounds until the requested window is covered, so the wall
 	// clock bound has to allow the boot plus the whole accumulation plus a margin.
 	const wallBudgetMs = ((parseInt(query.seconds, 10) || 90) + 240) * 1000;
 	while (Date.now() - started < wallBudgetMs && summary === null) await sleep(1000);
+	const surface = await page.evaluate(() => ({visibility:document.visibilityState,focus:document.hasFocus(),dpr:devicePixelRatio,canvas:[...document.querySelectorAll('canvas')].map(c=>({width:c.width,height:c.height,cssWidth:c.clientWidth,cssHeight:c.clientHeight}))})).catch(()=>null);
 	await browser.close();
+	if (rawFrames && !rawFrames.memory_static_available) {
+		if (peak) { peak.memory_static = null; peak.orphans = null; }
+		if (load) { load.mem_peak_mb = null; load.orphans_peak = null; }
+	}
 
 	const n = k => (summary && Number.isFinite(parseFloat(summary[k])) ? parseFloat(summary[k]) : null);
 	const p = k => (peak && Number.isFinite(parseFloat(peak[k])) ? parseFloat(peak[k]) : null);
 	const report = {
-		label, scenario, url, build, gpu, errors,
+		label, scenario, surface, visibilityEvents, source_variant: query.source || "unspecified", workload_scenario: scenario, url, build, gpu, errors,
+		headed: process.env.B19_HEADLESS !== "1", browser_version: browser.version(), viewport: {width:1280,height:760},
 		wall_clock_s: Math.round((Date.now() - started) / 1000),
 		seconds_requested: parseInt(query.seconds, 10) || 90,
 		rounds: summary ? parseFloat(summary.rounds) : null,
@@ -202,5 +217,5 @@ function parseKv(line) {
 	for (const b of buckets) {
 		console.log(`  bucket[${b.family}] ${b.name} n=${b.n} share=${f(b.share)} avg=${f(b.avg)} p95=${f(b.p95)} p99=${f(b.p99)} max=${f(b.max)} over33=${b.over33} over50=${b.over50}`);
 	}
-	process.exit(summary ? 0 : 1);
+	process.exit(summary && !errors.length && !rawFrames?.measurement_timeout ? 0 : 1);
 })();

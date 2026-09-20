@@ -2,6 +2,8 @@ extends Node
 
 var actor_exclusions: Array[RID] = []
 var exclusions_dirty = true
+var exclusions_revision := 0
+var clear_query_revision := -1
 var dispatch_depth = 0
 var attacks = 0
 var damage_events = 0
@@ -10,6 +12,10 @@ var max_depth_seen = 0
 var audio_pool: Array = []
 var sound_clock = 0.0
 var reduced_flash = false
+var _group_cache_frame := -1
+var _group_cache_tick := -1
+var _monster_group_cache: Array = []
+var _reward_group_cache: Array = []
 
 func _ready():
 	get_tree().node_added.connect(_actor_added)
@@ -23,16 +29,45 @@ func _ready():
 func _actor_added(node: Node):
 	if node is BaseMonster or node is Player:
 		exclusions_dirty = true
+		_group_cache_frame = -1
 		node.tree_exiting.connect(_actors_changed,CONNECT_ONE_SHOT)
+		# A callback may refresh while the node is still in its groups during exiting.
+		node.tree_exited.connect(_actors_changed,CONNECT_ONE_SHOT)
 
 func _actors_changed():
 	exclusions_dirty = true
+	_group_cache_frame = -1
+
+func invalidate_group_cache() -> void:
+	_group_cache_frame = -1
+	_group_cache_tick = -1
+
+func _refresh_group_cache() -> void:
+	var frame = Engine.get_process_frames()
+	var tick = Engine.get_physics_frames()
+	if _group_cache_frame == frame and _group_cache_tick == tick: return
+	_group_cache_frame = frame
+	_group_cache_tick = tick
+	_monster_group_cache = get_tree().get_nodes_in_group("monsters")
+	_reward_group_cache = get_tree().get_nodes_in_group("reward")
+	# Callers receive immutable snapshots; nested dispatch never mutates its parent.
+	_monster_group_cache.make_read_only()
+	_reward_group_cache.make_read_only()
+
+func _monsters_for_frame() -> Array:
+	_refresh_group_cache()
+	return _monster_group_cache
+
+func _rewards_for_frame() -> Array:
+	_refresh_group_cache()
+	return _reward_group_cache
 
 func _refresh_exclusions():
 	actor_exclusions.clear()
 	if is_instance_valid(Utils.player): actor_exclusions.append(Utils.player.get_rid())
 	for actor in get_tree().get_nodes_in_group("monsters"): actor_exclusions.append(actor.get_rid())
 	exclusions_dirty = false
+	exclusions_revision += 1
 
 func sound(stream: AudioStream, position: Vector2):
 	for player in audio_pool:
@@ -42,7 +77,17 @@ func sound(stream: AudioStream, position: Vector2):
 			player.play()
 			return
 
+var measuring_hit := false
 func hit(target, context: Dictionary) -> bool:
+	if not B11Probe.enabled or measuring_hit: return _hit(target,context)
+	measuring_hit = true
+	var started := Time.get_ticks_usec()
+	var result := _hit(target,context)
+	B11Probe.cost("hit_outer_inclusive",started)
+	measuring_hit = false
+	return result
+
+func _hit(target, context: Dictionary) -> bool:
 	if not is_instance_valid(target) or target.is_die or get_tree().paused: return false
 	if not target.training and (LevelServer.state != "COMBAT" or context.get("epoch",LevelServer.epoch) != LevelServer.epoch): return false
 	var depth = int(context.get("depth",0))
@@ -59,12 +104,14 @@ func hit(target, context: Dictionary) -> bool:
 	if critical: amount *= 1.5
 	var old_depth = dispatch_depth
 	dispatch_depth = depth + 1
-	var rewards = get_tree().get_nodes_in_group("reward")
+	var rewards = _rewards_for_frame()
 	if depth == 0:
 		for reward in rewards:
+			if not is_instance_valid(reward) or reward.is_queued_for_deletion(): continue
 			if reward.connect_beforeAtk: amount += reward.beforeAtk(target,amount)
 	if depth == 0:
 		for reward in rewards:
+			if not is_instance_valid(reward) or reward.is_queued_for_deletion(): continue
 			if reward.has_method("modify_direct"): amount += reward.modify_direct(target,amount)
 	amount = snappedf(amount,0.01)
 	damage_events += 1
@@ -84,9 +131,11 @@ func hit(target, context: Dictionary) -> bool:
 			secondary_hit(target,resolved_context,amount*context.echo,"T23")
 	if depth == 0:
 		for reward in rewards:
+			if not is_instance_valid(reward) or reward.is_queued_for_deletion(): continue
 			if reward.has_method("after_direct"): reward.after_direct(target,amount,critical,resolved_context)
 	if depth == 0 and not target.is_die:
 		for reward in rewards:
+			if not is_instance_valid(reward) or reward.is_queued_for_deletion(): continue
 			if reward.connect_afterAtk: reward.afterAtk(target,amount)
 	dispatch_depth = old_depth
 	return true
@@ -95,7 +144,8 @@ func secondary_hit(source, context: Dictionary, damage: float, talent: String):
 	if Demo.cooldown(talent) > 0: return
 	var nearest = null
 	var distance = DemoConfig.TALENTS[talent].radius
-	for target in get_tree().get_nodes_in_group("monsters"):
+	for target in _monsters_for_frame():
+		if not is_instance_valid(target) or target.is_queued_for_deletion(): continue
 		if target == source or target.is_die: continue
 		var d = source.global_position.distance_to(target.global_position)
 		if d < distance and clear_line(source.global_position,target.global_position):
@@ -127,19 +177,9 @@ func clear_line(from: Vector2, to: Vector2) -> bool:
 	return result
 
 const CLEAR_LINE_MASK := 2147483649
-## B11.1: ONE reusable query for the line-of-sight check. `clear_line` is issued on the order of
-## 500 times a second in a dense Hell round, and every call used to allocate a fresh
-## `PhysicsRayQueryParameters2D` and re-assign an `exclude` list holding a RID for the player plus
-## one per live monster - up to 85 entries, converted to a packed array each time. The mask never
-## changes, so the query object is built once; the actor LIST may change whenever something spawns
-## or dies, so the exclude list is re-mirrored on every call from actor_exclusions (refreshed first
-## if dirty). Re-mirroring unconditionally is the correctness anchor: CombatFootprint refreshes the
-## same shared actor_exclusions for its own throwaway queries and thereby consumes the dirty flag,
-## so a conditional mirror can keep FREED RIDs from an earlier actor set in the active query - the
-## ray then hits the current target itself and every LOS-gated attack whiffs until the next spawn
-## (measured in the B12 bench as whole scenarios of zero damage for cone/explosion weapons).
-## Mirroring is a small RID-array copy per call; the churn the B11.1 optimisation removed was the
-## per-call query ALLOCATION, which stays gone.
+## Reuse the query and copy exclusions only when their generation changes.
+## CombatFootprint also rebuilds this list; the revision (not dirty alone) is what
+## prevents this query retaining freed RIDs after another consumer refreshed it.
 var clear_query: PhysicsRayQueryParameters2D = null
 
 func _clear_line_query(from: Vector2, to: Vector2) -> bool:
@@ -150,7 +190,9 @@ func _clear_line_query(from: Vector2, to: Vector2) -> bool:
 		clear_query.to = to
 	if exclusions_dirty:
 		_refresh_exclusions()
-	clear_query.exclude = actor_exclusions
+	if clear_query_revision != exclusions_revision:
+		clear_query.exclude = actor_exclusions
+		clear_query_revision = exclusions_revision
 	return Utils.player.get_world_2d().direct_space_state.intersect_ray(clear_query).is_empty()
 
 func explosion(position: Vector2, radius: float, damage: float, gun = null, depth = 0):
@@ -164,7 +206,8 @@ func explosion(position: Vector2, radius: float, damage: float, gun = null, dept
 func explosion_context(position: Vector2, radius: float, context: Dictionary):
 	if context.get("depth",0) > DemoConfig.MAX_DERIVATION: return
 	var footprint = preload("res://game/effects/CombatFootprint.gd").polygon(position,radius)
-	for target in get_tree().get_nodes_in_group("monsters"):
+	for target in _monsters_for_frame():
+		if not is_instance_valid(target) or target.is_queued_for_deletion(): continue
 		if not target.is_die and Geometry2D.is_point_in_polygon(target.global_position,footprint) and clear_line(position,target.global_position):
 			hit(target,context)
 			heat_contact(target.global_position+Vector2(0,-8))
@@ -186,7 +229,7 @@ func trace(points: Array, color = Color(0.4,0.85,1), width = 2.0):
 func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: int):
 	var width = float(context.get("beam_width",gun.effective.width))
 	var normal = direction.orthogonal()
-	var targets = get_tree().get_nodes_in_group("monsters").filter(func(t): return not t.is_die)
+	var targets = _monsters_for_frame().filter(func(t): return not t.is_die)
 	targets.sort_custom(func(a,b): return start.distance_squared_to(a.global_position)<start.distance_squared_to(b.global_position))
 	var count = 0
 	for target in targets:
@@ -220,7 +263,8 @@ func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 	var length = gun.effective.range
 	var angle = gun.effective.angle
 	var footprint = preload("res://game/effects/CombatFootprint.gd").polygon(start,length,direction,angle)
-	for target in get_tree().get_nodes_in_group("monsters"):
+	for target in _monsters_for_frame():
+		if not is_instance_valid(target) or target.is_queued_for_deletion(): continue
 		var point = target.global_position+Vector2(0,-8)
 		var offset = point-start
 		if Geometry2D.is_point_in_polygon(point,footprint) and clear_line(start,point):
@@ -282,7 +326,7 @@ func arc(gun, start: Vector2, direction: Vector2, snapshot: Dictionary = {}):
 	if snapshot.is_empty(): snapshot = gun.shot_context()
 	var spec = WeaponCatalog.ARC
 	var budget = mini(16,int(spec.targets)+maxi(0,int(gun.effective.jumps)-3))
-	var candidates = get_tree().get_nodes_in_group("monsters").filter(func(t): return not t.is_die and not t.is_queued_for_deletion())
+	var candidates = _monsters_for_frame().filter(func(t): return not t.is_die and not t.is_queued_for_deletion())
 	candidates.sort_custom(func(a,b): return start.distance_squared_to(a.global_position)<start.distance_squared_to(b.global_position))
 	var visited = {}
 	var queue = []
@@ -326,7 +370,7 @@ func fission(source, context: Dictionary):
 	if not is_instance_valid(gun) or not "120" in Demo.owned_global_upgrades or Demo.cooldown("A120") > 0: return
 	if "straight" in gun.tags and "projectile" in gun.tags: return # Existing real fragments.
 	var direction = gun.gun_tip.global_position.direction_to(source.global_position)
-	var candidates = get_tree().get_nodes_in_group("monsters").filter(func(t):
+	var candidates = _monsters_for_frame().filter(func(t):
 		return t != source and not t.is_die and source.global_position.distance_to(t.global_position)<=100.0 and direction.dot(source.global_position.direction_to(t.global_position))>=-0.1 and clear_line(source.global_position,t.global_position))
 	if candidates.is_empty(): return
 	candidates.sort_custom(func(a,b): return source.global_position.distance_squared_to(a.global_position)<source.global_position.distance_squared_to(b.global_position))

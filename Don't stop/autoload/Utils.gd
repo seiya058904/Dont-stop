@@ -292,7 +292,7 @@ func showHitLabel(num,traget:Node2D):
 	# B11.2 visual isolation (test-only): damage numbers are pure feedback - no damage, no state and
 	# no gameplay timing flows through here, so switching them off isolates their cost exactly.
 	if B11Probe.iso_labels: return
-	if get_tree().get_nodes_in_group("damage_labels").size() >= 90: return
+	if preload("res://ui/widgets/HitLabel.gd").live_count >= 90: return
 	var ins = hitlabel.instantiate()
 	ins.setNumber(num)
 	traget.add_child(ins)
@@ -301,7 +301,7 @@ func showHitLabel(num,traget:Node2D):
 func showHitLabelMore(num,traget:Node2D,position = Vector2.ZERO,color = Color.WHITE):
 	# B11.2 visual isolation (test-only). See showHitLabel.
 	if B11Probe.iso_labels: return
-	if get_tree().get_nodes_in_group("damage_labels").size() >= 90: return
+	if preload("res://ui/widgets/HitLabel.gd").live_count >= 90: return
 	var ins = hitlabel.instantiate()
 	ins.setNumber(num)
 	ins.position = position

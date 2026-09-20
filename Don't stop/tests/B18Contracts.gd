@@ -11,9 +11,14 @@ func pellet(point, speed, rebounds = 0):
 
 func _ready():
 	await boot(); configure(0)
-	for pair in [[31,4.0],[35,7.2],[39,16.0]]:
+	for pair in [[31,2.0],[35,3.6],[39,8.0]]:
 		LevelServer.return_to_camp(); dismiss(); await wait(0.1)
 		LevelServer.town.depart(pair[0],true); LevelServer.timerStop()
+		# Isolate the manual variant fixture from the real arrival allocator.
+		VARIANTS.generation = LevelServer.epoch
+		VARIANTS.arrivals = 0
+		VARIANTS.enchanted_arrivals = 999999
+		VARIANTS.tier_two_arrivals = 0
 		for n in get_tree().get_nodes_in_group("monsters"): n.queue_free()
 		await wait(0.1)
 		for kind in [0,1,2,3]:
@@ -24,8 +29,8 @@ func _ready():
 			check(actor != null,"real factory instance")
 			if actor == null: continue
 			VARIANTS.apply(actor,kind)
-			var expected = pair[1]*[1,2,4,12][kind]
-			check(is_equal_approx(actor.HP,expected),"independent final HP stage %d variant %d"%[pair[0],kind])
+			var expected = M5Content.giant_final_hp(pair[0]) if kind == 3 else pair[1]*[1,2,4][kind]
+			check(is_equal_approx(actor.HP,expected),"independent final HP stage %d variant %d actual=%.2f expected=%.2f"%[pair[0],kind,actor.HP,expected])
 			VARIANTS.apply(actor,kind)
 			check(is_equal_approx(actor.HP,expected),"apply twice does not multiply twice")
 			check(not actor.is_elite,"numerical variant does not enable elite AI")

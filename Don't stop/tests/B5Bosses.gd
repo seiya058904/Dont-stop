@@ -60,7 +60,8 @@ func fight(stage: int, boss_id: String, durable_hp: int, budget_ms: int, observe
 	if not is_instance_valid(boss): return { }
 	check(boss.role == boss_id,"stage %d fields %s" % [stage,boss_id])
 	check(not boss.phase_two and not boss.phase_three,"stage %d boss starts in Phase I" % stage)
-	check(absf(boss.max_hp-M5Content.BOSSES[boss_id].hp) < 1.0,"%s uses its authored HP" % boss_id)
+	var expected_hp = float(M5Content.BOSSES[boss_id].get("final_hp",M5Content.BOSSES[boss_id].hp))
+	check(absf(boss.max_hp-expected_hp) < 1.0,"%s uses its explicit final HP" % boss_id)
 
 	var seen = {"two":false,"three":false}
 	var transition_violations = 0

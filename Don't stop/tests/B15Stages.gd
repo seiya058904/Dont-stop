@@ -10,7 +10,8 @@ func _ready():
 		actor.set_physics_process(false)
 		await get_tree().physics_frame
 		print("SPAWN_FINAL ",id," hp=",actor.HP," speed=",actor.SPEED)
-		check(actor.HP >= M5Content.definition(id).hp*HellMode.hp_scale(31)-0.001,"final initialized Hell HP "+id)
+		var expected = DemoConfig.ENCOUNTERS[31].get("pressure",{}).get("final_ordinary_hp",0.0) if id in ["E01","E02"] else M5Content.definition(id).hp*HellMode.hp_scale(31)
+		check(actor.HP >= expected-0.001,"final initialized Hell HP "+id)
 		actor.queue_free(); await wait(0.02)
 	var rows = []
 	for stage in range(1,41):
@@ -23,7 +24,11 @@ func _ready():
 			actor.set_physics_process(false)
 			await get_tree().physics_frame
 			row.actual_instances.append({"id":id,"hp":actor.HP,"speed":actor.SPEED})
-			check(is_equal_approx(actor.HP,M5Content.definition(id).hp*HellMode.hp_scale(stage)),"HP applied once stage %d %s" % [stage,id])
+			var pressure: Dictionary = DemoConfig.ENCOUNTERS[stage].get("pressure",{})
+			var base_expected = pressure.get("final_ordinary_hp",0.0) if id in ["E01","E02"] and pressure.has("final_ordinary_hp") else M5Content.definition(id).hp*HellMode.hp_scale(stage)
+			var variant = int(actor.get_meta("enchantment",0))
+			var expected = M5Content.giant_final_hp(stage) if actor.get_meta("giant",false) else base_expected*(2.0 if variant==1 else (4.0 if variant==2 else 1.0))
+			check(is_equal_approx(actor.HP,expected),"HP applied once stage %d %s" % [stage,id])
 			actor.queue_free(); await get_tree().process_frame
 		for id in row.roles: check(stage>=M5Content.FIRST_APPEARANCE.get(id,1),"roster identity allowed %d %s" % [stage,id])
 		row.hazards = ArenaHazards.plan(stage)

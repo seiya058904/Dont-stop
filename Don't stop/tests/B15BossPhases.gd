@@ -13,7 +13,8 @@ func _ready():
 		PlayerData.player_hp_max=10000; PlayerData.player_hp=10000
 		Utils.player.set_physics_process(false); Utils.player.set_process(false)
 		var boss=instance_from_id(LevelServer.boss_instance)
-		check(is_instance_valid(boss) and boss.max_hp==M5Content.BOSSES[boss.role].hp,"authored Boss HP %d"%stage)
+		var expected_hp = float(M5Content.BOSSES[boss.role].get("final_hp",M5Content.BOSSES[boss.role].hp)) if is_instance_valid(boss) else 0.0
+		check(is_instance_valid(boss) and is_equal_approx(boss.max_hp,expected_hp),"explicit final Boss HP %d"%stage)
 		for phase_index in [1,2,3]:
 			# Controlled health setup to inspect each real phase; no claim of a player clear.
 			if phase_index==2: boss.HP=boss.max_hp*0.60

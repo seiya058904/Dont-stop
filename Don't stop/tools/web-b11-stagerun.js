@@ -49,7 +49,7 @@ function token(name, ok, detail) {
 		}
 		if (t.startsWith('[probe] perf ')) { perfLines.push(t.slice('[probe] perf '.length)); return; }
 	});
-	page.on('pageerror', e => consoleErrors.push('pageerror: ' + e.message));
+	page.on('pageerror', e => consoleErrors.push('pageerror: ' + (e.stack || e.message)));
 
 	try {
 		await page.goto(url + '?stage-tour=1&probe=1', { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -124,12 +124,8 @@ function token(name, ok, detail) {
 			turned.join(' | ') || `no static frozen lane changed direction (${seen.turnedDeclared} samples from lanes that declare a sweep)`);
 		token('C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY', seen.fired > 0, `${seen.fired} samples of a frozen lane in its active phase`);
 
-		// The engine's audio worklet raises `currentTime` on a null node when the browser has not been
-		// given a user gesture, which no automated run can provide. It is reported, and it is not an
-		// assertion about this build.
-		const audioOnly = consoleErrors.filter(e => /currentTime/.test(e));
-		const realErrors = consoleErrors.filter(e => !/currentTime/.test(e));
-		token('NO_PAGE_ERRORS', realErrors.length === 0, realErrors.slice(0, 3).join(' | ') || `${audioOnly.length} audio-autoplay notices ignored`);
+		// Preserve every error until its exact stack and cause have been established.
+		token('NO_PAGE_ERRORS', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | ') || 'raw=0 known=0 unexpected=0');
 	} catch (err) {
 		token('DRIVER_COMPLETED', false, String(err && err.message));
 	}

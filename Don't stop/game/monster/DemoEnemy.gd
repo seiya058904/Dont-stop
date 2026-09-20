@@ -271,7 +271,7 @@ func _physics_process(delta):
 		return
 	if phase == "dash":
 		velocity = locked_direction*240
-		move_and_slide()
+		_measured_move()
 		if distance < 19 and contact_cooldown <= 0:
 			Utils.player.onHit(contact_damage(),self,1.0,"contact")
 			contact_cooldown = 0.8

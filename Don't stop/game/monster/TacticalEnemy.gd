@@ -28,6 +28,7 @@ var attack_kind = ""
 var phase_label: Label
 var combo_queue: Array = []
 var bulwark_spent = false
+var continuous_barrage: Node = null
 
 const PHASE_TWO_AT := 0.70
 const PHASE_THREE_AT := 0.35
@@ -69,9 +70,18 @@ func _ready():
 		var title = Label.new(); phase_label = title
 		title.text = d.name+" · PHASE I"; title.position = Vector2(-22,-47)
 		title.add_theme_font_size_override("font_size",8); add_child(title)
+	_ensure_continuous_barrage()
 
 func remember(action: String):
 	actions[action] = actions.get(action,0)+1
+
+func _ensure_continuous_barrage() -> void:
+	if is_instance_valid(continuous_barrage): return
+	if not is_boss and (role not in ["E10","E14"] or not is_elite): return
+	continuous_barrage = preload("res://game/monster/ContinuousBarrage.gd").new()
+	continuous_barrage.owner_ref = weakref(self)
+	continuous_barrage.name = "ContinuousBarrage"
+	add_child(continuous_barrage)
 
 func move_towards(point: Vector2, delta: float, multiplier = 1.0):
 	path_refresh -= delta
@@ -79,7 +89,7 @@ func move_towards(point: Vector2, delta: float, multiplier = 1.0):
 		cached_step = LevelServer.town.path_step(global_position,point) if is_instance_valid(LevelServer.town) else point
 		path_refresh = 0.2
 	velocity = global_position.direction_to(cached_step)*SPEED*multiplier*(1.0-slow_amount if slow_time > 0 else 1.0)
-	var previous = global_position; move_and_slide(); travelled += previous.distance_to(global_position)
+	var previous = global_position; _measured_move(); travelled += previous.distance_to(global_position)
 	anim.play("run" if velocity.length() > 1 else "idle")
 
 ## Single factory for every warning footprint, so palette, fog piercing and the Hell warning
@@ -595,12 +605,13 @@ func perform_attack():
 func _physics_process(delta):
 	if is_die: return
 	if born_epoch != LevelServer.epoch: queue_free(); return
+	_ensure_continuous_barrage()
 	if LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or Utils.player.is_dead: velocity = Vector2.ZERO; return
 	ultimate_cooldown = maxf(0,ultimate_cooldown-delta)
 	phase_time -= delta; contact_cooldown = maxf(0,contact_cooldown-delta)
 	phase_flash = maxf(0,phase_flash-delta); queue_redraw()
 	if state_array.has(Utils.STATE_TYPE.STUN): return
-	if hit: move_and_slide(); return
+	if hit: _measured_move(); return
 	# B11.1: `filter()` allocates a new array (and re-converts the untyped result back to
 	# `Array[WeakRef]`) on EVERY physics frame of EVERY live monster, for a list that is empty most
 	# of the time. Filtering an empty array can only return an empty array, so the empty case is
@@ -621,7 +632,7 @@ func _physics_process(delta):
 		if phase_time<=0: perform_attack()
 		return
 	if phase == "dash":
-		var previous = global_position; velocity = locked_direction*dash_speed; move_and_slide()
+		var previous = global_position; velocity = locked_direction*dash_speed; _measured_move()
 		travelled += previous.distance_to(global_position)
 		dash_clock += delta
 		if dash_clock>0.08:

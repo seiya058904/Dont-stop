@@ -161,6 +161,8 @@ jobs:
           run_case B14Feedback
           run_case B14EncounterContracts
           run_case B17Contracts
+          run_case B19Contracts
+          run_case B191Runtime
           run_case B17Sources
           run_case B17Saved
           run_case B17Resources

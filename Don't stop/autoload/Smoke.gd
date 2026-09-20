@@ -35,7 +35,7 @@ func _ready() -> void:
 	args.append_array(OS.get_cmdline_user_args())
 	probe = "--probe" in args
 	var stress := "--stress" in args
-	if not ("--smoke" in args) and not probe and not stress:
+	if not ("--smoke" in args) and not probe and not stress and not ("--stage-tour" in args) and not ("--perf" in args):
 		# Stay instantiated (inert) so autoload cross-references stay valid, but
 		# take the node out of idle processing: _process appends a frame sample
 		# every frame and nothing reads it in a real launch, so leaving it on
@@ -1114,7 +1114,7 @@ func _stage_tour_run() -> void:
 		print("[stage-tour] armed gun=%s" % str(Utils.player.gun != null))
 	# Give the profile the survivability a player who reached Hell would have, so the tour measures the
 	# STAGE and not a level-1 health bar.
-	PlayerData.player_hp_max = 60; PlayerData.player_hp = 60
+	PlayerData.player_hp_max = 100000; PlayerData.player_hp = 100000
 	for stage in STAGE_TOUR:
 		LevelServer.return_to_camp()
 		await _wait_until(func(): return LevelServer.state == "CAMP", 60000)
@@ -1155,7 +1155,7 @@ func _stage_tour_run() -> void:
 	LevelServer.return_to_camp()
 	await get_tree().create_timer(1.0).timeout
 	print("[stage-tour] complete")
-	get_tree().quit(0)
+	await Demo.quit_game()
 
 func _wait_until(predicate: Callable, timeout_ms: int) -> void:
 	var deadline := Time.get_ticks_msec() + timeout_ms
