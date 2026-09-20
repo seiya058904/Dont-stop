@@ -1,0 +1,36 @@
+extends "res://tests/M8Runtime.gd"
+
+func _ready():
+	await boot(); configure(112,true)
+	LevelServer.return_to_camp(); dismiss(); await wait(0.1)
+	check(LevelServer.town.depart(40,true),"stage40 departure")
+	await wait(0.3)
+	var boss = instance_from_id(LevelServer.boss_instance)
+	check(is_instance_valid(boss) and boss.role == "B04","real B04 owner")
+	if not is_instance_valid(boss): get_tree().quit(1); return
+	LevelServer.timerStop(); Utils.player.gun.set_use(false)
+	boss.set_physics_process(false); boss.phase="move"; boss.phase_two=true; boss.ultimate_cooldown=0
+	var stream = boss.get_node("ContinuousBarrage")
+	stream.set_physics_process(false)
+	var shot = boss.shot(Vector2.RIGHT,125.0,0.16,false,"ricochet",0.0,1)
+	check(is_instance_valid(shot),"real owner-bound shot exists before window")
+	boss.barrage("ring",12,3,125.0,0.18)
+	var previous = boss.owned_attacks.duplicate()
+	boss.choose_attack()
+	check(previous.all(func(ref): return not is_instance_valid(ref.get_ref()) or ref.get_ref().is_queued_for_deletion()),"B04 safe window retires previous pellets and pending waves immediately")
+	await wait(0.03)
+	check(get_tree().get_nodes_in_group("enemy_projectiles").is_empty(),"old shot registry drains before safe window damage")
+	var elapsed = stream.elapsed
+	boss.phase="move"; stream._physics_process(10)
+	check(stream.elapsed==elapsed,"safe window freezes continuous source despite move phase")
+	for ultimate in get_tree().get_nodes_in_group("boss_ultimate"): ultimate.queue_free()
+	await wait(0.03)
+	var before=int(boss.actions.get("continuous_barrage_emitted",0))
+	stream._physics_process(stream.telegraph+0.01)
+	check(int(boss.actions.get("continuous_barrage_emitted",0))-before==7,"after safety window original seven-shot wave resumes")
+	check(int(boss.actions.get("barrage_cancelled_owner",0))>0,"cancelled pending pellets remain accounted")
+	LevelServer.return_to_camp(); dismiss(); await wait(0.1)
+	check(preload("res://game/monster/EnemyShot.gd").live_count==0,"camp drains shots after resume")
+	print("B192_SAFETY checks=",checks," failures=",failures)
+	if failures: get_tree().quit(1)
+	else: await Demo.quit_game()

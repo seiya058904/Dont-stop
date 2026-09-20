@@ -1,0 +1,1260 @@
+[
+  {
+    "platform": "native",
+    "case": "H",
+    "weighted": {
+      "ordinary": 114.33851851851853,
+      "tier1": 66.31666666666666,
+      "tier2": 31.829629629629633,
+      "giant": 2.9118518518518517,
+      "visible": 36.674814814814816,
+      "visible_tier1": 21.187407407407406,
+      "visible_tier2": 10.141481481481481,
+      "shots_near": 0.26222222222222225,
+      "shots_screen": 0.7422222222222222,
+      "sources": 0.020000000000000007,
+      "ordinary_enchanted_percent": 85.83834876293268,
+      "visible_enchanted_percent": 85.42344125547858
+    },
+    "rss_bytes_first_peak_last": [
+      1675264,
+      551960576,
+      551890944
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 115.396,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": [
+      {
+        "cycle": 1,
+        "enemies": 0,
+        "epoch": 2,
+        "nodes": 621,
+        "objects": 9108.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127936078.0,
+        "transients": 0
+      },
+      {
+        "cycle": 2,
+        "enemies": 0,
+        "epoch": 4,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127904042.0,
+        "transients": 0
+      },
+      {
+        "cycle": 3,
+        "enemies": 0,
+        "epoch": 6,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127905086.0,
+        "transients": 0
+      },
+      {
+        "cycle": 4,
+        "enemies": 0,
+        "epoch": 8,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127906154.0,
+        "transients": 0
+      },
+      {
+        "cycle": 5,
+        "enemies": 0,
+        "epoch": 10,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127907342.0,
+        "transients": 0
+      },
+      {
+        "cycle": 6,
+        "enemies": 0,
+        "epoch": 12,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127908290.0,
+        "transients": 0
+      },
+      {
+        "cycle": 7,
+        "enemies": 0,
+        "epoch": 14,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127909470.0,
+        "transients": 0
+      },
+      {
+        "cycle": 8,
+        "enemies": 0,
+        "epoch": 16,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127910534.0,
+        "transients": 0
+      },
+      {
+        "cycle": 9,
+        "enemies": 0,
+        "epoch": 18,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127911738.0,
+        "transients": 0
+      },
+      {
+        "cycle": 10,
+        "enemies": 0,
+        "epoch": 20,
+        "nodes": 619,
+        "objects": 9095.0,
+        "orphans": 0.0,
+        "resources": 779.0,
+        "shots": 0,
+        "static_memory": 127912718.0,
+        "transients": 0
+      }
+    ],
+    "boss": null
+  },
+  {
+    "platform": "native",
+    "case": "M",
+    "weighted": {
+      "ordinary": 94.29285449833394,
+      "tier1": 53.060348019252125,
+      "tier2": 27.661236579044804,
+      "giant": 2.9078119215105516,
+      "visible": 32.73306182895224,
+      "visible_tier1": 18.801925212884115,
+      "visible_tier2": 10.007034431691967,
+      "shots_near": 0.3650499814883376,
+      "shots_screen": 0.9563124768604226,
+      "sources": 1.9059607552758238,
+      "ordinary_enchanted_percent": 85.60731884484755,
+      "visible_enchanted_percent": 88.01180835180745
+    },
+    "rss_bytes_first_peak_last": [
+      1679360,
+      550666240,
+      550666240
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 116.561,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  },
+  {
+    "platform": "native",
+    "case": "B",
+    "weighted": {
+      "ordinary": 0.0,
+      "tier1": 0.0,
+      "tier2": 0.0,
+      "giant": 0.0,
+      "visible": 0.9138110072689511,
+      "visible_tier1": 0.0,
+      "visible_tier2": 0.0,
+      "shots_near": 11.14330218068536,
+      "shots_screen": 15.453374870197301,
+      "sources": 1.0,
+      "ordinary_enchanted_percent": null,
+      "visible_enchanted_percent": 0.0
+    },
+    "rss_bytes_first_peak_last": [
+      1683456,
+      536698880,
+      536698880
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 115.337,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": [
+      {
+        "actions": {
+          "continuous_barrage_attached": 1
+        },
+        "frame": 1,
+        "phase": "1",
+        "round": 1
+      },
+      {
+        "actions": {
+          "continuous_barrage_attached": 1
+        },
+        "frame": 1,
+        "phase": "1",
+        "round": 1,
+        "ultimate_activated": 0
+      },
+      {
+        "actions": {
+          "attack": 5,
+          "barrage_admitted": 385,
+          "barrage_cancelled_owner": 35,
+          "barrage_planned": 420,
+          "barrage_projectiles": 385,
+          "barrage_requested": 385,
+          "barrage_wave": 11,
+          "burst": 3,
+          "charge": 1,
+          "cone": 3,
+          "contact": 1,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 56,
+          "continuous_barrage_planned": 56,
+          "continuous_barrage_requested": 56,
+          "continuous_barrage_wave": 8,
+          "dash": 1,
+          "dash_end": 1,
+          "line": 1,
+          "phase_two": 1,
+          "shot": 441,
+          "sweep": 1,
+          "windup_burst": 3,
+          "windup_dash": 1,
+          "windup_sweep": 1
+        },
+        "frame": 3414,
+        "phase": "2",
+        "round": 1
+      },
+      {
+        "actions": {
+          "attack": 7,
+          "band": 1,
+          "barrage_admitted": 385,
+          "barrage_cancelled_owner": 35,
+          "barrage_planned": 420,
+          "barrage_projectiles": 385,
+          "barrage_requested": 385,
+          "barrage_wave": 11,
+          "burst": 3,
+          "charge": 1,
+          "cone": 3,
+          "contact": 1,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 63,
+          "continuous_barrage_paused_safe_zone": 116,
+          "continuous_barrage_planned": 63,
+          "continuous_barrage_requested": 63,
+          "continuous_barrage_wave": 9,
+          "dash": 1,
+          "dash_end": 1,
+          "line": 2,
+          "phase_two": 1,
+          "shot": 448,
+          "sweep": 1,
+          "ultimate": 1,
+          "ultimate_activated": 1,
+          "windup_band": 1,
+          "windup_burst": 3,
+          "windup_dash": 1,
+          "windup_sweep": 1,
+          "windup_ultimate": 1
+        },
+        "frame": 4265,
+        "phase": "2",
+        "round": 1,
+        "ultimate_activated": 1
+      },
+      {
+        "actions": {
+          "attack": 12,
+          "band": 1,
+          "barrage_admitted": 665,
+          "barrage_cancelled_owner": 35,
+          "barrage_planned": 700,
+          "barrage_projectiles": 665,
+          "barrage_requested": 665,
+          "barrage_wave": 19,
+          "burst": 5,
+          "charge": 2,
+          "cone": 5,
+          "contact": 2,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 91,
+          "continuous_barrage_paused_safe_zone": 250,
+          "continuous_barrage_planned": 91,
+          "continuous_barrage_requested": 91,
+          "continuous_barrage_wave": 13,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 3,
+          "phase_two": 1,
+          "shot": 756,
+          "sweep": 2,
+          "ultimate": 2,
+          "ultimate_activated": 2,
+          "windup_band": 1,
+          "windup_burst": 5,
+          "windup_dash": 2,
+          "windup_sweep": 2,
+          "windup_ultimate": 2
+        },
+        "frame": 6838,
+        "phase": "2",
+        "round": 1,
+        "ultimate_activated": 2
+      },
+      {
+        "actions": {
+          "attack": 15,
+          "band": 2,
+          "barrage_admitted": 804,
+          "barrage_cancelled_owner": 105,
+          "barrage_planned": 909,
+          "barrage_projectiles": 804,
+          "barrage_requested": 804,
+          "barrage_wave": 24,
+          "burst": 6,
+          "charge": 2,
+          "cone": 6,
+          "contact": 3,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 112,
+          "continuous_barrage_paused_safe_zone": 268,
+          "continuous_barrage_planned": 112,
+          "continuous_barrage_requested": 112,
+          "continuous_barrage_wave": 16,
+          "cross": 1,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 8,
+          "phase_three": 1,
+          "phase_two": 1,
+          "shot": 916,
+          "sweep": 2,
+          "ultimate": 2,
+          "ultimate_activated": 2,
+          "windup_band": 2,
+          "windup_burst": 6,
+          "windup_cross": 1,
+          "windup_dash": 2,
+          "windup_sweep": 2,
+          "windup_ultimate": 2
+        },
+        "frame": 8268,
+        "phase": "3",
+        "round": 1
+      },
+      {
+        "actions": {
+          "attack": 17,
+          "band": 2,
+          "barrage_admitted": 927,
+          "barrage_cancelled_owner": 187,
+          "barrage_planned": 1114,
+          "barrage_projectiles": 927,
+          "barrage_requested": 927,
+          "barrage_wave": 27,
+          "burst": 7,
+          "charge": 2,
+          "cone": 7,
+          "contact": 4,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 126,
+          "continuous_barrage_paused_safe_zone": 384,
+          "continuous_barrage_planned": 126,
+          "continuous_barrage_requested": 126,
+          "continuous_barrage_wave": 18,
+          "cross": 1,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 8,
+          "phase_three": 1,
+          "phase_two": 1,
+          "shot": 1053,
+          "sweep": 2,
+          "ultimate": 3,
+          "ultimate_activated": 3,
+          "windup_band": 2,
+          "windup_burst": 7,
+          "windup_cross": 1,
+          "windup_dash": 2,
+          "windup_sweep": 2,
+          "windup_ultimate": 3
+        },
+        "frame": 9641,
+        "phase": "3",
+        "round": 1,
+        "ultimate_activated": 3
+      },
+      {
+        "actions": {
+          "attack": 23,
+          "band": 3,
+          "barrage_admitted": 1255,
+          "barrage_cancelled_owner": 269,
+          "barrage_deferred": 18,
+          "barrage_planned": 1524,
+          "barrage_projectiles": 1255,
+          "barrage_requested": 1255,
+          "barrage_wave": 35,
+          "burst": 9,
+          "charge": 2,
+          "cone": 9,
+          "contact": 6,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 168,
+          "continuous_barrage_paused_safe_zone": 518,
+          "continuous_barrage_planned": 168,
+          "continuous_barrage_requested": 168,
+          "continuous_barrage_wave": 24,
+          "cross": 1,
+          "cross_laser": 1,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 14,
+          "phase_three": 1,
+          "phase_two": 1,
+          "shot": 1423,
+          "sweep": 3,
+          "ultimate": 4,
+          "ultimate_activated": 4,
+          "windup_band": 3,
+          "windup_burst": 9,
+          "windup_cross": 1,
+          "windup_cross_laser": 1,
+          "windup_dash": 2,
+          "windup_sweep": 3,
+          "windup_ultimate": 4
+        },
+        "frame": 12462,
+        "phase": "3",
+        "round": 1,
+        "ultimate_activated": 4
+      }
+    ]
+  },
+  {
+    "platform": "native",
+    "case": "P",
+    "weighted": {
+      "ordinary": 114.59555555555556,
+      "tier1": 65.73722222222221,
+      "tier2": 34.87833333333333,
+      "giant": 2.8805555555555555,
+      "visible": 37.99388888888889,
+      "visible_tier1": 21.452777777777776,
+      "visible_tier2": 11.845555555555556,
+      "shots_near": 57.73611111111111,
+      "shots_screen": 63.34888888888889,
+      "sources": 1.8588888888888888,
+      "ordinary_enchanted_percent": 87.80057399937945,
+      "visible_enchanted_percent": 87.64128734153154
+    },
+    "rss_bytes_first_peak_last": [
+      1683456,
+      555085824,
+      555085824
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 118.053,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  },
+  {
+    "platform": "windows",
+    "case": "H",
+    "weighted": {
+      "ordinary": 113.6212513883747,
+      "tier1": 66.02332469455759,
+      "tier2": 31.840429470566466,
+      "giant": 2.9111440207330617,
+      "visible": 32.49796371714181,
+      "visible_tier1": 18.310255460940397,
+      "visible_tier2": 9.274342835986669,
+      "shots_near": 0.26878933728248766,
+      "shots_screen": 0.4587189929655678,
+      "sources": 0.00444279896334689,
+      "ordinary_enchanted_percent": 86.13155811020852,
+      "visible_enchanted_percent": 84.88100527473027
+    },
+    "rss_bytes_first_peak_last": [
+      1683456,
+      509812736,
+      509751296
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 32.654,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": [
+      {
+        "cycle": 1,
+        "enemies": 0,
+        "epoch": 2,
+        "nodes": 622,
+        "objects": 8963.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 2,
+        "enemies": 0,
+        "epoch": 4,
+        "nodes": 619,
+        "objects": 8955.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 3,
+        "enemies": 0,
+        "epoch": 6,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 4,
+        "enemies": 0,
+        "epoch": 8,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 5,
+        "enemies": 0,
+        "epoch": 10,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 6,
+        "enemies": 0,
+        "epoch": 12,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 7,
+        "enemies": 0,
+        "epoch": 14,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 8,
+        "enemies": 0,
+        "epoch": 16,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 9,
+        "enemies": 0,
+        "epoch": 18,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 10,
+        "enemies": 0,
+        "epoch": 20,
+        "nodes": 619,
+        "objects": 8953.0,
+        "orphans": null,
+        "resources": 783.0,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      }
+    ],
+    "boss": null
+  },
+  {
+    "platform": "windows",
+    "case": "M",
+    "weighted": {
+      "ordinary": 92.46575342465752,
+      "tier1": 52.57978526471676,
+      "tier2": 25.6815994076268,
+      "giant": 2.886708626434654,
+      "visible": 33.7230655312847,
+      "visible_tier1": 19.416142169566825,
+      "visible_tier2": 8.765642354683449,
+      "shots_near": 0.33839318770825594,
+      "shots_screen": 0.7278785634950015,
+      "sources": 1.907441688263606,
+      "ordinary_enchanted_percent": 84.63823823823823,
+      "visible_enchanted_percent": 83.56827613464199
+    },
+    "rss_bytes_first_peak_last": [
+      1683456,
+      493043712,
+      493043712
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 31.926,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  },
+  {
+    "platform": "windows",
+    "case": "B",
+    "weighted": {
+      "ordinary": 0.0,
+      "tier1": 0.0,
+      "tier2": 0.0,
+      "giant": 0.0,
+      "visible": 0.9148494288681205,
+      "visible_tier1": 0.0,
+      "visible_tier2": 0.0,
+      "shots_near": 11.050882658359294,
+      "shots_screen": 15.349325025960546,
+      "sources": 1.0,
+      "ordinary_enchanted_percent": null,
+      "visible_enchanted_percent": 0.0
+    },
+    "rss_bytes_first_peak_last": [
+      1683456,
+      483586048,
+      483586048
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 33.217,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": [
+      {
+        "actions": {
+          "continuous_barrage_attached": 1
+        },
+        "frame": 1,
+        "phase": "1",
+        "round": 1
+      },
+      {
+        "actions": {
+          "continuous_barrage_attached": 1
+        },
+        "frame": 1,
+        "phase": "1",
+        "round": 1,
+        "ultimate_activated": 0
+      },
+      {
+        "actions": {
+          "attack": 5,
+          "barrage_admitted": 385,
+          "barrage_cancelled_owner": 35,
+          "barrage_planned": 420,
+          "barrage_projectiles": 385,
+          "barrage_requested": 385,
+          "barrage_wave": 11,
+          "burst": 3,
+          "charge": 1,
+          "cone": 3,
+          "contact": 1,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 56,
+          "continuous_barrage_planned": 56,
+          "continuous_barrage_requested": 56,
+          "continuous_barrage_wave": 8,
+          "dash": 1,
+          "dash_end": 1,
+          "line": 1,
+          "phase_two": 1,
+          "shot": 441,
+          "sweep": 1,
+          "windup_burst": 3,
+          "windup_dash": 1,
+          "windup_sweep": 1
+        },
+        "frame": 3436,
+        "phase": "2",
+        "round": 1
+      },
+      {
+        "actions": {
+          "attack": 7,
+          "band": 1,
+          "barrage_admitted": 385,
+          "barrage_cancelled_owner": 35,
+          "barrage_planned": 420,
+          "barrage_projectiles": 385,
+          "barrage_requested": 385,
+          "barrage_wave": 11,
+          "burst": 3,
+          "charge": 1,
+          "cone": 3,
+          "contact": 1,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 63,
+          "continuous_barrage_paused_safe_zone": 116,
+          "continuous_barrage_planned": 63,
+          "continuous_barrage_requested": 63,
+          "continuous_barrage_wave": 9,
+          "dash": 1,
+          "dash_end": 1,
+          "line": 2,
+          "phase_two": 1,
+          "shot": 448,
+          "sweep": 1,
+          "ultimate": 1,
+          "ultimate_activated": 1,
+          "windup_band": 1,
+          "windup_burst": 3,
+          "windup_dash": 1,
+          "windup_sweep": 1,
+          "windup_ultimate": 1
+        },
+        "frame": 4287,
+        "phase": "2",
+        "round": 1,
+        "ultimate_activated": 1
+      },
+      {
+        "actions": {
+          "attack": 12,
+          "band": 1,
+          "barrage_admitted": 665,
+          "barrage_cancelled_owner": 35,
+          "barrage_planned": 700,
+          "barrage_projectiles": 665,
+          "barrage_requested": 665,
+          "barrage_wave": 19,
+          "burst": 5,
+          "charge": 2,
+          "cone": 5,
+          "contact": 2,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 91,
+          "continuous_barrage_paused_safe_zone": 250,
+          "continuous_barrage_planned": 91,
+          "continuous_barrage_requested": 91,
+          "continuous_barrage_wave": 13,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 3,
+          "phase_two": 1,
+          "shot": 756,
+          "sweep": 2,
+          "ultimate": 2,
+          "ultimate_activated": 2,
+          "windup_band": 1,
+          "windup_burst": 5,
+          "windup_dash": 2,
+          "windup_sweep": 2,
+          "windup_ultimate": 2
+        },
+        "frame": 6860,
+        "phase": "2",
+        "round": 1,
+        "ultimate_activated": 2
+      },
+      {
+        "actions": {
+          "attack": 15,
+          "band": 2,
+          "barrage_admitted": 804,
+          "barrage_cancelled_owner": 105,
+          "barrage_planned": 909,
+          "barrage_projectiles": 804,
+          "barrage_requested": 804,
+          "barrage_wave": 24,
+          "burst": 6,
+          "charge": 2,
+          "cone": 6,
+          "contact": 2,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 112,
+          "continuous_barrage_paused_safe_zone": 268,
+          "continuous_barrage_planned": 112,
+          "continuous_barrage_requested": 112,
+          "continuous_barrage_wave": 16,
+          "cross": 1,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 8,
+          "phase_three": 1,
+          "phase_two": 1,
+          "shot": 916,
+          "sweep": 2,
+          "ultimate": 2,
+          "ultimate_activated": 2,
+          "windup_band": 2,
+          "windup_burst": 6,
+          "windup_cross": 1,
+          "windup_dash": 2,
+          "windup_sweep": 2,
+          "windup_ultimate": 2
+        },
+        "frame": 8289,
+        "phase": "3",
+        "round": 1
+      },
+      {
+        "actions": {
+          "attack": 17,
+          "band": 2,
+          "barrage_admitted": 927,
+          "barrage_cancelled_owner": 187,
+          "barrage_planned": 1114,
+          "barrage_projectiles": 927,
+          "barrage_requested": 927,
+          "barrage_wave": 27,
+          "burst": 7,
+          "charge": 2,
+          "cone": 7,
+          "contact": 3,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 126,
+          "continuous_barrage_paused_safe_zone": 384,
+          "continuous_barrage_planned": 126,
+          "continuous_barrage_requested": 126,
+          "continuous_barrage_wave": 18,
+          "cross": 1,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 8,
+          "phase_three": 1,
+          "phase_two": 1,
+          "shot": 1053,
+          "sweep": 2,
+          "ultimate": 3,
+          "ultimate_activated": 3,
+          "windup_band": 2,
+          "windup_burst": 7,
+          "windup_cross": 1,
+          "windup_dash": 2,
+          "windup_sweep": 2,
+          "windup_ultimate": 3
+        },
+        "frame": 9663,
+        "phase": "3",
+        "round": 1,
+        "ultimate_activated": 3
+      },
+      {
+        "actions": {
+          "attack": 23,
+          "band": 3,
+          "barrage_admitted": 1255,
+          "barrage_cancelled_owner": 269,
+          "barrage_planned": 1524,
+          "barrage_projectiles": 1255,
+          "barrage_requested": 1255,
+          "barrage_wave": 35,
+          "burst": 9,
+          "charge": 2,
+          "cone": 9,
+          "contact": 6,
+          "continuous_barrage_attached": 1,
+          "continuous_barrage_emitted": 168,
+          "continuous_barrage_paused_safe_zone": 518,
+          "continuous_barrage_planned": 168,
+          "continuous_barrage_requested": 168,
+          "continuous_barrage_wave": 24,
+          "cross": 1,
+          "cross_laser": 1,
+          "dash": 2,
+          "dash_end": 2,
+          "line": 14,
+          "phase_three": 1,
+          "phase_two": 1,
+          "shot": 1423,
+          "sweep": 3,
+          "ultimate": 4,
+          "ultimate_activated": 4,
+          "windup_band": 3,
+          "windup_burst": 9,
+          "windup_cross": 1,
+          "windup_cross_laser": 1,
+          "windup_dash": 2,
+          "windup_sweep": 3,
+          "windup_ultimate": 4
+        },
+        "frame": 12484,
+        "phase": "3",
+        "round": 1,
+        "ultimate_activated": 4
+      }
+    ]
+  },
+  {
+    "platform": "windows",
+    "case": "P",
+    "weighted": {
+      "ordinary": 115.70222222222222,
+      "tier1": 67.87388888888889,
+      "tier2": 31.91611111111111,
+      "giant": 2.8427777777777776,
+      "visible": 40.311666666666675,
+      "visible_tier1": 22.336666666666666,
+      "visible_tier2": 12.117777777777778,
+      "shots_near": 58.05222222222222,
+      "shots_screen": 63.49333333333333,
+      "sources": 1.8577777777777778,
+      "ordinary_enchanted_percent": 86.24726308915608,
+      "visible_enchanted_percent": 85.47015614448533
+    },
+    "rss_bytes_first_peak_last": [
+      1683456,
+      501104640,
+      501104640
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 32.791,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  },
+  {
+    "platform": "web",
+    "case": "H",
+    "weighted": {
+      "ordinary": 133.98852276934468,
+      "tier1": 78.23509811181044,
+      "tier2": 37.494631617919296,
+      "giant": 2.9104035542391706,
+      "visible": 45.00962606442058,
+      "visible_tier1": 25.368382080710845,
+      "visible_tier2": 12.597926693817106,
+      "shots_near": 0.0825620140688634,
+      "shots_screen": 0.3395038874490927,
+      "sources": 0.0,
+      "ordinary_enchanted_percent": 86.37286786790935,
+      "visible_enchanted_percent": 84.35153120398779
+    },
+    "rss_bytes_first_peak_last": [
+      376168448,
+      1879928832,
+      1564762112
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 38.58,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": [
+      {
+        "cycle": 1,
+        "enemies": 0,
+        "epoch": 2,
+        "nodes": 620,
+        "objects": 6734,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 2,
+        "enemies": 0,
+        "epoch": 4,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 3,
+        "enemies": 0,
+        "epoch": 6,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 4,
+        "enemies": 0,
+        "epoch": 8,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 5,
+        "enemies": 0,
+        "epoch": 10,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 6,
+        "enemies": 0,
+        "epoch": 12,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 7,
+        "enemies": 0,
+        "epoch": 14,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 8,
+        "enemies": 0,
+        "epoch": 16,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 9,
+        "enemies": 0,
+        "epoch": 18,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      },
+      {
+        "cycle": 10,
+        "enemies": 0,
+        "epoch": 20,
+        "nodes": 619,
+        "objects": 6728,
+        "orphans": null,
+        "resources": 778,
+        "shots": 0,
+        "static_memory": null,
+        "transients": 0
+      }
+    ],
+    "boss": null
+  },
+  {
+    "platform": "web",
+    "case": "M",
+    "weighted": {
+      "ordinary": 125.25333333333333,
+      "tier1": 73.56,
+      "tier2": 36.008518518518514,
+      "giant": 2.9207407407407406,
+      "visible": 43.022962962962964,
+      "visible_tier1": 24.45962962962963,
+      "visible_tier2": 12.621851851851853,
+      "shots_near": 0.30222222222222234,
+      "shots_screen": 0.6922222222222224,
+      "sources": 1.9059259259259258,
+      "ordinary_enchanted_percent": 87.47752702670736,
+      "visible_enchanted_percent": 86.18997606790518
+    },
+    "rss_bytes_first_peak_last": [
+      374587392,
+      1795710976,
+      1740828672
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 40.015,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  },
+  {
+    "platform": "web",
+    "case": "B",
+    "weighted": {
+      "ordinary": 0.0,
+      "tier1": 0.0,
+      "tier2": 0.0,
+      "giant": 0.0,
+      "visible": 0.9129802699896158,
+      "visible_tier1": 0.0,
+      "visible_tier2": 0.0,
+      "shots_near": 10.643613707165118,
+      "shots_screen": 15.455451713395647,
+      "sources": 1.0,
+      "ordinary_enchanted_percent": null,
+      "visible_enchanted_percent": 0.0
+    },
+    "rss_bytes_first_peak_last": [
+      374915072,
+      1873547264,
+      1514569728
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 41.4,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  },
+  {
+    "platform": "web",
+    "case": "P",
+    "weighted": {
+      "ordinary": 140.4116666666667,
+      "tier1": 81.68277777777777,
+      "tier2": 42.50333333333333,
+      "giant": 2.8449999999999998,
+      "visible": 43.927777777777784,
+      "visible_tier1": 24.633333333333336,
+      "visible_tier2": 14.107777777777779,
+      "shots_near": 58.22944444444444,
+      "shots_screen": 63.437777777777775,
+      "sources": 1.8616666666666668,
+      "ordinary_enchanted_percent": 88.44429673064519,
+      "visible_enchanted_percent": 88.19274060958645
+    },
+    "rss_bytes_first_peak_last": [
+      376193024,
+      1826897920,
+      1686999040
+    ],
+    "entry": [
+      {
+        "depart_to_combat_ms": 39.305,
+        "round": 1,
+        "state": "COMBAT"
+      }
+    ],
+    "convergence": null,
+    "boss": null
+  }
+]

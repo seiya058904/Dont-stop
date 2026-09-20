@@ -68,6 +68,21 @@ func _ready():
 	p._physics_process(0.15)
 	check(not p.is_queued_for_deletion() and p.velocity.x < 0 and p.bounces_done==1,"real wall normal reflects")
 	check(p.position.x < 10080,"reflection consumes remaining displacement")
+	p.queue_free(); await wait(0.03)
+	Utils.player.global_position = Vector2(10070,10000)
+	p = pellet(Vector2(10000,10000),Vector2(300,0),1)
+	p.set_process(false)
+	B11Probe.enabled = true
+	var mirrors_before = B11Probe.shot_fog_mirrors
+	p._physics_process(0.01); p._physics_process(0.01)
+	check(is_equal_approx(p.life,0.02) and p.position.x > 10005,"all physics substeps advance lifetime and displacement")
+	check(p._ink_dirty and B11Probe.shot_fog_mirrors == mirrors_before,"physics substeps defer only drawing submissions")
+	check(p._fog_position.x > 10002 and p._fog_position.x < p.position.x,"latest original pre-sweep fog position retained")
+	p._process(0.0)
+	check(not p._ink_dirty and B11Probe.shot_fog_mirrors == mirrors_before+1,"one display update submits latest necessary warning")
+	p._process(0.0)
+	check(B11Probe.shot_fog_mirrors == mirrors_before+1,"no duplicate warning without a new physics step")
+	B11Probe.enabled = false
 	LevelServer.epoch += 1; p._physics_process(0.01)
 	check(p.is_queued_for_deletion(),"epoch clears reflected shot")
 	wall.queue_free(); await wait(0.05)

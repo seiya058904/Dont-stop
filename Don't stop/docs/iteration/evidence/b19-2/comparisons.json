@@ -1,0 +1,1117 @@
+{
+  "stress-b19-2-reference-final-M-D": {
+    "file": "stress-b19-2-reference-final-M-D.json",
+    "full": {
+      "frames": 3478,
+      "avg": 13.00374209603601,
+      "p95": 24.8899993896484,
+      "p99": 33.2700004577637,
+      "max": 398.654998779297,
+      "over33_percent": 0.9775733179988499,
+      "over50": 6
+    },
+    "first5": {
+      "frames": 620,
+      "avg": 8.059435480855585,
+      "p95": 10.539999961853,
+      "p99": 26.5699996948242,
+      "max": 398.654998779297,
+      "over33_percent": 0.6451612903225806,
+      "over50": 3
+    },
+    "hot": {
+      "frames": 2858,
+      "avg": 14.076334853702862,
+      "p95": 25.4549999237061,
+      "p99": 33.560001373291,
+      "max": 55.1150016784668,
+      "over33_percent": 1.0496850944716585,
+      "over50": 3
+    },
+    "worst5": {
+      "from_s": 40.0330009460449,
+      "to_s": 45.0330009460449,
+      "frames": 219,
+      "avg": 22.860913254898982,
+      "p95": 34.7249984741211,
+      "p99": 53.0900001525879,
+      "max": 55.1150016784668,
+      "over33_percent": 8.219178082191782,
+      "over50": 3
+    },
+    "longest_over33_ms": 398.654998779297,
+    "sim_s": 45.0166666666667,
+    "wall_s": 45.26,
+    "sim_wall": 0.9946236559139793,
+    "timing_pass": false,
+    "unclassified_over50": [
+      {
+        "wall_s": 0.0710000023245811,
+        "ms": 70.620002746582
+      },
+      {
+        "wall_s": 1.09300005435944,
+        "ms": 398.654998779297
+      },
+      {
+        "wall_s": 1.56099998950958,
+        "ms": 141.259994506836
+      },
+      {
+        "wall_s": 41.8219985961914,
+        "ms": 55.1150016784668
+      },
+      {
+        "wall_s": 42.8310012817383,
+        "ms": 54.7050018310547
+      },
+      {
+        "wall_s": 44.826000213623,
+        "ms": 53.0900001525879
+      }
+    ],
+    "load": {
+      "weighted_ordinary": 118.66234727878566,
+      "weighted_elite": 1.9070714550166605,
+      "weighted_visible": 40.92484265087006,
+      "weighted_shots": 5.321732691595709,
+      "shots_peak": 11,
+      "near_cap_sim_percent": 0.0,
+      "last": {
+        "action_totals": {
+          "armor_break": 2,
+          "armor_hit": 2,
+          "artillery": 2,
+          "attack": 33,
+          "barrage_admitted": 12,
+          "barrage_planned": 12,
+          "barrage_projectiles": 12,
+          "barrage_requested": 12,
+          "barrage_wave": 2,
+          "beam": 16,
+          "beam_fired": 16,
+          "circle": 2,
+          "continuous_barrage_attached": 2,
+          "continuous_barrage_emitted": 108,
+          "continuous_barrage_planned": 108,
+          "continuous_barrage_requested": 108,
+          "continuous_barrage_wave": 27,
+          "cross": 7,
+          "field_refused": 1,
+          "line": 59,
+          "shot": 128,
+          "tremor": 8,
+          "windup_artillery": 2,
+          "windup_beam": 20,
+          "windup_cross": 7,
+          "windup_tremor": 11
+        },
+        "actual_bounces": 0,
+        "births": {
+          "enchanted": 3177,
+          "ordinary_arrivals": 3530,
+          "tier2": 1059
+        },
+        "boss": 0,
+        "capacity_fixture_emitted": 0,
+        "capacity_fixture_planned_attempts": 0,
+        "capacity_fixture_wall_rejected": 0,
+        "continuous_cancelled": 0,
+        "continuous_deferred": 0,
+        "continuous_emitted": 108,
+        "continuous_planned": 108,
+        "damage_events": 4273,
+        "elite": 2,
+        "fire_released": true,
+        "flame_draw_passes": 0,
+        "flame_draw_usec": 0,
+        "giant": 3,
+        "gold": 947931,
+        "kills": 3398,
+        "ordinary": 158,
+        "physics_active": 146,
+        "physics_pairs": 188,
+        "round": 1,
+        "shots_admitted_total": 128,
+        "shots_group": 10,
+        "shots_live": 10,
+        "shots_near": 0,
+        "shots_screen": 1,
+        "shots_visible": 10,
+        "sources": 2,
+        "status_empty": 0,
+        "status_walks": 0,
+        "tick": 2698,
+        "tier1": 85,
+        "tier2": 50,
+        "visible": 58,
+        "visible_tier1": 30,
+        "visible_tier2": 19,
+        "wall_s": 45.1809997558594,
+        "weapon": 112
+      }
+    },
+    "boss_complete": false,
+    "timeout": false,
+    "errors": [],
+    "surface": {
+      "canvas_transform": "[X: (1.0, 0.0), Y: (0.0, 1.0), O: (74.99991, 48.99995)]",
+      "content_scale_size": "(410, 230)",
+      "display_server": "web",
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "max_fps": 0,
+      "physics_hz": 60,
+      "public_release": true,
+      "renderer": "gl_compatibility",
+      "stretch_transform": "[X: (3.746341, 0.0), Y: (0.0, 3.743478), O: (0.0, 0.0)]",
+      "texture_size": "(5755.0, 3224.0)",
+      "visible_rect": "[P: (0.0, 0.0), S: (410.0, 230.0)]",
+      "vsync": 1,
+      "window": "(1536, 864)"
+    },
+    "build": {
+      "index.wasm": {
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.pck": {
+        "bytes": 41385684,
+        "sha256": "34b33a617fa29db0bba4f362cf769c8c24599b4f92826896091f75aff15a2a99"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "identity": "2136e28c02a3a4db654c2e40656d8ffd495285f5b4e56fe4b2bdb7f5cf144477"
+    }
+  },
+  "stress-b19-2-reference-final-P-P": {
+    "file": "stress-b19-2-reference-final-P-P.json",
+    "full": {
+      "frames": 95,
+      "avg": 136.48647450657663,
+      "p95": 162.460006713867,
+      "p99": 497.445007324219,
+      "max": 497.445007324219,
+      "over33_percent": 98.94736842105263,
+      "over50": 94
+    },
+    "first5": {
+      "frames": 37,
+      "avg": 131.97121691728967,
+      "p95": 256.230010986328,
+      "p99": 497.445007324219,
+      "max": 497.445007324219,
+      "over33_percent": 97.29729729729729,
+      "over50": 36
+    },
+    "hot": {
+      "frames": 58,
+      "avg": 139.3668974514666,
+      "p95": 152.990005493164,
+      "p99": 203.110000610352,
+      "max": 203.110000610352,
+      "over33_percent": 100.0,
+      "over50": 58
+    },
+    "worst5": {
+      "from_s": 0.021999835968020243,
+      "to_s": 5.02199983596802,
+      "frames": 37,
+      "avg": 135.72837891449797,
+      "p95": 256.230010986328,
+      "p99": 497.445007324219,
+      "max": 497.445007324219,
+      "over33_percent": 100.0,
+      "over50": 37
+    },
+    "longest_over33_ms": 12966.205078125,
+    "sim_s": 12,
+    "wall_s": 13.057,
+    "sim_wall": 0.9190472543463276,
+    "timing_pass": false,
+    "unclassified_over50": [
+      {
+        "wall_s": 0.0939999967813492,
+        "ms": 94.0699996948242
+      },
+      {
+        "wall_s": 0.166999995708466,
+        "ms": 73.0299987792969
+      },
+      {
+        "wall_s": 0.259999990463257,
+        "ms": 92.6750030517578
+      },
+      {
+        "wall_s": 0.372999995946884,
+        "ms": 112.955001831055
+      },
+      {
+        "wall_s": 0.462999999523163,
+        "ms": 90.7649993896484
+      },
+      {
+        "wall_s": 0.558000028133392,
+        "ms": 94.4349975585938
+      },
+      {
+        "wall_s": 0.644999980926514,
+        "ms": 87.4700012207031
+      },
+      {
+        "wall_s": 0.748000025749207,
+        "ms": 103.139999389648
+      },
+      {
+        "wall_s": 0.845000028610229,
+        "ms": 97.004997253418
+      },
+      {
+        "wall_s": 1.34300005435944,
+        "ms": 497.445007324219
+      },
+      {
+        "wall_s": 1.52499997615814,
+        "ms": 182.634994506836
+      },
+      {
+        "wall_s": 1.66700005531311,
+        "ms": 141.684997558594
+      },
+      {
+        "wall_s": 1.79499995708466,
+        "ms": 127.720001220703
+      },
+      {
+        "wall_s": 1.92700004577637,
+        "ms": 132.080001831055
+      },
+      {
+        "wall_s": 2.06399989128113,
+        "ms": 137.119995117188
+      },
+      {
+        "wall_s": 2.20099997520447,
+        "ms": 136.529998779297
+      },
+      {
+        "wall_s": 2.3289999961853,
+        "ms": 128.425003051758
+      },
+      {
+        "wall_s": 2.4539999961853,
+        "ms": 125.355003356934
+      },
+      {
+        "wall_s": 2.60999989509583,
+        "ms": 155.830001831055
+      },
+      {
+        "wall_s": 2.8659999370575,
+        "ms": 256.230010986328
+      },
+      {
+        "wall_s": 2.99399995803833,
+        "ms": 127.849998474121
+      },
+      {
+        "wall_s": 3.12700009346008,
+        "ms": 132.815002441406
+      },
+      {
+        "wall_s": 3.25300002098083,
+        "ms": 126.050003051758
+      },
+      {
+        "wall_s": 3.38499999046326,
+        "ms": 131.645004272461
+      },
+      {
+        "wall_s": 3.51099991798401,
+        "ms": 125.745002746582
+      },
+      {
+        "wall_s": 3.62599992752075,
+        "ms": 114.974998474121
+      },
+      {
+        "wall_s": 3.74200010299683,
+        "ms": 116.444999694824
+      },
+      {
+        "wall_s": 3.85899996757507,
+        "ms": 116.919998168945
+      },
+      {
+        "wall_s": 3.9779999256134,
+        "ms": 118.764999389648
+      },
+      {
+        "wall_s": 4.09499979019165,
+        "ms": 116.889999389648
+      },
+      {
+        "wall_s": 4.21299982070923,
+        "ms": 118.279998779297
+      },
+      {
+        "wall_s": 4.33300018310547,
+        "ms": 120.269996643066
+      },
+      {
+        "wall_s": 4.46099996566772,
+        "ms": 128.020004272461
+      },
+      {
+        "wall_s": 4.58699989318848,
+        "ms": 126.194999694824
+      },
+      {
+        "wall_s": 4.75,
+        "ms": 162.460006713867
+      },
+      {
+        "wall_s": 4.88299989700317,
+        "ms": 133
+      },
+      {
+        "wall_s": 5.02199983596802,
+        "ms": 139.024993896484
+      },
+      {
+        "wall_s": 5.16200017929077,
+        "ms": 140.214996337891
+      },
+      {
+        "wall_s": 5.30000019073486,
+        "ms": 137.850006103516
+      },
+      {
+        "wall_s": 5.43300008773804,
+        "ms": 133.244995117188
+      },
+      {
+        "wall_s": 5.57299995422363,
+        "ms": 140.145004272461
+      },
+      {
+        "wall_s": 5.70699977874756,
+        "ms": 133.375
+      },
+      {
+        "wall_s": 5.84499979019165,
+        "ms": 137.889999389648
+      },
+      {
+        "wall_s": 5.98299980163574,
+        "ms": 138.850006103516
+      },
+      {
+        "wall_s": 6.125,
+        "ms": 141.794998168945
+      },
+      {
+        "wall_s": 6.27099990844727,
+        "ms": 145.845001220703
+      },
+      {
+        "wall_s": 6.41300010681152,
+        "ms": 141.854995727539
+      },
+      {
+        "wall_s": 6.55200004577637,
+        "ms": 139.330001831055
+      },
+      {
+        "wall_s": 6.69099998474121,
+        "ms": 138.710006713867
+      },
+      {
+        "wall_s": 6.83500003814697,
+        "ms": 144.100006103516
+      },
+      {
+        "wall_s": 6.97300004959106,
+        "ms": 137.779998779297
+      },
+      {
+        "wall_s": 7.11499977111816,
+        "ms": 142.154998779297
+      },
+      {
+        "wall_s": 7.2480001449585,
+        "ms": 133.445007324219
+      },
+      {
+        "wall_s": 7.38199996948242,
+        "ms": 134.059997558594
+      },
+      {
+        "wall_s": 7.52199983596802,
+        "ms": 139.255004882812
+      },
+      {
+        "wall_s": 7.66800022125244,
+        "ms": 146.714996337891
+      },
+      {
+        "wall_s": 7.79300022125244,
+        "ms": 125.065002441406
+      },
+      {
+        "wall_s": 7.92899990081787,
+        "ms": 135.759994506836
+      },
+      {
+        "wall_s": 8.07100009918213,
+        "ms": 141.839996337891
+      },
+      {
+        "wall_s": 8.21300029754639,
+        "ms": 141.565002441406
+      },
+      {
+        "wall_s": 8.36299991607666,
+        "ms": 150.169998168945
+      },
+      {
+        "wall_s": 8.48700046539307,
+        "ms": 124.675003051758
+      },
+      {
+        "wall_s": 8.625,
+        "ms": 137.395004272461
+      },
+      {
+        "wall_s": 8.76000022888184,
+        "ms": 134.830001831055
+      },
+      {
+        "wall_s": 8.96300029754639,
+        "ms": 203.110000610352
+      },
+      {
+        "wall_s": 9.09099960327148,
+        "ms": 128.029998779297
+      },
+      {
+        "wall_s": 9.23099994659424,
+        "ms": 140.550003051758
+      },
+      {
+        "wall_s": 9.37399959564209,
+        "ms": 142.994995117188
+      },
+      {
+        "wall_s": 9.52700042724609,
+        "ms": 152.990005493164
+      },
+      {
+        "wall_s": 9.65999984741211,
+        "ms": 132.264999389648
+      },
+      {
+        "wall_s": 9.78999996185303,
+        "ms": 130.654998779297
+      },
+      {
+        "wall_s": 9.93200016021729,
+        "ms": 141.285003662109
+      },
+      {
+        "wall_s": 10.0719995498657,
+        "ms": 140.139999389648
+      },
+      {
+        "wall_s": 10.2110004425049,
+        "ms": 139.369995117188
+      },
+      {
+        "wall_s": 10.3540000915527,
+        "ms": 143.190002441406
+      },
+      {
+        "wall_s": 10.5010004043579,
+        "ms": 146.725006103516
+      },
+      {
+        "wall_s": 10.6309995651245,
+        "ms": 129.955001831055
+      },
+      {
+        "wall_s": 10.7659997940063,
+        "ms": 135.115005493164
+      },
+      {
+        "wall_s": 10.9069995880127,
+        "ms": 140.960006713867
+      },
+      {
+        "wall_s": 11.0469999313354,
+        "ms": 140.320007324219
+      },
+      {
+        "wall_s": 11.1840000152588,
+        "ms": 136.350006103516
+      },
+      {
+        "wall_s": 11.3290004730225,
+        "ms": 145
+      },
+      {
+        "wall_s": 11.4899997711182,
+        "ms": 160.955001831055
+      },
+      {
+        "wall_s": 11.6379995346069,
+        "ms": 147.850006103516
+      },
+      {
+        "wall_s": 11.7709999084473,
+        "ms": 133.770004272461
+      },
+      {
+        "wall_s": 11.9119997024536,
+        "ms": 140.320007324219
+      },
+      {
+        "wall_s": 12.0419998168945,
+        "ms": 130.794998168945
+      },
+      {
+        "wall_s": 12.1759996414185,
+        "ms": 133.360000610352
+      },
+      {
+        "wall_s": 12.3070001602173,
+        "ms": 131.089996337891
+      },
+      {
+        "wall_s": 12.4399995803833,
+        "ms": 132.884994506836
+      },
+      {
+        "wall_s": 12.5530004501343,
+        "ms": 113.180000305176
+      },
+      {
+        "wall_s": 12.6879997253418,
+        "ms": 134.809997558594
+      },
+      {
+        "wall_s": 12.8240003585815,
+        "ms": 136.274993896484
+      },
+      {
+        "wall_s": 12.9659996032715,
+        "ms": 142.044998168945
+      }
+    ],
+    "load": {
+      "weighted_ordinary": 104.13472222222224,
+      "weighted_elite": 1.6444444444444446,
+      "weighted_visible": 38.62916666666667,
+      "weighted_shots": 176.4375,
+      "shots_peak": 180,
+      "near_cap_sim_percent": 98.75000000000001,
+      "last": {
+        "action_totals": {
+          "armor_break": 1,
+          "armor_hit": 1,
+          "attack": 7,
+          "beam": 3,
+          "beam_fired": 4,
+          "continuous_barrage_attached": 2,
+          "continuous_barrage_deferred": 20,
+          "continuous_barrage_emitted": 28,
+          "continuous_barrage_planned": 28,
+          "continuous_barrage_requested": 28,
+          "continuous_barrage_wave": 7,
+          "cross": 1,
+          "field_refused": 1,
+          "line": 11,
+          "shot": 31,
+          "tremor": 3,
+          "windup_beam": 3,
+          "windup_cross": 1,
+          "windup_tremor": 4
+        },
+        "actual_bounces": 469,
+        "births": {
+          "enchanted": 567,
+          "ordinary_arrivals": 629,
+          "tier2": 189
+        },
+        "boss": 0,
+        "capacity_fixture_emitted": 1025,
+        "capacity_fixture_planned_attempts": 1075,
+        "capacity_fixture_wall_rejected": 50,
+        "continuous_cancelled": 0,
+        "continuous_deferred": 20,
+        "continuous_emitted": 28,
+        "continuous_planned": 28,
+        "damage_events": 690,
+        "elite": 2,
+        "fire_released": true,
+        "flame_draw_passes": 0,
+        "flame_draw_usec": 0,
+        "giant": 3,
+        "gold": 946297,
+        "kills": 459,
+        "ordinary": 175,
+        "physics_active": 345,
+        "physics_pairs": 267,
+        "round": 1,
+        "shots_admitted_total": 1056,
+        "shots_group": 180,
+        "shots_live": 180,
+        "shots_near": 57,
+        "shots_screen": 67,
+        "shots_visible": 180,
+        "sources": 2,
+        "status_empty": 0,
+        "status_walks": 0,
+        "tick": 717,
+        "tier1": 100,
+        "tier2": 50,
+        "visible": 77,
+        "visible_tier1": 47,
+        "visible_tier2": 15,
+        "wall_s": 12.9659996032715,
+        "weapon": 112
+      }
+    },
+    "boss_complete": false,
+    "timeout": false,
+    "errors": [],
+    "surface": {
+      "canvas_transform": "[X: (1.0, 0.0), Y: (0.0, 1.0), O: (74.99991, 48.99995)]",
+      "content_scale_size": "(410, 230)",
+      "display_server": "web",
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "max_fps": 0,
+      "physics_hz": 60,
+      "public_release": true,
+      "renderer": "gl_compatibility",
+      "stretch_transform": "[X: (3.746341, 0.0), Y: (0.0, 3.743478), O: (0.0, 0.0)]",
+      "texture_size": "(5755.0, 3224.0)",
+      "visible_rect": "[P: (0.0, 0.0), S: (410.0, 230.0)]",
+      "vsync": 1,
+      "window": "(1536, 864)"
+    },
+    "build": {
+      "index.wasm": {
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.pck": {
+        "bytes": 41385684,
+        "sha256": "34b33a617fa29db0bba4f362cf769c8c24599b4f92826896091f75aff15a2a99"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "identity": "2136e28c02a3a4db654c2e40656d8ffd495285f5b4e56fe4b2bdb7f5cf144477"
+    }
+  },
+  "stress-b19-2-delivery-confirm-web-P-P": {
+    "file": "stress-b19-2-delivery-confirm-web-P-P.json",
+    "full": {
+      "frames": 1419,
+      "avg": 21.116275521977776,
+      "p95": 35.5200004577637,
+      "p99": 40.9550018310547,
+      "max": 104.544998168945,
+      "over33_percent": 8.668076109936575,
+      "over50": 7
+    },
+    "first5": {
+      "frames": 404,
+      "avg": 12.348985150638546,
+      "p95": 19.8449993133545,
+      "p99": 49.8849983215332,
+      "max": 104.544998168945,
+      "over33_percent": 1.9801980198019802,
+      "over50": 4
+    },
+    "hot": {
+      "frames": 1015,
+      "avg": 24.605916221505904,
+      "p95": 35.9449996948242,
+      "p99": 40.2750015258789,
+      "max": 94.2949981689453,
+      "over33_percent": 11.330049261083744,
+      "over50": 3
+    },
+    "worst5": {
+      "from_s": 23.2600002288818,
+      "to_s": 28.2600002288818,
+      "frames": 179,
+      "avg": 27.938798851141044,
+      "p95": 38.8199996948242,
+      "p99": 48.9150009155273,
+      "max": 79.5250015258789,
+      "over33_percent": 18.435754189944134,
+      "over50": 1
+    },
+    "longest_over33_ms": 185.20999908447268,
+    "sim_s": 30,
+    "wall_s": 30.007,
+    "sim_wall": 0.9997667210984104,
+    "timing_pass": false,
+    "unclassified_over50": [
+      {
+        "wall_s": 0.0670000016689301,
+        "ms": 66.379997253418
+      },
+      {
+        "wall_s": 0.787000000476837,
+        "ms": 54.9550018310547
+      },
+      {
+        "wall_s": 2.90499997138977,
+        "ms": 104.544998168945
+      },
+      {
+        "wall_s": 4.01999998092651,
+        "ms": 58.8199996948242
+      },
+      {
+        "wall_s": 8.04300022125244,
+        "ms": 82.9300003051758
+      },
+      {
+        "wall_s": 20.05299949646,
+        "ms": 94.2949981689453
+      },
+      {
+        "wall_s": 24.056999206543,
+        "ms": 79.5250015258789
+      }
+    ],
+    "load": {
+      "weighted_ordinary": 139.1038888888889,
+      "weighted_elite": 1.8583333333333334,
+      "weighted_visible": 43.806111111111115,
+      "weighted_shots": 177.8461111111111,
+      "shots_peak": 180,
+      "near_cap_sim_percent": 99.5,
+      "last": {
+        "action_totals": {
+          "armor_break": 2,
+          "armor_hit": 2,
+          "artillery": 2,
+          "attack": 31,
+          "barrage_cancelled_capacity": 1,
+          "barrage_cancelled_owner": 6,
+          "barrage_cancelled_pellets": 6,
+          "barrage_deferred": 267,
+          "barrage_planned": 12,
+          "beam": 11,
+          "beam_fired": 13,
+          "circle": 2,
+          "continuous_barrage_attached": 2,
+          "continuous_barrage_deferred": 39,
+          "continuous_barrage_emitted": 68,
+          "continuous_barrage_planned": 68,
+          "continuous_barrage_requested": 68,
+          "continuous_barrage_wave": 17,
+          "cross": 5,
+          "field_refused": 1,
+          "line": 49,
+          "shot": 78,
+          "tremor": 13,
+          "windup_artillery": 2,
+          "windup_beam": 12,
+          "windup_cross": 5,
+          "windup_tremor": 17
+        },
+        "actual_bounces": 1136,
+        "births": {
+          "enchanted": 2073,
+          "ordinary_arrivals": 2303,
+          "tier2": 691
+        },
+        "boss": 0,
+        "capacity_fixture_emitted": 2364,
+        "capacity_fixture_planned_attempts": 2397,
+        "capacity_fixture_wall_rejected": 33,
+        "continuous_cancelled": 0,
+        "continuous_deferred": 39,
+        "continuous_emitted": 68,
+        "continuous_planned": 68,
+        "damage_events": 2865,
+        "elite": 2,
+        "fire_released": true,
+        "flame_draw_passes": 0,
+        "flame_draw_usec": 0,
+        "giant": 3,
+        "gold": 947308,
+        "kills": 2152,
+        "ordinary": 166,
+        "physics_active": 326,
+        "physics_pairs": 215,
+        "round": 1,
+        "shots_admitted_total": 2442,
+        "shots_group": 177,
+        "shots_live": 177,
+        "shots_near": 56,
+        "shots_screen": 65,
+        "shots_visible": 177,
+        "sources": 2,
+        "status_empty": 0,
+        "status_walks": 0,
+        "tick": 1796,
+        "tier1": 94,
+        "tier2": 53,
+        "visible": 53,
+        "visible_tier1": 27,
+        "visible_tier2": 19,
+        "wall_s": 29.9080009460449,
+        "weapon": 112
+      }
+    },
+    "boss_complete": false,
+    "timeout": false,
+    "errors": [],
+    "surface": {
+      "canvas_transform": "[X: (1.0, 0.0), Y: (0.0, 1.0), O: (74.99991, 48.99995)]",
+      "content_scale_size": "(410, 230)",
+      "display_server": "web",
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "max_fps": 0,
+      "physics_hz": 60,
+      "public_release": true,
+      "renderer": "gl_compatibility",
+      "stretch_transform": "[X: (3.746341, 0.0), Y: (0.0, 3.743478), O: (0.0, 0.0)]",
+      "texture_size": "(5755.0, 3224.0)",
+      "visible_rect": "[P: (0.0, 0.0), S: (410.0, 230.0)]",
+      "vsync": 1,
+      "window": "(1536, 864)"
+    },
+    "build": {
+      "index.wasm": {
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.pck": {
+        "bytes": 41390324,
+        "sha256": "6c263d3a9e03a89e0e9f5ce23e9557071e8fc4b9906fe6edf34ec488184f7d9c"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "identity": "b67fec3c5c7bdf8c7340295c86887b958ca27ca4e4809d5913b62ee0a0eb05ca"
+    }
+  },
+  "stress-b19-2-delivery-max-web-P-P": {
+    "file": "stress-b19-2-delivery-max-web-P-P.json",
+    "full": {
+      "frames": 548,
+      "avg": 14.453895957600054,
+      "p95": 24.2950000762939,
+      "p99": 35.9300003051758,
+      "max": 106.930000305176,
+      "over33_percent": 1.4598540145985401,
+      "over50": 3
+    },
+    "first5": {
+      "frames": 394,
+      "avg": 12.662309599127903,
+      "p95": 21.1900005340576,
+      "p99": 40.5449981689453,
+      "max": 106.930000305176,
+      "over33_percent": 2.030456852791878,
+      "over50": 3
+    },
+    "hot": {
+      "frames": 154,
+      "avg": 19.03756495265218,
+      "p95": 25.7749996185303,
+      "p99": 27.375,
+      "max": 29.1200008392334,
+      "over33_percent": 0.0,
+      "over50": 0
+    },
+    "worst5": {
+      "from_s": 2.7870001792907697,
+      "to_s": 7.78700017929077,
+      "frames": 307,
+      "avg": 16.303876215161253,
+      "p95": 25.2350006103516,
+      "p99": 27.375,
+      "max": 55.2449989318848,
+      "over33_percent": 0.3257328990228013,
+      "over50": 1
+    },
+    "longest_over33_ms": 141.0100021362307,
+    "sim_s": 8,
+    "wall_s": 7.953,
+    "sim_wall": 1.0059097196026656,
+    "timing_pass": false,
+    "unclassified_over50": [
+      {
+        "wall_s": 0.10700000077486,
+        "ms": 106.930000305176
+      },
+      {
+        "wall_s": 0.828000009059906,
+        "ms": 75.1999969482422
+      },
+      {
+        "wall_s": 4.01100015640259,
+        "ms": 55.2449989318848
+      }
+    ],
+    "load": {
+      "weighted_ordinary": 91.30624999999999,
+      "weighted_elite": 1.4749999999999999,
+      "weighted_visible": 31.491666666666664,
+      "weighted_shots": 177.01666666666665,
+      "shots_peak": 180,
+      "near_cap_sim_percent": 98.95833333333334,
+      "last": {
+        "action_totals": {
+          "armor_break": 1,
+          "armor_hit": 1,
+          "attack": 7,
+          "beam": 3,
+          "beam_fired": 4,
+          "continuous_barrage_attached": 2,
+          "continuous_barrage_deferred": 8,
+          "continuous_barrage_emitted": 20,
+          "continuous_barrage_planned": 20,
+          "continuous_barrage_requested": 20,
+          "continuous_barrage_wave": 5,
+          "cross": 1,
+          "field_refused": 1,
+          "line": 10,
+          "shot": 23,
+          "tremor": 3,
+          "windup_beam": 3,
+          "windup_cross": 1,
+          "windup_tremor": 3
+        },
+        "actual_bounces": 313,
+        "births": {
+          "enchanted": 497,
+          "ordinary_arrivals": 552,
+          "tier2": 166
+        },
+        "boss": 0,
+        "capacity_fixture_emitted": 729,
+        "capacity_fixture_planned_attempts": 737,
+        "capacity_fixture_wall_rejected": 8,
+        "continuous_cancelled": 0,
+        "continuous_deferred": 8,
+        "continuous_emitted": 20,
+        "continuous_planned": 20,
+        "damage_events": 631,
+        "elite": 2,
+        "fire_released": true,
+        "flame_draw_passes": 0,
+        "flame_draw_usec": 0,
+        "giant": 3,
+        "gold": 946247,
+        "kills": 411,
+        "ordinary": 145,
+        "physics_active": 302,
+        "physics_pairs": 201,
+        "round": 1,
+        "shots_admitted_total": 752,
+        "shots_group": 176,
+        "shots_live": 176,
+        "shots_near": 50,
+        "shots_screen": 61,
+        "shots_visible": 176,
+        "sources": 2,
+        "status_empty": 0,
+        "status_walks": 0,
+        "tick": 474,
+        "tier1": 86,
+        "tier2": 41,
+        "visible": 52,
+        "visible_tier1": 27,
+        "visible_tier2": 17,
+        "wall_s": 7.84299993515015,
+        "weapon": 116
+      }
+    },
+    "boss_complete": false,
+    "timeout": false,
+    "errors": [],
+    "surface": {
+      "canvas_transform": "[X: (1.0, 0.0), Y: (0.0, 1.0), O: (75.99991, 49.99992)]",
+      "content_scale_size": "(410, 230)",
+      "display_server": "web",
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "max_fps": 0,
+      "physics_hz": 60,
+      "public_release": true,
+      "renderer": "gl_compatibility",
+      "stretch_transform": "[X: (9.365853, 0.0), Y: (0.0, 9.365217), O: (0.0, 0.0)]",
+      "texture_size": "(35965.0, 20173.0)",
+      "visible_rect": "[P: (0.0, 0.0), S: (410.0, 230.0)]",
+      "vsync": 1,
+      "window": "(3840, 2160)"
+    },
+    "build": {
+      "index.wasm": {
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.pck": {
+        "bytes": 41390324,
+        "sha256": "6c263d3a9e03a89e0e9f5ce23e9557071e8fc4b9906fe6edf34ec488184f7d9c"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "identity": "b67fec3c5c7bdf8c7340295c86887b958ca27ca4e4809d5913b62ee0a0eb05ca"
+    }
+  }
+}

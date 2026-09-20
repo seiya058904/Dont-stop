@@ -17,13 +17,13 @@ class_name ArenaVisibility
 ## keep today's exact appearance, so a non-Hell stage restores the authored ambient and
 ## the authored light values instead of merely "not darkening".
 ##
-## Nodes are resolved fresh on every call rather than cached, because returning to the
-## main menu and starting again re-instantiates Main.tscn and would leave a cache
-## pointing at a freed node.
+## The ambient node cache validates scene parent, tree membership and pending deletion
+## on every use. Scene reset clears it; the player light still resolves by its path.
 const TRANSITION_SECONDS := 0.55
 const CAMP_AMBIENT := DemoConfig.AMBIENT
 
 static var active_stage := 0
+static var _cached_modulate: CanvasModulate
 static var tween: Tween
 ## Boss Phase III may narrow the fight further (B03 slightly, B04 more). It is a factor on
 ## top of the stage profile, never a new stage: clearing it restores the authored Hell
@@ -35,8 +35,13 @@ static func modulate_node() -> CanvasModulate:
 	if not is_instance_valid(Utils.canvasLayer): return null
 	var root = Utils.canvasLayer.get_parent()
 	if root == null: return null
+	if is_instance_valid(_cached_modulate) and _cached_modulate.get_parent() == root and _cached_modulate.is_inside_tree() and not _cached_modulate.is_queued_for_deletion():
+		return _cached_modulate
+	_cached_modulate = null
 	for child in root.get_children():
-		if child is CanvasModulate: return child
+		if child is CanvasModulate and not child.is_queued_for_deletion():
+			_cached_modulate = child
+			return child
 	return null
 
 static func player_light() -> PointLight2D:
@@ -100,6 +105,7 @@ static func restore(instant := true) -> void:
 ## A new Main.tscn instance resets both nodes to their authored values, so the runtime
 ## stage must be dropped without touching them.
 static func reset() -> void:
+	_cached_modulate = null
 	active_stage = 0
 	phase_factor = 1.0
 	_kill_tween()

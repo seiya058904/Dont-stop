@@ -65,18 +65,65 @@ var _ticks := PackedInt64Array()
 var _load_samples: Array = []
 var _sample_tick_start := 0
 var _driver_active := false
-var source_variant := "b19-1-correct-reference"
+var source_variant := "b19-2-working-tree"
 var normal_hp := false
 var measurement_timeout := false
 
+# B19.2: this clock advances only while combat is actionable.
+var _effective_tick := 0
+var _next_amp_tick := 0
+var _next_root_tick := 0
+var measurement := "light"
+var _observation_frames := 0
+var _measured_wall_s := 0.0
+var camp_cycles := 0
+var _camp_checks: Array = []
+var _surface: Dictionary = {}
+var controlled_boss := false
+var boss_complete := false
+var _boss_ready_tick := -1
+var _phase_satisfied_tick := -1
+var _boss_gate_phase := ""
+var _retired_actions: Dictionary = {}
+var _pause_usec := 0
+var _retired_bounces := 0
+var _shots_admitted := 0
+var _safe_active := false
+var _safe_phase3_seen := false
+var _safe_phase3_finished_emitted := -1
+var _safe_peak_shots := 0
+var _capacity_planned := 0
+var _capacity_blocked := 0
+var _capacity_emitted := 0
+var _capacity_sequence := 0
+var _events: Array = []
+var _entry_samples: Array = []
+var _orbit_log: Array = []
+var _orbit_serial := 0
 var _release_until_tick := 0
 var _next_aim_tick := 0
 func _physics_process(_delta: float) -> void:
 	if not _driver_active or get_tree().paused or LevelServer.state != "COMBAT": return
-	var tick := Engine.get_physics_frames()-_sample_tick_start
+	if not is_instance_valid(Utils.player) or Utils.player.is_dead: return
+	_effective_tick += 1
+	var tick := _effective_tick
+	if not normal_hp: PlayerData.player_hp = PlayerData.player_hp_max
+	if tick >= _next_amp_tick:
+		var top_up_started := Time.get_ticks_usec()
+		var births_before := _topped_up
+		_next_amp_tick = tick+4*Engine.physics_ticks_per_second
+		if lasers > 0 and _meta_alive("b11_amplified") < lasers: _amplify_lasers()
+		if barrage > 0 and _meta_alive("b11_barrage") < barrage: _amplify_barrage()
+		if enemies > 0 and _live_enemies() < mini(enemies,_stage_cap()): _top_up_enemies()
+		_events.append({"tick":tick,"event":"top_up","usec":Time.get_ticks_usec()-top_up_started,"ordinary_added":_topped_up-births_before})
+	if root_period > 0.0 and tick >= _next_root_tick:
+		_next_root_tick = tick+maxi(1,int(root_period*Engine.physics_ticks_per_second))
+		_driver_root_attempts += 1
+		if Utils.player.apply_root(0.45): _driver_roots += 1
+	_observe_boss_tick()
+	if scenario == "P": _capacity_tick.call_deferred()
 	if not park: _drive_movement(int(tick*1000/Engine.physics_ticks_per_second))
-	if not label.begins_with("b19-1"): return
-	if stage == 40 and tick >= seconds*Engine.physics_ticks_per_second:
+	if (stage != 40 and seconds < 45 and tick >= seconds*Engine.physics_ticks_per_second) or (stage == 40 and boss_complete):
 		LevelServer.return_to_camp()
 		return
 	if not presentation_weapons.is_empty():
@@ -90,7 +137,10 @@ func _physics_process(_delta: float) -> void:
 	else: Input.action_press("shoot")
 	if tick >= _next_aim_tick:
 		_next_aim_tick = tick+6
-		var nearest = null
+		var nearest = instance_from_id(LevelServer.boss_instance) if stage == 40 else null
+		if is_instance_valid(nearest):
+			Utils.aim_override = get_viewport().get_canvas_transform()*(nearest.global_position-Vector2(0,8))
+			return
 		var best := INF
 		for actor in get_tree().get_nodes_in_group("monsters"):
 			if actor.is_die or actor.is_queued_for_deletion(): continue
@@ -150,14 +200,17 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-park="): park = arg.substr(14) == "1"
 		elif arg.begins_with("--stress-enemies="): enemies = int(arg.substr(17))
 		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(17))
-		elif arg.begins_with("--stress-iso="): iso = arg.substr(14)
+		elif arg.begins_with("--stress-iso="): iso = arg.trim_prefix("--stress-iso=")
 		elif arg.begins_with("--stress-label="): label = arg.substr(15)
 		elif arg.begins_with("--stress-source="): source_variant = arg.substr(16)
 		elif arg == "--stress-normal-hp": normal_hp = true
+		elif arg.begins_with("--stress-measurement="): measurement = arg.substr(21)
+		elif arg == "--stress-controlled-boss": controlled_boss = true
+		elif arg.begins_with("--stress-camp-cycles="): camp_cycles = int(arg.substr(21))
 		elif arg.begins_with("--stress-weapons="):
 			for key in arg.substr(17).split(",",false):
 				if Utils.weapon_list.has(str(int(key))): presentation_weapons.append(int(key))
-	B11Probe.enabled = true
+	B11Probe.enabled = measurement == "detail"
 	_apply_iso()
 	get_tree().node_added.connect(_count_added)
 	get_tree().node_removed.connect(_count_removed)
@@ -182,7 +235,32 @@ func _apply_iso() -> void:
 			str(B11Probe.iso_vfx),str(B11Probe.iso_labels),str(B11Probe.iso_trails),
 			str(B11Probe.iso_fog_core),str(B11Probe.iso_td_decor),str(B11Probe.iso_particles)])
 
-func _count_added(_node: Node) -> void: _created += 1
+func _count_added(node: Node) -> void:
+	_created += 1
+	if node.get_script() == preload("res://game/monster/EnemyShot.gd"):
+		if node.registered: _shots_admitted += 1
+		node.tree_exiting.connect(_retire_shot.bind(node),CONNECT_ONE_SHOT)
+	if "bodyink" in iso and node is BaseMonster:
+		node.ready.connect(func(): node.get_node("body").hide(),CONNECT_ONE_SHOT)
+	if "shotink" in iso and node.get_script() == preload("res://game/monster/EnemyShot.gd"):
+		node.ready.connect(node.hide,CONNECT_ONE_SHOT)
+	# node_added precedes _ready; ready is emitted after the production decision.
+	if node.get_script() == preload("res://game/monster/TacticalEnemy.gd"):
+		node.ready.connect(_fix_fixture_orbit.bind(node), CONNECT_ONE_SHOT)
+
+func _fix_fixture_orbit(node: Node) -> void:
+	node.tree_exiting.connect(_retire_source.bind(node),CONNECT_ONE_SHOT)
+	_orbit_serial += 1
+	var original: float = node.orbit_side
+	node.orbit_side = 1.0 if _orbit_serial % 2 else -1.0
+	_orbit_log.append({"serial":_orbit_serial,"role":node.role,"original":original,"fixture":node.orbit_side,"tick":_effective_tick})
+func _retire_shot(node: Node) -> void:
+	_retired_bounces += node.bounces_done
+
+func _retire_source(node: Node) -> void:
+	for key in node.actions:
+		_retired_actions[key] = int(_retired_actions.get(key,0))+int(node.actions[key])
+
 func _count_removed(_node: Node) -> void: _removed += 1
 
 ## The stress scenario is the whole point of the round, so it is stated once and named.
@@ -203,8 +281,8 @@ func _apply_scenario() -> void:
 		"A": pass
 		"B": enemies = maxi(enemies,60)
 		"C": lasers = maxi(lasers,4); root_period = maxf(root_period,2.0); barrage = maxi(barrage,6)
-		"D":
-			enemies = maxi(enemies,80); lasers = maxi(lasers,4); root_period = maxf(root_period,2.0)
+		"D", "P":
+			enemies = maxi(enemies,180 if scenario == "P" else 80); lasers = maxi(lasers,4); root_period = maxf(root_period,2.0)
 			barrage = maxi(barrage,6); park = true
 	if enemies > 0: enemies = mini(enemies,_stage_cap())
 	print("[stress] effective scenario=%s lasers=%d root_period=%.2f park=%s enemies=%d/%d barrage=%d" % [
@@ -278,6 +356,12 @@ func run() -> void:
 	# The reward tree a Hell player owns. Without this the incoming-damage path scans an EMPTY
 	# reward group and the harness would report that path as free.
 	_grant_everything()
+	if label.begins_with("b19-2-visual"):
+		var visual = load("res://game/diag/B192Visual.gd").new()
+		add_child(visual)
+		await visual.run()
+		await Demo.quit_game()
+		return
 	if not normal_hp:
 		PlayerData.player_hp_max = 1000000.0
 		PlayerData.player_hp = 1000000.0
@@ -285,13 +369,14 @@ func run() -> void:
 	await get_tree().create_timer(0.6).timeout
 	# Stage 39 is a 45 s survival round, so the requested window is accumulated over consecutive
 	# rounds. The protocol is identical in the BEFORE and the AFTER build.
-	while _total_combat_s < float(seconds) and _rounds < (1 if label.begins_with("b19-1") else 8):
+	while _total_combat_s < float(seconds) and _rounds < 1:
 		await _one_round()
 	Input.action_release("shoot")
 	Utils.aim_override = null
 	print("[stress] done scenario=%s rounds=%d frames=%d combat_s=%.1f" % [
 		scenario,_rounds,_ms.size(),_total_combat_s])
 	_dump()
+	if camp_cycles > 0: await _check_camp_cycles()
 	var b18_mode = false
 	for arg in OS.get_cmdline_args()+OS.get_cmdline_user_args():
 		if arg == "--b18": b18_mode = true
@@ -299,6 +384,17 @@ func run() -> void:
 		await Demo.quit_game()
 		return
 	await Demo.quit_game()
+
+func _check_camp_cycles() -> void:
+	for cycle in camp_cycles:
+		LevelServer.return_to_camp()
+		_close_panels()
+		await get_tree().create_timer(0.8).timeout
+		_camp_checks.append({"cycle":cycle+1,"nodes":get_tree().get_node_count(),"objects":Performance.get_monitor(Performance.OBJECT_COUNT),"resources":Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT),"orphans":Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT) if OS.is_debug_build() else null,"static_memory":Performance.get_monitor(Performance.MEMORY_STATIC) if OS.is_debug_build() else null,"enemies":get_tree().get_nodes_in_group("monsters").size(),"shots":preload("res://game/monster/EnemyShot.gd").live_count,"transients":get_tree().get_nodes_in_group("combat_transient").size(),"epoch":LevelServer.epoch})
+		if cycle+1 < camp_cycles:
+			LevelServer.town.depart(stage,true)
+			await get_tree().create_timer(1.0).timeout
+	print("[stress-convergence] ",JSON.stringify(_camp_checks))
 
 func _boot_to_camp() -> void:
 	if not Utils.is_game_start:
@@ -328,11 +424,13 @@ func _one_round() -> void:
 	# stream a round consumes is the same in every run and in both builds.
 	seed(run_seed)
 	_rounds += 1
+	var depart_usec := Time.get_ticks_usec()
 	var departed: bool = LevelServer.town.depart(stage,true)
 	print("[stress] round=%d depart=%s state=%s" % [_rounds,str(departed),LevelServer.state])
 	deadline = Time.get_ticks_msec() + 120000
 	while Time.get_ticks_msec() < deadline and LevelServer.state != "COMBAT":
 		await get_tree().create_timer(0.25).timeout
+	_entry_samples.append({"round":_rounds,"depart_to_combat_ms":(Time.get_ticks_usec()-depart_usec)/1000.0,"state":LevelServer.state})
 	if LevelServer.state != "COMBAT": return
 	await _sample_round()
 
@@ -340,63 +438,41 @@ func _one_round() -> void:
 ## to a handful of integer reads plus a few packed-array appends, because a harness that allocates
 ## per frame would end up measuring itself.
 func _sample_round() -> void:
+	_surface = {"window":str(get_window().size),"visible_rect":str(get_viewport().get_visible_rect()),"texture_size":str(get_viewport().get_texture().get_size()),"canvas_transform":str(get_viewport().get_canvas_transform()),"stretch_transform":str(get_viewport().get_stretch_transform()),"content_scale_size":str(get_window().content_scale_size),"vsync":DisplayServer.window_get_vsync_mode(),"max_fps":Engine.max_fps,"physics_hz":Engine.physics_ticks_per_second,"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"display_server":DisplayServer.get_name(),"public_release":OS.has_feature("public_release")}
+	if OS.has_feature("web") and measurement == "detail": JavaScriptBridge.eval("performance.mark('b192-combat-start')")
 	var round_index := _rounds
 	var started := Time.get_ticks_msec()
 	var previous_usec := Time.get_ticks_usec()
 	_sample_tick_start = Engine.get_physics_frames()
+	_effective_tick = 0
+	_next_amp_tick = 1
+	_next_root_tick = 1
 	_driver_active = true
 	_release_until_tick = 10
 	_next_aim_tick = 0
 	var next_report := started + 1000
 	var next_gauge := 0
-	var next_root := 0.0
 	var prev_rooted := false
 	var ray_prev: int = B11Probe.raycasts
 	var clear_prev: int = B11Probe.clear_line_calls
 	var hit_prev: int = B11Probe.player_hits
-	if enemies > 0: _top_up_enemies()
-	if barrage > 0: _amplify_barrage()
-	if lasers > 0: _amplify_lasers()
-	if B11Probe.iso_particles: _collect_particles()
-	Input.action_press("shoot")
-	var next_amp := 4.0
 	while LevelServer.state == "COMBAT" and is_instance_valid(Utils.player) and not Utils.player.is_dead:
 		# The rig cannot die: a level-1 health bar would end the round before the peak.
-		if not normal_hp: PlayerData.player_hp = PlayerData.player_hp_max
 		var now := Time.get_ticks_msec()
 		var elapsed := float(now-started)/1000.0
-		if label.begins_with("b19-1") and elapsed > maxf(90.0,seconds+45.0):
+		if elapsed > maxf(180.0 if stage == 40 else 90.0,seconds+45.0):
 			measurement_timeout = true
 			break
-		# Optional actual-weapon load profile. Default A-D keep their original gun.
-		if not presentation_weapons.is_empty() and not label.begins_with("b19-1"):
-			var slot := int(float(Engine.get_physics_frames()-_sample_tick_start)/Engine.physics_ticks_per_second/8.0) % presentation_weapons.size()
-			var next_weapon: int = presentation_weapons[slot]
-			if next_weapon != presentation_weapon:
-				presentation_weapon = next_weapon
-				Utils.player.changeWeapon(next_weapon)
-				if has_method("release_after_switch"): await call("release_after_switch")
-				print("[stress] weapon=%d round=%d combat_s=%.2f" % [next_weapon,round_index,elapsed])
-			# A charge weapon needs a real release; holding forever only benchmarks charging.
-			if presentation_weapon == 113 and (Engine.get_physics_frames()-_sample_tick_start) % (Engine.physics_ticks_per_second*2) < 7:
-				Input.action_release("shoot")
-			else:
-				Input.action_press("shoot")
-		if stage == 40 and (label.begins_with("presentation") or label.begins_with("b19-1")):
-			if presentation_boss_hold: Input.action_release("shoot")
-			else: Input.action_press("shoot")
-		if elapsed >= next_amp:
-			next_amp += 4.0
-			# Every amplifier is a TOP-UP, not a one-off volley: the player kills what arrives, so a
-			# single volley decayed long before the dense window and the run measured an ordinary
-			# round again. Re-arming on a cadence is what makes the condition the whole run is made of.
-			if lasers > 0 and _meta_alive("b11_amplified") < lasers: _amplify_lasers()
-			if barrage > 0 and _meta_alive("b11_barrage") < barrage: _amplify_barrage()
-			if enemies > 0 and _live_enemies() < mini(enemies,_stage_cap()): _top_up_enemies()
-		if root_period > 0.0 and elapsed >= next_root:
-			next_root += root_period
-			_driver_root_attempts += 1
-			if Utils.player.apply_root(0.45): _driver_roots += 1
+		if get_tree().paused:
+			var pause_start := Time.get_ticks_usec()
+			await get_tree().process_frame
+			_pause_usec += Time.get_ticks_usec()-pause_start
+			previous_usec = Time.get_ticks_usec()
+			continue
+		_observation_frames += 1
+		if measurement == "off":
+			await get_tree().process_frame
+			continue
 		# A root WINDOW, so a driver-applied root and a laser-applied one are both counted and the
 		# split is reported beside the total.
 		var rooted: bool = Utils.player.root_remaining > 0.0
@@ -413,7 +489,7 @@ func _sample_round() -> void:
 		_ms.append(float(current_usec-previous_usec)/1000.0)
 		previous_usec = current_usec
 		_engine_ms.append(get_process_delta_time()*1000.0)
-		_ticks.append(Engine.get_physics_frames()-_sample_tick_start)
+		_ticks.append(_effective_tick)
 		_phys.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)*1000.0)
 		_proc.append(Performance.get_monitor(Performance.TIME_PROCESS)*1000.0)
 		_draws.append(int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)))
@@ -424,15 +500,17 @@ func _sample_round() -> void:
 		if now >= next_gauge:
 			next_gauge = now + 100
 			_sample_gauges()
-		if now >= next_report:
+		if measurement == "detail" and now >= next_report:
 			next_report = now + 1000
 			_report_second(round_index)
 		await get_tree().process_frame
+	if OS.has_feature("web") and measurement == "detail": JavaScriptBridge.eval("performance.mark('b192-combat-end')")
+	_measured_wall_s += (Time.get_ticks_msec()-started)/1000.0
 	_driver_active = false
 	Input.action_release("shoot")
 	for action in ["left","right","up","down"]: Input.action_release(action)
 	var round_s := 0.0
-	if _combat_seconds.size() > 0: round_s = _combat_seconds[_combat_seconds.size()-1]
+	round_s = float(_effective_tick)/Engine.physics_ticks_per_second
 	_total_combat_s += round_s
 	print("[stress] round=%d end state=%s round_s=%.1f total_s=%.1f" % [
 		round_index,LevelServer.state,round_s,_total_combat_s])
@@ -507,7 +585,7 @@ func _spawn_amplified(role: String, meta_key: String) -> bool:
 	M5Content.promote_elite(actor,M5Content.elite_modifier_for(role))
 	if not actor.is_elite: return false
 	actor.set_meta(meta_key,true)
-	if label.begins_with("b19-1"):
+	if label.begins_with("b19-"):
 		# Explicit HP-only load fixture; leaves AI, attacks and production admission intact.
 		actor.HP = 1000000.0
 		if actor.get("max_hp") != null: actor.max_hp = actor.HP
@@ -528,27 +606,89 @@ func _drive_movement(now: int) -> void:
 		if step == int(pair[1]): Input.action_press(pair[0])
 		else: Input.action_release(pair[0])
 
-func _sample_gauges() -> void:
-	if stage == 40 and (label.begins_with("presentation") or label.begins_with("b19-1")):
+func _observe_boss_tick() -> void:
+	if stage == 40 and (label.begins_with("presentation") or label.begins_with("b19-")):
 		# Optional full-phase observation uses the established test-only aim hook.
 		# Real weapon fire and real boss AI still decide all HP and transitions.
 		var boss = instance_from_id(LevelServer.boss_instance)
 		if is_instance_valid(boss):
-			Utils.aim_override = get_viewport().get_canvas_transform()*(boss.global_position-Vector2(0,8))
 			var tier = "3" if boss.phase_three else ("2" if boss.phase_two else "1")
+			var safe_now: bool = not get_tree().get_nodes_in_group("boss_ultimate").is_empty()
+			var emitted := int(boss.actions.get("continuous_barrage_emitted",0))
+			if safe_now != _safe_active:
+				_events.append({"tick":_effective_tick,"event":"safe_window_start" if safe_now else "safe_window_end","phase":tier,"shots":preload("res://game/monster/EnemyShot.gd").live_count,"continuous_emitted":emitted,"peak_shots":_safe_peak_shots})
+				_safe_active = safe_now
+				if safe_now: _safe_peak_shots = 0
+				elif tier == "3": _safe_phase3_finished_emitted = emitted
+			if safe_now:
+				_safe_peak_shots = maxi(_safe_peak_shots,preload("res://game/monster/EnemyShot.gd").live_count)
+				if tier == "3": _safe_phase3_seen = true
 			var key = str(_rounds)+":"+tier
 			if key != presentation_boss_phase:
+				_phase_satisfied_tick = -1
 				presentation_boss_phase = key
 				presentation_boss_entry = boss.actions.duplicate()
 				presentation_boss_log.append({"frame":_ms.size(),"round":_rounds,"phase":tier,"actions":boss.actions.duplicate()})
-			var required = {"1":["dash","sweep","burst"],"2":["sweep","dash","cross","band"],"3":["cross_laser","sweep","band"]}[tier]
+			var required: Array = boss.BOSS_CYCLES[tier][boss.role]
 			presentation_boss_hold = false
 			for attack in required:
-				if boss.actions.get(attack,0) <= presentation_boss_entry.get(attack,0): presentation_boss_hold = true
+				if boss.actions.get(attack,0)-presentation_boss_entry.get(attack,0) < required.count(attack): presentation_boss_hold = true
+			if not presentation_boss_hold and _phase_satisfied_tick < 0: _phase_satisfied_tick = _effective_tick
+			var cycle_settled: bool = _phase_satisfied_tick >= 0 and _effective_tick-_phase_satisfied_tick >= 3*Engine.physics_ticks_per_second and boss.phase == "move"
+			if cycle_settled and controlled_boss and tier != "3":
+				# HP gate only: production _enter_phase handles cleanup and all AI.
+				boss.HP = boss.max_hp*(0.69 if tier == "1" else 0.34)
+				_boss_gate_phase = key
+				_events.append({"tick":_effective_tick,"event":"controlled_hp_gate","from_phase":tier})
+			if tier == "3" and not presentation_boss_hold:
+				if _boss_ready_tick < 0: _boss_ready_tick = _effective_tick
+				boss_complete = _effective_tick-_boss_ready_tick >= 8*Engine.physics_ticks_per_second and int(boss.actions.get("ultimate_activated",0)) > int(presentation_boss_entry.get("ultimate_activated",0)) and _safe_phase3_seen and _safe_phase3_finished_emitted >= 0 and emitted > _safe_phase3_finished_emitted and not safe_now
+			if controlled_boss:
+				# Keep normal active fire while observing: real damage/FX still run.
+				# Explicit HP floor holds this phase until its full attack cycle ends.
+				if _boss_gate_phase != key: boss.HP = maxf(boss.HP,boss.max_hp*{"1":0.71,"2":0.36,"3":0.20}[tier])
+				presentation_boss_hold = false
 			var ultimates = int(boss.actions.get("ultimate_activated",0))
 			if ultimates != presentation_ultimate_count:
 				presentation_ultimate_count = ultimates
 				presentation_boss_log.append({"frame":_ms.size(),"round":_rounds,"phase":tier,"ultimate_activated":ultimates,"actions":boss.actions.duplicate()})
+
+# Capacity-only rig: ordinary production projectiles, sweep/owner/expiry intact.
+# Refill after physics retirement, from a visible ring; never extends shot lifetime.
+func _capacity_tick() -> void:
+	if not _driver_active or LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or not is_instance_valid(LevelServer.town.arena): return
+	var shots = preload("res://game/monster/EnemyShot.gd")
+	var origin: Vector2 = Utils.player.global_position
+	# Yield only slots already requested by real continuous sources. This rig
+	# runs after their physics callbacks, so it cannot take a newly freed slot
+	# before a production source can try it. At most 18 reserved = 90% cap.
+	var reserved := 0
+	for actor in get_tree().get_nodes_in_group("monsters"):
+		var stream = actor.get_node_or_null("ContinuousBarrage")
+		if is_instance_valid(stream) and stream.wave_pending: reserved += stream.count
+	reserved = mini(reserved,18)
+	var missing: int = maxi(0,shots.capacity_limit-reserved-shots.live_count)
+	_capacity_planned += missing
+	for i in missing:
+		var angle := float(_capacity_sequence)*2.3999632297
+		_capacity_sequence += 1
+		var point := origin+Vector2.RIGHT.rotated(angle)*65.0
+		if not LevelServer.town.arena.point_clear(point,4.0):
+			_capacity_blocked += 1
+			continue
+		var pellet = shots.new()
+		pellet.global_position = point
+		pellet.velocity = Vector2.RIGHT.rotated(angle+1.2)*125.0
+		pellet.damage = 0.16
+		pellet.style = "ricochet" if _capacity_sequence%2 else "laser"
+		pellet.bounces_left = 1 if _capacity_sequence%2 else 0
+		get_tree().current_scene.add_child(pellet)
+		_capacity_emitted += 1
+
+func _sample_gauges() -> void:
+	if "fogink" in iso:
+		var fog = FogPierce.instance()
+		if is_instance_valid(fog): fog.canvas.hide()
 	var live := get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die).size()
 	if live > int(_peak.enemies): _peak.enemies = live
 	for spec in [["zones","hostile_zone"],["hazards",StageHazard.GROUP],["vfx","hostile_vfx"],
@@ -569,15 +709,19 @@ func _sample_gauges() -> void:
 	if mem > float(_peak.mem): _peak.mem = mem
 	var canvas_items := int(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
 	if canvas_items > int(_peak.render_objects): _peak.render_objects = canvas_items
-	var row := {"wall_s":_combat_seconds[-1],"tick":(_ticks[-1] if not _ticks.is_empty() else Engine.get_physics_frames()),"round":_rounds,"ordinary":0,"elite":0,"boss":0,"giant":0,"tier1":0,"tier2":0,"visible":0,"sources":0,"continuous_emitted":0,"continuous_deferred":0,"shots_live":preload("res://game/monster/EnemyShot.gd").live_count,"shots_group":get_tree().get_nodes_in_group("enemy_projectiles").size(),"shots_near":0,"shots_screen":0,"damage_events":Combat.damage_events,"kills":Combat.kill_events,"gold":PlayerData.gold,"status_walks":B11Probe.status_walks,"status_empty":B11Probe.status_walks_empty,"flame_draw_usec":0,"flame_draw_passes":0,"fire_released":Demo.fire_released,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"continuous_planned":0,"continuous_cancelled":0}
+	var row := {"wall_s":_combat_seconds[-1],"tick":(_ticks[-1] if not _ticks.is_empty() else Engine.get_physics_frames()),"round":_rounds,"action_totals":_retired_actions.duplicate(),"ordinary":0,"elite":0,"boss":0,"giant":0,"tier1":0,"tier2":0,"visible":0,"visible_tier1":0,"visible_tier2":0,"sources":0,"continuous_emitted":0,"continuous_deferred":0,"shots_live":preload("res://game/monster/EnemyShot.gd").live_count,"shots_group":get_tree().get_nodes_in_group("enemy_projectiles").size(),"shots_visible":0,"shots_near":0,"shots_screen":0,"damage_events":Combat.damage_events,"kills":Combat.kill_events,"gold":PlayerData.gold,"status_walks":B11Probe.status_walks,"status_empty":B11Probe.status_walks_empty,"flame_draw_usec":0,"flame_draw_passes":0,"fire_released":Demo.fire_released,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"continuous_planned":0,"continuous_cancelled":0}
 	var view_rect := get_viewport().get_visible_rect()
 	for actor in get_tree().get_nodes_in_group("monsters"):
+		if actor.get("actions") != null:
+			for key in actor.actions: row.action_totals[key] = int(row.action_totals.get(key,0))+int(actor.actions[key])
 		if actor.is_die: continue
 		row["boss" if actor.is_boss else ("elite" if actor.is_elite else "ordinary")] += 1
 		if actor.get_meta("giant",false): row.giant += 1
 		var tier := int(actor.get_meta("enchantment",0))
 		if tier > 0: row["tier"+str(tier)] += 1
-		if actor.is_visible_in_tree() and view_rect.has_point(actor.get_global_transform_with_canvas().origin): row.visible += 1
+		if actor.is_visible_in_tree() and view_rect.has_point(actor.get_global_transform_with_canvas().origin):
+			row.visible += 1
+			if tier > 0: row["visible_tier"+str(tier)] += 1
 		var stream = actor.get_node_or_null("ContinuousBarrage")
 		if is_instance_valid(stream):
 			row.sources += 1
@@ -586,12 +730,23 @@ func _sample_gauges() -> void:
 			row.continuous_emitted += int(actor.actions.get("continuous_barrage_emitted",0))
 			row.continuous_deferred += int(actor.actions.get("continuous_barrage_deferred",0))
 	for shot in get_tree().get_nodes_in_group("enemy_projectiles"):
+		if shot.is_visible_in_tree(): row.shots_visible += 1
 		if shot.global_position.distance_squared_to(Utils.player.global_position) < 14400: row.shots_near += 1
 		if view_rect.has_point(shot.get_global_transform_with_canvas().origin): row.shots_screen += 1
 	var layer = LevelServer.town.monster_root.get_node_or_null("B19EnchantmentLayer")
 	if is_instance_valid(layer):
 		row.flame_draw_usec = layer.draw_usec
 		row.flame_draw_passes = layer.draw_passes
+	var variants = load("res://game/config/B18Variants.gd")
+	row.births = {"ordinary_arrivals":variants.arrivals,"enchanted":variants.enchanted_arrivals,"tier2":variants.tier_two_arrivals}
+	row.actual_bounces = _retired_bounces
+	for shot in get_tree().get_nodes_in_group("enemy_projectiles"): row.actual_bounces += shot.bounces_done
+	row.shots_admitted_total = _shots_admitted
+	row.capacity_fixture_emitted = _capacity_emitted
+	row.capacity_fixture_planned_attempts = _capacity_planned
+	row.capacity_fixture_wall_rejected = _capacity_blocked
+	row.physics_pairs = Performance.get_monitor(Performance.PHYSICS_2D_COLLISION_PAIRS)
+	row.physics_active = Performance.get_monitor(Performance.PHYSICS_2D_ACTIVE_OBJECTS)
 	_load_samples.append(row)
 	if B11Probe.iso_particles: _silence_particles()
 
@@ -616,7 +771,7 @@ func _collect_particles() -> void:
 ## One line per second. It exists so a run can be read as a TIMELINE - which second the hitch was
 ## in - instead of as one number for the whole round.
 func _report_second(round_index: int) -> void:
-	if label.begins_with("b19-1"):
+	if label.begins_with("b19-"):
 		print("[stress] input tick=",Engine.get_physics_frames()-_sample_tick_start," released=",Demo.fire_released," shoot=",Input.is_action_pressed("shoot")," mouse=",Utils.is_gameplay_mouse_mode()," damage=",Combat.damage_events," kills=",Combat.kill_events," paused=",get_tree().paused)
 	var from := _last_report_index
 	var count := _ms.size()-from
@@ -627,6 +782,7 @@ func _report_second(round_index: int) -> void:
 	var now: Dictionary = B11Probe.snapshot()
 	var rates := {}
 	for key in now:
+		if not (now[key] is int or now[key] is float): continue
 		rates[key] = int(now[key])-int(_prev.get(key,now[key]))
 	_prev = now
 	_peak_same_frame = maxi(_peak_same_frame,B11Probe.hits_in_frame_peak)
@@ -710,7 +866,7 @@ func _dump() -> void:
 	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.
-	print("[stress-frames] ",JSON.stringify({"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"physics_hz":Engine.physics_ticks_per_second,"physics_monitor_proxy_ms":Array(_phys),"process_monitor_proxy_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; monitor proxies overlap"}))
+	print("[stress-frames] ",JSON.stringify({"surface":_surface,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"physics_hz":Engine.physics_ticks_per_second,"physics_monitor_proxy_ms":Array(_phys),"process_monitor_proxy_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; monitor proxies overlap"}))
 	var all: Dictionary = _stats(_ms)
 	var phys: Dictionary = _stats(_phys)
 	var proc: Dictionary = _stats(_proc)

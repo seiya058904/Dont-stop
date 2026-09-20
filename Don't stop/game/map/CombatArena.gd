@@ -23,6 +23,34 @@ var _no_exclusions: Array = []
 ## margin that encodes it, so the spawn validator's early-out cannot drift away from the grid.
 const GRID_CLEARANCE := 7.0
 var grid_clearance := GRID_CLEARANCE
+var _spawn_points := PackedVector2Array()
+var _spawn_transform := Transform2D()
+var _spawn_geometry_key: Array = []
+var _spawn_geometry := PackedByteArray()
+
+func _prepare_spawn_geometry(center: Vector2, minimum: float, maximum: float, side: int) -> void:
+	if _spawn_points.size() != cells.size() or _spawn_transform != global_transform:
+		_spawn_transform = global_transform
+		_spawn_points.clear()
+		for candidate in cells: _spawn_points.append(to_global(grid.get_point_position(candidate)))
+		_spawn_geometry.resize(cells.size())
+		_spawn_geometry_key.clear()
+	var key: Array = [center,Utils.player.global_position,minimum,maximum,side]
+	if key != _spawn_geometry_key:
+		_spawn_geometry_key = key
+		_spawn_geometry.fill(0)
+
+func _spawn_geometry_allows(index: int, center: Vector2, minimum: float, maximum: float, side: int) -> bool:
+	# Only immutable ring/arc arithmetic is reused between synchronous births.
+	# Dynamic occupancy, actor clearance and connectivity are always re-queried.
+	if _spawn_geometry[index] != 0: return _spawn_geometry[index] == 1
+	var point := _spawn_points[index]
+	var relative := point-center
+	var distance := relative.length()
+	var valid := distance >= minimum and distance <= maximum and point.distance_to(Utils.player.global_position) >= 55
+	if valid and side >= 0: valid = relative.dot(Vector2.RIGHT.rotated(side*PI/2)) >= distance*0.35
+	_spawn_geometry[index] = 1 if valid else 2
+	return valid
 
 func _ready():
 	obstacles = M5Content.WALLS[region_id].duplicate()
@@ -103,13 +131,13 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 	# Player collision permits wall-adjacent positions outside the conservative AI grid.
 	# Use the closest reachable target cell, never cancel all reinforcement there.
 	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): target=nearest(Utils.player.global_position)
+	_prepare_spawn_geometry(center,minimum,maximum,int(side))
 	var offset = randi()%cells.size()
 	for i in cells.size():
-		var candidate = cells[(offset+i)%cells.size()]; var point = to_global(grid.get_point_position(candidate)); var relative = point-center
+		var index: int = (offset+i)%cells.size()
+		var candidate = cells[index]; var point = _spawn_points[index]
 		M5Content.audit_candidates += 1
-		if relative.length() < minimum or relative.length() > maximum or point.distance_to(Utils.player.global_position)<55:
-			M5Content.audit_rejected += 1; continue
-		if side >= 0 and relative.dot(Vector2.RIGHT.rotated(side*PI/2)) < relative.length()*0.35:
+		if not _spawn_geometry_allows(index,center,minimum,maximum,int(side)):
 			M5Content.audit_rejected += 1; continue
 		# The grid above is built from two rectangle tests on the cell CENTRE, with a
 		# fixed 13 px margin that has nothing to do with how big the actor really is.
@@ -134,13 +162,14 @@ func spawn_flank(center: Vector2, minimum: float, maximum: float, radius := -1.0
 	if radius <= 0.0: radius = M5Content.default_radius()
 	var target = cell(Utils.player.global_position)
 	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): target = nearest(Utils.player.global_position)
+	_prepare_spawn_geometry(center,minimum,maximum,-1)
 	var offset = randi()%cells.size()
 	for i in cells.size():
-		var candidate = cells[(offset+i)%cells.size()]
-		var point = to_global(grid.get_point_position(candidate))
-		var relative = point-center
+		var index: int = (offset+i)%cells.size()
+		var candidate = cells[index]
+		var point = _spawn_points[index]
 		M5Content.audit_candidates += 1
-		if relative.length() < minimum or relative.length() > maximum or point.distance_to(Utils.player.global_position) < 55:
+		if not _spawn_geometry_allows(index,center,minimum,maximum,-1):
 			M5Content.audit_rejected += 1; continue
 		if radius > grid_clearance and not _is_clear(point,radius):
 			M5Content.audit_rejected += 1; continue

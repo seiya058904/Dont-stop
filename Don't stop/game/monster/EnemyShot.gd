@@ -3,6 +3,11 @@ static var live_count := 0
 const CAPACITY := 180
 static var capacity_limit := CAPACITY
 var registered := false
+var _ink_dirty := false
+var _body_ink: Node2D
+var _trail_ink := PackedVector2Array()
+var _fog_position := Vector2.ZERO
+var _fog_tip := Vector2.ZERO
 var bounces_left := 0
 var bounces_done := 0
 var lifetime := 3.2
@@ -63,6 +68,9 @@ func _ready():
 	shape.shape.radius = 3
 	add_child(shape)
 	z_index = 5
+	_body_ink = Node2D.new()
+	_body_ink.draw.connect(_draw_body)
+	add_child(_body_ink)
 
 func _exit_tree():
 	if registered:
@@ -70,31 +78,68 @@ func _exit_tree():
 		registered = false
 
 func _draw():
+	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	_draw_ink()
+	if B11Probe.enabled: B11Probe.cost("enemy_shot_draw",started)
+
+func _draw_ink():
 	var ink = INK.get(style,INK.projectile)
 	# B11.2 visual isolation (test-only): the projectile BODY always draws - only the decorative
 	# trail segments are switchable, because the body is what the player actually dodges.
 	if not B11Probe.iso_trails:
-		for i in range(1,trail.size()):
-			draw_line(to_local(trail[i-1]),to_local(trail[i]),Color(ink.r,ink.g,ink.b,0.1+0.45*i/trail.size()),1.0+1.5*i/trail.size(),true)
-	draw_circle(Vector2.ZERO,4,Color(ink.r*0.15,ink.g*0.15,ink.b*0.15))
-	draw_circle(Vector2.ZERO,2.8,Color(ink.r,ink.g,ink.b))
+		for i in range(1,_trail_ink.size()):
+			draw_line(_trail_ink[i-1],_trail_ink[i],Color(ink.r,ink.g,ink.b,0.1+0.45*i/_trail_ink.size()),1.0+1.5*i/_trail_ink.size(),true)
+
+# Geometry and ink are fixed for the projectile lifetime except control pulses.
+# Retain its body commands; only the moving trail needs rebuilding each frame.
+func _draw_body() -> void:
+	var ink = INK.get(style,INK.projectile)
+	_body_ink.draw_circle(Vector2.ZERO,4,Color(ink.r*0.15,ink.g*0.15,ink.b*0.15))
+	_body_ink.draw_circle(Vector2.ZERO,2.8,Color(ink.r,ink.g,ink.b))
 	if style in ["laser","ricochet"]:
-		draw_polyline(PackedVector2Array([Vector2(-5,0),Vector2(0,-4),Vector2(5,0),Vector2(0,4),Vector2(-5,0)]),Color(ink,0.9),1)
+		_body_ink.draw_polyline(PackedVector2Array([Vector2(-5,0),Vector2(0,-4),Vector2(5,0),Vector2(0,4),Vector2(-5,0)]),Color(ink,0.9),1)
 	elif style == "poison":
-		for side in [-1,1]: draw_rect(Rect2(Vector2(side*4,-1),Vector2(2,2)),Color(ink,0.85))
+		for side in [-1,1]: _body_ink.draw_rect(Rect2(Vector2(side*4,-1),Vector2(2,2)),Color(ink,0.85))
 	if control > 0.0:
 		# Control attacks pulse an outer waveform ring so they never read as plain damage.
-		draw_arc(Vector2.ZERO,5.5+1.5*sin(life*22.0),0,TAU,14,Color(ink.r,ink.g,ink.b,0.75),1.4,true)
-		draw_arc(Vector2.ZERO,7.5,0,TAU,14,Color(0.95,0.8,1,0.45),1.0,true)
+		_body_ink.draw_arc(Vector2.ZERO,5.5+1.5*sin(life*22.0),0,TAU,14,Color(ink.r,ink.g,ink.b,0.75),1.4,true)
+		_body_ink.draw_arc(Vector2.ZERO,7.5,0,TAU,14,Color(0.95,0.8,1,0.45),1.0,true)
+# Several physics steps may precede one display frame. Only the last trail
+# state can be presented; keep every sweep, reflection and lifetime step, but
+# submit that final drawing once instead of rebuilding it between substeps.
+func _process(_delta):
+	if _ink_dirty and not is_queued_for_deletion():
+		_ink_dirty = false
+		var points := PackedVector2Array()
+		for point in trail: points.append(to_local(point))
+		var changed := points.size() != _trail_ink.size()
+		if not changed:
+			for i in points.size():
+				# Ignore only world-to-local float cancellation below 0.0001
+				# logical pixels; compare to retained ink, so errors never accumulate.
+				if points[i].distance_squared_to(_trail_ink[i]) > 0.00000001:
+					changed = true; break
+		if changed:
+			_trail_ink = points
+			queue_redraw()
+		if control > 0.0 and is_instance_valid(_body_ink): _body_ink.queue_redraw()
+		_mirror_into_fog()
+
 func _physics_process(delta):
+	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	_step(delta)
+	if B11Probe.enabled: B11Probe.cost("enemy_shot_step",started)
+
+func _step(delta):
 	life += delta
 	if life > lifetime or epoch != LevelServer.epoch or not is_instance_valid(Utils.player) or (owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die)):
 		queue_free()
 		return
 	trail.append(global_position)
 	if trail.size()>3: trail.pop_front()
-	queue_redraw()
-	_mirror_into_fog()
+	_ink_dirty = true
+	_fog_position = global_position
+	_fog_tip = global_position+velocity.normalized()*14.0
 	var remaining = velocity*delta
 	for iteration in 4:
 		var previous = global_position
@@ -138,6 +183,6 @@ func _mirror_into_fog() -> void:
 	if not ArenaVisibility.fog_active(): return
 	var player = Utils.player
 	if not is_instance_valid(player): return
-	if global_position.distance_to(player.global_position) > ArenaVisibility.fair_radius()*1.4: return
+	if _fog_position.distance_to(player.global_position) > ArenaVisibility.fair_radius()*1.4: return
 	if B11Probe.enabled: B11Probe.shot_fog_mirrors += 1
-	preload("res://game/map/FogPierce.gd").push_line(global_position,global_position+velocity.normalized()*14.0,INK.get(style,INK.projectile),2.0)
+	preload("res://game/map/FogPierce.gd").push_line(_fog_position,_fog_tip,INK.get(style,INK.projectile),2.0)

@@ -22,7 +22,7 @@ func begin_frame() -> void:
 func offer(entry: Dictionary) -> bool:
 	begin_frame()
 	var decorative = entry.get("decorative",false)
-	var key = str(entry)
+	var key = [entry.kind,entry.a,entry.get("b",Vector2.ZERO),entry.get("radius",0.0),entry.color,entry.width,decorative]
 	if seen.has(key): return true
 	# Necessary geometry scales with admitted threats (180 shots + bounded zones).
 	# Only cosmetic cores share the fixed budget; they can never evict a boundary.
@@ -43,11 +43,22 @@ func _draw() -> void:
 	# is the entry volume that has to be held against the BEFORE build before the HostileZone
 	# repaint gate is accepted.
 	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	# Preserve submission order and antialiasing; combine adjacent equal-width
+	# segments into a single canvas command, including each segment's color.
+	var points := PackedVector2Array()
+	var colors := PackedColorArray()
+	var width := -1.0
 	for entry in entries + decorations:
-		match entry.kind:
-			"circle": draw_arc(entry.a,entry.radius,0,TAU,32,entry.color,entry.width,true)
-			"dot": draw_circle(entry.a,entry.width,entry.color)
-			_: draw_line(entry.a,entry.b,entry.color,entry.width,true)
+		var is_line: bool = entry.kind == "line"
+		if not points.is_empty() and (not is_line or width != entry.width):
+			draw_multiline_colors(points,colors,width,true)
+			points.clear(); colors.clear()
+		if is_line:
+			width = entry.width
+			points.append(entry.a); points.append(entry.b); colors.append(entry.color)
+		elif entry.kind == "circle": draw_arc(entry.a,entry.radius,0,TAU,32,entry.color,entry.width,true)
+		else: draw_circle(entry.a,entry.width,entry.color)
+	if not points.is_empty(): draw_multiline_colors(points,colors,width,true)
 	if B11Probe.enabled:
 		B11Probe.fog_draws += 1
 		B11Probe.fog_entries_drawn += entries.size()

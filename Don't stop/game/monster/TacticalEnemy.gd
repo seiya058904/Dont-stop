@@ -193,6 +193,16 @@ func damage_pressure() -> float:
 ## Phase III boss can script "charge, slam, shockwave, shockwave" as one problem.
 func choose_attack():
 	if is_boss and phase_two and ultimate_cooldown <= 0 and get_tree().get_nodes_in_group("boss_ultimate").is_empty():
+		if role == "B04":
+			# The marked safe circle must not inherit old pellets or pending waves.
+			# Keep the child continuous source: it pauses for this window and resumes
+			# its existing clock afterwards. Retiring patterns accounts cancellation.
+			for ref in owned_attacks:
+				var previous = ref.get_ref()
+				if is_instance_valid(previous):
+					previous.set_physics_process(false)
+					previous.queue_free()
+			owned_attacks.clear()
 		var ultimate = preload("res://game/monster/BossUltimate.gd").new()
 		ultimate.role = role; ultimate.owner_ref = weakref(self)
 		ultimate.position = global_position

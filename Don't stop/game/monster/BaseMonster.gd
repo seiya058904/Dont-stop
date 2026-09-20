@@ -223,9 +223,10 @@ func onDie(is_death_effect = true):
 		item.queue_free()
 	get_node("CollisionShape2D").call_deferred("set_disabled",true)
 	anim.play("die")
-	get_tree().create_tween().tween_property(get_node("UndeadShadow"),"scale",Vector2.ZERO,0.3)
-	await get_tree().create_timer(0.5, false).timeout
-	queue_free()
+	var death_tween = create_tween()
+	death_tween.tween_property(get_node("UndeadShadow"),"scale",Vector2.ZERO,0.3)
+	death_tween.tween_interval(0.2)
+	death_tween.tween_callback(queue_free)
 
 func setDeathCallBack(death_callback:Callable):
 	self.death_callback = death_callback

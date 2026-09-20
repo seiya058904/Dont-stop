@@ -209,7 +209,7 @@ func _pick_point(extent: float) -> Vector2:
 
 func _legal(candidate: Vector2, extent: float, player_at: Vector2, authored: bool) -> bool:
 	if not candidate.is_finite(): return false
-	for ultimate in get_tree().get_nodes_in_group("combat_transient"):
+	for ultimate in get_tree().get_nodes_in_group("boss_ultimate"):
 		if ultimate.get_script()==load("res://game/monster/BossUltimate.gd") and ultimate.role=="B04":
 			if candidate.distance_to(ultimate.safe_center)<ultimate.safe_radius+extent+90: return false
 	if not arena.point_clear(candidate,extent*0.55+10.0):

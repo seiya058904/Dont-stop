@@ -77,12 +77,17 @@ function parseKv(line) {
 
 (async () => {
 	const build = hashBuild();
-	const query = Object.assign({ stress: '1', scenario, stage: '39', seconds: '90', seed: '20260918' }, overrides);
+	const query = Object.assign({ label, stress: '1', scenario, stage: '39', seconds: '90', seed: '20260918' }, overrides);
 	const url = `${base}?` + new URLSearchParams(Object.entries(query).map(([k, v]) => [k, String(v)])).toString();
 	const spikes = [];
 	const buckets = [];
 	const markers = [];
 	let summary = null;
+	let convergence = null;
+	let captureCount=0;
+	const visualQueue=[];
+	const visualStates=[];
+	let visualDone=false;
 	let peak = null;
 	let cpu = null;
 	// B11.2 adds two report lines. They are parsed separately instead of growing `[stress-peak]`, so
@@ -100,18 +105,48 @@ function parseKv(line) {
 		headless: process.env.B19_HEADLESS === "1",
 		args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'],
 	});
-	const context = await browser.newContext({ viewport: { width: 1280, height: 760 } });
+	let memoryProcess = null;
+	const memoryFile = path.resolve(outDir,`process-memory-${label}.json`);
+	if (process.env.B192_MEMORY === '1') {
+		const session = await browser.newBrowserCDPSession();
+		const info = await session.send('SystemInfo.getProcessInfo');
+		const root = info.processInfo.find(p => p.type === 'browser');
+		if (!root) throw new Error('Cannot identify owned browser process');
+		memoryProcess = require('child_process').spawn('python',[path.join(__dirname,'b192-process-memory.py'),String(root.id),memoryFile],{stdio:'ignore',windowsHide:true});
+		await session.detach();
+	}
+	const viewport = {width:Number(process.env.B192_WIDTH || 1536),height:Number(process.env.B192_HEIGHT || 864)};
+	const context = await browser.newContext({ viewport, deviceScaleFactor:1, serviceWorkers:'block' });
 	const page = await context.newPage();
 	// Chromium happily reuses a cached index.pck across page loads, which made a freshly exported
 	// build invisible to earlier rounds of this project: the measurement was of the PREVIOUS build
 	// and the only symptom was a missing line.
-	await page.route('**/*', route => route.continue({
-		headers: Object.assign({}, route.request().headers(), { 'cache-control': 'no-cache', pragma: 'no-cache' }),
-	}));
+	const loadedResources = [];
+	const verified = {};
+	for (const name of ['index.wasm','index.pck','index.js']) {
+		const resourceUrl = new URL(name,base).href;
+		const response = await context.request.get(resourceUrl);
+		if (!response.ok()) throw new Error(`HTTP ${response.status()}: ${resourceUrl}`);
+		const body = await response.body();
+		const sha256 = crypto.createHash('sha256').update(body).digest('hex');
+		if (sha256 !== build[name]?.sha256) throw new Error(`served/local hash mismatch: ${name}`);
+		verified[resourceUrl] = {body,contentType:response.headers()['content-type'],sha256};
+	}
+	await page.route('**/*', async route => {
+		const asset = verified[route.request().url()];
+		if (asset) {
+			loadedResources.push({url:route.request().url(),sha256:asset.sha256,bytes:asset.body.length});
+			await route.fulfill({status:200,body:asset.body,contentType:asset.contentType});
+		} else await route.continue();
+	});
 
 	page.on('console', m => {
 		const t = m.text();
+		if(t.startsWith('B192_VISUAL ')) { const state=JSON.parse(t.slice(12)); visualStates.push(state); visualQueue.push(state.name); }
+		if(t==='B192_VISUAL_DONE') visualDone=true;
 		if (m.type() === "error" || t.startsWith("[stress] ")) console.log(t);
+		if (t.startsWith('ERROR:') || t.startsWith('SCRIPT ERROR:')) errors.push(t);
+		if (t.startsWith('[stress-convergence] ')) convergence=JSON.parse(t.slice('[stress-convergence] '.length));
 		if (t.startsWith('[stress-frames] ')) {
 			rawFrames = JSON.parse(t.slice('[stress-frames] '.length));
 			return; // Store once, outside the bounded human-readable console log.
@@ -142,6 +177,27 @@ function parseKv(line) {
 		const report = () => window.b191Visibility({time:performance.now(),visibility:document.visibilityState,focus:document.hasFocus(),dpr:devicePixelRatio});
 		document.addEventListener('visibilitychange',report); window.addEventListener('focus',report); window.addEventListener('blur',report);
 	});
+	const traceSession = process.env.B192_TRACE === '1' ? await context.newCDPSession(page) : null;
+	const traceEvents = [];
+	if (traceSession) {
+		traceSession.on('Tracing.dataCollected', value => traceEvents.push(...value.value));
+		await traceSession.send('Tracing.start',{categories:'devtools.timeline,v8,disabled-by-default-v8.cpu_profiler,blink.user_timing,gpu',options:'sampling-frequency=1000'});
+	}
+	if (traceSession) await page.addInitScript(() => {
+		window.b192ShaderWaits = []; window.b192GlSizes = {};
+		const sources = new WeakMap(), programs = new WeakMap();
+		for (const type of [WebGLRenderingContext,WebGL2RenderingContext]) {
+			const proto=type.prototype;
+			for (const name of ['viewport','texImage2D','texStorage2D','renderbufferStorage']) {
+				const fn=proto[name]; if (!fn) continue;
+				proto[name]=function(...args){const key=name+':'+args.filter(a=>typeof a==='number').join(',');window.b192GlSizes[key]=(window.b192GlSizes[key]||0)+1;return fn.apply(this,args);};
+			}
+			const source=proto.shaderSource, attach=proto.attachShader, query=proto.getProgramParameter;
+			proto.shaderSource=function(shader,text){sources.set(shader,text);return source.call(this,shader,text);};
+			proto.attachShader=function(program,shader){const list=programs.get(program)||[];list.push(shader);programs.set(program,list);return attach.call(this,program,shader);};
+			proto.getProgramParameter=function(program,key){const start=performance.now();const value=query.call(this,program,key);const duration=performance.now()-start;if(duration>10)window.b192ShaderWaits.push({start,duration,key,sources:(programs.get(program)||[]).map(s=>sources.get(s))});return value;};
+		}
+	});
 	const started = Date.now();
 	await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 	await page.bringToFront();
@@ -149,9 +205,26 @@ function parseKv(line) {
 	// A round is 45 s and the driver runs rounds until the requested window is covered, so the wall
 	// clock bound has to allow the boot plus the whole accumulation plus a margin.
 	const wallBudgetMs = ((parseInt(query.seconds, 10) || 90) + 240) * 1000;
-	while (Date.now() - started < wallBudgetMs && summary === null) await sleep(1000);
-	const surface = await page.evaluate(() => ({visibility:document.visibilityState,focus:document.hasFocus(),dpr:devicePixelRatio,canvas:[...document.querySelectorAll('canvas')].map(c=>({width:c.width,height:c.height,cssWidth:c.clientWidth,cssHeight:c.clientHeight}))})).catch(()=>null);
+	while (Date.now() - started < wallBudgetMs && !visualDone && (summary === null || (query.camp_cycles && convergence === null))) {
+		await sleep(1000);
+		while(visualQueue.length) await page.screenshot({path:path.join(outDir,`${label}-${visualQueue.shift()}.png`)});
+		if (process.env.B192_CAPTURE === '1' && captureCount < 5 && allConsole.some(t=>t.includes('depart=true'))) {
+			await page.screenshot({path:path.join(outDir,`capture-${label}-${captureCount++}.png`)});
+		}
+	}
+	const surface = await page.evaluate(() => ({visibility:document.visibilityState,focus:document.hasFocus(),dpr:devicePixelRatio,canvas:[...document.querySelectorAll('canvas')].map(c=>({width:c.width,height:c.height,cssWidth:c.getBoundingClientRect().width,cssHeight:c.getBoundingClientRect().height}))})).catch(()=>null);
+	if (traceSession) {
+		fs.writeFileSync(path.join(outDir,`shader-waits-${label}.json`),JSON.stringify(await page.evaluate(()=>window.b192ShaderWaits)));
+		fs.writeFileSync(path.join(outDir,`gl-sizes-${label}.json`),JSON.stringify(await page.evaluate(()=>window.b192GlSizes)));
+		const completed = new Promise(resolve=>traceSession.once('Tracing.tracingComplete',resolve));
+		await traceSession.send('Tracing.end'); await completed;
+		fs.writeFileSync(path.join(outDir,`trace-${label}.json`),JSON.stringify({traceEvents}));
+	}
 	await browser.close();
+	if (memoryProcess) {
+		await Promise.race([new Promise(resolve=>memoryProcess.once('exit',resolve)),sleep(5000)]);
+		if (memoryProcess.exitCode === null) memoryProcess.kill();
+	}
 	if (rawFrames && !rawFrames.memory_static_available) {
 		if (peak) { peak.memory_static = null; peak.orphans = null; }
 		if (load) { load.mem_peak_mb = null; load.orphans_peak = null; }
@@ -160,8 +233,10 @@ function parseKv(line) {
 	const n = k => (summary && Number.isFinite(parseFloat(summary[k])) ? parseFloat(summary[k]) : null);
 	const p = k => (peak && Number.isFinite(parseFloat(peak[k])) ? parseFloat(peak[k]) : null);
 	const report = {
-		label, scenario, surface, visibilityEvents, source_variant: query.source || "unspecified", workload_scenario: scenario, url, build, gpu, errors,
-		headed: process.env.B19_HEADLESS !== "1", browser_version: browser.version(), viewport: {width:1280,height:760},
+		visualStates, visualDone,
+		label, scenario, convergence, loadedResources, server_root:process.env.B11_BUILD_DIR, surface, visibilityEvents, source_variant: query.source || "unspecified", workload_scenario: scenario, url, build, gpu, errors,
+		process_memory: fs.existsSync(memoryFile) ? JSON.parse(fs.readFileSync(memoryFile,"utf8")) : null,
+		headed: process.env.B19_HEADLESS !== "1", browser_version: browser.version(), viewport,
 		wall_clock_s: Math.round((Date.now() - started) / 1000),
 		seconds_requested: parseInt(query.seconds, 10) || 90,
 		rounds: summary ? parseFloat(summary.rounds) : null,
@@ -217,5 +292,5 @@ function parseKv(line) {
 	for (const b of buckets) {
 		console.log(`  bucket[${b.family}] ${b.name} n=${b.n} share=${f(b.share)} avg=${f(b.avg)} p95=${f(b.p95)} p99=${f(b.p99)} max=${f(b.max)} over33=${b.over33} over50=${b.over50}`);
 	}
-	process.exit(summary && !errors.length && !rawFrames?.measurement_timeout ? 0 : 1);
+	process.exit((summary || visualDone) && !errors.length && !rawFrames?.measurement_timeout ? 0 : 1);
 })();

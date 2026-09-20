@@ -32,6 +32,7 @@ const WARM_SCENES := [
 const SCENES_PER_FRAME := 3
 
 var _root: Node2D
+var _warm_canvas: CanvasLayer
 var _started := false
 var _finished := false
 ## 0.0 - 1.0, only meaningful while start() is running.
@@ -67,10 +68,16 @@ func _run() -> void:
 	_root = Node2D.new()
 	_root.name = "WarmupRoot"
 	# Nearly transparent but still drawn, so GPU pipelines really get compiled.
-	_root.modulate = Color(1, 1, 1, 0.004)
+	_root.modulate = Color(1, 1, 1, 0.05)
 	_root.position = Vector2(0, 0)
 	_root.z_index = -100
-	get_tree().root.add_child(_root)
+	# The town camera is far from world zero. Draw in screen space, on layer
+	# zero so the light's layer mask includes both sprites and primitives.
+	_warm_canvas = CanvasLayer.new()
+	_warm_canvas.layer = 0
+	get_tree().root.add_child(_warm_canvas)
+	_warm_canvas.add_child(_root)
+	_warm_lit_canvas()
 	var warmed := 0
 	var done := 0
 	for path in WARM_SCENES:
@@ -91,7 +98,7 @@ func _run() -> void:
 	# spawn, then release cleanly.
 	for i in 6:
 		await get_tree().process_frame
-	_root.queue_free()
+	_warm_canvas.queue_free()
 	# Web evidence: the very first audio voice (player or 2D panner) costs
 	# ~100-140 ms in Chromium, which lands exactly on the first shot. Warm the
 	# voice pipeline with an inaudible (-80 dB) playback, then stop it.
@@ -158,3 +165,30 @@ func _wake_particles(node: Node) -> void:
 		p.restart()
 	for child in node.get_children():
 		_wake_particles(child)
+
+func _warm_lit_canvas() -> void:
+	var scene = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
+	var frames: SpriteFrames = scene.get_node("body/AnimatedSprite2D").sprite_frames
+	scene.free()
+	var sprite := AnimatedSprite2D.new()
+	sprite.sprite_frames = frames
+	var material := ShaderMaterial.new()
+	material.shader = load("res://shader/HitFlash.gdshader")
+	material.set_shader_parameter("enchantment_tier",2.0)
+	sprite.material = material
+	sprite.position = Vector2(32,32)
+	_root.add_child(sprite)
+	sprite.play("run")
+	_root.add_child(load("res://game/diag/WarmupCanvas.gd").new())
+	var light := PointLight2D.new()
+	light.texture = load("res://Sprites/light2.png")
+	light.position = Vector2(32,32)
+	_root.add_child(light)
+	var hero = load("res://game/hero/Hero.tscn").instantiate()
+	for path in ["body/DashParticles2D","GPUParticles2D"]:
+		var particles = hero.get_node(path).duplicate()
+		particles.position = Vector2(32,32)
+		_root.add_child(particles)
+		particles.emitting = true
+		particles.restart()
+	hero.free()
