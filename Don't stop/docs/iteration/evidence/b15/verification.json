@@ -1,0 +1,185 @@
+{
+  "build_sha": "2845dddc6c0645f4814dd7885020f5d3e0f60fa8",
+  "targeted_contracts": [
+    {
+      "log": "b15-camp-tier-final.log",
+      "passes": 6,
+      "errors": []
+    },
+    {
+      "log": "b15-loadout-capacity-fixed.log",
+      "passes": 86,
+      "errors": []
+    },
+    {
+      "log": "b15-arc-final.log",
+      "passes": 4,
+      "errors": []
+    },
+    {
+      "log": "b15-weapons-after.log",
+      "passes": 7,
+      "errors": []
+    },
+    {
+      "log": "b15-saw.log",
+      "passes": 3,
+      "errors": []
+    },
+    {
+      "log": "b15-mechanism-regressions.log",
+      "passes": 72,
+      "errors": []
+    },
+    {
+      "log": "b15-growth.log",
+      "passes": 13,
+      "errors": []
+    },
+    {
+      "log": "b15-lifecycle.log",
+      "passes": 52,
+      "errors": []
+    },
+    {
+      "log": "b15-rail.log",
+      "passes": 8,
+      "errors": []
+    },
+    {
+      "log": "b15-stage-table2.log",
+      "passes": 1131,
+      "errors": []
+    },
+    {
+      "log": "b15-encounter-contracts.log",
+      "passes": 86,
+      "errors": []
+    },
+    {
+      "log": "b15-fairness2.log",
+      "passes": 61,
+      "errors": []
+    },
+    {
+      "log": "b15-hazards2.log",
+      "passes": 15,
+      "errors": []
+    },
+    {
+      "log": "b15-boss-phases.log",
+      "passes": 21,
+      "errors": []
+    },
+    {
+      "log": "b15-heavy-targets2.log",
+      "passes": 48,
+      "errors": []
+    },
+    {
+      "log": "b15-catalog-final.log",
+      "passes": 182,
+      "errors": []
+    },
+    {
+      "log": "b15-save-capacity.log",
+      "passes": 7,
+      "errors": []
+    },
+    {
+      "log": "b15-save-compatibility.log",
+      "passes": 14,
+      "errors": []
+    }
+  ],
+  "total_passed_assertions": 1816,
+  "web": [
+    {
+      "success": true,
+      "state": {
+        "detail_height": 116,
+        "detail_scroll": 0,
+        "equipped": 124,
+        "gold": 9999,
+        "heading": "",
+        "message": "已装备至槽位1；已保存",
+        "owned": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          124
+        ],
+        "saved": true,
+        "selection": "1",
+        "slots": [
+          124,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          7
+        ]
+      },
+      "method": "Playwright Chromium ANGLE D3D11; real mouse/keyboard; isolated fresh browser profile"
+    },
+    {
+      "success": true,
+      "identity": "2845dddc6c0645f4814dd7885020f5d3e0f60fa8",
+      "observations": [
+        {
+          "id": 113,
+          "gun": 113,
+          "bullets": 5,
+          "mode": "COMBAT",
+          "stage": 39,
+          "hp": 5
+        },
+        {
+          "id": 115,
+          "gun": 115,
+          "bullets": 11,
+          "mode": "COMBAT",
+          "stage": 39,
+          "hp": 5
+        },
+        {
+          "id": 119,
+          "gun": 119,
+          "bullets": 7,
+          "mode": "COMBAT",
+          "stage": 39,
+          "hp": 5
+        },
+        {
+          "id": 124,
+          "gun": 124,
+          "bullets": 93,
+          "mode": "COMBAT",
+          "stage": 39,
+          "hp": 5
+        },
+        {
+          "gun": 113,
+          "bullets": 6,
+          "mode": "COMBAT",
+          "stage": 40,
+          "hp": 2.8
+        }
+      ],
+      "method": "Playwright Chromium ANGLE D3D11, real input, normal HP, isolated profile; short rendered gameplay, not completion or performance acceptance"
+    }
+  ],
+  "windows": {
+    "functional_smoke": "PASS",
+    "renderer": "Forward+ Vulkan",
+    "engine_errors": 0,
+    "remaining_warning": "18 RefCounted ObjectDB instances reported at process exit; not resolved"
+  },
+  "HUMAN_ACCEPTED": false
+}
