@@ -5,7 +5,7 @@
 ## 候选身份
 
 - 分支：`codex/presentation-upgrade-20260919`。
-- 当前 HEAD：`46d215f40092dab6661ded92afc4eff0742a9e50`（B17 基线）。当前 HEAD 没有被标记为 B18 生产提交；B18 候选是本工作区未提交的有限变更。
+- 采样时基线 HEAD：`46d215f40092dab6661ded92afc4eff0742a9e50`（B17 基线）。本轮有限 B18 候选已提交为 `c29f5974fbacf15eeb1ac8ee444b9457caa2d551`；它仍是 Draft 候选，不是生产发布提交。
 - B17 可玩生产基线：`80aae7255ac16256df944af6e68f04adbdd68696`。旧 B17 Web/Windows 构建和 B17 失败证据保留。
 - 构建时运行时源码指纹：`eba9517341953cc9fac25f1ddfbaa5d3e4367712ad9c5aa9056fed61236137b3`，共 2202 个文件。规则是从 `Don't stop` 递归取文件，排除 `build/`、`evidence/`、`.godot/`、`docs/`、`tools/` 和 `.import`，按相对路径排序，逐行拼接 `relative-path<TAB>raw-file-sha256` 后做 UTF-8 SHA-256。导出后只更新了文档和工具，运行时源码集合未变。
 
