@@ -19,6 +19,8 @@ var owned_only = false
 var tier_filter = 0
 var sort_mode = 0
 var upgrade_quality_filter = 0
+var action_footer: VBoxContainer
+var action_status: Label
 var action_bar: HBoxContainer
 var tab_buttons = {}
 var tier_box: OptionButton
@@ -162,10 +164,10 @@ func label(parent, text: String, size = 7) -> Label:
 
 func button(parent, text: String, action: Callable) -> Button:
 	var item = Button.new()
-	if parent == detail and is_instance_valid(action_bar): parent = action_bar
 	item.text = text
 	item.add_theme_font_size_override("font_size",7)
 	item.custom_minimum_size.y = 16
+	item.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	item.pressed.connect(action)
 	parent.add_child(item)
 	return item
@@ -323,8 +325,13 @@ func _ready():
 	detail_scroll.add_child(reading)
 	reading.add_child(weapon_header)
 	reading.add_child(detail)
+	action_footer = VBoxContainer.new()
+	action_footer.add_theme_constant_override("separation",2)
+	right.add_child(action_footer)
+	action_status = label(action_footer, "")
+	action_status.hide()
 	action_bar = HBoxContainer.new()
-	right.add_child(action_bar)
+	action_footer.add_child(action_bar)
 	message = label(body,"WASD 移动 · R 装填 · Shift 冲刺 · Esc 返回",7)
 	message.custom_minimum_size.y = 18
 	message.max_lines_visible = 2
@@ -360,7 +367,10 @@ func update_wallet():
 	save_retry.visible = Demo.dirty or Demo.save_blocked
 
 func clear_box(box):
-	if box == detail and is_instance_valid(action_bar): clear_box(action_bar)
+	if box == detail and is_instance_valid(action_bar):
+		clear_box(action_bar)
+		action_status.text = ""
+		action_status.hide()
 	for child in box.get_children():
 		box.remove_child(child)
 		child.queue_free()
@@ -435,7 +445,7 @@ func render():
 				var am = Utils.am_dict[id].instantiate()
 				cached.append(am)
 				var active = id in Demo.owned_global_upgrades
-				if not matches(tr(am.am_name)+AttachmentCatalog.DEFINITIONS[am.am_id].info+AttachmentCatalog.quality_name(int(id))): continue
+				if not matches(id+tr(am.am_name)+AttachmentCatalog.DEFINITIONS[am.am_id].info+AttachmentCatalog.quality_name(int(id))): continue
 				if owned_only and not active: continue
 				if upgrade_quality_filter > 0 and AttachmentCatalog.quality(int(id)) != upgrade_quality_filter: continue
 				var card = entry("%s %s\n%s" % [AttachmentCatalog.quality_name(int(id)),tr(am.am_name),"√ 已激活" if active else "%d金币 · 未激活" % am.money],id,func(): show_attachment(id,am,active))
@@ -443,7 +453,11 @@ func render():
 		"magazine": magazine_list()
 		"talent":
 			button(listing,"重置计划天赋 / 查看退款",show_reset)
-			for id in DemoConfig.TALENTS:
+			var talent_ids = DemoConfig.TALENTS.keys()
+			talent_ids.sort_custom(func(a,b):
+				if DemoConfig.talent_quality(a) != DemoConfig.talent_quality(b): return DemoConfig.talent_quality(a) < DemoConfig.talent_quality(b)
+				return a < b)
+			for id in talent_ids:
 				var d = DemoConfig.TALENTS[id]
 				if not matches(id+d.name+DemoConfig.talent_info(id)+DemoConfig.talent_quality_name(id)): continue
 				if owned_only and Demo.rank(id) == 0: continue
@@ -535,19 +549,19 @@ func show_weapon(id: String, gun):
 			label(detail,"当前装备",8)
 			# B13 unequip: the weapon stays owned, ammo untouched - only the "current weapon"
 			# link is dropped. Re-equipping stays available right here and via hotkeys.
-			button(detail,"卸下武器",func():
+			button(action_bar,"卸下武器",func():
 				var result = Demo.unequip_weapon()
 				message.text = result.reason
 				request_refresh())
 		else:
-			button(detail,"已拥有 | 装备",func():
+			button(action_bar,"已拥有 | 装备",func():
 				selected_gun = int(id)
 				equip_selection(int(id))).set_meta("action_id","equip_owned")
 		var carried_slot = PlayerData.weapon_slots.find(int(id))
 		if carried_slot >= 0 and not gun.is_use:
-			button(detail,"移出携带栏",func(): show_loadout_result(PlayerData.remove_slot(carried_slot)))
+			button(action_bar,"移出携带栏",func(): show_loadout_result(PlayerData.remove_slot(carried_slot)))
 	else:
-		button(detail,"%d金币 | 购买" % Utils.weapon_money_list[id],func(): purchase("weapon",id)).set_meta("action_id","purchase_weapon")
+		button(action_bar,"%d金币 | 购买" % Utils.weapon_money_list[id],func(): purchase("weapon",id)).set_meta("action_id","purchase_weapon")
 
 func magazine_list():
 	for count in [5,10,25]:
@@ -557,7 +571,7 @@ func magazine_list():
 			label(detail,"备用弹匣补给",10)
 			label(detail,"当前 %d 弹匣\n购买 +%d → %d 弹匣" % [PlayerData.reserve_magazines,count,PlayerData.reserve_magazines+count],9)
 			label(detail,"一次换弹消耗1个备用弹匣，将当前枪补满。")
-			button(detail,"%d金币 | 购买%d弹匣" % [price,count],func(): purchase("supply","mag"+str(count))))
+			button(action_bar,"%d金币 | 购买%d弹匣" % [price,count],func(): purchase("supply","mag"+str(count))))
 
 func active_gun():
 	return PlayerData.player_weapon_list.get(selected_gun,Utils.player.gun)
@@ -582,7 +596,7 @@ func show_attachment(id: String,am,_owned: bool):
 			var after = float(boosted.get(stat,0.0))
 			if is_equal_approx(before,after): continue
 			label(detail,comparison(stat,before,after),7)
-	var action = button(detail,"√ 已激活" if active else "%d金币 | 购买" % am.money,func(): purchase("attachment",id))
+	var action = button(action_bar,"√ 已激活" if active else "%d金币 | 购买" % am.money,func(): purchase("attachment",id))
 	action.disabled = active
 
 func show_talent(id: String):
@@ -590,7 +604,6 @@ func show_talent(id: String):
 	var d = DemoConfig.TALENTS[id]
 	var rank = Demo.rank(id)
 	label(detail,"%s · %s  %d / %d" % [d.name,DemoConfig.talent_quality_name(id),rank,d.max],10)
-	label(detail,"品质：%s（价值等级；与当前等级独立）" % DemoConfig.talent_quality_name(id),7)
 	label(detail,DemoConfig.talent_info(id))
 	label(detail,DemoConfig.talent_effect(id,rank),8)
 	label(detail,Demo.talent_status(id))
@@ -609,9 +622,17 @@ func show_talent(id: String):
 		if not preview_lines.is_empty():
 			label(detail,"当前 → 购买后（真实结算）",8)
 			for preview_line in preview_lines: label(detail,preview_line,8)
-	label(action_bar,"已满级 · 不会扣款" if rank == d.max else "支付任选：%d金币 / %d天赋点" % [DemoConfig.talent_gold_price(id,rank+1),DemoConfig.talent_point_price(id,rank+1)],7)
-	button(detail,"金币购买",func(): purchase("talent",id,"gold")).disabled = rank == d.max
-	button(detail,"天赋点升级",func(): purchase("talent",id,"points")).disabled = rank == d.max
+	action_status.show()
+	if rank >= d.max:
+		action_status.text = "已满级"
+	else:
+		var gold_price = DemoConfig.talent_gold_price(id,rank+1)
+		var point_price = DemoConfig.talent_point_price(id,rank+1)
+		action_status.text = "选择一种支付方式"
+		if PlayerData.gold < gold_price and PlayerData.reward_point < point_price:
+			action_status.text = "余额不足 · 金币或天赋点满足一种即可"
+		button(action_bar,"%d金币 | 购买" % gold_price,func(): purchase("talent",id,"gold"))
+		button(action_bar,"%d天赋点 | 升级" % point_price,func(): purchase("talent",id,"points"))
 
 func equipment_list():
 	switch_tab("weapon")
@@ -661,7 +682,7 @@ func stage_entries(first: int, last: int):
 			label(detail,("地狱模式（固定战争迷雾）\n" if HellMode.is_hell(id) else "")+
 				M5Content.REGIONS[config.region].info+"\n"+config.info+
 				"\n胜利奖励：20金币 + 1天赋点，另计掉落；结束返回营地。\n重复挑战不移动「继续」进度指针。")
-			button(detail,"开始此遭遇",func(): depart(id)))
+			button(action_bar,"开始此遭遇",func(): depart(id)))
 		# Read-only locator for the browser probe (autoload/Smoke.gd). A driver has to click a
 		# control by its REAL rectangle, and the only stable name for a stage entry is its stage
 		# id - the visible text carries a region name that a future edit could change.
@@ -711,8 +732,8 @@ func show_legacy(id: String,reward):
 	if id in ["2","5"]:
 		label(detail,"已整合为T07/T08的历史来源；旧等级和原数值保留，新购买请前往持久天赋页。")
 		return
-	button(detail,"%d金币购买" % DemoConfig.TALENT_GOLD_PRICE,func(): purchase("legacy",id))
-	button(detail,"1天赋点升级",func(): purchase("legacy",id,"points"))
+	button(action_bar,"%d金币购买" % DemoConfig.TALENT_GOLD_PRICE,func(): purchase("legacy",id))
+	button(action_bar,"1天赋点升级",func(): purchase("legacy",id,"points"))
 
 func show_reset():
 	var refund = Demo.reset_preview()
@@ -804,9 +825,9 @@ func talent_preview_lines(id: String, rank: int, next_rank: int) -> Array:
 		restore_preview_rank(id,saved_rank)
 		lines.append(comparison("speed",speed_before,speed_after))
 	elif id == "T09":
-		var pickup_before: float = 1.0+RewardServer.pickup_bonus()
+		var pickup_before: float = maxf(DemoConfig.talent_value(id,rank),20.0 if RewardServer.pickup_bonus()>0 else 0.0)*(1.0+RewardServer.pickup_bonus())
 		Demo.talents[id] = next_rank
-		var pickup_after: float = 1.0+RewardServer.pickup_bonus()
+		var pickup_after: float = maxf(DemoConfig.talent_value(id,next_rank),20.0 if RewardServer.pickup_bonus()>0 else 0.0)*(1.0+RewardServer.pickup_bonus())
 		restore_preview_rank(id,saved_rank)
 		lines.append(comparison("pickup",pickup_before,pickup_after))
 	return lines

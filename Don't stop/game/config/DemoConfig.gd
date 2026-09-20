@@ -28,7 +28,7 @@ const MIN_RELOAD_SECONDS = 0.15
 ## 传说=机制解锁. Rank (1..max) is how many times a talent was bought and stays independent.
 ## Core B13 rule: overall, talent value must exceed upgrade value; legends change how fights play.
 const TALENT_QUALITY = {
-	"T01":1,"T03":1,"T04":1,"T05":1,"T07":1,"T08":1,"T09":1,"T18":1,"T20":1,
+	"T01":1,"T03":1,"T04":1,"T05":1,"T07":1,"T08":1,"T09":3,"T18":1,"T20":1,
 	"T02":2,"T06":2,"T10":2,"T11":2,"T12":2,"T15":2,"T17":2,"T21":2,"T22":2,"T24":2,
 	"T13":3,"T14":3,"T16":3,"T19":3,"T23":3
 }
@@ -46,15 +46,15 @@ const TALENTS = {
 	"T06": {"name":"弱点识别","max":3,"step":0.06,"info":"每级暴击率+6个百分点；每次命中只采样一次，暴击×1.5。","unit":"暴击率百分点"},
 	"T07": {"name":"生存余量","max":3,"step":1.0,"info":"每级最大生命+1（初始基础5的20%），购买补该增量；旧头盔生命增量作为历史来源保留。","unit":"生命"},
 	"T08": {"name":"轻装移动","max":3,"step":0.03,"info":"每级基础移速+3%；不改变冲刺。旧蓝靴来源保留，详情另列。","unit":"基础移速"},
-	"T09": {"name":"拾取磁场","max":3,"step":0.2,"info":"金币/回血拾取半径每级+20%；隔墙不可吸附，不执行寻路。","unit":"拾取范围"},
-	"T11": {"name":"弹药回流","max":3,"step":1.0,"kills":5,"info":"每5次有效直接击杀补1×等级备用弹匣；假人、派生击杀不计，不填弹匣。","unit":"每5杀弹匣"},
+	"T09": {"name":"强磁回收","max":3,"values":[120.0,180.0,240.0],"info":"金币在120/180/240范围内加速飞来，到达才入账；墙阻挡，暂停停止。医疗包独立判定，满血不消耗。","unit":"金币吸引半径","gold_prices":[700,1000,1400],"point_prices":[3,4,5]},
+	"T11": {"name":"弹药回流","max":3,"step":1.0,"kills":5,"info":"每5次有效武器击杀补1×等级备用弹匣；假人、派生击杀不计，不填弹匣。","unit":"每5杀弹匣"},
 	"T12": {"name":"首发重击","max":3,"values":[0.25,0.4,0.55],"info":"完成实际补弹后的第一发伤害+25/40/55%；同次同时发射的弹丸共享，不含后续连发。取消装填不触发。","unit":"首发伤害"},
 	"T13": {"name":"贯穿专精","max":1,"step":2.0,"info":"明确兼容的直射攻击+2贯穿；总目标最多8，实墙阻断，不影响爆炸/跟踪/锯盘。轨道炮按蓄力比例兑现；已达上限时不继续增加。","unit":"额外贯穿"},
 	"T14": {"name":"静电跃迁","max":1,"step":0.25,"cooldown":0.5,"damage":0.5,"radius":80.0,"info":"直接命中25%概率电弧到附近一个不同目标，50%命中伤害；冷却0.5秒，墙阻挡；派生不触发。","unit":"触发概率"},
-	"T15": {"name":"灼热弹道","max":3,"step":0.3,"seconds":1.5,"tick":0.25,"info":"直接命中施加1.5秒灼烧，每0.25秒伤害0.3×等级；同来源刷新，一条计时记录。","unit":"每次灼烧tick"},
+	"T15": {"name":"灼热弹道","max":3,"step":0.3,"seconds":1.5,"tick":0.25,"info":"直接命中施加1.5秒灼烧，每0.25秒至少伤害0.3×等级，随发射时单发伤害的2%×等级成长，上限0.6×等级；同来源刷新，一条计时记录。","unit":"每次灼烧tick"},
 	"T17": {"name":"低温冲击","max":3,"step":0.08,"seconds":1.5,"info":"直接命中减速8%×等级，1.5秒；最高24%，Boss仅四分之一，不叠无限层。","unit":"减速"},
 	"T18": {"name":"冲击放大","max":3,"step":0.15,"info":"普通敌人冲量每级+15%；Boss免推移。","unit":"冲量"},
-	"T19": {"name":"应急护盾","max":1,"cooldown":6.0,"step":1.0,"info":"战斗抵消一次正伤害，冷却6秒；先占用冷却再反馈，同帧下一击仍受伤。","unit":"抵消次数"},
+	"T19": {"name":"应急护盾","max":1,"cooldown":6.0,"step":1.0,"info":"战斗抵消一次正伤害，基础恢复6秒；有效原生击杀缩短0.35秒，破盾后至少2秒才可恢复；只有一层。","unit":"抵消次数"},
 	"T20": {"name":"战后修复","max":3,"step":0.1,"info":"有效遭遇胜利回复最大生命10%×等级；手动回营、选关和重复结算不触发。","unit":"胜利回复生命比例"},
 	"T21": {"name":"精英猎手","max":3,"values":[0.15,0.25,0.35],"info":"对精英目标伤害+15/25/35%；Boss不适用。精英按关卡计划与存活预算出现，并非所有特殊怪都是精英。","unit":"对精英伤害"},
 	"T22": {"name":"密集火网","max":3,"step":0.08,"radius":100.0,"count":3,"interval":0.2,"info":"100范围内至少3名存活敌人时伤害+8%×等级；每0.2秒更新，发射快照保留该次状态。","unit":"条件伤害"},
@@ -77,11 +77,11 @@ static func talent_quality_name(id: String) -> String:
 ## Price of buying `rank` (the rank being purchased, 1-based) of a talent in the given
 ## currency. Recorded per payment, so reset/refund keeps replaying actual payments.
 static func talent_gold_price(id: String, rank: int) -> int:
-	var ladder: Array = TALENT_GOLD_PRICES[talent_quality(id)]
+	var ladder: Array = TALENTS[id].get("gold_prices",TALENT_GOLD_PRICES[talent_quality(id)])
 	return int(ladder[clampi(rank-1,0,ladder.size()-1)])
 
 static func talent_point_price(id: String, rank: int) -> int:
-	var ladder: Array = TALENT_POINT_PRICES[talent_quality(id)]
+	var ladder: Array = TALENTS[id].get("point_prices",TALENT_POINT_PRICES[talent_quality(id)])
 	return int(ladder[clampi(rank-1,0,ladder.size()-1)])
 
 static func talent_value(id: String, rank: int) -> float:
@@ -92,6 +92,7 @@ static func talent_value(id: String, rank: int) -> float:
 
 static func talent_effect(id: String, rank: int) -> String:
 	var value = talent_value(id,rank)
+	if id == "T09": return "金币吸引半径：%.0f" % value
 	if TALENTS[id].has("unit"):
 		var unit = TALENTS[id].unit
 		if unit in ["生命","每5杀弹匣","每次灼烧tick","额外贯穿","抵消次数"]: return "累计 %s：%.2f" % [unit,value]
@@ -113,8 +114,8 @@ static func talent_info(id: String) -> String:
 		"T03": return "常驻：每级装填时间 -%d%%，最低 %.2f 秒" % [roundi(d.step*100),MIN_RELOAD_SECONDS]
 		"T04": return "常驻：每级弹匣 +%d%%；不会凭空补弹" % roundi(d.step*100)
 		"T10": return "有效击杀：每层射速 +%d%% × 等级，最多%d层；%.1f秒刷新，超时归零。热流及封顶转管转换为单次伤害。" % [roundi(d.step*100),d.stacks,d.seconds]
-		"T16": return "直接击杀：半径%.0f的小爆炸（伤害%.2f），冷却%.1f秒；派生击杀不再爆破" % [d.radius,d.damage,d.cooldown]
-		"T24": return "直接击杀回复 %.2f × 等级 生命，冷却%.1f秒；假人不触发" % [d.step,d.cooldown]
+		"T16": return "原生武器击杀：半径%.0f爆炸，伤害取%.2f与该攻击25%%的较大值（上限12），冷却%.1f秒；派生不再爆破" % [d.radius,d.damage,d.cooldown]
+		"T24": return "武器原生击杀回复 %.2f × 等级 生命，冷却%.1f秒；假人不触发" % [d.step,d.cooldown]
 	return ""
 
 static var ENCOUNTERS = M5Content.encounters()

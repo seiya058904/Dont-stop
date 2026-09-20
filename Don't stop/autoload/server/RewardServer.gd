@@ -91,4 +91,34 @@ func momentum() -> float:
 		if reward.id == 22 and reward.moving_buff: return 0.03*reward.count
 	return 0.0
 func pickup_bonus() -> float:
-	return DemoConfig.talent_value("T09",Demo.rank("T09"))+0.4*rank(23)
+	return 0.4*rank(23)
+
+# Shared once per physics frame, independent of the number of grounded coins.
+var pickup_frame := -1
+var cached_coin_radius := 0.0
+var pending_gold := 0
+var gold_feedback_clock := 0.0
+var gold_feedback_epoch := -1
+func coin_radius() -> float:
+	var frame = Engine.get_physics_frames()
+	if frame != pickup_frame:
+		pickup_frame = frame
+		var legacy = pickup_bonus()
+		var talent = DemoConfig.talent_value("T09",Demo.rank("T09"))
+		cached_coin_radius = maxf(talent,20.0 if legacy > 0 else 0.0)*(1.0+legacy)
+	return cached_coin_radius
+
+func collect_gold() -> void:
+	PlayerData.gold += 1
+	if gold_feedback_epoch != LevelServer.epoch:
+		pending_gold = 0
+		gold_feedback_epoch = LevelServer.epoch
+	pending_gold += 1
+
+func _process(delta):
+	gold_feedback_clock -= delta
+	if gold_feedback_clock > 0: return
+	gold_feedback_clock = 0.12
+	if pending_gold > 0 and gold_feedback_epoch == LevelServer.epoch and is_instance_valid(Utils.player):
+		Utils.showHitLabel("+%d" % pending_gold,Utils.player)
+	pending_gold = 0

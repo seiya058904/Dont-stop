@@ -4,7 +4,7 @@
 [node name="A120" type="Node2D"]
 script = ExtResource("1")
 am_id = 120
-am_name = "裂片弹药核心"
+am_name = "裂变火力核心"
 am_image = ExtResource("2")
 am_type = "WEAPON_AMMUNITION"
 am_info = "裂片弹头：详情读取统一机制目录"

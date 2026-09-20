@@ -89,6 +89,14 @@ func _ready() -> void:
 	# get_tree().current_scene is not), so assigning `position` here would have placed every
 	# arena-owned hazard ~32000 px off the map. global_position is parent independent.
 	global_position = at
+	if kind == "meteor":
+		var foreground = CanvasLayer.new()
+		foreground.layer = 1
+		foreground.follow_viewport_enabled = true
+		add_child(foreground)
+		var body = load("res://game/effects/MeteorBody.gd").new()
+		body.hazard = weakref(self)
+		foreground.add_child(body)
 
 ## Diagnostics for tests/B3Hazards.gd. Counters only, no behaviour change.
 static var audit_spawned := 0
@@ -101,12 +109,13 @@ static var audit_poison_capped := 0
 
 func _physics_process(delta: float) -> void:
 	if epoch != LevelServer.epoch or LevelServer.state != "COMBAT":
+		if kind == "meteor": meteor_event("cancel_epoch_or_combat")
 		queue_free(); return
 	elapsed += delta
 	phase_time -= delta
 	if kind in ["laser","shock"]:
 		var here := origin()
-		if sweep != 0.0 or not clip_valid or here != clip_origin:
+		if (sweep != 0.0 and phase != "active") or not clip_valid or here != clip_origin:
 			clip_origin = here; clip_valid = true
 			_clip()
 	queue_redraw()
@@ -126,6 +135,9 @@ func _warning(delta: float) -> void:
 	if _footprint_visible():
 		visible_warning += delta
 	if phase_time > 0.0: return
+	if kind == "meteor" and ArenaVisibility.fog_active() and visible_warning < FAIR_VISIBLE:
+		meteor_event("cancel_unseen")
+		queue_free(); return
 	# Fog fairness: never open the damaging phase before the warning has actually been
 	# readable from inside the player's light, and never extend forever.
 	if ArenaVisibility.fog_active() and visible_warning < FAIR_VISIBLE and elapsed < warning+FAIR_MAX_EXTENSION:
@@ -133,12 +145,13 @@ func _warning(delta: float) -> void:
 		return
 	phase = "active"; phase_time = active_time; active_clock = 0.0
 	if kind == "meteor":
+		meteor_event("impact")
 		hit_this_pulse = true
 		if _player_inside() and Combat.clear_line(origin(),Utils.player.global_position): Utils.player.onHit(damage,null,1.0,"hazard_meteor")
 		Combat.sound(load("res://audio/bullet/EXPLDsgn_Explosion Impact_10.wav"),origin())
 	if not activated:
 		activated = true
-		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if radius > 0.0 else width*2.0,direction)
+		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if radius > 0.0 else width*2.0,direction,kind)
 
 func _active(delta: float) -> void:
 	_advance(delta)
@@ -349,13 +362,12 @@ func _draw_meteor(live: bool, progress: float):
 		for side in [-1,1]: draw_line(Vector2(side*9,-9),Vector2(-side*9,9),red,2)
 		draw_string(ThemeDB.fallback_font,Vector2(-9,22),"%.1fs"%maxf(0,phase_time),HORIZONTAL_ALIGNMENT_LEFT,-1,9,red)
 		draw_circle(Vector2.ZERO,8+progress*9,Color(0.02,0.01,0.01,0.6))
-		var height = 180*pow(1-progress,0.7)
-		var p = Vector2(-height*0.18,-height)
-		draw_colored_polygon(PackedVector2Array([p+Vector2(-7,-7),p+Vector2(-14,-32),p+Vector2(9,-10),p+Vector2(10,7)]),Color(1,0.3,0.05,0.8))
-		draw_colored_polygon(PackedVector2Array([p+Vector2(-10,-7),p+Vector2(3,-12),p+Vector2(12,1),p+Vector2(4,11),p+Vector2(-9,7)]),Color(0.34,0.21,0.17))
-		draw_line(p+Vector2(-5,-4),p+Vector2(7,3),Color(1,0.6,0.2),3)
 		FogPierce.push_circle(origin(),radius,red,3)
 	else:
 		var fade = clampf(phase_time/active_time,0,1)
 		draw_circle(Vector2.ZERO,radius*(1-fade*0.7),Color(1,0.3,0.06,fade*0.35))
 		draw_arc(Vector2.ZERO,radius*(1-fade*0.5),0,TAU,40,Color(1,0.65,0.25,fade),3)
+
+func meteor_event(event: String):
+	if Demo.test_mode or Smoke.probe:
+		print("B16_METEOR ",JSON.stringify({"event":event,"stage":stage,"elapsed":elapsed,"visible_warning":visible_warning,"phase":phase,"x":at.x,"y":at.y}))

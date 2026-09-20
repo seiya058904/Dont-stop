@@ -114,10 +114,11 @@ static func inspect(gun) -> Dictionary:
 	player.shield_unlocked=Demo.rank("T19")>0
 	player.shield_cooldown=Demo.cooldown("T19")
 	player.pickup_multiplier=1.0+RewardServer.pickup_bonus()
-	player.pickup=player.pickup_multiplier
-	ledger.add("pickup","base","base","基础拾取范围","flat",1.0)
-	ledger.add("pickup","talent","T09",DemoConfig.TALENTS.T09.name,"additive_percentage",DemoConfig.talent_value("T09",Demo.rank("T09")),Demo.rank("T09")>0)
-	ledger.add("pickup","reward","23","拾取奖励","additive_percentage",RewardServer.pickup_bonus()-DemoConfig.talent_value("T09",Demo.rank("T09")),RewardServer.rank(23)>0)
+	player.pickup=maxf(DemoConfig.talent_value("T09",Demo.rank("T09")),20.0 if RewardServer.pickup_bonus()>0 else 0.0)*player.pickup_multiplier
+	player.coin_radius=player.pickup
+	ledger.add("pickup","base","base","基础自动吸取范围","flat",20.0 if RewardServer.pickup_bonus()>0 and Demo.rank("T09")==0 else 0.0)
+	ledger.add("pickup","talent","T09",DemoConfig.TALENTS.T09.name,"flat",DemoConfig.talent_value("T09",Demo.rank("T09")),Demo.rank("T09")>0)
+	ledger.add("pickup","reward","23","拾取奖励","additive_percentage",RewardServer.pickup_bonus(),RewardServer.rank(23)>0)
 	player.reserve_magazines=PlayerData.reserve_magazines
 	ledger.add("speed","base","base","基础移动","flat",100*PlayerData.player_speed)
 	ledger.add("speed","talent","T08",DemoConfig.TALENTS.T08.name,"flat",100*DemoConfig.talent_value("T08",Demo.rank("T08")),Demo.rank("T08")>0)
@@ -184,7 +185,7 @@ static func describe(s: Dictionary) -> String:
 	if "homing" in s.tags: text += "\n转向 %.2f弧度/秒 · 寻找半角 %.1f度" % [s.turn,rad_to_deg(s.lock_angle)]
 	if s.warmup > 0: text += "\n蓄力/预热上限 %.2f秒" % s.warmup
 	if s.shards > 0: text += "\n首次命中裂片 %d枚 × %.0f%%；有限一代" % [s.shards,s.shard_ratio*100]
-	if s.refill > 0: text += "\n直接击杀弹匣+1，冷却0.2秒"
+	if s.refill > 0: text += "\n原生击杀回填容量8%（1至6发），冷却0.5秒"
 	if s.recovery != 1.0: text += "\n局部回正时间 ×%.2f" % s.recovery
 	if "projectile" in s.tags or "beam" in s.tags: text += "\n对普通敌人冲量 %.1f" % s.impulse
 	if "spread" in s.tags: text += " · 散布倍率 %.2f" % s.spread

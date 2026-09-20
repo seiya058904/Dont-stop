@@ -23,6 +23,9 @@ var rng := RandomNumberGenerator.new()
 var live_peak := 0
 var coverage_peak := 0.0
 var poison_ticks := 0
+var meteor_wait := 0.0
+var round_time := 0.0
+var meteor_spawned := 0
 
 ## Fixed-seed support for tests: when non-zero the director reproduces its hazard sequence
 ## exactly, so a Hazard audit can assert the same run twice.
@@ -74,6 +77,8 @@ func _physics_process(delta: float) -> void:
 	# Poison is coordinated for the whole arena, whatever put the field there.
 	_tick_poison(delta)
 	if plan.is_empty() or not is_instance_valid(arena): return
+	round_time += delta
+	meteor_wait += delta
 	spawn_clock -= delta
 	if spawn_clock <= 0.0:
 		spawn_clock = float(plan.interval)
@@ -127,23 +132,30 @@ func _spawn() -> void:
 	if not is_instance_valid(arena): return
 	var kinds: Array = plan.kinds
 	if kinds.is_empty(): return
-	var kind = kinds[rng.randi()%kinds.size()]
-	if kind == "meteor" and get_tree().get_nodes_in_group("boss_ultimate").any(func(u): return u.role=="B04"): return
-	if kind == "meteor" and get_tree().get_nodes_in_group(StageHazard.GROUP).filter(func(h): return h.kind=="meteor").size()>=2: return
+	var kind = "meteor" if "meteor" in kinds and meteor_wait >= 8.0 else kinds[rng.randi()%kinds.size()]
+	audit_event("selected",kind)
+	if kind == "meteor" and get_tree().get_nodes_in_group("boss_ultimate").any(func(u): return u.role=="B04"):
+		audit_event("b04_suppressed",kind); spawn_clock = minf(spawn_clock,1.0); return
+	if kind == "meteor" and get_tree().get_nodes_in_group(StageHazard.GROUP).filter(func(h): return h.kind=="meteor").size()>=2:
+		audit_event("meteor_cap",kind); return
 	var live = get_tree().get_nodes_in_group(StageHazard.GROUP).size()
 	if live >= int(plan.live_cap):
+		audit_event("live_cap",kind)
 		StageHazard.audit_rejected += 1
 		return
 	# Coverage is a hard ceiling, checked before placement so a rejected hazard is never
 	# drawn for a frame and then removed.
 	var projected = coverage_share()+ArenaHazards.footprint_area(kind)/maxf(1.0,walkable_area())
 	if projected > float(plan.coverage):
+		audit_event("coverage_cap",kind)
 		StageHazard.audit_rejected += 1
 		return
 	var spec = ArenaHazards.shape(kind)
 	var extent = float(spec.max_extent)
-	var point = _pick_point(extent)
+	var point = _pick_visible_meteor(extent) if kind == "meteor" else _pick_point(extent)
 	if point == Vector2.INF:
+		audit_event("no_legal_visible_point",kind)
+		if kind == "meteor": spawn_clock = minf(spawn_clock,1.0)
 		StageHazard.audit_rejected += 1
 		return
 	var hazard = load("res://game/map/StageHazard.gd").new()
@@ -171,6 +183,9 @@ func _spawn() -> void:
 		hazard.pulses = 1
 		hazard.damage = 2.0
 	arena.add_child(hazard)
+	if kind == "meteor":
+		meteor_wait = 0.0; meteor_spawned += 1
+	audit_event("spawned",kind,point)
 	StageHazard.audit_spawned += 1
 
 ## Authored anchors first, then any legal walkable cell. Every candidate must be clear of
@@ -209,3 +224,26 @@ func _legal(candidate: Vector2, extent: float, player_at: Vector2, authored: boo
 		if authored: StageHazard.audit_skipped_anchor += 1
 		return false
 	return true
+
+func audit_event(event: String, kind: String, point = Vector2.ZERO):
+	if Demo.test_mode or Smoke.probe:
+		print("B16_HAZARD ",JSON.stringify({"stage":stage,"seed":rng.seed,"time":round_time,"event":event,"kind":kind,"x":point.x,"y":point.y}))
+
+func _pick_visible_meteor(extent: float) -> Vector2:
+	if not is_instance_valid(Utils.player): return Vector2.INF
+	var player_at = Utils.player.global_position
+	var view = Utils.player.get_viewport()
+	var screen = view.get_visible_rect().grow(-12.0)
+	var transform = view.get_canvas_transform()
+	var rotation_offset = rng.randf()*TAU
+	var rejected = {"offscreen":0,"fog":0,"unsafe":0,"wall":0}
+	for distance in [extent+ArenaHazards.MIN_EDGE_DISTANCE+12.0,140.0,160.0]:
+		for i in 24:
+			var candidate = player_at+Vector2.RIGHT.rotated(rotation_offset+i*TAU/24)*distance
+			if not screen.has_point(transform*candidate): rejected.offscreen += 1; continue
+			if candidate.distance_to(player_at)-extent > ArenaVisibility.fair_radius(): rejected.fog += 1; continue
+			if not _legal(candidate,extent,player_at,false): rejected.unsafe += 1; continue
+			if not Combat.clear_line(player_at,candidate): rejected.wall += 1; continue
+			return candidate
+	if Demo.test_mode or Smoke.probe: print("B16_PLACEMENT ",rejected," player_screen=",transform*player_at," screen=",screen)
+	return Vector2.INF

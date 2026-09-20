@@ -71,7 +71,9 @@ func _ready():
 		if AttachmentCatalog.quality(int(key)) == 3: max_legendary_upgrade = maxi(max_legendary_upgrade,int(AttachmentCatalog.PRICES[int(key)]))
 	for id in DemoConfig.TALENTS:
 		if DemoConfig.talent_quality(id) != 3: continue
-		check(DemoConfig.talent_gold_price(id,1) > max_legendary_upgrade,"legendary talent %d gold sits above the legendary upgrade band top (%d)"%[DemoConfig.talent_gold_price(id,1),max_legendary_upgrade])
+		var total = 0
+		for level in range(1,DemoConfig.TALENTS[id].max+1): total += DemoConfig.talent_gold_price(id,level)
+		check(total > max_legendary_upgrade,"complete legendary talent ladder exceeds legendary upgrade price "+id)
 	# --- the INITIAL_GOLD demo rule is untouched --------------------------------------------
 	check(DemoConfig.INITIAL_GOLD == 9999,"demo wallet constant unchanged")
 	check(DemoConfig.INITIAL_TALENT_POINTS == 9999,"demo talent-point wallet constant unchanged")

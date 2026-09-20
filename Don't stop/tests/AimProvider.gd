@@ -153,18 +153,8 @@ func _ready() -> void:
 		var script = node.get_script()
 		if script != null and script.resource_path == "res://game/other/Grenade.gd":
 			grenades.append(node)
-	check(grenades.size() == 1,
-		"right-click lob spawns exactly one grenade through the aim provider",
-		"found=%d" % grenades.size())
-	if grenades.size() == 1:
-		var grenade = grenades[0]
-		var target: Vector2 = grenade.target_position
-		check(target.distance_to(aim_before) < 0.01,
-			"the lob targets the value get_aim_world_position() returned for the click",
-			"target=%s provider=%s" % [target, aim_before])
-		check(Demo.grenade_cooldown > 0.0,
-			"the lob consumed its cooldown, so the call site really executed")
-		grenade.queue_free()
+	check(grenades.is_empty(), "B16 right-click cannot create a second A9 ability budget")
+	check(Demo.grenade_cooldown == 0.0, "right-click without a real hit does not consume the automatic cooldown")
 	await get_tree().process_frame
 
 	# -------------------------------------------------- Windows must not be redirected

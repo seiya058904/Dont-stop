@@ -81,17 +81,17 @@ func _ready():
 	for text in talent_cards: check("/" in text,"talent card shows rank x/y: "+text)
 	panel.upgrade_quality_filter = 3; panel.render()
 	var legendary := card_texts(panel).filter(func(t): return has_quality_prefix(t))
-	check(legendary.size()==5,"the legendary filter shows exactly the legendary talents")
+	check(legendary.size()==6,"the legendary filter shows exactly the legendary talents")
 	for text in legendary: check(text.begins_with("传说 "),"legendary cards are prefixed 传说")
 	panel.upgrade_quality_filter = 0; panel.render()
 	panel.selection = "T02"; panel.render()
 	detail = detail_text_of(panel)
 	check("稀有" in detail,"talent detail names its quality")
-	check("品质：稀有（价值等级；与当前等级独立）" in detail,"talent detail separates quality from rank")
+	check("稀有  0 / 3" in detail,"talent detail separates quality from rank")
 	check("0 / 3" in detail,"talent detail shows the current rank")
 	check("400金币 或 2天赋点" in detail,"talent detail shows the next-rank gold and point prices")
 	check(DemoConfig.talent_effect("T02",1) in detail,"talent detail states the next-rank effect")
-	check(find_button(panel,"金币购买") != null and find_button(panel,"天赋点升级") != null,"both purchase routes are offered")
+	check(find_button(panel,"400金币 | 购买") != null and find_button(panel,"2天赋点 | 升级") != null,"both purchase routes are offered")
 	# --- B13.1: the talent preview must equal the ACTUAL post-purchase value -----------------
 	# One weapon-stat talent (T01 → gun damage through EffectiveStats) and one player-stat
 	# talent (T07 → max HP through refresh()'s own delta). The number the panel showed

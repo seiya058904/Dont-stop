@@ -1,4 +1,5 @@
 extends Node2D
+var segments: Array = []
 var radius = 0.0
 var points: Array[Vector2] = []
 var life = 0.0
@@ -40,6 +41,8 @@ func _process(delta):
 	queue_redraw()
 func _draw():
 	var opacity = clampf(1.0-life/0.24,0,1)
+	for segment in segments:
+		draw_line(segment[0],segment[1],Color(color,opacity),width)
 	if radius > 0:
 		var expansion = clampf(life/0.14,0,1)
 		if not footprint.is_empty():

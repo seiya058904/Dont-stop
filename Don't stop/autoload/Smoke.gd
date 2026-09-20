@@ -89,6 +89,10 @@ func _ready() -> void:
 	print("[smoke] user_dir=", OS.get_user_data_dir())
 	print("[smoke] renderer=", ProjectSettings.get_setting("rendering/renderer/rendering_method"))
 	print("[smoke] save_state %s" % _save_state_line())
+	if "--b16-ui" in args:
+		Demo.test_mode = true
+		_b16_native_ui.call_deferred()
+		return
 	var stutter := "--stutter" in args
 	var tour := "--tour" in args
 	_run.call_deferred()
@@ -615,6 +619,17 @@ func _probe_report_rects() -> void:
 			# fresh Web profile needs all three, and the third click is the real "购买"/"装备" control
 			# the product builds.
 			_probe_report_rect("camp-weapon-tab", panel, "武器")
+			for page in [["talent","天赋"],["attachment","武器强化"],["magazine","弹匣补给"]]:
+				_probe_report_rect("camp-"+page[0]+"-tab",panel,page[1])
+			for item in panel.listing.get_children():
+				if item.has_meta("entry_key"): _probe_emit_rect("camp-entry-"+str(item.get_meta("entry_key")),item)
+			for index in panel.action_bar.get_child_count():
+				var action = panel.action_bar.get_child(index)
+				if action is Button: _probe_emit_rect("camp-action-"+str(index),action)
+			var camp_state = JSON.stringify({"tab":panel.tab,"selection":panel.selection,"rank":Demo.rank(panel.selection),"detail":panel.detail_scroll.size.y,"actions":panel.action_bar.size.y,"status":panel.action_status.text,"order":panel.detail_actions.keys()})
+			if camp_state != _last_camp_state:
+				_last_camp_state = camp_state
+				print("[camp] ",camp_state)
 			_probe_report_weapon(panel,0)
 			_probe_report_search(panel)
 			_probe_loadout_controls(panel)
@@ -639,6 +654,7 @@ func _probe_report_rects() -> void:
 ## cost two browser runs before it was instrumented.
 var _probe_rect_diag_at := -1000
 var _last_carry_state := ""
+var _last_camp_state := ""
 
 func _probe_loadout_controls(node: Node) -> void:
 	if node is Button:
@@ -1347,3 +1363,38 @@ func _run() -> void:
 		else:
 			Input.set_custom_mouse_cursor(null)
 			get_tree().quit(1)
+
+# Explicit native export acceptance driver; never restores or writes the real save.
+func _b16_native_ui():
+	await get_tree().create_timer(3.0).timeout
+	await _enter_camp_from_title()
+	await _wait_until(func(): return LevelServer.state == "CAMP",60000)
+	_tour_close_panels()
+	await get_tree().process_frame
+	Demo.try_purchase("weapon","0")
+	Demo.open_panel()
+	var output = "user://b16-native-ui"
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--b16-output="): output = arg.substr(13)
+	DirAccess.make_dir_recursive_absolute(output)
+	for resolution in [Vector2i(1280,720),Vector2i(1366,768),Vector2i(1536,864),Vector2i(1920,1080)]:
+		get_window().borderless = true
+		get_window().position = Vector2i.ZERO
+		get_window().size = resolution
+		for page in ["weapon","attachment","magazine","talent","stage"]:
+			Demo.ui.switch_tab(page)
+			if page == "talent": Demo.ui.selection = "T04"; Demo.ui.render()
+			await get_tree().create_timer(0.3).timeout
+			await RenderingServer.frame_post_draw
+			var image = get_viewport().get_texture().get_image()
+			image.save_png(output+"/%s-%d.png" % [page,resolution.x])
+			print("B16_NATIVE_UI ",page," window=",resolution," image=",image.get_size()," detail=",Demo.ui.detail_scroll.size," actions=",Demo.ui.action_bar.size)
+			await get_tree().create_timer(2.5).timeout
+		Demo.ui.switch_tab("talent"); Demo.ui.selection = "T04"
+		while Demo.rank("T04") < 3: Demo.try_purchase("talent","T04","points")
+		Demo.ui.render()
+		await get_tree().create_timer(0.3).timeout
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png(output+"/talent-max-%d.png" % resolution.x)
+	_tour_close_panels()
+	await Demo.quit_game()

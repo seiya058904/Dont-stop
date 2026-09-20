@@ -128,6 +128,7 @@ func split():
 		shard.spec = {"mode":"fragment"}
 		shard.context = context.duplicate(true)
 		shard.context.depth = 1
+		shard.context.native_attack = i < 3 and context.get("native_attack",false)
 		shard.context.damage *= spec.get("shard_ratio",0.35)
 		shard.context.crit = 0.0
 		shard.hurt = shard.context.damage

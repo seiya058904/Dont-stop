@@ -39,6 +39,7 @@ func apply_burn(source: String, amount: float, seconds: float, context: Dictiona
 	var saved = context.duplicate(true)
 	saved.damage = amount
 	saved.depth = 1
+	saved.native_attack = false
 	saved.crit = 0.0
 	saved.erase("burn")
 	var old = burns.get(source,{"tick":0.25})

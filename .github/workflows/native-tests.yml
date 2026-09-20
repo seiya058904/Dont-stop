@@ -161,6 +161,12 @@ jobs:
           run_case B14Rail
           run_case B14Feedback
           run_case B14EncounterContracts
+          run_case B16Camp
+          run_case B16Growth
+          run_case B16Pickup
+          run_case B16Save
+          run_case B16Effects
+          run_case B16CombatMix
           run_case M3Weapons
       - name: Upload contract logs
         if: always()

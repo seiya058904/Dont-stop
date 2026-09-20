@@ -94,7 +94,9 @@ func _ready():
 	check(Demo.try_purchase("attachment","9").success,"upgrade 9 purchases in camp")
 	LevelServer.state = "COMBAT"
 	Demo.grenade_cooldown = 0
-	check(Demo.fire_global_grenade(origin+Vector2(60,0)),"upgrade 9 unlocks the right-click grenade")
+	var blast_target = enemy(origin+Vector2(60,0),1000)
+	Combat.hit(blast_target,Utils.player.gun.shot_context())
+	check(Demo.grenade_cooldown > 0,"upgrade 9 automatically activates on an actual hit")
 	check(Demo.grenade_cooldown > 0,"grenade entered its cooldown")
 	for node in get_tree().root.get_children():
 		if node.get_script() and node.get_script().resource_path == "res://game/other/Grenade.gd": node.queue_free()

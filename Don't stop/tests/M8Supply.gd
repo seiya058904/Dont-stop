@@ -15,7 +15,10 @@ func _ready():
 		check(PlayerData.reserve_magazines==2 and gun.bullets_count==0,"cancelled reload spends nothing "+str(gun.weapon_id))
 		check(gun.effective==EffectiveStats.calculate(gun) and Demo.owned_global_upgrades.size()==24,"switch keeps all buffs "+str(gun.weapon_id))
 	LevelServer.state = "COMBAT"
-	check(Demo.fire_global_grenade(origin+Vector2(75,-10)),"global grenade works on current gun")
+	var blast_target = enemy(origin+Vector2(75,-10),1000)
+	Demo.grenade_cooldown = 0
+	Combat.hit(blast_target,Utils.player.gun.shot_context())
+	check(Demo.grenade_cooldown > 0,"global automatic blast works on current gun")
 	check(not Demo.fire_global_grenade(origin),"global grenade cooldown prevents repeats")
 	LevelServer.return_to_camp(); await wait(0.2)
 	check(get_tree().get_nodes_in_group("combat_transient").is_empty(),"global grenade leaves with combat")

@@ -193,7 +193,11 @@ func cancel_actions():
 func damage_context(depth = 0) -> Dictionary:
 	var context = {"gun":self,"tier":WeaponCatalog.tier(weapon_id),"damage":effective.damage,"crit":effective.crit,"impulse":effective.impulse,"impulse_time":knockback_time,"radius":effective.radius,"pierce":effective.get("pierce",0),"shards":effective.get("shards",0),"shard_ratio":effective.get("shard_ratio",0.25),"range_mul":effective.get("range",320.0)/320.0,"refill":effective.get("refill",0),"depth":depth,"epoch":LevelServer.epoch}
 
-	context.burn_talent = DemoConfig.talent_value("T15",Demo.rank("T15"))
+	context.native_attack = depth == 0
+	# Freeze one second of sustained output; limit crowd/volley multiplication.
+	var cycle = effective.magazine / maxf(0.1,effective.rate) + effective.reload
+	context.link_damage = clampf(effective.damage * projectile_count() * effective.magazine / cycle * 0.65, effective.damage, effective.damage * 12.0)
+	context.burn_talent = maxf(DemoConfig.talent_value("T15",Demo.rank("T15")),minf(0.6*Demo.rank("T15"),effective.damage*0.02*Demo.rank("T15")))
 	context.slow = DemoConfig.talent_value("T17",Demo.rank("T17"))
 	context.elite_bonus = DemoConfig.talent_value("T21",Demo.rank("T21"))
 	context.static_chance = DemoConfig.talent_value("T14",Demo.rank("T14"))

@@ -68,7 +68,11 @@ func hit(target, context: Dictionary) -> bool:
 			if reward.has_method("modify_direct"): amount += reward.modify_direct(target,amount)
 	amount = snappedf(amount,0.01)
 	damage_events += 1
+	var hp_before = target.HP
 	target.receive_damage(amount, critical, resolved_context)
+	if not target.training and hp_before > target.HP and context.get("native_attack",depth == 0):
+		Demo.linked_blast(target.global_position,resolved_context)
+		fission(target,resolved_context)
 	if depth == 0:
 		if not target.is_die:
 			if context.get("burn_talent",0.0) > 0: target.apply_burn("T15",context.burn_talent,DemoConfig.TALENTS.T15.seconds,context)
@@ -101,9 +105,15 @@ func secondary_hit(source, context: Dictionary, damage: float, talent: String):
 	var derived = context.duplicate(true)
 	derived.damage = damage
 	derived.depth = 1
+	derived.native_attack = false
 	derived.crit = 0.0
 	hit(nearest,derived)
-	trace([source.global_position,nearest.global_position],Color(0.4,0.85,1) if talent=="T14" else Color(0.9,0.65,1))
+	if talent == "T23":
+		var midpoint = (source.global_position+nearest.global_position)*0.5
+		var normal = source.global_position.direction_to(nearest.global_position).orthogonal()*5.0
+		trace([source.global_position,midpoint+normal,nearest.global_position,midpoint-normal,source.global_position],Color(0.9,0.65,1),1.0)
+	else:
+		trace([source.global_position,nearest.global_position],Color(0.4,0.85,1))
 
 func clear_line(from: Vector2, to: Vector2) -> bool:
 	# B11.1 test-only counters (game/diag/B11Probe.gd). Read-only: they observe this query, they do
@@ -192,6 +202,9 @@ func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: i
 		if count>=limit: break
 	# Closely spaced strips cover the visual width; damage uses continuous geometry above.
 	var strips = maxi(2,ceili(width/3.0))
+	var batch = load("res://game/effects/CombatEffect.gd").new()
+	batch.width = width/strips+0.3
+	batch.color = Color(0.55,0.85,1)
 	for i in strips:
 		var from = start+normal*lerpf(-width*0.5,width*0.5,(i+0.5)/strips)
 		if not clear_line(start,from): continue
@@ -200,7 +213,8 @@ func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: i
 		if exclusions_dirty: _refresh_exclusions()
 		query.exclude = actor_exclusions
 		var wall = gun.get_world_2d().direct_space_state.intersect_ray(query)
-		trace([from,wall.get("position",end)],Color(0.55,0.85,1),width/strips+0.3)
+		batch.segments.append([from,wall.get("position",end)])
+	get_tree().current_scene.add_child(batch)
 
 func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 	var length = gun.effective.range
@@ -229,6 +243,7 @@ func fragments(position: Vector2, angle: float, context: Dictionary, ignored, sp
 		var shard = load("res://game/bullets/SmpBullet.tscn").instantiate()
 		shard.context = context.duplicate(true)
 		shard.context.depth = 1
+		shard.context.native_attack = false
 		shard.context.shards = 0
 		shard.context.damage *= context.get("shard_ratio",0.25)
 		shard.context.crit = 0.0
@@ -240,10 +255,27 @@ func fragments(position: Vector2, angle: float, context: Dictionary, ignored, sp
 		shard.add_collision_exception_with(ignored)
 		shard.fire()
 
+var heat_cells: Dictionary = {}
+var heat_created := 0
 func heat_contact(point: Vector2):
+	var key = Vector2i(floori(point.x/8.0),floori(point.y/8.0))
+	if heat_cells.has(key):
+		var existing = heat_cells[key].get_ref()
+		if is_instance_valid(existing) and not existing.is_queued_for_deletion() and existing.epoch == LevelServer.epoch:
+			existing.age = 0.0
+			existing.global_position = point
+			return
+		heat_cells.erase(key)
+	if heat_cells.size() >= 32: return
 	var fx = load("res://game/effects/HeatContact.gd").new()
 	fx.global_position = point
 	get_tree().current_scene.add_child(fx)
+	heat_cells[key] = weakref(fx)
+	var identity = fx.get_instance_id()
+	fx.tree_exiting.connect(func():
+		var current = heat_cells.get(key)
+		if current and is_instance_valid(current.get_ref()) and current.get_ref().get_instance_id() == identity: heat_cells.erase(key),CONNECT_ONE_SHOT)
+	heat_created += 1
 
 func arc(gun, start: Vector2, direction: Vector2, snapshot: Dictionary = {}):
 	attacks += 1
@@ -279,6 +311,7 @@ func arc(gun, start: Vector2, direction: Vector2, snapshot: Dictionary = {}):
 		var context = snapshot.duplicate(true)
 		context.damage *= maxf(0.6,pow(0.9,node.hop))
 		context.depth = 0 if node.hop==0 else 1
+		context.native_attack = true
 		context.attack_id = attacks
 		if hit(node.target,context):
 			fx.contacts.append(node.point)
@@ -287,3 +320,19 @@ func arc(gun, start: Vector2, direction: Vector2, snapshot: Dictionary = {}):
 		var end = start+direction*minf(35,gun.effective.range)
 		if clear_line(start,end): fx.edges.append([start,end])
 	get_tree().current_scene.add_child(fx)
+
+func fission(source, context: Dictionary):
+	var gun = context.get("gun")
+	if not is_instance_valid(gun) or not "120" in Demo.owned_global_upgrades or Demo.cooldown("A120") > 0: return
+	if "straight" in gun.tags and "projectile" in gun.tags: return # Existing real fragments.
+	var direction = gun.gun_tip.global_position.direction_to(source.global_position)
+	var candidates = get_tree().get_nodes_in_group("monsters").filter(func(t):
+		return t != source and not t.is_die and source.global_position.distance_to(t.global_position)<=100.0 and direction.dot(source.global_position.direction_to(t.global_position))>=-0.1 and clear_line(source.global_position,t.global_position))
+	if candidates.is_empty(): return
+	candidates.sort_custom(func(a,b): return source.global_position.distance_squared_to(a.global_position)<source.global_position.distance_squared_to(b.global_position))
+	Demo.talent_cooldowns.A120 = 0.4
+	var derived = context.duplicate(true)
+	derived.depth = 1; derived.native_attack = false; derived.crit = 0.0
+	derived.damage = maxf(context.damage*0.35,context.get("link_damage",context.damage)*0.16)
+	for target in candidates.slice(0,2):
+		if hit(target,derived): trace([source.global_position,target.global_position],Color(0.65,1.0,0.8),2.0)

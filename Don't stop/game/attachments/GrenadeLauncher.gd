@@ -4,11 +4,9 @@ var can_shoot = true
 
 const pre = preload("res://game/other/Grenade.tscn")
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not get_tree().paused and not Utils.player.is_dead and Demo.pause_stack.is_empty() and Utils.is_gameplay_mouse_mode() and event.is_action_pressed("mouse_right") && can_shoot && gun != null && gun.is_use:
-		can_shoot = false
-		$Timer.start()
-		openFire()
+func _unhandled_input(_event: InputEvent) -> void:
+	# B16: legacy attachment scenes cannot bypass the automatic A9 budget.
+	pass
 
 func _on_timer_timeout() -> void:
 	can_shoot = true

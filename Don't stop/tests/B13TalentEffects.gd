@@ -54,7 +54,7 @@ func _ready():
 	check(PlayerData.player_hp_max==5+3,"T07 HP magnitude is the catalog value")
 	check(is_equal_approx(Utils.player.SPEED,100*PlayerData.player_speed+100*DemoConfig.talent_value("T08",3)),"T08 speed magnitude is the catalog value")
 	var inspect = EffectiveStats.inspect(gun)
-	check(is_equal_approx(float(inspect.player.pickup_multiplier),1.0+DemoConfig.talent_value("T09",3)),"T09 pickup magnitude is the catalog value")
+	check(is_equal_approx(float(inspect.player.coin_radius),DemoConfig.talent_value("T09",3)),"T09 pickup magnitude is the catalog value")
 	check(is_equal_approx(gun.effective.impulse,base.impulse*(1.0+DemoConfig.talent_value("T18",3))),"T18 impulse magnitude is the catalog value")
 	# --- conditional values --------------------------------------------------------------
 	ranks({"T10":3})

@@ -45,6 +45,7 @@ func _enter_tree():
 		get_window().mouse_passthrough = true
 func boot():
 	Demo.test_mode = true; seed(808)
+	Demo.save_path = "user://runtime-fixture-camp.json"
 	play_view = SubViewport.new(); play_view.size = Vector2i(410,230); play_view.world_2d = get_viewport().world_2d
 	play_view.render_target_update_mode = SubViewport.UPDATE_ALWAYS if DisplayServer.get_name() != "headless" else SubViewport.UPDATE_DISABLED
 	add_child(play_view); play_view.add_child(load("res://game/map/Main.tscn").instantiate()); Utils.gameStart(); await wait(0.3)

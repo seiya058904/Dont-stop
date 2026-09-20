@@ -66,7 +66,7 @@ func _ready():
 	await wait(0.1)
 	check(PlayerData.gold == gold_before,"T09 absent does not collect outside base radius")
 	ranks({"T09":3})
-	await wait(0.1)
+	await wait(0.6)
 	check(PlayerData.gold == gold_before+1,"T09 expanded radius collects actual coin")
 	var barrier = wall(origin+Vector2(-15,0),Vector2(3,100))
 	coin = load("res://game/items/Gold.tscn").instantiate(); coin.position = origin-Vector2(30,0); add_child(coin)

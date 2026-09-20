@@ -15,6 +15,7 @@ var talents: Dictionary = {}
 var purchases: Array = []
 var owned_global_upgrades: Array = []
 var grenade_cooldown = 0.0
+var shield_age = 6.0
 var next_instance = 1
 var campaign_complete = false
 ## Set when Stage 40 is cleared. Persisted as an OPTIONAL field: schema_version stays 6,
@@ -99,7 +100,9 @@ func ready_trigger(id: String) -> bool:
 	return true
 
 func shield_hit(amount: float) -> bool:
-	return amount > 0 and rank("T19") > 0 and ready_trigger("T19")
+	if amount <= 0 or rank("T19") <= 0 or not ready_trigger("T19"): return false
+	shield_age = 0.0
+	return true
 
 func talent_status(id: String) -> String:
 	if rank(id) == 0: return "当前未解锁"
@@ -184,6 +187,7 @@ func _process(delta):
 	if not Input.is_action_pressed("shoot"): fire_released = true
 	if get_tree().paused: return
 	grenade_cooldown = maxf(0,grenade_cooldown-delta)
+	shield_age += delta
 	for id in talent_cooldowns: talent_cooldowns[id] = maxf(0,talent_cooldowns[id]-delta)
 	crowd_clock -= delta
 	if crowd_clock <= 0:
@@ -339,7 +343,9 @@ func on_kill(monster, context: Dictionary):
 		kill_stacks = mini(DemoConfig.TALENTS.T10.stacks,kill_stacks+1)
 		stack_time = DemoConfig.TALENTS.T10.seconds
 		refresh()
-	if context.get("depth",0) != 0: return
+	if not context.get("native_attack",context.get("depth",0) == 0): return
+	if rank("T19") > 0 and cooldown("T19") > 0:
+		talent_cooldowns.T19 = maxf(maxf(0.0,2.0-shield_age),cooldown("T19")-0.35)
 	if rank("T11") > 0:
 		ammo_kills += 1
 		if ammo_kills >= DemoConfig.TALENTS.T11.kills:
@@ -349,7 +355,7 @@ func on_kill(monster, context: Dictionary):
 	if is_instance_valid(gun) and context.get("refill",0) > 0 and cooldown("A24") <= 0:
 		talent_cooldowns.A24 = AttachmentCatalog.DEFINITIONS[124].cooldown
 		var ammo_before=gun.bullets_count
-		gun.bullets_count = mini(gun.bullets_max_count,gun.bullets_count+1)
+		gun.bullets_count = mini(gun.bullets_max_count,gun.bullets_count+clampi(ceili(gun.bullets_max_count*0.08),1,6))
 		if gun.bullets_count>ammo_before:
 			preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,Utils.player.global_position,12,Vector2.UP,"refill")
 	if rank("T24") > 0 and heal_cooldown <= 0:
@@ -360,7 +366,7 @@ func on_kill(monster, context: Dictionary):
 			preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,Utils.player.global_position,12,Vector2.UP,"heal")
 	if rank("T16") > 0 and blast_cooldown <= 0:
 		blast_cooldown = DemoConfig.TALENTS.T16.cooldown
-		Combat.explosion(monster.global_position,DemoConfig.TALENTS.T16.radius,DemoConfig.TALENTS.T16.damage,context.get("gun"),1)
+		Combat.explosion(monster.global_position,DemoConfig.TALENTS.T16.radius,maxf(DemoConfig.TALENTS.T16.damage,minf(12.0,context.get("damage",0.0)*0.25)),context.get("gun"),1)
 
 func snapshot() -> Dictionary:
 	var weapons = []
@@ -767,19 +773,23 @@ func _notification(what):
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and Utils.is_game_start and LevelServer.state == "COMBAT" and pause_stack.is_empty():
 		open_panel()
 
-func fire_global_grenade(point: Vector2) -> bool:
-	if not "9" in owned_global_upgrades or grenade_cooldown > 0 or get_tree().paused or not is_instance_valid(Utils.player) or Utils.player.is_dead or not Utils.player.gun: return false
-	if LevelServer.state != "COMBAT": return false
-	grenade_cooldown = 2.0
-	var grenade = load("res://game/other/Grenade.tscn").instantiate()
-	grenade.hurt = Utils.player.gun.effective.damage*0.35
-	grenade.global_position = Utils.player.gun.global_position
-	get_tree().current_scene.add_child(grenade)
-	grenade.launch(point)
+func linked_blast(point: Vector2, context: Dictionary) -> bool:
+	if not "9" in owned_global_upgrades or grenade_cooldown > 0 or get_tree().paused: return false
+	if LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or Utils.player.is_dead or not Utils.player.gun: return false
+	if context.get("epoch",-1) != LevelServer.epoch: return false
+	grenade_cooldown = 1.75
+	var derived = context.duplicate(true)
+	derived.damage = context.get("link_damage",context.damage)
+	derived.depth = 1
+	derived.native_attack = false
+	derived.crit = 0.0
+	Combat.explosion_context(point,44.0,derived)
 	return true
+
+func fire_global_grenade(_point: Vector2) -> bool:
+	# Retained for callers of the old API; A9 now resolves only from successful hits.
+	return false
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		print("[leave] demo saw a mouse press at %s" % str(event.position))
-	if event.is_action_pressed("mouse_right") and pause_stack.is_empty() and is_instance_valid(Utils.player):
-		if fire_global_grenade(Utils.get_aim_world_position()): get_viewport().set_input_as_handled()

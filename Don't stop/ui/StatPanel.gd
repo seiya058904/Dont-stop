@@ -58,7 +58,7 @@ func render():
 		label(listing,"Lv.%d · EXP %.1f / %.1f\n生命 %.1f / %.1f\n奖励点 %d" % [p.level,p.exp,p.exp_max,p.hp,p.max_hp,p.points])
 		label(listing,"普通入伤 ×%.4f\nBoss普通入伤 ×%.4f\n百分比大招独立，再经过护盾/减伤。" % [p.normal_incoming,p.boss_incoming])
 		label(listing,"护盾："+(("就绪" if p.shield_cooldown<=0 else "%.1fs" % p.shield_cooldown) if p.shield_unlocked else "未解锁"))
-		label(listing,"吸附半径 ×%.2f\n备用弹匣 %d" % [p.pickup_multiplier,p.reserve_magazines])
+		label(listing,"金币吸引半径 %.0f\n备用弹匣 %d" % [p.coin_radius,p.reserve_magazines])
 		stats=["max_hp","speed","damage","crit","pickup"]
 	else:
 		var preview=TextureRect.new(); preview.texture=gun.image; preview.custom_minimum_size=Vector2(120,30); preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE; preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED; preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; listing.add_child(preview)

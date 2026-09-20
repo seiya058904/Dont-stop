@@ -7,7 +7,7 @@
 [node name="UniversalExtendedMagazines" type="Node2D"]
 script = ExtResource("1_4cecu")
 am_id = 9
-am_name = "下挂榴弹模块"
+am_name = "联动爆破核心"
 am_image = ExtResource("2_uuw0x")
 am_type = "WEAPON_UNDERBARREL"
 am_info = "INFO_GRENADE LAUNCHER"
