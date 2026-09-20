@@ -95,6 +95,8 @@ func _ready():
 	LevelServer.return_to_camp()
 	await wait(0.3)
 	var town = LevelServer.town
+	# E14 is introduced at 32; the shared factory now enforces this for fixtures too.
+	LevelServer.level = 32
 	LevelServer.state = "COMBAT"
 	Utils.player.global_position = town.global_position+Vector2(0.0,-40.0)
 	var sentinel = M5Content.spawn("E14",town.monster_root,Utils.player.global_position+Vector2(200.0,0.0))

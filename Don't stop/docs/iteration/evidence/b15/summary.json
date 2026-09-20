@@ -1,0 +1,1694 @@
+{
+  "horde": [
+    {
+      "id": 6,
+      "build": "bare",
+      "seconds": 9.995,
+      "kills": 58,
+      "kills_per_s": 5.80290145072536,
+      "reloads": 0,
+      "reload_s": 0.0,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 63,
+      "kills_per_s": 6.30189056717015,
+      "reloads": 0,
+      "reload_s": 0.0,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "build": "bare",
+      "seconds": 9.998,
+      "kills": 63,
+      "kills_per_s": 6.30126025205041,
+      "reloads": 2,
+      "reload_s": 2.16299999999999,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 66,
+      "kills_per_s": 6.60132026405281,
+      "reloads": 1,
+      "reload_s": 0.725000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 46,
+      "kills_per_s": 4.60138041412424,
+      "reloads": 1,
+      "reload_s": 1.799,
+      "hp_damage": 6.14468749998196,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 49,
+      "kills_per_s": 4.90098019603921,
+      "reloads": 0,
+      "reload_s": 0.0,
+      "hp_damage": 3.68681249998917,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 51,
+      "kills_per_s": 5.10153045913774,
+      "reloads": 1,
+      "reload_s": 1.5,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 57,
+      "kills_per_s": 5.70114022804561,
+      "reloads": 1,
+      "reload_s": 0.787000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "build": "bare",
+      "seconds": 9.999,
+      "kills": 37,
+      "kills_per_s": 3.7003700370037,
+      "reloads": 1,
+      "reload_s": 1.80099999999999,
+      "hp_damage": 3.68681249998917,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 53,
+      "kills_per_s": 5.30106021204241,
+      "reloads": 1,
+      "reload_s": 0.932000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "build": "bare",
+      "seconds": 9.998,
+      "kills": 62,
+      "kills_per_s": 6.20124024804961,
+      "reloads": 1,
+      "reload_s": 1.99999999999999,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 64,
+      "kills_per_s": 6.40192057617285,
+      "reloads": 1,
+      "reload_s": 0.362,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "build": "bare",
+      "seconds": 9.998,
+      "kills": 26,
+      "kills_per_s": 2.6005201040208,
+      "reloads": 1,
+      "reload_s": 1.006,
+      "hp_damage": 1.22893749999639,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 66,
+      "kills_per_s": 6.60198059417825,
+      "reloads": 1,
+      "reload_s": 0.519,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "build": "bare",
+      "seconds": 9.998,
+      "kills": 13,
+      "kills_per_s": 1.3002600520104,
+      "reloads": 3,
+      "reload_s": 2.30499999999999,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 58,
+      "kills_per_s": 5.80174052215665,
+      "reloads": 2,
+      "reload_s": 1.036,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "build": "bare",
+      "seconds": 9.992,
+      "kills": 13,
+      "kills_per_s": 1.30104083266613,
+      "reloads": 1,
+      "reload_s": 1.011,
+      "hp_damage": 3.58063124999171,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 57,
+      "kills_per_s": 5.70114022804561,
+      "reloads": 1,
+      "reload_s": 0.519,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "build": "bare",
+      "seconds": 9.992,
+      "kills": 20,
+      "kills_per_s": 2.00160128102482,
+      "reloads": 1,
+      "reload_s": 1.007,
+      "hp_damage": 2.45787499999278,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 65,
+      "kills_per_s": 6.50130026005201,
+      "reloads": 1,
+      "reload_s": 0.519,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "build": "bare",
+      "seconds": 9.998,
+      "kills": 51,
+      "kills_per_s": 5.10102020404081,
+      "reloads": 1,
+      "reload_s": 1.007,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 63,
+      "kills_per_s": 6.30126025205041,
+      "reloads": 1,
+      "reload_s": 0.52,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 23,
+      "kills_per_s": 2.30069020706212,
+      "reloads": 3,
+      "reload_s": 3.02499999999998,
+      "hp_damage": 1.22893749999639,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 57,
+      "kills_per_s": 5.70114022804561,
+      "reloads": 3,
+      "reload_s": 1.557,
+      "hp_damage": 1.22893749999639,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 49,
+      "kills_per_s": 4.90147044113234,
+      "reloads": 1,
+      "reload_s": 1.2,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 63,
+      "kills_per_s": 6.30126025205041,
+      "reloads": 1,
+      "reload_s": 0.625,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "build": "bare",
+      "seconds": 9.998,
+      "kills": 14,
+      "kills_per_s": 1.4002800560112,
+      "reloads": 9,
+      "reload_s": 8.20399999999991,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 58,
+      "kills_per_s": 5.80116023204641,
+      "reloads": 7,
+      "reload_s": 3.62899999999997,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 25,
+      "kills_per_s": 2.50075022506752,
+      "reloads": 3,
+      "reload_s": 2.33899999999999,
+      "hp_damage": 2.45787499999278,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 62,
+      "kills_per_s": 6.20124024804961,
+      "reloads": 2,
+      "reload_s": 1.038,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "build": "bare",
+      "seconds": 9.996,
+      "kills": 41,
+      "kills_per_s": 4.1016406562625,
+      "reloads": 1,
+      "reload_s": 1.401,
+      "hp_damage": 2.45787499999278,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 55,
+      "kills_per_s": 5.50165049514855,
+      "reloads": 1,
+      "reload_s": 0.725000000000001,
+      "hp_damage": 1.22893749999639,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "build": "bare",
+      "seconds": 9.999,
+      "kills": 41,
+      "kills_per_s": 4.1004100410041,
+      "reloads": 1,
+      "reload_s": 1.6,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 50,
+      "kills_per_s": 5.00150045013504,
+      "reloads": 1,
+      "reload_s": 0.838000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 17,
+      "kills_per_s": 1.70051015304591,
+      "reloads": 1,
+      "reload_s": 1.401,
+      "hp_damage": 3.68681249998917,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 58,
+      "kills_per_s": 5.80116023204641,
+      "reloads": 1,
+      "reload_s": 0.725000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 51,
+      "kills_per_s": 5.10153045913774,
+      "reloads": 1,
+      "reload_s": 1.4,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "build": "late",
+      "seconds": 9.997,
+      "kills": 61,
+      "kills_per_s": 6.10183054916475,
+      "reloads": 1,
+      "reload_s": 0.724000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 41,
+      "kills_per_s": 4.10123036911073,
+      "reloads": 1,
+      "reload_s": 1.501,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 61,
+      "kills_per_s": 6.10122024404881,
+      "reloads": 1,
+      "reload_s": 0.782000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 45,
+      "kills_per_s": 4.50135040512154,
+      "reloads": 1,
+      "reload_s": 1.7,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 55,
+      "kills_per_s": 5.50110022004401,
+      "reloads": 1,
+      "reload_s": 0.874000000000001,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "build": "bare",
+      "seconds": 9.997,
+      "kills": 54,
+      "kills_per_s": 5.40162048614584,
+      "reloads": 1,
+      "reload_s": 1.312,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "build": "late",
+      "seconds": 9.992,
+      "kills": 59,
+      "kills_per_s": 5.90472377902322,
+      "reloads": 1,
+      "reload_s": 0.669,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "build": "bare",
+      "seconds": 9.999,
+      "kills": 34,
+      "kills_per_s": 3.4003400340034,
+      "reloads": 1,
+      "reload_s": 1.206,
+      "hp_damage": 3.68681249998917,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "build": "late",
+      "seconds": 9.999,
+      "kills": 63,
+      "kills_per_s": 6.3006300630063,
+      "reloads": 1,
+      "reload_s": 0.626,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "build": "bare",
+      "seconds": 9.994,
+      "kills": 61,
+      "kills_per_s": 6.10366219731839,
+      "reloads": 1,
+      "reload_s": 1.799,
+      "hp_damage": 1.22893749999639,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "build": "late",
+      "seconds": 9.998,
+      "kills": 65,
+      "kills_per_s": 6.50130026005201,
+      "reloads": 0,
+      "reload_s": 0.0,
+      "hp_damage": 0.0,
+      "role_stats": [
+        {
+          "hp": 2.0,
+          "role": "E01",
+          "speed": 103.5
+        },
+        {
+          "hp": 1.2,
+          "role": "E02",
+          "speed": 105.0
+        }
+      ]
+    }
+  ],
+  "heavy_targets": [
+    {
+      "damage": 71.5500000000175,
+      "id": 121,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 71.5500000000175,
+      "id": 121,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 247.499999999854,
+      "id": 122,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 247.499999999854,
+      "id": 122,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 171.000000000349,
+      "id": 124,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 171.000000000349,
+      "id": 124,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 128.25,
+      "id": 111,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 128.25,
+      "id": 111,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 572.400000000052,
+      "id": 113,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 572.400000000052,
+      "id": 113,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 59.8500000000204,
+      "id": 115,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 59.8500000000204,
+      "id": 115,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 92.9500000002736,
+      "id": 116,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 92.9500000002736,
+      "id": 116,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 75.25,
+      "id": 117,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 75.25,
+      "id": 117,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 68.4000000000524,
+      "id": 118,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 68.4000000000524,
+      "id": 118,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 65.9999999999854,
+      "id": 119,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 65.9999999999854,
+      "id": 119,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 379.43999999977,
+      "id": 120,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 379.43999999977,
+      "id": 120,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 99.359999999986,
+      "id": 112,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 99.359999999986,
+      "id": 112,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 90.2999999999884,
+      "id": 114,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 90.2999999999884,
+      "id": 114,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 35.3600000001024,
+      "id": 123,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 33.150000000096,
+      "id": 123,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 30.6000000000495,
+      "id": 0,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 30.6000000000495,
+      "id": 0,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 6.50000000001455,
+      "id": 1,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 6.50000000001455,
+      "id": 1,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 44.5199999999895,
+      "id": 2,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 44.5199999999895,
+      "id": 2,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 22.3999999999069,
+      "id": 3,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 22.3999999999069,
+      "id": 3,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 71.5300000000134,
+      "id": 4,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 71.5300000000134,
+      "id": 4,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 22.0799999999581,
+      "id": 5,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 22.0799999999581,
+      "id": 5,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 74.2900000000664,
+      "id": 6,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 74.2900000000664,
+      "id": 6,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 50.0499999997555,
+      "id": 7,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 48.6199999997625,
+      "id": 7,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 13.4399999999878,
+      "id": 8,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 13.4399999999878,
+      "id": 8,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 19.2000000000698,
+      "id": 9,
+      "kind": "elite",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    },
+    {
+      "damage": 20.0000000000728,
+      "id": 9,
+      "kind": "boss",
+      "method": "stationary high-HP target with elite/boss flag; not a real Boss fight",
+      "seconds": 3.5
+    }
+  ],
+  "milestones": [
+    {
+      "stage": 5,
+      "weapon": 115,
+      "seconds": 18.011,
+      "completed": false,
+      "dead": false,
+      "live_peak": 4,
+      "special_peak": 1,
+      "ordinary_alive_time_fraction": 0.899838391093554
+    },
+    {
+      "stage": 10,
+      "weapon": 115,
+      "seconds": 18.004,
+      "completed": false,
+      "dead": false,
+      "live_peak": 1,
+      "special_peak": 1,
+      "ordinary_alive_time_fraction": 0.0
+    },
+    {
+      "stage": 15,
+      "weapon": 115,
+      "seconds": 18.005,
+      "completed": false,
+      "dead": false,
+      "live_peak": 2,
+      "special_peak": 0,
+      "ordinary_alive_time_fraction": 1.0
+    },
+    {
+      "stage": 20,
+      "weapon": 115,
+      "seconds": 18.003,
+      "completed": false,
+      "dead": false,
+      "live_peak": 4,
+      "special_peak": 1,
+      "ordinary_alive_time_fraction": 0.23772817754437
+    },
+    {
+      "stage": 25,
+      "weapon": 115,
+      "seconds": 18.0,
+      "completed": false,
+      "dead": false,
+      "live_peak": 20,
+      "special_peak": 3,
+      "ordinary_alive_time_fraction": 0.921870202640468
+    },
+    {
+      "stage": 29,
+      "weapon": 115,
+      "seconds": 18.0,
+      "completed": false,
+      "dead": false,
+      "live_peak": 40,
+      "special_peak": 3,
+      "ordinary_alive_time_fraction": 0.910304127686683
+    },
+    {
+      "stage": 30,
+      "weapon": 115,
+      "seconds": 18.005,
+      "completed": false,
+      "dead": false,
+      "live_peak": 1,
+      "special_peak": 1,
+      "ordinary_alive_time_fraction": 0.0
+    },
+    {
+      "stage": 31,
+      "weapon": 115,
+      "seconds": 18.005,
+      "completed": false,
+      "dead": false,
+      "live_peak": 26,
+      "special_peak": 3,
+      "ordinary_alive_time_fraction": 0.858238717679608
+    },
+    {
+      "stage": 35,
+      "weapon": 115,
+      "seconds": 18.007,
+      "completed": false,
+      "dead": false,
+      "live_peak": 54,
+      "special_peak": 4,
+      "ordinary_alive_time_fraction": 0.892408451672441
+    },
+    {
+      "stage": 39,
+      "weapon": 115,
+      "seconds": 18.005,
+      "completed": false,
+      "dead": false,
+      "live_peak": 84,
+      "special_peak": 4,
+      "ordinary_alive_time_fraction": 0.943526596268171
+    },
+    {
+      "stage": 40,
+      "weapon": 115,
+      "seconds": 18.004,
+      "completed": false,
+      "dead": false,
+      "live_peak": 1,
+      "special_peak": 1,
+      "ordinary_alive_time_fraction": 0.0
+    }
+  ],
+  "fixed_performance": {
+    "after": {
+      "renderer": "forward_plus",
+      "window": [
+        15,
+        105
+      ],
+      "emitted": 430,
+      "frame": {
+        "n": 14383,
+        "mean": 6.257393659180977,
+        "p95": 7.026,
+        "p99": 7.399,
+        "max": 13.036
+      },
+      "process_proxy": {
+        "n": 14383,
+        "mean": 7.899908155461309,
+        "p95": 12.482,
+        "p99": 13.026,
+        "max": 13.761
+      },
+      "physics_proxy": {
+        "n": 14383,
+        "mean": 0.9469858165890287,
+        "p95": 1.311,
+        "p99": 1.39,
+        "max": 1.39
+      }
+    },
+    "b15": {
+      "renderer": "forward_plus",
+      "window": [
+        15,
+        105
+      ],
+      "emitted": 430,
+      "frame": {
+        "n": 14385,
+        "mean": 6.256527007299271,
+        "p95": 7.081,
+        "p99": 7.471,
+        "max": 14.425
+      },
+      "process_proxy": {
+        "n": 14385,
+        "mean": 7.930863885992353,
+        "p95": 12.852,
+        "p99": 13.521,
+        "max": 13.521
+      },
+      "physics_proxy": {
+        "n": 14385,
+        "mean": 0.9563907542579075,
+        "p95": 1.287,
+        "p99": 1.326,
+        "max": 2.063
+      }
+    }
+  },
+  "product_performance": [
+    {
+      "tag": "b15-product39",
+      "stage": 39,
+      "weapon": 116,
+      "seconds": 44.934,
+      "completed": true,
+      "dead": false,
+      "live_peak": 74,
+      "special_peak": 4,
+      "window": "5 seconds to end; new product load, not fixed-load A/B",
+      "frame": {
+        "n": 6357,
+        "mean": 6.2798489853704575,
+        "p95": 9.0,
+        "p99": 10.0,
+        "max": 96.0
+      },
+      "largest_samples": [
+        [
+          7.58,
+          96.0,
+          7.911,
+          1.73
+        ],
+        [
+          7.105,
+          33.0,
+          7.911,
+          1.73
+        ],
+        [
+          17.556,
+          16.0,
+          10.613,
+          2.143
+        ]
+      ]
+    },
+    {
+      "tag": "b15-product40",
+      "stage": 40,
+      "weapon": 112,
+      "seconds": 47.004,
+      "completed": false,
+      "dead": false,
+      "live_peak": 1,
+      "special_peak": 1,
+      "window": "5 seconds to end; new product load, not fixed-load A/B",
+      "frame": {
+        "n": 6703,
+        "mean": 6.265851111442638,
+        "p95": 8.0,
+        "p99": 8.0,
+        "max": 34.0
+      },
+      "largest_samples": [
+        [
+          9.813,
+          34.0,
+          7.101,
+          0.717
+        ],
+        [
+          17.437,
+          14.0,
+          12.449,
+          0.651
+        ],
+        [
+          28.437,
+          14.0,
+          11.903,
+          0.906
+        ]
+      ]
+    },
+    {
+      "tag": "b15-product39-repeat",
+      "stage": 39,
+      "weapon": 116,
+      "seconds": 44.948,
+      "completed": true,
+      "dead": false,
+      "live_peak": 65,
+      "special_peak": 4,
+      "window": "5 seconds to end; new product load, not fixed-load A/B",
+      "frame": {
+        "n": 6383,
+        "mean": 6.256149146169513,
+        "p95": 8.0,
+        "p99": 9.0,
+        "max": 33.0
+      },
+      "largest_samples": [
+        [
+          6.37,
+          33.0,
+          8.247,
+          1.418
+        ],
+        [
+          27.858,
+          15.0,
+          7.978,
+          7.249
+        ],
+        [
+          10.444,
+          14.0,
+          8.388,
+          1.644
+        ]
+      ]
+    }
+  ],
+  "limitations": [
+    "Historical three CPU proxy failures remain open",
+    "True per-frame CPU/GPU unavailable",
+    "39 product run has a 96ms long frame; attribution remains open",
+    "Initial thermal renderer failed triangulation; corrected local-coordinate rerun supersedes only its two rows",
+    "Moving horde uses durable observer; milestone runs use normal HP; neither is human acceptance"
+  ],
+  "HUMAN_ACCEPTED": false
+}

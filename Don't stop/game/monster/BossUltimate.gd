@@ -33,6 +33,9 @@ func _ready():
 	if role == "B02": fraction = 0.28; radius = 18.0
 	elif role == "B03": fraction = 0.33; warning = 1.5
 	elif role == "B04":
+		# The sole safe-zone event has priority over environmental meteor warnings.
+		for hazard in get_tree().get_nodes_in_group("stage_hazard"):
+			if hazard.kind == "meteor": hazard.queue_free()
 		fraction = 0.30; warning = 1.9; radius = 300.0; safe_radius = 74.0
 		safe_center = Utils.player.global_position
 		safe_drift = Vector2.RIGHT.rotated(randf()*TAU)*24.0

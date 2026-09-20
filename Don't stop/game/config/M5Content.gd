@@ -25,6 +25,8 @@ const HORDES = {
 	39:{"batch":18,"window":1.5,"step":0.14,"floor":20,"windows":6}
 }
 
+const FIRST_APPEARANCE = {"E01":1,"E02":1,"E03":6,"E04":4,"E05":3,"E06":7,"E07":16,"E08":17,"E09":12,"E10":13,"E11":11,"E12":18,"E13":31,"E14":32,"E15":33}
+
 const ENEMIES = {
 	"E01":{"name":"追击者","hp":2.0,"speed":90.0,"role":"近战追击"},
 	"E02":{"name":"轻型蜂群","hp":1.2,"speed":105.0,"role":"成群接触"},
@@ -123,6 +125,7 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 		push_warning("[spawn] %s refused: non-finite point %s" % [id, str(point)])
 		return null
 	var requested_id = id
+	if not id.begins_with("B") and LevelServer.level < int(FIRST_APPEARANCE.get(id,1)): id = "E01"
 	var pressure = encounter_pressure(LevelServer.level)
 	if pressure.has("special_cap"):
 		var mix = living_mix(parent.get_tree())
@@ -145,8 +148,6 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	# damped axis, while telegraphed attacks read `damage_scale` at full weight.
 	var contact := 1.0
 	if hell:
-		actor.HP *= HellMode.hp_scale(LevelServer.level)
-		actor.SPEED *= HellMode.speed_scale(LevelServer.level)
 		actor.damage_scale = HellMode.damage_scale(LevelServer.level)
 		contact = 1.0+(HellMode.damage_scale(LevelServer.level)-1.0)*DemoConfig.CONTACT_DAMAGE_WEIGHT_HELL
 		actor.set_meta("hell",LevelServer.level)
@@ -157,15 +158,17 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	actor.set_meta("spawn_epoch",LevelServer.epoch)
 	actor.set_meta("born_ms",Time.get_ticks_msec())
 	actor.position = parent.to_local(point)
-	# Per-stage chase pressure, table driven instead of the old hardcoded [27,28,29].
-	if float(pressure.get("chase_speed",1.0)) != 1.0 and id in ["E01","E02"]:
-		actor.SPEED *= float(pressure.chase_speed)
 	if is_instance_valid(LevelServer.town): actor.setDeathCallBack(LevelServer.town.onMonsterDeath)
 	parent.add_child(actor)
-	# E02's _ready restores its base speed. Apply the authorized late chase tuning
-	# AFTER initialization, with an absolute ceiling; leave stages 1/2 and HP alone.
-	if pressure.has("special_cap") and id in ["E01","E02"]:
-		actor.SPEED = minf(112.0,d.speed*float(pressure.chase_speed))
+	# All subclass ready methods have finished. Apply the authored final values once.
+	var hp_scale = HellMode.hp_scale(LevelServer.level) if hell else 1.0
+	var speed_scale = HellMode.speed_scale(LevelServer.level) if hell else 1.0
+	if id in ["E01","E02"]: speed_scale *= float(pressure.get("chase_speed",1.0))
+	actor.HP = d.hp*hp_scale
+	actor.SPEED = minf(132.0,d.speed*speed_scale) if id in ["E01","E02"] else d.speed*speed_scale
+	if actor.get("max_hp") != null: actor.max_hp = actor.HP
+	actor.set_meta("initialized_hp",actor.HP)
+	actor.set_meta("initialized_speed",actor.SPEED)
 	return actor
 
 static func living_mix(tree: SceneTree) -> Dictionary:
@@ -182,6 +185,10 @@ static func special_budget(mix: Dictionary) -> int:
 	return mini(cap,maxi(1,int(floor((mix.ordinary+1)*0.18))))
 
 static func can_promote(actor) -> bool:
+	if LevelServer.level < 5: return false
+	var cap = int(elite_plan(LevelServer.level).get("cap",0))
+	var live = actor.get_tree().get_nodes_in_group("monsters").filter(func(m): return m.is_elite and not m.is_boss and not m.is_die).size()
+	if live >= cap: return false
 	if not encounter_pressure(LevelServer.level).has("special_cap"): return true
 	if actor.get_meta("content_id","") not in ["E01","E02"]: return true
 	var mix = living_mix(actor.get_tree())
@@ -304,18 +311,19 @@ static func encounters() -> Dictionary:
 		39:{"name":"R8 · 39 核心暴走","region":"R8","info":"HELL；生存45秒；高密度精英配合危险带，必须靠视野判断；敌群 E01 E02 E14 E02 E13 E01 E02 E15 E02 E10","seconds":45,"roles":["E01","E02","E14","E02","E13","E01","E02","E15","E02","E10"],"cap":84,"interval":0.26,"rhythm":"三段","hell":true,"flank":true,"elite":{"start":14.0,"interval":10.0,"cap":3},"pressure":{"horde_simple":0.42,"ring_min":110.0,"chase_speed":1.15}},
 		40:{"name":"R8 · 40 深渊核心体","region":"R8","info":"HELL FINAL BOSS；三阶段；迷雾中移动安全区；击败后 HELL COMPLETE；敌群 ","seconds":0,"roles":[],"cap":24,"interval":1.40,"rhythm":"Boss","boss":"B04","hell":true,"flank":true}
 	}
-	for stage in range(21,40):
+	for stage in range(3,40):
 		var row = table[stage]
 		if row.has("boss"): continue
-		var specials = row.roles.filter(func(id): return id not in ["E01","E02"])
+		var specials = row.roles.filter(func(id): return id not in ["E01","E02"] and stage>=int(FIRST_APPEARANCE.get(id,1)))
 		var cycle = []
 		# Keep each stage's existing special identities, one per ten regular arrivals.
 		for i in maxi(1,specials.size())*10:
 			cycle.append(specials[i/10] if i%10==9 and not specials.is_empty() else ("E01" if i%2==0 else "E02"))
 		row.roles = cycle
 		row.pressure.horde_simple = 0.9
-		row.pressure.special_cap = 2 if stage<31 else 3
-		row.pressure.chase_speed = lerpf(1.12,1.25,(stage-21)/18.0)
+		row.pressure.special_cap = 2 if stage<21 else (3 if stage<31 else 4)
+		row.pressure.chase_speed = lerpf(1.02,1.12,clampf((stage-3)/26.0,0,1))
+		row.interval *= 0.92 if stage<21 else 0.86
 		if row.has("elite"):
 			row.elite.cap = 1 if stage<31 else 2
 			row.elite.interval = maxf(14.0,row.elite.interval)

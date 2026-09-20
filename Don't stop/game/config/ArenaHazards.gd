@@ -62,7 +62,7 @@ static func plan(stage: int) -> Dictionary:
 	if HellMode.is_hell(stage):
 		return {
 			"region":region,
-			"kinds":kinds_for(region,HellMode.hazard_kinds(stage)),
+			"kinds":kinds_for(region,HellMode.hazard_kinds(stage)).map(func(kind): return "meteor" if kind=="poison" else kind),
 			"interval":HellMode.hazard_interval(stage),
 			"live_cap":HellMode.hazard_live_cap(stage),
 			"coverage":HELL_COVERAGE,
@@ -91,6 +91,7 @@ static func _axis(from: float, to: float, ramp: float) -> float:
 ## quietly change footprint between the two.
 static func shape(kind: String) -> Dictionary:
 	match kind:
+		"meteor": return {"radius":48.0,"max_extent":48.0}
 		"poison": return {"radius":96.0,"max_extent":96.0}
 		"vent": return {"radius":74.0,"max_extent":74.0}
 		"frost": return {"radius":86.0,"max_extent":86.0}

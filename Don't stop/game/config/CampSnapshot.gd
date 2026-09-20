@@ -77,7 +77,10 @@ static func validate(data) -> bool:
 			valid = false; break
 		var gun = Utils.weapon_list[w.id].instantiate()
 		gun.tags = DemoConfig.weapon_tags(int(w.id))
-		gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
+		# Detached scenes have not run MechanismGun._ready(): use the same catalog
+		# values as live guns, especially the upgraded saw's 24-round magazine.
+		var spec = WeaponCatalog.definition(int(w.id))
+		gun.base_stats = {"damage":spec.get("damage",gun.damage),"magazine":spec.get("magazine",gun.bullets_max_count),"reload":spec.get("reload",gun.change_speed),"rate":spec.get("rate",gun.fire_rate),"impulse":gun.knockback_speed}
 		guns[w.id] = gun
 	var ids = []
 	var slots = {}
@@ -147,7 +150,7 @@ static func normalize(data: Dictionary) -> Dictionary:
 		var capacity = 30
 		if Utils.weapon_list.has(data.equipped):
 			var gun = Utils.weapon_list[data.equipped].instantiate()
-			capacity = gun.bullets_max_count
+			capacity = WeaponCatalog.definition(int(data.equipped)).get("magazine",gun.bullets_max_count)
 			for a in data.attachments:
 				if a.gun == data.equipped: capacity += {"1":10,"2":20,"3":10,"5":5,"6":50,"7":19,"8":70}.get(a.definition,0)
 			capacity = maxi(1,int(capacity*(1.0+DemoConfig.talent_value("T04",int(data.talents.get("T04",0))))))
@@ -158,7 +161,8 @@ static func normalize(data: Dictionary) -> Dictionary:
 		for w in result.weapons:
 			var gun = Utils.weapon_list[w.id].instantiate()
 			gun.tags = DemoConfig.weapon_tags(int(w.id))
-			gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
+			var spec = WeaponCatalog.definition(int(w.id))
+			gun.base_stats = {"damage":spec.get("damage",gun.damage),"magazine":spec.get("magazine",gun.bullets_max_count),"reload":spec.get("reload",gun.change_speed),"rate":spec.get("rate",gun.fire_rate),"impulse":gun.knockback_speed}
 			var items = []
 			for a in result.attachments:
 				if a.gun == w.id: items.append(Utils.am_dict[a.definition].instantiate())

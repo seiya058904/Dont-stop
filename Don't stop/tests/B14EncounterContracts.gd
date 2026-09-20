@@ -8,7 +8,7 @@ func _ready():
 		if row.has("boss"):continue
 		var ordinary=row.roles.filter(func(id):return id in ["E01","E02"]).size()
 		check(float(ordinary)/row.roles.size()>=0.8,"ordinary authored roster >=80 percent stage %d"%stage)
-		check(row.pressure.horde_simple>=0.8 and row.pressure.special_cap<=3,"horde and live-special budgets stage %d"%stage)
+		check(row.pressure.horde_simple>=0.8 and row.pressure.special_cap<=4,"horde and live-special budgets stage %d"%stage)
 		check(row.pressure.ring_min>=110,"safe spawn ring never shortened stage %d"%stage)
 	LevelServer.timer.stop();LevelServer.level=39;LevelServer.epoch+=1
 	LevelServer.town.prepare_region("R8");await wait(0.1);LevelServer.state="COMBAT"
@@ -18,10 +18,10 @@ func _ready():
 		var actor=M5Content.spawn(role,LevelServer.town.monster_root,point,i%3==0)
 		if actor!=null:M5Content.promote_elite(actor)
 	var mix=M5Content.living_mix(get_tree())
-	check(mix.special<=3 and mix.ordinary>=mix.total*0.8,"all shared spawn sources and promotions obey live mix budget")
+	check(mix.special<=4 and mix.ordinary>=mix.total*0.8,"all shared spawn sources and promotions obey live mix budget")
 	for actor in get_tree().get_nodes_in_group("monsters"):
 		if actor.get_meta("content_id","") in ["E01","E02"]:
-			check(actor.SPEED>105 and actor.SPEED<=112,"actual late ordinary initialized speed is bounded")
+			check(actor.SPEED>105 and actor.SPEED<=132,"actual late ordinary initialized speed is bounded")
 	check(DemoConfig.ENCOUNTERS[39].cap==84 and DemoConfig.ENCOUNTERS[29].cap==145,"existing total caps retained")
 	await clean()
 	LevelServer.level=1

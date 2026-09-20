@@ -86,10 +86,11 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = nul
 		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
 		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle, 0.1, 24.0 if "rotary" in gun.tags else 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,
-		"impulse": b.impulse * impulse, "radius":WeaponCatalog.definition(gun.weapon_id).get("radius",32.0) * radius, "jumps":jumps
+		"impulse": b.impulse * impulse, "radius":(WeaponCatalog.PLASMA_RADIUS if gun.weapon_id == 114 else spec.get("radius",32.0)) * radius, "jumps":jumps
 	}
 
 	result.merge(extras,true)
+	if "gravity" in gun.tags: result.radius *= extras.range/320.0
 	if "projectile" in gun.tags:
 		result.projectile_seconds = 2.0*extras.range/320.0
 		result.projectile_speed = gun.bullet_speed*2.0
@@ -173,9 +174,10 @@ static func describe(s: Dictionary) -> String:
 	var text = "伤害 %.2f %s · %.2f次/秒\n弹匣 %d · 装填 %.2f秒 · 暴击 %.0f%%" % [s.damage,damage_unit(s),s.rate,s.magazine,s.reload,s.crit*100]
 	if "beam" in s.tags and not "pulse" in s.tags and not "charged" in s.tags: text += "\n激光tick：0.1秒；射速为脉冲次数"
 	if "beam" in s.tags or "pulse_cone" in s.tags: text += "\n射程 %.1f 像素 · 判定宽 %.1f" % [s.range,s.width]
-	if "projectile" in s.tags: text += "\n弹速 %.0f像素/秒 · 最长飞行 %.2f秒\n无提前碰撞时累计路径上限 %.0f像素（引力落地/锯盘回收可提前结束）" % [s.projectile_speed,s.projectile_seconds,s.projectile_path_limit]
+	if "gravity" in s.tags: text += "\n弹速 %.0f像素/秒 · 地图内飞行至碰撞\n无固定飞行计时；远程延展转为引力场范围收益" % s.projectile_speed
+	elif "projectile" in s.tags: text += "\n弹速 %.0f像素/秒 · 最长飞行 %.2f秒\n无提前碰撞时累计路径上限 %.0f像素（锯盘回收可提前结束）" % [s.projectile_speed,s.projectile_seconds,s.projectile_path_limit]
 	if "pulse_cone" in s.tags: text += " · 扇面全角 %.1f度" % rad_to_deg(s.angle*2)
-	if "straight" in s.tags: text += "\n总目标上限 %d；不穿墙" % mini(8,s.pierce+1)
+	if "straight" in s.tags: text += ("\n每束目标上限 %d；不穿墙" if "charged" in s.tags else "\n总目标上限 %d；不穿墙") % mini(8,s.pierce+1)
 	if "charged" in s.tags: text += "\n满蓄循环至少 %.2f秒（蓄力+冷却，不含装填）；轻点减少宽度/贯穿" % (s.warmup+1.0/s.rate)
 	if "rotary" in s.tags: text += "\n24发/秒封顶；超限射速已转为单发伤害"
 	if "ricochet" in s.tags: text += "\n墙面反弹 %d次，反弹伤害保留 %.0f%%" % [mini(4,s.bounces),s.bounce_retention*100]
@@ -187,20 +189,20 @@ static func describe(s: Dictionary) -> String:
 	if "projectile" in s.tags or "beam" in s.tags: text += "\n对普通敌人冲量 %.1f" % s.impulse
 	if "spread" in s.tags: text += " · 散布倍率 %.2f" % s.spread
 	if "explosive" in s.tags: text += "\n爆炸半径 %.1f" % s.radius
-	if "chain" in s.tags: text += "\n电弧后跳 %d" % s.jumps
+	if "chain" in s.tags: text += "\n%d根分支 · 至多%d目标 · 连接%.0f" % [WeaponCatalog.ARC.roots,mini(16,WeaponCatalog.ARC.targets+maxi(0,s.jumps-3)),WeaponCatalog.ARC.link_range]
 	return text
 
 static func damage_unit(s: Dictionary) -> String:
 	if "gravity" in s.tags: return "/目标/场终结爆炸"
 	if "returning" in s.tags: return "/目标/出行或回行（各至多一次）"
-	if "homing" in s.tags: return "/枚导弹爆炸；每组2枚"
+	if "homing" in s.tags: return "/枚导弹爆炸；每组%d枚" % WeaponCatalog.definition(120).count
 	if "explosive" in s.tags and "spread" in s.tags: return "/枚火箭爆炸；每组3枚"
 	if "continuous" in s.tags: return "/tick（0.1秒）"
-	if "charged" in s.tags: return "/基础贯穿；满蓄×2.5"
+	if "charged" in s.tags: return "/每束基础贯穿；%d束，满蓄×2.5" % WeaponCatalog.definition(113).beams
 	if "pulse" in s.tags: return "/单束；3束独立交集"
 	if "pulse_cone" in s.tags: return "/目标/次扇面"
 	if "beam" in s.tags: return "/tick（0.1秒）"
-	if "chain" in s.tags: return "/主目标；每后跳×75%"
+	if "chain" in s.tags: return "/目标；后跳×90%，最低60%"
 	if "burst" in s.tags: return "/弹；3发一组"
 	if "spread" in s.tags: return "/弹丸（多弹丸分别结算）"
 	return "/弹"

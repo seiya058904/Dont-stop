@@ -78,7 +78,7 @@ func _ready() -> void:
 	# Below every telegraph and every actor: a ground hazard is terrain first.
 	z_index = -2
 	var spec = ArenaHazards.shape(kind)
-	if kind in ["poison","vent","frost"]: radius = spec.radius
+	if kind in ["poison","vent","frost","meteor"]: radius = spec.radius
 	elif kind == "laser": length = spec.length; width = spec.width
 	elif kind == "shock": length = spec.length; width = spec.width
 	if HellMode.is_hell(stage):
@@ -132,12 +132,17 @@ func _warning(delta: float) -> void:
 		phase_time = 0.05
 		return
 	phase = "active"; phase_time = active_time; active_clock = 0.0
+	if kind == "meteor":
+		hit_this_pulse = true
+		if _player_inside() and Combat.clear_line(origin(),Utils.player.global_position): Utils.player.onHit(damage,null,1.0,"hazard_meteor")
+		Combat.sound(load("res://audio/bullet/EXPLDsgn_Explosion Impact_10.wav"),origin())
 	if not activated:
 		activated = true
 		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,radius if radius > 0.0 else width*2.0,direction)
 
 func _active(delta: float) -> void:
 	_advance(delta)
+	if kind in ["laser","shock"] and sweep != 0.0: _clip()
 	active_clock -= delta
 	if active_clock <= 0.0:
 		active_clock += tick_interval()
@@ -243,6 +248,7 @@ func _draw() -> void:
 	var progress = clampf(1.0-phase_time/maxf(0.01,warning),0.0,1.0)
 	var live = phase == "active"
 	match kind:
+		"meteor": _draw_meteor(live,progress)
 		"poison": _draw_poison(live,progress)
 		"vent": _draw_vent(live,progress)
 		"frost": _draw_frost(live,progress)
@@ -255,6 +261,7 @@ func _draw_poison(live: bool, progress: float) -> void:
 	var edge = Color(0.42,1,0.62,0.55+0.35*progress)
 	var core = Color(0.10,0.42,0.24,0.30 if live else 0.12+0.12*progress)
 	draw_circle(Vector2.ZERO,radius,core)
+	draw_arc(Vector2.ZERO,radius,0,TAU,64,edge,2)
 	# Unstable edge: two out-of-phase lobes read as "seeping", not as a UI circle.
 	var wobble = PackedVector2Array()
 	for i in 48:
@@ -306,6 +313,7 @@ func _draw_frost(live: bool, progress: float) -> void:
 		draw_arc(Vector2.ZERO,radius+14,0,TAU,40,Color(0.7,0.95,1,0.55*clampf(slick_remaining/slick_seconds,0,1)),2,true)
 
 func _draw_band(_style: String, live: bool, progress: float) -> void:
+	draw_set_transform(offset)
 	var laser = kind == "laser"
 	var edge = Color(0.45,0.92,1,0.7) if laser else Color(0.72,0.5,1,0.7)
 	var core = Color(0.25,0.85,1,0.30) if laser else Color(0.5,0.3,0.95,0.3)
@@ -317,7 +325,8 @@ func _draw_band(_style: String, live: bool, progress: float) -> void:
 		draw_line(Vector2.ZERO,direction*clipped,Color(0.02,0.05,0.09,0.7),5,true)
 		draw_line(Vector2.ZERO,direction*clipped,hot,1.4+(2.2 if near else 0.0),true)
 		draw_arc(Vector2.ZERO,clipped*progress,direction.angle()-0.5,direction.angle()+0.5,24,edge,2,true)
-		FogPierce.push_line(global_position,global_position+direction*clipped,edge,2.4)
+		FogPierce.push_line(origin(),origin()+direction*clipped,edge,2.4)
+		draw_set_transform(Vector2.ZERO)
 		return
 	var normal = direction.orthogonal()*width
 	draw_colored_polygon(PackedVector2Array([-normal,direction*clipped-normal,direction*clipped+normal,normal]),core)
@@ -327,3 +336,26 @@ func _draw_band(_style: String, live: bool, progress: float) -> void:
 	for i in int(clipped/34.0):
 		var point = direction*(i*34.0)
 		draw_arc(point,3.0,0,TAU,10,Color(1,1,1,0.55),1.2,true)
+	FogPierce.push_line(origin(),origin()+direction*clipped,edge,width*2)
+	draw_set_transform(Vector2.ZERO)
+
+func _draw_meteor(live: bool, progress: float):
+	var red = Color(1,0.18,0.1,0.9)
+	if not live:
+		draw_circle(Vector2.ZERO,radius,Color(0.65,0.02,0.01,0.18))
+		draw_arc(Vector2.ZERO,radius,0,TAU,48,Color(0.12,0.02,0.02),4)
+		draw_arc(Vector2.ZERO,radius,0,TAU,48,red,2)
+		draw_arc(Vector2.ZERO,radius+4,-PI/2,-PI/2+TAU*progress,48,Color(1,0.65,0.3),2)
+		for side in [-1,1]: draw_line(Vector2(side*9,-9),Vector2(-side*9,9),red,2)
+		draw_string(ThemeDB.fallback_font,Vector2(-9,22),"%.1fs"%maxf(0,phase_time),HORIZONTAL_ALIGNMENT_LEFT,-1,9,red)
+		draw_circle(Vector2.ZERO,8+progress*9,Color(0.02,0.01,0.01,0.6))
+		var height = 180*pow(1-progress,0.7)
+		var p = Vector2(-height*0.18,-height)
+		draw_colored_polygon(PackedVector2Array([p+Vector2(-7,-7),p+Vector2(-14,-32),p+Vector2(9,-10),p+Vector2(10,7)]),Color(1,0.3,0.05,0.8))
+		draw_colored_polygon(PackedVector2Array([p+Vector2(-10,-7),p+Vector2(3,-12),p+Vector2(12,1),p+Vector2(4,11),p+Vector2(-9,7)]),Color(0.34,0.21,0.17))
+		draw_line(p+Vector2(-5,-4),p+Vector2(7,3),Color(1,0.6,0.2),3)
+		FogPierce.push_circle(origin(),radius,red,3)
+	else:
+		var fade = clampf(phase_time/active_time,0,1)
+		draw_circle(Vector2.ZERO,radius*(1-fade*0.7),Color(1,0.3,0.06,fade*0.35))
+		draw_arc(Vector2.ZERO,radius*(1-fade*0.5),0,TAU,40,Color(1,0.65,0.25,fade),3)

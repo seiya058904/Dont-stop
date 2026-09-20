@@ -157,6 +157,7 @@ func explosion_context(position: Vector2, radius: float, context: Dictionary):
 	for target in get_tree().get_nodes_in_group("monsters"):
 		if not target.is_die and Geometry2D.is_point_in_polygon(target.global_position,footprint) and clear_line(position,target.global_position):
 			hit(target,context)
+			heat_contact(target.global_position+Vector2(0,-8))
 	var effect = Node2D.new()
 	effect.set_script(load("res://game/effects/CombatEffect.gd"))
 	effect.radius = radius
@@ -173,30 +174,33 @@ func trace(points: Array, color = Color(0.4,0.85,1), width = 2.0):
 	get_tree().current_scene.add_child(effect)
 
 func beam(gun, start: Vector2, direction: Vector2, context: Dictionary, limit: int):
-	var visited = []
 	var width = float(context.get("beam_width",gun.effective.width))
-	for lane in [0.0,-0.5,0.5]:
-		var from = start+direction.orthogonal()*width*lane
-		var end = from+direction*gun.effective.range
-		var query = PhysicsRayQueryParameters2D.create(from,end,2147483651)
-		query.exclude = [Utils.player.get_rid()]
-		var count = 0
-		for step in limit:
-			var result = gun.get_world_2d().direct_space_state.intersect_ray(query)
-			if result.is_empty(): break
-			var target = result.collider
-			if not target is BaseMonster:
-				end = result.position
-				break
-			if not target.get_instance_id() in visited and visited.size() < limit:
-				visited.append(target.get_instance_id())
-				hit(target,context)
+	var normal = direction.orthogonal()
+	var targets = get_tree().get_nodes_in_group("monsters").filter(func(t): return not t.is_die)
+	targets.sort_custom(func(a,b): return start.distance_squared_to(a.global_position)<start.distance_squared_to(b.global_position))
+	var count = 0
+	for target in targets:
+		var point = target.global_position+Vector2(0,-8)
+		var along = (point-start).dot(direction)
+		var lateral = (point-start).dot(normal)
+		if along<0 or along>gun.effective.range or absf(lateral)>width*0.5+6: continue
+		var lane_start = start+normal*clampf(lateral,-width*0.5,width*0.5)
+		if not clear_line(start,lane_start) or not clear_line(lane_start,point): continue
+		if hit(target,context):
 			count += 1
-			var excluded = query.exclude
-			excluded.append(target.get_rid())
-			query.exclude = excluded
-			if count == limit: end = result.position
-		trace([from,end],Color(0.7,0.9,1),maxf(1,width/3.0))
+			heat_contact(point)
+		if count>=limit: break
+	# Closely spaced strips cover the visual width; damage uses continuous geometry above.
+	var strips = maxi(2,ceili(width/3.0))
+	for i in strips:
+		var from = start+normal*lerpf(-width*0.5,width*0.5,(i+0.5)/strips)
+		if not clear_line(start,from): continue
+		var end = from+direction*gun.effective.range
+		var query = PhysicsRayQueryParameters2D.create(from,end,CLEAR_LINE_MASK)
+		if exclusions_dirty: _refresh_exclusions()
+		query.exclude = actor_exclusions
+		var wall = gun.get_world_2d().direct_space_state.intersect_ray(query)
+		trace([from,wall.get("position",end)],Color(0.55,0.85,1),width/strips+0.3)
 
 func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 	var length = gun.effective.range
@@ -207,13 +211,14 @@ func cone(gun, start: Vector2, direction: Vector2, context: Dictionary):
 		var offset = point-start
 		if Geometry2D.is_point_in_polygon(point,footprint) and clear_line(start,point):
 			hit(target,context)
+			if context.has("burn"): heat_contact(point)
 			if context.has("burn") and not target.is_die: target.apply_burn("thermal",context.burn,1.0,context)
 	var edge = Array(footprint)
 	edge.append(start)
 	if context.has("burn"):
 		# Refresh one visual per sustained gun; the hit/tick/footprint above is unchanged.
 		if not is_instance_valid(gun.thermal_visual) or gun.thermal_visual.is_queued_for_deletion():
-			gun.thermal_visual = load("res://game/effects/CombatEffect.gd").new()
+			gun.thermal_visual = load("res://game/effects/ThermalStream.gd").new()
 			get_tree().current_scene.add_child(gun.thermal_visual)
 		gun.thermal_visual.refresh_cone(edge,Color(1,0.5,0.2))
 	else:
@@ -235,38 +240,50 @@ func fragments(position: Vector2, angle: float, context: Dictionary, ignored, sp
 		shard.add_collision_exception_with(ignored)
 		shard.fire()
 
-func arc(gun, start: Vector2, direction: Vector2):
+func heat_contact(point: Vector2):
+	var fx = load("res://game/effects/HeatContact.gd").new()
+	fx.global_position = point
+	get_tree().current_scene.add_child(fx)
+
+func arc(gun, start: Vector2, direction: Vector2, snapshot: Dictionary = {}):
 	attacks += 1
-	var query = PhysicsRayQueryParameters2D.create(start,start+direction*gun.effective.range,2147483651)
-	query.exclude = [Utils.player.get_rid()]
-	var hit_result = gun.get_world_2d().direct_space_state.intersect_ray(query)
-	var points: Array[Vector2] = [start]
-	var target = hit_result.get("collider")
-	if not target is BaseMonster:
-		points.append(hit_result.get("position",start+direction*gun.effective.range))
-	else:
-		var visited: Array = []
-		var amount = gun.effective.damage
-		for hop in range(gun.effective.jumps+1):
-			if not is_instance_valid(target) or target in visited: break
-			var location = target.global_position
-			visited.append(target)
-			points.append(location)
-			var context = gun.damage_context(0 if hop == 0 else 1)
-			context.damage = amount
-			hit(target,context)
-			amount *= 0.75
-			var nearest = null
-			var distance = 88.0
-			for candidate in get_tree().get_nodes_in_group("monsters"):
-				if candidate in visited or candidate.is_die: continue
-				var d = location.distance_to(candidate.global_position)
-				if d < distance and clear_line(location,candidate.global_position):
-					nearest = candidate
-					distance = d
-			target = nearest
-			if target == null: break
-	var line = Node2D.new()
-	line.set_script(load("res://game/effects/CombatEffect.gd"))
-	line.points = points
-	get_tree().current_scene.add_child(line)
+	if snapshot.is_empty(): snapshot = gun.shot_context()
+	var spec = WeaponCatalog.ARC
+	var budget = mini(16,int(spec.targets)+maxi(0,int(gun.effective.jumps)-3))
+	var candidates = get_tree().get_nodes_in_group("monsters").filter(func(t): return not t.is_die and not t.is_queued_for_deletion())
+	candidates.sort_custom(func(a,b): return start.distance_squared_to(a.global_position)<start.distance_squared_to(b.global_position))
+	var visited = {}
+	var queue = []
+	var fx = load("res://game/effects/ArcDischarge.gd").new()
+	# Resolve the entire bounded graph before damage can free a target.
+	for target in candidates:
+		var p = target.global_position+Vector2(0,-8)
+		var offset = p-start
+		if queue.size() >= int(spec.roots): break
+		if offset.length()>gun.effective.range or absf(direction.angle_to(offset))>float(spec.root_angle) or not clear_line(start,p): continue
+		queue.append({"target":target,"point":p,"from":start,"hop":0})
+		visited[target.get_instance_id()] = true
+	var index = 0
+	while index < queue.size() and queue.size()<budget:
+		var parent = queue[index]; index += 1
+		var children = 0
+		for target in candidates:
+			if queue.size()>=budget or children>=2: break
+			if visited.has(target.get_instance_id()): continue
+			var p = target.global_position+Vector2(0,-8)
+			if parent.point.distance_to(p)>float(spec.link_range) or not clear_line(parent.point,p): continue
+			visited[target.get_instance_id()] = true
+			queue.append({"target":target,"point":p,"from":parent.point,"hop":parent.hop+1})
+			children += 1
+	for node in queue:
+		var context = snapshot.duplicate(true)
+		context.damage *= maxf(0.6,pow(0.9,node.hop))
+		context.depth = 0 if node.hop==0 else 1
+		context.attack_id = attacks
+		if hit(node.target,context):
+			fx.contacts.append(node.point)
+			fx.edges.append([node.from,node.point])
+	if queue.is_empty():
+		var end = start+direction*minf(35,gun.effective.range)
+		if clear_line(start,end): fx.edges.append([start,end])
+	get_tree().current_scene.add_child(fx)

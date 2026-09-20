@@ -618,7 +618,7 @@ func _probe_report_rects() -> void:
 			_probe_report_weapon(panel,0)
 			_probe_report_search(panel)
 			_probe_loadout_controls(panel)
-			var carry_state = JSON.stringify({"slots":PlayerData.weapon_slots,"equipped":Utils.player.gun.weapon_id if Utils.player.gun else -1,"owned":PlayerData.player_weapon_list.keys(),"gold":PlayerData.gold,"message":panel.message.text,"saved":Demo.save_result.success})
+			var carry_state = JSON.stringify({"slots":PlayerData.weapon_slots,"equipped":Utils.player.gun.weapon_id if Utils.player.gun else -1,"owned":PlayerData.player_weapon_list.keys(),"gold":PlayerData.gold,"message":panel.message.text,"saved":Demo.save_result.success,"selection":panel.selection,"heading":panel.weapon_heading.text,"detail_height":panel.detail_scroll.size.y,"detail_scroll":panel.detail_scroll.scroll_vertical})
 			if carry_state != _last_carry_state:
 				_last_carry_state = carry_state
 				print("[loadout] ",carry_state)

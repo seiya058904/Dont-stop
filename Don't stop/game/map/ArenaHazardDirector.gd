@@ -128,6 +128,8 @@ func _spawn() -> void:
 	var kinds: Array = plan.kinds
 	if kinds.is_empty(): return
 	var kind = kinds[rng.randi()%kinds.size()]
+	if kind == "meteor" and get_tree().get_nodes_in_group("boss_ultimate").any(func(u): return u.role=="B04"): return
+	if kind == "meteor" and get_tree().get_nodes_in_group(StageHazard.GROUP).filter(func(h): return h.kind=="meteor").size()>=2: return
 	var live = get_tree().get_nodes_in_group(StageHazard.GROUP).size()
 	if live >= int(plan.live_cap):
 		StageHazard.audit_rejected += 1
@@ -163,6 +165,11 @@ func _spawn() -> void:
 		hazard.direction = Vector2.RIGHT.rotated(rng.randf()*TAU)
 		var sign = 1.0 if rng.randi()%2 == 0 else -1.0
 		hazard.sweep = sign*(0.7 if kind == "laser" else 46.0)
+	if kind == "meteor":
+		hazard.warning = maxf(1.5,hazard.warning)
+		hazard.active_time = 0.35
+		hazard.pulses = 1
+		hazard.damage = 2.0
 	arena.add_child(hazard)
 	StageHazard.audit_spawned += 1
 
@@ -187,6 +194,9 @@ func _pick_point(extent: float) -> Vector2:
 
 func _legal(candidate: Vector2, extent: float, player_at: Vector2, authored: bool) -> bool:
 	if not candidate.is_finite(): return false
+	for ultimate in get_tree().get_nodes_in_group("combat_transient"):
+		if ultimate.get_script()==load("res://game/monster/BossUltimate.gd") and ultimate.role=="B04":
+			if candidate.distance_to(ultimate.safe_center)<ultimate.safe_radius+extent+90: return false
 	if not arena.point_clear(candidate,extent*0.55+10.0):
 		if authored: StageHazard.audit_skipped_anchor += 1
 		return false

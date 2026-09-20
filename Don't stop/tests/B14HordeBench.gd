@@ -15,6 +15,7 @@ func spawn_chaser(index: int) -> bool:
 	var actor = M5Content.spawn(role,LevelServer.town.monster_root,point)
 	if actor == null: return false
 	# Freeze this protocol independently of subsequent encounter-table tuning.
+	actor.HP = 2.0 if role=="E01" else 1.2
 	actor.SPEED = 103.5 if role=="E01" else 105.0
 	if spawned_stats.size()<2: spawned_stats.append({"role":role,"hp":actor.HP,"speed":actor.SPEED})
 	actor.setDeathCallBack(func(dead):

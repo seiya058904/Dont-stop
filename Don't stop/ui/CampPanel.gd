@@ -19,7 +19,7 @@ var owned_only = false
 var tier_filter = 0
 var sort_mode = 0
 var upgrade_quality_filter = 0
-var action_bar: VBoxContainer
+var action_bar: HBoxContainer
 var tab_buttons = {}
 var tier_box: OptionButton
 var sort_box: OptionButton
@@ -41,6 +41,22 @@ var expanded_weapons: Dictionary = {}
 var loadout_box: VBoxContainer
 var target_slot := -1
 var replacement_weapon := -1
+var slot_detail := ""
+var rendered_selection := ""
+var filters_open := false
+
+func select_carried(id: int):
+	selection = str(id)
+	slot_detail = selection
+	selected_gun = id
+	detail_scroll.scroll_vertical = 0
+	show_loadout_result(PlayerData.equip_owned(id))
+	call_deferred("reveal_carried")
+
+func reveal_carried():
+	for item in listing.get_children():
+		if item.get_meta("entry_key","") == selection:
+			listing_scroll.ensure_control_visible(item)
 
 func loadout_status(id: int) -> String:
 	if not PlayerData.player_weapon_list.has(id): return "未拥有"
@@ -64,14 +80,6 @@ func render_loadout():
 	clear_box(loadout_box)
 	loadout_box.visible = tab == "weapon"
 	if tab != "weapon": return
-	var heading = HBoxContainer.new(); loadout_box.add_child(heading)
-	var title = label(heading,"携带栏 1–7 · 保留所有已购武器",7)
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button(heading,"卸下全部",func():
-		replacement_weapon = -1; target_slot = -1
-		show_loadout_result(PlayerData.clear_loadout())).set_meta("action_id","clear_loadout")
-	if replacement_weapon >= 0:
-		button(heading,"取消替换",func(): replacement_weapon = -1; request_refresh())
 	var row = HBoxContainer.new(); row.add_theme_constant_override("separation",2); loadout_box.add_child(row)
 	for slot in 7:
 		var column = HBoxContainer.new(); column.size_flags_horizontal = Control.SIZE_EXPAND_FILL; column.add_theme_constant_override("separation",0); row.add_child(column)
@@ -84,18 +92,24 @@ func render_loadout():
 			elif id < 0:
 				target_slot = slot; message.text = "已选择空槽%d；选择已拥有武器后点击装备" % (slot+1)
 				request_refresh()
-			else: show_loadout_result(PlayerData.equip_owned(id)))
+			else: select_carried(id))
 		pick.set_meta("slot_id",slot); pick.set_meta("action_id","select_slot")
 		pick.toggle_mode = true; pick.set_pressed_no_signal(current or target_slot == slot)
 		pick.expand_icon = true; pick.add_theme_constant_override("icon_max_width",20)
-		pick.custom_minimum_size = Vector2(35,20)
+		pick.custom_minimum_size = Vector2(30,20)
 		pick.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if gun: pick.icon = gun.image
-		pick.tooltip_text = "选择此槽替换" if replacement_weapon >= 0 else (gun.weapon_name if gun else "空槽 · 添加已拥有武器")
+		pick.tooltip_text = ("将%s换入 · 替换%s" % [tr(PlayerData.player_weapon_list[replacement_weapon].weapon_name),tr(gun.weapon_name) if gun else "空槽"]) if replacement_weapon >= 0 else (tr(gun.weapon_name) if gun else "空槽 · 添加已拥有武器")
+		if selection == str(id): pick.add_theme_color_override("font_color",Color("e0cb9c"))
 		var remove = button(column,"x",func(): show_loadout_result(PlayerData.remove_slot(slot)))
 		remove.custom_minimum_size.x = 12
 		remove.tooltip_text = "移出槽位%d · 保留武器与弹药" % (slot+1)
 		remove.disabled = id < 0; remove.set_meta("slot_id",slot); remove.set_meta("action_id","remove_slot")
+	button(row,"卸下全部",func():
+		replacement_weapon = -1; target_slot = -1
+		show_loadout_result(PlayerData.clear_loadout())).set_meta("action_id","clear_loadout")
+	if replacement_weapon >= 0:
+		button(row,"取消",func(): replacement_weapon = -1; target_slot = -1; request_refresh())
 
 ## B11 removed the "Hell Playtest" product concept entirely.
 ##
@@ -112,6 +126,9 @@ func render_loadout():
 ## "does this stage exist", which is the only question a selector may ask.
 
 func switch_tab(next_tab: String):
+	replacement_weapon = -1
+	target_slot = -1
+	slot_detail = ""
 	tab_state[tab] = {"selection":selection,"scroll":listing_scroll.scroll_vertical}
 	tab = next_tab
 	var state = tab_state.get(tab,{"selection":"","scroll":0})
@@ -199,7 +216,7 @@ func _ready():
 	panel.offset_bottom = -7
 	add_child(panel)
 	var body = VBoxContainer.new()
-	body.add_theme_constant_override("separation",3)
+	body.add_theme_constant_override("separation",2)
 	panel.add_child(body)
 	var top = HBoxContainer.new()
 	body.add_child(top)
@@ -243,6 +260,7 @@ func _ready():
 	owned_filter.toggle_mode = true
 	filters.add_child(owned_filter)
 	owned_filter.toggled.connect(func(value): owned_only = value; request_refresh())
+	button(filters,"筛选 / 排序",func(): filters_open = not filters_open; request_refresh())
 	filter_row = HBoxContainer.new()
 	body.add_child(filter_row)
 	category_box = OptionButton.new()
@@ -285,7 +303,7 @@ func _ready():
 	var right = VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
-	weapon_header=HBoxContainer.new(); right.add_child(weapon_header)
+	weapon_header=HBoxContainer.new()
 	weapon_preview=TextureRect.new(); weapon_preview.name="WeaponPreview"
 	weapon_preview.custom_minimum_size=Vector2(96,32); weapon_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	weapon_preview.stretch_mode=TextureRect.STRETCH_KEEP_CENTERED; weapon_preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
@@ -300,8 +318,12 @@ func _ready():
 	detail = VBoxContainer.new()
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail.add_theme_constant_override("separation",2)
-	detail_scroll.add_child(detail)
-	action_bar = VBoxContainer.new()
+	var reading = VBoxContainer.new()
+	reading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail_scroll.add_child(reading)
+	reading.add_child(weapon_header)
+	reading.add_child(detail)
+	action_bar = HBoxContainer.new()
 	right.add_child(action_bar)
 	message = label(body,"WASD 移动 · R 装填 · Shift 冲刺 · Esc 返回",7)
 	message.custom_minimum_size.y = 18
@@ -359,7 +381,7 @@ func render():
 	tier_box.visible = tab == "weapon"
 	sort_box.visible = tab == "weapon"
 	quality_box.visible = tab == "attachment" or tab == "talent"
-	filter_row.visible = tab in ["weapon","attachment","talent"]
+	filter_row.visible = filters_open and tab in ["weapon","attachment","talent"]
 	owned_filter.visible = tab in ["weapon","attachment","talent"]
 	search_box.visible = tab in ["weapon","attachment","talent"]
 	weapon_preview.texture = null
@@ -436,11 +458,16 @@ func render():
 				cached.append(reward)
 				entry(tr(reward.reward_name),id,func(): show_legacy(id,reward))
 	if selection.is_empty() and not detail_actions.is_empty(): selection = detail_actions.keys()[0]
+	if tab == "weapon" and selection == slot_detail and not detail_actions.has(selection) and PlayerData.player_weapon_list.has(int(selection)):
+		detail_actions[selection] = func():
+			show_weapon(selection,PlayerData.player_weapon_list[int(selection)])
+			label(detail,"此武器不在当前筛选结果中")
 	if detail_actions.has(selection): detail_actions[selection].call()
 	if tab == "weapon": weapon_header.visible = detail_actions.has(selection)
 	refresh_selection()
 	listing_scroll.set_deferred("scroll_vertical",scroll_position)
-	detail_scroll.set_deferred("scroll_vertical",detail_position)
+	detail_scroll.set_deferred("scroll_vertical",detail_position if rendered_selection == tab+":"+selection else 0)
+	rendered_selection = tab+":"+selection
 	if not focused_entry.is_empty():
 		for child in listing.get_children():
 			if child.get_meta("entry_key","") == focused_entry: child.call_deferred("grab_focus")
@@ -476,23 +503,24 @@ func show_weapon(id: String, gun):
 	weapon_heading.text=tr(gun.weapon_name)
 	weapon_badge.text="%s · %s\n%d金币 · %s" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id],loadout_status(int(id))]
 	weapon_badge.add_theme_color_override("font_color",tier_color(WeaponCatalog.tier(int(id))))
+	label(detail,WeaponCatalog.short_info(int(id)))
 	var stats = gun.effective if owned else {}
 	if stats.is_empty():
 		gun.tags = DemoConfig.weapon_tags(int(id))
-		gun.base_stats = {"damage":gun.damage,"magazine":gun.bullets_max_count,"reload":gun.change_speed,"rate":gun.fire_rate,"impulse":gun.knockback_speed}
+		var spec = WeaponCatalog.definition(int(id))
+		gun.base_stats = {"damage":spec.get("damage",gun.damage),"magazine":spec.get("magazine",gun.bullets_max_count),"reload":spec.get("reload",gun.change_speed),"rate":spec.get("rate",gun.fire_rate),"impulse":gun.knockback_speed}
 		stats = EffectiveStats.calculate(gun)
 	if Utils.player.gun and Utils.player.gun.weapon_id!=int(id):
 		label(detail,"当前 → 候选 · 同一构筑",7)
 		var current=EffectiveStats.calculate(Utils.player.gun)
 		var comparisons=GridContainer.new(); comparisons.columns=2; detail.add_child(comparisons)
-		for stat in ["damage","rate","magazine","reload","crit","range"]:
+		for stat in (["damage","rate","magazine","reload","crit"] if int(id)==121 else ["damage","rate","magazine","reload","crit","range"]):
 			var line=comparison(stat,current[stat],stats[stat]); var first=line.find("  ")
 			line=line.substr(0,first)+"\n"+line.substr(first+2)
 			var cell=label(comparisons,line,7); cell.custom_minimum_size.x=108; cell.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	else:
 		if not Utils.player.gun: label(detail,"未装备 · 以下为候选属性",7)
-		label(detail,"Damage %.2f · RPM %.0f\nMagazine %d · Reload %.2fs\nCrit %.1f%% · Range %.0f" % [stats.damage,stats.rate*60,stats.magazine,stats.reload,stats.crit*100,stats.range],8)
-	label(detail,WeaponCatalog.short_info(int(id)))
+		label(detail,"Damage %.2f · RPM %.0f\nMagazine %d · Reload %.2fs\nCrit %.1f%% · %s" % [stats.damage,stats.rate*60,stats.magazine,stats.reload,stats.crit*100,"飞行至碰撞" if int(id)==121 else "Range %.0f"%stats.range],8)
 	label(detail," / ".join(WeaponCatalog.labels(int(id))))
 	var more = Button.new()
 	more.toggle_mode = true
@@ -703,6 +731,9 @@ func show_reset():
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel") and Demo.top_pause(self):
 		get_viewport().set_input_as_handled()
+		if replacement_weapon >= 0:
+			replacement_weapon = -1; target_slot = -1; request_refresh()
+			return
 		queue_free()
 
 func tier_color(tier: int) -> Color:

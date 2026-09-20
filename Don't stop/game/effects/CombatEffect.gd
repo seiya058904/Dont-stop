@@ -41,6 +41,15 @@ func _process(delta):
 func _draw():
 	var opacity = clampf(1.0-life/0.24,0,1)
 	if radius > 0:
+		var expansion = clampf(life/0.14,0,1)
+		if not footprint.is_empty():
+			var wave = PackedVector2Array()
+			for p in footprint: wave.append(p*expansion)
+			draw_colored_polygon(wave,Color(0.35,0.85,0.65,opacity*0.32))
+			draw_circle(Vector2.ZERO,radius*0.2*opacity,Color(0.9,1,0.65,opacity*(0.3 if Combat.reduced_flash else 0.7)))
+			for i in 8:
+				var p = footprint[(i*footprint.size())/8]*expansion
+				draw_rect(Rect2(p.round(),Vector2(3,2)),Color(0.8,1,0.6,opacity))
 		if not footprint.is_empty():
 			draw_colored_polygon(footprint,Color(0.3,1.0,0.8,opacity*0.12))
 			draw_polyline(footprint_edge,Color(0.3,1.0,0.8,opacity),2)

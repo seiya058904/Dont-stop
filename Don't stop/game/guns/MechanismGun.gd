@@ -8,6 +8,7 @@ var thermal_clock = 0.0
 
 func projectile_count() -> int:
 	var spec=WeaponCatalog.definition(weapon_id)
+	if spec.mode=="rail": return int(spec.beams)
 	return 3 if spec.mode=="prism" else int(spec.get("count",1))
 
 func _ready():
@@ -119,7 +120,8 @@ func _shoot():
 			var charged = clampf(charge_time/effective.warmup,0,1)
 			context.damage *= 1.0+1.5*charged
 			context.beam_width = effective.width*lerpf(0.3,1.0,charged)
-			Combat.beam(self,gun_tip.global_position,direction,context,mini(8,1+int(floor(effective.pierce*charged))))
+			for beam_index in int(spec.beams):
+				Combat.beam(self,gun_tip.global_position,direction.rotated((beam_index-1)*spec.beam_angle),context,mini(8,1+int(floor(effective.pierce*charged))))
 		else:
 			if spec.mode == "thermal":
 				sustained = true
@@ -129,6 +131,7 @@ func _shoot():
 		_shootAnim()
 		return
 	var count = projectile_count()
+	var assigned: Array = []
 	for i in count:
 		var angle = (i-(count-1)*0.5)*spec.get("fan",0.0)*effective.spread
 		var shot_direction = direction.rotated(angle)
@@ -145,6 +148,7 @@ func _shoot():
 		bullet.global_position = gun_tip.global_position
 		bullet.rotation = shot_direction.angle()
 		bullet.fire()
-		bullet.lock_target()
+		bullet.lock_target(assigned)
+		if bullet.target_ref: assigned.append(bullet.target_ref.get_ref().get_instance_id())
 	audio.play()
 	_shootAnim()

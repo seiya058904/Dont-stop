@@ -29,24 +29,33 @@ func gravity_field():
 func _ready():
 	super._ready()
 	timer.stop()
+	light2d.enabled = false
 	remaining_bounces = mini(4,int(spec.get("bounces",0)))
 
-func lock_target():
+func lock_target(assigned: Array = []):
 	if spec.get("mode","") != "missile": return
-	var nearest = 260.0
+	var best = INF
 	for target in get_tree().get_nodes_in_group("monsters"):
 		var offset = target.global_position-global_position
-		if target.is_die or absf(velocity.angle_to(offset)) > spec.get("lock_angle",0.65): continue
-		if offset.length() < nearest and Combat.clear_line(global_position,target.global_position):
-			nearest = offset.length()
+		if target.is_die or offset.length()>260 or absf(velocity.angle_to(offset)) > spec.get("lock_angle",0.65): continue
+		var score = offset.length()+assigned.count(target.get_instance_id())*1000
+		if score < best and Combat.clear_line(global_position,target.global_position):
+			best = score
 			target_ref = weakref(target)
-	if target_ref:
-		Combat.trace([global_position,target_ref.get_ref().global_position],Color(1,0.7,0.25),1.0)
+
+func outside_world() -> bool:
+	if not global_position.is_finite(): return true
+	if is_instance_valid(LevelServer.town) and is_instance_valid(LevelServer.town.arena):
+		var arena = LevelServer.town.arena
+		return not arena.bounds.grow(24).has_point(arena.to_local(global_position))
+	# Training/camp fallback is spatial, never a flight timer.
+	return is_instance_valid(player) and global_position.distance_to(player.global_position)>4096
 
 func _physics_process(delta):
 	if finished: return
 	age += delta
-	if age >= 2.0*context.get("range_mul",1.0) or context.get("epoch",-1) != LevelServer.epoch:
+	queue_redraw()
+	if (spec.get("mode","") != "gravity" and age >= 2.0*context.get("range_mul",1.0)) or context.get("epoch",-1) != LevelServer.epoch or (spec.get("mode","") == "gravity" and outside_world()):
 		finished = true
 		queue_free()
 		return
@@ -57,9 +66,6 @@ func _physics_process(delta):
 			velocity = velocity.rotated(turn)
 			rotation = velocity.angle()
 		else: target_ref = null
-	if spec.get("mode","") == "gravity" and age >= 0.45*context.get("range_mul",1.0):
-		gravity_field()
-		return
 	if spec.get("mode","") == "disc":
 		if not is_instance_valid(player) or player.is_dead:
 			queue_free()
@@ -144,8 +150,17 @@ func _draw():
 	if mode in ["rocket","missile"]:
 		draw_colored_polygon(PackedVector2Array([Vector2(3,0),Vector2(0,-2),Vector2(-3,-2),Vector2(-3,2),Vector2(0,2)]),Color(0.85,0.88,0.76))
 	elif mode == "gravity": draw_arc(Vector2.ZERO,3,0,TAU,8,color,1)
-	elif mode == "shard": draw_line(Vector2(-1,-2),Vector2(2,1),color,1)
+	elif mode in ["shard","fragment"]:
+		var size = 1.0 if mode == "shard" else 0.6
+		draw_colored_polygon(PackedVector2Array([Vector2(-6,-3)*size,Vector2(6,0)*size,Vector2(-6,3)*size,Vector2(-3,0)*size]),Color(0.6,0.85,0.94))
+		if mode == "shard":
+			draw_line(Vector2(-3,-2),Vector2(1,0),Color(0.07,0.2,0.3),1)
+			draw_line(Vector2(-3,2),Vector2(1,0),Color(0.07,0.2,0.3),1)
 	if mode == "ricochet": draw_arc(Vector2.ZERO,4,0,TAU,8,color,1)
 	if mode == "disc":
-		draw_arc(Vector2.ZERO,7,0,TAU,12,Color(0.8,0.9,1),2)
+		var teeth = PackedVector2Array()
+		for i in 24: teeth.append(Vector2.RIGHT.rotated(i*TAU/24)*(9 if i%2==0 else 6))
+		draw_colored_polygon(teeth,Color(0.65,0.8,0.88))
+		draw_circle(Vector2.ZERO,4,Color(0.16,0.28,0.35))
+		draw_circle(Vector2.ZERO,2,Color(1,0.65,0.2) if returning else Color(0.5,0.95,1))
 		for i in 6: draw_line(Vector2(4,0).rotated(i*TAU/6),Vector2(9,0).rotated(i*TAU/6+0.3),Color(0.5,0.8,1),1)

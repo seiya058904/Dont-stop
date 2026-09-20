@@ -49,7 +49,7 @@ weapon_name = "跃迁电弧枪"
 
 damage = 2.0
 
-fire_rate = 3.0
+fire_rate = 4.5
 
 bullets_max_count = 12
 

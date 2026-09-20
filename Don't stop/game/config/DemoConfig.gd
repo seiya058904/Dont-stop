@@ -128,11 +128,13 @@ static func weapon_tags(id: int) -> Array:
 	return ["projectile","spread","straight"] if id in [1,5,8] else ["projectile","straight"]
 
 const WEAPON_INFO = {
-	112:"首次射线主目标命中，最多3次后跳；后跳伤害逐次×75%，墙阻挡电弧。",
-	114:"慢速可见大弹，接触后半径32爆炸；每目标一次伤害。",
+	112:"一次最多3根放电、10个不同目标；连接140，后跳×90%且至少保留60%；每目标一次，墙阻挡。",
+	114:"慢速可见大弹，接触后半径48爆炸；每目标一次伤害。",
 	123:"每组3发，组内0.08秒，组间独立间隔；剩弹不足只射剩余。",
 	6:"原型激光：射线阻墙，0.1秒持续tick，保留0.4秒脉冲。"
 }
 static func weapon_info(id: int) -> String:
+	if id == 112: return "一次最多%d根放电、%d个不同目标；连接距离%.0f，后跳×90%%且至少保留60%%；每目标一次，墙阻挡。" % [WeaponCatalog.ARC.roots,WeaponCatalog.ARC.targets,WeaponCatalog.ARC.link_range]
+	if id == 114: return "慢速可见大弹，接触后半径%.0f爆炸；每目标一次伤害。" % WeaponCatalog.PLASMA_RADIUS
 	if WeaponCatalog.DEFINITIONS.has(id): return WeaponCatalog.DEFINITIONS[id].info
 	return WEAPON_INFO.get(id,"保留原型弹道、开火节奏、枪体动作与音色。")

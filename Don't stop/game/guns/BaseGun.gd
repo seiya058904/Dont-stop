@@ -3,6 +3,7 @@ class_name BaseGun
 
 const particles_pre = preload("res://game/hero/gpu_particles_2d.tscn")
 var thermal_visual: Node2D
+var idle_visual: Node2D
 
 ## 武器ID
 @export var weapon_id = 0 #枪械ID
@@ -87,6 +88,11 @@ func _ready() -> void:
 	add_to_group("guns")
 	tier_muzzle = preload("res://game/effects/TierMuzzle.gd").new()
 	gun_tip.add_child(tier_muzzle)
+	if weapon_id in [6,112,113,116,120,124]:
+		var idle = preload("res://game/effects/WeaponIdle.gd").new()
+		idle.gun = self
+		add_child(idle)
+		idle_visual = idle
 	base_stats = {"damage":damage,"magazine":bullets_max_count,"reload":change_speed,"rate":fire_rate,"impulse":knockback_speed}
 	tags = DemoConfig.weapon_tags(weapon_id)
 	audio.bus = "SFX"
@@ -253,6 +259,9 @@ func _process(delta):
 
 #设置是否正在使用
 func set_use(use:bool):
+	if is_instance_valid(idle_visual):
+		idle_visual.set_process(use)
+		idle_visual.visible = use
 	if is_use == use and is_node_ready():
 		set_process(use)
 		set_physics_process(use)
