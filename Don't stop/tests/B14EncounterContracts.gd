@@ -22,7 +22,7 @@ func _ready():
 	for actor in get_tree().get_nodes_in_group("monsters"):
 		if actor.get_meta("content_id","") in ["E01","E02"]:
 			check(actor.SPEED>105 and actor.SPEED<=132,"actual late ordinary initialized speed is bounded")
-	check(DemoConfig.ENCOUNTERS[39].cap==84 and DemoConfig.ENCOUNTERS[29].cap==145,"existing total caps retained")
+	check(DemoConfig.ENCOUNTERS[39].cap==168 and DemoConfig.ENCOUNTERS[29].cap==145,"B17 late ordinary cap and unchanged stage 29")
 	await clean()
 	LevelServer.level=1
 	for id in ["E01","E02"]:

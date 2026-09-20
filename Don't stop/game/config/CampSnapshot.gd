@@ -49,7 +49,9 @@ static func validate(data) -> bool:
 		counts[id] = counts.get(id,0)+1
 	for id in counts:
 		var reward = RewardServer.reward_list[id].instantiate()
-		var valid = reward.only_start or counts[id] <= reward.max_count
+		# Historical purchases remain valid after B17 lowers only new-purchase caps.
+		var historical_cap = 99 if id in ["2","3","5","6","7","9","11"] else reward.max_count
+		var valid = reward.only_start or counts[id] <= historical_cap
 		reward.free()
 		if not valid: return false
 	var state = data.get("legacy_state",{})

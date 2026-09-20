@@ -87,6 +87,7 @@ static func hazard_live_cap(stage: int) -> int:
 ## The floor is well above the upstream 0.039 only because this arena is 880x660 and the
 ## player must still be able to move; the ceiling stays far below the bright 0.64 normal.
 const FOG = {
+	30:{"ambient":0.19,"scale":1.38,"energy":1.10},
 	31:{"ambient":0.170,"scale":1.30,"energy":1.10},
 	32:{"ambient":0.160,"scale":1.26,"energy":1.08},
 	33:{"ambient":0.150,"scale":1.22,"energy":1.06},
@@ -108,26 +109,29 @@ const LIGHT_RADIUS_PER_SCALE := 192.0
 static func fog(stage: int) -> Dictionary:
 	return FOG.get(stage,FOG[LAST])
 
+static func has_fog(stage: int) -> bool:
+	return stage >= 30 and stage <= LAST
+
 static func fog_ambient(stage: int) -> Color:
-	var level = fog(stage).ambient if is_hell(stage) else DemoConfig.AMBIENT.g
+	var level = fog(stage).ambient if has_fog(stage) else DemoConfig.AMBIENT.g
 	return Color(level,level,level,1)
 
 static func light_scale(stage: int) -> float:
-	return float(fog(stage).scale) if is_hell(stage) else UPSTREAM_LIGHT_SCALE
+	return float(fog(stage).scale)*(0.88 if is_hell(stage) else 1.0) if has_fog(stage) else UPSTREAM_LIGHT_SCALE
 
 static func light_energy(stage: int) -> float:
-	return float(fog(stage).energy) if is_hell(stage) else 1.0
+	return float(fog(stage).energy) if has_fog(stage) else 1.0
 
 ## World-pixel radius inside which the restored light makes terrain readable. Used by the
 ## fog fairness gate, so it is a property of the STAGE TARGET, never of a tween in flight.
 static func visible_radius(stage: int) -> float:
-	if not is_hell(stage): return 4096.0
+	if not has_fog(stage): return 4096.0
 	return LIGHT_RADIUS_PER_SCALE*light_scale(stage)
 
 ## The gate uses a slightly conservative radius: a telegraph must be readable, and the
 ## readable edge of the light is inside the geometric edge of the texture.
 static func fair_radius(stage: int) -> float:
-	if not is_hell(stage): return 4096.0
+	if not has_fog(stage): return 4096.0
 	return visible_radius(stage)*0.85
 
 ## Composite pressure readout for the report. A pure product of the axes, printed so the

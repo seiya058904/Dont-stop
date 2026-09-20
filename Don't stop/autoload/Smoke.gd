@@ -89,6 +89,10 @@ func _ready() -> void:
 	print("[smoke] user_dir=", OS.get_user_data_dir())
 	print("[smoke] renderer=", ProjectSettings.get_setting("rendering/renderer/rendering_method"))
 	print("[smoke] save_state %s" % _save_state_line())
+	if "--b17-visual" in args:
+		Demo.test_mode = true
+		add_child(load("res://game/diag/B17Visual.gd").new())
+		return
 	if "--b16-ui" in args:
 		Demo.test_mode = true
 		_b16_native_ui.call_deferred()

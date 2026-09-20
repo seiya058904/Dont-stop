@@ -29,6 +29,7 @@ var quality_box: OptionButton
 var tab_state: Dictionary = {}
 var search_box: LineEdit
 var weapon_preview: TextureRect
+var weapon_aura: Node2D
 var weapon_heading: Label
 var weapon_badge: Label
 var weapon_header: HBoxContainer
@@ -310,6 +311,9 @@ func _ready():
 	weapon_preview.custom_minimum_size=Vector2(96,32); weapon_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	weapon_preview.stretch_mode=TextureRect.STRETCH_KEEP_CENTERED; weapon_preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 	weapon_header.add_child(weapon_preview)
+	weapon_aura = preload("res://game/effects/WeaponIdle.gd").new()
+	weapon_preview.add_child(weapon_aura)
+	weapon_preview.resized.connect(func(): weapon_aura.position=weapon_preview.size/2)
 	var titles=VBoxContainer.new(); titles.size_flags_horizontal=Control.SIZE_EXPAND_FILL; weapon_header.add_child(titles)
 	weapon_heading=label(titles,"",9); weapon_badge=label(titles,"",7)
 	detail_scroll = ScrollContainer.new()
@@ -513,6 +517,9 @@ func show_weapon(id: String, gun):
 	var owned = PlayerData.player_weapon_list.has(int(id))
 	if owned: gun = PlayerData.player_weapon_list[int(id)]
 	weapon_preview.texture=weapon_art(gun.image)
+	weapon_aura.preview_id = int(id) if WeaponCatalog.tier(int(id)) >= 4 else -1
+	weapon_aura.preview_tip = Vector2(12,0)
+	weapon_aura.position = weapon_preview.size/2
 	assert(weapon_preview.texture!=null,"Missing weapon preview: "+id)
 	weapon_heading.text=tr(gun.weapon_name)
 	weapon_badge.text="%s · %s\n%d金币 · %s" % [WeaponCatalog.rarity(int(id)),WeaponCatalog.type_name(int(id)),Utils.weapon_money_list[id],loadout_status(int(id))]

@@ -162,6 +162,7 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	parent.add_child(actor)
 	# All subclass ready methods have finished. Apply the authored final values once.
 	var hp_scale = HellMode.hp_scale(LevelServer.level) if hell else 1.0
+	if id in ["E01","E02"]: hp_scale *= float(pressure.get("ordinary_hp",1.0))
 	var speed_scale = HellMode.speed_scale(LevelServer.level) if hell else 1.0
 	if id in ["E01","E02"]: speed_scale *= float(pressure.get("chase_speed",1.0))
 	actor.HP = d.hp*hp_scale
@@ -328,4 +329,13 @@ static func encounters() -> Dictionary:
 			row.elite.cap = 1 if stage<31 else 2
 			row.elite.interval = maxf(14.0,row.elite.interval)
 		row.info = "生存45秒；快速普通追击为主，多方向分批进入；特殊威胁同时至多%d名（含精英）。" % row.pressure.special_cap
+	for stage in range(31,40):
+		var density = minf(2.0,1.25+0.1*(stage-31))
+		var row = table[stage]
+		row.cap = ceili(row.cap*density)
+		row.interval /= density
+		row.pressure.ordinary_hp = lerpf(1.05,1.20,(stage-31)/8.0)
+		row.horde = HORDES[stage].duplicate()
+		row.horde.batch = ceili(row.horde.batch*density)
+		row.horde.floor = ceili(row.horde.floor*density)
 	return table

@@ -123,6 +123,9 @@ func growth_score(build: String) -> float:
 	return pow(single*boss*crowd,1.0/3.0)
 
 func _ready():
+	if "--b17" in OS.get_cmdline_user_args():
+		var current=load("res://tests/B17Evidence.gd").new()
+		current.scope="growth"; add_child(current); return
 	if "--b14" in OS.get_cmdline_user_args():
 		var current=load("res://tests/B14Evidence.gd").new()
 		current.scope="growth";add_child(current)

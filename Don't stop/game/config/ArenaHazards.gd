@@ -91,7 +91,7 @@ static func _axis(from: float, to: float, ramp: float) -> float:
 ## quietly change footprint between the two.
 static func shape(kind: String) -> Dictionary:
 	match kind:
-		"meteor": return {"radius":48.0,"max_extent":48.0}
+		"meteor": return {"radius":56.0,"max_extent":56.0}
 		"poison": return {"radius":96.0,"max_extent":96.0}
 		"vent": return {"radius":74.0,"max_extent":74.0}
 		"frost": return {"radius":86.0,"max_extent":86.0}

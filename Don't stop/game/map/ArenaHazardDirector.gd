@@ -132,11 +132,11 @@ func _spawn() -> void:
 	if not is_instance_valid(arena): return
 	var kinds: Array = plan.kinds
 	if kinds.is_empty(): return
-	var kind = "meteor" if "meteor" in kinds and meteor_wait >= 8.0 else kinds[rng.randi()%kinds.size()]
+	var kind = "meteor" if "meteor" in kinds and meteor_wait >= 6.5 else kinds[rng.randi()%kinds.size()]
 	audit_event("selected",kind)
 	if kind == "meteor" and get_tree().get_nodes_in_group("boss_ultimate").any(func(u): return u.role=="B04"):
 		audit_event("b04_suppressed",kind); spawn_clock = minf(spawn_clock,1.0); return
-	if kind == "meteor" and get_tree().get_nodes_in_group(StageHazard.GROUP).filter(func(h): return h.kind=="meteor").size()>=2:
+	if kind == "meteor" and get_tree().get_nodes_in_group(StageHazard.GROUP).filter(func(h): return h.kind=="meteor").size()>=3:
 		audit_event("meteor_cap",kind); return
 	var live = get_tree().get_nodes_in_group(StageHazard.GROUP).size()
 	if live >= int(plan.live_cap):
@@ -237,7 +237,8 @@ func _pick_visible_meteor(extent: float) -> Vector2:
 	var transform = view.get_canvas_transform()
 	var rotation_offset = rng.randf()*TAU
 	var rejected = {"offscreen":0,"fog":0,"unsafe":0,"wall":0}
-	for distance in [extent+ArenaHazards.MIN_EDGE_DISTANCE+12.0,140.0,160.0]:
+	var nearest = extent+ArenaHazards.MIN_EDGE_DISTANCE+8.0
+	for distance in [nearest,nearest+16.0,nearest+32.0]:
 		for i in 24:
 			var candidate = player_at+Vector2.RIGHT.rotated(rotation_offset+i*TAU/24)*distance
 			if not screen.has_point(transform*candidate): rejected.offscreen += 1; continue

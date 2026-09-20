@@ -35,8 +35,8 @@ const PHASE_THREE_AT := 0.35
 ## turns the last third into a set of linked problems instead of a faster first third.
 const BOSS_CYCLES = {
 	"1":{"B01":["charge","cleave","slam"],"B02":["brood","lockdown","pulse"],"B03":["dash","sweep","burst"],"B04":["dash","sweep","burst"]},
-	"2":{"B01":["charge","cleave","slam"],"B02":["brood","lockdown","pulse"],"B03":["dash","sweep","burst"],"B04":["sweep","dash","cross","band"]},
-	"3":{"B01":["charge","slam","shockwave"],"B02":["toxic_zone","root_shot","brood"],"B03":["cross_laser","sweep","burst"],"B04":["cross_laser","sweep","band"]}
+	"2":{"B01":["charge","cleave","slam"],"B02":["brood","lockdown","pulse"],"B03":["dash","sweep","burst"],"B04":["burst","sweep","dash","cross","band"]},
+	"3":{"B01":["charge","slam","shockwave"],"B02":["toxic_zone","root_shot","brood"],"B03":["cross_laser","burst","sweep","burst"],"B04":["burst","cross_laser","burst","sweep","band"]}
 }
 ## Attack kinds whose warning must be visible before they may connect. Used for the fog
 ## warning floor; the fog fairness gate inside HostileZone enforces the rest.
@@ -120,6 +120,7 @@ func barrage(kind: String, count: int, waves: int, speed_value: float, spread_va
 	pattern.speed = speed_value; pattern.spread = spread_value
 	pattern.style = style; pattern.control = control
 	pattern.shift = (0.24 if kind == "ring" else 0.18)*orbit_side
+	pattern.interval = 0.38 if kind == "ring" else 0.28
 	get_tree().current_scene.add_child(pattern); owned_attacks.append(weakref(pattern))
 
 func fan(count: int, spread: float, speed_value = 85.0, style := "projectile", control := 0.0):
@@ -556,13 +557,13 @@ func perform_attack():
 			if attack_kind == "charge":
 				phase = "dash"; phase_time = dash_seconds
 			elif attack_kind == "slam":
-				barrage("ring",23 if phase_two else 19,2 if phase_two else 1,115,0.85,"artillery")
+				barrage("ring",24 if phase_two else 20,2,115,0.85,"artillery")
 			elif attack_kind == "shockwave":
 				barrage("ring",25,2,120,0.85,"detonate")
 		"B02":
 			if attack_kind == "brood":
 				summon(3,"E06" if phase_two else "E02")
-				barrage("ring",28 if phase_two else 24,3 if phase_two else 2,115,0.85)
+				barrage("ring",32 if phase_two else 24,3 if phase_two else 2,115,0.85,"poison")
 			elif attack_kind == "pulse":
 				barrage("fan",23 if phase_two else 17,3 if phase_two else 2,130,1.3)
 			elif attack_kind == "root_shot":
@@ -572,12 +573,12 @@ func perform_attack():
 			if attack_kind == "dash":
 				phase = "dash"; phase_time = dash_seconds
 			elif attack_kind == "burst":
-				barrage("fan",17 if phase_two else 13,3 if phase_two else 2,160,1.0)
+				barrage("ring",40 if phase_two else 32,3,130,1.0,"laser")
 		"B04":
 			if attack_kind == "dash":
 				phase = "dash"; phase_time = dash_seconds
 			elif attack_kind == "burst":
-				barrage("fan",19 if phase_three else 15,3 if phase_three else 2,150,1.15)
+				barrage("ring",48 if phase_three else 40,4 if phase_three else 3,125,1.15,"laser")
 			elif attack_kind == "cross":
 				barrage("ring",26,2,120,0.85,"laser")
 			phase_time = 0.95 if not phase_two else 0.6

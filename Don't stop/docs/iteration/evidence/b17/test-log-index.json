@@ -1,0 +1,344 @@
+[
+ {
+  "file": "b17-auras-all.log",
+  "sha256": "47a59581128cd839534f7f00a3ec3e6138bb1afc5bb8d62accf2a10b94e2fd90",
+  "passes": 12,
+  "issues": [
+   "ERROR: Condition \"!viewport->canvas_map.has(p_canvas)\" is true."
+  ]
+ },
+ {
+  "file": "b17-auras-confirm.log",
+  "sha256": "e34eaeb10408ed1099147580d4a301992159806ae7e9c36a8a456969097be0a8",
+  "passes": 12,
+  "issues": []
+ },
+ {
+  "file": "b17-auras-samples.log",
+  "sha256": "b8ca3db1d0d7d14d184f8c30f11248f0ea8663438dc79646644eae3e41d2e75a",
+  "passes": 2,
+  "issues": [
+   "ERROR: Condition \"!viewport->canvas_map.has(p_canvas)\" is true."
+  ]
+ },
+ {
+  "file": "b17-boss-survival.log",
+  "sha256": "729a35fb81e62b8a558edfd8aa9fbf1ab49f2a65537bbf5e4c3dca3a4f3deae4",
+  "passes": 7,
+  "issues": [
+   "FAIL normal-health boss completion 40"
+  ]
+ },
+ {
+  "file": "b17-bosses-observation.log",
+  "sha256": "668e057b78b81fa765ece2a61cdb16490c2c93dd1561e5fef7d554742a904f02",
+  "passes": 28,
+  "issues": []
+ },
+ {
+  "file": "b17-camp-fixed.log",
+  "sha256": "fedc69c3bced85efdbb7cbb52267a8d954c7cf0e7a6017461ac83dc878d0abd4",
+  "passes": 15,
+  "issues": []
+ },
+ {
+  "file": "b17-camp-regression.log",
+  "sha256": "4ecc090cb663fa1b67b9b361e779a4b17add9c7fd992674c21c2d36fad1e6cbe",
+  "passes": 15,
+  "issues": [
+   "SCRIPT ERROR: Invalid access to property or key 'weapon_id' on a base object of type 'Nil'."
+  ]
+ },
+ {
+  "file": "b17-capacity-before.log",
+  "sha256": "3510d656d27332480102af4bee8b11d3126a97c2cc50ce173f0d9da22bca8932",
+  "passes": 0,
+  "issues": []
+ },
+ {
+  "file": "b17-close-B13Unequip.log",
+  "sha256": "084aff0acf2cd2c6636ec2f7e5ddc203863e2d538f2aec5924dde83fcde3d030",
+  "passes": 55,
+  "issues": []
+ },
+ {
+  "file": "b17-close-B16Save.log",
+  "sha256": "9ac9e70162068d24fa5cc03d3d9b2c83631316425da33792857a19be55600509",
+  "passes": 80,
+  "issues": []
+ },
+ {
+  "file": "b17-close-B17Contracts.log",
+  "sha256": "955eccd20c18b5be880b369df3dc93a68060c40afa9a1db2e8f73b182c153a1e",
+  "passes": 20,
+  "issues": []
+ },
+ {
+  "file": "b17-close-B17Sources.log",
+  "sha256": "ec7840dffaa612b4aa8ca35ce56d6fc2b3a7de3fe713e97b6c371ba1e1c50bbf",
+  "passes": 5,
+  "issues": []
+ },
+ {
+  "file": "b17-close-M4Talents.log",
+  "sha256": "7875ef4fb4975525fa96f445918015193f0b100f10050a061cf238058bd7b801",
+  "passes": 233,
+  "issues": []
+ },
+ {
+  "file": "b17-confirm-B13UI.log",
+  "sha256": "92cfb252e94c15f69d05efe954af9782c4368e85145f0c1b2014b3deeb7c6c43",
+  "passes": 138,
+  "issues": []
+ },
+ {
+  "file": "b17-confirm-B17Resources.log",
+  "sha256": "952350dba18c660f441bf37167624e26955d3c41c1bd76e577f6031157ddfa20",
+  "passes": 10,
+  "issues": []
+ },
+ {
+  "file": "b17-contracts-first.log",
+  "sha256": "9689c222e34038cf50168a0e2e3779c6ff701a670594f97e3c9f899761892d6f",
+  "passes": 20,
+  "issues": []
+ },
+ {
+  "file": "b17-current-encounters.log",
+  "sha256": "8774ff14c8af0022214da8ca718587ab543f6890e449593359c544bd7b470c84",
+  "passes": 5,
+  "issues": []
+ },
+ {
+  "file": "b17-density-paired.log",
+  "sha256": "51900ec339e46fe5f58e5498b735e7fdc78fcf7dc8166c73220351dfaa9962fa",
+  "passes": 0,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B13Economy.log",
+  "sha256": "2d05fa5c832d2e563f80ac009348efbc3254e44a360a54cfffa6796b82d29a71",
+  "passes": 159,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B13UI.log",
+  "sha256": "1376422a6c89cef88ce877149e6d9d79fde94d6c60dbe4098cb9260beb623696",
+  "passes": 137,
+  "issues": [
+   "FAIL stat panel names the unarmed state"
+  ]
+ },
+ {
+  "file": "b17-final-B14EncounterContracts.log",
+  "sha256": "8181c31efdb63f19cecb9e36c8ad2ce7f07bb0879e88fbce3492a8a423749211",
+  "passes": 86,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B14GrowthMatrix.log",
+  "sha256": "ea85a57c60c4fe69b670d40e46cc62c7ee7866a4f85f34683396d0bcc6326352",
+  "passes": 0,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B16Effects.log",
+  "sha256": "5764cc7de166b2c6839494bd7c2be50cc327835bf7c68ae45a5b75769b79c3e8",
+  "passes": 5,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B16Growth.log",
+  "sha256": "4c7bd6959f3dc4f72a0e7139997515e4299242e4a33f9c98753a3dc97bfe0de1",
+  "passes": 7,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B16Pickup.log",
+  "sha256": "99ff80379b140d97c44e5e9f794769f45226e7fc85f61f99895307fe80c0f872",
+  "passes": 12,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B17CombatMix.log",
+  "sha256": "4ba296b07b2db2aadd080dac6fc0ea7f714c4608b8e553bb28a45b2dd3417fda",
+  "passes": 72,
+  "issues": []
+ },
+ {
+  "file": "b17-final-B17Resources.log",
+  "sha256": "eb25b8a9d597eebd15bea782a6a19672ccb1aeea409e223131169fae8faac464",
+  "passes": 9,
+  "issues": [
+   "FAIL R10 actual kill growth caps at one hundred events"
+  ]
+ },
+ {
+  "file": "b17-fixed-perf.log",
+  "sha256": "1ee7b3fb4e8a0b2facbedeb6f77b371922ea9c57152ad002b3a23fbcffd6e033",
+  "passes": 0,
+  "issues": []
+ },
+ {
+  "file": "b17-horde-current.log",
+  "sha256": "d4ef089de6b355b01cb30fefb9a347faeef94dd7b8248a3df3b4b2e6dcfecccd",
+  "passes": 0,
+  "issues": []
+ },
+ {
+  "file": "b17-import.log",
+  "sha256": "1c2345396f388bc1b2048a36ddfc325e1f1ee37361ef1f46b9c02138542b0400",
+  "passes": 0,
+  "issues": [
+   "WARNING: Missing .uid file for path \"res://tests/B12Catalog.gd\". The file was re-created from cache.",
+   "WARNING: Missing .uid file for path \"res://tests/B12LineOfSightRegression.gd\". The file was re-created from cache.",
+   "WARNING: Missing .uid file for path \"res://tests/B12Save.gd\". The file was re-created from cache.",
+   "WARNING: Missing .uid file for path \"res://tests/B12UI.gd\". The file was re-created from cache.",
+   "WARNING: Missing .uid file for path \"res://tests/B12Visual.gd\". The file was re-created from cache.",
+   "WARNING: Missing .uid file for path \"res://tests/B12WeaponBench.gd\". The file was re-created from cache."
+  ]
+ },
+ {
+  "file": "b17-product-perf-first.log",
+  "sha256": "a7337f9ec1a5332cd4547d82418ff1e0f93719d4797ea5b1d858ce36c09978c7",
+  "passes": 0,
+  "issues": []
+ },
+ {
+  "file": "b17-saved-confirm.log",
+  "sha256": "b5d923ee3bfdca8ea9e5fe72e07f3720d403fec08df5a7910f00e9a57d750613",
+  "passes": 12,
+  "issues": [
+   "FAIL historical retained ownership without replaying instant heal 7"
+  ]
+ },
+ {
+  "file": "b17-saved-final.log",
+  "sha256": "02d654c52b57ea1251049074017b20154c78a20de0fc2fa9994f1db25602a901",
+  "passes": 13,
+  "issues": []
+ },
+ {
+  "file": "b17-saved-isolation.log",
+  "sha256": "aa2c786cc9fd703763f9afae61600042b1dfb20344c663170d9a7e5684ecd188",
+  "passes": 13,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B11Fairness.log",
+  "sha256": "facf2f8ef3b3719bbcb01c9a02ac416df3a173fe0b741bfb91daaa7dfc2a9ed5",
+  "passes": 61,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B13TalentEffects.log",
+  "sha256": "f9915fc80a14a385ef41a9a1247f53b9b56dae130a3744803c9db97782ee924e",
+  "passes": 37,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B13UpgradeEffects.log",
+  "sha256": "8a630bd66bbd9bdd6bde3ef51d2e3fe9cd6b06d0e7809452b36b6325c90ea680",
+  "passes": 85,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B14Loadout.log",
+  "sha256": "cdb9f308bc93316733994eb5203af61bec71a9fcb88c9eba0131b7e2b4a3d00f",
+  "passes": 86,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B15Hazards.log",
+  "sha256": "f8871923ede836a0f16cf5ba7d835ccce3c0ee3710c325210bbc33d71efb3d2e",
+  "passes": 15,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B16Save.log",
+  "sha256": "f718e069ca4f699ec8fa486d5f7b150653d7acf47bc50d0db9f0cad2cc9c6c18",
+  "passes": 80,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B17CombatMix.log",
+  "sha256": "15c1053a327220c51d5ee785c00488e6b45d8568633578656a5291c9d38be921",
+  "passes": 72,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B17Contracts.log",
+  "sha256": "fd92ccb3852d75d422517d7ff52e2a4f0c1eaa80329c6cb62ed672f14f38bb7a",
+  "passes": 20,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B17RewardMatrix.log",
+  "sha256": "454b39afd5ca64322fc10e0f3ba7ebdbaf8dd879de45601a24418522b7ece9b1",
+  "passes": 49,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-B17Sources.log",
+  "sha256": "638e852dfc1710bcc599e648b76f08ee96e323de03b4b3b8c87dc874a4696a73",
+  "passes": 5,
+  "issues": []
+ },
+ {
+  "file": "b17-suite-R1Timeline.log",
+  "sha256": "7b8c0e7b185948ecaab8bfc6e015e4d00e45fb36fad6bd43f35e033260326b56",
+  "passes": 37,
+  "issues": [
+   "FAIL V02 held laser real ray hits across 0.1s ticks",
+   "FAIL V02 original .1 tick and .4 pulse active at .34",
+   "FAIL V02 sustained real beam with legal increased pulse rate",
+   "FAIL V02 original right-click grenade creates actual projectile"
+  ]
+ },
+ {
+  "file": "b17-timeline-current.log",
+  "sha256": "e2c1f751fc193043a0fbe467cdc6add10d6d4533ea726efee1aae19b82612614",
+  "passes": 38,
+  "issues": [
+   "FAIL V02 laser real ray hits across 0.1s ticks",
+   "FAIL V02 stop damage audio particles on switch",
+   "FAIL V02 stop damage audio particles on reload"
+  ]
+ },
+ {
+  "file": "b17-timeline-final.log",
+  "sha256": "56794d6abb4e47a23e1b2bb8cfd2545f5cf4ef454d0427f0972c4be2eb9e9a12",
+  "passes": 40,
+  "issues": [
+   "FAIL V02 laser real ray hits across 0.1s ticks"
+  ]
+ },
+ {
+  "file": "b17-timeline-raydiagnostic.log",
+  "sha256": "a1626910a8bae512981243e233602d3f28f0740e3f75fb9cbdf3473e7433f0da",
+  "passes": 40,
+  "issues": [
+   "FAIL V02 laser real ray hits across 0.1s ticks"
+  ]
+ },
+ {
+  "file": "b17-timeline-reload.log",
+  "sha256": "1a80cf8fb129d9985823b94157b5cacfda281a4394486c0223b36eb0bb8b21e9",
+  "passes": 40,
+  "issues": [
+   "FAIL V02 laser real ray hits across 0.1s ticks"
+  ]
+ },
+ {
+  "file": "b17-timeline-worldpose.log",
+  "sha256": "359ad21c4a9d954a47a70e0910a0024015295f27132d93d2aea3fc80fa9da5d4",
+  "passes": 41,
+  "issues": []
+ },
+ {
+  "file": "b17-verbose-smoke.log",
+  "sha256": "a0259d618d7833964439d123f197113ddfc06919b284491c20666f900934eabc",
+  "passes": 0,
+  "issues": []
+ }
+]

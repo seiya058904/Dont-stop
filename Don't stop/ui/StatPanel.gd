@@ -42,9 +42,8 @@ func render():
 	for parent in [listing,details,overview]:
 		for child in parent.get_children(): parent.remove_child(child); child.queue_free()
 	source_buttons.clear(); values.clear()
-	if not Utils.player.gun:
-		label(listing,"未装备武器；装备武器后可查看完整属性。"); return
 	snapshot=EffectiveStats.inspect(Utils.player.gun)
+	if snapshot.weapon.is_empty(): label(listing,"未装备武器；玩家属性与已有构筑仍然生效。")
 	overview.visible=tab=="build"; columns.visible=tab!="build"
 	if tab=="build": render_build(); return
 	var p=snapshot.player; var gun=Utils.player.gun
@@ -59,8 +58,10 @@ func render():
 		label(listing,"普通入伤 ×%.4f\nBoss普通入伤 ×%.4f\n百分比大招独立，再经过护盾/减伤。" % [p.normal_incoming,p.boss_incoming])
 		label(listing,"护盾："+(("就绪" if p.shield_cooldown<=0 else "%.1fs" % p.shield_cooldown) if p.shield_unlocked else "未解锁"))
 		label(listing,"金币吸引半径 %.0f\n备用弹匣 %d" % [p.coin_radius,p.reserve_magazines])
-		stats=["max_hp","speed","damage","crit","pickup"]
+		stats=["max_hp","speed","damage","crit","pickup"] if is_instance_valid(gun) else ["max_hp","speed","pickup"]
 	else:
+		if not is_instance_valid(gun):
+			label(listing,"未装备武器"); label(details,"玩家属性、已拥有强化、天赋与原型仍可在其他标签查看。强化会自动用于以后装备的武器。"); return
 		var preview=TextureRect.new(); preview.texture=gun.image; preview.custom_minimum_size=Vector2(120,30); preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE; preview.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED; preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST; listing.add_child(preview)
 		label(listing,tr(gun.weapon_name)+" · "+WeaponCatalog.rarity(gun.weapon_id))
 		label(listing,"弹药 %d / %d · RPM %.1f\n%s" % [gun.bullets_count,snapshot.weapon.magazine,snapshot.weapon.rpm,EffectiveStats.damage_unit(gun.effective)])
@@ -132,8 +133,10 @@ func make_owned(grid,kind: String,id: String,picture: Texture2D,title: String,in
 func render_build():
 	owned_icons.clear()
 	label(overview,"我的力量来自哪里？ · 点击最终值查看来源",8)
+	if snapshot.weapon.is_empty(): label(overview,"未装备武器 · 全局强化保留，装备后自动生效。")
 	var finals=GridContainer.new(); finals.columns=4; overview.add_child(finals)
 	for stat in ["damage","crit","rate","magazine","reload","range","max_hp","speed","impulse"]:
+		if snapshot.weapon.is_empty() and stat not in ["max_hp","speed"]: continue
 		var value=snapshot.player.get(stat,snapshot.weapon.get(stat,0)); values[stat]=value
 		var text_value="%.1f" % value
 		if stat=="crit": text_value="%.1f%%" % (value*100)
@@ -165,7 +168,7 @@ func render_build():
 				make_owned(grid,kind,id,load("res://Sprites/All_Icons/Blue Crystal.png"),DemoConfig.TALENTS[id].name+" Lv.%d" % Demo.rank(id),info)
 		else:
 			for reward in Utils.player.reward_root.get_children():
-				make_owned(grid,kind,str(reward.id),reward.reward_image,tr(reward.reward_name),"当前 %d / %d 层\n" % [reward.count,reward.max_count]+tr(reward.reward_info))
+				make_owned(grid,kind,str(reward.id),reward.reward_image,tr(reward.reward_name),"已记录 %d 层 · 有效 %d / %d 层\n" % [reward.count,mini(reward.count,reward.max_count),reward.max_count]+tr(reward.reward_info))
 
 		var special=button(content,"条件效果 / 特殊效果  ›",func(): tab="effects"; render())
 		special.tooltip_text="触发效果单独计算，不计为永久属性。"

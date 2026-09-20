@@ -3,15 +3,26 @@ class_name EffectiveStats
 
 static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = null) -> Dictionary:
 	if upgrades == null: upgrades = Demo.owned_global_upgrades if saved.is_empty() else saved.get("owned_global_upgrades",[])
+	# Saved validation is independent of whatever character is currently loaded.
+	# Legacy base_* fields were never persisted and have no current reward writers.
+	var legacy_damage = PlayerData.base_bullet_damage if saved.is_empty() else 0.0
+	var legacy_magazine = PlayerData.base_magazine_count if saved.is_empty() else 0.0
+	var legacy_reload = PlayerData.base_reload_speed if saved.is_empty() else 0.0
+	var legacy_crit = PlayerData.base_aim_enh if saved.is_empty() else 0.0
+	var state = saved.get("legacy_state",{})
+	var fire_cycle = PlayerData.player_fire_rate if saved.is_empty() else (1.2 if state.get("8",{}).get("remaining",0)>0 else 1.0)
+	var spring_rank = RewardServer.rank(20) if saved.is_empty() else saved.get("legacy",[]).count("20")
+	var momentum = RewardServer.momentum() if saved.is_empty() else (0.03*saved.get("legacy",[]).count("22") if state.get("22",{}).get("moving_buff",false) else 0.0)
+	var kill_stacks = Demo.kill_stacks if saved.is_empty() else 0
 	var b = gun.base_stats
 	var ranks = Demo.talents if saved.is_empty() else saved.talents
 	var level_damage = PlayerData.player_damage if saved.is_empty() else PlayerData.PROGRESSION.damage(saved.level)
 	var magazine_mul = 1.0
 	var reload_mul = 1.0
-	var damage_percent = PlayerData.base_bullet_damage + DemoConfig.talent_value("T01",int(ranks.get("T01",0)))
-	var crit = PlayerData.base_aim_enh * 0.01
+	var damage_percent = legacy_damage + DemoConfig.talent_value("T01",int(ranks.get("T01",0)))
+	var crit = legacy_crit * 0.01
 	var spread = 1.0
-	var impulse = 1.0+0.15*RewardServer.rank(20)
+	var impulse = 1.0+0.15*spring_rank
 	var radius = 1.0
 	var jumps = 3
 	var spec = WeaponCatalog.definition(gun.weapon_id)
@@ -22,25 +33,25 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = nul
 	extras.range *= 1.0+DemoConfig.talent_value("T05",int(ranks.get("T05",0)))
 	if gun.weapon_id == 6: extras.range *= 1000.0/320.0
 	if "straight" in gun.tags: extras.pierce += int(DemoConfig.talent_value("T13",int(ranks.get("T13",0))))
-	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))+RewardServer.momentum()+PlayerData.player_fire_rate-1.0
-	cycle *= 1.0+Demo.kill_stacks*DemoConfig.talent_value("T10",int(ranks.get("T10",0)))
+	var cycle = 1.0+DemoConfig.talent_value("T02",int(ranks.get("T02",0)))+momentum+fire_cycle-1.0
+	cycle *= 1.0+kill_stacks*DemoConfig.talent_value("T10",int(ranks.get("T10",0)))
 	if ledger:
 		for stat in ["damage","magazine","reload","rate","impulse"]: ledger.add(stat,"base","weapon",TranslationServer.translate(gun.weapon_name),"flat",b[stat])
 		ledger.add("damage","level","level","等级成长","flat",level_damage)
 		ledger.add("damage","base","power","武器品阶强度","multiplier",WeaponCatalog.power(gun.weapon_id))
-		for row in [["damage",PlayerData.base_bullet_damage],["magazine",PlayerData.base_magazine_count],["reload",-PlayerData.base_reload_speed]]:
+		for row in [["damage",legacy_damage],["magazine",legacy_magazine],["reload",-legacy_reload]]:
 			ledger.add(row[0],"legacy","legacy_base","原型全局成长","additive_percentage",row[1])
-		ledger.add("crit","base","weapon","原型基础暴击","percentage_point",PlayerData.base_aim_enh*0.01)
+		ledger.add("crit","base","weapon","原型基础暴击","percentage_point",legacy_crit*0.01)
 		ledger.add("range","base","weapon","武器基础射程","flat",spec.get("range",320.0))
 		ledger.add("spread","base","weapon","基础散布倍率","flat",1.0)
 		for row in [["damage","T01"],["rate","T02"],["reload","T03"],["magazine","T04"],["range","T05"],["crit","T06"],["impulse","T18"]]:
 			var value=DemoConfig.talent_value(row[1],int(ranks.get(row[1],0)))
 			if row[0]=="reload": value=-value
 			ledger.add(row[0],"talent",row[1],DemoConfig.TALENTS[row[1]].name,"percentage_point" if row[0]=="crit" else "additive_percentage",value,ranks.get(row[1],0)>0)
-		ledger.add("rate","reward","8","琥珀镰刀","additive_percentage",PlayerData.player_fire_rate-1.0,PlayerData.player_fire_rate>1,"限时连杀增益")
-		ledger.add("rate","reward","22","动量环","additive_percentage",RewardServer.momentum(),RewardServer.momentum()>0,"连续移动2秒")
-		ledger.add("impulse","reward","20","冲量弹簧","additive_percentage",0.15*RewardServer.rank(20),RewardServer.rank(20)>0,"仅普通敌人")
-		ledger.add("rate","condition","T10",DemoConfig.TALENTS.T10.name,"multiplier",1.0+Demo.kill_stacks*DemoConfig.talent_value("T10",int(ranks.get("T10",0))),Demo.kill_stacks>0,"有效击杀后限时层数")
+		ledger.add("rate","reward","8","琥珀镰刀","additive_percentage",fire_cycle-1.0,fire_cycle>1,"限时连杀增益")
+		ledger.add("rate","reward","22","动量环","additive_percentage",momentum,momentum>0,"连续移动2秒")
+		ledger.add("impulse","reward","20","冲量弹簧","additive_percentage",0.15*spring_rank,spring_rank>0,"仅普通敌人")
+		ledger.add("rate","condition","T10",DemoConfig.TALENTS.T10.name,"multiplier",1.0+kill_stacks*DemoConfig.talent_value("T10",int(ranks.get("T10",0))),kill_stacks>0,"有效击杀后限时层数")
 		if gun.weapon_id==6: ledger.add("range","base","laser","原型激光距离换算","multiplier",1000.0/320.0)
 	if "continuous" in gun.tags:
 		damage_mul *= cycle
@@ -82,8 +93,8 @@ static func calculate(gun, upgrades = null, saved: Dictionary = {}, ledger = nul
 
 	var result = {
 		"tags":gun.tags, "damage": (b.damage + level_damage) * WeaponCatalog.power(gun.weapon_id) * (1.0 + damage_percent)*damage_mul,
-		"magazine": maxi(1, int((b.magazine * magazine_mul) * (1.0 + PlayerData.base_magazine_count + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
-		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - PlayerData.base_reload_speed - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
+		"magazine": maxi(1, int((b.magazine * magazine_mul) * (1.0 + legacy_magazine + DemoConfig.talent_value("T04",int(ranks.get("T04",0)))))),
+		"reload": maxf(DemoConfig.MIN_RELOAD_SECONDS, b.reload * maxf(0.1, 1.0 - legacy_reload - DemoConfig.talent_value("T03",int(ranks.get("T03",0)))) * reload_mul),
 		"rate": 10.0 if "continuous" in gun.tags else clampf(b.rate * cycle, 0.1, 24.0 if "rotary" in gun.tags else 60.0),
 		"crit": clampf(crit, 0.0, 1.0), "spread":spread,
 		"impulse": b.impulse * impulse, "radius":(WeaponCatalog.PLASMA_RADIUS if gun.weapon_id == 114 else spec.get("radius",32.0)) * radius, "jumps":jumps
@@ -109,7 +120,7 @@ static func player_values() -> Dictionary:
 
 static func inspect(gun) -> Dictionary:
 	var ledger=preload("res://game/config/StatLedger.gd").new()
-	var final=calculate(gun,null,{},ledger)
+	var final=calculate(gun,null,{},ledger) if is_instance_valid(gun) else {}
 	var player=player_values()
 	player.shield_unlocked=Demo.rank("T19")>0
 	player.shield_cooldown=Demo.cooldown("T19")
@@ -133,6 +144,10 @@ static func inspect(gun) -> Dictionary:
 	var helmet=3*mini(RewardServer.rank(2),4)
 	ledger.add("max_hp","reward","2","头盔（当前有效层）","flat",helmet,helmet>0)
 	ledger.add("max_hp","history","saved_hp","已保存的原型成长/历史差额","flat",player.max_hp-5-level_hp-talent_hp-helmet,true,"含细菌击杀成长及旧档历史；不重复授予")
+	if not is_instance_valid(gun):
+		var empty_deltas = {}
+		for id in Demo.owned_global_upgrades: empty_deltas[str(id)] = {}
+		return {"weapon":{},"player":player,"ledger":ledger,"conditions":conditions(null),"upgrade_deltas":empty_deltas}
 	ledger.add("damage","condition","T22",DemoConfig.TALENTS.T22.name,"multiplier",1.0+DemoConfig.talent_value("T22",Demo.rank("T22")),Demo.crowd_active,"100范围至少3敌")
 	var first_shot=gun.first_round or gun.boosted_frame==Engine.get_process_frames()
 	var first_multiplier=1.0+DemoConfig.talent_value("T12",Demo.rank("T12")) if gun.first_round else gun.volley_boost

@@ -26,6 +26,7 @@ func restore_state(state: Dictionary):
 [node name="HpReward" type="Node2D"]
 script = SubResource("GDScript_vv158")
 id = 9
+max_count = 3
 reward_name = "REWARD BATTERY"
 reward_image = ExtResource("1_dmkwg")
 reward_info = "REWARD BATTERY INFO"

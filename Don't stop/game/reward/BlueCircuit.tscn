@@ -19,6 +19,7 @@ func afterAtk(monster:BaseMonster,hit_num):#怪物收到伤害后触发
 [node name="HpReward" type="Node2D"]
 script = SubResource("GDScript_k4dxi")
 id = 11
+max_count = 4
 reward_name = "REWARD BLUE CIRCUIT"
 reward_image = ExtResource("1_nvfc7")
 reward_info = "REWARD BLUE CIRCUIT INFO"

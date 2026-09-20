@@ -11,8 +11,8 @@ class_name FogPierce
 ## layer makes the threat DIRECTION readable, which is the user's stated requirement
 ## ("Laser：危险线必须先进入可见范围", "关键危险 telegraph 可以在 Fog 层上方绘制").
 ##
-## Deliberately minimal: one canvas, straight segments and circles only, a hard per-frame
-## cap, and it only exists while fog is active. It is an information layer, never a
+## One canvas, straight segments and circles; the per-frame cap applies only to decoration.
+## Admitted threats retain their necessary outlines. It is an information layer, never a
 ## damage layer.
 const GROUP := "fog_pierce"
 
@@ -92,11 +92,10 @@ static func discard() -> void:
 ## decorative core and never the lane, so the cap has to be evaluated between the two.
 static func _offer(layer: FogPierce, entry: Dictionary) -> void:
 	if B11Probe.enabled: B11Probe.fog_pushes += 1
-	if layer.canvas.entries.size() >= FogPierceCanvas.MAX_ENTRIES:
+	if not layer.canvas.offer(entry):
 		if B11Probe.enabled: B11Probe.fog_entries_dropped += 1
 		return
 	if B11Probe.enabled: B11Probe.fog_entries_appended += 1
-	layer.canvas.entries.append(entry)
 
 ## Single-entry producers (circles) go through here; the canvas is resolved once for the one entry.
 static func _push(entry: Dictionary) -> void:
@@ -105,10 +104,8 @@ static func _push(entry: Dictionary) -> void:
 	if layer == null: return
 	_offer(layer, entry)
 
-## World-space segment. Push order is a PRIORITY, not an accident: the lane that tells the player
-## where a laser is about to fire goes FIRST and the decorative bright core that doubles it goes
-## last, so a full list can only ever cost ink and never information. B11.2 keeps that order and
-## that guarantee, and resolves the canvas once for the pair instead of once per entry.
+## World-space segment. B17 separates the necessary lane from the globally budgeted
+## decorative core; producer order cannot let an earlier core suppress a later threat.
 static func push_line(a: Vector2, b: Vector2, color: Color, width: float) -> void:
 	if B11Probe.enabled: B11Probe.fog_push_lines += 1
 	if not ArenaVisibility.fog_active(): return
@@ -119,7 +116,7 @@ static func push_line(a: Vector2, b: Vector2, color: Color, width: float) -> voi
 	# A doubled thin core reads as emissive against a near-black far field. Both keys are
 	# quoted on purpose: a bare `width:` here created a differently typed key, which made the
 	# renderer read a missing property and draw nothing.
-	_offer(layer, {"kind":"line","a":a,"b":b,"color":Color(color.r,color.g,color.b,color.a*0.55),"width":width*0.4})
+	_offer(layer, {"kind":"line","a":a,"b":b,"color":Color(color.r,color.g,color.b,color.a*0.55),"width":width*0.4,"decorative":true})
 
 ## World-space circle outline.
 static func push_circle(center: Vector2, radius: float, color: Color, width: float) -> void:

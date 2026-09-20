@@ -55,6 +55,10 @@ func _draw():
 			draw_line(to_local(trail[i-1]),to_local(trail[i]),Color(ink.r,ink.g,ink.b,0.1+0.45*i/trail.size()),1.0+1.5*i/trail.size(),true)
 	draw_circle(Vector2.ZERO,4,Color(ink.r*0.15,ink.g*0.15,ink.b*0.15))
 	draw_circle(Vector2.ZERO,2.8,Color(ink.r,ink.g,ink.b))
+	if style == "laser":
+		draw_polyline(PackedVector2Array([Vector2(-5,0),Vector2(0,-4),Vector2(5,0),Vector2(0,4),Vector2(-5,0)]),Color(ink,0.9),1)
+	elif style == "poison":
+		for side in [-1,1]: draw_rect(Rect2(Vector2(side*4,-1),Vector2(2,2)),Color(ink,0.85))
 	if control > 0.0:
 		# Control attacks pulse an outer waveform ring so they never read as plain damage.
 		draw_arc(Vector2.ZERO,5.5+1.5*sin(life*22.0),0,TAU,14,Color(ink.r,ink.g,ink.b,0.75),1.4,true)

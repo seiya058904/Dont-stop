@@ -6,6 +6,7 @@
 [node name="HpReward" type="Node2D"]
 script = ExtResource("1_jrwkq")
 id = 3
+max_count = 4
 reward_name = "REWARD_WARING_SHIELD"
 reward_image = ExtResource("2_t1dvg")
 reward_info = "REWARD_WARING_SHIELD_INFO"

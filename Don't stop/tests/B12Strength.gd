@@ -136,6 +136,9 @@ func verify_manifest():
 	check(str(covered)==str(expected),"manifest covers the whole measurement set (catalog + stats + combat + bench + 24 gun scenes/scripts)")
 
 func _ready():
+	if "--b17" in OS.get_cmdline_user_args():
+		var current=load("res://tests/B17Evidence.gd").new()
+		current.scope="weapons"; add_child(current); return
 	if "--b14" in OS.get_cmdline_user_args():
 		var current=load("res://tests/B14Evidence.gd").new()
 		current.scope="weapons";add_child(current)

@@ -231,7 +231,7 @@ func onMonsterCreate():
 
 func tick_horde(config: Dictionary):
 	if not M5Content.HORDES.has(level): return
-	var h=M5Content.HORDES[level]
+	var h=config.get("horde",M5Content.HORDES[level])
 	horde_clock-=0.1; horde_since+=0.1
 	var alive=get_tree().get_nodes_in_group("monsters").filter(func(m): return not m.is_die and not m.training).size()
 	var thinning=Combat.kill_events-horde_last_kills>=ceili(h.batch*0.6)

@@ -1,0 +1,698 @@
+{
+ "checks": 49,
+ "failures": 0,
+ "rows": [
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 0,
+   "info": "REWARD_GOLD_INFO",
+   "max_count": 99,
+   "once": true,
+   "values": [
+    {
+     "gold_delta": 10,
+     "hp": 3.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 1,
+   "info": "REWARD_HP_INFO",
+   "max_count": 99,
+   "once": true,
+   "values": [
+    {
+     "gold_delta": 0,
+     "hp": 5.0
+    }
+   ]
+  },
+  {
+   "first_hp": 8,
+   "first_speed": 100,
+   "id": 2,
+   "info": "获得及叠层时最大生命+3；最多前4层提供效果，旧存档计数和历史生命保留。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 8,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 17,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 3,
+   "info": "15%/层概率抵消少量伤害；概率最高60%，减伤量按最多4层计算。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 4,
+   "info": "直接命中每层10%概率伤害翻倍，概率最高100%；保留蓝斧特色。",
+   "max_count": 10,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1090.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 2000.0,
+     "magnet": 0.0,
+     "rank": 10,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 105.0,
+   "id": 5,
+   "info": "基础移动速度每层+5，效果最多6层；与天赋及动量环相加。",
+   "max_count": 6,
+   "once": null,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 105.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 6,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 130.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 6,
+   "info": "同目标每3次直接命中造成5×层数附加伤害，效果最多6层；附伤不递归。",
+   "max_count": 6,
+   "once": null,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1165.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1990.0,
+     "magnet": 0.0,
+     "rank": 6,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 7,
+   "info": "直接击杀20%掉落回血包，回复量最多3HP；不触发派生击杀。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 8,
+   "info": "1秒内直接击杀3敌，射速+20个百分点，持续层数+1秒（最多6秒），不重复叠加；保存剩余时间。",
+   "max_count": 5,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1.2,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 5,
+     "rate": 1.2,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 9,
+   "info": "每3秒充能，下一次直接命中伤害+50%×层数，效果最多3层；保存充能状态。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1005.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1015.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 10,
+   "info": "前100次直接击杀每次最大生命+0.1；旧存档击杀计数及历史生命保留。",
+   "max_count": 1,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 11,
+   "info": "直接命中20%概率额外造成25%×层数伤害，效果最多4层；派生不再触发。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1045.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1180.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 12,
+   "info": "直接命中10/13/16/19%附加1秒灼烧，总伤害为本次50%；同源刷新，不递归。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [
+      "R12"
+     ],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [
+      "R12"
+     ],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 13,
+   "info": "直接命中10/14/18/22%减速20%持续1秒；Boss效果四分之一，与低温天赋相加上限40%。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.2,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.2,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 14,
+   "info": "对精英及Boss，每层独立伤害+5%。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1050.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1200.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 15,
+   "info": "每第7/6/5次直接命中，该次伤害+35%。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1049.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1070.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 16,
+   "info": "直接暴击15/20/25%放出两枚各12.5%伤害实体裂片；墙阻挡，短距飞行，仅一代。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1500.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1500.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 17,
+   "info": "受伤后，下一次普通攻击伤害-20%；激活冷却6/5/4秒，不减百分比大招。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 18,
+   "info": "每12/10/8次直接击杀恢复0.5HP；派生和假人不计。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 19,
+   "info": "受伤后生命低于30%且存活，恢复1/1.5/2HP；冷却20秒。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 20,
+   "info": "对普通敌人击退每层+15%，与天赋及强化普通百分比相加；Boss免推。",
+   "max_count": 4,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 4,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 21,
+   "info": "每15/12/10次直接击杀获得1个备用弹匣；不填当前弹匣。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 22,
+   "info": "连续移动2秒后移速及射速每层+3%；停止即消失。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 103.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.0,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 109.0
+    }
+   ]
+  },
+  {
+   "first_hp": 5,
+   "first_speed": 100,
+   "id": 23,
+   "info": "金币和回血拾取范围每层+40%；与天赋相加，隔墙无效，金币价值不变。",
+   "max_count": 3,
+   "once": false,
+   "values": [
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 0.4,
+     "rank": 1,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    },
+    {
+     "burn_sources": [],
+     "hp_max": 5,
+     "hundred_direct_damage": 1000.0,
+     "magnet": 1.2,
+     "rank": 3,
+     "rate": 1,
+     "slow": 0.0,
+     "speed": 100.0
+    }
+   ]
+  }
+ ]
+}

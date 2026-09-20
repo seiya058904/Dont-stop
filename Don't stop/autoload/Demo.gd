@@ -439,7 +439,13 @@ func load_camp() -> bool:
 	for id in purchases:
 		var reward = RewardServer.reward_list[id].instantiate()
 		if reward.only_start: reward.free()
-		else: RewardServer.addReward(reward)
+		else:
+			# Validated historical ownership is not a new purchase; retain excess ranks.
+			var existing = Utils.player.reward_root.get_node_or_null(reward.reward_name)
+			if existing:
+				existing.count += 1
+				reward.free()
+			else: RewardServer.addReward(reward)
 	for reward in Utils.player.reward_root.get_children():
 		if reward.id == 10: reward.kill_count = int(data.legacy_state.get("10",0))
 		if reward.has_method("restore_state"): reward.restore_state(data.legacy_state.get(str(reward.id),{}))

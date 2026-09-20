@@ -88,7 +88,7 @@ func _ready() -> void:
 	add_to_group("guns")
 	tier_muzzle = preload("res://game/effects/TierMuzzle.gd").new()
 	gun_tip.add_child(tier_muzzle)
-	if weapon_id in [6,112,113,116,120,124]:
+	if WeaponCatalog.tier(weapon_id) >= 4:
 		var idle = preload("res://game/effects/WeaponIdle.gd").new()
 		idle.gun = self
 		add_child(idle)
@@ -316,6 +316,8 @@ func reload_ammo():
 		Utils.showToast("AMMO_OUT")
 		return
 	if !is_reloading && change_timer.is_stopped() && bullets_count < bullets_max_count:
+		# Reload ends an active beam/thermal/charge before starting its own timer.
+		cancel_actions()
 		is_reloading = true
 		var local_speed = effective.reload
 		anim_player.speed_scale = 1 / local_speed

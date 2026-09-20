@@ -49,7 +49,7 @@ static func player_light() -> PointLight2D:
 ## in the combat code reads this, so a stale stage can never gate damage after a return
 ## to camp, a map reload or a second session.
 static func fog_active() -> bool:
-	if not HellMode.is_hell(active_stage): return false
+	if not HellMode.has_fog(active_stage): return false
 	if LevelServer.state != "COMBAT": return false
 	return modulate_node() != null and player_light() != null
 
@@ -60,20 +60,20 @@ static func fair_radius() -> float:
 	return HellMode.LIGHT_RADIUS_PER_SCALE*stage_target_scale(active_stage)*0.85
 
 static func stage_target_ambient(stage: int) -> Color:
-	if not HellMode.is_hell(stage): return CAMP_AMBIENT
+	if not HellMode.has_fog(stage): return CAMP_AMBIENT
 	# The ambient floor is scaled by the phase factor but never below the authored stage
 	# value's own floor, so a tighten cannot black the arena out.
 	var level = HellMode.fog(stage).ambient*phase_factor
 	return Color(level,level,level,1)
 
 static func stage_target_scale(stage: int) -> float:
-	if not HellMode.is_hell(stage): return HellMode.UPSTREAM_LIGHT_SCALE
+	if not HellMode.has_fog(stage): return HellMode.UPSTREAM_LIGHT_SCALE
 	return HellMode.light_scale(stage)*phase_factor
 
 ## Boss Phase III: narrow the fight for as long as the phase lasts. A shorter fade than the
 ## stage entrance, because this one happens while the player is already under fire.
 static func tighten_phase(factor: float) -> void:
-	if not HellMode.is_hell(active_stage): return
+	if not HellMode.has_fog(active_stage): return
 	phase_factor = clampf(factor,0.6,1.0)
 	_apply(active_stage,false,0.35)
 
@@ -114,7 +114,7 @@ static func _apply(stage: int, instant: bool, seconds := TRANSITION_SECONDS) -> 
 	var light = player_light()
 	var ambient = stage_target_ambient(stage)
 	var scale = stage_target_scale(stage)
-	var energy = HellMode.light_energy(stage) if HellMode.is_hell(stage) else 1.0
+	var energy = HellMode.light_energy(stage) if HellMode.has_fog(stage) else 1.0
 	if instant or modulate == null:
 		if modulate != null: modulate.color = ambient
 		if light != null: light.texture_scale = scale; light.energy = energy

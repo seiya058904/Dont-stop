@@ -347,8 +347,16 @@ func _draw_band(_style: String, live: bool, progress: float) -> void:
 	draw_line(Vector2.ZERO,direction*clipped,edge,3.2,true)
 	draw_line(Vector2.ZERO,direction*clipped,Color(1,1,1,0.9),width*0.5,true)
 	for i in int(clipped/34.0):
-		var point = direction*(i*34.0)
-		draw_arc(point,3.0,0,TAU,10,Color(1,1,1,0.55),1.2,true)
+		var distance = fmod(i*34.0+elapsed*85.0,maxf(1,clipped))
+		var point = direction*distance
+		var side = direction.orthogonal()
+		# Moving broken facets give the live beam a material distinct from its warning.
+		for sign_value in [-1,1]:
+			var facet=point+side*sign_value*width*0.65
+			draw_line(facet,facet+direction*minf(11,clipped-distance),Color(edge,0.75),2)
+		draw_line(point,point+direction*minf(7,clipped-distance),Color(1,1,1,0.8),2)
+	draw_arc(Vector2.ZERO,9,0,TAU,12,edge,2)
+	draw_circle(direction*clipped,4,Color(0.85,1,1,0.85))
 	FogPierce.push_line(origin(),origin()+direction*clipped,edge,width*2)
 	draw_set_transform(Vector2.ZERO)
 

@@ -1,0 +1,1149 @@
+{
+ "b17-capacity-before.json": [
+  {
+   "factor": 1.0,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6369,
+    "p50": 6.208,
+    "p95": 7.935,
+    "p99": 8.699,
+    "max": 32.836,
+    "over25": 1,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7128,
+    "p50": 6.213,
+    "p95": 7.9,
+    "p99": 8.739,
+    "max": 177.109,
+    "over25": 5,
+    "over33": 3,
+    "over50": 3
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 34,
+    "p95": 48,
+    "p99": 54,
+    "max": 54,
+    "over25": 38,
+    "over33": 23,
+    "over50": 1
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 802,
+    "p95": 973,
+    "p99": 1067,
+    "max": 1067,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 35,
+    "p95": 52,
+    "p99": 56,
+    "max": 56,
+    "over25": 35,
+    "over33": 27,
+    "over50": 3
+   }
+  },
+  {
+   "factor": 1.5,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6389,
+    "p50": 6.265,
+    "p95": 7.829,
+    "p99": 8.38,
+    "max": 14.573,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7189,
+    "p50": 6.264,
+    "p95": 7.797,
+    "p99": 8.31,
+    "max": 14.573,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 34,
+    "p95": 46,
+    "p99": 55,
+    "max": 55,
+    "over25": 41,
+    "over33": 25,
+    "over50": 1
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 841,
+    "p95": 1000,
+    "p99": 1049,
+    "max": 1049,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 35,
+    "p95": 68,
+    "p99": 97,
+    "max": 97,
+    "over25": 35,
+    "over33": 26,
+    "over50": 9
+   }
+  },
+  {
+   "factor": 2.0,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6391,
+    "p50": 6.274,
+    "p95": 8.186,
+    "p99": 8.76,
+    "max": 14.386,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7192,
+    "p50": 6.273,
+    "p95": 8.151,
+    "p99": 8.708,
+    "max": 14.386,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 46,
+    "p50": 56,
+    "p95": 72,
+    "p99": 80,
+    "max": 80,
+    "over25": 42,
+    "over33": 41,
+    "over50": 29
+   },
+   "nodes": {
+    "samples": 46,
+    "p50": 1123,
+    "p95": 1337,
+    "p99": 1471,
+    "max": 1471,
+    "over25": 46,
+    "over33": 46,
+    "over50": 46
+   },
+   "transients": {
+    "samples": 46,
+    "p50": 54,
+    "p95": 77,
+    "p99": 92,
+    "max": 92,
+    "over25": 39,
+    "over33": 35,
+    "over50": 26
+   }
+  }
+ ],
+ "b17-product-perf.json": [
+  {
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 808,
+   "stage": 31,
+   "true_per_frame_cpu": null,
+   "weapon": 112,
+   "warm_frame_ms": {
+    "samples": 6364,
+    "p50": 6.245,
+    "p95": 7.221,
+    "p99": 8.177,
+    "max": 57.965,
+    "over25": 1,
+    "over33": 1,
+    "over50": 1
+   },
+   "all_frame_ms": {
+    "samples": 7127,
+    "p50": 6.245,
+    "p95": 7.218,
+    "p99": 8.177,
+    "max": 189.192,
+    "over25": 4,
+    "over33": 3,
+    "over50": 3
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 3,
+    "p95": 8,
+    "p99": 11,
+    "max": 11,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 8,
+    "p95": 14,
+    "p99": 18,
+    "max": 18,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 0,
+    "p95": 0,
+    "p99": 0,
+    "max": 0,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 534,
+    "p95": 705,
+    "p99": 760,
+    "max": 760,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 28,
+    "p95": 67,
+    "p99": 70,
+    "max": 70,
+    "over25": 26,
+    "over33": 18,
+    "over50": 11
+   }
+  },
+  {
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 808,
+   "stage": 35,
+   "true_per_frame_cpu": null,
+   "weapon": 112,
+   "warm_frame_ms": {
+    "samples": 6384,
+    "p50": 6.244,
+    "p95": 7.411,
+    "p99": 8.565,
+    "max": 14.428,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7184,
+    "p50": 6.245,
+    "p95": 7.382,
+    "p99": 8.478,
+    "max": 14.428,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 5,
+    "p95": 17,
+    "p99": 21,
+    "max": 21,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 18,
+    "p95": 27,
+    "p99": 31,
+    "max": 31,
+    "over25": 5,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 0,
+    "p95": 0,
+    "p99": 0,
+    "max": 0,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 760,
+    "p95": 1110,
+    "p99": 1181,
+    "max": 1181,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 54,
+    "p95": 127,
+    "p99": 130,
+    "max": 130,
+    "over25": 35,
+    "over33": 30,
+    "over50": 25
+   }
+  },
+  {
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 808,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6389,
+    "p50": 6.143,
+    "p95": 8.49,
+    "p99": 10.41,
+    "max": 17.348,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7188,
+    "p50": 6.17,
+    "p95": 8.38,
+    "p99": 10.287,
+    "max": 34.782,
+    "over25": 1,
+    "over33": 1,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 46,
+    "p50": 35,
+    "p95": 50,
+    "p99": 54,
+    "max": 54,
+    "over25": 39,
+    "over33": 26,
+    "over50": 2
+   },
+   "enemies": {
+    "samples": 46,
+    "p50": 58,
+    "p95": 71,
+    "p99": 80,
+    "max": 80,
+    "over25": 41,
+    "over33": 40,
+    "over50": 36
+   },
+   "enemy_shots": {
+    "samples": 46,
+    "p50": 1,
+    "p95": 4,
+    "p99": 7,
+    "max": 7,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 46,
+    "p50": 1118,
+    "p95": 1305,
+    "p99": 1436,
+    "max": 1436,
+    "over25": 46,
+    "over33": 46,
+    "over50": 46
+   },
+   "transients": {
+    "samples": 46,
+    "p50": 50,
+    "p95": 71,
+    "p99": 80,
+    "max": 80,
+    "over25": 40,
+    "over33": 37,
+    "over50": 21
+   }
+  },
+  {
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 809,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6384,
+    "p50": 6.153,
+    "p95": 8.488,
+    "p99": 9.934,
+    "max": 18.701,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7182,
+    "p50": 6.171,
+    "p95": 8.421,
+    "p99": 9.763,
+    "max": 18.701,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 35,
+    "p95": 56,
+    "p99": 64,
+    "max": 64,
+    "over25": 36,
+    "over33": 25,
+    "over50": 7
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 60,
+    "p95": 83,
+    "p99": 88,
+    "max": 88,
+    "over25": 41,
+    "over33": 41,
+    "over50": 36
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 1,
+    "p95": 2,
+    "p99": 4,
+    "max": 4,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 1180,
+    "p95": 1461,
+    "p99": 1507,
+    "max": 1507,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 57,
+    "p95": 80,
+    "p99": 84,
+    "max": 84,
+    "over25": 40,
+    "over33": 38,
+    "over50": 30
+   }
+  },
+  {
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 810,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6374,
+    "p50": 6.213,
+    "p95": 8.934,
+    "p99": 10.577,
+    "max": 15.923,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7174,
+    "p50": 6.212,
+    "p95": 8.882,
+    "p99": 10.413,
+    "max": 15.923,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 46,
+    "p50": 46,
+    "p95": 77,
+    "p99": 85,
+    "max": 85,
+    "over25": 41,
+    "over33": 38,
+    "over50": 18
+   },
+   "enemies": {
+    "samples": 46,
+    "p50": 72,
+    "p95": 102,
+    "p99": 106,
+    "max": 106,
+    "over25": 42,
+    "over33": 41,
+    "over50": 39
+   },
+   "enemy_shots": {
+    "samples": 46,
+    "p50": 1,
+    "p95": 2,
+    "p99": 3,
+    "max": 3,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 46,
+    "p50": 1321,
+    "p95": 1678,
+    "p99": 1727,
+    "max": 1727,
+    "over25": 46,
+    "over33": 46,
+    "over50": 46
+   },
+   "transients": {
+    "samples": 46,
+    "p50": 65,
+    "p95": 88,
+    "p99": 97,
+    "max": 97,
+    "over25": 41,
+    "over33": 40,
+    "over50": 34
+   }
+  },
+  {
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 808,
+   "stage": 40,
+   "true_per_frame_cpu": null,
+   "weapon": 112,
+   "warm_frame_ms": {
+    "samples": 3758,
+    "p50": 6.241,
+    "p95": 8.255,
+    "p99": 9.969,
+    "max": 15.59,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 4559,
+    "p50": 6.247,
+    "p95": 8.062,
+    "p99": 9.887,
+    "max": 15.59,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 29,
+    "p50": 0,
+    "p95": 0,
+    "p99": 0,
+    "max": 0,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 29,
+    "p50": 1,
+    "p95": 1,
+    "p99": 1,
+    "max": 1,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "enemy_shots": {
+    "samples": 29,
+    "p50": 0,
+    "p95": 63,
+    "p99": 94,
+    "max": 94,
+    "over25": 5,
+    "over33": 5,
+    "over50": 2
+   },
+   "nodes": {
+    "samples": 29,
+    "p50": 364,
+    "p95": 488,
+    "p99": 553,
+    "max": 553,
+    "over25": 29,
+    "over33": 29,
+    "over50": 29
+   },
+   "transients": {
+    "samples": 29,
+    "p50": 6,
+    "p95": 69,
+    "p99": 102,
+    "max": 102,
+    "over25": 5,
+    "over33": 5,
+    "over50": 2
+   }
+  }
+ ],
+ "b17-density-paired.json": [
+  {
+   "b17_density": false,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 808,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6360,
+    "p50": 6.26,
+    "p95": 7.887,
+    "p99": 8.591,
+    "max": 65.597,
+    "over25": 1,
+    "over33": 1,
+    "over50": 1
+   },
+   "all_frame_ms": {
+    "samples": 7111,
+    "p50": 6.257,
+    "p95": 7.872,
+    "p99": 8.73,
+    "max": 166.67,
+    "over25": 6,
+    "over33": 5,
+    "over50": 4
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 22,
+    "p95": 32,
+    "p99": 36,
+    "max": 36,
+    "over25": 8,
+    "over33": 1,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 38,
+    "p95": 47,
+    "p99": 51,
+    "max": 51,
+    "over25": 40,
+    "over33": 35,
+    "over50": 1
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 1,
+    "p95": 2,
+    "p99": 2,
+    "max": 2,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 861,
+    "p95": 983,
+    "p99": 998,
+    "max": 998,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 35,
+    "p95": 45,
+    "p99": 50,
+    "max": 50,
+    "over25": 36,
+    "over33": 25,
+    "over50": 0
+   }
+  },
+  {
+   "b17_density": true,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 808,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6385,
+    "p50": 6.17,
+    "p95": 8.314,
+    "p99": 9.368,
+    "max": 15.083,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7184,
+    "p50": 6.185,
+    "p95": 8.271,
+    "p99": 9.295,
+    "max": 15.083,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 46,
+    "p50": 39,
+    "p95": 57,
+    "p99": 59,
+    "max": 59,
+    "over25": 40,
+    "over33": 35,
+    "over50": 10
+   },
+   "enemies": {
+    "samples": 46,
+    "p50": 63,
+    "p95": 78,
+    "p99": 88,
+    "max": 88,
+    "over25": 41,
+    "over33": 40,
+    "over50": 38
+   },
+   "enemy_shots": {
+    "samples": 46,
+    "p50": 1,
+    "p95": 2,
+    "p99": 5,
+    "max": 5,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 46,
+    "p50": 1200,
+    "p95": 1400,
+    "p99": 1535,
+    "max": 1535,
+    "over25": 46,
+    "over33": 46,
+    "over50": 46
+   },
+   "transients": {
+    "samples": 46,
+    "p50": 53,
+    "p95": 74,
+    "p99": 91,
+    "max": 91,
+    "over25": 39,
+    "over33": 38,
+    "over50": 24
+   }
+  },
+  {
+   "b17_density": false,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 809,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6385,
+    "p50": 6.198,
+    "p95": 7.933,
+    "p99": 8.649,
+    "max": 15.335,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7185,
+    "p50": 6.204,
+    "p95": 7.9,
+    "p99": 8.59,
+    "max": 15.335,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 22,
+    "p95": 32,
+    "p99": 35,
+    "max": 35,
+    "over25": 9,
+    "over33": 1,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 38,
+    "p95": 52,
+    "p99": 54,
+    "max": 54,
+    "over25": 41,
+    "over33": 36,
+    "over50": 3
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 0,
+    "p95": 3,
+    "p99": 8,
+    "max": 8,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 872,
+    "p95": 1045,
+    "p99": 1065,
+    "max": 1065,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 38,
+    "p95": 55,
+    "p99": 55,
+    "max": 55,
+    "over25": 39,
+    "over33": 31,
+    "over50": 6
+   }
+  },
+  {
+   "b17_density": true,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 809,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6384,
+    "p50": 6.271,
+    "p95": 8.643,
+    "p99": 9.501,
+    "max": 16.682,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7181,
+    "p50": 6.264,
+    "p95": 8.596,
+    "p99": 9.482,
+    "max": 16.682,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 46,
+    "p50": 49,
+    "p95": 70,
+    "p99": 72,
+    "max": 72,
+    "over25": 41,
+    "over33": 39,
+    "over50": 19
+   },
+   "enemies": {
+    "samples": 46,
+    "p50": 76,
+    "p95": 90,
+    "p99": 101,
+    "max": 101,
+    "over25": 42,
+    "over33": 41,
+    "over50": 40
+   },
+   "enemy_shots": {
+    "samples": 46,
+    "p50": 1,
+    "p95": 2,
+    "p99": 3,
+    "max": 3,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 46,
+    "p50": 1365,
+    "p95": 1533,
+    "p99": 1660,
+    "max": 1660,
+    "over25": 46,
+    "over33": 46,
+    "over50": 46
+   },
+   "transients": {
+    "samples": 46,
+    "p50": 61,
+    "p95": 81,
+    "p99": 87,
+    "max": 87,
+    "over25": 40,
+    "over33": 39,
+    "over50": 34
+   }
+  },
+  {
+   "b17_density": false,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 810,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6385,
+    "p50": 6.188,
+    "p95": 7.866,
+    "p99": 8.684,
+    "max": 14.507,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7186,
+    "p50": 6.197,
+    "p95": 7.834,
+    "p99": 8.646,
+    "max": 14.507,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 24,
+    "p95": 32,
+    "p99": 38,
+    "max": 38,
+    "over25": 12,
+    "over33": 2,
+    "over50": 0
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 41,
+    "p95": 51,
+    "p99": 56,
+    "max": 56,
+    "over25": 41,
+    "over33": 38,
+    "over50": 3
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 0,
+    "p95": 1,
+    "p99": 7,
+    "max": 7,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 937,
+    "p95": 1113,
+    "p99": 1184,
+    "max": 1184,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 50,
+    "p95": 73,
+    "p99": 78,
+    "max": 78,
+    "over25": 38,
+    "over33": 36,
+    "over50": 21
+   }
+  },
+  {
+   "b17_density": true,
+   "gpu_ms": null,
+   "method": "native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 810,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6380,
+    "p50": 6.204,
+    "p95": 8.423,
+    "p99": 9.478,
+    "max": 18.407,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7180,
+    "p50": 6.209,
+    "p95": 8.377,
+    "p99": 9.355,
+    "max": 18.407,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "ordinary": {
+    "samples": 46,
+    "p50": 41,
+    "p95": 58,
+    "p99": 60,
+    "max": 60,
+    "over25": 39,
+    "over33": 36,
+    "over50": 8
+   },
+   "enemies": {
+    "samples": 46,
+    "p50": 67,
+    "p95": 87,
+    "p99": 93,
+    "max": 93,
+    "over25": 41,
+    "over33": 40,
+    "over50": 37
+   },
+   "enemy_shots": {
+    "samples": 46,
+    "p50": 0,
+    "p95": 4,
+    "p99": 6,
+    "max": 6,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 46,
+    "p50": 1229,
+    "p95": 1494,
+    "p99": 1556,
+    "max": 1556,
+    "over25": 46,
+    "over33": 46,
+    "over50": 46
+   },
+   "transients": {
+    "samples": 46,
+    "p50": 57,
+    "p95": 71,
+    "p99": 81,
+    "max": 81,
+    "over25": 40,
+    "over33": 38,
+    "over50": 32
+   }
+  }
+ ],
+ "fixed": {
+  "frame_ms": {
+   "samples": 14373,
+   "p50": 6.243,
+   "p95": 7.268,
+   "p99": 7.718,
+   "max": 14.44,
+   "over25": 0,
+   "over33": 0,
+   "over50": 0
+  },
+  "process_proxy_ms": {
+   "samples": 14373,
+   "p50": 7.276,
+   "p95": 13.469,
+   "p99": 14.283,
+   "max": 14.283,
+   "over25": 0,
+   "over33": 0,
+   "over50": 0
+  },
+  "zones_emitted": 430,
+  "true_per_frame_cpu": null,
+  "gpu_ms": null
+ }
+}
