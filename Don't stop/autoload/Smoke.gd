@@ -1341,4 +1341,9 @@ func _run() -> void:
 	# driver owns the page lifecycle (it keeps interacting with the live page after
 	# the markers), so the Web build must stay running.
 	if not OS.has_feature("web"):
-		get_tree().quit(0 if passed else 1)
+		# Use the native exit cleanup too: direct quit leaves the custom cursor
+		# texture alive after RenderingServer teardown and makes the smoke fail.
+		if passed: await Demo.finish_quit()
+		else:
+			Input.set_custom_mouse_cursor(null)
+			get_tree().quit(1)
