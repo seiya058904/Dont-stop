@@ -1121,6 +1121,86 @@
    }
   }
  ],
+ "b17-upper-perf.json": [
+  {
+   "gpu_ms": null,
+   "method": "bounded upper probe: 1.5x current B17 stage39 cap/arrival/horde settings (3x B16 nominal cap/arrival); seed811; native Forward+ real stage, full purchased growth, actual movement/fire, HP replenished for measurement; not survival proof; not same workload as fixed fixture",
+   "seed": 811,
+   "stage": 39,
+   "true_per_frame_cpu": null,
+   "weapon": 116,
+   "warm_frame_ms": {
+    "samples": 6379,
+    "p50": 6.195,
+    "p95": 8.671,
+    "p99": 9.166,
+    "max": 14.657,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "all_frame_ms": {
+    "samples": 7138,
+    "p50": 6.203,
+    "p95": 8.644,
+    "p99": 9.164,
+    "max": 167.243,
+    "over25": 5,
+    "over33": 4,
+    "over50": 3
+   },
+   "ordinary": {
+    "samples": 45,
+    "p50": 49,
+    "p95": 67,
+    "p99": 70,
+    "max": 70,
+    "over25": 42,
+    "over33": 41,
+    "over50": 21
+   },
+   "enemies": {
+    "samples": 45,
+    "p50": 75,
+    "p95": 95,
+    "p99": 102,
+    "max": 102,
+    "over25": 42,
+    "over33": 42,
+    "over50": 41
+   },
+   "enemy_shots": {
+    "samples": 45,
+    "p50": 1,
+    "p95": 2,
+    "p99": 3,
+    "max": 3,
+    "over25": 0,
+    "over33": 0,
+    "over50": 0
+   },
+   "nodes": {
+    "samples": 45,
+    "p50": 1372,
+    "p95": 1600,
+    "p99": 1717,
+    "max": 1717,
+    "over25": 45,
+    "over33": 45,
+    "over50": 45
+   },
+   "transients": {
+    "samples": 45,
+    "p50": 61,
+    "p95": 81,
+    "p99": 92,
+    "max": 92,
+    "over25": 40,
+    "over33": 39,
+    "over50": 33
+   }
+  }
+ ],
  "fixed": {
   "frame_ms": {
    "samples": 14373,

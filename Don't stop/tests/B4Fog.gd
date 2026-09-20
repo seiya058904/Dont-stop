@@ -1,7 +1,7 @@
 extends "res://tests/B8Runtime.gd"
 
 ## Fog audit. Verifies that the ORIGINAL TowDownGame darkness has been restored as a
-## stage-aware property of Hell rather than as a permanent change, that Stage 1-30 is
+## stage-aware property rather than a permanent change, that Stage 1-29 is
 ## untouched, that the restored light is still where upstream put it, and that the fog
 ## fairness gate cannot be talked out of showing a warning first.
 ##
@@ -109,8 +109,9 @@ func _ready():
 		check(radius <= previous+0.01,"stage %d fog does not widen as stages advance" % stage)
 		previous = radius
 	check(HellMode.fair_radius(40) < HellMode.fair_radius(31),"stage 40 is tighter than stage 31")
-	for stage in range(1,31):
+	for stage in range(1,30):
 		check(not HellMode.is_hell(stage) and HellMode.fair_radius(stage) > 1000.0,"stage %d is outside Hell" % stage)
+	check(not HellMode.is_hell(30) and HellMode.has_fog(30) and HellMode.fair_radius(30)<1000.0,"stage30 visual fog is independent of Hell gameplay")
 
 	# ---- A real Hell round: fog on, then camp cleanup ----------------------------------
 	stop(); LevelServer.return_to_camp(); await wait(0.5)

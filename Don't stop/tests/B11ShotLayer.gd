@@ -464,9 +464,12 @@ func _ready():
 	# this one flaky on the frames it lands on.)
 	var exceptions_before: int = B11Probe.shot_exceptions
 	var created_before: int = B11Probe.shot_created
+	# E13 is authored from stage31 onward. A boss-stage factory context avoids
+	# the ordinary-cohort admission ratio substituting a plain chaser in this probe.
+	LevelServer.level = 40
 	var sentinel = M5Content.spawn("E13",live_arena,origin+Vector2(120.0,-90.0))
-	check(sentinel != null,"a real tremor shooter spawns for the integration half")
-	if sentinel != null:
+	check(sentinel != null and sentinel.get_meta("content_id","")=="E13","a real tremor shooter spawns for the integration half")
+	if sentinel != null and sentinel.get_meta("content_id","")=="E13":
 		sentinel.set_physics_process(false)
 		sentinel.locked_direction = sentinel.global_position.direction_to(Utils.player.global_position)
 		sentinel.attack_kind = "tremor"

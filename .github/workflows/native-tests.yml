@@ -131,7 +131,6 @@ jobs:
           run_case B12Catalog
           # B17 remeasured evidence seals current sources; B14 remains archived under --b14.
           # Existing floors are retained, including any failing observations.
-          run_case B12Strength --b17
           run_case B12Save
           run_case B12UI
           # Pins the B12 clear_line fix: footprint consumes the shared exclusions_dirty
@@ -165,6 +164,7 @@ jobs:
           run_case B17Sources
           run_case B17Saved
           run_case B17Resources
+          run_case B17NativeRules
           run_case R1Timeline
           run_case B16Camp
           run_case B16Growth
@@ -173,6 +173,8 @@ jobs:
           run_case B16Effects
           run_case B16CombatMix
           run_case M3Weapons
+          # Keep safety/event checks runnable before the retained quality floor.
+          run_case B12Strength --b17
       - name: Upload contract logs
         if: always()
         uses: actions/upload-artifact@v4

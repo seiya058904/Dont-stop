@@ -13,7 +13,8 @@ def read(name):
     return json.loads((RAW/name).read_text(encoding='utf-8'))
 
 def write(name, value):
-    (OUT/name).write_text(json.dumps(value, ensure_ascii=False, indent=1)+'\n', encoding='utf-8')
+    text = '[\n'+',\n'.join(json.dumps(row,ensure_ascii=False,separators=(',',':')) for row in value)+'\n]\n' if isinstance(value,list) else json.dumps(value,ensure_ascii=False,indent=1)+'\n'
+    (OUT/name).write_text(text, encoding='utf-8')
 
 def times(values):
     values = sorted(values)
@@ -24,7 +25,7 @@ def times(values):
                 over25=sum(x>25 for x in values), over33=sum(x>33.3 for x in values), over50=sum(x>50 for x in values))
 
 performance = {}
-for name in ['b17-capacity-before.json', 'b17-product-perf.json', 'b17-density-paired.json']:
+for name in ['b17-capacity-before.json', 'b17-product-perf.json', 'b17-density-paired.json', 'b17-upper-perf.json']:
     if not (RAW/name).exists():
         performance[name] = {'status':'NOT_RUN'}
         continue
@@ -58,7 +59,14 @@ mapping={'b17-sources.json':'sources.json','b17-reward-matrix.json':'reward-matr
          'b14-growth-matrix-b17.json':'growth-matrix.json','b14-horde-b17-current.json':'horde.json',
          'b14-encounter-b17-current.json':'encounters.json','b17-bosses.json':'bosses.json','b17-boss-survival.json':'boss-survival.json'}
 for source,dest in mapping.items():
-    if (RAW/source).exists(): write(dest,read(source))
+    if (RAW/source).exists():
+        value=read(source)
+        if dest=='encounters.json':
+            for row in value:
+                row.pop('frame_samples',None)
+                row['raw_file']=source
+                row['raw_sha256']=hashlib.sha256((RAW/source).read_bytes()).hexdigest()
+        write(dest,value)
 
 if (OUT/'sources.json').exists():
     rows=json.loads((OUT/'sources.json').read_text(encoding='utf-8'))['rows']

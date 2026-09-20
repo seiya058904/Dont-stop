@@ -10,7 +10,7 @@ var tab = "build"
 var overview: VBoxContainer
 var columns: HBoxContainer
 var owned_icons: Dictionary = {}
-const CATEGORY = {"upgrade":"武器强化", "talent":"天赋", "reward":"原型奖励", "base":"基础武器", "level":"等级成长", "legacy":"基础成长", "condition":"条件效果", "history":"历史成长", "rule":"边界规则"}
+const CATEGORY = {"upgrade":"武器强化", "talent":"天赋", "reward":"原型奖励", "base":"基础数值", "level":"等级成长", "legacy":"基础成长", "condition":"条件效果", "history":"历史成长", "rule":"边界规则"}
 const LEDGER = preload("res://game/config/StatLedger.gd")
 const NAMES = {"damage":"伤害","crit":"暴击率","rate":"射速","magazine":"弹匣","reload":"换弹秒数","range":"有效射程","spread":"散布倍率","impulse":"普通敌人击退","projectile_count":"每次发射数量","shards":"后继裂片数","pierce":"额外贯穿","speed":"移动速度","max_hp":"最大生命","pickup":"拾取范围"}
 func _enter_tree():

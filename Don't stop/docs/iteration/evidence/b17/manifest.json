@@ -1043,7 +1043,7 @@
   },
   {
    "path": "ui/StatPanel.gd",
-   "sha256": "98ab64293b6a961a0ce922bb163e0607788345d6335f7c9679b405bc72bb49e2"
+   "sha256": "3fccf8b699911e1e84c951d4fa84cc25c646dafc3970685d18915d8a295a1b6b"
   },
   {
    "path": "ui/WeaponAmItem.gd",
@@ -1197,15 +1197,15 @@
   },
   {
    "path": "docs/iteration/evidence/b17/growth-matrix.json",
-   "sha256": "82d369c85207825372635bf9272ecce56374a3847834867db1ba974020e7992e"
+   "sha256": "6287f2bf4a00d70ce6dd7f772b258990928e1b1726521d9e73d384367b9ef614"
   },
   {
    "path": "docs/iteration/evidence/b17/horde.json",
-   "sha256": "b0b4dfcdcdab107ceac438ef665ffa7381c0eea19e2522a27cd7608e67240a78"
+   "sha256": "3dce706f756c8012600320b0e7e51c385192c1be37546b251c03a45d418258bd"
   },
   {
    "path": "docs/iteration/evidence/b17/encounters.json",
-   "sha256": "6f8a805dae487510ed1a5ea64e0780ed92614b1af75dafb9dab14c3827823f64"
+   "sha256": "8f0a65e2b4fb66f6c64efa770651862e78dbe867a9b1a81462099e3b876c776e"
   },
   {
    "path": "docs/iteration/evidence/b17/bosses.json",
@@ -1213,11 +1213,11 @@
   },
   {
    "path": "docs/iteration/evidence/b17/boss-survival.json",
-   "sha256": "b6ad3eee6f029261ac4553d28ecda7a17febde9c222018355012765e226ebbe0"
+   "sha256": "a8189733ef551da3264e5c3456cfbc14743d4b9ae71a009f3d799709a8d03abb"
   },
   {
    "path": "docs/iteration/evidence/b17/performance.json",
-   "sha256": "e38fc26f2ae6f4ba3e3e53df532887e8046281c973e4da2150acf924d0cb4549"
+   "sha256": "e6c34da6512d8dceeb1237cae6fc63724ec85086f02a5b581170e2b25bc72604"
   }
  ],
  "status": "Measured candidate; failures retained, HUMAN_ACCEPTED=false",
