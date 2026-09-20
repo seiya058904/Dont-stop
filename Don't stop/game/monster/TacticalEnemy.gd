@@ -34,8 +34,8 @@ const PHASE_THREE_AT := 0.35
 ## Phase III scripts. Each entry is one whole boss turn, executed in order, which is what
 ## turns the last third into a set of linked problems instead of a faster first third.
 const BOSS_CYCLES = {
-	"1":{"B01":["charge","cleave","slam"],"B02":["brood","lockdown","pulse"],"B03":["dash","sweep","burst"],"B04":["dash","sweep","burst"]},
-	"2":{"B01":["charge","cleave","slam"],"B02":["brood","lockdown","pulse"],"B03":["dash","sweep","burst"],"B04":["burst","sweep","dash","cross","band"]},
+	"1":{"B01":["slam","charge","cleave","slam"],"B02":["brood","pulse","lockdown","pulse"],"B03":["burst","dash","burst","sweep"],"B04":["burst","sweep","burst","dash"]},
+	"2":{"B01":["slam","charge","slam","cleave"],"B02":["brood","pulse","lockdown","pulse"],"B03":["burst","sweep","burst","dash"],"B04":["burst","sweep","burst","dash","cross","band"]},
 	"3":{"B01":["charge","slam","shockwave"],"B02":["toxic_zone","root_shot","brood"],"B03":["cross_laser","burst","sweep","burst"],"B04":["burst","cross_laser","burst","sweep","band"]}
 }
 ## Attack kinds whose warning must be visible before they may connect. Used for the fog
@@ -106,8 +106,8 @@ func zone(kind: String, point: Vector2, reach: float, delay: float, time = 0.12,
 
 ## Registers a projectile the base class already created, so every projectile this actor
 ## fires is cleaned up when the actor dies or the phase changes.
-func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", control := 0.0):
-	var node = super.shot(dir,speed_value,damage_value,muzzle_flash,style,control)
+func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", control := 0.0, bounces := 0):
+	var node = super.shot(dir,speed_value,damage_value,muzzle_flash,style,control,bounces)
 	if node == null: return null
 	owned_attacks.append(weakref(node))
 	remember("shot")
@@ -121,6 +121,15 @@ func barrage(kind: String, count: int, waves: int, speed_value: float, spread_va
 	pattern.style = style; pattern.control = control
 	pattern.shift = (0.24 if kind == "ring" else 0.18)*orbit_side
 	pattern.interval = 0.38 if kind == "ring" else 0.28
+	if is_boss:
+		pattern.damage = {"B01":0.35,"B02":0.55,"B03":0.8,"B04":1.1}.get(role,0.35)*(1.3 if phase_three else (1.15 if phase_two else 1.0))
+		if control > 0: pattern.damage *= 0.45
+		pattern.waves += 1
+		pattern.interval = 0.34 if kind == "ring" else 0.25
+		if role in ["B03","B04"] and kind == "ring" and control <= 0:
+			pattern.bounces = 2 if role == "B04" and phase_three else 1
+			pattern.style = "ricochet"
+			pattern.damage *= 0.75
 	get_tree().current_scene.add_child(pattern); owned_attacks.append(weakref(pattern))
 
 func fan(count: int, spread: float, speed_value = 85.0, style := "projectile", control := 0.0):

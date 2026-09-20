@@ -134,6 +134,8 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 		# An occupied special budget becomes a real plain chaser, never a renamed special.
 		if id not in ["E01","E02"] and not id.begins_with("B") and mix.special >= special_budget(mix):
 			id = "E01" if mix.ordinary%2 == 0 else "E02"
+	var variant = preload("res://game/config/B18Variants.gd").select(id,parent.get_tree(),point,summoned,radius_for(id))
+	point = variant.point
 	var actor = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
 	if id in ["E02","E04","E05"]:
 		actor.set_script(load("res://game/monster/DemoEnemy.gd")); actor.role = id
@@ -163,6 +165,9 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	# All subclass ready methods have finished. Apply the authored final values once.
 	var hp_scale = HellMode.hp_scale(LevelServer.level) if hell else 1.0
 	if id in ["E01","E02"]: hp_scale *= float(pressure.get("ordinary_hp",1.0))
+	if id in ["E01","E02"] and pressure.has("final_ordinary_hp"):
+		hp_scale = float(pressure.final_ordinary_hp)
+	if id.begins_with("B"): hp_scale = 1.25
 	var speed_scale = HellMode.speed_scale(LevelServer.level) if hell else 1.0
 	if id in ["E01","E02"]: speed_scale *= float(pressure.get("chase_speed",1.0))
 	actor.HP = d.hp*hp_scale
@@ -170,6 +175,7 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	if actor.get("max_hp") != null: actor.max_hp = actor.HP
 	actor.set_meta("initialized_hp",actor.HP)
 	actor.set_meta("initialized_speed",actor.SPEED)
+	preload("res://game/config/B18Variants.gd").apply(actor,variant.kind)
 	return actor
 
 static func living_mix(tree: SceneTree) -> Dictionary:
@@ -186,6 +192,7 @@ static func special_budget(mix: Dictionary) -> int:
 	return mini(cap,maxi(1,int(floor((mix.ordinary+1)*0.18))))
 
 static func can_promote(actor) -> bool:
+	if actor.get_meta("variant_applied",false): return false
 	if LevelServer.level < 5: return false
 	var cap = int(elite_plan(LevelServer.level).get("cap",0))
 	var live = actor.get_tree().get_nodes_in_group("monsters").filter(func(m): return m.is_elite and not m.is_boss and not m.is_die).size()
@@ -338,4 +345,20 @@ static func encounters() -> Dictionary:
 		row.horde = HORDES[stage].duplicate()
 		row.horde.batch = ceili(row.horde.batch*density)
 		row.horde.floor = ceili(row.horde.floor*density)
+	# B18: final HP replaces (rather than multiplies) the prior Hell/ordinary axes.
+	# Additional arrivals are ordinary; mechanism/elite caps and fog stay unchanged.
+	for stage in range(31,40):
+		var row = table[stage]
+		var extra = [1.15,1.2,1.25,1.3,1.4,1.5,1.6,1.7,1.8][stage-31]
+		row.pressure.final_ordinary_hp = [2.0,2.3,2.6,3.0,3.6,4.3,5.2,6.4,8.0][stage-31]
+		# Keep Hell's pressure in HP, damage, variants and arrival rhythm while
+		# bounding simultaneous ordinary bodies for the single-thread Web budget.
+		# The isolated B18 capacity fixture can still raise this cap explicitly.
+		row.cap = mini(180,ceili(row.cap*extra))
+		row.interval /= extra
+		row.horde.batch = ceili(row.horde.batch*extra)
+		row.horde.floor = ceili(row.horde.floor*extra)
+		row.horde.window /= sqrt(extra)
+		row.horde.step = maxf(0.1,row.horde.step/extra)
+		row.info += " 附魔以符文环标记，少量巨型慢速追击者（33关起）；数值变体不带额外技能。"
 	return table

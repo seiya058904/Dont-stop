@@ -1,4 +1,11 @@
 extends CharacterBody2D
+static var live_count := 0
+const CAPACITY := 180
+static var capacity_limit := CAPACITY
+var registered := false
+var bounces_left := 0
+var bounces_done := 0
+var lifetime := 3.2
 var owner_ref: WeakRef
 var life = 0.0
 var epoch = 0
@@ -14,14 +21,24 @@ const INK = {
 	"projectile":Color(1,0.55,0.15),
 	"root":Color(0.78,0.42,1.0),
 	"poison":Color(0.4,1,0.6),
-	"laser":Color(0.45,0.95,1.0)
+	"laser":Color(0.45,0.95,1.0),
+	"ricochet":Color(1.0,0.4,0.8)
 }
+func _enter_tree():
+	if live_count >= capacity_limit:
+		set_physics_process(false); queue_free(); return
+	live_count += 1
+	registered = true
+
 func _ready():
 	# B11.2 test-only counter (game/diag/B11Probe.gd): kept so the AFTER run can report the burst
 	# cost as zero rather than merely absent.
 	if B11Probe.enabled: B11Probe.shot_created += 1
-	if get_tree().get_nodes_in_group("enemy_projectiles").size() >= 180:
+	if not registered:
 		set_physics_process(false); queue_free(); return
+	if bounces_left > 0:
+		bounces_left = clampi(bounces_left,1,2)
+		lifetime = 5.2
 	add_to_group("combat_transient")
 	add_to_group("enemy_projectiles")
 	epoch = LevelServer.epoch
@@ -46,6 +63,12 @@ func _ready():
 	shape.shape.radius = 3
 	add_child(shape)
 	z_index = 5
+
+func _exit_tree():
+	if registered:
+		live_count -= 1
+		registered = false
+
 func _draw():
 	var ink = INK.get(style,INK.projectile)
 	# B11.2 visual isolation (test-only): the projectile BODY always draws - only the decorative
@@ -55,7 +78,7 @@ func _draw():
 			draw_line(to_local(trail[i-1]),to_local(trail[i]),Color(ink.r,ink.g,ink.b,0.1+0.45*i/trail.size()),1.0+1.5*i/trail.size(),true)
 	draw_circle(Vector2.ZERO,4,Color(ink.r*0.15,ink.g*0.15,ink.b*0.15))
 	draw_circle(Vector2.ZERO,2.8,Color(ink.r,ink.g,ink.b))
-	if style == "laser":
+	if style in ["laser","ricochet"]:
 		draw_polyline(PackedVector2Array([Vector2(-5,0),Vector2(0,-4),Vector2(5,0),Vector2(0,4),Vector2(-5,0)]),Color(ink,0.9),1)
 	elif style == "poison":
 		for side in [-1,1]: draw_rect(Rect2(Vector2(side*4,-1),Vector2(2,2)),Color(ink,0.85))
@@ -65,18 +88,33 @@ func _draw():
 		draw_arc(Vector2.ZERO,7.5,0,TAU,14,Color(0.95,0.8,1,0.45),1.0,true)
 func _physics_process(delta):
 	life += delta
-	if life > 3.2 or epoch != LevelServer.epoch or (owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die)):
+	if life > lifetime or epoch != LevelServer.epoch or not is_instance_valid(Utils.player) or (owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die)):
 		queue_free()
 		return
 	trail.append(global_position)
 	if trail.size()>3: trail.pop_front()
 	queue_redraw()
 	_mirror_into_fog()
-	var previous = global_position
-	if move_and_collide(velocity*delta):
-		queue_free()
-		return
-	if Geometry2D.get_closest_point_to_segment(Utils.player.global_position,previous,global_position).distance_to(Utils.player.global_position) < 12:
+	var remaining = velocity*delta
+	for iteration in 4:
+		var previous = global_position
+		var collision = move_and_collide(remaining)
+		# Check the travelled subsegment BEFORE the wall: a later wall must not erase a hit.
+		if hit_segment(previous,global_position): return
+		if collision == null: return
+		var normal = collision.get_normal()
+		if bounces_left <= 0 or normal.length_squared() < 0.5 or collision.get_travel().length_squared() < 0.000001:
+			queue_free(); return
+		bounces_left -= 1; bounces_done += 1
+		velocity = velocity.bounce(normal)
+		remaining = collision.get_remainder().bounce(normal)
+		trail.clear()
+		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,8,normal,"ricochet")
+		if remaining.length_squared() < 0.000001: return
+	queue_free()
+
+func hit_segment(previous: Vector2, current: Vector2) -> bool:
+	if Geometry2D.get_closest_point_to_segment(Utils.player.global_position,previous,current).distance_to(Utils.player.global_position) < 12:
 		# Barrage pellets intentionally carry fractional pressure; other attacks keep
 		# Hero's existing one-point minimum.
 		# The tag carries the shot's FAMILY, not just "a projectile": a 23-pellet artillery ring
@@ -89,6 +127,8 @@ func _physics_process(delta):
 		if control > 0.0: Utils.player.apply_root(control)
 		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,14,velocity.normalized(),style)
 		queue_free()
+		return true
+	return false
 
 ## In Hell, an incoming shot that is still outside the lit radius gets its final approach
 ## mirrored above the fog, so "something is about to arrive" is never information the

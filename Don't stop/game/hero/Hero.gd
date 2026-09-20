@@ -287,6 +287,10 @@ func source_throttled(source: String) -> bool:
 	return source in CONTACT_SOURCES and contact_immunity > 0.0
 
 func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
+	# Variant damage freezes on its actor at spawn and is applied once for every source.
+	# Percentage damage and control duration retain their independent budgets.
+	if is_instance_valid(attacker) and not incoming_percentage and attacker.get("variant_damage") != null:
+		hurt *= attacker.variant_damage
 	# E2E driver mode keeps the test character alive so real inputs can be
 	# asserted against; gated behind the --e2e cmdline flag only.
 	if "--e2e" in OS.get_cmdline_args() or "--e2e" in OS.get_cmdline_user_args(): return

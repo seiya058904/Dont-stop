@@ -289,6 +289,9 @@
 			// number being reported. All of these are test-only flags and none of them is needed to
 			// play.
 			GODOT_CONFIG.args = ['--stress'];
+			if (params.has('b18')) GODOT_CONFIG.args.push('--b18');
+			if (params.has('normal')) GODOT_CONFIG.args.push('--b18-normal=' + params.get('normal'));
+			if (params.has('shots')) GODOT_CONFIG.args.push('--b18-shots=' + params.get('shots'));
 			GODOT_CONFIG.args.push('--stress-stage=' + (parseInt(params.get('stage'), 10) || 39));
 			GODOT_CONFIG.args.push('--stress-seconds=' + (parseInt(params.get('seconds'), 10) || 90));
 			GODOT_CONFIG.args.push('--stress-scenario=' + (params.get('scenario') || 'A'));

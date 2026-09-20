@@ -6,6 +6,10 @@ var aura_enabled := true
 var preview_id := -1
 var preview_tip := Vector2.ZERO
 const PALETTES = {112:Color("66cfff"),121:Color("c68cff"),116:Color("ff863d"),113:Color("90bfff"),120:Color("ffbf69"),124:Color("ffd47a"),6:Color("70ffac"),111:Color("b7a0ff"),114:Color("ff78ce"),115:Color("77eeff"),122:Color("c8e5e9")}
+# Keep the aura just outside each weapon's silhouette.  The small per-weapon offsets
+# preserve the distinct idle shapes while keeping the bright pixels from covering their
+# readable bodies in the camp preview and during combat.
+const AURA_OFFSETS = {112:Vector2(-7,0),121:Vector2(-6,0),116:Vector2(-8,0),113:Vector2(-5,0),120:Vector2(-6,0),124:Vector2(-7,0),6:Vector2(-7,0),111:Vector2(-8,0),114:Vector2(-8,0),115:Vector2(-4,0),122:Vector2(-6,0)}
 func _process(delta):
 	visible = preview_id >= 0 or (is_instance_valid(gun) and gun.is_use and is_instance_valid(gun.player) and not gun.player.is_dead)
 	if not visible: return
@@ -51,7 +55,7 @@ func _draw():
 
 func draw_aura(id: int, tip: Vector2):
 	var color: Color = PALETTES[id]
-	var center = tip + Vector2(-10,0)
+	var center: Vector2 = tip + AURA_OFFSETS.get(id,Vector2(-10,0))
 	var legendary = WeaponCatalog.tier(id) == 5
 	var intensity = 0.78 if Combat.reduced_flash else 0.9+0.1*sin(clock*2.4)
 	# Stepped translucent pixels form a local energy sheath, not a player halo.

@@ -109,8 +109,8 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-lasers="): lasers = int(arg.substr(16))
 		elif arg.begins_with("--stress-root="): root_period = float(arg.substr(14))
 		elif arg.begins_with("--stress-park="): park = arg.substr(14) == "1"
-		elif arg.begins_with("--stress-enemies="): enemies = int(arg.substr(18))
-		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(18))
+		elif arg.begins_with("--stress-enemies="): enemies = int(arg.substr(17))
+		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(17))
 		elif arg.begins_with("--stress-iso="): iso = arg.substr(14)
 		elif arg.begins_with("--stress-label="): label = arg.substr(15)
 		elif arg.begins_with("--stress-weapons="):
@@ -250,6 +250,12 @@ func run() -> void:
 	print("[stress] done scenario=%s rounds=%d frames=%d combat_s=%.1f" % [
 		scenario,_rounds,_ms.size(),_total_combat_s])
 	_dump()
+	var b18_mode = false
+	for arg in OS.get_cmdline_args()+OS.get_cmdline_user_args():
+		if arg == "--b18": b18_mode = true
+	if b18_mode:
+		await Demo.quit_game()
+		return
 	get_tree().quit(0)
 
 func _boot_to_camp() -> void:
@@ -319,6 +325,7 @@ func _sample_round() -> void:
 			if next_weapon != presentation_weapon:
 				presentation_weapon = next_weapon
 				Utils.player.changeWeapon(next_weapon)
+				if has_method("release_after_switch"): await call("release_after_switch")
 				print("[stress] weapon=%d round=%d combat_s=%.2f" % [next_weapon,round_index,elapsed])
 			# A charge weapon needs a real release; holding forever only benchmarks charging.
 			if presentation_weapon == 113 and fmod(elapsed,2.0) < 0.12:

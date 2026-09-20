@@ -33,6 +33,7 @@ var is_elite = false
 ## Contact damage uses DemoConfig.CONTACT_DAMAGE_WEIGHT of it; telegraphed attacks use it
 ## in full.
 var damage_scale = 1.0
+var variant_damage = 1.0
 var displayed_flash = -1.0
 
 func apply_burn(source: String, amount: float, seconds: float, context: Dictionary):
@@ -227,6 +228,17 @@ func addEffect(node):
 	get_node("EffectRoot").add_child(node)
 
 func _draw():
+	if not is_die and get_meta("variant_applied",false):
+		var giant = get_meta("giant",false)
+		var tier = int(get_meta("enchantment",0))
+		var color = Color("eeb65d") if giant else (Color("8fed74") if tier == 1 else Color("ed77c9"))
+		var center = Vector2(0,-18 if giant else -9)
+		var radius = 23.0 if giant else 13.0
+		draw_arc(center,radius,0,TAU,12,color,1.0)
+		for rune in (2 if tier == 2 else 1):
+			draw_line(center+Vector2(-3+rune*6,-radius-4),center+Vector2(-3+rune*6,-radius),color,2)
+		var fraction = clampf(HP/maxf(1.0,float(get_meta("initialized_hp",HP))),0,1)
+		draw_line(center+Vector2(-radius,-radius-7),center+Vector2(-radius+radius*2*fraction,-radius-7),color,2)
 	# Compact contact bracket remains visible with flash and shake disabled.
 	if flash_time > 0 and not is_die:
 		var tier = int(last_context.get("tier",1))

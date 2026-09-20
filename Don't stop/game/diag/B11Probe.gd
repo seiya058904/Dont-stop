@@ -26,6 +26,8 @@ class_name B11Probe
 ## comparison.
 
 static var enabled := false
+static var refresh_calls := 0
+static var refresh_usec := 0
 
 ## ---- B11.2 visual-isolation switches (test-only) --------------------------------------------
 ##

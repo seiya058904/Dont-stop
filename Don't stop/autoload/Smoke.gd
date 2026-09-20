@@ -53,7 +53,11 @@ func _ready() -> void:
 		print("[stress] driver=game/diag/B11Stress.gd")
 		var rig := Node.new()
 		rig.name = "B11Stress"
-		rig.set_script(load("res://game/diag/B11Stress.gd"))
+		var normal_b18 = false
+		for arg in args:
+			if arg.begins_with("--b18-normal="):
+				normal_b18 = true
+		rig.set_script(load("res://game/diag/B18Play.gd" if normal_b18 else ("res://game/diag/B18Run.gd" if "--b18" in args else "res://game/diag/B11Stress.gd")))
 		add_child(rig)
 		return
 	# `--stage-tour` is its OWN driver: it walks stages 31/35/39/40 in one session and prints one

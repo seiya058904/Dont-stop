@@ -171,6 +171,8 @@ func _level_changed(_level):
 	if not loading: refresh()
 
 func refresh():
+	var measured_at = Time.get_ticks_usec() if B11Probe.enabled else 0
+	if B11Probe.enabled: B11Probe.refresh_calls += 1
 	if not loading and is_instance_valid(Utils.player):
 		var hp_bonus = DemoConfig.talent_value("T07",rank("T07"))
 		var delta_hp = hp_bonus-applied_talent_hp
@@ -182,6 +184,7 @@ func refresh():
 	for gun in PlayerData.player_weapon_list.values():
 		if gun.is_node_ready(): gun.updateGun()
 	changed.emit()
+	if B11Probe.enabled: B11Probe.refresh_usec += Time.get_ticks_usec()-measured_at
 
 func _process(delta):
 	if not Input.is_action_pressed("shoot"): fire_released = true
@@ -340,9 +343,10 @@ func unequip_weapon() -> Dictionary:
 func on_kill(monster, context: Dictionary):
 	if monster.training: return
 	if rank("T10") > 0:
+		var previous_stacks = kill_stacks
 		kill_stacks = mini(DemoConfig.TALENTS.T10.stacks,kill_stacks+1)
 		stack_time = DemoConfig.TALENTS.T10.seconds
-		refresh()
+		if kill_stacks != previous_stacks: refresh()
 	if not context.get("native_attack",context.get("depth",0) == 0): return
 	if rank("T19") > 0 and cooldown("T19") > 0:
 		talent_cooldowns.T19 = maxf(maxf(0.0,2.0-shield_age),cooldown("T19")-0.35)
