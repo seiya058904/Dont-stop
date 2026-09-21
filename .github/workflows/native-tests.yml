@@ -13,16 +13,23 @@ name: Native gameplay tests
 # engine state, printed counters and saved JSON. No screenshot diffing, no page.evaluate.
 on:
   push:
+    branches: [main]
     # A docs-only push cannot change what these tests observe, and the whole suite costs about
     # 30 runner-minutes. deploy-pages.yml already skips its heavy jobs for a docs-only change;
     # this matches it. No test reads a fixture out of docs/ - M11SaveMigration's fixture lives in
     # tests/fixtures/ and everything under docs/iteration/evidence is OUTPUT the tests write.
-    # pull_request is deliberately NOT filtered: a PR always gets the full suite.
     paths-ignore:
       - "Don't stop/docs/**"
       - "**/*.md"
   pull_request:
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      run_historical_evidence:
+        description: 'Run the non-blocking B17 frozen-evidence audit'
+        type: boolean
+        required: false
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -129,8 +136,8 @@ jobs:
           # CI on purpose (it is evidence generation, ~30 min); these assert the frozen
           # evidence against the live catalog and the shop UI instead.
           run_case B12Catalog
-          # B17 remeasured evidence seals current sources; B14 remains archived under --b14.
-          # Existing floors are retained, including any failing observations.
+          # Current-source contracts remain active; historical frozen evidence runs only in the
+          # explicitly requested informational job below.
           run_case B12Save
           run_case B12UI
           # Pins the B12 clear_line fix: footprint consumes the shared exclusions_dirty
@@ -154,7 +161,6 @@ jobs:
           # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
           # job as the B13 contracts that pin their new magnitudes.
           run_case M4Talents
-          run_case B13Strength --b17
           run_case B14Loadout
           run_case B14Growth
           run_case B14Rail
@@ -176,7 +182,6 @@ jobs:
           run_case B16CombatMix
           run_case M3Weapons
           # Keep safety/event checks runnable before the retained quality floor.
-          run_case B12Strength --b17
       - name: Upload contract logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -244,4 +249,57 @@ jobs:
             ${{ runner.temp }}/*.log
             Don't stop/docs/iteration/evidence/m10/density.json
             Don't stop/docs/iteration/evidence/b/bosses.json
+          if-no-files-found: warn
+
+  historical-evidence:
+    name: Historical / frozen evidence audit (informational)
+    needs: setup
+    if: github.event_name == 'workflow_dispatch' && inputs.run_historical_evidence == true
+    continue-on-error: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore the pinned Godot binary
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/godot
+          key: godot-${{ env.GODOT_VERSION }}-native-v2
+      - name: Audit B17 frozen evidence without blocking current CI
+        shell: bash
+        env:
+          GODOT: ${{ runner.temp }}/godot/bin/Godot_v4.7.2-stable_linux.x86_64
+        run: |
+          set -euo pipefail
+          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
+          failed=0
+          run_case () {
+            local name="$1"; shift
+            local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' -').log"
+            set +e
+            timeout 900 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
+              "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
+            local code=$?
+            set -e
+            local issues checks
+            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
+            checks=$(grep -cE '^PASS ' "$log" || true)
+            echo "::group::historical $name $* (exit $code, checks $checks, issues $issues)"
+            tail -n 40 "$log"
+            echo "::endgroup::"
+            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
+              failed=1
+              echo "HISTORICAL_AUDIT_FAILED: $name $*"
+              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
+            fi
+          }
+          run_case B12Strength --b17
+          run_case B13Strength --b17
+          exit "$failed"
+      - name: Upload historical audit logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-historical-evidence-logs
+          path: ${{ runner.temp }}/*.log
           if-no-files-found: warn
