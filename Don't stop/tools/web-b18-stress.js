@@ -201,7 +201,7 @@ function parseKv(line) {
 		`p99=${f(report.frame_ms && report.frame_ms.p99)} max=${f(report.frame_ms && report.frame_ms.max)} ` +
 		`over25=${report.spikes && report.spikes.over25} over33=${report.spikes && report.spikes.over33} ` +
 		`over50=${report.spikes && report.spikes.over50} slow_run_ms=${f(report.spikes && report.spikes.slow_run_ms)} ` +
-		`phys_avg=${f(cpu && cpu.phys_avg)} phys_p95=${f(cpu && cpu.phys_p95)} phys_max=${f(cpu && cpu.phys_max)} ` +
+		`ENGINE_WINDOW_PEAK_MONITOR physics_max_ms=${f(cpu && cpu.physics_max_ms)} process_max_ms=${f(cpu && cpu.process_max_ms)} ` +
 		`identity=${build.identity ? build.identity.slice(0, 16) : 'n/a'} gpu="${gpu}"`);
 	if (load) {
 		console.log(`  load objects_peak=${load.objects_peak} orphans_peak=${load.orphans_peak} ` +

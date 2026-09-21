@@ -6,6 +6,7 @@ const pre = preload("res://ui/ModeSelect.tscn")
 
 func _ready() -> void:
 	Utils.onGameStart.connect(self.onGameStart)
+	$VBoxContainer/start.mouse_entered.connect(_on_start_hovered)
 	# A web page is left by closing its tab; a button pretending to end the program
 	# would only freeze the last frame. Native builds keep their quit entry and the
 	# existing save-failure confirmation.
@@ -37,12 +38,14 @@ func _on_start_pressed() -> void:
 ## one in a screenshot, so the round's acceptance driver needs the game to say
 ## whether a click reached the menu at all.
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and not Utils.is_game_start:
-		Utils.startup_mark_once("menu-first-hover")
 	if event is InputEventMouseButton and event.pressed:
 		Utils.startup_mark_once("menu-input-received")
 		print("[leave] menu received a mouse press at %s (unhandled=%s)" % [
 			str(event.position), str(not get_viewport().is_input_handled())])
+
+func _on_start_hovered() -> void:
+	await RenderingServer.frame_post_draw
+	Utils.startup_mark_once("menu-first-hover")
 
 func onModeChoose(mode):
 	if mode == 0:

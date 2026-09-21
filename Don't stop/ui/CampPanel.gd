@@ -47,6 +47,7 @@ var replacement_weapon := -1
 var slot_detail := ""
 var rendered_selection := ""
 var filters_open := false
+var departure_preparing := false
 
 func select_carried(id: int):
 	selection = str(id)
@@ -714,6 +715,8 @@ func depart(stage: int):
 	_depart_with(stage,true)
 
 func _depart_with(stage: int, trial: bool):
+	if departure_preparing:
+		return
 	if not DemoConfig.ENCOUNTERS.has(stage):
 		message.text = "该关卡不存在"
 		return
@@ -722,6 +725,13 @@ func _depart_with(stage: int, trial: bool):
 	# player choice; unarmed is a first-class state now.
 	if LevelServer.state != "CAMP":
 		message.text = "当前仍在战斗；需先完成或返回营地"
+		return
+	departure_preparing = true
+	message.text = "正在准备出发…"
+	if is_instance_valid(Warmup):
+		await Warmup.prepare_web_combat()
+	departure_preparing = false
+	if LevelServer.state != "CAMP":
 		return
 	Demo.pop_pause(self)
 	if LevelServer.town.depart(stage,trial):

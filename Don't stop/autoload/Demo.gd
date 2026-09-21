@@ -780,7 +780,9 @@ func finish_quit():
 	Input.set_custom_mouse_cursor(null)
 	for type in ["AudioStreamPlayer","AudioStreamPlayer2D"]:
 		for node in get_tree().root.find_children("*",type,true,false): node.stop()
-	await get_tree().create_timer(0.1,true).timeout
+	# Ogg playback retirement is asynchronous. A 100 ms exit window still
+	# leaked the Music playback in repeated B17 runs; 400 ms drains it.
+	await get_tree().create_timer(0.4,true).timeout
 	get_tree().quit()
 
 func _notification(what):

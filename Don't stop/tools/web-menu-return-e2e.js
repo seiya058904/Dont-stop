@@ -293,6 +293,7 @@ watchdog.unref?.();
 		return { ok: true, rect: r };
 	}
 	async function shot(name) {
+		if (process.env.E2E_SCREENSHOTS === 'none') return;
 		try { await page.screenshot({ path: path.join(outDir, name) }); } catch (err) { note('screenshot ' + name + ' failed: ' + (err && err.message)); }
 	}
 

@@ -284,11 +284,9 @@ func notify_web_boot_warmup_done() -> void:
 
 func _web_report_boot_ready() -> void:
 	if not OS.has_feature("web") or _web_boot_reported: return
-	# The menu can be built while the autoload is still paying first-use costs on the
-	# browser's single thread. The shell must stay in its real loading state until
-	# both sides of that hand-off have completed; otherwise it reveals a menu and
-	# immediately freezes again while the warm-up pass finishes behind it.
-	if not _web_boot_menu or not _web_boot_warmup: return
+	# Hand over the actually drawn menu. Optional full warmup must not gate the
+	# first screen; Web does not schedule that pass behind the revealed menu.
+	if not _web_boot_menu: return
 	_web_boot_reported = true
 	# Two drawn frames: the shell must only drop its overlay once the menu has
 	# actually been presented, not merely built.

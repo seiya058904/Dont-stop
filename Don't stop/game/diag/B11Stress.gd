@@ -62,6 +62,11 @@ var presentation_ultimate_count := -1
 var _ms := PackedFloat32Array()
 var _engine_ms := PackedFloat32Array()
 var _ticks := PackedInt64Array()
+var _process_frames := PackedInt64Array()
+var _absolute_ticks := PackedInt64Array()
+var _epochs := PackedInt64Array()
+var _long_frames: Array = []
+var _round_contexts: Array = []
 var _load_samples: Array = []
 var _sample_tick_start := 0
 var _driver_active := false
@@ -74,6 +79,7 @@ var _effective_tick := 0
 var _next_amp_tick := 0
 var _next_root_tick := 0
 var measurement := "light"
+var run_mode := "diagnostic"
 var spawn_reachability_cache := true
 var _observation_frames := 0
 var _measured_wall_s := 0.0
@@ -129,8 +135,8 @@ func _physics_process(_delta: float) -> void:
 		_driver_root_attempts += 1
 		if Utils.player.apply_root(0.45): _driver_roots += 1
 	_observe_boss_tick()
-	# The fixture is a real EnemyShot stream, not a frame-by-frame counter. A 30 Hz
-	# refill is enough to replace the authored 3.2/5.2 s lifetimes while avoiding a
+	# The fixture is a real EnemyShot stream, not a frame-by-frame counter. A 15 Hz
+	# refill at 60 physics Hz replaces retired shots while avoiding a
 	# deferred group scan on every 60 Hz physics tick.
 	if scenario == "P" and tick % CAPACITY_REFILL_TICKS == 0: _capacity_tick.call_deferred()
 	if not park: _drive_movement(int(tick*1000/Engine.physics_ticks_per_second))
@@ -160,10 +166,8 @@ func _physics_process(_delta: float) -> void:
 				best = distance; nearest = actor
 		if is_instance_valid(nearest): Utils.aim_override = get_viewport().get_canvas_transform()*(nearest.global_position-Vector2(0,8))
 
-## The engine's own CPU cost for this frame's physics step and idle step, in milliseconds. These
-## are the readings that survive a vsync lock: the browser build is capped at 60 Hz here, so a frame
-## that costs 8 ms and one that costs 16.6 ms are both reported as 16.67 ms. `_phys` and `_proc`
-## show the cost itself, which is what a slower player machine actually feels.
+## ENGINE_WINDOW_PEAK_MONITOR: engine-window monitor readings, not per-frame
+## CPU durations. Retain raw readings and maxima only; never CPU percentiles.
 var _phys := PackedFloat32Array()
 var _proc := PackedFloat32Array()
 ## Draw calls per frame: the reading that answers "did the fog/telegraph rendering grow".
@@ -221,6 +225,7 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-source="): source_variant = arg.substr(16)
 		elif arg == "--stress-normal-hp": normal_hp = true
 		elif arg.begins_with("--stress-measurement="): measurement = arg.substr(21)
+		elif arg.begins_with("--stress-mode="): run_mode = arg.trim_prefix("--stress-mode=")
 		elif arg == "--stress-no-spawn-cache": spawn_reachability_cache = false
 		elif arg == "--stress-controlled-boss": controlled_boss = true
 		elif arg.begins_with("--stress-camp-cycles="): camp_cycles = int(arg.substr(21))
@@ -440,6 +445,9 @@ func _one_round() -> void:
 	Utils.set_gameplay_mouse_mode()
 	# Seeded here, after the previous round's reward draw and the camp refresh, so the random
 	# stream a round consumes is the same in every run and in both builds.
+	# Reuse the production camp departure preparation, with its separate timing.
+	if is_instance_valid(Warmup):
+		await Warmup.prepare_web_combat()
 	seed(run_seed)
 	_rounds += 1
 	var depart_usec := Time.get_ticks_usec()
@@ -456,9 +464,11 @@ func _one_round() -> void:
 ## to a handful of integer reads plus a few packed-array appends, because a harness that allocates
 ## per frame would end up measuring itself.
 func _sample_round() -> void:
+	if OS.has_feature("web"): JavaScriptBridge.eval("performance.mark('b194-combat-start')")
 	_surface = {"window":str(get_window().size),"visible_rect":str(get_viewport().get_visible_rect()),"texture_size":str(get_viewport().get_texture().get_size()),"canvas_transform":str(get_viewport().get_canvas_transform()),"stretch_transform":str(get_viewport().get_stretch_transform()),"content_scale_size":str(get_window().content_scale_size),"vsync":DisplayServer.window_get_vsync_mode(),"max_fps":Engine.max_fps,"physics_hz":Engine.physics_ticks_per_second,"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"display_server":DisplayServer.get_name(),"public_release":OS.has_feature("public_release")}
 	if OS.has_feature("web") and measurement == "detail": JavaScriptBridge.eval("performance.mark('b192-combat-start')")
 	var round_index := _rounds
+	_round_contexts.append({"round":round_index,"epoch":LevelServer.epoch,"scene":get_tree().current_scene.scene_file_path,"stage":stage,"scenario":scenario})
 	var started := Time.get_ticks_msec()
 	var previous_usec := Time.get_ticks_usec()
 	_sample_tick_start = Engine.get_physics_frames()
@@ -505,6 +515,11 @@ func _sample_round() -> void:
 		if beams >= 1: flags |= F_LANE
 		var current_usec := Time.get_ticks_usec()
 		_ms.append(float(current_usec-previous_usec)/1000.0)
+		_process_frames.append(Engine.get_process_frames())
+		_absolute_ticks.append(Engine.get_physics_frames())
+		_epochs.append(LevelServer.epoch)
+		if _ms[-1] > 50.0:
+			_long_frames.append({"index":_ms.size()-1,"ms":_ms[-1],"round":round_index,"wall_s":elapsed,"process_frame":Engine.get_process_frames(),"physics_tick":Engine.get_physics_frames(),"epoch":LevelServer.epoch,"preceding_load_sample":_load_samples.size()-1,"events_through":_events.size()})
 		previous_usec = current_usec
 		_engine_ms.append(get_process_delta_time()*1000.0)
 		_ticks.append(_effective_tick)
@@ -524,6 +539,7 @@ func _sample_round() -> void:
 		await get_tree().process_frame
 	if OS.has_feature("web") and measurement == "detail": JavaScriptBridge.eval("performance.mark('b192-combat-end')")
 	_measured_wall_s += (Time.get_ticks_msec()-started)/1000.0
+	if OS.has_feature("web"): JavaScriptBridge.eval("performance.mark('b194-combat-end')")
 	_driver_active = false
 	Input.action_release("shoot")
 	for action in ["left","right","up","down"]: Input.action_release(action)
@@ -733,16 +749,22 @@ func _sample_gauges() -> void:
 	if canvas_items > int(_peak.render_objects): _peak.render_objects = canvas_items
 	var row := {"wall_s":_combat_seconds[-1],"tick":(_ticks[-1] if not _ticks.is_empty() else Engine.get_physics_frames()),"round":_rounds,"action_totals":_retired_actions.duplicate(),"ordinary":0,"elite":0,"boss":0,"giant":0,"tier1":0,"tier2":0,"visible":0,"visible_tier1":0,"visible_tier2":0,"sources":0,"continuous_emitted":0,"continuous_deferred":0,"shots_live":preload("res://game/monster/EnemyShot.gd").live_count,"shots_group":get_tree().get_nodes_in_group("enemy_projectiles").size(),"shots_visible":0,"shots_near":0,"shots_screen":0,"damage_events":Combat.damage_events,"kills":Combat.kill_events,"gold":PlayerData.gold,"status_walks":B11Probe.status_walks,"status_empty":B11Probe.status_walks_empty,"flame_draw_usec":0,"flame_draw_passes":0,"fire_released":Demo.fire_released,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"continuous_planned":0,"continuous_cancelled":0}
 	var view_rect := get_viewport().get_visible_rect()
+	row.enemies_alive = 0
+	row.enemies_drawing_enabled = 0
+	row.enemies_on_screen = 0
 	for actor in get_tree().get_nodes_in_group("monsters"):
 		if actor.get("actions") != null:
 			for key in actor.actions: row.action_totals[key] = int(row.action_totals.get(key,0))+int(actor.actions[key])
 		if actor.is_die: continue
+		row.enemies_alive += 1
+		if actor.is_visible_in_tree(): row.enemies_drawing_enabled += 1
 		row["boss" if actor.is_boss else ("elite" if actor.is_elite else "ordinary")] += 1
 		if actor.get_meta("giant",false): row.giant += 1
 		var tier := int(actor.get_meta("enchantment",0))
 		if tier > 0: row["tier"+str(tier)] += 1
 		if actor.is_visible_in_tree() and view_rect.has_point(actor.get_global_transform_with_canvas().origin):
 			row.visible += 1
+			row.enemies_on_screen += 1
 			if tier > 0: row["visible_tier"+str(tier)] += 1
 		var stream = actor.get_node_or_null("ContinuousBarrage")
 		if is_instance_valid(stream):
@@ -754,7 +776,13 @@ func _sample_gauges() -> void:
 	for shot in get_tree().get_nodes_in_group("enemy_projectiles"):
 		if shot.is_visible_in_tree(): row.shots_visible += 1
 		if shot.global_position.distance_squared_to(Utils.player.global_position) < 14400: row.shots_near += 1
-		if view_rect.has_point(shot.get_global_transform_with_canvas().origin): row.shots_screen += 1
+		if shot.is_visible_in_tree() and view_rect.has_point(shot.get_global_transform_with_canvas().origin): row.shots_screen += 1
+	row.projectiles_alive = row.shots_live
+	row.projectiles_drawing_enabled = row.shots_visible
+	row.projectiles_on_screen = row.shots_screen
+	row.simultaneous_180_alive = row.enemies_alive >= 180 and row.projectiles_alive >= 180
+	row.simultaneous_180_drawing = row.enemies_drawing_enabled >= 180 and row.projectiles_drawing_enabled >= 180
+	row.simultaneous_180_on_screen = row.enemies_on_screen >= 180 and row.projectiles_on_screen >= 180
 	if scenario == "P":
 		var pressure_floor := int(ceil(float(preload("res://game/monster/EnemyShot.gd").capacity_limit)*0.9))
 		_pressure_samples += 1
@@ -806,7 +834,6 @@ func _report_second(round_index: int) -> void:
 	var count := _ms.size()-from
 	if count <= 0: return
 	var stats: Dictionary = _stats(_ms.slice(from,_ms.size()))
-	var cpu := _stats(_phys.slice(from,_phys.size()))
 	var worst := B11Probe.take_worst()
 	var now: Dictionary = B11Probe.snapshot()
 	var rates := {}
@@ -815,10 +842,10 @@ func _report_second(round_index: int) -> void:
 		rates[key] = int(now[key])-int(_prev.get(key,now[key]))
 	_prev = now
 	_peak_same_frame = maxi(_peak_same_frame,B11Probe.hits_in_frame_peak)
-	print("[spike] r=%d t=%.1f n=%d avg=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d over25=%d over33=%d over50=%d slow_run_ms=%.0f phys_avg=%.2f phys_p95=%.2f phys_max=%.2f proc_avg=%.2f draws=%d beams=%d zone_hits=%d hits=%d same_frame=%d rays=%d rays_sk=%d cl=%d labels=%d vfx=%d fog=%d reward_scans=%d rbuilt=%d rreuse=%d rnodes=%d rooted_frames=%d zone_usec=%d zone_worst_us=%d clear_usec=%d onhit_usec=%d onhit_worst_us=%d draw_usec=%d objects=%d orphans=%d mem_mb=%.2f pq=%d foglines=%d fogscans=%d shots=%d shotexc=%d td_draws=%d td_usec=%d hz_draws=%d hz_usec=%d swalk=%d swalk_empty=%d" % [
+	print("[spike] r=%d t=%.1f n=%d avg=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d over25=%d over33=%d over50=%d slow_run_ms=%.0f engine_window_physics_max_ms=%.2f engine_window_process_max_ms=%.2f draws=%d beams=%d zone_hits=%d hits=%d same_frame=%d rays=%d rays_sk=%d cl=%d labels=%d vfx=%d fog=%d reward_scans=%d rbuilt=%d rreuse=%d rnodes=%d rooted_frames=%d zone_usec=%d zone_worst_us=%d clear_usec=%d onhit_usec=%d onhit_worst_us=%d draw_usec=%d objects=%d orphans=%d mem_mb=%.2f pq=%d foglines=%d fogscans=%d shots=%d shotexc=%d td_draws=%d td_usec=%d hz_draws=%d hz_usec=%d swalk=%d swalk_empty=%d" % [
 		round_index,_combat_seconds[_ms.size()-1],count,stats.avg,stats.p95,stats.p99,stats.max,
 		Engine.get_frames_per_second(),stats.over25,stats.over33,stats.over50,stats.slow_run,
-		cpu.avg,cpu.p95,cpu.max,_stats(_proc.slice(from,_proc.size())).avg,_draws[_draws.size()-1],
+		Array(_phys.slice(from)).max(),Array(_proc.slice(from)).max(),_draws[_draws.size()-1],
 		B11Probe.beams_active,int(rates.get("zone_hits",0)),int(rates.get("hits",0)),
 		B11Probe.hits_in_frame_peak,int(rates.get("raycasts",0)),int(rates.get("raycasts_skipped",0)),
 		int(rates.get("clear_line",0)),int(rates.get("labels",0)),int(rates.get("vfx",0)),
@@ -914,19 +941,15 @@ func _dump() -> void:
 	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.
-	print("[stress-frames] ",JSON.stringify({"surface":_surface,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"pressure_samples":_pressure_samples,"pressure_live_ge_90":_pressure_live_ge_90,"pressure_visible_ge_90":_pressure_visible_ge_90,"pressure_live_ratio":(float(_pressure_live_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_visible_ratio":(float(_pressure_visible_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_live_min":_pressure_live_min,"pressure_live_max":_pressure_live_max,"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"physics_hz":Engine.physics_ticks_per_second,"physics_monitor_proxy_ms":Array(_phys),"process_monitor_proxy_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; monitor proxies overlap"}))
+	print("[stress-frames] ",JSON.stringify({"surface":_surface,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"mode":run_mode,"requested_seconds":seconds,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"pressure_samples":_pressure_samples,"pressure_live_ge_90":_pressure_live_ge_90,"pressure_visible_ge_90":_pressure_visible_ge_90,"pressure_live_ratio":(float(_pressure_live_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_visible_ratio":(float(_pressure_visible_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_live_min":_pressure_live_min,"pressure_live_max":_pressure_live_max,"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"process_frames":Array(_process_frames),"absolute_physics_ticks":Array(_absolute_ticks),"epochs":Array(_epochs),"round_contexts":_round_contexts,"long_frames":_long_frames,"physics_hz":Engine.physics_ticks_per_second,"engine_window_peak_monitor":{"physics_ms":Array(_phys),"process_ms":Array(_proc),"kind":"ENGINE_WINDOW_PEAK_MONITOR"},"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; engine-window monitors are not per-frame CPU durations"}))
 	var all: Dictionary = _stats(_ms)
-	var phys: Dictionary = _stats(_phys)
-	var proc: Dictionary = _stats(_proc)
 	var total_s := _total_combat_s
 	print("[stress-summary] scenario=%s stage=%d label=%s rounds=%d frames=%d combat_s=%.1f avg=%.2f p50=%.2f p95=%.2f p99=%.2f max=%.2f over25=%d over33=%d over50=%d slow_run_ms=%.0f root_windows=%d driver_roots=%d/%d amplified=%d" % [
 		scenario,stage,label,_rounds,_ms.size(),total_s,all.avg,all.p50,all.p95,all.p99,all.max,
 		all.over25,all.over33,all.over50,all.slow_run,_root_windows,_driver_roots,
 		_driver_root_attempts,_amplified])
-	print("[stress-cpu] frames=%d combat_s=%.1f phys_avg=%.3f phys_p50=%.3f phys_p95=%.3f phys_p99=%.3f phys_max=%.3f proc_avg=%.3f proc_max=%.3f phys_over8=%d phys_over12=%d draws_peak=%d zone_step_usec=%d zone_draw_usec=%d clear_line_usec=%d onhit_usec=%d" % [
-		_ms.size(),total_s,phys.avg,phys.p50,phys.p95,phys.p99,phys.max,proc.avg,proc.max,
-		_count_over(_phys,8.0),_count_over(_phys,12.0),_draws_peak(),
-		B11Probe.zone_step_usec,B11Probe.zone_draw_usec,B11Probe.clear_line_usec,B11Probe.onhit_usec])
+	print("[stress-cpu] kind=ENGINE_WINDOW_PEAK_MONITOR physics_max_ms=%.3f process_max_ms=%.3f draws_peak=%d" % [
+		Array(_phys).max() if not _phys.is_empty() else 0.0,Array(_proc).max() if not _proc.is_empty() else 0.0,_draws_peak()])
 	print("[stress-peak] enemies=%d zones=%d beams=%d hazards=%d vfx=%d transients=%d labels=%d projectiles=%d rewards=%d nodes=%d created=%d removed=%d raycasts=%d raycasts_skipped=%d clear_line=%d hits=%d zone_hits=%d same_frame=%d labels_created=%d vfx_created=%d fog_pushes=%d reward_scans=%d reward_built=%d reward_reused=%d reward_nodes=%d frames=%d" % [
 		_peak.enemies,_peak.zones,_peak.beams,_peak.hazards,_peak.vfx,_peak.transients,_peak.labels,
 		_peak.projectiles,_peak.rewards,_peak.nodes,_created,_removed,
@@ -977,7 +1000,6 @@ func _dump() -> void:
 		int(B11Probe.scoped_calls.get("spawn_ready",0)),int(B11Probe.scoped_calls.get("spawn_finalize",0)),
 		_peak.enemies,_peak.projectiles,_peak.hazards,_peak.zones,_peak.nodes])
 	_buckets("ms",_ms)
-	_buckets("phys",_phys)
 
 func _buckets(family: String, values) -> void:
 	_bucket(family,"all",func(_f: int,_b: int) -> bool: return true,values)

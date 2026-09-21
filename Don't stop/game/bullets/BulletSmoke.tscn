@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5pc5whok7ley"]
+[gd_scene load_steps=10 format=3 uid="uid://b5pc5whok7ley"]
 
 [ext_resource type="Texture2D" uid="uid://dpvosctidguwu" path="res://game/bullets/assets/debris.png" id="1_p435v"]
 
@@ -16,6 +16,12 @@ point_count = 3
 [sub_resource type="CurveTexture" id="CurveTexture_ie73j"]
 curve = SubResource("Curve_sq6gq")
 
+[sub_resource type="Gradient" id="Gradient_identity"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_identity"]
+gradient = SubResource("Gradient_identity")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_auh7s"]
 particle_flag_disable_z = true
 spread = 70.0
@@ -27,6 +33,7 @@ orbit_velocity_max = 0.0
 angle_max = 180.0
 scale_curve = SubResource("CurveTexture_ie73j")
 color = Color(0.94902, 0.423529, 0.45098, 1)
+color_ramp = SubResource("GradientTexture1D_identity")
 anim_offset_max = 1.0
 
 [sub_resource type="Animation" id="Animation_qiaaw"]

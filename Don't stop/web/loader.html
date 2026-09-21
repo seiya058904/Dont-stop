@@ -78,19 +78,34 @@
 			const originalDisable = proto.disable;
 			if (!originalGetParameter || !originalEnable || !originalDisable) continue;
 			const states = new WeakMap();
+			const watched = new WeakSet();
+			const lost = new WeakSet();
+			function watch(context) {
+				if (watched.has(context)) return;
+				watched.add(context);
+				context.canvas.addEventListener('webglcontextlost', function () {
+					lost.add(context);
+					states.set(context, null);
+				});
+				context.canvas.addEventListener('webglcontextrestored', function () {
+					lost.delete(context);
+					states.delete(context);
+				});
+			}
 			proto.getParameter = function (pname) {
 				if (pname !== SCISSOR_TEST) return originalGetParameter.apply(this, arguments);
+				watch(this);
 				if (!states.has(this)) states.set(this, originalGetParameter.apply(this, arguments));
 				return states.get(this);
 			};
 			proto.enable = function (cap) {
 				const result = originalEnable.apply(this, arguments);
-				if (cap === SCISSOR_TEST) states.set(this, true);
+				if (cap === SCISSOR_TEST) { watch(this); if (!lost.has(this)) states.set(this, true); }
 				return result;
 			};
 			proto.disable = function (cap) {
 				const result = originalDisable.apply(this, arguments);
-				if (cap === SCISSOR_TEST) states.set(this, false);
+				if (cap === SCISSOR_TEST) { watch(this); if (!lost.has(this)) states.set(this, false); }
 				return result;
 			};
 			Object.defineProperty(proto, '__dontStopScissorCache', { value: true });
@@ -310,8 +325,8 @@
 		}
 
 		// The game calls these from GDScript (autoload/Utils.gd, WEB_SHELL_HOOKS)
-		// once the real title menu has been drawn AND the pre-warm pass has
-		// finished. This is the readiness signal the shell waits for; the engine's
+		// once the real title menu has been drawn. Full warmup is optional and
+		// never gates the Web menu. The engine's
 		// startGame() promise alone only means "the engine booted".
 		window.__dontStop = {
 			ready: function () {
@@ -399,6 +414,7 @@
 			if (params.has('camp_cycles')) GODOT_CONFIG.args.push('--stress-camp-cycles=' + params.get('camp_cycles'));
 			if (params.has('controlled_boss')) GODOT_CONFIG.args.push('--stress-controlled-boss');
 			if (params.has('measurement')) GODOT_CONFIG.args.push('--stress-measurement=' + params.get('measurement'));
+			if (params.has('mode')) GODOT_CONFIG.args.push('--stress-mode=' + params.get('mode'));
 			if (params.has('source')) GODOT_CONFIG.args.push('--stress-source=' + params.get('source'));
 			if (params.has('normal_hp')) GODOT_CONFIG.args.push('--stress-normal-hp');
 			if (params.has('weapons')) GODOT_CONFIG.args.push('--stress-weapons=' + params.get('weapons'));

@@ -49,7 +49,6 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 		}
 		step('loading-completes', true);
 		await page.waitForSelector('#canvas-host canvas', { timeout: 30000 });
-		await page.waitForTimeout(5000);
 		return page;
 	}
 
@@ -67,7 +66,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 	{
 		const page = await newGamePage('', 300000);
 		if (page) {
-			await page.screenshot({ path: shotDir + '/01-title.png' });
+			if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: shotDir + '/01-title.png' });
 			const canvasOk = await page.evaluate(() => {
 				const c = document.querySelector('#canvas-host canvas');
 				return !!c && c.width > 0 && c.height > 0;
@@ -89,13 +88,13 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 			}
 			const pass = engineLog.some(l => l.includes('[smoke] result=PASS'));
 			step('in-game-smoke', finished && pass, engineLog.filter(l => l.includes('[smoke]')).join(' ; ').slice(0, 900));
-			await page.screenshot({ path: shotDir + '/02-combat.png' });
+			if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: shotDir + '/02-combat.png' });
 			step('page-alive', await page.evaluate(() => !!document.querySelector('#canvas-host canvas')));
 
 			// ---- Phase 3: keyboard + panel + weapon/fire input sanity.
 			await page.keyboard.press('Tab');
 			await page.waitForTimeout(1500);
-			await page.screenshot({ path: shotDir + '/03-panel.png' });
+			if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: shotDir + '/03-panel.png' });
 			await page.keyboard.press('Escape');
 			await page.waitForTimeout(800);
 			await page.keyboard.press('2');
@@ -103,7 +102,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 			await page.mouse.move(960, 540);
 			await page.mouse.down(); await page.waitForTimeout(400); await page.mouse.up();
 			await page.waitForTimeout(500);
-			await page.screenshot({ path: shotDir + '/04-fire.png' });
+			if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: shotDir + '/04-fire.png' });
 			step('still-alive-after-input', await page.evaluate(() => !!document.querySelector('#canvas-host canvas')));
 			await page.close();
 		}

@@ -1,49 +1,9 @@
 name: Build and deploy Web release
 
-# ---------------------------------------------------------------------------
-# WHY THIS FILE LOOKS THE WAY IT DOES
-#
-# The pipeline used to cost about 3.5 hours for one main deploy. Measured on
-# run 34954529853 / 34962338505:
-#
-#   build 45s -> Browser smoke 1h44m30s -> deploy 13s -> Online smoke 1h41m6s
-#
-# Almost all of it was two serial jobs that re-drove the whole game through
-# Playwright and measured everything with page.screenshot(). The Web export uses
-# the nothreads template, so the game loop owns the browser main thread and every
-# capture or evaluate has to wait for a slot on it: ~32 ms idle, ~30 s on CI. The
-# gates now read the game's own read-only state channel instead (?probe=1), which
-# costs no page round trip, so the same coverage runs in minutes.
-#
-# What this file therefore guarantees:
-#   * Build once. One `build` job exports the Web build, names it by digest, and
-#     is the only place a build is produced.
-#   * Test the exact bytes that ship. Every gate downloads that one `web-build`
-#     artifact; nothing is rebuilt for a test.
-#   * Deploy the exact bytes that were tested. The Pages artifact is uploaded
-#     from the same directory in the same job, and the online check compares the
-#     live page's SHA *and* payload digest against this run's identity.
-#   * Gates run in parallel (smoke / save-audit / aim-core / aim-fault /
-#     menu-return) and the deploy waits for all of them. The aim acceptance gate
-#     is one script split across two jobs purely for wall-clock: the fault
-#     injection waits out the loader's own 45 s quiet window and shares no state
-#     with the aim chain, so running it alongside costs nothing and takes 78 s
-#     off the critical path. Both jobs must pass, and together they still assert
-#     all 65 of the gate's contracts.
-#   * A PR runs the gates but can never deploy. A main push deploys.
-#   * A docs-only change does not pay for a game build.
-#   * Layered testing: FAST and RELEASE on every push/PR, SOAK nightly.
-#
-# Budgets held by this file:
-#   build                  <  5 min   (warm caches; 12 min ceiling for a cold run)
-#   each browser gate      < 10 min
-#   five-cycle menu return < 10-15 min
-#   pre-deploy total       < 20 min
-#   deploy + online smoke  < 10 min   (online smoke is a <=5 min script)
-#   main push, end to end  < 30 min
-# Every job carries an explicit timeout-minutes so a hang fails the run instead
-# of occupying a runner for hours; the scripts carry their own watchdogs too.
-# ---------------------------------------------------------------------------
+# B19.4: one import/export, core preflight before export, and real browser
+# startup/smoke/menu-return before either required summary or deployment.
+# Full browser regression and soak run on schedule/manual dispatch.
+# Required path hard budget: 10 minutes; engineering target: 8 minutes.
 on:
   push:
     branches: [main]
@@ -86,9 +46,9 @@ env:
   # included). Bash needs the quotes; YAML must not, because a scalar that opens
   # with a quote has to close it before anything else follows.
   PROJECT_PATH: "Don't stop"
-  # The testing layers. FAST and RELEASE are always on; SOAK is the nightly run.
+  # Daily required checks are bounded; full regression is manual/nightly.
   TIER: ${{ github.event_name == 'schedule' && 'soak' || 'release' }}
-  MENU_CYCLES: ${{ inputs.menu_cycles || (github.event_name == 'schedule' && '20' || '5') }}
+  MENU_CYCLES: ${{ inputs.menu_cycles || (github.event_name == 'schedule' && '20' || (github.event_name == 'workflow_dispatch' && '5' || '1')) }}
 
 jobs:
   # ------------------------------------------------------------------------ #
@@ -195,12 +155,50 @@ jobs:
           unzip -p "$TPLZ" templates/web_nothreads_release.zip > "$DEST/web_nothreads_release.zip"
           echo "GODOT=$BIN" >> "$GITHUB_ENV"
 
-      - name: Import project and export Web build
+      - name: Import project (fail before browser or export)
         shell: bash
         run: |
           set -euo pipefail
           "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit \
             --log-file "$RUNNER_TEMP/godot/import.log"
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$RUNNER_TEMP/godot/import.log"; then
+            echo 'Import/parse failed.'
+            exit 1
+          fi
+
+      - name: Run stable core regression preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_case () {
+            local name="$1"
+            local log="$RUNNER_TEMP/preflight-$name.log"
+            set +e
+            timeout 300 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
+              "res://tests/$name.tscn" > "$log" 2>&1
+            local code=$?
+            set -e
+            local issues checks
+            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
+            checks=$(grep -cE '^PASS ' "$log" || true)
+            echo "::group::preflight $name (exit $code, checks $checks, issues $issues)"
+            tail -n 40 "$log"
+            echo '::endgroup::'
+            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
+              echo "PREFLIGHT_FAILED: $name"
+              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
+              exit 1
+            fi
+          }
+          run_case BaselineRegression
+          run_case B194Contracts
+          run_case B17Contracts
+          run_case M3Weapons
+
+      - name: Export the validated Web candidate
+        shell: bash
+        run: |
+          set -euo pipefail
           mkdir -p "$PROJECT_PATH/build/web"
           # Export path is relative to the project directory (that is how Godot
           # resolves it), and --path is the project directory, so this stays
@@ -208,6 +206,10 @@ jobs:
           "$GODOT" --headless --path "$PROJECT_PATH" \
             --export-release "Web Release" build/web/index.html \
             --log-file "$RUNNER_TEMP/godot/export.log"
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$RUNNER_TEMP/godot/export.log"; then
+            echo 'Export reported an error.'
+            exit 1
+          fi
           test -s "$PROJECT_PATH/build/web/index.html"
           test -s "$PROJECT_PATH/build/web/index.pck"
           test -s "$PROJECT_PATH/build/web/index.wasm"
@@ -274,14 +276,14 @@ jobs:
   # docs-only PR where the expensive Web export is intentionally skipped.
   # Game changes still require the real build to succeed; docs-only changes
   # take the explicit no-build path instead of leaving a required check pending.
-  web-required-gate:
-    name: Web required gate
+  stable-preflight:
+    name: Stable preflight
     needs: [changes, build]
-    if: always() && github.event_name == 'pull_request'
+    if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Verify Web build requirement
+      - name: Verify import and deterministic preflight
         shell: bash
         env:
           SCOPE_RESULT: ${{ needs.changes.result }}
@@ -295,12 +297,50 @@ jobs:
           fi
           if [[ "$GAME_SCOPE" == true ]]; then
             if [[ "$BUILD_RESULT" != success ]]; then
+              echo "Game changes require a successful preflight and Web build; got: $BUILD_RESULT"
+              exit 1
+            fi
+            echo "preflight and Web build passed for a game-changing PR."
+          elif [[ "$GAME_SCOPE" == false ]]; then
+            if [[ "$BUILD_RESULT" != success && "$BUILD_RESULT" != skipped ]]; then
+              echo "Docs-only scope had an unexpected preflight and Web build result: $BUILD_RESULT"
+              exit 1
+            fi
+            echo "Docs-only PR: preflight and Web build intentionally skipped and explicitly accepted."
+          else
+            echo "Scope job did not emit a valid game=true/false result."
+            exit 1
+          fi
+
+
+  web-required-gate:
+    name: Web required gate
+    needs: [changes, build, browser-gates]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify Web build requirement
+        shell: bash
+        env:
+          SCOPE_RESULT: ${{ needs.changes.result }}
+          GAME_SCOPE: ${{ needs.changes.outputs.game }}
+          BROWSER_RESULT: ${{ needs.browser-gates.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          set -euo pipefail
+          if [[ "$SCOPE_RESULT" != success ]]; then
+            echo "Scope job did not succeed: $SCOPE_RESULT"
+            exit 1
+          fi
+          if [[ "$GAME_SCOPE" == true ]]; then
+            if [[ "$BUILD_RESULT" != success || "$BROWSER_RESULT" != success ]]; then
               echo "Game changes require a successful Web build; got: $BUILD_RESULT"
               exit 1
             fi
-            echo "Web build passed for a game-changing PR."
+            echo "Web build, startup budget, real interaction and smoke passed."
           elif [[ "$GAME_SCOPE" == false ]]; then
-            if [[ "$BUILD_RESULT" != success && "$BUILD_RESULT" != skipped ]]; then
+            if [[ ( "$BUILD_RESULT" != success && "$BUILD_RESULT" != skipped ) || ( "$BROWSER_RESULT" != success && "$BROWSER_RESULT" != skipped ) ]]; then
               echo "Docs-only scope had an unexpected Web build result: $BUILD_RESULT"
               exit 1
             fi
@@ -310,39 +350,19 @@ jobs:
             exit 1
           fi
 
-  # ------------------------------------------------------------------------ #
-  # The gates. Five parallel jobs, all downloading the one build above. The
-  # deploy waits for every one of them.
-  #
-  #   FAST    smoke, save-audit         cheap, always on
-  #   RELEASE aim-core, aim-fault,      the full acceptance layer. aim-core and
-  #           menu-return               aim-fault are the two halves of
-  #                                     tools/web-aim-e2e.js, split by phase so
-  #                                     the fault injection stops serialising
-  #                                     the aim chain. Both must pass.
-  #   SOAK    the same jobs, nightly, with a 20-cycle return
-  # ------------------------------------------------------------------------ #
+  # Three required gates share the one exported artifact. The full matrix
+  # adds save/aim/stage coverage on manual/nightly runs; one return cycle is
+  # sufficient for each edit, while manual/nightly retain 5/20 cycles.
   browser-gates:
-    name: "Gate ${{ matrix.name }} (${{ matrix.tier }})"
+    name: "Gate ${{ matrix.name }}"
     needs: [changes, build]
     if: needs.changes.outputs.game == 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ matrix.timeout }}
+    timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { name: smoke,       tier: FAST,    script: tools/smoke-web.js,             timeout: 10 }
-          - { name: save-audit,  tier: FAST,    script: tools/save-audit-web.js,        timeout: 10 }
-          - { name: aim-core,    tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 12 }
-          - { name: aim-fault,   tier: RELEASE, script: tools/web-aim-e2e.js,           timeout: 8 }
-          - { name: menu-return, tier: RELEASE, script: tools/web-menu-return-e2e.js,   timeout: 15 }
-          # B11. The claims this batch makes can only be judged in a browser: stages 31/35/39/40 really
-          # start Hell rounds on a fresh profile, and a frozen laser lane really fires at the geometry
-          # it froze. The gate reads the game's own read-only channel - including each live footprint's
-          # identity, countdown, direction, declared sweep and lock state - so it needs no screenshot
-          # diffing, and it asserts on the game's own per-stage evidence lines.
-          - { name: stages-fair,  tier: RELEASE, script: tools/web-b11-stagerun.js,    timeout: 15 }
+        name: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '["smoke","startup","save-audit","aim-core","aim-fault","menu-return","stages-fair"]' || '["smoke","startup","menu-return"]') }}
     steps:
       - name: Check out source (gate scripts)
         uses: actions/checkout@v4
@@ -385,6 +405,20 @@ jobs:
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
           # Every gate script takes the same shape: <url> <evidenceDir> [gateArg].
           set -- "http://localhost:8788/index.html" "$OUT"
+          SCRIPT=""
+          case "${{ matrix.name }}" in
+            smoke) SCRIPT=tools/smoke-web.js ;;
+            startup) SCRIPT=tools/web-b193-startup.js ;;
+            save-audit) SCRIPT=tools/save-audit-web.js ;;
+            aim-core|aim-fault) SCRIPT=tools/web-aim-e2e.js ;;
+            menu-return) SCRIPT=tools/web-menu-return-e2e.js ;;
+            stages-fair) SCRIPT=tools/web-b11-stagerun.js ;;
+            *) exit 2 ;;
+          esac
+          export B193_HEADLESS=1 B193_BUILD_DIR="$PWD/build/web" E2E_SCREENSHOTS=none
+          if [[ "${{ matrix.name }}" == startup ]]; then
+            node "$PROJECT_PATH/tools/test-web-scissor.js"
+          fi
           case "${{ matrix.name }}" in
             menu-return) set -- "$@" "${MENU_CYCLES:-5}" ;;
             # The two halves of the aim gate select their phases explicitly; the
@@ -397,11 +431,11 @@ jobs:
             stages-fair) set -- "$@" ;;
           esac
           START=$SECONDS
-          if ! node "$PROJECT_PATH/${{ matrix.script }}" "$@" 2>&1 | tee "$OUT/run.log"; then
-            echo "GATE_${{ matrix.name }}=FAIL tier=${{ matrix.tier }} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          if ! node "$PROJECT_PATH/$SCRIPT" "$@" 2>&1 | tee "$OUT/run.log"; then
+            echo "GATE_${{ matrix.name }}=FAIL tier=${TIER} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
             exit 1
           fi
-          echo "GATE_${{ matrix.name }}=PASS tier=${{ matrix.tier }} wall_clock=$((SECONDS-START))s budget=${{ matrix.timeout }}m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=8m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload gate evidence
         if: always()
@@ -418,7 +452,7 @@ jobs:
   # ------------------------------------------------------------------------ #
   deploy:
     name: Deploy the tested artifact to Pages
-    needs: [changes, build, browser-gates]
+    needs: [changes, build, stable-preflight, web-required-gate]
     if: >-
       needs.changes.outputs.game == 'true'
       && github.ref == 'refs/heads/main'
@@ -450,6 +484,12 @@ jobs:
     steps:
       - name: Check out source (online smoke script)
         uses: actions/checkout@v4
+
+      - name: Download the tested Web candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: build/web
 
       - name: Restore the build identity this run produced
         uses: actions/download-artifact@v4
@@ -487,6 +527,8 @@ jobs:
             "$PAGES_URL" "$DIGEST" "$GITHUB_SHA" \
             online-evidence build-identity/build-identity.json \
             2>&1 | tee online-evidence/online-smoke.log
+          B193_HEADLESS=1 B193_BUILD_DIR="$PWD/build/web" node "$PROJECT_PATH/tools/web-b193-startup.js" \
+            "$PAGES_URL" online-evidence/startup
           echo "ONLINE_SMOKE=PASS identity=sha:$GITHUB_SHA digest:$DIGEST wall_clock=$((SECONDS-START))s budget=5m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload online evidence

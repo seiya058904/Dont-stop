@@ -4,19 +4,21 @@ import hashlib
 import subprocess
 import sys
 import time
+import os
 from pathlib import Path
 
 import psutil
 
 root = Path(__file__).resolve().parents[1]
 platform, label, *args = sys.argv[1:]
-out = root / 'output/b19-2'
+out = Path(os.environ.get('B19_OUT', str(root / 'output/b19-2')))
 out.mkdir(parents=True, exist_ok=True)
 log = out / (label + '.log')
 if log.exists():
     raise SystemExit('Refusing overwrite: ' + str(log))
 engine = (root.parent / 'archive/workspace-support/_tools/godot/4.7.2/Godot_v4.7.2-stable_win64.exe'
           if platform == 'native' else root / 'build/b192-windows/Dont-stop.exe')
+engine = Path(os.environ.get('GODOT' if platform == 'native' else 'B19_WINDOWS_EXE', str(engine)))
 command = [str(engine), *( ['--path', str(root)] if platform == 'native' else [] ), *args]
 identity = {'exe_sha256': hashlib.sha256(engine.read_bytes()).hexdigest()}
 if platform == 'windows':
@@ -28,6 +30,7 @@ memory = []
 with log.open('w', encoding='utf8') as stream:
     process = subprocess.Popen(command, cwd=engine.parent if platform == 'windows' else root, stdout=stream, stderr=subprocess.STDOUT)
     observed = psutil.Process(process.pid)
+    read_offset = 0
     while process.poll() is None:
         try:
             info = observed.memory_info()
@@ -35,7 +38,17 @@ with log.open('w', encoding='utf8') as stream:
                            'rss': info.rss, 'private': getattr(info, 'private', None)})
         except psutil.NoSuchProcess:
             break
-        if time.monotonic()-started > 240:
+        # A lazy-script parse failure can leave a perfectly live title menu.
+        # Stop this exact process tree immediately, not after the stress watchdog.
+        with log.open('r', encoding='utf8', errors='replace') as current:
+            current.seek(read_offset)
+            new_output = current.read()
+            read_offset = current.tell()
+        failed = any(line.startswith(('ERROR:', 'SCRIPT ERROR:', 'FAIL ')) for line in new_output.splitlines())
+        if failed or time.monotonic()-started > 240:
+            for child in observed.children(recursive=True):
+                try: child.kill()
+                except psutil.NoSuchProcess: pass
             process.kill()
             break
         time.sleep(2)
