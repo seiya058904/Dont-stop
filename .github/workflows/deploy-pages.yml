@@ -270,6 +270,46 @@ jobs:
           path: ${{ runner.temp }}/build-identity.json
           retention-days: 3
 
+  # This is the branch-protection check. It must run on every PR, including a
+  # docs-only PR where the expensive Web export is intentionally skipped.
+  # Game changes still require the real build to succeed; docs-only changes
+  # take the explicit no-build path instead of leaving a required check pending.
+  web-required-gate:
+    name: Web required gate
+    needs: [changes, build]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify Web build requirement
+        shell: bash
+        env:
+          SCOPE_RESULT: ${{ needs.changes.result }}
+          GAME_SCOPE: ${{ needs.changes.outputs.game }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          set -euo pipefail
+          if [[ "$SCOPE_RESULT" != success ]]; then
+            echo "Scope job did not succeed: $SCOPE_RESULT"
+            exit 1
+          fi
+          if [[ "$GAME_SCOPE" == true ]]; then
+            if [[ "$BUILD_RESULT" != success ]]; then
+              echo "Game changes require a successful Web build; got: $BUILD_RESULT"
+              exit 1
+            fi
+            echo "Web build passed for a game-changing PR."
+          elif [[ "$GAME_SCOPE" == false ]]; then
+            if [[ "$BUILD_RESULT" != success && "$BUILD_RESULT" != skipped ]]; then
+              echo "Docs-only scope had an unexpected Web build result: $BUILD_RESULT"
+              exit 1
+            fi
+            echo "Docs-only PR: Web build intentionally skipped and explicitly accepted."
+          else
+            echo "Scope job did not emit a valid game=true/false result."
+            exit 1
+          fi
+
   # ------------------------------------------------------------------------ #
   # The gates. Five parallel jobs, all downloading the one build above. The
   # deploy waits for every one of them.
