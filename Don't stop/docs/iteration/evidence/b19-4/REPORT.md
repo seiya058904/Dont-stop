@@ -1,6 +1,6 @@
 # B19.4 — work in progress
 
-The full objective remains open. No PR, merge, deployment or final candidate acceptance has been performed.
+The full objective remains open. Draft PR #17 is under CI verification; no merge, deployment or final candidate acceptance has been performed.
 
 | Item | Before | Current evidence | Target | Status |
 |---|---:|---:|---|---|
@@ -68,6 +68,12 @@ All paths below are relative to the Godot project. Raw trace files are local ign
 The P rig tried ordinary population refill alongside its existing deferred projectile refill (every 4 physics ticks). Same 15 s workload still recorded zero simultaneous 180+180 gauge samples, while max frame rose to 250.41 ms and p99 to 103.91 ms. Refill events reached about 95 ms for only 0–4 successful additions; measured spawn-clearance scope totaled 847.330 ms. This unhelpful refill change was reverted. Evidence: `output/b19-4/pressure-refill/`, build identity `7b86af357ba75d66…`. The Web export was subsequently rebuilt from the restored source (`restored-candidate-export.log`); it no longer contains the rejected refill change.
 
 The same run validates the preparation timing split: synchronous load <=0.815 ms, construction <=0.610 ms and add/emit <=0.205 ms per measured item, versus draw windows up to 143.725 ms. The large cost is first rendering, not synchronous resource load for these five items.
+
+## CI candidate verification
+
+Draft PR: https://github.com/seiya058904/Dont-stop/pull/17, first snapshot `d987a1f`. Run `35596753173` stopped its required path in about 50 s because the fresh importer reads the project font/cursor before generating their cache. Only seven distinct early diagnostics occurred; both protected summaries failed and browser gates were skipped. This verifies fail-fast behavior, not a successful timing result.
+
+The import validator now accepts only those exact font/cursor diagnostics before the first filesystem scan, only after both source and generated files exist and are nonempty. Any later error, other resource error or script error still fails. B194Contracts actually loads both resources after import. The same validator is used by local L1/L2; five classification cases and L1 (23.547 s) pass. A clean-cache project copy completed an ordered-log import in 21.588 s, then passed all five B194 runtime checks (`output/b19-4/clean-import/ordered-import.log`, `runtime.log`).
 
 ## Remaining completion gates
 

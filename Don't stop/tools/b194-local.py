@@ -4,6 +4,8 @@ GODOT=<pinned executable> python tools/b194-local.py L1
 GODOT=... python tools/b194-local.py L2 --url http://127.0.0.1:8199/index.html
 No export, installation, screenshot or trace is performed by this runner.
 """
+from b194_import_check import validate as validate_import
+
 import argparse
 import json
 import os
@@ -63,7 +65,8 @@ def main():
                                   stderr=subprocess.STDOUT, timeout=remaining)
             output = proc.stdout.decode("utf-8", errors="replace")
             checks = len(re.findall(r"^PASS ", output, re.M))
-            errors = re.findall(r"^(?:SCRIPT ERROR:|ERROR:|FAIL ).*$", output, re.M)
+            errors = (validate_import(output, ROOT) if name == "import" else
+                      re.findall(r"^(?:SCRIPT ERROR:|ERROR:|FAIL ).*$", output, re.M))
             ok = proc.returncode == 0 and not errors and (not contract or checks > 0)
             row = {"name": name, "wall_ms": round((time.monotonic()-begin)*1000),
                    "exit": proc.returncode, "checks": checks, "ok": ok, "errors": errors}

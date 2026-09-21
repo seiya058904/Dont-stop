@@ -9,4 +9,9 @@ func _ready() -> void:
 		var valid: bool = script is GDScript and script.can_instantiate()
 		print(("PASS " if valid else "FAIL ") + "lazy script compiles: " + path)
 		if not valid: failures += 1
+	for path in ["res://fonts/fusion-pixel.otf", "res://Sprites/1 cursor.png"]:
+		var resource = load(path)
+		var valid := resource != null
+		print(("PASS " if valid else "FAIL ") + "imported boot resource loads: " + path)
+		if not valid: failures += 1
 	get_tree().quit(1 if failures else 0)

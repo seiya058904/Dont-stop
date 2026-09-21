@@ -161,10 +161,7 @@ jobs:
           set -euo pipefail
           "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit \
             --log-file "$RUNNER_TEMP/godot/import.log"
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$RUNNER_TEMP/godot/import.log"; then
-            echo 'Import/parse failed.'
-            exit 1
-          fi
+          python3 "$PROJECT_PATH/tools/b194_import_check.py" "$PROJECT_PATH" "$RUNNER_TEMP/godot/import.log"
 
       - name: Run stable core regression preflight
         shell: bash
