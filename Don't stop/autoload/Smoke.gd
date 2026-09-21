@@ -501,9 +501,22 @@ func _probe_track_projectiles() -> void:
 var _probe_last_save_diagnostic := ""
 
 func _probe_report() -> void:
+	var web_fs = null
+	if OS.has_feature("web"):
+		# Read-only bridge diagnostic: distinguish the engine's file view from
+		# the mounted browser FS. Never synchronize or repair the save here.
+		web_fs = JavaScriptBridge.eval("""(function (path) {
+			if (typeof GodotFS === 'undefined' || typeof FS === 'undefined') return null;
+			try { return JSON.stringify({ syncing: GodotFS._syncing, mounts: GodotFS._mount_points,
+				mount: FS.lookupPath(path).node.mount.mountpoint,
+				files: FS.readdir(path).filter(name => name !== '.' && name !== '..').map(name => {
+					const stat = FS.stat(path + '/' + name);
+					return { name, mode: stat.mode, size: stat.size, mtime: String(stat.mtime) };
+				}) }); } catch (error) { return JSON.stringify({ error: String(error) }); }
+		})(%s)""" % JSON.stringify(ProjectSettings.globalize_path(Demo.save_path).get_base_dir()))
 	var save_diagnostic := JSON.stringify({"path":Demo.save_path,"exists":FileAccess.file_exists(Demo.save_path),
 		"absolute_path":ProjectSettings.globalize_path(Demo.save_path),
-		"persistent":OS.is_userfs_persistent(),"result":Demo.save_result})
+		"persistent":OS.is_userfs_persistent(),"result":Demo.save_result,"web_fs":web_fs})
 	if save_diagnostic != _probe_last_save_diagnostic:
 		_probe_last_save_diagnostic = save_diagnostic
 		print("[probe] save_diagnostic ",save_diagnostic)

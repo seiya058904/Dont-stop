@@ -177,9 +177,20 @@ watchdog.unref?.();
 	const storageEvents = [];
 	let durableFilesBeforeReload = null;
 	const rects = {};
+	let documentSequence = 0;
+	// The previous game can still emit while goto is waiting to navigate. Clear
+	// at the committed main-document boundary, before the new game starts, not
+	// before calling goto (which let old fixture messages contaminate acceptance).
+	page.on('framenavigated', frame => {
+		if (frame !== page.mainFrame()) return;
+		documentSequence += 1;
+		gameLines = [];
+		probeLines = [];
+		probeSaveState = null;
+	});
 	page.on('console', m => {
 		const t = m.text();
-		if (t.startsWith('[idb-observe] ')) { storageEvents.push({ wall_ms: Date.now(), ...JSON.parse(t.slice('[idb-observe] '.length)) }); return; }
+		if (t.startsWith('[idb-observe] ')) { storageEvents.push({ document: documentSequence, wall_ms: Date.now(), ...JSON.parse(t.slice('[idb-observe] '.length)) }); return; }
 		if (m.type() === 'error') consoleErrors.push(t);
 		if (t.startsWith('[probe] rect ')) {
 			const g = t.match(/rect (\S+) id=(\d+) text="([^"]*)" x=([\d.-]+) y=([\d.-]+) w=([\d.-]+) h=([\d.-]+) cx=([\d.-]+) cy=([\d.-]+)/);
@@ -187,7 +198,7 @@ watchdog.unref?.();
 			return;
 		}
 		if (t.startsWith('[probe] ')) {
-			if (t.startsWith('[probe] save_diagnostic ')) { saveDiagnostics.push({ wall_ms: Date.now(), text: t }); return; }
+			if (t.startsWith('[probe] save_diagnostic ')) { saveDiagnostics.push({ document: documentSequence, wall_ms: Date.now(), text: t }); return; }
 			if (t.startsWith('[probe] save_state')) { probeSaveState = t.replace('[probe] save_state', '').trim(); return; }
 			if (!/frames=\d+/.test(t)) return;
 			probeLines.push(t);
@@ -344,8 +355,6 @@ watchdog.unref?.();
 
 	// ========================================================= Phase A: cycles
 	rect = null;
-	probeLines = [];
-	gameLines = [];
 	let acceptanceFrom = 0;
 	await phase('acceptance-load', async () => {
 		await page.goto(q(url, 'probe=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -658,7 +667,6 @@ watchdog.unref?.();
 				};
 			})));
 		});
-		probeSaveState = null;
 		await page.goto(q(url, 'probe=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
 		const t = Date.now();
 		while (Date.now() - t < 180000 && probeSaveState === null) await sleep(100);
