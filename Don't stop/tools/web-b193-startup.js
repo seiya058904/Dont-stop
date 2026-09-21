@@ -59,20 +59,31 @@ async function waitForLine(lines, pattern, timeoutMs, started = Date.now()) {
 async function waitForReady(page, lines) {
 	const started = Date.now();
 	await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
-	const ready = await page.waitForFunction(
-		() => window.__dontStopState && window.__dontStopState.outcome === 'game-reported-ready',
-		undefined,
-		{ timeout: maxLoadMs },
-	).then(() => true).catch(() => false);
+	// Observe the existing handover message without scheduling repeated work on
+	// the game's main thread. On software rendering each extra browser round
+	// trip can cost whole frames; do not queue several before the first input.
+	const notice = await waitForLine(lines, /\[loader\] revealing the running game \(game-reported-ready\)/, maxLoadMs, started);
 	const readyWallMs = Date.now() - started;
-	const canvasReady = await page.waitForSelector('#canvas-host canvas', { timeout: 30000 }).then(() => true).catch(() => false);
+	const observed = await page.evaluate(() => {
+		const canvas = document.querySelector('#canvas-host canvas');
+		const rect = canvas?.getBoundingClientRect();
+		const style = canvas && getComputedStyle(canvas);
+		return {
+			state: window.__dontStopState || null,
+			canvas: rect && style.visibility !== 'hidden' && style.display !== 'none'
+				&& rect.width > 0 && rect.height > 0
+				? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : null,
+		};
+	});
 	return {
-		ok: ready && canvasReady,
+		ok: notice.ok && observed.state?.outcome === 'game-reported-ready' && !!observed.canvas,
 		wall_ms: readyWallMs,
-		game_ready_nav_ms: (await snapshotState(page))?.readyNoticeAt ?? null,
+		ready_received_wall_ms: lines.find(line => /\[loader\] revealing the running game \(game-reported-ready\)/.test(line.text))?.wall_ms ?? null,
+		game_ready_nav_ms: observed.state?.readyNoticeAt ?? null,
 		canvas_ready_wall_ms: Date.now() - started,
 		post_ready_settle_ms: 0,
-		state: await snapshotState(page),
+		canvas: observed.canvas,
+		state: observed.state,
 		lines: lines.slice(),
 	};
 }
@@ -188,8 +199,8 @@ let browser;
 	}
 	await context.close();
 
-	const interact = async (page, lines) => {
-		const rect = await page.locator('#canvas-host canvas').boundingBox();
+	const interact = async (page, lines, ready) => {
+		const rect = ready.canvas;
 		if (!rect) throw new Error('game canvas did not have a bounding box');
 		const hoverAt = await moveDesign(page, rect, 41, 136);
 		const hover = await waitForLine(lines, /\[startup\] stage=menu-first-hover/, 1500, hoverAt);
@@ -207,6 +218,7 @@ let browser;
 			settings,
 			start,
 			first_response_nav_ms: firstResponseAt,
+			driver_before_hover_ms: hoverAt - ready.ready_received_wall_ms,
 			state: await snapshotState(page),
 		};
 	};

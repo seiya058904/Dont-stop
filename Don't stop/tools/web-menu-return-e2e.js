@@ -122,6 +122,32 @@ watchdog.unref?.();
 		],
 	});
 	const page = context.pages()[0] || await context.newPage();
+	// Test-profile observation only: preserve native arguments/return values and
+	// never flush or write storage for the product. Record transaction completion
+	// so an in-memory save cannot be mistaken for a committed browser save.
+	await page.addInitScript(() => {
+		let events = 0;
+		const report = (event) => {
+			if (events++ < 128) console.log('[idb-observe] ' + JSON.stringify({ navigation_ms: performance.now(), ...event }));
+		};
+		const transaction = IDBDatabase.prototype.transaction;
+		IDBDatabase.prototype.transaction = function (...args) {
+			const tx = Reflect.apply(transaction, this, args);
+			if (tx.mode === 'readwrite') {
+				const database = this.name;
+				report({ event: 'transaction-start', database });
+				tx.addEventListener('complete', () => report({ event: 'transaction-complete', database }));
+				tx.addEventListener('abort', () => report({ event: 'transaction-abort', database, error: tx.error?.name }));
+			}
+			return tx;
+		};
+		const put = IDBObjectStore.prototype.put;
+		IDBObjectStore.prototype.put = function (...args) {
+			const request = Reflect.apply(put, this, args);
+			if (this.name === 'FILE_DATA') report({ event: 'file-put', path: String(args[1]) });
+			return request;
+		};
+	});
 
 	// A dead renderer used to surface as an opaque "Target page ... has been
 	// closed" from whatever wait was in flight, which says nothing about where it
@@ -148,10 +174,12 @@ watchdog.unref?.();
 	let probeLines = [];
 	let probeSaveState = null;
 	const saveDiagnostics = [];
+	const storageEvents = [];
 	let durableFilesBeforeReload = null;
 	const rects = {};
 	page.on('console', m => {
 		const t = m.text();
+		if (t.startsWith('[idb-observe] ')) { storageEvents.push({ wall_ms: Date.now(), ...JSON.parse(t.slice('[idb-observe] '.length)) }); return; }
 		if (m.type() === 'error') consoleErrors.push(t);
 		if (t.startsWith('[probe] rect ')) {
 			const g = t.match(/rect (\S+) id=(\d+) text="([^"]*)" x=([\d.-]+) y=([\d.-]+) w=([\d.-]+) h=([\d.-]+) cx=([\d.-]+) cy=([\d.-]+)/);
@@ -708,6 +736,7 @@ watchdog.unref?.();
 			transport: 'read-only ?probe=1 console channel (autoload/Smoke.gd), no page round trips',
 			save_state_at_reload: probeSaveState,
 			save_diagnostics: saveDiagnostics,
+			storage_events: storageEvents,
 			durable_files_before_reload: durableFilesBeforeReload,
 		},
 		rects_reported_by_the_game: rects,

@@ -123,6 +123,15 @@ The save diagnostic now confirms the in-memory path `/userfs/TowDownGame/camp-v1
 
 ## Outstanding acceptance
 
+### Continued isolation and driver overhead
+
+- Required run `35603141621` also failed startup/menu-return; build, preflight and smoke passed (about 7 min 7 s total). No thresholds were relaxed.
+- The exact Web artifact from run `35601999418` passes all 53 menu-return assertions on this Windows host, including reload persistence (`ci-exact-local-menu/`). Its Wasm and JavaScript bytes equal the local export; PCK comparison verifies every entry MD5 and finds identical game-script bytes. Differences are exported scene node IDs/cache metadata (`compare-ci-pack.json`), not a proven save-code divergence.
+- A local SwiftShader plus 4x CPU-throttling diagnostic also passes save reload; instrumented sync-start/end logs show successful synchronization after camp writes (`save-sync-throttled/`). This does not reproduce or waive the Linux failure.
+- The menu test now records a bounded stream of IndexedDB write-transaction start/completion/abort and file keys, without writing data or forcing synchronization. Its local exact-artifact regression passes in 58.030 s, records 65 events, two camp writes and no transaction abort (`ci-exact-idb-observed/`).
+- CI startup evidence shows driver overhead before input: cold run 1 reports game-ready at 7231.8 ms, driver-ready at 8227 ms, canvas inspection at 17422 ms and first hover at 26211.5 ms. The driver now observes the existing handover console message and reads state/canvas bounds together once, avoiding repeated pre-input main-thread round trips. It retains the actual navigation-clock response time and unchanged interaction/frame gates, and reports driver-before-hover time separately. One hardware-backed validation passes: cold 6273.590 ms, warm 2386.660 ms; menu max 16.67 ms, hover 5 ms, Settings 22 ms and Start 68 ms (`startup-driver-batched/`). This is diagnostic validation, not a replacement for final three-run acceptance.
+- Normal-close verbose comparison of the earlier Windows build and current progress build yields 16 and 15 RefCounted exit warnings respectively, both exit 0 (`exit-cover-comparison/`). That warning category predates the new loading cover; the variable counts do not establish leak-free shutdown.
+
 - Resolve remaining repeatable first-use freezes and verify all requested first-use actions, Boss phases and return/second combat.
 - Finish same-workload observer off/light/detail comparison, visible simultaneous pressure proof and hotspot attribution.
 - Produce Top 20 slow-test timing breakdown and validate failure-injection behavior; repeat L1/L2 for the final candidate.
