@@ -432,6 +432,11 @@ jobs:
           START=$SECONDS
           if ! node "$PROJECT_PATH/$SCRIPT" "$@" 2>&1 | tee "$OUT/run.log"; then
             echo "GATE_${{ matrix.name }}=FAIL tier=${TIER} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            if [[ "${{ matrix.name }}" == startup ]]; then
+              # Separate navigation: trace overhead never enters acceptance samples.
+              timeout 90s node "$PROJECT_PATH/tools/web-b194-cost-trace.js" \
+                "http://localhost:8788/index.html" "$OUT/cost-trace" "$PWD/build/web" || true
+            fi
             exit 1
           fi
           echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=8m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
