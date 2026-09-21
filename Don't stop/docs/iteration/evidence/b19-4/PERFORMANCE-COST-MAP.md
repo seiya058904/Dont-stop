@@ -19,7 +19,7 @@ These are priorities supported by observed magnitude, not additive percentages o
 |---|---|---|---|---|
 | 1 | Menu compositor readback / driver wait, Linux software Web | Repeated 1.0–1.4 s intervals; new trace records 8.620 s in 11 ReadPixels spans | Largest waits occur under LayerTreeHost → ReadPixels → WaitForGetOffset; underlying raster/command cost still unresolved | Compare baseline and full SwiftShader browser backend in A/B/B/A; preserve pixels, workload and gates |
 | 2 | First-use shader / hardware Web, older artifact | 1224.125 ms spike; two approximately 590 ms LINK_STATUS waits | Trace identifies blocking shader-status queries; historical evidence only | Reproduce baseline/candidate/baseline with identical seed/artifact protocol and validate visual equivalence; do not claim final ROI yet |
-| 3 | Monster movement, current Native diagnostic | 2210.328 ms / 109901 calls over 15 simulated seconds; 0.962 ms per observed process interval | Largest **instrumented** bucket, not proven largest whole-frame subsystem | Split movement calculations from physics calls and crowd interaction only after validating pressure coverage |
+| 3 | Monster move_and_slide, current Native diagnostic | 2210.328 ms / 109901 calls over 15 simulated seconds; 0.962 ms per observed process interval | Source confirms the scope directly surrounds move_and_slide; largest **instrumented** bucket, not proven largest whole-frame subsystem | Attribute wall/crowd physics interaction only after validating pressure coverage |
 | 4 | Enemy projectile step, same Native diagnostic | 592.332 ms / 155203 calls; 0.258 ms per observed interval | Inclusive step cost; collision, bounce and lifetime not yet separated | Measure those subscopes if this remains a leading bucket under valid pressure |
 | 5 | Observer, historical hardware Web | Detail rAF mean 8.788 ms versus off 7.654 ms | One run each; +1.135 ms is not a reliable isolated cost | Repeat off/detail/detail/off; keep formal sampling separate from detailed attribution |
 
@@ -30,7 +30,7 @@ The uninstrumented remainder is **unknown**, not `frame interval minus sum(scope
 | Family | Currently measured | Missing attribution |
 |---|---|---|
 | CPU / script | Monster process inclusive 359.979 ms; hit handler inclusive 152.078 ms; movement and projectile step above | Enemy AI versus target selection; all path requests / duplicates / cache hits; Boss state machine; Fog; UI; diagnostics and test-driver exclusive time |
-| Physics | Collision-pair / active-object gauges; spawn-clearance scope 56.361 ms / 22043 calls | move_and_slide versus move_and_collide, wall/crowd work, overlaps, rays/segments, shape creation; engine monitor values are peak windows, not frame CPU costs |
+| Physics | Monster move_and_slide scope above; collision-pair / active-object gauges; spawn-clearance scope 56.361 ms / 22043 calls | Projectile move_and_collide, wall/crowd work, overlaps, rays/segments, shape creation; engine monitor values are peak windows, not frame CPU costs |
 | Render submission | Draw-count timeline; projectile draw callback 9.287 ms total | Sprite/animation, trails, particles, Fog, Canvas geometry, material switches, lights, transparency and VFX CPU submission separated from driver work |
 | GPU / driver | Historical shader waits and intrusive software draw brackets | Nonintrusive GPU timing, overdraw/fill, framebuffer work, upload and synchronization attribution on the actual failing Linux runner |
 | Allocation / lifecycle | Spawn instantiate 29.465 ms / 731 calls; ready 46.330 ms; finalize 10.706 ms; prepare 51.801 ms | Deletion bursts, arrays/dictionaries, duplicate, shapes, signals, strings/logging, ref cleanup; existing scopes can nest |
@@ -59,11 +59,11 @@ Full gameplay warmup is not scheduled at this Web boot. The old 52–60 s startu
 | Event | Before / current | Evidence | Cause status |
 |---|---:|---|---|
 | Historical Web first-combat shader use | 1224.125 → 440.865 → 75.240 ms across exploratory candidates | First-use / particle-share / targeted-prepare traces | Two extra shader variants removed, later work prepared earlier; not repeated A/B/A; preparation itself had draws up to 155.090 ms |
-| Current Native first pressure burst | 59.069 ms at process frame 767, physics tick 319, epoch 1, round 1 | First top-up recorded 48 actors / 37.112 ms | Nearby event is a candidate; existing event lacks exact process-frame timestamp, so not a causal assignment |
+| Current Native first pressure burst | 59.069 ms at process frame 767, physics tick 319, epoch 1, round 1 | First top-up recorded 48 actors / 37.112 ms at effective tick 1; the interval spans effective ticks 0 → 7 | Tick alignment places the fixture top-up within this interval: about 63% is accounted for by that inclusive event; remaining cost is unassigned |
 | Current Native subsequent spike | 55.271 ms at process frame 837, physics tick 351 | Previous gauge at 0.433 s reports 55 enemies / 176 shots, weapon 115; spike ends at 0.579 s | Gauge is approximately 146 ms old; first-use/resource/allocation/physics cause unassigned |
 | Linux normal menu | Repeated approximately 1400 ms | Seven baseline intervals | Persistent slowdown, not an isolated first-use spike |
 
-The two fresh Native long frames are fully retained in raw evidence, but Boss phase, exact spawn frame, VFX, resource first use, allocation burst and per-frame query counts are not all recorded. Previous gauges are context only. This is a measurement gap to fix, not evidence those events were absent.
+The two fresh Native long frames are fully retained in raw evidence. Source confirms event ticks and per-frame `physics_ticks` use the same effective-tick clock, allowing the first top-up to be placed between adjacent samples. This is test-fixture spawn cost, not proof of a normal-player spawn freeze. Boss phase, VFX, resource first use, allocation burst and per-frame query counts are not all recorded. Previous gauges are context only. This is a measurement gap to fix, not evidence those events were absent.
 
 ## Experiment decisions and acceptance
 
@@ -88,6 +88,50 @@ Local source capture identifies six >50 ms LINK_STATUS waits: two spatial defaul
 
 Decision: **REJECT**. No repeatable benefit; no shader-normalization change enters the product. These are diagnostic ready markers, not first-interaction acceptance times.
 
-The next single-variable experiment uses Chromium's documented full SwiftShader mode (`--use-gl=angle --use-angle=swiftshader`) versus its WebGL fallback path. [Chromium's SwiftShader documentation](https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/docs/gpu/swiftshader.md) distinguishes these modes. It is confined to separate post-failure diagnostic navigations; the acceptance browser arguments and thresholds remain unchanged. GPU feature status and post-trace screenshots are retained to verify what actually ran.
+A subsequent read-only capture of existing `transformFeedbackVaryings` calls explains why source similarity was insufficient: the first particle program captures five outputs, while the second also captures `out_userdata1` (`cost-map-current/shader-feedback.json`). They have different link contracts even after duplicate-macro normalization. Treating them as interchangeable programs would risk particle behavior; no program-alias/cache patch is justified by this experiment.
+
+The second single-variable experiment uses Chromium's documented full SwiftShader mode (`--use-gl=angle --use-angle=swiftshader`) versus its WebGL fallback path. [Chromium's SwiftShader documentation](https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/docs/gpu/swiftshader.md) distinguishes these modes. It ran in separate post-failure diagnostic navigations; acceptance browser arguments and thresholds remained unchanged. GPU feature status and post-trace screenshots verify what actually ran.
+
+Run `35612213295` completed all four diagnostic captures without reported trace data loss. All four loaded identical Wasm/PCK/JS hashes at 1536×864, all reported the same SwiftShader renderer, and A1/B1 screenshots show the complete menu/world. Feature status changes from `gpu_compositing=disabled_software` in A to `enabled` in B. Evidence: `output/b19-4/ci-backend-abba/backend-comparison.json` and the four `cost-trace-*` directories.
+
+| Run order | Menu rAF samples | Mean interval | Max interval | ReadPixels span sum | GPU-process command span max |
+|---|---:|---:|---:|---:|---:|
+| A1 | 7 | 1323.757 ms | 1399.900 ms | 8682.177 ms | 1383.135 ms |
+| B1 | 10 | 773.290 ms | 3783.200 ms | 21.323 ms | 3780.548 ms |
+| B2 | 10 | 733.300 ms | 3733.200 ms | 20.216 ms | 3734.562 ms |
+| A2 | 7 | 1378.514 ms | 1783.200 ms | 8696.746 ms | 1393.847 ms |
+
+Decision: **REJECT as a startup/performance fix**. B removes the blocking compositor readback path but retains expensive command execution and introduces repeatable approximately 3.7–3.8 s menu intervals. A better mean is insufficient. rAF intervals are not GPU-present timings; command spans include driver/software raster work, not hardware GPU utilization. These short, heavily traced windows are diagnostic, not formal FPS acceptance. Underlying work inside `CommandBufferService:PutChanged` still needs attribution.
+
+The original uninstrumented gate in this run still fails: cold first-response 11.281 / 10.305 / 10.271 s, baseline menu max 1399.9 ms. Build, stable preflight, smoke and menu-return pass. The temporary automatic A/B/B/A workflow block has been removed after obtaining evidence, restoring the preceding required-gate execution path. Standalone trace/reduction tools remain for bounded reproduction; no backend switch enters acceptance or product defaults.
 
 Next measurement order: attribute Linux menu freeze; complete >50 ms event context; establish valid simultaneous pressure; split the largest measured scopes and repeat observer controls. Only then choose one equivalent implementation and run A/B/A or A/B/B/A. Final startup, three-surface H/M/B/P, Boss, soak, visual and human acceptance remain false/pending.
+
+## Test-duration cost map (separate from game frame cost)
+
+The latest recorded local L1 takes 24.594 s; its largest step is import at 6.047 s. The preceding affected L2 takes 161.938 s: menu-return 54.578 s, smoke 48.906 s, startup 26.219 s. These three browser steps occupy about 80% of that L2 wall time. The L2 predates the latest save change; this is scheduling evidence, not final-candidate validation. Optimizing millisecond contract assertions would not address its largest costs.
+
+Historical full Linux contract ranking below comes from `output/b19-4/before-contract-ranking.json`. Adjacent sequential PASSED timestamps include small log overhead; the initial case is excluded and buffered timestamps cannot split startup/runtime/teardown. Do not compare these directly with local Windows timings or claim removing their coverage is a speedup.
+
+| Rank | Historical Linux case | Elapsed seconds |
+|---|---|---:|
+| 1 | M6EncounterAudit | 414.919 |
+| 2 | M8Encounters | 414.841 |
+| 3 | M3Weapons | 36.087 |
+| 4 | B13TalentEffects | 25.916 |
+| 5 | B3Hazards | 20.209 |
+| 6 | PresentationLifecycle | 12.656 |
+| 7 | B4Fog | 12.095 |
+| 8 | B11Stages | 11.630 |
+| 9 | B16CombatMix | 10.250 |
+| 10 | M4Talents | 6.790 |
+| 11 | B14Growth | 6.419 |
+| 12 | R1Timeline | 6.416 |
+| 13 | B16Pickup | 5.568 |
+| 14 | B16Camp | 2.864 |
+| 15 | B6Progression | 2.772 |
+| 16 | B6Progression --hell-unlock | 2.771 |
+| 17 | B14Feedback | 2.307 |
+| 18 | B11Fairness | 2.210 |
+| 19 | B14Rail | 2.029 |
+| 20 | B13UI | 2.028 |
