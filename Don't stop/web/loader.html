@@ -156,6 +156,7 @@
 			// Stage timestamps, so download / engine bring-up / scene preparation /
 			// warm-up / menu can be told apart instead of being one anonymous wait.
 			stages: {},
+			gameStages: {},
 			activeStage: 'navigating',
 			lastProgressAt: null,
 			downloadStartedAt: null,
@@ -465,6 +466,17 @@
 		state.downloadStartedAt = performance.now();
 		mark('download');
 		engine.startGame({
+			onPrint: function () {
+				// Timestamp the existing game markers on the browser clock, before
+				// console transport/polling can add delay to the measured response.
+				const line = Array.from(arguments).join(' ');
+				const stage = /^\[startup\] stage=([^ ]+) t=(\d+) since_utils=(\d+) frame=(\d+)/.exec(line);
+				if (stage && !state.gameStages[stage[1]]) {
+					state.gameStages[stage[1]] = { navigation_ms: performance.now(),
+						engine_ms: Number(stage[2]), since_utils_ms: Number(stage[3]), process_frame: Number(stage[4]) };
+				}
+				console.log.apply(console, arguments);
+			},
 			onProgress: function (current, total) {
 				// Every download chunk is real progress: it re-arms the stall check.
 				mark('download');
@@ -478,7 +490,7 @@
 			}
 		}).then(function () {
 			// The engine is up. That is NOT the same as "the game is ready": the
-			// title scene still has to build, draw and finish the warm-up pass.
+			// title scene still has to build and draw. Full warmup is not a gate.
 			state.engineStartedAt = performance.now();
 			setStatus('正在准备游戏内容…', true);
 			mark('engine-init');

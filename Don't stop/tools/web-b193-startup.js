@@ -69,6 +69,7 @@ async function waitForReady(page, lines) {
 	return {
 		ok: ready && canvasReady,
 		wall_ms: readyWallMs,
+		game_ready_nav_ms: (await snapshotState(page))?.readyNoticeAt ?? null,
 		canvas_ready_wall_ms: Date.now() - started,
 		post_ready_settle_ms: 0,
 		state: await snapshotState(page),
@@ -132,6 +133,15 @@ async function capturePage(browser, label, interact, reuseContext) {
 			title: document.title,
 			build_sha: document.querySelector('meta[name="dontstop-build"]')?.content,
 			artifact_digest: document.querySelector('meta[name="dontstop-artifact"]')?.content,
+			renderer: (() => {
+				const canvas = document.querySelector('#canvas-host canvas');
+				const gl = canvas?.getContext('webgl2') || canvas?.getContext('webgl');
+				if (!gl) return null;
+				const ext = gl.getExtension('WEBGL_debug_renderer_info');
+				return { vendor: gl.getParameter(ext ? ext.UNMASKED_VENDOR_WEBGL : gl.VENDOR),
+					renderer: gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER),
+					width: gl.drawingBufferWidth, height: gl.drawingBufferHeight };
+			})(),
 		}));
 		return {
 			label,
@@ -165,6 +175,8 @@ let browser;
 			'--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding'],
 	};
 	browser = await chromium.launch(launchOptions);
+	report.environment = { browser: browser.version(), platform: process.platform,
+		arch: process.arch, logical_cpus: os.cpus().length, launch_args: launchOptions.args };
 	const context = await browser.newContext({ viewport, serviceWorkers: 'block' });
 	const served = report.build.served;
 	for (const name of ['index.wasm', 'index.pck', 'index.js']) {
@@ -181,7 +193,8 @@ let browser;
 		if (!rect) throw new Error('game canvas did not have a bounding box');
 		const hoverAt = await moveDesign(page, rect, 41, 136);
 		const hover = await waitForLine(lines, /\[startup\] stage=menu-first-hover/, 1500, hoverAt);
-		const firstResponseAt = await page.evaluate(() => performance.now());
+		const firstResponseAt = await page.evaluate(() =>
+			window.__dontStopState?.gameStages?.['menu-first-hover']?.navigation_ms ?? null);
 		const settingsAt = await clickDesign(page, rect, 41, 180);
 		const settings = await waitForLine(lines, /\[startup\] stage=settings-feedback/, 3000, settingsAt);
 		await clickDesign(page, rect, 153, 207.5); // close settings

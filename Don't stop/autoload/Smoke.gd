@@ -498,7 +498,14 @@ func _probe_track_projectiles() -> void:
 			still.append(node)
 	_probe_pending = still
 
+var _probe_last_save_diagnostic := ""
+
 func _probe_report() -> void:
+	var save_diagnostic := JSON.stringify({"path":Demo.save_path,"exists":FileAccess.file_exists(Demo.save_path),
+		"persistent":OS.is_userfs_persistent(),"result":Demo.save_result})
+	if save_diagnostic != _probe_last_save_diagnostic:
+		_probe_last_save_diagnostic = save_diagnostic
+		print("[probe] save_diagnostic ",save_diagnostic)
 	var player_id := 0
 	var gun_id := -1
 	var bullets := -1

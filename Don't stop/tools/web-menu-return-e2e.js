@@ -147,6 +147,7 @@ watchdog.unref?.();
 	// The read-only probe stream, and the one-shot save report it prints at boot.
 	let probeLines = [];
 	let probeSaveState = null;
+	const saveDiagnostics = [];
 	const rects = {};
 	page.on('console', m => {
 		const t = m.text();
@@ -157,6 +158,7 @@ watchdog.unref?.();
 			return;
 		}
 		if (t.startsWith('[probe] ')) {
+			if (t.startsWith('[probe] save_diagnostic ')) { saveDiagnostics.push({ wall_ms: Date.now(), text: t }); return; }
 			if (t.startsWith('[probe] save_state')) { probeSaveState = t.replace('[probe] save_state', '').trim(); return; }
 			if (!/frames=\d+/.test(t)) return;
 			probeLines.push(t);
@@ -687,6 +689,7 @@ watchdog.unref?.();
 		probe: {
 			transport: 'read-only ?probe=1 console channel (autoload/Smoke.gd), no page round trips',
 			save_state_at_reload: probeSaveState,
+			save_diagnostics: saveDiagnostics,
 		},
 		rects_reported_by_the_game: rects,
 		console_errors: consoleErrors, page_errors: pageErrors,
