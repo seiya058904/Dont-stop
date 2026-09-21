@@ -1,7 +1,0 @@
-[save-audit] ok T5-fresh-profile first-run save_state: [smoke] save_state none
-[save-audit] ok T6a-reload-restores after reload equipped= gold=9999.0
-[save-audit] ok T6b-browser-restart-restores equipped= gold=9999.0
-[save-audit] ok userfs-in-indexeddb {"names":["/userfs"],"godotObjects":["FILE_DATA:33keys"]}
-[save-audit] ok T7-profile-isolation fresh profile save_state: [smoke] save_state none
-[save-audit] cleaned Don't stop\evidence\visual-upgrade-20260919\b14-save-profile\run-18348-mu8qw7k6
-[save-audit] RESULT=PASS

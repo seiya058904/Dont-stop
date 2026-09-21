@@ -1,2 +1,0 @@
-visual-on 0
-visual-off 0

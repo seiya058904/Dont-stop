@@ -1,5 +1,0 @@
-Gate stages-fair (RELEASE)	Run the gate	2026-09-19T18:44:16.1010787Z PASS C_LINE_FOOTPRINTS_WERE_OBSERVED :: 3 lane observations across 51 samples (up to 1 live footprints)
-Gate stages-fair (RELEASE)	Run the gate	2026-09-19T18:44:16.1012011Z PASS C_A_FROZEN_LANE_WAS_OBSERVED_WITH_TIME_TO_RUN :: 2 samples of a frozen lane before it fired
-Gate stages-fair (RELEASE)	Run the gate	2026-09-19T18:44:16.1015051Z FAIL C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY :: 0 samples of a frozen lane in its active phase
-Gate stages-fair (RELEASE)	Run the gate	2026-09-19T18:44:16.2073134Z B11_STAGERUN tokens=42 failures=1 wall_clock=89s
-Gate stages-fair (RELEASE)	Run the gate	2026-09-19T18:44:16.2074262Z   FAIL C_A_FROZEN_LANE_FIRED_AT_ITS_FROZEN_GEOMETRY :: 0 samples of a frozen lane in its active phase

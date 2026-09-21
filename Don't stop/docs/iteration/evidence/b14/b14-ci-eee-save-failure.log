@@ -1,7 +1,0 @@
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:44:21.7253726Z [save-audit] ok T5-fresh-profile first-run save_state: [smoke] save_state none
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:45:48.9855430Z [save-audit] FAIL T6a-reload-restores after reload equipped=null gold=null
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:47:17.0172553Z [save-audit] FAIL T6b-browser-restart-restores equipped=null gold=null
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:47:19.9523740Z [save-audit] ok userfs-in-indexeddb {"names":["/userfs"],"godotObjects":["FILE_DATA:31keys"]}
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:48:49.3412072Z [save-audit] ok T7-profile-isolation fresh profile save_state: [smoke] save_state none
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:48:49.6099519Z [save-audit] cleaned save-audit-evidence/run-2944-mu8qj51t
-Gate save-audit (FAST)	Run the gate	2026-09-19T18:48:49.6100594Z [save-audit] RESULT=FAIL (T6a-reload-restores)
