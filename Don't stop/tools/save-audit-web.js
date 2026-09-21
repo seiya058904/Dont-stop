@@ -52,7 +52,7 @@ async function waitForShellGone(page, maxMs = 300000) {
 	await page.waitForFunction(() => {
 		const f = document.getElementById('frame');
 		return !f || f.style.display === 'none' || f.classList.contains('gone');
-	}, { timeout: maxMs });
+	}, null, { timeout: maxMs });
 }
 
 async function smokeRun(page, maxMs = 480000) {

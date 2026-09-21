@@ -211,6 +211,11 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	actor.set_meta("initialized_hp",actor.HP)
 	actor.set_meta("initialized_speed",actor.SPEED)
 	preload("res://game/config/B18Variants.gd").apply(actor,variant.kind,int(variant.get("enchantment",0)))
+	# Keep the late ordinary-chaser cap final: B18/B19 enchantments can raise
+	# speed after the base Hell pressure has been applied.
+	if id in ["E01","E02"]:
+		actor.SPEED = minf(132.0,actor.SPEED)
+		actor.set_meta("initialized_speed",actor.SPEED)
 	if B11Probe.enabled: B11Probe.cost("spawn_finalize",measured)
 	return actor
 

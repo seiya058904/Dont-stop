@@ -44,6 +44,7 @@ func _ready():
 	var gold=PlayerData.gold
 	var purchase=Demo.try_purchase("legacy","9","gold")
 	check(not purchase.success and PlayerData.gold==gold and battery.count==3,"capped battery transaction does not charge or add layer")
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://evidence/visual-upgrade-20260919"))
 	var file=FileAccess.open("res://evidence/visual-upgrade-20260919/b17-sources.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"independent_hp":{"expected":expected,"actual":actual},"rows":rows},"\t")); file.close()
 	await clean()

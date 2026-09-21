@@ -42,7 +42,7 @@ if (!url) { console.error('usage: node smoke-web.js <url> [shotDir]'); process.e
 		const appeared = await page.waitForFunction(() => {
 			const f = document.getElementById('frame');
 			return !f || f.style.display === 'none' || f.classList.contains('gone');
-		}, { timeout: maxLoadMs }).then(() => true).catch(() => false);
+		}, null, { timeout: maxLoadMs }).then(() => true).catch(() => false);
 		if (!appeared) {
 			step('loading-completes', false, 'status=' + await page.locator('#status').innerText().catch(() => '?'));
 			return null;

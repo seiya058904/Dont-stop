@@ -22,4 +22,63 @@
 /Don't stop/build/
 /Don't stop/evidence/
 /Don't stop/output/
+
+# Regenerated historical run output stays local; formal reports, manifests,
+# matrices, and canonical evidence remain tracked.
+/Don't stop/docs/iteration/evidence/**/*.log
+/Don't stop/docs/iteration/evidence/m6/**/*.txt
+/Don't stop/docs/iteration/evidence/m7/**/*.txt
+/Don't stop/docs/iteration/evidence/m8/**/*.txt
+/Don't stop/docs/iteration/evidence/m9/**/*.txt
+/Don't stop/docs/iteration/evidence/m10/**/*.txt
+/Don't stop/docs/iteration/evidence/m11/**/*.txt
+/Don't stop/docs/iteration/evidence/presentation/test-logs.zip
+
+# These are exact duplicate screenshots with no tracked-document references.
+# Keep one canonical copy of each content group in Git.
+/Don't stop/docs/iteration/evidence/b10/browser/C31-in-hell.png
+/Don't stop/docs/iteration/evidence/b10/browser/C35-in-hell.png
+/Don't stop/docs/iteration/evidence/b10/browser/C40-in-hell.png
+/Don't stop/docs/iteration/evidence/b11_2/browser/smoke/03-panel.png
+/Don't stop/docs/iteration/evidence/b11_2/browser/smoke/04-fire.png
+/Don't stop/docs/iteration/evidence/b12/visual/shop-all.png
+/Don't stop/docs/iteration/evidence/m10/visual-review/m10/shop-0.png
+/Don't stop/docs/iteration/evidence/m10/visual-review/m10/shop-111.png
+/Don't stop/docs/iteration/evidence/m10/visual-review/m10/shop-124.png
+/Don't stop/docs/iteration/evidence/m10/visual-review/m10/shop-6.png
+/Don't stop/docs/iteration/evidence/m10/visual-review/m10/upgrade-prices.png
+/Don't stop/docs/iteration/evidence/m10/visual-v3/m10/shop-0.png
+/Don't stop/docs/iteration/evidence/m10/visual-v3/m10/shop-111.png
+/Don't stop/docs/iteration/evidence/m10/visual-v3/m10/shop-124.png
+/Don't stop/docs/iteration/evidence/m10/visual-v3/m10/shop-6.png
+/Don't stop/docs/iteration/evidence/m10/visual-v3/m10/upgrade-prices.png
+/Don't stop/docs/iteration/evidence/m11/clarity-review/m11/stats-level-help.png
+/Don't stop/docs/iteration/evidence/m11/clarity-source-final/m11/stats-effects.png
+/Don't stop/docs/iteration/evidence/m11/clarity-source-final/m11/stats-level-help.png
+/Don't stop/docs/iteration/evidence/m11/clarity-v2/m11/stats-effects.png
+/Don't stop/docs/iteration/evidence/m11/clarity-v2/m11/stats-level-help.png
+/Don't stop/docs/iteration/evidence/m11/clarity-v2/m11/stats-player.png
+/Don't stop/docs/iteration/evidence/m11/clarity-v2/m11/stats-weapon.png
+/Don't stop/docs/iteration/evidence/m11/m12-20260913-170041-M12Native/m12/native-shop.png
+/Don't stop/docs/iteration/evidence/m11/m12-clarity-v2/m11/stats-level-help.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-final-v2/m12/native-build.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-final-v2/m12/native-lesson-complete.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-final-v2/m12/native-lesson-objective.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-final-v2/m12/native-tooltip.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-final/m12/native-build.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-final/m12/native-tooltip.png
+/Don't stop/docs/iteration/evidence/m11/m12-native-v2/m12/native-lesson-objective.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-hover-v1/m12/damage-categories.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-hover-v1/m12/upgrade-total.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-v2/m12/build-overview.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-v2/m12/damage-categories.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-v2/m12/reward-total.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-v2/m12/talent-total.png
+/Don't stop/docs/iteration/evidence/m11/m12-ux-v2/m12/upgrade-total.png
+/Don't stop/docs/iteration/evidence/m9/m10-anchor-launch/m8/m9-shop.png
+/Don't stop/docs/iteration/evidence/m9/regions-final-v3/m8/m9-region-11.png
+/Don't stop/docs/iteration/evidence/r4/browser-smoke/03-panel.png
+/Don't stop/docs/iteration/evidence/r4/browser-smoke/04-fire.png
+/Don't stop/docs/iteration/evidence/r4/online/03-panel.png
+/Don't stop/docs/iteration/evidence/r4/online/04-fire.png
 /output/
