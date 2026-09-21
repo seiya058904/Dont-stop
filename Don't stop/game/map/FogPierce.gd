@@ -41,6 +41,15 @@ var canvas: Node2D
 ##   * nothing is remembered across a scene change: the new round's canvas is found by scanning
 ##     the live tree, and `_cached` can only ever point at a node that passes all three checks.
 static var _cached: FogPierce = null
+static var _fog_gate_frame := -1
+static var _fog_gate_active := false
+
+static func _fog_active_this_frame() -> bool:
+	var frame := Engine.get_process_frames()
+	if frame != _fog_gate_frame:
+		_fog_gate_frame = frame
+		_fog_gate_active = ArenaVisibility.fog_active()
+	return _fog_gate_active
 
 ## A canvas the producers can still draw into: alive, still parented, not condemned this frame.
 static func _usable(layer) -> bool:
@@ -99,16 +108,22 @@ static func _offer(layer: FogPierce, entry: Dictionary) -> void:
 
 ## Single-entry producers (circles) go through here; the canvas is resolved once for the one entry.
 static func _push(entry: Dictionary) -> void:
-	if not ArenaVisibility.fog_active(): return
+	if not _fog_active_this_frame(): return
 	var layer = ensure()
 	if layer == null: return
 	_offer(layer, entry)
 
 ## World-space segment. B17 separates the necessary lane from the globally budgeted
 ## decorative core; producer order cannot let an earlier core suppress a later threat.
-static func push_line(a: Vector2, b: Vector2, color: Color, width: float) -> void:
+static func push_line(a: Vector2, b: Vector2, color: Color, width: float, fog_active_override: Variant = null) -> void:
 	if B11Probe.enabled: B11Probe.fog_push_lines += 1
-	if not ArenaVisibility.fog_active(): return
+	# EnemyShot already captured the frame-wide fog state before mirroring its
+	# segment. Reuse that snapshot on this hot producer path; callers without a
+	# snapshot keep the original live gate.
+	if fog_active_override == null:
+		if not _fog_active_this_frame(): return
+	elif not bool(fog_active_override):
+		return
 	var layer = ensure()
 	if layer == null: return
 	_offer(layer, {"kind":"line","a":a,"b":b,"color":color,"width":width})

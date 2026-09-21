@@ -2,6 +2,9 @@ extends CharacterBody2D
 static var live_count := 0
 const CAPACITY := 180
 static var capacity_limit := CAPACITY
+static var _fog_cache_frame := -1
+static var _fog_cache_active := false
+static var _fog_cache_radius := 4096.0
 var registered := false
 var _ink_dirty := false
 var _body_ink: Node2D
@@ -125,6 +128,14 @@ func _process(_delta):
 		if control > 0.0 and is_instance_valid(_body_ink): _body_ink.queue_redraw()
 		_mirror_into_fog()
 
+static func _refresh_fog_cache() -> void:
+	var frame := Engine.get_process_frames()
+	if frame == _fog_cache_frame:
+		return
+	_fog_cache_frame = frame
+	_fog_cache_active = ArenaVisibility.fog_active()
+	_fog_cache_radius = ArenaVisibility.fair_radius() if _fog_cache_active else 4096.0
+
 func _physics_process(delta):
 	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
 	_step(delta)
@@ -159,7 +170,14 @@ func _step(delta):
 	queue_free()
 
 func hit_segment(previous: Vector2, current: Vector2) -> bool:
-	if Geometry2D.get_closest_point_to_segment(Utils.player.global_position,previous,current).distance_to(Utils.player.global_position) < 12:
+	var player_position := Utils.player.global_position
+	# The exact segment test below is still authoritative. This conservative AABB
+	# reject only skips segments that cannot possibly enter the 12 px hit radius,
+	# avoiding a Geometry2D call for shots already outside the player's lane.
+	var margin := 12.0
+	if player_position.x < minf(previous.x,current.x)-margin or player_position.x > maxf(previous.x,current.x)+margin or player_position.y < minf(previous.y,current.y)-margin or player_position.y > maxf(previous.y,current.y)+margin:
+		return false
+	if Geometry2D.get_closest_point_to_segment(player_position,previous,current).distance_to(player_position) < margin:
 		# Barrage pellets intentionally carry fractional pressure; other attacks keep
 		# Hero's existing one-point minimum.
 		# The tag carries the shot's FAMILY, not just "a projectile": a 23-pellet artillery ring
@@ -180,9 +198,13 @@ func hit_segment(previous: Vector2, current: Vector2) -> bool:
 ## darkness can hide. Bounded to shots inside 1.4x the fair radius, which is the only band
 ## where the information changes what the player can do.
 func _mirror_into_fog() -> void:
-	if not ArenaVisibility.fog_active(): return
+	# Every live shot used to resolve the same scene/state query independently. Fog
+	# is a frame-wide rendering state, so share one snapshot per process frame while
+	# preserving the exact active gate and current fair-radius value.
+	_refresh_fog_cache()
+	if not _fog_cache_active: return
 	var player = Utils.player
 	if not is_instance_valid(player): return
-	if _fog_position.distance_to(player.global_position) > ArenaVisibility.fair_radius()*1.4: return
+	if _fog_position.distance_to(player.global_position) > _fog_cache_radius*1.4: return
 	if B11Probe.enabled: B11Probe.shot_fog_mirrors += 1
-	preload("res://game/map/FogPierce.gd").push_line(_fog_position,_fog_tip,INK.get(style,INK.projectile),2.0)
+	preload("res://game/map/FogPierce.gd").push_line(_fog_position,_fog_tip,INK.get(style,INK.projectile),2.0,_fog_cache_active)

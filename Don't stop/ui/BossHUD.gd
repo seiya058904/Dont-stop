@@ -18,7 +18,7 @@ func _ready():
 	badge = Label.new(); badge.position = Vector2(182,2); badge.add_theme_font_size_override("font_size",7)
 	badge.text = "HELL"; badge.modulate = Color(0.86,0.55,1); add_child(badge)
 func _process(_delta):
-	var boss = instance_from_id(LevelServer.boss_instance)
+	var boss = LevelServer.get_boss()
 	visible = LevelServer.state == "COMBAT" and is_instance_valid(boss) and not boss.is_die
 	if not visible: return
 	# The existing reward grid can now wrap to two rows. Keep both HUDs readable.

@@ -74,6 +74,7 @@ var _effective_tick := 0
 var _next_amp_tick := 0
 var _next_root_tick := 0
 var measurement := "light"
+var spawn_reachability_cache := true
 var _observation_frames := 0
 var _measured_wall_s := 0.0
 var camp_cycles := 0
@@ -96,12 +97,18 @@ var _capacity_planned := 0
 var _capacity_blocked := 0
 var _capacity_emitted := 0
 var _capacity_sequence := 0
+var _pressure_samples := 0
+var _pressure_live_ge_90 := 0
+var _pressure_visible_ge_90 := 0
+var _pressure_live_min := 0
+var _pressure_live_max := 0
 var _events: Array = []
 var _entry_samples: Array = []
 var _orbit_log: Array = []
 var _orbit_serial := 0
 var _release_until_tick := 0
 var _next_aim_tick := 0
+const CAPACITY_REFILL_TICKS := 4
 func _physics_process(_delta: float) -> void:
 	if not _driver_active or get_tree().paused or LevelServer.state != "COMBAT": return
 	if not is_instance_valid(Utils.player) or Utils.player.is_dead: return
@@ -115,13 +122,17 @@ func _physics_process(_delta: float) -> void:
 		if lasers > 0 and _meta_alive("b11_amplified") < lasers: _amplify_lasers()
 		if barrage > 0 and _meta_alive("b11_barrage") < barrage: _amplify_barrage()
 		if enemies > 0 and _live_enemies() < mini(enemies,_stage_cap()): _top_up_enemies()
+		_remember_spawn_stats()
 		_events.append({"tick":tick,"event":"top_up","usec":Time.get_ticks_usec()-top_up_started,"ordinary_added":_topped_up-births_before})
 	if root_period > 0.0 and tick >= _next_root_tick:
 		_next_root_tick = tick+maxi(1,int(root_period*Engine.physics_ticks_per_second))
 		_driver_root_attempts += 1
 		if Utils.player.apply_root(0.45): _driver_roots += 1
 	_observe_boss_tick()
-	if scenario == "P": _capacity_tick.call_deferred()
+	# The fixture is a real EnemyShot stream, not a frame-by-frame counter. A 30 Hz
+	# refill is enough to replace the authored 3.2/5.2 s lifetimes while avoiding a
+	# deferred group scan on every 60 Hz physics tick.
+	if scenario == "P" and tick % CAPACITY_REFILL_TICKS == 0: _capacity_tick.call_deferred()
 	if not park: _drive_movement(int(tick*1000/Engine.physics_ticks_per_second))
 	if (stage != 40 and seconds < 45 and tick >= seconds*Engine.physics_ticks_per_second) or (stage == 40 and boss_complete):
 		LevelServer.return_to_camp()
@@ -137,7 +148,7 @@ func _physics_process(_delta: float) -> void:
 	else: Input.action_press("shoot")
 	if tick >= _next_aim_tick:
 		_next_aim_tick = tick+6
-		var nearest = instance_from_id(LevelServer.boss_instance) if stage == 40 else null
+		var nearest = LevelServer.get_boss() if stage == 40 else null
 		if is_instance_valid(nearest):
 			Utils.aim_override = get_viewport().get_canvas_transform()*(nearest.global_position-Vector2(0,8))
 			return
@@ -187,6 +198,11 @@ var _driver_roots := 0
 var _driver_root_attempts := 0
 var _amplified := 0
 var _topped_up := 0
+var _ordinary_requests := 0
+var _elite_requests := 0
+var _elite_promotions := 0
+var _spawn_peak := {"requests":0,"geometry_rejected":0,"clearance_queries":0,"clearance_rejected":0,
+	"path_checks":0,"path_queries":0,"path_cache_hits":0,"path_reachable":0,"path_rejected":0}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -205,12 +221,14 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-source="): source_variant = arg.substr(16)
 		elif arg == "--stress-normal-hp": normal_hp = true
 		elif arg.begins_with("--stress-measurement="): measurement = arg.substr(21)
+		elif arg == "--stress-no-spawn-cache": spawn_reachability_cache = false
 		elif arg == "--stress-controlled-boss": controlled_boss = true
 		elif arg.begins_with("--stress-camp-cycles="): camp_cycles = int(arg.substr(21))
 		elif arg.begins_with("--stress-weapons="):
 			for key in arg.substr(17).split(",",false):
 				if Utils.weapon_list.has(str(int(key))): presentation_weapons.append(int(key))
 	B11Probe.enabled = measurement == "detail"
+	B11Probe.spawn_reachability_cache = spawn_reachability_cache
 	_apply_iso()
 	get_tree().node_added.connect(_count_added)
 	get_tree().node_removed.connect(_count_removed)
@@ -556,6 +574,7 @@ func _top_up_enemies() -> void:
 		var role := str(roles[guard % roles.size()])
 		var point: Vector2 = town.spawn_point(M5Content.radius_for(role))
 		if point == Vector2.INF: continue
+		_ordinary_requests += 1
 		var actor: Node = M5Content.spawn(role,town.monster_root,point)
 		if actor == null: continue
 		actor.set_meta("b11_topped_up",true)
@@ -566,6 +585,7 @@ func _top_up_enemies() -> void:
 ## ordinary damage and an ordinary root. Only the director's timing and its elite ceiling are
 ## bypassed, and that is exactly what makes the dense moment repeatable instead of luck.
 func _spawn_amplified(role: String, meta_key: String) -> bool:
+	_elite_requests += 1
 	var town = LevelServer.town
 	if not is_instance_valid(town): return false
 	# Reuse a real eligible actor before asking the factory for another special.
@@ -582,8 +602,10 @@ func _spawn_amplified(role: String, meta_key: String) -> bool:
 		if point == Vector2.INF: return false
 		actor = M5Content.spawn(role,town.monster_root,point)
 	if actor == null or str(actor.get_meta("content_id","")) != role: return false
+	var was_elite: bool = actor.is_elite
 	M5Content.promote_elite(actor,M5Content.elite_modifier_for(role))
 	if not actor.is_elite: return false
+	if not was_elite: _elite_promotions += 1
 	actor.set_meta(meta_key,true)
 	if label.begins_with("b19-"):
 		# Explicit HP-only load fixture; leaves AI, attacks and production admission intact.
@@ -607,10 +629,10 @@ func _drive_movement(now: int) -> void:
 		else: Input.action_release(pair[0])
 
 func _observe_boss_tick() -> void:
-	if stage == 40 and (label.begins_with("presentation") or label.begins_with("b19-")):
+	if stage == 40 and LevelServer.get_boss() != null and (label.begins_with("presentation") or label.begins_with("b19-")):
 		# Optional full-phase observation uses the established test-only aim hook.
 		# Real weapon fire and real boss AI still decide all HP and transitions.
-		var boss = instance_from_id(LevelServer.boss_instance)
+		var boss = LevelServer.get_boss()
 		if is_instance_valid(boss):
 			var tier = "3" if boss.phase_three else ("2" if boss.phase_two else "1")
 			var safe_now: bool = not get_tree().get_nodes_in_group("boss_ultimate").is_empty()
@@ -733,6 +755,13 @@ func _sample_gauges() -> void:
 		if shot.is_visible_in_tree(): row.shots_visible += 1
 		if shot.global_position.distance_squared_to(Utils.player.global_position) < 14400: row.shots_near += 1
 		if view_rect.has_point(shot.get_global_transform_with_canvas().origin): row.shots_screen += 1
+	if scenario == "P":
+		var pressure_floor := int(ceil(float(preload("res://game/monster/EnemyShot.gd").capacity_limit)*0.9))
+		_pressure_samples += 1
+		if int(row.shots_live) >= pressure_floor: _pressure_live_ge_90 += 1
+		if int(row.shots_visible) >= pressure_floor: _pressure_visible_ge_90 += 1
+		_pressure_live_min = int(row.shots_live) if _pressure_samples == 1 else mini(_pressure_live_min,int(row.shots_live))
+		_pressure_live_max = maxi(_pressure_live_max,int(row.shots_live))
 	var layer = LevelServer.town.monster_root.get_node_or_null("B19EnchantmentLayer")
 	if is_instance_valid(layer):
 		row.flame_draw_usec = layer.draw_usec
@@ -816,11 +845,29 @@ func _report_second(round_index: int) -> void:
 ## `_pq_total` remembers the high-water mark because the arena is freed with the round, and the
 ## final `[stress-load]` line is printed after the last round has already ended.
 func _path_queries() -> int:
+	_remember_spawn_stats()
 	var town = LevelServer.town
 	if is_instance_valid(town) and is_instance_valid(town.arena):
 		var live := int(town.arena.path_queries)
 		if live > _pq_total: _pq_total = live
 	return _pq_total
+
+func _remember_spawn_stats() -> void:
+	var town = LevelServer.town
+	if not is_instance_valid(town) or not is_instance_valid(town.arena): return
+	var arena = town.arena
+	var current := {
+		"requests":int(arena.spawn_requests),
+		"geometry_rejected":int(arena.spawn_geometry_rejected),
+		"clearance_queries":int(arena.spawn_clearance_queries),
+		"clearance_rejected":int(arena.spawn_clearance_rejected),
+		"path_checks":int(arena.spawn_path_checks),
+		"path_queries":int(arena.spawn_path_queries),
+		"path_cache_hits":int(arena.spawn_path_cache_hits),
+		"path_reachable":int(arena.spawn_path_reachable),
+		"path_rejected":int(arena.spawn_path_rejected)}
+	for key in current:
+		_spawn_peak[key] = maxi(int(_spawn_peak.get(key,0)),int(current[key]))
 
 func _rooted_frames_in(from: int) -> int:
 	var count := 0
@@ -863,10 +910,11 @@ func _stats(values) -> Dictionary:
 ## the stutter is a burst, the conditioned rows separate from the unconditioned ones here; if it is
 ## not, they do not - and that is the answer either way.
 func _dump() -> void:
+	_remember_spawn_stats()
 	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.
-	print("[stress-frames] ",JSON.stringify({"surface":_surface,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"physics_hz":Engine.physics_ticks_per_second,"physics_monitor_proxy_ms":Array(_phys),"process_monitor_proxy_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; monitor proxies overlap"}))
+	print("[stress-frames] ",JSON.stringify({"surface":_surface,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"pressure_samples":_pressure_samples,"pressure_live_ge_90":_pressure_live_ge_90,"pressure_visible_ge_90":_pressure_visible_ge_90,"pressure_live_ratio":(float(_pressure_live_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_visible_ratio":(float(_pressure_visible_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_live_min":_pressure_live_min,"pressure_live_max":_pressure_live_max,"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"physics_hz":Engine.physics_ticks_per_second,"physics_monitor_proxy_ms":Array(_phys),"process_monitor_proxy_ms":Array(_proc),"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"memory_static_available":OS.is_debug_build(),"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; monitor proxies overlap"}))
 	var all: Dictionary = _stats(_ms)
 	var phys: Dictionary = _stats(_phys)
 	var proc: Dictionary = _stats(_proc)
@@ -917,6 +965,17 @@ func _dump() -> void:
 		B11Probe.labels_created,B11Probe.label_tweens,B11Probe.clear_line_calls,B11Probe.raycasts,
 		B11Probe.raycasts_skipped,B11Probe.onhit_usec,B11Probe.zone_step_usec,B11Probe.zone_draw_usec,
 		B11Probe.path_usec])
+	print("[stress-spawn] requests=%d ordinary_requests=%d ordinary_added=%d elite_requests=%d elite_promotions=%d geometry_rejected=%d clearance_queries=%d clearance_rejected=%d path_checks=%d path_queries=%d path_cache_hits=%d path_reachable=%d path_rejected=%d candidates=%d audit_rejected=%d arena_failed=%d spawn_prepare_usec=%d spawn_instantiate_usec=%d spawn_ready_usec=%d spawn_finalize_usec=%d spawn_prepare_calls=%d spawn_instantiate_calls=%d spawn_ready_calls=%d spawn_finalize_calls=%d enemies_peak=%d projectiles_peak=%d hazards_peak=%d zones_peak=%d nodes_peak=%d" % [
+		int(_spawn_peak.requests),_ordinary_requests,_topped_up,_elite_requests,_elite_promotions,
+		int(_spawn_peak.geometry_rejected),int(_spawn_peak.clearance_queries),int(_spawn_peak.clearance_rejected),
+		int(_spawn_peak.path_checks),int(_spawn_peak.path_queries),int(_spawn_peak.path_cache_hits),
+		int(_spawn_peak.path_reachable),int(_spawn_peak.path_rejected),M5Content.audit_candidates,
+		M5Content.audit_rejected,M5Content.audit_arena_failed,
+		int(B11Probe.scoped_usec.get("spawn_prepare",0)),int(B11Probe.scoped_usec.get("spawn_instantiate",0)),
+		int(B11Probe.scoped_usec.get("spawn_ready",0)),int(B11Probe.scoped_usec.get("spawn_finalize",0)),
+		int(B11Probe.scoped_calls.get("spawn_prepare",0)),int(B11Probe.scoped_calls.get("spawn_instantiate",0)),
+		int(B11Probe.scoped_calls.get("spawn_ready",0)),int(B11Probe.scoped_calls.get("spawn_finalize",0)),
+		_peak.enemies,_peak.projectiles,_peak.hazards,_peak.zones,_peak.nodes])
 	_buckets("ms",_ms)
 	_buckets("phys",_phys)
 

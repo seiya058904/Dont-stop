@@ -372,7 +372,7 @@ func depart(stage: int, is_trial: bool) -> bool:
 			push_warning("[spawn] no legal boss spawn point for stage %d; deferring" % target_stage)
 			return true
 		var boss = M5Content.spawn(DemoConfig.ENCOUNTERS[target_stage].boss,monster_root,point)
-		LevelServer.boss_instance = boss.get_instance_id()
+		LevelServer.set_boss(boss)
 	return true
 
 ## Bosses are the largest actors, so their clearance is measured from the boss scene instead
@@ -401,7 +401,7 @@ func _process(_delta: float) -> void:
 	if point == Vector2.INF: return
 	var boss = M5Content.spawn(_boss_pending,monster_root,point)
 	if boss == null: return
-	LevelServer.boss_instance = boss.get_instance_id()
+	LevelServer.set_boss(boss)
 	_boss_pending = ""
 
 func clear_practice():

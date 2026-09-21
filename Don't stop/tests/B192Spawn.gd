@@ -42,6 +42,24 @@ func _ready():
 	var actor = M5Content.spawn("E01",LevelServer.town.monster_root,point)
 	actor.set_physics_process(false)
 	await get_tree().physics_frame; await get_tree().physics_frame
+	var actor_rid: RID = actor.get_rid()
+	var actor_point: Vector2 = actor.global_position
+	# The cached query object is intentionally shared by radius. A wall-only probe must
+	# not poison the following ordinary occupancy probe, and excluding the actor must
+	# not poison the following non-excluding probe.
+	check(arena.point_clear(actor_point,M5Content.default_radius(),[],arena.WALL_MASK),
+		"wall-only probe sees the live actor position as wall-clear")
+	check(not arena._is_clear(actor_point,M5Content.default_radius()),
+		"ordinary clearance still sees an actor after a wall-only probe")
+	check(arena._is_clear_excluding(actor_point,M5Content.default_radius(),actor_rid),
+		"excluding the tested actor leaves its legal position clear")
+	check(not arena._is_clear(actor_point,M5Content.default_radius()),
+		"ordinary clearance clears the self-exclusion after the excluding probe")
+	check(not arena.point_clear(actor_point,M5Content.default_radius(),[],arena.CLEAR_MASK),
+		"ordinary public probe still sees the live actor after reverse mask order")
+	var wall_point: Vector2 = arena.to_global(arena.obstacles[0].get_center())
+	check(not arena.point_clear(wall_point,4.0,[],arena.WALL_MASK),
+		"wall-only probe independently detects a real arena wall")
 	compare(arena,1)
 	actor.global_position += Vector2(50,0)
 	Utils.player.global_position += Vector2(16,0)

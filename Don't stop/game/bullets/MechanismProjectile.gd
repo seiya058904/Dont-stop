@@ -4,6 +4,7 @@ var spec: Dictionary = {}
 var age = 0.0
 var remaining_bounces = 0
 var visited: Array[int] = []
+var visited_refs: Array[WeakRef] = []
 var target_ref: WeakRef
 var finished = false
 var last_wall_age = -1.0
@@ -11,11 +12,13 @@ var returning = false
 
 func begin_return():
 	returning = true
-	# Physics exception RIDs may outlive a killed target; resolve our hit IDs instead.
-	for id in visited:
-		var body = instance_from_id(id)
+	# Physics exception RIDs may outlive a killed target. Keep the integer IDs for
+	# hit de-duplication, but resolve the live objects through weak references.
+	for ref in visited_refs:
+		var body = ref.get_ref()
 		if is_instance_valid(body): remove_collision_exception_with(body)
 	visited.clear()
+	visited_refs.clear()
 
 func gravity_field():
 	if finished: return
@@ -92,6 +95,7 @@ func _physics_process(delta):
 	if target is BaseMonster:
 		if not target.get_instance_id() in visited:
 			visited.append(target.get_instance_id())
+			visited_refs.append(weakref(target))
 			var impact = context.duplicate()
 			impact.impact_origin = global_position-velocity.normalized()*10
 			Combat.hit(target,impact)
@@ -135,11 +139,11 @@ func split():
 		shard.speed = speed
 		shard.player = player
 		get_tree().current_scene.add_child(shard)
-		shard.global_position = global_position
-		shard.rotation = velocity.angle()+(i-(count-1)*0.5)*0.28
-		for id in visited:
-			var victim = instance_from_id(id)
-			if is_instance_valid(victim): shard.add_collision_exception_with(victim)
+	shard.global_position = global_position
+	shard.rotation = velocity.angle()+(i-(count-1)*0.5)*0.28
+	for ref in visited_refs:
+		var victim = ref.get_ref()
+		if is_instance_valid(victim): shard.add_collision_exception_with(victim)
 		shard.fire()
 
 func _draw():

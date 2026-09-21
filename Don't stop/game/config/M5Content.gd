@@ -160,6 +160,13 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 		actor.set_script(load("res://game/monster/DemoEnemy.gd")); actor.role = id
 	elif id != "E01":
 		actor.set_script(load("res://game/monster/TacticalEnemy.gd")); actor.role = id; actor.summoned = summoned
+	# Only the plain E01 actor uses Monster2's Area2D/body_entered melee contract.
+	# Every other production role applies contact damage from its authored attack state
+	# (DemoEnemy/TacticalEnemy), so keeping an idle player sensor alive for those bodies
+	# only adds PhysicsServer pairs. The player-facing E01 contract is unchanged.
+	var contact_sensor := actor.get_node_or_null("Area2D") as Area2D
+	if contact_sensor != null:
+		contact_sensor.monitoring = id == "E01"
 	var d = definition(id)
 	# Hell Mode pressure is applied here, once, per actor: bounded HP/speed axes and a
 	# damage axis the actor reads when it deals damage. Bosses are excluded - B04 is

@@ -120,9 +120,72 @@ var _web_boot_reported := false
 var _web_boot_menu_ms := 0
 var _web_boot_warmup_ms := 0
 
+# One-shot startup timeline. It is active only until ten seconds after the
+# first real menu frame, so normal gameplay pays no per-frame instrumentation.
+var _startup_trace_active := true
+var _startup_origin_ms := 0
+var _startup_last_frame_ms := -1
+var _startup_menu_visible_ms := -1
+var _startup_menu_deadline_ms := -1
+var _startup_stages: Dictionary = {}
+var _startup_all_gaps: Array = []
+var _startup_menu_gaps: Array = []
+var _startup_long_gaps: Array = []
+
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
+	_startup_origin_ms = Time.get_ticks_msec()
+	_startup_last_frame_ms = _startup_origin_ms
+	startup_mark("utils-ready")
 	print("[boot-probe] utils_ready t=%d" % Time.get_ticks_msec())
+
+func _process(_delta: float) -> void:
+	if not _startup_trace_active:
+		return
+	var now := Time.get_ticks_msec()
+	if _startup_last_frame_ms >= 0:
+		var gap := now - _startup_last_frame_ms
+		_startup_all_gaps.append(gap)
+		if gap > 50:
+			_startup_long_gaps.append({"t_ms":now - _startup_origin_ms,"gap_ms":gap})
+		if _startup_menu_visible_ms >= 0 and now <= _startup_menu_deadline_ms:
+			_startup_menu_gaps.append(gap)
+	_startup_last_frame_ms = now
+	if (_startup_menu_deadline_ms >= 0 and now >= _startup_menu_deadline_ms) or now - _startup_origin_ms >= 120000:
+		_finish_startup_trace()
+
+func startup_mark(stage: String) -> void:
+	if not _startup_trace_active or _startup_stages.has(stage):
+		return
+	var now := Time.get_ticks_msec()
+	_startup_stages[stage] = {"t_ms":now,"since_utils_ms":now - _startup_origin_ms,
+		"process_frame":Engine.get_process_frames()}
+	if stage == "menu-first-visible" and _startup_menu_visible_ms < 0:
+		_startup_menu_visible_ms = now
+		_startup_menu_deadline_ms = now + 10000
+	print("[startup] stage=%s t=%d since_utils=%d frame=%d" % [stage,now,now - _startup_origin_ms,Engine.get_process_frames()])
+
+func startup_mark_once(stage: String) -> void:
+	startup_mark(stage)
+
+func _percentile(values: Array, fraction: float) -> float:
+	if values.is_empty():
+		return -1.0
+	var sorted: Array = values.duplicate()
+	sorted.sort()
+	var index := clampi(ceili(float(sorted.size()) * fraction) - 1,0,sorted.size() - 1)
+	return float(sorted[index])
+
+func _finish_startup_trace() -> void:
+	if not _startup_trace_active:
+		return
+	_startup_trace_active = false
+	print("[startup-summary] %s" % JSON.stringify({
+		"stages":_startup_stages,
+		"all_frame_gaps":{"count":_startup_all_gaps.size(),"max_ms":(_startup_all_gaps.max() if not _startup_all_gaps.is_empty() else -1),"over50":_startup_all_gaps.filter(func(v): return v > 50).size()},
+		"menu_10s":{"samples":_startup_menu_gaps.size(),"p95_ms":_percentile(_startup_menu_gaps,0.95),"p99_ms":_percentile(_startup_menu_gaps,0.99),"max_ms":(_startup_menu_gaps.max() if not _startup_menu_gaps.is_empty() else -1),"over50":_startup_menu_gaps.filter(func(v): return v > 50).size(),"over100":_startup_menu_gaps.filter(func(v): return v > 100).size(),"over250":_startup_menu_gaps.filter(func(v): return v > 250).size(),"over1000":_startup_menu_gaps.filter(func(v): return v > 1000).size()},
+		"long_gaps":_startup_long_gaps
+	}))
 
 func _notification(what: int) -> void:
 	if not OS.has_feature("web"): return
@@ -221,18 +284,17 @@ func notify_web_boot_warmup_done() -> void:
 
 func _web_report_boot_ready() -> void:
 	if not OS.has_feature("web") or _web_boot_reported: return
-	# The title menu is what the player needs; the pre-warm pass is an optimisation.
-	# Requiring both used to put the reveal behind a pass the player does not have to
-	# wait for, and on a slow machine that meant the cover stayed up long after the
-	# menu was drawn (measured on the CI runner: the shell was still showing its
-	# loading text while the menu was already built). Warm-up is still reported as
-	# its own stage, it just no longer gates the hand-over.
-	if not _web_boot_menu: return
+	# The menu can be built while the autoload is still paying first-use costs on the
+	# browser's single thread. The shell must stay in its real loading state until
+	# both sides of that hand-off have completed; otherwise it reveals a menu and
+	# immediately freezes again while the warm-up pass finishes behind it.
+	if not _web_boot_menu or not _web_boot_warmup: return
 	_web_boot_reported = true
 	# Two drawn frames: the shell must only drop its overlay once the menu has
 	# actually been presented, not merely built.
 	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
+	startup_mark("menu-first-visible")
 	_web_call_shell(WEB_SHELL_HOOKS.ready)
 	print("[boot] completion notice sent t=%d (menu=%d warmup=%s)" % [
 		Time.get_ticks_msec(), _web_boot_menu_ms,

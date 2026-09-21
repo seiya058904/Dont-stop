@@ -13,6 +13,7 @@ var phase_two = false
 var phase_three = false
 var heal_budget: Dictionary = {}
 var children_ids: Array[int] = []
+var children_refs: Array[WeakRef] = []
 var owned_attacks: Array[WeakRef] = []
 var summon_total = 0
 var travelled = 0.0
@@ -148,6 +149,7 @@ func fan(count: int, spread: float, speed_value = 85.0, style := "projectile", c
 
 func summon(count: int, id = "E02"):
 	children_ids = children_ids.filter(func(instance): return is_instance_id_valid(instance))
+	children_refs = children_refs.filter(func(ref): return is_instance_valid(ref.get_ref()))
 	if summoned: return
 	var cap = (8 if is_boss else 3)+(2 if elite_modifier() == "hive" else 0)
 	for i in count:
@@ -157,7 +159,7 @@ func summon(count: int, id = "E02"):
 		if point == Vector2.INF: continue
 		var child = M5Content.spawn(id,get_parent(),point,true)
 		if child:
-			children_ids.append(child.get_instance_id()); summon_total += 1; remember("summon")
+			children_ids.append(child.get_instance_id()); children_refs.append(weakref(child)); summon_total += 1; remember("summon")
 
 ## Arena hazard owned by an actor rather than by the director (E15's sac, B02's toxic zone,
 ## elite E12's ember field). Shares the arena's live cap, coverage rule and "never under the
@@ -785,9 +787,13 @@ func onDie(effects = true):
 			var bigger = elite_modifier() == "lingering_poison"
 			release_field("poison",global_position,0.85,5.2 if bigger else 3.4,0.016 if bigger else 0.012,1.0,92.0 if bigger else 78.0)
 	if is_boss:
+		# The base death path can queue this node before the deferred victory callback
+		# runs. Clear the published ObjectID at the death boundary so HUD/diagnostic
+		# callbacks cannot resolve a freed boss during that handover.
+		LevelServer.clear_boss()
 		ArenaVisibility.clear_phase_tighten()
-		for id in children_ids:
-			var child = instance_from_id(id)
+		for ref in children_refs:
+			var child = ref.get_ref()
 			if is_instance_valid(child): child.queue_free()
 	super.onDie(effects)
 	if is_boss: LevelServer.boss_defeated.call_deferred(born_epoch)

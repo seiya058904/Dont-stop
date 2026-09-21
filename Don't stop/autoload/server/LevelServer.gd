@@ -96,6 +96,7 @@ var town
 var spawn_index = 0
 var settled_epoch = -1
 var boss_instance = 0
+var boss_ref = null
 var boss_victory_epoch = -1
 var rush_remaining = 0
 var rush_used = false
@@ -121,6 +122,22 @@ var flank_used = 0
 var flank_clock = 0.0
 var flank_active = false
 
+func set_boss(node) -> void:
+	if is_instance_valid(node):
+		boss_ref = weakref(node)
+		boss_instance = node.get_instance_id()
+	else:
+		clear_boss()
+
+func get_boss():
+	if boss_ref == null: return null
+	var node = boss_ref.get_ref()
+	return node if is_instance_valid(node) and not node.is_queued_for_deletion() else null
+
+func clear_boss() -> void:
+	boss_ref = null
+	boss_instance = 0
+
 func _ready() -> void:
 	timer.wait_time = 0.1
 	timer.timeout.connect(_timeout)
@@ -142,7 +159,7 @@ func roundStart() -> bool:
 	level = Demo.selected_stage
 	resetLevelInfo()
 	spawn_index = 0
-	boss_instance = 0
+	clear_boss()
 	boss_victory_epoch = -1
 	rush_remaining = 0; rush_used = false; rush_active = false; rush_clock = 0
 	horde_jobs.clear(); horde_clock=1.0; horde_since=0; horde_last_kills=Combat.kill_events; horde_index=0; horde_active=false; horde_overlap_peak=0; horde_while_alive=0
@@ -253,8 +270,10 @@ func tick_horde(config: Dictionary):
 
 func victory() -> bool:
 	if DemoConfig.ENCOUNTERS[level].has("boss"):
-		var boss = instance_from_id(boss_instance) if boss_instance else null
-		if boss_instance == 0 or (is_instance_valid(boss) and not boss.is_die): return false
+		# Boss death is reported deferred, after the node may already be queued for
+		# deletion. Use the epoch written by boss_defeated() instead of resolving a
+		# potentially stale ObjectID from that callback.
+		if boss_victory_epoch != epoch: return false
 	if state != "COMBAT" or settled_epoch == epoch or Utils.player.is_dead: return false
 	state = "RESOLVING"
 	settled_epoch = epoch
@@ -284,6 +303,9 @@ func return_to_camp():
 	timerStop()
 	Demo.stop_attacks()
 	epoch += 1
+	# The boss node is queued for deletion below. Clear its ObjectID before any
+	# HUD/diagnostic process callback can observe the new CAMP state.
+	clear_boss()
 	for node in get_tree().get_nodes_in_group("combat_transient"): node.queue_free()
 	for node in get_tree().get_nodes_in_group("monsters"):
 		node.queue_free()

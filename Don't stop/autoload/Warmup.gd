@@ -30,6 +30,11 @@ const WARM_SCENES := [
 ## Scenes instantiated per drawn frame while staging, so the loading UI keeps
 ## painting instead of freezing for the whole pass.
 const SCENES_PER_FRAME := 3
+## The Web export's process_frame await is a browser scheduling boundary, not a
+## free operation. The measured warm items are 3-4ms each, so keep batches
+## below one 16.6ms frame while avoiding 32 tiny browser hand-offs.
+const WEB_BATCH_MAX_ITEMS := 4
+const WEB_BATCH_BUDGET_USEC := 8000
 
 var _root: Node2D
 var _warm_canvas: CanvasLayer
@@ -61,6 +66,9 @@ func start() -> void:
 	Utils.notify_web_boot_stage("warmup")
 	_run()
 
+func is_finished() -> bool:
+	return _finished
+
 func _run() -> void:
 	print("[warmup] starting total=%d" % total_scenes)
 	await get_tree().process_frame
@@ -77,21 +85,42 @@ func _run() -> void:
 	_warm_canvas.layer = 0
 	get_tree().root.add_child(_warm_canvas)
 	_warm_canvas.add_child(_root)
+	var lit_started := Time.get_ticks_msec()
 	_warm_lit_canvas()
+	print("[warmup] lit_canvas_ms=%d" % (Time.get_ticks_msec() - lit_started))
 	var warmed := 0
 	var done := 0
+	var batch_started := Time.get_ticks_usec()
+	var slowest_ms := 0
+	var slowest_label := ""
 	for path in WARM_SCENES:
+		var item_started := Time.get_ticks_msec()
 		warmed += _warm_scene(path)
+		var item_ms := Time.get_ticks_msec() - item_started
+		if item_ms > slowest_ms:
+			slowest_ms = item_ms
+			slowest_label = path
 		done += 1
 		progress = float(done) / maxf(1.0, total_scenes)
-		if done % SCENES_PER_FRAME == 0:
+		if _warmup_batch_due(done,batch_started):
 			await get_tree().process_frame
+			batch_started = Time.get_ticks_usec()
+	print("[warmup] effect_scenes_ms=%d" % (Time.get_ticks_msec() - lit_started))
+	var weapon_started := Time.get_ticks_msec()
 	for id in Utils.weapon_list:
+		var item_started := Time.get_ticks_msec()
 		warmed += _warm_scene("", Utils.weapon_list[id])
+		var item_ms := Time.get_ticks_msec() - item_started
+		if item_ms > slowest_ms:
+			slowest_ms = item_ms
+			slowest_label = "weapon:%s" % id
 		done += 1
 		progress = float(done) / maxf(1.0, total_scenes)
-		if done % SCENES_PER_FRAME == 0:
+		if _warmup_batch_due(done,batch_started):
 			await get_tree().process_frame
+			batch_started = Time.get_ticks_usec()
+	print("[warmup] weapon_scenes_ms=%d" % (Time.get_ticks_msec() - weapon_started))
+	print("[warmup] slowest_item=%s ms=%d" % [slowest_label, slowest_ms])
 	if warmed > 0:
 		print("[warmup] instantiated %d scenes" % warmed)
 	# Keep them alive for several drawn frames so particle batches actually
@@ -107,12 +136,18 @@ func _run() -> void:
 	progress = 1.0
 	_finish()
 
+func _warmup_batch_due(done: int, batch_started: int) -> bool:
+	if not OS.has_feature("web"):
+		return done % SCENES_PER_FRAME == 0
+	return done % WEB_BATCH_MAX_ITEMS == 0 or Time.get_ticks_usec() - batch_started >= WEB_BATCH_BUDGET_USEC
+
 func _finish() -> void:
 	if _finished:
 		return
 	_finished = true
 	progress = 1.0
 	print("[warmup] finished t=%d" % Time.get_ticks_msec())
+	Utils.startup_mark("warmup-finished")
 	finished.emit()
 	Utils.notify_web_boot_warmup_done()
 
@@ -167,9 +202,22 @@ func _wake_particles(node: Node) -> void:
 		_wake_particles(child)
 
 func _warm_lit_canvas() -> void:
-	var scene = load("res://game/monster/Monster 2/Monster2.tscn").instantiate()
-	var frames: SpriteFrames = scene.get_node("body/AnimatedSprite2D").sprite_frames
-	scene.free()
+	# The production Monster2 scene is already preloaded by Town/M5Content. Do not
+	# instantiate a full CharacterBody2D here just to borrow its SpriteFrames: that
+	# creates its script, collision, navigation obstacle and ready path during the
+	# Web startup pass. Build the same six-frame run animation from the same
+	# spritesheet instead, so the first animated-sprite + hit-flash draw is still
+	# exercised without duplicating a gameplay actor.
+	var frames := SpriteFrames.new()
+	frames.add_animation("run")
+	frames.set_animation_loop("run",true)
+	frames.set_animation_speed("run",15.0)
+	var monster_texture: Texture2D = load("res://game/monster/Monster 2/50x31 Monster 2 spritesheet without shadows.png")
+	for frame_index in 6:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = monster_texture
+		atlas.region = Rect2(frame_index*50,31,50,31)
+		frames.add_frame("run",atlas)
 	var sprite := AnimatedSprite2D.new()
 	sprite.sprite_frames = frames
 	var material := ShaderMaterial.new()
@@ -184,11 +232,20 @@ func _warm_lit_canvas() -> void:
 	light.texture = load("res://Sprites/light2.png")
 	light.position = Vector2(32,32)
 	_root.add_child(light)
-	var hero = load("res://game/hero/Hero.tscn").instantiate()
-	for path in ["body/DashParticles2D","GPUParticles2D"]:
-		var particles = hero.get_node(path).duplicate()
-		particles.position = Vector2(32,32)
-		_root.add_child(particles)
-		particles.emitting = true
-		particles.restart()
-	hero.free()
+	# The standalone production particle scene is warmed by WARM_SCENES below.
+	# This second emitter covers the Hero dash texture/material path without
+	# instantiating the full Hero (which would also build its input, collision and
+	# reward nodes during startup).
+	var dash_particles := GPUParticles2D.new()
+	dash_particles.amount = 50
+	dash_particles.lifetime = 0.5
+	dash_particles.position = Vector2(32,32)
+	dash_particles.texture = load("res://game/bullets/assets/lights1.png")
+	var dash_material := ParticleProcessMaterial.new()
+	dash_material.gravity = Vector3.ZERO
+	dash_material.initial_velocity_min = 100.0
+	dash_material.initial_velocity_max = 100.0
+	dash_particles.process_material = dash_material
+	_root.add_child(dash_particles)
+	dash_particles.emitting = true
+	dash_particles.restart()

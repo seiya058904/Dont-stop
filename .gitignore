@@ -21,3 +21,5 @@
 /Don't stop/*.log
 /Don't stop/build/
 /Don't stop/evidence/
+/Don't stop/output/
+/output/

@@ -2,6 +2,14 @@ extends Node2D
 var region_id = "R2"
 var path_queries = 0
 var spawn_path_queries = 0
+var spawn_path_checks = 0
+var spawn_path_cache_hits = 0
+var spawn_path_reachable = 0
+var spawn_path_rejected = 0
+var spawn_geometry_rejected = 0
+var spawn_clearance_queries = 0
+var spawn_clearance_rejected = 0
+var spawn_requests = 0
 var grid = AStarGrid2D.new()
 var cells: Array[Vector2i] = []
 var obstacles: Array = []
@@ -13,6 +21,8 @@ var bounds = Rect2(-440,-330,880,660)
 const CELL := 16
 const GRID_ORIGIN := Vector2i(-28,-21)
 const GRID_SIZE := Vector2i(56,42)
+const CLEAR_MASK := 2147483649
+const WALL_MASK := 2147483648
 ## Reusable physics query objects, keyed by quantised radius. See `_query_for()`.
 var _queries: Dictionary = {}
 ## `cells` as a set, so "is this cell walkable" is one lookup instead of a scan.
@@ -27,6 +37,12 @@ var _spawn_points := PackedVector2Array()
 var _spawn_transform := Transform2D()
 var _spawn_geometry_key: Array = []
 var _spawn_geometry := PackedByteArray()
+## The grid topology is built once in _ready() and has no runtime solid-point
+## updates. Cache only this static connectivity result; geometry, physics
+## clearance, dynamic occupancy and the caller's random candidate order remain
+## per-request checks. If the arena ever mutates the grid, this cache must be
+## cleared at the same mutation site.
+var _spawn_reachability: Dictionary = {}
 
 func _prepare_spawn_geometry(center: Vector2, minimum: float, maximum: float, side: int) -> void:
 	if _spawn_points.size() != cells.size() or _spawn_transform != global_transform:
@@ -51,6 +67,33 @@ func _spawn_geometry_allows(index: int, center: Vector2, minimum: float, maximum
 	if valid and side >= 0: valid = relative.dot(Vector2.RIGHT.rotated(side*PI/2)) >= distance*0.35
 	_spawn_geometry[index] = 1 if valid else 2
 	return valid
+
+func _spawn_reachable(candidate: Vector2i, target: Vector2i) -> bool:
+	spawn_path_checks += 1
+	if B11Probe.enabled and not B11Probe.spawn_reachability_cache:
+		var uncached_started := Time.get_ticks_usec()
+		spawn_path_queries += 1
+		var uncached_reachable: bool = grid.get_id_path(candidate,target).size() > 1
+		B11Probe.cost("spawn_path",uncached_started)
+		if uncached_reachable: spawn_path_reachable += 1
+		else: spawn_path_rejected += 1
+		return uncached_reachable
+	var target_cache: Dictionary = _spawn_reachability.get(target,{})
+	if target_cache.has(candidate):
+		spawn_path_cache_hits += 1
+		var cached: bool = bool(target_cache[candidate])
+		if cached: spawn_path_reachable += 1
+		else: spawn_path_rejected += 1
+		return cached
+	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	spawn_path_queries += 1
+	var reachable: bool = grid.get_id_path(candidate,target).size() > 1
+	if B11Probe.enabled: B11Probe.cost("spawn_path",started)
+	target_cache[candidate] = reachable
+	_spawn_reachability[target] = target_cache
+	if reachable: spawn_path_reachable += 1
+	else: spawn_path_rejected += 1
+	return reachable
 
 func _ready():
 	obstacles = M5Content.WALLS[region_id].duplicate()
@@ -122,6 +165,7 @@ func path_step(from: Vector2, target: Vector2) -> Vector2:
 	if B11Probe.enabled: B11Probe.path_usec += Time.get_ticks_usec()-t0
 	return to_global(path[1]) if path.size()>1 else to_global(grid.get_point_position(b))
 func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radius := -1.0) -> Vector2:
+	spawn_requests += 1
 	# A negative radius means "the actor's own size". Every enemy instantiates the
 	# same body, so the scene is the source of truth and a caller that forgets to
 	# pass a radius still gets a real clearance instead of the old fixed 7 px that
@@ -138,6 +182,7 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 		var candidate = cells[index]; var point = _spawn_points[index]
 		M5Content.audit_candidates += 1
 		if not _spawn_geometry_allows(index,center,minimum,maximum,int(side)):
+			spawn_geometry_rejected += 1
 			M5Content.audit_rejected += 1; continue
 		# The grid above is built from two rectangle tests on the cell CENTRE, with a
 		# fixed 13 px margin that has nothing to do with how big the actor really is.
@@ -147,10 +192,15 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 		# grid itself was built with. For a default-size enemy the grid's own solid/walkable answer
 		# already IS the clearance rule, and re-asking the physics world for every candidate made a
 		# single reinforcement cost up to ~677 shape queries. Large actors keep the real check.
-		if radius > grid_clearance and not _is_clear(point,radius):
-			M5Content.audit_rejected += 1; continue
-		spawn_path_queries+=1
-		if grid.get_id_path(candidate,target).size()>1: return point
+		if radius > grid_clearance:
+			spawn_clearance_queries += 1
+			var clearance_started := Time.get_ticks_usec() if B11Probe.enabled else 0
+			var clear := _is_clear(point,radius)
+			if B11Probe.enabled: B11Probe.cost("spawn_clearance",clearance_started)
+			if not clear:
+				spawn_clearance_rejected += 1
+				M5Content.audit_rejected += 1; continue
+		if _spawn_reachable(candidate,target): return point
 		M5Content.audit_rejected += 1
 	M5Content.audit_arena_failed += 1
 	return Vector2.INF
@@ -159,6 +209,7 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 ## arrivals. Same validation rules as spawn_near(); only the arc is different, so a flank
 ## wave cannot smuggle an illegal point past the audit.
 func spawn_flank(center: Vector2, minimum: float, maximum: float, radius := -1.0) -> Vector2:
+	spawn_requests += 1
 	if radius <= 0.0: radius = M5Content.default_radius()
 	var target = cell(Utils.player.global_position)
 	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): target = nearest(Utils.player.global_position)
@@ -170,11 +221,17 @@ func spawn_flank(center: Vector2, minimum: float, maximum: float, radius := -1.0
 		var point = _spawn_points[index]
 		M5Content.audit_candidates += 1
 		if not _spawn_geometry_allows(index,center,minimum,maximum,-1):
+			spawn_geometry_rejected += 1
 			M5Content.audit_rejected += 1; continue
-		if radius > grid_clearance and not _is_clear(point,radius):
-			M5Content.audit_rejected += 1; continue
-		spawn_path_queries += 1
-		if grid.get_id_path(candidate,target).size() > 1: return point
+		if radius > grid_clearance:
+			spawn_clearance_queries += 1
+			var clearance_started := Time.get_ticks_usec() if B11Probe.enabled else 0
+			var clear := _is_clear(point,radius)
+			if B11Probe.enabled: B11Probe.cost("spawn_clearance",clearance_started)
+			if not clear:
+				spawn_clearance_rejected += 1
+				M5Content.audit_rejected += 1; continue
+		if _spawn_reachable(candidate,target): return point
 		M5Content.audit_rejected += 1
 	M5Content.audit_arena_failed += 1
 	return Vector2.INF
@@ -198,7 +255,7 @@ func _query_for(radius: float) -> PhysicsShapeQueryParameters2D:
 	shape.radius = radius
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.collision_mask = 2147483649
+	query.collision_mask = CLEAR_MASK
 	_queries[key] = query
 	return query
 
@@ -206,6 +263,7 @@ func _is_clear(point: Vector2, radius: float) -> bool:
 	var space := get_world_2d().direct_space_state
 	if space == null: return true
 	var query := _query_for(radius)
+	query.collision_mask = CLEAR_MASK
 	query.transform = Transform2D(0,point)
 	query.exclude = _no_exclusions
 	return space.intersect_shape(query,1).is_empty()
@@ -214,6 +272,7 @@ func _is_clear_excluding(point: Vector2, radius: float, rid: RID) -> bool:
 	var space := get_world_2d().direct_space_state
 	if space == null: return true
 	var query := _query_for(radius)
+	query.collision_mask = CLEAR_MASK
 	query.transform = Transform2D(0,point)
 	query.exclude = [rid]
 	return space.intersect_shape(query,1).is_empty()
@@ -222,7 +281,7 @@ func _is_clear_excluding(point: Vector2, radius: float, rid: RID) -> bool:
 ## by exactly one rule. `exclude` must carry the RID of the actor being tested: an actor
 ## standing in a legal spot still intersects its OWN collider, and an audit that forgets to
 ## exclude it reports every unit as "inside a wall".
-func point_clear(point: Vector2, radius: float, exclude: Array = [], mask := 2147483649) -> bool:
+func point_clear(point: Vector2, radius: float, exclude: Array = [], mask := CLEAR_MASK) -> bool:
 	var space := get_world_2d().direct_space_state
 	if space == null: return true
 	var query := _query_for(radius)

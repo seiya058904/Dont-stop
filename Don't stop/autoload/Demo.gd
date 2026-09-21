@@ -554,7 +554,8 @@ func start_root_lesson():
 	if not LevelServer.town.depart(20,true): lesson_state=""; return
 	LevelServer.timerStop()
 	PlayerData.player_hp=PlayerData.player_hp_max
-	var boss=instance_from_id(LevelServer.boss_instance)
+	var boss=LevelServer.get_boss()
+	if not is_instance_valid(boss): lesson_state=""; return
 	var center=LevelServer.town.arena.global_position
 	Utils.player.global_position=center+Vector2(-40,0)
 	boss.global_position=center+Vector2(40,0)
@@ -747,6 +748,9 @@ func release_session_nodes() -> void:
 	# found by name.
 	Utils.canvasLayer = null
 	LevelServer.town = null
+	# The outgoing boss is part of the scene being queued for deletion. Do not
+	# leave its ObjectID for BossHUD or a diagnostic callback during the handover.
+	LevelServer.clear_boss()
 
 ## The one place the session is exchanged for the main menu.
 ##

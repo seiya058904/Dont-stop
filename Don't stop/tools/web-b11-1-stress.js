@@ -185,6 +185,7 @@ function parseKv(line) {
 	}
 	if (traceSession) await page.addInitScript(() => {
 		window.b192ShaderWaits = []; window.b192GlSizes = {};
+		window.b192GlParameters = {total:0,byPname:{},slow:[],stacks:[]};
 		const sources = new WeakMap(), programs = new WeakMap();
 		for (const type of [WebGLRenderingContext,WebGL2RenderingContext]) {
 			const proto=type.prototype;
@@ -196,6 +197,21 @@ function parseKv(line) {
 			proto.shaderSource=function(shader,text){sources.set(shader,text);return source.call(this,shader,text);};
 			proto.attachShader=function(program,shader){const list=programs.get(program)||[];list.push(shader);programs.set(program,list);return attach.call(this,program,shader);};
 			proto.getProgramParameter=function(program,key){const start=performance.now();const value=query.call(this,program,key);const duration=performance.now()-start;if(duration>10)window.b192ShaderWaits.push({start,duration,key,sources:(programs.get(program)||[]).map(s=>sources.get(s))});return value;};
+			const getParameter=proto.getParameter;
+			if (getParameter) proto.getParameter=function(...args){
+				const started=performance.now();
+				try { return getParameter.apply(this,args); }
+				finally {
+					const duration=performance.now()-started;
+					const key=String(args[0]);
+					const bucket=window.b192GlParameters.byPname[key] || {count:0,total_ms:0,max_ms:0};
+					bucket.count += 1; bucket.total_ms += duration; bucket.max_ms = Math.max(bucket.max_ms,duration);
+					window.b192GlParameters.byPname[key]=bucket;
+					window.b192GlParameters.total += 1;
+					if (duration > 0.5 && window.b192GlParameters.slow.length < 128) window.b192GlParameters.slow.push({pname:key,duration_ms:duration});
+					if (duration > 0.5 && window.b192GlParameters.stacks.length < 32) window.b192GlParameters.stacks.push({pname:key,duration_ms:duration,stack:(new Error()).stack});
+				}
+			};
 		}
 	});
 	const started = Date.now();
@@ -216,6 +232,7 @@ function parseKv(line) {
 	if (traceSession) {
 		fs.writeFileSync(path.join(outDir,`shader-waits-${label}.json`),JSON.stringify(await page.evaluate(()=>window.b192ShaderWaits)));
 		fs.writeFileSync(path.join(outDir,`gl-sizes-${label}.json`),JSON.stringify(await page.evaluate(()=>window.b192GlSizes)));
+		fs.writeFileSync(path.join(outDir,`gl-parameters-${label}.json`),JSON.stringify(await page.evaluate(()=>window.b192GlParameters)));
 		const completed = new Promise(resolve=>traceSession.once('Tracing.tracingComplete',resolve));
 		await traceSession.send('Tracing.end'); await completed;
 		fs.writeFileSync(path.join(outDir,`trace-${label}.json`),JSON.stringify({traceEvents}));

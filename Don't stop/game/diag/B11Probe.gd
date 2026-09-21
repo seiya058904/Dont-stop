@@ -26,6 +26,7 @@ class_name B11Probe
 ## comparison.
 
 static var enabled := false
+static var spawn_reachability_cache := true
 static var refresh_calls := 0
 static var refresh_usec := 0
 

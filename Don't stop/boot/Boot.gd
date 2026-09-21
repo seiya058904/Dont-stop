@@ -51,6 +51,7 @@ var _capture_dir := ""
 
 func _ready() -> void:
 	_boot_ms = Time.get_ticks_msec()
+	Utils.startup_mark("boot-ready")
 	for arg in OS.get_cmdline_args() + OS.get_cmdline_user_args():
 		if arg.begins_with("--boot-capture="):
 			_capture_dir = arg.substr("--boot-capture=".length())
@@ -63,6 +64,7 @@ func _ready() -> void:
 	# constant above; touch it so the load cannot be optimised away silently.
 	print("[boot] transition patterns loaded=%d" % TRANSITION_PATTERNS.size())
 	print("[boot] shell drawn at t=%d" % _boot_ms)
+	Utils.startup_mark("loading-shell-built")
 	if OS.has_feature("web"):
 		# The DOM shell already covered the whole engine boot; go straight in.
 		# Deferred on purpose: replacing the current scene from inside its own
@@ -72,6 +74,7 @@ func _ready() -> void:
 		# The stage mark tells the shell that engine bring-up finished and the
 		# synchronous scene load below is a real, expected wait.
 		Utils.notify_web_boot_stage("scene-prep")
+		Utils.startup_mark("scene-prep-start")
 		get_tree().change_scene_to_file.call_deferred(MAIN_SCENE)
 		return
 	_run.call_deferred()
@@ -190,6 +193,7 @@ func _run() -> void:
 
 	# --- Stage 1: the game scene and everything it drags in (map, town, theme).
 	var t0 := Time.get_ticks_msec()
+	Utils.startup_mark("scene-load-start")
 	_set_progress(-1.0, "正在载入游戏场景…")
 	var err := ResourceLoader.load_threaded_request(MAIN_SCENE, "PackedScene", true)
 	if err != OK:
@@ -215,11 +219,13 @@ func _run() -> void:
 		_fail("游戏场景载入失败：资源为空")
 		return
 	_set_progress(1.0, "正在载入游戏场景… 100%")
+	Utils.startup_mark("scene-load-100")
 	print("[boot] scene loaded in %d ms" % (Time.get_ticks_msec() - t0))
 
 	# --- Stage 2: the warm-up pass. Real work with a real, observable completion
 	# signal; it never fires combat audio, deals damage or touches save data.
 	var t1 := Time.get_ticks_msec()
+	Utils.startup_mark("warmup-start")
 	_set_progress(-1.0, "正在预热武器与特效…")
 	await _capture("03-warmup.png")
 	# Warmup lives as an autoload, so it is looked up by path: `--no-warmup` and
@@ -227,17 +233,20 @@ func _run() -> void:
 	var warmup := get_node_or_null("/root/Warmup")
 	if warmup != null:
 		warmup.start()
-		while is_instance_valid(warmup) and warmup.progress < 1.0:
-			await get_tree().process_frame
-			if not is_instance_valid(warmup): break
-			_set_progress(clampf(warmup.progress, 0.0, 1.0), "正在预热武器与特效… %d%%" % int(warmup.progress * 100.0))
+		# Progress is display-only. The hand-off waits for the autoload's real
+		# completion signal, so a final progress value cannot race its cleanup.
+		if is_instance_valid(warmup) and not warmup.is_finished():
+			await warmup.finished
 	_set_progress(1.0, "正在预热武器与特效… 100%")
+	Utils.startup_mark("warmup-handover")
 	print("[boot] warmup finished in %d ms" % (Time.get_ticks_msec() - t1))
 
 	# --- Stage 3: hand over to the real title menu.
 	_set_progress(1.0, "准备完成")
+	Utils.startup_mark("boot-ready-to-handover")
 	await _capture("04-ready.png")
 	await _fade_out()
+	Utils.startup_mark("main-scene-handover")
 	get_tree().change_scene_to_packed(packed)
 	print("[boot] title menu handed over at t=%d ms total" % (Time.get_ticks_msec() - _boot_ms))
 

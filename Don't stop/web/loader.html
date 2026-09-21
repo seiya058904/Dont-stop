@@ -61,6 +61,42 @@
 		</div>
 		<div id="note">Don't Stop</div>
 	</div>
+	<script>
+	// Godot's WebGL commit path reads SCISSOR_TEST before every offscreen
+	// framebuffer blit. On ANGLE this boolean read is a synchronous round-trip.
+	// Track only this boolean state per context so the engine receives the same
+	// value without asking the driver to flush; every other WebGL query and every
+	// enable/disable call keeps its original this/arguments/return/exception.
+	(function installScissorStateCache() {
+		const SCISSOR_TEST = 0x0C11;
+		for (const type of [window.WebGLRenderingContext, window.WebGL2RenderingContext]) {
+			if (!type) continue;
+			const proto = type.prototype;
+			if (!proto || proto.__dontStopScissorCache) continue;
+			const originalGetParameter = proto.getParameter;
+			const originalEnable = proto.enable;
+			const originalDisable = proto.disable;
+			if (!originalGetParameter || !originalEnable || !originalDisable) continue;
+			const states = new WeakMap();
+			proto.getParameter = function (pname) {
+				if (pname !== SCISSOR_TEST) return originalGetParameter.apply(this, arguments);
+				if (!states.has(this)) states.set(this, originalGetParameter.apply(this, arguments));
+				return states.get(this);
+			};
+			proto.enable = function (cap) {
+				const result = originalEnable.apply(this, arguments);
+				if (cap === SCISSOR_TEST) states.set(this, true);
+				return result;
+			};
+			proto.disable = function (cap) {
+				const result = originalDisable.apply(this, arguments);
+				if (cap === SCISSOR_TEST) states.set(this, false);
+				return result;
+			};
+			Object.defineProperty(proto, '__dontStopScissorCache', { value: true });
+		}
+	})();
+	</script>
 	<script src="$GODOT_URL" onerror="window.__dontStopEngineScriptFailed = true"></script>
 	<script>
 	(function () {
@@ -123,6 +159,10 @@
 			// true when this page was asked to simulate a missing notice.
 			readyNoticeSuppressed: SUPPRESS_READY,
 			errorMessage: null,
+			frame: {
+				startedAt: performance.now(), lastAt: null, menuVisibleAt: null,
+				allGaps: [], menuGaps: [], longTasks: [], summary: null
+			},
 		};
 
 		let revealed = false;
@@ -130,6 +170,51 @@
 		let engineStarted = false;
 		let readyReported = false;
 		let stallTimer = null;
+		let frameTraceActive = true;
+
+		function sampleFrame(now) {
+			if (!frameTraceActive) return;
+			const frame = state.frame;
+			if (frame.lastAt !== null) {
+				const gap = now - frame.lastAt;
+				frame.allGaps.push(gap);
+				if (frame.menuVisibleAt !== null && now <= frame.menuVisibleAt + 10000) {
+					frame.menuGaps.push(gap);
+				}
+			}
+			frame.lastAt = now;
+			if (frame.menuVisibleAt !== null && now >= frame.menuVisibleAt + 10000) {
+				const sorted = frame.menuGaps.slice().sort(function (a, b) { return a - b; });
+				const percentile = function (fraction) {
+					if (!sorted.length) return -1;
+					return sorted[Math.max(0, Math.min(sorted.length - 1, Math.ceil(sorted.length * fraction) - 1))];
+				};
+				frame.summary = {
+					samples: sorted.length,
+					p95_ms: percentile(0.95), p99_ms: percentile(0.99),
+					max_ms: sorted.length ? sorted[sorted.length - 1] : -1,
+					over50: sorted.filter(function (v) { return v > 50; }).length,
+					over100: sorted.filter(function (v) { return v > 100; }).length,
+					over250: sorted.filter(function (v) { return v > 250; }).length,
+					over1000: sorted.filter(function (v) { return v > 1000; }).length,
+				};
+				frameTraceActive = false;
+				log('startup-frame-summary ' + JSON.stringify(frame.summary));
+				return;
+			}
+			requestAnimationFrame(sampleFrame);
+		}
+		requestAnimationFrame(sampleFrame);
+		if (window.PerformanceObserver) {
+			try {
+				const longTaskObserver = new PerformanceObserver(function (list) {
+					list.getEntries().forEach(function (entry) {
+						state.frame.longTasks.push({start_ms: entry.startTime, duration_ms: entry.duration});
+					});
+				});
+				longTaskObserver.observe({type: 'longtask', buffered: true});
+			} catch (ignored) {}
+		}
 
 		function setStatus(text, busy) {
 			statusEl.textContent = text;
@@ -153,6 +238,9 @@
 			state.outcome = reason;
 			state.revealedBy = reason;
 			state.overlayRemovedAt = performance.now();
+			if (reason === 'game-reported-ready' && state.frame.menuVisibleAt === null) {
+				state.frame.menuVisibleAt = state.overlayRemovedAt;
+			}
 			log('revealing the running game (' + reason + ') at ' + Math.round(state.overlayRemovedAt) + 'ms');
 			frameEl.classList.add('gone');
 			setTimeout(function () {
