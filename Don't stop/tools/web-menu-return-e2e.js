@@ -271,7 +271,7 @@ watchdog.unref?.();
 	const shellGone = () => page.waitForFunction(() => {
 		const f = document.getElementById('frame');
 		return !f || f.style.display === 'none' || f.classList.contains('gone');
-	}, { timeout: 300000 }).then(() => true).catch(() => false);
+	}, null, { timeout: 300000 }).then(() => true).catch(() => false);
 
 	let rect = null;
 	const toCss = (dx, dy) => ({ x: rect.x + (dx / DESIGN.w) * rect.w, y: rect.y + (dy / DESIGN.h) * rect.h });

@@ -251,7 +251,7 @@ const MENU_START = { x: 41, y: 136 };
 	const shellGone = () => page.waitForFunction(() => {
 		const f = document.getElementById('frame');
 		return !f || f.style.display === 'none' || f.classList.contains('gone');
-	}, { timeout: 240000 }).then(() => true).catch(() => false);
+	}, null, { timeout: 240000 }).then(() => true).catch(() => false);
 
 	await page.goto(pageUrl + (pageUrl.includes('?') ? '&' : '?') + 'probe=1', { waitUntil: 'domcontentloaded', timeout: 90000 });
 	token('LOADER_SHELL_HIDES_BY_ITSELF', await shellGone(),
