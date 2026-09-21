@@ -2,6 +2,8 @@
 
 The full objective remains open. Draft PR #17 is under CI verification; no merge, deployment or final candidate acceptance has been performed.
 
+The supplemental hotspot-first investigation is tracked in [PERFORMANCE COST MAP](PERFORMANCE-COST-MAP.md), including current evidence boundaries, unmeasured categories, spike context, and A/B/B/A keep/reject decisions.
+
 | Item | Before | Current evidence | Target | Status |
 |---|---:|---:|---|---|
 | Public cold startup | 52.5–60.1 s (supplied CI evidence) | Not tested after deployment | median ≤5 s, hard ≤10 s | Pending |

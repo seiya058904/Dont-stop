@@ -17,7 +17,7 @@ These are priorities supported by observed magnitude, not additive percentages o
 
 | Priority | Path / platform | Cost evidence | Why / confidence | Next action |
 |---|---|---|---|---|
-| 1 | Menu render/driver path, Linux software Web | Repeated 1.0–1.4 s intervals, no gameplay pressure driver | Render/driver is a candidate supported by separate Windows software-renderer diagnostics; Linux per-stage attribution still missing | Capture exact Linux browser trace and distinguish submission, synchronization, rasterization and waiting before selecting a change |
+| 1 | Menu compositor readback / driver wait, Linux software Web | Repeated 1.0–1.4 s intervals; new trace records 8.620 s in 11 ReadPixels spans | Largest waits occur under LayerTreeHost → ReadPixels → WaitForGetOffset; underlying raster/command cost still unresolved | Compare baseline and full SwiftShader browser backend in A/B/B/A; preserve pixels, workload and gates |
 | 2 | First-use shader / hardware Web, older artifact | 1224.125 ms spike; two approximately 590 ms LINK_STATUS waits | Trace identifies blocking shader-status queries; historical evidence only | Reproduce baseline/candidate/baseline with identical seed/artifact protocol and validate visual equivalence; do not claim final ROI yet |
 | 3 | Monster movement, current Native diagnostic | 2210.328 ms / 109901 calls over 15 simulated seconds; 0.962 ms per observed process interval | Largest **instrumented** bucket, not proven largest whole-frame subsystem | Split movement calculations from physics calls and crowd interaction only after validating pressure coverage |
 | 4 | Enemy projectile step, same Native diagnostic | 592.332 ms / 155203 calls; 0.258 ms per observed interval | Inclusive step cost; collision, bounce and lifetime not yet separated | Measure those subscopes if this remains a leading bucket under valid pressure |
@@ -70,5 +70,24 @@ The two fresh Native long frames are fully retained in raw evidence, but Boss ph
 Existing particle-variant sharing and targeted preparation are provisional under the supplemental standard: repeatable A/B/A benefit and full visual/behavior equivalence still need verification. The rejected faster-refill and HP experiments remain reverted. No pooling, AI-frequency reduction, particle reduction, resolution change or collision removal follows from this map.
 
 The IndexedDB bulk-enumeration change has functional persistence proof on Linux, including latest-save hash equality. Its isolated timing experiment is not whole-game frame ROI. Startup driver round-trip removal improves measurement overhead, not rendering throughput.
+
+### New trace evidence and one rejected experiment
+
+Run `35610869791` tests `cbcfba0` (unchanged game code). Build/preflight/smoke/menu-return pass; startup remains failed, with cold first response 10.625 / 10.182 / 10.130 s and baseline menu max 1383.3 ms. A separate diagnostic navigation after the failed gate captures 2.18 MB of compressed trace with no reported data loss. It never calls readPixels itself. Evidence: `output/b19-4/ci-cost-trace-startup/cost-trace/`.
+
+The trace contains 11 `GLES2::ReadPixels` spans totaling 8620.419 ms, maximum 1378.620 ms. The largest seven waits have the ancestor chain `LayerTreeHost::DoUpdateLayers → GLES2::ReadPixels → CommandBufferProxyImpl::WaitForGetOffset`. GPU-process `CommandBufferService:PutChanged` spans total 9136.698 ms. These timelines overlap; they are not additive CPU and GPU costs. LinkProgram spans total only 65.539 ms in this diagnostic navigation. This separates persistent compositor/command synchronization from the locally observed cold shader-link stalls; it does not prove a hardware GPU is saturated.
+
+Local source capture identifies six >50 ms LINK_STATUS waits: two spatial default/instanced variants, two particle variants and two Canvas variants. The particle pair differs by an extra duplicate `USERDATA1_USED` define. A narrowly scoped browser-only experiment removes that duplicate, leaving the later identical unconditional definition intact. Corrected, guarded A/B/B/A results (`cost-map-current/shader-startup-checked-*.json`):
+
+| Run | Sum of >50 ms link waits | Menu ready marker |
+|---|---:|---:|
+| A1 | 2762.190 ms | 5662.345 ms |
+| B1 | 2793.475 ms | 5727.205 ms |
+| B2 | 2795.095 ms | 5717.480 ms |
+| A2 | 2755.250 ms | 5698.080 ms |
+
+Decision: **REJECT**. No repeatable benefit; no shader-normalization change enters the product. These are diagnostic ready markers, not first-interaction acceptance times.
+
+The next single-variable experiment uses Chromium's documented full SwiftShader mode (`--use-gl=angle --use-angle=swiftshader`) versus its WebGL fallback path. [Chromium's SwiftShader documentation](https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/docs/gpu/swiftshader.md) distinguishes these modes. It is confined to separate post-failure diagnostic navigations; the acceptance browser arguments and thresholds remain unchanged. GPU feature status and post-trace screenshots are retained to verify what actually ran.
 
 Next measurement order: attribute Linux menu freeze; complete >50 ms event context; establish valid simultaneous pressure; split the largest measured scopes and repeat observer controls. Only then choose one equivalent implementation and run A/B/A or A/B/B/A. Final startup, three-surface H/M/B/P, Boss, soak, visual and human acceptance remain false/pending.

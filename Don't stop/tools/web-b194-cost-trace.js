@@ -6,15 +6,18 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { chromium } = require('playwright');
-const [url, outDir, buildDir] = process.argv.slice(2);
+const [url, outDir, buildDir, mode = 'baseline'] = process.argv.slice(2);
 if (!url || !outDir || !buildDir) throw new Error('usage: web-b194-cost-trace.js <url> <outDir> <buildDir>');
+if (!['baseline', 'swangle'].includes(mode)) throw new Error('unknown diagnostic mode');
 fs.mkdirSync(outDir, { recursive: true });
-const report = { diagnostic_only: true, url, platform: process.platform, assets: {}, lines: [], errors: [] };
+const report = { diagnostic_only: true, mode, url, platform: process.platform, assets: {}, lines: [], errors: [] };
 const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 let browser, timer;
 async function capture() {
-    const args = [...(process.platform === 'win32' ? ['--use-angle=d3d11'] : ['--enable-unsafe-swiftshader']),
+    const backend = mode === 'swangle' ? ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+        : (process.platform === 'win32' ? ['--use-angle=d3d11'] : ['--enable-unsafe-swiftshader']);
+    const args = [...backend,
         '--enable-gpu', '--ignore-gpu-blocklist', '--disable-background-timer-throttling',
         '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding'];
     browser = await chromium.launch({ headless: true, args });
@@ -37,6 +40,7 @@ async function capture() {
     });
     page.on('pageerror', error => report.errors.push(String(error)));
     const cdp = await browser.newBrowserCDPSession();
+    report.gpu = (await cdp.send('SystemInfo.getInfo')).gpu;
     await cdp.send('Tracing.start', {
         categories: 'toplevel,devtools.timeline,v8,blink,cc,gpu,disabled-by-default-gpu.service,disabled-by-default-devtools.timeline',
         transferMode: 'ReturnAsStream', streamCompression: 'gzip',
@@ -69,7 +73,12 @@ async function capture() {
     report.trace_bytes = bytes;
     report.state = await page.evaluate(() => ({ loader: window.__dontStopState,
         build_sha: document.querySelector('meta[name="dontstop-build"]')?.content,
-        artifact_digest: document.querySelector('meta[name="dontstop-artifact"]')?.content }));
+        artifact_digest: document.querySelector('meta[name="dontstop-artifact"]')?.content,
+        canvas: (() => { const canvas = document.querySelector('#canvas-host canvas');
+            const gl = canvas?.getContext('webgl2'); const ext = gl?.getExtension('WEBGL_debug_renderer_info');
+            return gl ? { width: gl.drawingBufferWidth, height: gl.drawingBufferHeight,
+                renderer: gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER) } : null; })() }));
+    await page.screenshot({ path: path.join(outDir, 'menu-after-trace.png') });
     report.complete = true;
 }
 Promise.race([capture(), new Promise((_, reject) => {

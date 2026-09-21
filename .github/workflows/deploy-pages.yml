@@ -434,8 +434,12 @@ jobs:
             echo "GATE_${{ matrix.name }}=FAIL tier=${TIER} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
             if [[ "${{ matrix.name }}" == startup ]]; then
               # Separate navigation: trace overhead never enters acceptance samples.
-              timeout 90s node "$PROJECT_PATH/tools/web-b194-cost-trace.js" \
-                "http://localhost:8788/index.html" "$OUT/cost-trace" "$PWD/build/web" || true
+              # A/B/B/A tests only software backend selection, never gate thresholds.
+              for CASE in A1:baseline B1:swangle B2:swangle A2:baseline; do
+                timeout 90s node "$PROJECT_PATH/tools/web-b194-cost-trace.js" \
+                  "http://localhost:8788/index.html" "$OUT/cost-trace-${CASE%%:*}" \
+                  "$PWD/build/web" "${CASE##*:}" || break
+              done
             fi
             exit 1
           fi
