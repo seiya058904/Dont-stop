@@ -19,12 +19,18 @@ var e2e := false
 var probe := false
 var _transients := 0
 var _tour_simulated := 0.0
+var _tour_last_telegraph_sample := -1.0
 
 func _physics_process(delta: float) -> void:
 	# Enabled only by stage-tour: observe short attacks even when a renderer
 	# executes several physics ticks between two visible frames.
 	if LevelServer.state != "COMBAT": return
 	_tour_simulated += delta
+	# Keep the detailed channel at the same 50 ms cadence as the tour driver.
+	# Emitting a full scene-tree report on every physics tick can starve the
+	# software-rendered CI runner before the required simulated window elapses.
+	if _tour_simulated - _tour_last_telegraph_sample < 0.05: return
+	_tour_last_telegraph_sample = _tour_simulated
 	var zones = get_tree().get_nodes_in_group("hostile_zone")
 	if not zones.is_empty():
 		print("[telegraph] count=%d rows=%s" % [zones.size(), _probe_zone_state()])
@@ -1125,6 +1131,7 @@ func _stage_tour_run() -> void:
 		# Nine simulated seconds, bounded by 60 wall seconds. A slow software
 		# renderer must not silently turn this into a one-second combat sample.
 		_tour_simulated = 0.0
+		_tour_last_telegraph_sample = -1.0
 		var until := Time.get_ticks_msec()+60000
 		var monsters := 0
 		var fog := false
