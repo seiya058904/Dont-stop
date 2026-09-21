@@ -41,6 +41,9 @@ const TRANSITION_PATTERNS := [
 var _status: Label
 var _fill: TextureRect
 var _track: ColorRect
+var _activity: ColorRect
+var _progress_target := 0.0
+var _progress_shown := 0.0
 var _sweep := false
 var _sweep_time := 0.0
 var _boot_ms := 0
@@ -132,6 +135,7 @@ func _build_ui() -> void:
 	_track.color = Color("1f1d31")
 	_track.custom_minimum_size = Vector2(170, 6)
 	_track.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_track.clip_contents = true
 	var track_wrap := _centered(_track)
 	column.add_child(track_wrap)
 
@@ -152,6 +156,11 @@ func _build_ui() -> void:
 	_fill.position = Vector2.ZERO
 	_fill.size = Vector2(0, 6)
 	_track.add_child(_fill)
+	_activity = ColorRect.new()
+	_activity.color = Color(0.65, 0.85, 1.0, 0.3)
+	_activity.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_activity.size = Vector2(38, 6)
+	_track.add_child(_activity)
 
 func _centered(node: Control) -> Control:
 	var wrap := CenterContainer.new()
@@ -166,20 +175,25 @@ func _set_progress(value: float, text: String) -> void:
 	if value < 0.0:
 		_sweep = true
 		return
-	_sweep = false
-	if _fill != null and _track != null:
-		_fill.position.x = 0.0
-		_fill.size.x = _track.custom_minimum_size.x * clampf(value, 0.0, 1.0)
+	# Three real work stages; smoothing never advances beyond completed work.
+	_progress_target = maxf(_progress_target, clampf(value, 0.0, 1.0))
+	_sweep = value < 1.0
+	if value >= 1.0:
+		_progress_shown = 1.0
+		_fill.size.x = _track.custom_minimum_size.x
+		_activity.hide()
 
 func _process(delta: float) -> void:
-	if not _sweep or _fill == null or _track == null: return
+	if _fill == null or _track == null: return
+	_progress_shown = lerpf(_progress_shown, _progress_target, 1.0-exp(-18.0*delta))
+	_fill.size.x = _track.custom_minimum_size.x * _progress_shown
+	if not _sweep: return
 	_sweep_time += delta
 	var width: float = _track.custom_minimum_size.x
-	var bar := width * 0.35
-	_fill.size.x = bar
-	# -bar .. width, so the sweep enters and leaves the track completely.
+	var bar := _activity.size.x
+	# Activity is separate from measured progress: it cannot imply completion.
 	var span := width + bar
-	_fill.position.x = fposmod(_sweep_time * span / 1.15, span) - bar
+	_activity.position.x = fposmod(_sweep_time * span / 1.15, span) - bar
 
 func _run() -> void:
 	# Draw the shell before doing anything expensive. Three processed frames with
@@ -194,7 +208,7 @@ func _run() -> void:
 	# --- Stage 1: the game scene and everything it drags in (map, town, theme).
 	var t0 := Time.get_ticks_msec()
 	Utils.startup_mark("scene-load-start")
-	_set_progress(-1.0, "正在载入游戏场景…")
+	_set_progress(0.0, "正在载入游戏场景…")
 	var err := ResourceLoader.load_threaded_request(MAIN_SCENE, "PackedScene", true)
 	if err != OK:
 		_fail("无法开始载入游戏场景 (ResourceLoader error %d)" % err)
@@ -207,7 +221,7 @@ func _run() -> void:
 		progress.clear()
 		status = ResourceLoader.load_threaded_get_status(MAIN_SCENE, progress)
 		if not progress.is_empty():
-			_set_progress(float(progress[0]), "正在载入游戏场景… %d%%" % int(float(progress[0]) * 100.0))
+			_set_progress(float(progress[0])/3.0, "正在载入游戏场景…")
 		if not captured_loading and not progress.is_empty() and float(progress[0]) > 0.2:
 			captured_loading = true
 			await _capture("02-loading-progress.png")
@@ -218,7 +232,7 @@ func _run() -> void:
 	if packed == null:
 		_fail("游戏场景载入失败：资源为空")
 		return
-	_set_progress(1.0, "正在载入游戏场景… 100%")
+	_set_progress(1.0/3.0, "场景资源已就绪")
 	Utils.startup_mark("scene-load-100")
 	print("[boot] scene loaded in %d ms" % (Time.get_ticks_msec() - t0))
 
@@ -226,41 +240,61 @@ func _run() -> void:
 	# signal; it never fires combat audio, deals damage or touches save data.
 	var t1 := Time.get_ticks_msec()
 	Utils.startup_mark("warmup-start")
-	_set_progress(-1.0, "正在预热武器与特效…")
+	_set_progress(1.0/3.0, "正在准备武器与特效…")
 	await _capture("03-warmup.png")
 	# Warmup lives as an autoload, so it is looked up by path: `--no-warmup` and
 	# TOWDOWN_SKIP_WARMUP free the node, after which the global identifier is gone.
 	var warmup := get_node_or_null("/root/Warmup")
 	if warmup != null:
 		warmup.start()
-		# Progress is display-only. The hand-off waits for the autoload's real
-		# completion signal, so a final progress value cannot race its cleanup.
-		if is_instance_valid(warmup) and not warmup.is_finished():
-			await warmup.finished
-	_set_progress(1.0, "正在预热武器与特效… 100%")
+		# The completed flag, not the progress value, controls the hand-off.
+		while is_instance_valid(warmup) and not warmup.is_finished():
+			_set_progress((1.0+warmup.progress)/3.0, "正在准备武器与特效…")
+			await get_tree().process_frame
+	_set_progress(2.0/3.0, "正在呈现主菜单…")
 	Utils.startup_mark("warmup-handover")
 	print("[boot] warmup finished in %d ms" % (Time.get_ticks_msec() - t1))
 
-	# --- Stage 3: hand over to the real title menu.
+	# --- Stage 3: keep the cover alive while the menu is instantiated and drawn.
+	# A scene switch normally frees Boot. Move only this cover to a temporary
+	# top canvas layer, so 100% can never precede menu construction.
+	var tree := get_tree()
+	var cover := CanvasLayer.new()
+	cover.layer = 128
+	tree.root.add_child(cover)
+	tree.root.set_meta("boot_overlay_active", true)
+	tree.current_scene = null
+	reparent(cover)
+	Utils.startup_mark("main-scene-handover")
+	err = tree.change_scene_to_packed(packed)
+	if err != OK:
+		_fail("无法打开主菜单 (scene error %d)" % err)
+		return
+	await tree.scene_changed
+	await RenderingServer.frame_post_draw
 	_set_progress(1.0, "准备完成")
 	Utils.startup_mark("boot-ready-to-handover")
 	await _capture("04-ready.png")
 	await _fade_out()
-	Utils.startup_mark("main-scene-handover")
-	get_tree().change_scene_to_packed(packed)
+	tree.root.remove_meta("boot_overlay_active")
+	Utils.startup_mark("menu-first-visible")
+	await _capture("05-menu.png")
+	cover.queue_free()
 	print("[boot] title menu handed over at t=%d ms total" % (Time.get_ticks_msec() - _boot_ms))
 
 func _fade_out() -> void:
 	if _status == null: return
 	var tween := create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(self, "modulate:a", 0.0, 0.22)
+	tween.tween_property(self, "modulate:a", 0.0, 0.12)
 	await tween.finished
 
 func _fail(message: String) -> void:
 	push_error("[boot] " + message)
 	if _status == null: return
 	_set_progress(0.0, "启动失败")
+	_sweep = false
+	_activity.hide()
 	var box := Label.new()
 	box.text = message + "\n请关闭后重新启动游戏；若反复失败，请核对游戏目录中的可执行文件与同名 .pck 是否完整。"
 	box.add_theme_font_override("font", load("res://fonts/fusion-pixel.otf"))

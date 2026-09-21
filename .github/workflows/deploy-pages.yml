@@ -415,6 +415,7 @@ jobs:
           export B193_HEADLESS=1 B193_BUILD_DIR="$PWD/build/web" E2E_SCREENSHOTS=none
           if [[ "${{ matrix.name }}" == startup ]]; then
             node "$PROJECT_PATH/tools/test-web-scissor.js"
+            node "$PROJECT_PATH/tools/test-web-loader-progress.js"
           fi
           case "${{ matrix.name }}" in
             menu-return) set -- "$@" "${MENU_CYCLES:-5}" ;;

@@ -148,6 +148,7 @@ watchdog.unref?.();
 	let probeLines = [];
 	let probeSaveState = null;
 	const saveDiagnostics = [];
+	let durableFilesBeforeReload = null;
 	const rects = {};
 	page.on('console', m => {
 		const t = m.text();
@@ -612,6 +613,23 @@ watchdog.unref?.();
 
 	// ================================ Phase P: the save survives it all
 	await phase('save-reload', async () => {
+		// Read only the fresh test profile's committed IndexedDB keys. This does
+		// not flush, wait for, or repair persistence on behalf of the game.
+		durableFilesBeforeReload = await page.evaluate(async () => {
+			const databases = await indexedDB.databases();
+			return Promise.all(databases.map(info => new Promise((resolve, reject) => {
+				const request = indexedDB.open(info.name);
+				request.onerror = () => reject(new Error('IndexedDB diagnostic open failed'));
+				request.onsuccess = () => {
+					const db = request.result;
+					if (!db.objectStoreNames.contains('FILE_DATA')) { db.close(); resolve({ name: info.name, keys: [] }); return; }
+					const tx = db.transaction('FILE_DATA', 'readonly');
+					const keys = tx.objectStore('FILE_DATA').getAllKeys();
+					tx.oncomplete = () => { db.close(); resolve({ name: info.name, keys: keys.result }); };
+					tx.onerror = () => { db.close(); reject(new Error('IndexedDB diagnostic read failed')); };
+				};
+			})));
+		});
 		probeSaveState = null;
 		await page.goto(q(url, 'probe=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
 		const t = Date.now();
@@ -690,6 +708,7 @@ watchdog.unref?.();
 			transport: 'read-only ?probe=1 console channel (autoload/Smoke.gd), no page round trips',
 			save_state_at_reload: probeSaveState,
 			save_diagnostics: saveDiagnostics,
+			durable_files_before_reload: durableFilesBeforeReload,
 		},
 		rects_reported_by_the_game: rects,
 		console_errors: consoleErrors, page_errors: pageErrors,

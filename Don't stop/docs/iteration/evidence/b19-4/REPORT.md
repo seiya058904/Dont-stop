@@ -99,6 +99,18 @@ The CI menu-return failure was solely save readability after reload; its interac
 
 ## Remaining completion gates (unchanged)
 
+## Additional request: honest, smooth progress on all three surfaces
+
+Native/editor and Windows share `boot/Boot.gd`. It now keeps a temporary loading cover alive across the scene switch, waits for the menu's first draw, and only then completes and fades the bar. Scene-load and warmup counts advance through their actual stages; a separate activity sweep handles unknown-duration work. Completion no longer precedes menu instantiation. Native rendering captures show the loading cover and the unobstructed menu (`output/b19-4/progress-native/`). The direct boot-script compile contract passes.
+
+The Web bar likewise represents three completed work stages, with no speculative time-based percentage. A completed download cannot fill the bar; only the ready handshake can. Transform animation smooths measured advances, late progress cannot move it backwards, and reduced-motion settings are respected. The isolated production-loader contract passes at widths 1536 and 390, including download-complete/not-ready and immediate ready handover. Its mocked engine is UI-contract evidence only, not game startup acceptance.
+
+CI run `35600668367` remains failed: preflight/build/smoke pass; startup and menu-return fail. The renderer is explicitly SwiftShader on a four-logical-CPU Linux runner. A cold menu sample records about 1.8 s frame intervals. The save diagnostic reports persistent storage available, a successful in-memory save, but no save on reload. Read-only committed IndexedDB-key and absolute-path diagnostics are being added to distinguish a mount mismatch from missing synchronization without changing save semantics.
+
+The preceding complete affected L2 passed in 161.938 s (`l2-20260921-203809/`); the progress changes still require exported Windows/Web runtime checks. No final matrix, merge or production deployment has been performed.
+
+## Outstanding acceptance
+
 - Resolve remaining repeatable first-use freezes and verify all requested first-use actions, Boss phases and return/second combat.
 - Finish same-workload observer off/light/detail comparison, visible simultaneous pressure proof and hotspot attribution.
 - Produce Top 20 slow-test timing breakdown and validate failure-injection behavior; repeat L1/L2 for the final candidate.

@@ -18,7 +18,7 @@ func _ready() -> void:
 func _mark_menu_presented() -> void:
 	await RenderingServer.frame_post_draw
 	Utils.startup_mark("menu-scene-ready")
-	if not OS.has_feature("web"):
+	if not OS.has_feature("web") and not get_tree().root.has_meta("boot_overlay_active"):
 		Utils.startup_mark("menu-first-visible")
 	# The web shell waits for this before it drops its loading overlay.
 	Utils.notify_web_boot_menu_ready()

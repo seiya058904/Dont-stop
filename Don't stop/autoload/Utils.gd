@@ -155,7 +155,9 @@ func _process(_delta: float) -> void:
 		_finish_startup_trace()
 
 func startup_mark(stage: String) -> void:
-	if not _startup_trace_active or _startup_stages.has(stage):
+	# Keep one-shot interaction evidence even after the ten-second frame sample.
+	# Slow renderers must fail their budget with evidence, not lose late markers.
+	if _startup_stages.has(stage):
 		return
 	var now := Time.get_ticks_msec()
 	_startup_stages[stage] = {"t_ms":now,"since_utils_ms":now - _startup_origin_ms,
