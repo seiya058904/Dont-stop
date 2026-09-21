@@ -42,6 +42,7 @@ env:
 
 jobs:
   setup:
+    name: Stable preflight
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -70,7 +71,44 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
+          mkdir -p "$RUNNER_TEMP/godot"
+          for pass in 1 2; do
+            "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit \
+              --log-file "$RUNNER_TEMP/godot/import-$pass.log"
+          done
+          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$RUNNER_TEMP/godot/import-2.log" \
+            | grep -v 'resources still in use'; then
+            echo 'Stable preflight import reported an error.'
+            exit 1
+          fi
+
+      - name: Run stable core regression preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_case () {
+            local name="$1"
+            local log="$RUNNER_TEMP/preflight-$name.log"
+            set +e
+            timeout 300 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
+              "res://tests/$name.tscn" > "$log" 2>&1
+            local code=$?
+            set -e
+            local issues checks
+            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
+            checks=$(grep -cE '^PASS ' "$log" || true)
+            echo "::group::preflight $name (exit $code, checks $checks, issues $issues)"
+            tail -n 40 "$log"
+            echo '::endgroup::'
+            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
+              echo "PREFLIGHT_FAILED: $name"
+              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
+              exit 1
+            fi
+          }
+          run_case BaselineRegression
+          run_case B17Contracts
+          run_case M3Weapons
 
   contracts:
     needs: setup
