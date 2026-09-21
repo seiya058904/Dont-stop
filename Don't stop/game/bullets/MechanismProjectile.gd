@@ -139,11 +139,11 @@ func split():
 		shard.speed = speed
 		shard.player = player
 		get_tree().current_scene.add_child(shard)
-	shard.global_position = global_position
-	shard.rotation = velocity.angle()+(i-(count-1)*0.5)*0.28
-	for ref in visited_refs:
-		var victim = ref.get_ref()
-		if is_instance_valid(victim): shard.add_collision_exception_with(victim)
+		shard.global_position = global_position
+		shard.rotation = velocity.angle()+(i-(count-1)*0.5)*0.28
+		for ref in visited_refs:
+			var victim = ref.get_ref()
+			if is_instance_valid(victim): shard.add_collision_exception_with(victim)
 		shard.fire()
 
 func _draw():
