@@ -1128,11 +1128,11 @@ func _stage_tour_run() -> void:
 		Utils.set_gameplay_mouse_mode()
 		var departed: bool = LevelServer.town.depart(stage,true)
 		await _wait_until(func(): return LevelServer.state == "COMBAT", 60000)
-		# Nine simulated seconds, bounded by 60 wall seconds. A slow software
+		# Nine simulated seconds, bounded by 75 wall seconds. A slow software
 		# renderer must not silently turn this into a one-second combat sample.
 		_tour_simulated = 0.0
 		_tour_last_telegraph_sample = -1.0
-		var until := Time.get_ticks_msec()+60000
+		var until := Time.get_ticks_msec()+75000
 		var monsters := 0
 		var fog := false
 		var locked_lanes := 0
