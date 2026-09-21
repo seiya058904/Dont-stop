@@ -134,6 +134,8 @@ var _startup_long_gaps: Array = []
 
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
+	if OS.has_feature("web"):
+		Engine.get_singleton("JavaScriptBridge").call("eval",WEB_IDBFS_BATCH)
 	_startup_origin_ms = Time.get_ticks_msec()
 	_startup_last_frame_ms = _startup_origin_ms
 	startup_mark("utils-ready")
@@ -247,6 +249,49 @@ func get_aim_viewport_position() -> Vector2:
 func get_aim_world_position() -> Vector2:
 	var vport := get_viewport()
 	return vport.get_canvas_transform().affine_inverse() * get_aim_viewport_position()
+
+## Godot 4.7.2's IDBFS enumerates one remote timestamp per asynchronous cursor
+## callback. Slow rendered frames turn a few dozen cache files into tens of
+## seconds of sync delay. Read the same index in two bulk requests instead.
+## Reconciliation, write scheduling, file contents and error propagation remain
+## IDBFS-owned. Older browsers retain the original cursor implementation.
+const WEB_IDBFS_BATCH := """
+(function () {
+	if (typeof IDBFS === 'undefined' || typeof IDBIndex === 'undefined'
+		|| typeof IDBIndex.prototype.getAll !== 'function'
+		|| typeof IDBIndex.prototype.getAllKeys !== 'function' || IDBFS.dontStopBulkIndex) return false;
+	IDBFS.getRemoteSet = function (mount, callback) {
+		IDBFS.getDB(mount.mountpoint, function (error, db) {
+			if (error) return callback(error);
+			let finished = false;
+			const finish = function (error, result) {
+				if (finished) return;
+				finished = true;
+				callback(error, result);
+			};
+			try {
+				const tx = db.transaction([IDBFS.DB_STORE_NAME], 'readonly');
+				tx.onerror = tx.onabort = function (event) {
+					event.preventDefault();
+					finish(tx.error || event.target.error || new Error('IDBFS index read aborted'));
+				};
+				const index = tx.objectStore(IDBFS.DB_STORE_NAME).index('timestamp');
+				const keys = index.getAllKeys();
+				const values = index.getAll();
+				tx.oncomplete = function () {
+					if (finished) return;
+					if (keys.result.length !== values.result.length) return finish(new Error('IDBFS index length mismatch'));
+					const entries = {};
+					for (let i = 0; i < keys.result.length; i++) entries[keys.result[i]] = { timestamp: values.result[i].timestamp };
+					finish(null, { type: 'remote', db, entries });
+				};
+			} catch (error) { finish(error); }
+		});
+	};
+	IDBFS.dontStopBulkIndex = true;
+	return true;
+})()
+"""
 
 ## The shell handshake. web/loader.html exposes exactly these two functions on
 ## window.__dontStop, and this file is the only caller, so the names live here

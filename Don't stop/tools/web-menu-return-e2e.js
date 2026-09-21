@@ -173,6 +173,7 @@ watchdog.unref?.();
 	// The read-only probe stream, and the one-shot save report it prints at boot.
 	let probeLines = [];
 	let probeSaveState = null;
+	let probeSaveHash = null;
 	const saveDiagnostics = [];
 	const storageEvents = [];
 	let durableFilesBeforeReload = null;
@@ -187,6 +188,7 @@ watchdog.unref?.();
 		gameLines = [];
 		probeLines = [];
 		probeSaveState = null;
+		probeSaveHash = null;
 	});
 	page.on('console', m => {
 		const t = m.text();
@@ -198,6 +200,7 @@ watchdog.unref?.();
 			return;
 		}
 		if (t.startsWith('[probe] ')) {
+			if (t.startsWith('[probe] save_hash ')) { probeSaveHash = t.slice('[probe] save_hash '.length).trim(); return; }
 			if (t.startsWith('[probe] save_diagnostic ')) { saveDiagnostics.push({ document: documentSequence, wall_ms: Date.now(), text: t }); return; }
 			if (t.startsWith('[probe] save_state')) { probeSaveState = t.replace('[probe] save_state', '').trim(); return; }
 			if (!/frames=\d+/.test(t)) return;
@@ -650,6 +653,8 @@ watchdog.unref?.();
 
 	// ================================ Phase P: the save survives it all
 	await phase('save-reload', async () => {
+		const latest = saveDiagnostics.filter(row => row.document === documentSequence).at(-1);
+		const expectedHash = latest ? JSON.parse(latest.text.slice('[probe] save_diagnostic '.length)).sha256 : null;
 		// Read only the fresh test profile's committed IndexedDB keys. This does
 		// not flush, wait for, or repair persistence on behalf of the game.
 		durableFilesBeforeReload = await page.evaluate(async () => {
@@ -669,7 +674,10 @@ watchdog.unref?.();
 		});
 		await page.goto(q(url, 'probe=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
 		const t = Date.now();
-		while (Date.now() - t < 180000 && probeSaveState === null) await sleep(100);
+		while (Date.now() - t < 180000 && (probeSaveState === null || probeSaveHash === null)) await sleep(100);
+		marks.latest_save = { expected_sha256: expectedHash, reloaded_sha256: probeSaveHash };
+		token('LATEST_SAVE_SURVIVES_RELOAD', /^[a-f0-9]{64}$/.test(expectedHash || '') && probeSaveHash === expectedHash,
+			`latest in-memory save hash=${expectedHash}, reloaded hash=${probeSaveHash}`);
 		// "Readable" is the whole claim, and it is deliberately not "has a
 		// weapon": the format the product prints is gold="<n>" equipped="<s>",
 		// and a fresh camp legitimately reports an empty equipped value (the

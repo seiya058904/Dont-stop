@@ -416,6 +416,7 @@ jobs:
           if [[ "${{ matrix.name }}" == startup ]]; then
             node "$PROJECT_PATH/tools/test-web-scissor.js"
             node "$PROJECT_PATH/tools/test-web-loader-progress.js"
+            node "$PROJECT_PATH/tools/test-web-idbfs.js" "$PWD/build/web"
           fi
           case "${{ matrix.name }}" in
             menu-return) set -- "$@" "${MENU_CYCLES:-5}" ;;

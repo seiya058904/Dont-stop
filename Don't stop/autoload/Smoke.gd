@@ -351,6 +351,7 @@ func _start_probe() -> void:
 	# asserts the save is still readable, which is the durability half of the
 	# return contract. Nothing is written.
 	print("[probe] save_state %s" % _save_state_line())
+	print("[probe] save_hash ",FileAccess.get_sha256(Demo.save_path) if FileAccess.file_exists(Demo.save_path) else "none")
 	_probe_stream.call_deferred()
 
 ## Reads the save file without touching it. Shared with the smoke header so the
@@ -515,6 +516,7 @@ func _probe_report() -> void:
 				}) }); } catch (error) { return JSON.stringify({ error: String(error) }); }
 		})(%s)""" % JSON.stringify(ProjectSettings.globalize_path(Demo.save_path).get_base_dir()))
 	var save_diagnostic := JSON.stringify({"path":Demo.save_path,"exists":FileAccess.file_exists(Demo.save_path),
+		"sha256":FileAccess.get_sha256(Demo.save_path) if FileAccess.file_exists(Demo.save_path) else "none",
 		"absolute_path":ProjectSettings.globalize_path(Demo.save_path),
 		"persistent":OS.is_userfs_persistent(),"result":Demo.save_result,"web_fs":web_fs})
 	if save_diagnostic != _probe_last_save_diagnostic:
