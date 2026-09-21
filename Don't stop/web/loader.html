@@ -341,6 +341,7 @@
 		// startGame() promise alone only means "the engine booted".
 		window.__dontStop = {
 			ready: function () {
+				if (fatal || revealed) return;
 				state.readyNoticeAt = performance.now();
 				if (SUPPRESS_READY) {
 					// Fault injection: behave exactly as if the game never called

@@ -97,8 +97,6 @@ The CI menu-return failure was solely save readability after reload; its interac
 - Switching to SwiftShader's WebGL-fallback mode did not fix responsiveness: menu max 216.66 ms, every sampled frame >100 ms, Settings 361 ms and Start 435 ms. This launch-flag experiment remains only in ignored diagnostics (`swiftshader-webgl-mode/`). No renderer flag was retained in production tools.
 - The existing menu-return test with forced SwiftShader passed all 53 checks in 83.675 s, including reload/save readability (`save-software-diagnostic/`). Therefore the CI save failure is still not reproduced locally or explained; the read-only save diagnostics must be collected on CI before changing save behavior.
 
-## Remaining completion gates (unchanged)
-
 ## Additional request: honest, smooth progress on all three surfaces
 
 Native/editor and Windows share `boot/Boot.gd`. It now keeps a temporary loading cover alive across the scene switch, waits for the menu's first draw, and only then completes and fades the bar. Scene-load and warmup counts advance through their actual stages; a separate activity sweep handles unknown-duration work. Completion no longer precedes menu instantiation. Native rendering captures show the loading cover and the unobstructed menu (`output/b19-4/progress-native/`). The direct boot-script compile contract passes.
@@ -107,7 +105,21 @@ The Web bar likewise represents three completed work stages, with no speculative
 
 CI run `35600668367` remains failed: preflight/build/smoke pass; startup and menu-return fail. The renderer is explicitly SwiftShader on a four-logical-CPU Linux runner. A cold menu sample records about 1.8 s frame intervals. The save diagnostic reports persistent storage available, a successful in-memory save, but no save on reload. Read-only committed IndexedDB-key and absolute-path diagnostics are being added to distinguish a mount mismatch from missing synchronization without changing save semantics.
 
-The preceding complete affected L2 passed in 161.938 s (`l2-20260921-203809/`); the progress changes still require exported Windows/Web runtime checks. No final matrix, merge or production deployment has been performed.
+The preceding complete affected L2 passed in 161.938 s (`l2-20260921-203809/`). The final progress-script L1 passed in 23.625 s (`l1-20260921-204947/`), including six lazy-script checks. No final matrix, merge or production deployment has been performed.
+
+### Exported progress verification
+
+Native source and the Windows export both passed real-window startup and normal window-close checks. Captures show the loading cover followed by the unobstructed menu; stage order proves menu drawing precedes completion. Completion-to-visible handover was 135 ms / 133 ms, including the intended 120 ms fade and screenshot overhead. Both processes exited 0, but retained 18 / 19 ObjectDB shutdown warnings; these are not clean-shutdown acceptance. Evidence: `progress-runtime-checks.json`, `progress-native-close/`, `progress-windows-close/` under `output/b19-4/`.
+
+The Web export from `a93765452de2046a9b16ecc75343f93686270e0f` passed three fresh-profile cold and three cached warm startups locally: cold median 5856.835 ms / max 5890.120 ms; warm median 2208.865 ms / max 2212.590 ms. The 600-sample menu window had p95/p99/max 16.67 ms and no >50 ms interval; interaction gates passed. Evidence: `progress-web-startup/b193-web-startup.json`. These hardware-backed local results do not establish public Pages or software-rendered CI acceptance.
+
+Real rendered Web loading/menu captures were checked at 1536x864 and 390x844 (`progress-web-visual/`). Only the Wasm request was delayed to inspect loading; those captures are visual evidence, not startup timing. Error-then-late-ready fault injection exposed a loader race, reproduced a failing contract, and now passes with a fatal/duplicate-ready guard: errors keep the cover visible and cannot fill the bar. The guard changes only HTML; the measured normal-start Wasm/PCK bytes are unchanged.
+
+### Latest required-gate result
+
+Run `35601999418` (source `a937654`) completed in approximately 7 min 27 s, but FAILED startup and menu-return. Build, stable preflight and smoke passed. A fast failed run does not count toward CI_TIME_ACCEPTED.
+
+The save diagnostic now confirms the in-memory path `/userfs/TowDownGame/camp-v1.json` exists after saving, while the committed `/userfs` IndexedDB keys contain configuration/shader caches but no camp save before reload. The mount path agrees; missing durable synchronization remains unresolved. The gate does not flush or repair storage for the product. Evidence: `ci-progress-menu/web-menu-return-e2e.json`, `ci-progress-startup/b193-web-startup.json`. Engine-source review shows write-close notifications normally schedule synchronization in the Web main loop; this alone does not prove why this CI run missed the file, so no speculative save rewrite was made.
 
 ## Outstanding acceptance
 

@@ -35,6 +35,17 @@ const { chromium } = require('playwright');
 			assert.ok(state.overlayRemovedAt - state.readyNoticeAt < 20, 'no artificial completion wait');
 			await page.close();
 		}
+		const failedPage = await browser.newPage();
+		await failedPage.setContent(html);
+		await failedPage.evaluate(() => {
+			window.__dontStop.failed('injected loader failure');
+			window.__dontStop.ready();
+		});
+		const failedState = await failedPage.evaluate(() => window.__dontStopState);
+		assert.equal(failedState.outcome, 'engine-error', 'late ready must not hide an earlier loader failure');
+		assert.equal(failedState.overlayRemovedAt, null);
+		assert.ok(failedState.completedStageFraction < 1);
+		await failedPage.close();
 		console.log('PASS loader: real-stage monotonic progress, no early 100%, immediate ready handover, desktop/mobile bounds');
 	} finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
