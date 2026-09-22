@@ -102,7 +102,7 @@ func _physics_process(delta):
 	var emitted := 0
 	actor.actions["continuous_barrage_requested"] = actor.actions.get("continuous_barrage_requested",0)+directions.size()
 	for direction in directions:
-		if actor.shot(direction,speed,damage,false,style,0.0,bounces) != null: emitted += 1
+		if actor.shot(direction,speed,damage,false,style,bounces) != null: emitted += 1
 	actor.actions["continuous_barrage_emitted"] = actor.actions.get("continuous_barrage_emitted",0)+emitted
 	actor.remember("continuous_barrage_wave")
 	wave_pending = false

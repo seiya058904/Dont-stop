@@ -42,18 +42,18 @@ const PHASE_THREE_AT := 0.35
 const BOSS_CYCLES = {
 	"1":{"B01":["slam","charge","cleave","slam"],"B02":["brood","pulse","lockdown","pulse"],"B03":["burst","dash","burst","sweep"],"B04":["burst","sweep","burst","dash"]},
 	"2":{"B01":["slam","charge","slam","cleave"],"B02":["brood","pulse","lockdown","pulse"],"B03":["burst","sweep","burst","dash"],"B04":["burst","sweep","burst","dash","cross","band"]},
-	"3":{"B01":["charge","slam","shockwave"],"B02":["toxic_zone","root_shot","brood"],"B03":["cross_laser","burst","sweep","burst"],"B04":["burst","cross_laser","burst","sweep","band"]}
+	"3":{"B01":["charge","slam","shockwave"],"B02":["toxic_zone","fan_shot","brood"],"B03":["cross_laser","burst","sweep","burst"],"B04":["burst","cross_laser","burst","sweep","band"]}
 }
 ## Attack kinds whose warning must be visible before they may connect. Used for the fog
 ## warning floor; the fog fairness gate inside HostileZone enforces the rest.
-const DAMAGING_KINDS := ["detonate","cone","beam","artillery","tremor","cross","toxin","shockwave","cross_laser","root_shot","toxic_zone","band"]
+const DAMAGING_KINDS := ["detonate","cone","beam","artillery","tremor","cross","toxin","shockwave","cross_laser","fan_shot","toxic_zone","band"]
 ## Extra mechanic per elite promotion. Only the MECHANISM lives here; the stat bump is a
 ## single bounded 1.5x HP applied by M5Content.promote_elite().
 const ELITE_MODIFIERS = {
 	"E01":"sprint","E02":"pack","E04":"double_charge","E05":"burst",
 	"E03":"ram_shockwave","E06":"cluster","E07":"hive","E09":"bulwark",
-	"E10":"root_artillery","E11":"fan","E12":"ember_field",
-	"E13":"double_root","E14":"cross_beam","E15":"lingering_poison",
+	"E10":"volley_artillery","E11":"fan","E12":"ember_field",
+	"E13":"double_shot","E14":"cross_beam","E15":"lingering_poison",
 	"B01":"ram_shockwave","B02":"hive","B03":"cross_beam","B04":"ember_field"
 }
 
@@ -135,35 +135,35 @@ func zone(kind: String, point: Vector2, reach: float, delay: float, time = 0.12,
 
 ## Registers a projectile the base class already created, so every projectile this actor
 ## fires is cleaned up when the actor dies or the phase changes.
-func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", control := 0.0, bounces := 0):
-	var node = super.shot(dir,speed_value,damage_value,muzzle_flash,style,control,bounces)
+func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", bounces := 0):
+	var node = super.shot(dir,speed_value,damage_value,muzzle_flash,style,bounces)
 	if node == null: return null
 	owned_attacks.append(weakref(node))
 	remember("shot")
 	return node
 
-func barrage(kind: String, count: int, waves: int, speed_value: float, spread_value = 0.85, style := "projectile", control := 0.0):
+func barrage(kind: String, count: int, waves: int, speed_value: float, spread_value = 0.85, style := "projectile"):
 	var pattern = preload("res://game/monster/EnemyBarrage.gd").new()
 	pattern.owner_ref = weakref(self); pattern.heading = locked_direction
 	pattern.kind = kind; pattern.count = count; pattern.waves = waves
 	pattern.speed = speed_value; pattern.spread = spread_value
-	pattern.style = style; pattern.control = control
+	pattern.style = style
 	pattern.shift = (0.24 if kind == "ring" else 0.18)*orbit_side
 	pattern.interval = 0.38 if kind == "ring" else 0.28
 	if is_boss:
 		pattern.damage = {"B01":0.35,"B02":0.55,"B03":0.8,"B04":1.1}.get(role,0.35)*(1.3 if phase_three else (1.15 if phase_two else 1.0))
-		if control > 0: pattern.damage *= 0.45
+		if role == "B02" and attack_kind == "fan_shot": pattern.damage *= 0.45
 		pattern.waves += 1
 		pattern.interval = 0.34 if kind == "ring" else 0.25
-		if role in ["B03","B04"] and kind == "ring" and control <= 0:
+		if role in ["B03","B04"] and kind == "ring":
 			pattern.bounces = 2 if role == "B04" and phase_three else 1
 			pattern.style = "ricochet"
 			pattern.damage *= 0.75
 	get_tree().current_scene.add_child(pattern); owned_attacks.append(weakref(pattern))
 
-func fan(count: int, spread: float, speed_value = 85.0, style := "projectile", control := 0.0):
+func fan(count: int, spread: float, speed_value = 85.0, style := "projectile"):
 	for i in count:
-		shot(locked_direction.rotated(lerpf(-spread,spread,i/float(maxi(1,count-1)))),speed_value,1.0,true,style,control)
+		shot(locked_direction.rotated(lerpf(-spread,spread,i/float(maxi(1,count-1)))),speed_value,1.0,true,style)
 
 func summon(count: int, id = "E02"):
 	children_ids = children_ids.filter(func(instance): return is_instance_id_valid(instance))
@@ -286,13 +286,13 @@ const COMBO_GAP := 1.0
 const LEAD_WANTED := {
 	"beam":0.16,"cross":0.16,"cross_laser":0.16,"artillery":0.24,"tremor":0.20,
 	"charge":0.0,"cone":0.18,"detonate":0.16,"toxin":0.16,"shockwave":0.16,
-	"root_shot":0.24,"toxic_zone":0.24,"band":0.20,
+	"fan_shot":0.24,"toxic_zone":0.24,"band":0.20,
 	"cleave":0.18,"slam":0.18,"brood":0.0,"lockdown":0.20,"pulse":0.18,
 	"dash":0.0,"sweep":0.16,"burst":0.18,"summon":0.0,"heal":0.0,
 }
 ## Attacks whose real payload is a PROJECTILE rather than a footprint. They want a lead of the
 ## round's own flight time instead of a fixed fraction of a second, still clamped by `lead_cap()`.
-const PROJECTILE_KINDS := {"artillery":140.0,"root_shot":150.0,"toxic_zone":130.0}
+const PROJECTILE_KINDS := {"artillery":140.0,"fan_shot":150.0,"toxic_zone":130.0}
 ## Only these footprints re-aim with the lock, and only WHILE IT IS TRACKING. A summon/brood
 ## marker is decoration and must not follow anybody, and nothing follows the aim once it is frozen.
 const TRACKED_KINDS := ["line","charge","cone","circle","tremor","artillery","toxin"]
@@ -333,7 +333,7 @@ func clearance(kind: String) -> float:
 		# the boss extent. Anything else would leave a six-pixel blind spot in a boss's reaction window.
 		"charge","dash": return required_clearance("charge",0.0,BOSS_CHARGE_WIDTH if is_boss else CHARGE_WIDTH)
 		"cone": return required_clearance("circle",60.0,0.0)
-		"root_shot": return required_clearance("circle",150.0,0.0)
+		"fan_shot": return required_clearance("circle",150.0,0.0)
 		"pulse": return required_clearance("circle",160.0,0.0)
 		"cleave": return required_clearance("circle",125.0,0.0)
 		"burst": return required_clearance("circle",240.0,0.0)
@@ -433,9 +433,9 @@ func _begin(kind: String) -> void:
 				zone("circle",locked_point+locked_direction.orthogonal()*72.0*orbit_side,36,strike+0.2,0.12,"artillery")
 			phase_time = strike
 		"tremor":
-			# Low direct damage; the payload is the root, routed through Hero.apply_root().
+			# Keep the original damage, footprint and warning; movement remains available.
 			var quake = maxf(delay,warning_for(clearance("tremor")))
-			zone("line",global_position,240,quake,0.22,"root").damage = boost*0.3
+			zone("line",global_position,240,quake,0.22,"projectile").damage = boost*0.3
 			phase_time = quake
 		"cross":
 			locked_direction = global_position.direction_to(locked_point)
@@ -470,9 +470,9 @@ func _begin(kind: String) -> void:
 				lance.damage = boost*0.5
 				lance.pierce = true
 			phase_time = grid
-		"root_shot":
-			var bind = zone("cone",global_position,150,maxf(delay,warning_for(clearance("root_shot"))),0.12,"root")
-			bind.angle = 0.85; bind.damage = boost*0.3; bind.control = 0.45
+		"fan_shot":
+			var bind = zone("cone",global_position,150,maxf(delay,warning_for(clearance("fan_shot"))),0.12,"projectile")
+			bind.angle = 0.85; bind.damage = boost*0.3
 		"toxic_zone":
 			var field = maxf(delay,warning_for(clearance("toxic_zone")))
 			var spot = locked_point+Vector2.RIGHT.rotated(randf()*TAU)*130.0
@@ -577,23 +577,20 @@ func perform_attack():
 		"E10":
 			phase_time = 0.9
 			if attack_kind == "artillery":
-				var root = elite_modifier() == "root_artillery"
 				# B10: 115 -> 140. Still slower than the player's own speed, so the pattern stays
 				# readable and walking out of it still works - but no longer so slow that a single
 				# constant strafe is a complete answer. The centre pellet leads because the lock
 				# itself now carries a bounded lead.
-				barrage("fan",12 if is_elite else 6,1,140,0.9,"root" if root else "projectile",0.4 if root else 0.0)
+				barrage("fan",12 if is_elite else 6,1,140,0.9)
 		"E13":
-			# Tremor shooter: one control shot, or two when promoted. Low direct damage; the
-			# payload is the root, and Hero's 1.2 s immunity still governs its real uptime.
+			# One ordinary shot, or two when promoted; keep damage and cadence.
 			phase_time = 1.4
-			var shots = 2 if elite_modifier() == "double_root" else 1
+			var shots = 2 if elite_modifier() == "double_shot" else 1
 			for i in shots:
 				var spread = 0.0 if shots == 1 else lerpf(-0.25,0.25,i/float(shots-1))
 				# B10: 130 -> 150, and the lock's bounded lead aims the shot where the player is
-				# going. Still far short of a hitscan, and the purple root round stays visually
-				# distinct from plain damage so the control threat is never read as just a hit.
-				shot(locked_direction.rotated(spread),150,boost*0.35,true,"root",0.45)
+				# going. It remains a visible, dodgeable ordinary projectile.
+				shot(locked_direction.rotated(spread),150,boost*0.35)
 		"E14":
 			phase_time = 2.2
 			remember("beam_fired")
@@ -615,8 +612,8 @@ func perform_attack():
 				barrage("ring",32 if phase_two else 24,3 if phase_two else 2,115,0.85,"poison")
 			elif attack_kind == "pulse":
 				barrage("fan",23 if phase_two else 17,3 if phase_two else 2,130,1.3)
-			elif attack_kind == "root_shot":
-				barrage("fan",9,2,120,1.0,"root",0.45)
+			elif attack_kind == "fan_shot":
+				barrage("fan",9,2,120,1.0)
 			phase_time = 1.0 if not phase_two else 0.65
 		"B03":
 			if attack_kind == "dash":
@@ -840,7 +837,7 @@ func _draw():
 	if role == "E10": draw_line(Vector2(0,-18),facing*17+Vector2(0,-18),Color(1,0.7,0.3),2)
 	if role == "E11": draw_polyline(PackedVector2Array([Vector2(-10,-20),Vector2(0,-27),Vector2(10,-20)]),Color(0.8,0.4,1),2)
 	if role == "E12": draw_circle(Vector2(0,-20),5,Color(0.2,0.9,1))
-	# E13-E15 silhouettes: a control emitter, a long barrel, and a swollen sac.
+	# E13-E15 silhouettes: a projectile emitter, a long barrel, and a swollen sac.
 	if role == "E13":
 		draw_arc(Vector2(0,-20),7,0,TAU,10,Color(0.8,0.45,1),2)
 		draw_line(Vector2(-6,-14),Vector2(-6,-26),Color(0.8,0.45,1),1.5)

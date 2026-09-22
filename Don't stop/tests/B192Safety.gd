@@ -12,7 +12,7 @@ func _ready():
 	boss.set_physics_process(false); boss.phase="move"; boss.phase_two=true; boss.ultimate_cooldown=0
 	var stream = boss.get_node("ContinuousBarrage")
 	stream.set_physics_process(false)
-	var shot = boss.shot(Vector2.RIGHT,125.0,0.16,false,"ricochet",0.0,1)
+	var shot = boss.shot(Vector2.RIGHT,125.0,0.16,false,"ricochet",1)
 	check(is_instance_valid(shot),"real owner-bound shot exists before window")
 	boss.barrage("ring",12,3,125.0,0.18)
 	var previous = boss.owned_attacks.duplicate()

@@ -50,6 +50,23 @@ var _static_wall_fast_path := false
 ## per-request checks. If the arena ever mutates the grid, this cache must be
 ## cleared at the same mutation site.
 var _spawn_reachability: Dictionary = {}
+var _spawn_batch_depth := 0
+var _spawn_batch_failed: Dictionary = {}
+var spawn_failed_cache_hits := 0
+
+## Only bracket synchronous birth-only loops: no movement, removals or awaits.
+## Occupancy can only increase, so an exhausted search stays exhausted. Never
+## cache a successful point; every birth must still check current occupancy.
+func begin_spawn_batch() -> void:
+	if _spawn_batch_depth == 0: _spawn_batch_failed.clear()
+	_spawn_batch_depth += 1
+
+func end_spawn_batch() -> void:
+	_spawn_batch_depth -= 1
+	if _spawn_batch_depth == 0: _spawn_batch_failed.clear()
+
+func _spawn_failure_key(radius: float) -> Array:
+	return [_spawn_geometry_key.duplicate(),_spawn_transform,radius,Engine.get_physics_frames()]
 
 func _prepare_spawn_geometry(center: Vector2, minimum: float, maximum: float, side: int) -> void:
 	if _spawn_points.size() != cells.size() or _spawn_transform != global_transform:
@@ -271,6 +288,12 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 	spawn_geometry_rejected += geometry_rejected
 	M5Content.audit_rejected += geometry_rejected
 	var valid_start := _spawn_valid_start(offset)
+	var failure_key := _spawn_failure_key(radius) if _spawn_batch_depth > 0 else []
+	if _spawn_batch_failed.has(failure_key):
+		spawn_failed_cache_hits += 1
+		M5Content.audit_rejected += valid_count
+		M5Content.audit_arena_failed += 1
+		return Vector2.INF
 	for i in valid_count:
 		var index: int = _spawn_valid_indices[(valid_start+i)%valid_count]
 		var candidate = cells[index]; var point = _spawn_points[index]
@@ -288,6 +311,7 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 			return point
 		M5Content.audit_rejected += 1
 	M5Content.audit_arena_failed += 1
+	if _spawn_batch_depth > 0: _spawn_batch_failed[failure_key] = true
 	return Vector2.INF
 
 ## Reachable reinforcement from the far side of the arena, for Hell Mode's multi-direction
@@ -306,6 +330,12 @@ func spawn_flank(center: Vector2, minimum: float, maximum: float, radius := -1.0
 	spawn_geometry_rejected += geometry_rejected
 	M5Content.audit_rejected += geometry_rejected
 	var valid_start := _spawn_valid_start(offset)
+	var failure_key := _spawn_failure_key(radius) if _spawn_batch_depth > 0 else []
+	if _spawn_batch_failed.has(failure_key):
+		spawn_failed_cache_hits += 1
+		M5Content.audit_rejected += valid_count
+		M5Content.audit_arena_failed += 1
+		return Vector2.INF
 	for i in valid_count:
 		var index: int = _spawn_valid_indices[(valid_start+i)%valid_count]
 		var candidate = cells[index]
@@ -316,6 +346,7 @@ func spawn_flank(center: Vector2, minimum: float, maximum: float, radius := -1.0
 			return point
 		M5Content.audit_rejected += 1
 	M5Content.audit_arena_failed += 1
+	if _spawn_batch_depth > 0: _spawn_batch_failed[failure_key] = true
 	return Vector2.INF
 
 ## Reuses the same approach the town navigation builder uses (a circle cast against the

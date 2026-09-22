@@ -4,7 +4,7 @@
 //   node tools/web-b11-1-stress.js <baseUrl> <evidenceDir> <label> <scenario> [key=value ...]
 //
 //   scenario   A | B | C | D | P                 (see game/diag/B11Stress.gd)
-//   key=value  stage=39 seconds=90 seed=20260918 lasers=4 root=2.0 park=1 pressure_births=4
+//   key=value  stage=39 seconds=90 seed=20260918 lasers=4 park=1 pressure_births=4
 //              enemies=60 barrage=6 iso=vfx,labels,trails,fogcore,tddecor,particles
 //
 // B11.2 re-pointed the same four scenario names at four LOAD PROFILES (normal / dense enemies /
@@ -298,11 +298,7 @@ function parseKv(line) {
 		combat_s: summary ? parseFloat(summary.combat_s) : null,
 		frame_ms: summary ? { avg: n('avg'), p50: n('p50'), p95: n('p95'), p99: n('p99'), max: n('max') } : null,
 		spikes: summary ? { over25: n('over25'), over33: n('over33'), over50: n('over50'), slow_run_ms: n('slow_run_ms') } : null,
-		root: summary ? {
-			windows: n('root_windows'),
-			driver_applied: parseFloat(summary.driver_roots.split('/')[0]),
-			driver_attempts: parseFloat(summary.driver_roots.split('/')[1]),
-		} : null,
+
 		amplified: summary ? n('amplified') : null,
 		cpu,
 		peaks: peak,
@@ -349,8 +345,7 @@ function parseKv(line) {
 			`label_tweens=${ink.label_tweens} labels_created=${ink.labels_created}`);
 	}
 	if (pressureFrames) {
-		const projectileMode = pressureFrames.projectile_target_mode || 'legacy';
-		console.log(`  pressure phase=${pressureFrames.phase} enemy_target=${pressureFrames.target_enemies} projectile_target_mode=${projectileMode} ` +
+		console.log(`  pressure phase=${pressureFrames.phase} enemy_target=${pressureFrames.target_enemies} ` +
 			`time_to_target_s=${f(pressureFrames.time_to_target_s)} steady_s=${f(pressureFrames.steady_seconds)} ` +
 			`steady_p95=${f(steady && steady.p95)} steady_p99=${f(steady && steady.p99)} ` +
 			`over16_67=${steady && steady.over16_67} over25=${steady && steady.over25} over33=${steady && steady.over33} ` +

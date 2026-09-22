@@ -532,62 +532,6 @@ func open_stats():
 	var panel=load("res://ui/StatPanel.gd").new()
 	Utils.canvasLayer.add_child(panel)
 
-var lesson_state = ""
-var lesson_overlay: Control
-func root_lesson():
-	if lesson_state!="": return
-	lesson_state="explanation"
-	lesson_message("束缚攻击训练", "学习如何识别并应对 Boss 的紫色束缚攻击\n\n某些 Boss 会发射特殊的紫色束缚弹。\n命中后约0.5秒无法移动、无法Dash；\n仍可瞄准、射击和换弹。正式战斗中应优先躲避。\n\n本次训练目标：故意让紫色束缚弹命中你一次。", "开始训练", start_root_lesson)
-
-func lesson_message(title: String, text: String, action_text: String, action: Callable):
-	var overlay=Control.new(); overlay.set_script(load("res://ui/RootLessonPanel.gd"))
-	overlay.heading=title; overlay.explanation=text; overlay.action_text=action_text; overlay.action=action
-	lesson_overlay=overlay; Utils.canvasLayer.add_child(overlay)
-
-func start_root_lesson():
-	if lesson_state!="explanation": return
-	lesson_state="starting"
-	for menu in pause_stack.duplicate(): menu.queue_free(); pop_pause(menu)
-	LevelServer.return_to_camp()
-	await get_tree().create_timer(0.3).timeout
-	for menu in pause_stack.duplicate(): menu.queue_free(); pop_pause(menu)
-	if not LevelServer.town.depart(20,true): lesson_state=""; return
-	LevelServer.timerStop()
-	PlayerData.player_hp=PlayerData.player_hp_max
-	var boss=LevelServer.get_boss()
-	if not is_instance_valid(boss): lesson_state=""; return
-	var center=LevelServer.town.arena.global_position
-	Utils.player.global_position=center+Vector2(-40,0)
-	boss.global_position=center+Vector2(40,0)
-	boss.set_physics_process(false); boss.phase_two=true; boss.HP=boss.max_hp*0.49; boss.ultimate_cooldown=0
-	var lesson_epoch=LevelServer.epoch
-	lesson_state="objective"
-	var objective=Label.new(); objective.text="训练目标：让紫色束缚弹命中你"
-	objective.position=Vector2(70,38); objective.add_theme_font_size_override("font_size",9)
-	objective.add_theme_font_override("font",load("res://fonts/fusion-pixel.otf")); Utils.canvasLayer.add_child(objective)
-	while LevelServer.epoch==lesson_epoch and LevelServer.state=="COMBAT" and is_instance_valid(boss) and not boss.is_die:
-		if get_tree().get_nodes_in_group("boss_ultimate").is_empty():
-			boss.ultimate_cooldown=0; boss.choose_attack()
-		var deadline=Time.get_ticks_msec()+5000
-		while Utils.player.root_remaining<=0 and Time.get_ticks_msec()<deadline and LevelServer.epoch==lesson_epoch:
-			await get_tree().create_timer(0.02,false).timeout
-		if Utils.player.root_remaining>0:
-			lesson_state="hit"; objective.text="束缚！约0.5s · 仍可瞄准 / 射击 / 换弹"
-			while Utils.player.root_remaining>0: await get_tree().create_timer(0.02,false).timeout
-			objective.text="束缚结束"
-			await get_tree().create_timer(0.35,false).timeout
-			break
-	objective.queue_free()
-	if LevelServer.epoch!=lesson_epoch or LevelServer.state!="COMBAT": lesson_state=""; return
-	if lesson_state!="hit": LevelServer.return_to_camp(); lesson_state=""; return
-	lesson_state="complete"
-	lesson_message("训练完成", "你已经体验过束缚攻击。\n\n看到紫色束缚弹时，优先移动躲避。\n如果被击中，会短暂无法移动，\n但仍可继续攻击。", "返回营地", finish_root_lesson)
-
-func finish_root_lesson():
-	lesson_state=""
-	for menu in pause_stack.duplicate(): menu.queue_free(); pop_pause(menu)
-	LevelServer.return_to_camp()
-
 func quit_game():
 	if quitting_game: return
 	stop_attacks()

@@ -65,6 +65,42 @@ func _ready():
 	Utils.player.global_position += Vector2(16,0)
 	await get_tree().physics_frame; await get_tree().physics_frame
 	compare(arena,2)
+	# An exhausted birth-only batch must preserve selection and RNG while avoiding
+	# repeated queries. A new batch must observe an obstruction being removed.
+	var blocker := StaticBody2D.new()
+	blocker.collision_layer = 1; blocker.collision_mask = 0
+	var collider := CollisionShape2D.new()
+	var box := RectangleShape2D.new(); box.size = Vector2(1200,1000)
+	collider.shape = box; blocker.add_child(collider); arena.add_child(blocker)
+	await get_tree().physics_frame; await get_tree().physics_frame
+	arena.begin_spawn_batch()
+	var center: Vector2 = Utils.player.global_position
+	var radius := M5Content.default_radius()
+	var after_first_queries := 0
+	var before_hits: int = arena.spawn_failed_cache_hits
+	for sample in 3:
+		seed(922200+sample)
+		var expected := reference(arena,center,108,280,0,radius)
+		var next_random := randi()
+		seed(922200+sample)
+		if sample == 1: arena.begin_spawn_batch()
+		var actual: Vector2 = arena.spawn_near(center,108,280,0,radius)
+		if sample == 1: arena.end_spawn_batch()
+		check(actual == Vector2.INF and actual == expected and randi() == next_random,"exhausted batch preserves failure and RNG")
+		if sample == 0: after_first_queries = arena.spawn_clearance_queries
+		else: check(arena.spawn_clearance_queries == after_first_queries,"same batch reuses exhausted search")
+	check(arena.spawn_failed_cache_hits-before_hits == 2,"both repeated failures reused")
+	arena.end_spawn_batch()
+	blocker.queue_free()
+	await get_tree().physics_frame; await get_tree().physics_frame
+	arena.begin_spawn_batch()
+	seed(922200)
+	var expected := reference(arena,center,108,280,0,radius)
+	var next_random := randi()
+	seed(922200)
+	var actual: Vector2 = arena.spawn_near(center,108,280,0,radius)
+	check(actual.is_finite() and actual == expected and randi() == next_random,"new batch sees freed space with original selection and RNG")
+	arena.end_spawn_batch()
 	LevelServer.return_to_camp(); dismiss(); await wait(0.1)
 	check(get_tree().get_nodes_in_group("monsters").is_empty(),"cache fixture lifecycle drains")
 	print("B192_SPAWN checks=",checks," failures=",failures)

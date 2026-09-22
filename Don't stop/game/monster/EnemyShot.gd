@@ -2,6 +2,11 @@ extends CharacterBody2D
 static var live_count := 0
 const CAPACITY := 180
 static var capacity_limit := CAPACITY
+## B19.4 diagnostic switches. They are armed only by the test pressure driver and reset by
+## that driver before it exits; normal gameplay never changes these values.
+static var b194_skip_wall_collision := false
+static var b194_hold_lifecycle := false
+static var b194_ignore_player_hits := false
 static var _fog_cache_frame := -1
 static var _fog_cache_active := false
 static var _fog_cache_radius := 4096.0
@@ -19,15 +24,9 @@ var life = 0.0
 var epoch = 0
 var trail: Array[Vector2] = []
 var damage = 1.0
-## B批: the shot carries its family so the ink matches the warning that preceded it, and an
-## optional control payload. `control` is the ONLY new mechanic a projectile gained, and it
-## goes through Hero.apply_root() rather than a second stun system, so CC immunity, the
-## epoch reset and the "still able to aim/fire/reload" contract all keep working.
 var style = "projectile"
-var control = 0.0
 const INK = {
 	"projectile":Color(1,0.55,0.15),
-	"root":Color(0.78,0.42,1.0),
 	"poison":Color(0.4,1,0.6),
 	"laser":Color(0.45,0.95,1.0),
 	"ricochet":Color(1.0,0.4,0.8)
@@ -65,7 +64,7 @@ func _ready():
 	# contact - `_physics_process` measures the distance from the player to the segment the shot
 	# travelled this frame, and applies the hit itself. This mask only ever decided what STOPPED the
 	# shot, which is the map. `tests/B11ShotLayer.gd` asserts all four halves of that contract.
-	collision_mask = 2147483648
+	collision_mask = 0 if b194_skip_wall_collision else 2147483648
 	var shape = CollisionShape2D.new()
 	shape.shape = CircleShape2D.new()
 	shape.shape.radius = 3
@@ -93,7 +92,7 @@ func _draw_ink():
 		for i in range(1,_trail_ink.size()):
 			draw_line(_trail_ink[i-1],_trail_ink[i],Color(ink.r,ink.g,ink.b,0.1+0.45*i/_trail_ink.size()),1.0+1.5*i/_trail_ink.size(),true)
 
-# Geometry and ink are fixed for the projectile lifetime except control pulses.
+# Geometry and ink are fixed for the projectile lifetime throughout its flight.
 # Retain its body commands; only the moving trail needs rebuilding each frame.
 func _draw_body() -> void:
 	var ink = INK.get(style,INK.projectile)
@@ -103,10 +102,6 @@ func _draw_body() -> void:
 		_body_ink.draw_polyline(PackedVector2Array([Vector2(-5,0),Vector2(0,-4),Vector2(5,0),Vector2(0,4),Vector2(-5,0)]),Color(ink,0.9),1)
 	elif style == "poison":
 		for side in [-1,1]: _body_ink.draw_rect(Rect2(Vector2(side*4,-1),Vector2(2,2)),Color(ink,0.85))
-	if control > 0.0:
-		# Control attacks pulse an outer waveform ring so they never read as plain damage.
-		_body_ink.draw_arc(Vector2.ZERO,5.5+1.5*sin(life*22.0),0,TAU,14,Color(ink.r,ink.g,ink.b,0.75),1.4,true)
-		_body_ink.draw_arc(Vector2.ZERO,7.5,0,TAU,14,Color(0.95,0.8,1,0.45),1.0,true)
 # Several physics steps may precede one display frame. Only the last trail
 # state can be presented; keep every sweep, reflection and lifetime step, but
 # submit that final drawing once instead of rebuilding it between substeps.
@@ -125,7 +120,6 @@ func _process(_delta):
 		if changed:
 			_trail_ink = points
 			queue_redraw()
-		if control > 0.0 and is_instance_valid(_body_ink): _body_ink.queue_redraw()
 		_mirror_into_fog()
 
 static func _refresh_fog_cache() -> void:
@@ -143,7 +137,8 @@ func _physics_process(delta):
 
 func _step(delta):
 	life += delta
-	if life > lifetime or epoch != LevelServer.epoch or not is_instance_valid(Utils.player) or (owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die)):
+	if b194_hold_lifecycle: life = minf(life,0.0)
+	if (not b194_hold_lifecycle and life > lifetime) or epoch != LevelServer.epoch or not is_instance_valid(Utils.player) or (owner_ref and (not is_instance_valid(owner_ref.get_ref()) or owner_ref.get_ref().is_die)):
 		queue_free()
 		return
 	trail.append(global_position)
@@ -154,14 +149,19 @@ func _step(delta):
 	var remaining = velocity*delta
 	for iteration in 4:
 		var previous = global_position
+		if b194_skip_wall_collision:
+			global_position += remaining
+			if not b194_ignore_player_hits and hit_segment(previous,global_position): return
+			return
 		var collision = move_and_collide(remaining)
 		# Check the travelled subsegment BEFORE the wall: a later wall must not erase a hit.
-		if hit_segment(previous,global_position): return
+		if not b194_ignore_player_hits and hit_segment(previous,global_position): return
 		if collision == null: return
 		var normal = collision.get_normal()
-		if bounces_left <= 0 or normal.length_squared() < 0.5 or collision.get_travel().length_squared() < 0.000001:
+		if (not b194_hold_lifecycle and bounces_left <= 0) or normal.length_squared() < 0.5 or collision.get_travel().length_squared() < 0.000001:
 			queue_free(); return
-		bounces_left -= 1; bounces_done += 1
+		if not b194_hold_lifecycle: bounces_left -= 1
+		bounces_done += 1
 		velocity = velocity.bounce(normal)
 		remaining = collision.get_remainder().bounce(normal)
 		trail.clear()
@@ -184,10 +184,7 @@ func hit_segment(previous: Vector2, current: Vector2) -> bool:
 		# and a single aimed pellet are different balance questions, and the attacker alone
 		# cannot tell them apart because the barrage reports the boss as its owner.
 		Utils.player.onHit(damage,owner_ref.get_ref() if owner_ref else null,0.0,
-			("control_shot:" if control > 0.0 else "shot:")+style)
-		# Control is applied after the damage so a root can never eat the hit's feedback,
-		# and apply_root() itself refuses while the player is immune or already rooted.
-		if control > 0.0: Utils.player.apply_root(control)
+			"shot:"+style)
 		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,14,velocity.normalized(),style)
 		queue_free()
 		return true

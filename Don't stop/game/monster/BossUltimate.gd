@@ -88,7 +88,6 @@ func _physics_process(delta):
 	if not hit_once and inside and Combat.clear_line(global_position,player.global_position):
 		hit_once = true
 		player.on_percentage_hit(fraction,boss,"boss_percentage")
-		if role == "B02" and not player.is_dead: player.apply_root()
 		boss.remember("ultimate_hit")
 	if elapsed>=warning+(4.0 if role == "B02" else 0.3): queue_free()
 
@@ -122,7 +121,7 @@ func _footprint_visible() -> bool:
 func _draw():
 	var active = activated
 	var color = Color(1,0.36,0.64,0.8) if active else Color(1,0.73,0.25,0.9)
-	if role=="B02": color=Color(0.85,0.45,1,1) if active else Color(0.65,0.8,1,1)
+	if role=="B02": color=Color(1,0.55,0.15,1) if active else Color(1,0.73,0.25,1)
 	if role=="B04": color=Color(0.72,0.38,1,0.95) if active else Color(0.86,0.62,1,0.95)
 	if role == "B03":
 		for i in 4:
@@ -136,9 +135,9 @@ func _draw():
 		if not active:
 			draw_line(Vector2.ZERO,direction*lengths[0],Color(color,0.2),36)
 			draw_line(Vector2.ZERO,direction*lengths[0],color,2)
-		draw_circle(Vector2.ZERO,radius,Color(0.35,0.12,0.45,0.95))
+		draw_circle(Vector2.ZERO,radius,Color(0.35,0.18,0.05,0.95))
 		draw_arc(Vector2.ZERO,radius,0,TAU,32,color,3)
-		draw_circle(Vector2(-5,-5),5,Color(1,0.8,0.9))
+		draw_circle(Vector2(-5,-5),5,Color(1,0.85,0.55))
 	else:
 		draw_circle(Vector2.ZERO,radius,Color(color,0.15 if active else 0.06))
 		draw_arc(Vector2.ZERO,radius,0,TAU,64,Color(0.1,0.03,0.02),5)

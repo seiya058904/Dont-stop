@@ -18,10 +18,10 @@ const FAMILY = {
 	"cluster":Color(1,0.34,0.24),
 	"hive":Color(0.66,0.86,1.0),
 	"bulwark":Color(0.98,0.86,0.4),
-	"root_artillery":Color(0.8,0.5,1.0),
+	"volley_artillery":Color(1,0.55,0.15),
 	"fan":Color(1.0,0.5,0.94),
 	"ember_field":Color(1,0.45,0.3),
-	"double_root":Color(0.82,0.46,1.0),
+	"double_shot":Color(1,0.55,0.15),
 	"cross_beam":Color(0.45,0.95,1.0),
 	"lingering_poison":Color(0.44,1.0,0.62)
 }

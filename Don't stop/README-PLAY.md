@@ -1,31 +1,13 @@
-# Don't Stop — 试玩说明
+# Don't Stop — local play
 
-当前主要公开试玩入口：[GitHub Pages 浏览器版](https://seiya058904.github.io/Dont-stop/)。Windows x64 仍可通过本地构建试玩；当前不发布新的 GitHub Windows Release，已有历史 Release 仅作为旧版本记录保留。
+`PLAY_GAME.bat` exports the current source with Godot 4.7.2 and starts a local Windows Release runtime. It is a development launcher, not a packaged Windows installer.
 
-双击 `PLAY_GAME.bat` 仅用于开发环境试玩。当前状态：`WEB_DEPLOYED_FOR_HUMAN_REVIEW`；`HUMAN_ACCEPTED = false`、`WEB_HUMAN_ACCEPTED = false`。自动化通过不等于真人接受。
+## Requirements
 
-`PLAY_GAME.bat` 依赖本机工作区保留的 portable Godot 4.7.2 运行时；本次不是独立发行包。
+Keep the workspace's Godot 4.7.2 portable runtime available under `archive/workspace-support/_tools/godot/4.7.2/`.
 
-OS 鼠标逐项自动验收如未实际执行，不标记为 PASS；不宣称零 Bug、所有原始验收门槛均已实测通过或所有硬件均已验证。
+## Controls
 
-## 最终真人复测短路线
+WASD/arrow keys move, the mouse aims, and left click fires. `R` reloads, `Shift` dashes, `1`–`7` switch weapons, and `E`/`Tab` opens the camp or loadout.
 
-1. 营地点击 **角色属性 → 我的构筑**，查看最终属性、武器强化、天赋和原型奖励。
-2. 悬停条目查看来源、层数、效果与条件，并检查屏幕边缘和分类合计。
-3. 商店选择另一把武器，检查枪图、Tier、当前→候选对比和购买/装备按钮。
-4. 点击 **束缚攻击训练**，阅读说明后开始训练；命中紫色束缚弹并恢复后返回营地。
-5. 继续以原有成熟构筑试玩；自动化结果与视觉、音频、手感验收分开记录。
-
-## 操作与补给
-
-WASD/方向键移动，鼠标瞄准，左键射击，R 换弹，Shift 冲刺；数字 1—7 切换前七把持有枪，E/Tab 打开营地或整备菜单。激活榴弹强化后，所有武器均可右键发射榴弹，冷却 2 秒。
-
-试玩新档和补给规则沿用当前工程实现；购买、换弹、全局强化、存档迁移和返回主菜单的实际语义以游戏内状态及回归测试为准。
-
-## 存档与退出
-
-旧 schema 存档的迁移和 `owned_global_upgrades` 持久化由当前 save contracts 覆盖。三端离开方式按平台区分：浏览器返回主菜单或关闭标签页；本地源码与 Windows 使用游戏内退出或关闭窗口。未保存变化和未结算战斗需要明确确认。
-
-## 当前实现与限制
-
-内容规模仍为 24 枪、24 全局强化、24 持久天赋、24 Reward、12 普通敌人、3 Boss、6 区域、30 遭遇。当前开发记录已经过 B12–B19.3；详细报告、回归和已知限制见 [`docs/iteration/`](docs/iteration/)。本轮停止在 CI/仓库卫生收尾，不进入新的玩法迭代，也不创建新的 Windows Release。
+For the public builds, use the [browser version](https://seiya058904.github.io/Dont-stop/) or the [latest Windows release](https://github.com/seiya058904/Dont-stop/releases/latest).

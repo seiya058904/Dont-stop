@@ -10,9 +10,6 @@ const level_up_effect = preload("res://game/hero/effect/LevelUpEffect.tscn")
 
 var gun = null
 
-var root_remaining = 0.0
-var cc_immunity = 0.0
-var root_epoch = -1
 var incoming_percentage = false
 
 ## Bounded environmental slow, used by the R3 frost slick. Deliberately NOT a friction
@@ -29,7 +26,7 @@ const MAX_ENV_SLOW := 0.25
 ## pass, a `received` pass and an `afterPlayerHit` pass. Written the obvious way that resolves
 ## `connect_beforePlayerHit` (a script property) and `has_method("incoming")` (a method lookup by
 ## name) on EVERY reward on EVERY landed hit - 92 reflective lookups per hit at the full 23-reward
-## width. That cost is invisible in an average-FPS table, but it is paid once per hit and a rooted
+## width. That cost is invisible in an average-FPS table, but it is paid once per hit and a
 ## player standing inside several overlapping telegraphs can take eight hits in ONE physics frame,
 ## which is precisely when the human report says the game stutters.
 ##
@@ -69,14 +66,6 @@ func _reward_fanout(nodes: Array) -> void:
 func apply_slow(amount: float, seconds: float) -> void:
 	slow_amount = clampf(maxf(slow_amount,amount),0.0,MAX_ENV_SLOW)
 	slow_time = maxf(slow_time,seconds)
-
-func apply_root(seconds = 0.45) -> bool:
-	if is_dead or LevelServer.state != "COMBAT" or root_remaining > 0 or cc_immunity > 0: return false
-	root_remaining = clampf(seconds,0.4,0.5); root_epoch = LevelServer.epoch
-	is_dash = false; dash_part.emitting = false
-	# The control state remains authoritative. The player-side root ring and
-	# floating label are visual-only, so omit them from the pressure path.
-	return true
 
 func on_percentage_hit(fraction: float, attacker = null, source := "percentage"):
 	# Percentage is resolved from current maximum HP and follows defense/rewards.
@@ -151,7 +140,7 @@ func playerWeaponListChange():
 
 func _input(event: InputEvent) -> void:
 	if get_tree().paused or is_dead or not Utils.is_game_start: return
-	if Input.is_action_just_pressed("dash") && !is_dash and root_remaining <= 0:
+	if Input.is_action_just_pressed("dash") && !is_dash:
 		is_dash = true
 		dash_part.emitting = true
 		anim.play("dash")
@@ -160,15 +149,10 @@ func _input(event: InputEvent) -> void:
 		dash_part.emitting = false
 
 func _physics_process(delta):
-	if root_epoch != LevelServer.epoch: root_remaining = 0.0; cc_immunity = 0.0
-	cc_immunity = maxf(0,cc_immunity-delta)
 	contact_immunity = maxf(0,contact_immunity-delta)
 	if slow_time > 0:
 		slow_time = maxf(0,slow_time-delta)
 		if slow_time == 0: slow_amount = 0.0
-	if root_remaining > 0:
-		root_remaining = maxf(0,root_remaining-delta)
-		if root_remaining == 0: cc_immunity = 1.2
 	queue_redraw()
 	if is_dead:
 		return
@@ -185,7 +169,6 @@ func _physics_process(delta):
 		velocity = direction * SPEED * pressure
 	if is_dash:
 		velocity = direction * 600
-	if root_remaining > 0: velocity = Vector2.ZERO
 	move_and_slide()
 	changeAnim(direction)
 	$PointLight2D2.look_at(Utils.get_aim_world_position())
@@ -230,6 +213,8 @@ func animPlay(anim_name,speed = 1.0,is_back = false):
 		anim.play(anim_name,speed,is_back)
 
 func gunAnim():
+	# Six movement dust particles use CPU simulation to avoid a first-move Web
+	# particle-shader compile stall. Keep the existing node path and emission timing.
 	if is_shoot:
 		pass
 	if is_run:
@@ -281,7 +266,7 @@ func source_throttled(source: String) -> bool:
 
 func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	# Variant damage freezes on its actor at spawn and is applied once for every source.
-	# Percentage damage and control duration retain their independent budgets.
+	# Percentage damage retains its independent budget.
 	if is_instance_valid(attacker) and not incoming_percentage and attacker.get("variant_damage") != null:
 		hurt *= attacker.variant_damage
 	# E2E driver mode keeps the test character alive so real inputs can be

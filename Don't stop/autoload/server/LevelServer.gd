@@ -212,6 +212,8 @@ func onMonsterCreate():
 	wait_time_temp += 0.1
 	var config = DemoConfig.ENCOUNTERS[level]
 	if config.has("boss"): return
+	var spawn_arena = town.arena if is_instance_valid(town) else null
+	if is_instance_valid(spawn_arena): spawn_arena.begin_spawn_batch()
 	elite_clock = maxf(0,elite_clock-0.1)
 	tick_horde(config)
 	if level>=16 and not rush_used and level_info.time>=config.seconds*0.5:
@@ -245,6 +247,8 @@ func onMonsterCreate():
 		if level>=16 and spawn_index%4==0:
 			# A second existing roster member arrives from the next side. Each emission obeys the encounter cap.
 			monsterCreate.emit()
+
+	if is_instance_valid(spawn_arena): spawn_arena.end_spawn_batch()
 
 func tick_horde(config: Dictionary):
 	if not M5Content.HORDES.has(level): return

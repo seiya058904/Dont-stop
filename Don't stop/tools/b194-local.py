@@ -16,6 +16,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RULES = [
+    (r"B11Stress|B194Pressure", ["B194Pressure"], [], False),
+    (r"Hero.gd|TacticalEnemy|EnemyBarrage|BossUltimate|HostileZone|ArenaHazards|B194Combat|CombatStatus|DemoHUD|CampPanel|autoload/Demo.gd",
+     ["B194Combat"], ["B11Fairness", "B8Contracts"], False),
     (r"web/|boot/|autoload/(Utils|Warmup)|ui/MainUI|web-b193|smoke-web|menu-return",
      ["B17Contracts"], ["B19Contracts"], True),
     (r"bullets/|EnemyShot|MechanismProjectile|CombatArena|game/diag/",

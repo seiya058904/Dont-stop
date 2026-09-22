@@ -3,8 +3,6 @@ static func entries() -> Array:
 	var rows=[]
 	if not is_instance_valid(Utils.player): return rows
 	var player=Utils.player
-	if player.root_remaining>0: rows.append({"name":"束缚","value":"%.1fs" % player.root_remaining,"source":"母巢巨卵","info":"不能移动或冲刺，仍可瞄准、开火和装填。"})
-	elif player.cc_immunity>0: rows.append({"name":"束缚免疫","value":"%.1fs" % player.cc_immunity,"source":"束缚保护","info":"免疫再次束缚。"})
 	for pair in [["T19","护盾",Demo.cooldown("T19")],["T16","爆破",Demo.blast_cooldown],["T24","自动修复",Demo.heal_cooldown]]:
 		if Demo.rank(pair[0])>0: rows.append({"name":pair[1],"value":"就绪" if pair[2]<=0 else "%.1fs" % pair[2],"source":DemoConfig.TALENTS[pair[0]].name,"info":DemoConfig.talent_info(pair[0])})
 	if Demo.kill_stacks>0: rows.append({"name":"连杀加速","value":"%d层 · %.1fs" % [Demo.kill_stacks,maxf(0,Demo.stack_time)],"source":DemoConfig.TALENTS.T10.name,"info":DemoConfig.talent_info("T10")})

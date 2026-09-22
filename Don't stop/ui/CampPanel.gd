@@ -237,10 +237,8 @@ func _ready():
 	tools.text = "工具"
 	top.add_child(tools)
 	tools.get_popup().add_item("角色属性",0)
-	tools.get_popup().add_item("束缚攻击训练",1)
 	tools.get_popup().id_pressed.connect(func(id):
-		if id == 0: Demo.open_stats()
-		else: Demo.root_lesson())
+		if id == 0: Demo.open_stats())
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)

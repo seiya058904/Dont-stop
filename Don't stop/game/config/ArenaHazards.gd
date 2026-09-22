@@ -8,23 +8,6 @@ class_name ArenaHazards
 ## themselves are epoch/stage bound nodes in the `stage_hazard` + `combat_transient`
 ## groups, so returning to camp clears them through the existing path.
 
-## Per-region hazard identity. `primary` is the region's own language, `secondary` is the
-## one that only shows up once the stage pressure justifies a second kind.
-const REGION = {
-	"R2":{"primary":"vent","secondary":"shock"},
-	"R3":{"primary":"frost","secondary":"vent"},
-	"R4":{"primary":"vent","secondary":"shock"},
-	"R5":{"primary":"poison","secondary":"poison"},
-	"R6":{"primary":"laser","secondary":"shock"},
-	"R7":{"primary":"poison","secondary":"vent","tertiary":"frost"},
-	"R8":{"primary":"laser","secondary":"shock","tertiary":"poison"}
-}
-
-## The fixed arena-wide rotating laser is intentionally out of the shipped hazard plans:
-## it is visually noisy and its redraw/clip work is not worth keeping. This only filters
-## ArenaHazard plans; monster-fired TacticalEnemy beams and the player's laser are separate.
-const DISABLED_ARENA_KINDS := {"laser":true}
-
 ## Authored placement anchors in arena-local coordinates. They read as part of each map
 ## (loading aprons, coolant runs, core ring) instead of appearing at random, and every one
 ## is still validated at spawn time against the real collider set, the player distance
@@ -52,19 +35,7 @@ const WARNING_FLOOR := 0.8
 ## applies: the maze must always have a reachable safe route.
 const HELL_COVERAGE := 0.34
 
-static func kinds_for(region: String, count: int) -> Array:
-	var entry = REGION.get(region,{})
-	var order = []
-	for key in ["primary","secondary","tertiary"]:
-		if entry.has(key) and not DISABLED_ARENA_KINDS.has(entry[key]) and not order.has(entry[key]): order.append(entry[key])
-	return order.slice(0,maxi(0,count))
-
-static func primary_for(region: String) -> String:
-	var entry = REGION.get(region,{})
-	for key in ["primary","secondary","tertiary"]:
-		if entry.has(key) and not DISABLED_ARENA_KINDS.has(entry[key]): return entry[key]
-	return ""
-
+## Environmental attacks use only the existing meteor. Monster-owned fields are separate.
 ## Empty dictionary means "this stage fields no arena hazard".
 static func plan(stage: int) -> Dictionary:
 	if stage < 21: return {}
@@ -73,7 +44,7 @@ static func plan(stage: int) -> Dictionary:
 	if HellMode.is_hell(stage):
 		return {
 			"region":region,
-			"kinds":kinds_for(region,HellMode.hazard_kinds(stage)).map(func(kind): return "meteor" if kind=="poison" else kind),
+			"kinds":["meteor"],
 			"interval":HellMode.hazard_interval(stage),
 			"live_cap":HellMode.hazard_live_cap(stage),
 			"coverage":HELL_COVERAGE,
@@ -84,15 +55,15 @@ static func plan(stage: int) -> Dictionary:
 			"pulses":1+int(round(ramp*2.0))
 		}
 	if stage <= 25:
-		# The first formal arena hazard: R5's spore contamination, gentle enough to teach.
-		return {"region":region,"kinds":[primary_for(region)],"interval":11.0,"live_cap":2,"coverage":MAX_COVERAGE,
+		# Keep the existing stage cadence and budget with the single meteor family.
+		return {"region":region,"kinds":["meteor"],"interval":11.0,"live_cap":2,"coverage":MAX_COVERAGE,
 			"warning":1.05,"active":4.6,"poison_share":0.015,"flat_damage":1.0,"pulses":1}
 	if stage <= 29:
-		return {"region":region,"kinds":kinds_for(region,2),"interval":8.5,"live_cap":4,"coverage":MAX_COVERAGE,
+		return {"region":region,"kinds":["meteor"],"interval":8.5,"live_cap":4,"coverage":MAX_COVERAGE,
 			"warning":0.95,"active":4.8,"poison_share":0.016,"flat_damage":1.05,"pulses":1}
 	# Stage 30 is the normal campaign's final boss: hazards stay present but never
-	# out-shout the boss, so only the region's own primary kind is fielded.
-	return {"region":region,"kinds":[primary_for(region)],"interval":8.0,"live_cap":3,"coverage":MAX_COVERAGE,
+	# out-shout the boss; the same meteor family is used here.
+	return {"region":region,"kinds":["meteor"],"interval":8.0,"live_cap":3,"coverage":MAX_COVERAGE,
 		"warning":0.95,"active":4.4,"poison_share":0.015,"flat_damage":1.05,"pulses":1}
 
 static func _axis(from: float, to: float, ramp: float) -> float:

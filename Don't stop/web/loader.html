@@ -414,7 +414,6 @@
 			GODOT_CONFIG.args.push('--stress-scenario=' + (params.get('scenario') || 'A'));
 			GODOT_CONFIG.args.push('--stress-seed=' + (parseInt(params.get('seed'), 10) || 20260918));
 			GODOT_CONFIG.args.push('--stress-lasers=' + (parseInt(params.get('lasers'), 10) || 0));
-			GODOT_CONFIG.args.push('--stress-root=' + (parseFloat(params.get('root')) || 0));
 			// B11.2 adds the two density amplifiers and the visual-isolation switches. `enemies`
 			// tops the population up out of the stage's own role list (never past the stage's own
 			// cap), `barrage` holds the real laser/artillery/root/poison families alive together,

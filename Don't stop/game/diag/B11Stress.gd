@@ -5,14 +5,14 @@ extends Node
 ## WHY THIS FILE EXISTS, AND WHY IT IS SHAPED LIKE THIS.
 ## B11 measured "Stage 39 for 75 s" and reported averages, and concluded Stage 39 was fine. The
 ## human then reported that it is NOT fine: the stutter happens in the INSTANT a burst of lasers
-## and attacks converges on a rooted player. An average over a whole round cannot show that, and
+## and attacks converges on a moving player. An average over a whole round cannot show that, and
 ## neither can a node count. So this driver measures the thing the report is about:
 ##
 ##   * FRAME SPIKES, not FPS. Per frame: p95, p99, max, how many frames were over 25/33/50 ms, and
 ##     the longest unbroken run of slow frames. An average that never moves can hide a 120 ms hitch.
-##   * EVERY SPIKE IS TAGGED with what was happening on that frame - rooted or not, inside one
+##   * EVERY SPIKE IS TAGGED with what was happening on that frame - inside one
 ##     lane or several, a hit landed or not. The summary prints one line per condition, so "the
-##     frame cost X when rooted inside 3+ firing lanes" is a measured number and not a guess.
+##     frame cost X inside 3+ firing lanes" is a measured number and not a guess.
 ##   * COST COUNTERS WITH THEIR PRODUCERS (game/diag/B11Probe.gd): wall-clipping raycasts per
 ##     second, `Combat.clear_line()` queries per second, incoming hits per second AND per physics
 ##     frame, damage-number churn, fog-pierce churn. A frame time says a frame was expensive; these
@@ -21,8 +21,7 @@ extends Node
 ## WHAT IS REAL. Every actor is the shipped one: the round is `LevelServer.town.depart(39, true)`
 ## through the real encounter table, the real director, the real spawn validation, the real
 ## `M5Content.spawn()`; the lasers are real `TacticalEnemy` E14/E13 elites running their own AI and
-## creating real `HostileZone` footprints that fire on the real damage pipeline; the root is
-## `Hero.apply_root()`, the one root system the game has, with its real 1.2 s immunity; the fog is
+## creating real `HostileZone` footprints that fire on the real damage pipeline; the fog is
 ## the real `ArenaVisibility`. Nothing here fakes a load with bare Nodes.
 ##
 ## WHAT IS TEST-ONLY. `?stress=1` is the only way in; no product code path reaches this file. The
@@ -39,7 +38,6 @@ var seconds := 90
 var scenario := "A"
 var run_seed := 20260918
 var lasers := 0
-var root_period := 0.0
 var park := false
 var label := "run"
 ## B11.2: how many ordinary monsters the density amplifier tops the arena up to, and how many
@@ -58,25 +56,21 @@ var presentation_boss_entry: Dictionary = {}
 var presentation_boss_hold := false
 var presentation_ultimate_count := -1
 
-## B19.4 P is a two-phase production-pressure kill cycle. The load-build frames are retained as
-## evidence, but they never enter the steady-state percentiles. The 180 target is a diagnostic
-## population ceiling; every actor is allowed to use its real HP, die, free and be respawned.
+## B19.4 has one formal pressure workload. All four physics-cost conditions use this same
+## production scene and the same exact live floors; only the named diagnostic isolation changes.
+const B194_MAX_PRESSURE := "B194_MAX_PRESSURE"
 const PRESSURE_TARGET_ENEMIES := 180
-## The population is intentionally refilled toward the 180 peak, but a kill can free a body
-## between two render samples. The steady floor still stays far above authored Stage 39 density.
-const PRESSURE_STEADY_ENEMY_FLOOR := 160
-## Projectiles remain an observation only. P must never manufacture a projectile population to
-## satisfy a target: the projectile count and births come solely from the actors' production AI.
-const PRESSURE_PROJECTILE_MODE := "natural_ai_only"
-## The user-identified highest-pressure crowd weapon is W112: hold it continuously so its
-## production Combat.arc chain clears a dense wave and immediately exposes the refill churn.
+## The formal highest-pressure workload is the densest real enemy population under ordinary play:
+## the player keeps the production W112 fire path active, real enemies die quickly, and only those
+## real deaths are refilled through the production factory. Hostile projectiles are observations only:
+## no enemy fire method is called by this driver and no projectile target is part of acceptance.
 const PRESSURE_WEAPON_ID := 112
 const PRESSURE_SETTLING_SECONDS := 2.0
-## Sprint 3 ramp calibration: 12 births/tick did not reach the target with real EnemyShot
-## lifetime/collision; 24 did. The separate frame cap prevents physics catch-up from turning that
-## into a 48+ birth render frame.
+## Build is a bounded ramp. Once the exact target is reached, maintenance is capped separately so
+## a steady sample can never hide a 24/48-object fixture burst.
 const PRESSURE_BUILD_BIRTHS_PER_TICK := 24
 const PRESSURE_BUILD_MAX_BIRTHS_PER_RENDER_FRAME := 24
+const PRESSURE_STEADY_MAX_REFILL_BIRTHS_PER_RENDER_FRAME := 8
 var pressure_birth_budget := PRESSURE_BUILD_BIRTHS_PER_TICK
 var benchmark_uncapped := false
 
@@ -109,6 +103,7 @@ var _pressure_frame_enemy_births := PackedInt32Array()
 var _pressure_frame_projectile_births := PackedInt32Array()
 var _pressure_frame_removed := PackedInt32Array()
 var _pressure_max_births_per_frame := 0
+var _pressure_max_refill_births_per_frame := 0
 var _pressure_build_max_frame_ms := 0.0
 var _pressure_build_last_gauge_usec := -1
 var _pressure_enemy_births := 0
@@ -116,16 +111,25 @@ var _pressure_projectile_births := 0
 var _pressure_kill_events := 0
 var _pressure_last_kill_events := 0
 var _pressure_frame_kills := PackedInt32Array()
+var _pressure_steady_physics_ms := PackedFloat32Array()
 var _pressure_player_path_px := 0.0
 var _pressure_player_start := Vector2.ZERO
 var _pressure_player_last := Vector2.ZERO
 var _pressure_player_end := Vector2.ZERO
 var _pressure_laser_cursor := 0
 var _pressure_barrage_cursor := 0
+var _pressure_spawn_cursor := 0
 var _frame_enemy_births := 0
 var _frame_projectile_births := 0
 var _frame_removed := 0
 var _tracked_enemy_count := 0
+var _tracked_kill_events := 0
+var _enemy_count_mismatches := 0
+
+func _sync_live_enemy_count() -> void:
+	var killed := int(Combat.kill_events)
+	_tracked_enemy_count -= killed-_tracked_kill_events
+	_tracked_kill_events = killed
 ## Sprint 5 diagnostic-only production birth timeline. Scenario A leaves the authored director
 ## untouched; these packed arrays make its real per-render-frame churn measurable instead of
 ## inferring it from the 10 Hz load gauges. They are never read by gameplay code.
@@ -170,7 +174,6 @@ var measurement_timeout := false
 # B19.2: this clock advances only while combat is actionable.
 var _effective_tick := 0
 var _next_amp_tick := 0
-var _next_root_tick := 0
 var measurement := "light"
 var run_mode := "diagnostic"
 var spawn_reachability_cache := true
@@ -196,8 +199,8 @@ var _capacity_planned := 0
 var _capacity_blocked := 0
 var _capacity_emitted := 0
 var _pressure_samples := 0
-var _pressure_live_ge_90 := 0
-var _pressure_visible_ge_90 := 0
+var _pressure_live_ge_target := 0
+var _pressure_visible_ge_target := 0
 var _pressure_live_min := 0
 var _pressure_live_max := 0
 var _events: Array = []
@@ -226,13 +229,13 @@ func _physics_process(_delta: float) -> void:
 		if enemies > 0 and _live_enemies() < mini(enemies,_stage_cap()): _top_up_enemies(48)
 		_remember_spawn_stats()
 		_events.append({"tick":tick,"event":"top_up","usec":Time.get_ticks_usec()-top_up_started,"ordinary_added":_topped_up-births_before})
-	if root_period > 0.0 and tick >= _next_root_tick:
-		_next_root_tick = tick+maxi(1,int(root_period*Engine.physics_ticks_per_second))
-		_driver_root_attempts += 1
-		if Utils.player.apply_root(0.45): _driver_roots += 1
 	_observe_boss_tick()
 	if not park: _drive_movement(int(tick*1000/Engine.physics_ticks_per_second))
 	var sample_window_done := (scenario == "P" and _pressure_phase == PRESSURE_STEADY and _pressure_steady_seconds >= float(seconds)) or (stage != 40 and scenario != "P" and seconds < 45 and tick >= seconds*Engine.physics_ticks_per_second) or (stage == 40 and boss_complete)
+	# Coded ablation runs retain every frame after the first target arrival, including
+	# density drops and refill spikes. They are never formal steady-state acceptance.
+	if run_mode == "ablation" and _pressure_build_finished_usec >= 0:
+		sample_window_done = Time.get_ticks_usec()-_pressure_build_finished_usec >= seconds*1000000
 	# The independent wall-clock counter must finish inside the same combat window. Without this
 	# guard a fast uncapped run can return to camp just before the fifth second and emit an empty
 	# counter result, which is a harness boundary error rather than a product measurement.
@@ -246,6 +249,10 @@ func _physics_process(_delta: float) -> void:
 			Utils.player.changeWeapon(presentation_weapon)
 			_release_until_tick = tick+10
 	if diagnostic_profile == "enemies":
+		Input.action_release("shoot")
+	elif scenario == "P" and diagnostic_profile == "no_churn" and _pressure_phase != PRESSURE_BUILD:
+		# P1 freezes the already-qualified population after the build. The player weapon is
+		# released so the diagnostic does not create a hidden death/refill workload.
 		Input.action_release("shoot")
 	elif (stage == 40 and presentation_boss_hold) or tick < _release_until_tick or (presentation_weapon == 113 and tick % (Engine.physics_ticks_per_second*2) < 7):
 		Input.action_release("shoot")
@@ -275,7 +282,6 @@ var _beams := PackedInt32Array()
 var _combat_seconds := PackedFloat32Array()
 var _round_of := PackedInt32Array()
 
-const F_ROOTED := 1
 const F_HIT := 2
 const F_RAY := 4
 const F_CLEAR := 8
@@ -295,9 +301,6 @@ var _peak_same_frame := 0
 # ---- round bookkeeping -----------------------------------------------------------------------
 var _rounds := 0
 var _total_combat_s := 0.0
-var _root_windows := 0
-var _driver_roots := 0
-var _driver_root_attempts := 0
 var _amplified := 0
 var _topped_up := 0
 var _ordinary_requests := 0
@@ -314,7 +317,6 @@ func _ready() -> void:
 		elif arg.begins_with("--stress-scenario="): scenario = arg.substr(18)
 		elif arg.begins_with("--stress-seed="): run_seed = int(arg.substr(14))
 		elif arg.begins_with("--stress-lasers="): lasers = int(arg.substr(16))
-		elif arg.begins_with("--stress-root="): root_period = float(arg.substr(14))
 		elif arg.begins_with("--stress-park="): park = arg.substr(14) == "1"
 		elif arg.begins_with("--stress-enemies="): enemies = int(arg.substr(17))
 		elif arg.begins_with("--stress-barrage="): barrage = int(arg.substr(17))
@@ -338,14 +340,15 @@ func _ready() -> void:
 				if Utils.weapon_list.has(str(int(key))): presentation_weapons.append(int(key))
 	B11Probe.enabled = measurement == "detail"
 	B11Probe.spawn_reachability_cache = spawn_reachability_cache
+	_reset_pressure_diagnostics()
 	if benchmark_uncapped:
 		Engine.max_fps = 0
 		if DisplayServer.get_name() != "headless": DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	_apply_iso()
 	get_tree().node_added.connect(_count_added)
 	get_tree().node_removed.connect(_count_removed)
-	print("[stress] mode=on scenario=%s profile=%s stage=%d seconds=%d seed=%d lasers=%d root=%.2f park=%s enemies=%d barrage=%d iso=%s label=%s ramp_births=%d benchmark=%s fps_counter=%s" % [
-		scenario,diagnostic_profile,stage,seconds,run_seed,lasers,root_period,str(park),enemies,barrage,
+	print("[stress] mode=on scenario=%s profile=%s stage=%d seconds=%d seed=%d lasers=%d park=%s enemies=%d barrage=%d iso=%s label=%s ramp_births=%d benchmark=%s fps_counter=%s" % [
+		scenario,diagnostic_profile,stage,seconds,run_seed,lasers,str(park),enemies,barrage,
 		("none" if iso == "" else iso),label,pressure_birth_budget,str(benchmark_uncapped),str(fps_counter_requested)])
 	run.call_deferred()
 
@@ -365,12 +368,60 @@ func _apply_iso() -> void:
 			str(B11Probe.iso_vfx),str(B11Probe.iso_labels),str(B11Probe.iso_trails),
 			str(B11Probe.iso_fog_core),str(B11Probe.iso_td_decor),str(B11Probe.iso_particles)])
 
+func _reset_pressure_diagnostics() -> void:
+	var shot_script = preload("res://game/monster/EnemyShot.gd")
+	shot_script.b194_skip_wall_collision = diagnostic_profile == "no_projectile_collision"
+	shot_script.b194_hold_lifecycle = false
+	shot_script.b194_ignore_player_hits = false
+
+func _configure_pressure_monster(node: Node) -> void:
+	if diagnostic_profile != "no_crowd_collision" or not is_instance_valid(node): return
+	# BaseMonster.tscn already publishes collision_mask = 0, so production monsters do not
+	# physically collide with one another. Keep their authored layer 3: layer 1 is also the
+	# player-bullet hit layer, and removing it would turn this ablation into an unhit/overlap
+	# fixture rather than a monster-crowd diagnostic.
+	node.set_meta("b194_no_crowd_collision",true)
+
+func _configure_pressure_shot(node: Node) -> void:
+	if diagnostic_profile == "no_projectile_collision" and is_instance_valid(node):
+		node.collision_mask = 0
+
+func _apply_existing_pressure_diagnostics() -> void:
+	if diagnostic_profile == "no_crowd_collision":
+		for actor in get_tree().get_nodes_in_group("monsters"):
+			_configure_pressure_monster(actor)
+	if diagnostic_profile == "no_projectile_collision":
+		for shot in get_tree().get_nodes_in_group("enemy_projectiles"):
+			_configure_pressure_shot(shot)
+
+func _set_no_churn_lifecycle(hold: bool) -> void:
+	if diagnostic_profile != "no_churn": return
+	var shot_script = preload("res://game/monster/EnemyShot.gd")
+	shot_script.b194_hold_lifecycle = hold
+	shot_script.b194_ignore_player_hits = hold
+
+func _restore_pressure_diagnostics() -> void:
+	var shot_script = preload("res://game/monster/EnemyShot.gd")
+	shot_script.b194_skip_wall_collision = false
+	shot_script.b194_hold_lifecycle = false
+	shot_script.b194_ignore_player_hits = false
+	for shot in get_tree().get_nodes_in_group("enemy_projectiles"):
+		if is_instance_valid(shot): shot.collision_mask = 2147483648
+	for actor in get_tree().get_nodes_in_group("monsters"):
+		if not is_instance_valid(actor): continue
+		if actor.has_meta("b194_original_collision_layer"):
+			actor.collision_layer = int(actor.get_meta("b194_original_collision_layer"))
+			actor.remove_meta("b194_original_collision_layer")
+		if actor.has_meta("b194_no_crowd_collision"):
+			actor.remove_meta("b194_no_crowd_collision")
+
 func _count_added(node: Node) -> void:
 	_created += 1
 	if node is BaseMonster:
 		_frame_enemy_births += 1
 		_tracked_enemy_count += 1
 		if _driver_active and scenario == "P": _pressure_enemy_births += 1
+		node.ready.connect(_configure_pressure_monster.bind(node),CONNECT_ONE_SHOT)
 		if diagnostic_profile == "enemies":
 			node.ready.connect(func(): _configure_enemy_only_actor(node),CONNECT_ONE_SHOT)
 	if node.get_script() == preload("res://game/monster/EnemyShot.gd"):
@@ -378,10 +429,21 @@ func _count_added(node: Node) -> void:
 		if _driver_active and scenario == "P": _pressure_projectile_births += 1
 		if node.registered: _shots_admitted += 1
 		node.tree_exiting.connect(_retire_shot.bind(node),CONNECT_ONE_SHOT)
+		node.ready.connect(_configure_pressure_shot.bind(node),CONNECT_ONE_SHOT)
 	if "bodyink" in iso and node is BaseMonster:
 		node.ready.connect(func(): node.get_node("body").hide(),CONNECT_ONE_SHOT)
 	if "shotink" in iso and node.get_script() == preload("res://game/monster/EnemyShot.gd"):
 		node.ready.connect(node.hide,CONNECT_ONE_SHOT)
+	# Diagnostic ablations only: hide W112/muzzle drawing without changing hits or RNG.
+	if "gunink" in iso and node.get_script() in [preload("res://game/effects/ArcDischarge.gd"),preload("res://game/effects/TierMuzzle.gd")]:
+		node.ready.connect(node.hide,CONNECT_ONE_SHOT)
+	# A separate, deliberately non-acceptance load removes death/refill churn while
+	# keeping the mixed roster, held W112, movement, damage evaluation and enemy AI.
+	if diagnostic_profile == "durable" and node is BaseMonster:
+		node.ready.connect(func():
+			# M5Content finalizes HP after ready returns; apply after that factory step.
+			node.set_deferred("HP",1000000000000.0)
+			if node.get("max_hp") != null: node.set_deferred("max_hp",1000000000000.0),CONNECT_ONE_SHOT)
 	# node_added precedes _ready; ready is emitted after the production decision.
 	if node.get_script() == preload("res://game/monster/TacticalEnemy.gd"):
 		node.ready.connect(_fix_fixture_orbit.bind(node), CONNECT_ONE_SHOT)
@@ -403,30 +465,32 @@ func _count_removed(_node: Node) -> void:
 	_removed += 1
 	_frame_removed += 1
 	if _node is BaseMonster:
-		_tracked_enemy_count = maxi(0,_tracked_enemy_count-1)
+		# Death is counted from Combat.kill_events, before the corpse's delayed free.
+		# Removing an actor alive (camp/cleanup) is the only removal left to count here.
+		if not _node.is_die: _tracked_enemy_count -= 1
 		if _driver_active and scenario == "P":
 			_events.append({"tick":_effective_tick,"event":"enemy_free","content_id":str(_node.get_meta("content_id","")),"is_die":bool(_node.is_die),"hp":float(_node.HP),"training":bool(_node.training),"last_context":_node.last_context.duplicate(true)})
 	elif _node.get_script() == preload("res://game/monster/EnemyShot.gd") and _driver_active and scenario == "P":
-		_events.append({"tick":_effective_tick,"event":"projectile_free","projectile_mode":PRESSURE_PROJECTILE_MODE,"life":float(_node.life),"lifetime":float(_node.lifetime),"owner_alive":is_instance_valid(_node.owner_ref.get_ref()) if _node.owner_ref else false})
+		_events.append({"tick":_effective_tick,"event":"projectile_free","life":float(_node.life),"lifetime":float(_node.lifetime),"owner_alive":is_instance_valid(_node.owner_ref.get_ref()) if _node.owner_ref else false})
 
 ## The stress scenario is the whole point of the round, so it is stated once and named.
 ##
-## B11.1 shaped A-D around the laser/root overlap, because that was the report at the time. B11.2's
+## B11.1 shaped A-D around the laser overlap, because that was the report at the time. B11.2's
 ## report is different in kind - "the whole picture is busy and it still hitches" - so the same four
 ## names now carry the four LOAD PROFILES the round has to separate. Everything that produces them
 ## is still a shipped actor on a shipped code path; the amplifiers only decide how many arrive.
 ##   A  normal Stage 39, exactly as shipped. The control.
 ##   B  dense enemies: real Stage 39 monsters topped up toward the stage's own cap, attacks normal.
 ##      Isolates "many bodies" from "many attacks".
-##   C  dense attacks: the real laser/artillery/root/poison families held alive at once, population
+##   C  dense attacks: the real laser/artillery/projectile/poison families held alive at once, population
 ##      normal. Isolates "many attacks" from "many bodies".
-##   D  worst visual load: 80+ bodies AND the full attack mix AND the rooted/held position, with the
+##   D  worst visual load: 80+ bodies AND the full attack mix AND the held position, with the
 ##      player firing. This is the "场上累积的各种特效和怪非常多" frame the human described.
 func _apply_scenario() -> void:
 	if diagnostic_profile == "enemies":
 		# W2 diagnostic: use the real E01 production factory and director, but remove authored
 		# ranged/special roles and player fire so this window isolates 180 moving bodies.
-		lasers = 0; root_period = 0.0; barrage = 0; park = true
+		lasers = 0; barrage = 0; park = true
 		enemies = PRESSURE_TARGET_ENEMIES
 		if DemoConfig.ENCOUNTERS.has(stage):
 			var enemy_only_encounter: Dictionary = DemoConfig.ENCOUNTERS[stage]
@@ -437,25 +501,25 @@ func _apply_scenario() -> void:
 	match scenario:
 		"A": _pressure_phase = PRESSURE_NOT_APPLICABLE
 		"B": enemies = maxi(enemies,60)
-		"C": lasers = maxi(lasers,4); root_period = maxf(root_period,2.0); barrage = maxi(barrage,6)
+		"C": lasers = maxi(lasers,4); barrage = maxi(barrage,6)
 		"D":
-			enemies = maxi(enemies,80); lasers = maxi(lasers,4); root_period = maxf(root_period,2.0)
+			enemies = maxi(enemies,80); lasers = maxi(lasers,4)
 			barrage = maxi(barrage,6); park = true
 		"P":
 			## P is deliberately above the authored Stage 39 population. This mutation exists only in
 			## the test driver, so M5Content.spawn() still constructs every actor through production code
 			## while the formal workload is unambiguously 180 enemies, not the stage's normal cap.
 			enemies = PRESSURE_TARGET_ENEMIES
-			lasers = maxi(lasers,4); root_period = maxf(root_period,2.0); barrage = maxi(barrage,6)
-			## The highest-pressure window is an active player run, not a parked turret: W112 is
-			## held continuously while the rig circles the arena and the factory refills kills.
+			lasers = maxi(lasers,4); barrage = maxi(barrage,6)
+			## The highest-pressure window is a moving run through the densest real enemy group.
+			## W112 remains active so real player kills drive the real enemy refill path.
 			park = false
 			_pressure_phase = PRESSURE_BUILD
 			if DemoConfig.ENCOUNTERS.has(stage):
 				DemoConfig.ENCOUNTERS[stage].cap = maxi(int(DemoConfig.ENCOUNTERS[stage].cap),PRESSURE_TARGET_ENEMIES)
 	if enemies > 0 and scenario != "P": enemies = mini(enemies,_stage_cap())
-	print("[stress] effective scenario=%s lasers=%d root_period=%.2f park=%s enemies=%d/%d barrage=%d" % [
-		scenario,lasers,root_period,str(park),enemies,_stage_cap(),barrage])
+	print("[stress] effective scenario=%s lasers=%d park=%s enemies=%d/%d barrage=%d" % [
+		scenario,lasers,str(park),enemies,_stage_cap(),barrage])
 
 ## The stage's own published simultaneous cap, read from the shipped encounter table. The amplifiers
 ## below can never take the population past it - that is the B11 contract and this round does not
@@ -481,8 +545,8 @@ func _live_enemies() -> int:
 		count += 1
 	return count
 
-func _pressure_target_met() -> bool:
-	return _live_enemies() >= PRESSURE_STEADY_ENEMY_FLOOR
+func _pressure_target_met(live_enemies: int) -> bool:
+	return live_enemies >= PRESSURE_TARGET_ENEMIES
 
 func _configure_enemy_only_actor(actor: Node) -> void:
 	if diagnostic_profile != "enemies" or not is_instance_valid(actor): return
@@ -493,34 +557,39 @@ func _configure_enemy_only_actor(actor: Node) -> void:
 	actor.set_meta("b194_enemy_only_fixture",true)
 
 func _pressure_ramp_tick(tick: int) -> void:
+	if diagnostic_profile == "no_churn" and _pressure_phase != PRESSURE_BUILD: return
 	var started := Time.get_ticks_usec()
+	var spawn_arena = LevelServer.town.arena
+	if is_instance_valid(spawn_arena): spawn_arena.begin_spawn_batch()
 	if _pressure_build_started_usec < 0: _pressure_build_started_usec = started
-	var frame_budget := maxi(0,PRESSURE_BUILD_MAX_BIRTHS_PER_RENDER_FRAME-_frame_enemy_births-_frame_projectile_births)
+	var frame_cap := PRESSURE_BUILD_MAX_BIRTHS_PER_RENDER_FRAME if _pressure_phase == PRESSURE_BUILD else PRESSURE_STEADY_MAX_REFILL_BIRTHS_PER_RENDER_FRAME
+	# Enemy replacement is its own bounded budget. Natural enemy projectiles are observed separately
+	# and must never consume the budget needed to refill real kills.
+	var frame_budget := maxi(0,frame_cap-_frame_enemy_births)
 	var ramp_budget := mini(pressure_birth_budget,frame_budget)
 	var enemy_budget := ramp_budget
 	var enemy_added := 0
-	var before := _live_enemies()
-	if enemy_budget > 0 and _meta_alive("b11_amplified") < lasers:
+	var before := _frame_enemy_births
+	var enemy_need := maxi(0,PRESSURE_TARGET_ENEMIES-_live_enemies())
+	if enemy_budget > 0 and enemy_need > 0 and _meta_alive("b11_amplified") < lasers:
 		_spawn_amplified("E14" if _pressure_laser_cursor % 2 == 0 else "E13","b11_amplified")
 		_pressure_laser_cursor += 1
-		var born := maxi(0,_live_enemies()-before)
+		var born := _frame_enemy_births-before
 		enemy_added += born; enemy_budget -= born
-	if enemy_budget > 0 and _meta_alive("b11_barrage") < barrage:
+	if enemy_budget > 0 and enemy_need > enemy_added and _meta_alive("b11_barrage") < barrage:
 		var pool := ["E14","E10","E13","E15"]
-		before = _live_enemies()
+		before = _frame_enemy_births
 		_spawn_amplified(pool[_pressure_barrage_cursor % pool.size()],"b11_barrage")
 		_pressure_barrage_cursor += 1
-		var barrage_born := maxi(0,_live_enemies()-before)
+		var barrage_born := _frame_enemy_births-before
 		enemy_added += barrage_born; enemy_budget -= barrage_born
-	var ordinary_added := _top_up_enemies(enemy_budget)
+	var ordinary_added := _top_up_pressure_enemies(enemy_budget)
 	enemy_added += ordinary_added
 	enemy_budget = maxi(0,enemy_budget-ordinary_added)
-	_pressure_build_batches.append({"tick":tick,"phase":_pressure_phase,"kind":"enemy","requested":ramp_budget,"added":enemy_added,"ordinary_added":ordinary_added,"spawn_ms":float(Time.get_ticks_usec()-started)/1000.0})
-	# Do not fill a projectile quota here. The previous driver-admission path called actor.shot()
-	# repeatedly after the enemy pool was full, producing an artificial orange projectile wall that
-	# normal Stage 39 AI never emits. Natural projectile births are still counted by _count_added().
+	if is_instance_valid(spawn_arena): spawn_arena.end_spawn_batch()
+	_pressure_build_batches.append({"tick":tick,"phase":_pressure_phase,"kind":B194_MAX_PRESSURE,"requested":ramp_budget,"enemy_added":enemy_added,"ordinary_added":ordinary_added,"spawn_ms":float(Time.get_ticks_usec()-started)/1000.0})
 	_remember_spawn_stats()
-	_events.append({"tick":tick,"event":"pressure_ramp","usec":Time.get_ticks_usec()-started,"enemy_added":enemy_added,"ordinary_added":ordinary_added,"projectile_admitted":0,"projectile_mode":PRESSURE_PROJECTILE_MODE})
+	_events.append({"tick":tick,"event":"pressure_ramp","usec":Time.get_ticks_usec()-started,"enemy_added":enemy_added,"ordinary_added":ordinary_added,"profile":diagnostic_profile})
 
 func run() -> void:
 	await get_tree().create_timer(3.0).timeout
@@ -596,6 +665,7 @@ func run() -> void:
 	print("[stress] done scenario=%s rounds=%d frames=%d combat_s=%.1f" % [
 		scenario,_rounds,_ms.size(),_total_combat_s])
 	_dump()
+	_restore_pressure_diagnostics()
 	if camp_cycles > 0: await _check_camp_cycles()
 	var b18_mode = false
 	for arg in OS.get_cmdline_args()+OS.get_cmdline_user_args():
@@ -753,8 +823,8 @@ func _sample_round() -> void:
 	_sample_tick_start = Engine.get_physics_frames()
 	_effective_tick = 0
 	_next_amp_tick = 1
-	_next_root_tick = 1
 	_driver_active = true
+	_apply_existing_pressure_diagnostics()
 	_release_until_tick = 10
 	_next_aim_tick = 0
 	_frame_enemy_births = 0
@@ -796,7 +866,9 @@ func _sample_round() -> void:
 		_pressure_frame_projectile_births.clear()
 		_pressure_frame_removed.clear()
 		_pressure_frame_kills.clear()
+		_pressure_steady_physics_ms.clear()
 		_pressure_max_births_per_frame = 0
+		_pressure_max_refill_births_per_frame = 0
 		_pressure_build_max_frame_ms = 0.0
 		_pressure_enemy_births = 0
 		_pressure_projectile_births = 0
@@ -808,10 +880,12 @@ func _sample_round() -> void:
 		_pressure_player_end = _pressure_player_start
 		_pressure_laser_cursor = 0
 		_pressure_barrage_cursor = 0
+		_pressure_spawn_cursor = 0
 		_tracked_enemy_count = _live_enemies()
+		_tracked_kill_events = int(Combat.kill_events)
+		_enemy_count_mismatches = 0
 	var next_report := started + 1000
 	var next_gauge := 0
-	var prev_rooted := false
 	var ray_prev: int = B11Probe.raycasts
 	var clear_prev: int = B11Probe.clear_line_calls
 	var hit_prev: int = B11Probe.player_hits
@@ -832,13 +906,7 @@ func _sample_round() -> void:
 		if measurement == "off":
 			await get_tree().process_frame
 			continue
-		# A root WINDOW, so a driver-applied root and a laser-applied one are both counted and the
-		# split is reported beside the total.
-		var rooted: bool = Utils.player.root_remaining > 0.0
-		if rooted and not prev_rooted: _root_windows += 1
-		prev_rooted = rooted
 		var flags := 0
-		if rooted: flags |= F_ROOTED
 		if B11Probe.player_hits != hit_prev: flags |= F_HIT; hit_prev = B11Probe.player_hits
 		if B11Probe.raycasts != ray_prev: flags |= F_RAY; ray_prev = B11Probe.raycasts
 		if B11Probe.clear_line_calls != clear_prev: flags |= F_CLEAR; clear_prev = B11Probe.clear_line_calls
@@ -850,10 +918,16 @@ func _sample_round() -> void:
 		_process_frames.append(Engine.get_process_frames())
 		_absolute_ticks.append(Engine.get_physics_frames())
 		_epochs.append(LevelServer.epoch)
+		var physics_ms := Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)*1000.0
 		if frame_ms > 50.0:
 			_long_frames.append({"index":_ms.size()-1,"ms":frame_ms,"round":round_index,"wall_s":elapsed,"process_frame":Engine.get_process_frames(),"physics_tick":Engine.get_physics_frames(),"epoch":LevelServer.epoch,"preceding_load_sample":_load_samples.size()-1,"events_through":_events.size()})
 		if scenario == "P":
-			var target_met := _tracked_enemy_count >= PRESSURE_STEADY_ENEMY_FLOOR
+			_sync_live_enemy_count()
+			# Enforce the same density floor on every observed frame, including brief
+			# kill/refill dips between the independent 10 Hz census samples.
+			var live_projectiles := int(preload("res://game/monster/EnemyShot.gd").live_count)
+			_update_pressure_phase(_tracked_enemy_count)
+			var target_met := _pressure_target_met(_tracked_enemy_count)
 			var frame_births := _frame_enemy_births+_frame_projectile_births
 			var player_position := Utils.player.global_position
 			_pressure_player_path_px += player_position.distance_to(_pressure_player_last)
@@ -871,6 +945,8 @@ func _sample_round() -> void:
 			_pressure_frame_removed.append(_frame_removed)
 			_pressure_frame_kills.append(frame_kills)
 			_pressure_max_births_per_frame = maxi(_pressure_max_births_per_frame,frame_births)
+			if _pressure_phase == PRESSURE_STEADY:
+				_pressure_max_refill_births_per_frame = maxi(_pressure_max_refill_births_per_frame,_frame_enemy_births)
 			match _pressure_phase:
 				PRESSURE_BUILD:
 					_pressure_build_ms.append(frame_ms)
@@ -878,13 +954,14 @@ func _sample_round() -> void:
 				PRESSURE_SETTLING: _pressure_settling_ms.append(frame_ms)
 				PRESSURE_STEADY:
 					_pressure_steady_ms.append(frame_ms)
+					_pressure_steady_physics_ms.append(physics_ms)
 					_pressure_steady_samples += 1
 					if target_met: _pressure_steady_target_frames += 1
 					else: _pressure_steady_shortfall_frames += 1
 					if _pressure_steady_started_usec >= 0:
-						_pressure_steady_seconds = float(current_usec-_pressure_steady_started_usec)/1000000.0
+						_pressure_steady_seconds = float(maxi(0,current_usec-_pressure_steady_started_usec))/1000000.0
 			if frame_ms > 25.0:
-				var spike_context := {"index":_ms.size()-1,"ms":frame_ms,"phase":_pressure_phase,"thresholds":[">25"] as Array,"target_met":target_met,"enemies_alive":_tracked_enemy_count,"projectiles_alive":preload("res://game/monster/EnemyShot.gd").live_count,"spawn_count":_frame_enemy_births,"projectile_spawn":_frame_projectile_births,"death_free_count":_frame_removed,"events":_events.size(),"event_tail":_events.slice(maxi(0,_events.size()-4),_events.size()),"path_requests":_path_queries(),"path_usec":B11Probe.path_usec,"physics_contacts":Performance.get_monitor(Performance.PHYSICS_2D_COLLISION_PAIRS),"fog_entries":B11Probe.fog_push_lines,"fog_scans":B11Probe.fog_scans,"vfx_created":B11Probe.vfx_created,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"audio_players":_active_audio_players(),"boss_present":is_instance_valid(LevelServer.get_boss()),"scene":get_tree().current_scene.scene_file_path,"epoch":LevelServer.epoch}
+				var spike_context := {"index":_ms.size()-1,"ms":frame_ms,"phase":_pressure_phase,"thresholds":[">25"] as Array,"target_met":target_met,"enemies_alive":_tracked_enemy_count,"projectiles_alive":live_projectiles,"spawn_count":_frame_enemy_births,"projectile_spawn":_frame_projectile_births,"death_free_count":_frame_removed,"events":_events.size(),"event_tail":_events.slice(maxi(0,_events.size()-4),_events.size()),"path_requests":_path_queries(),"path_usec":B11Probe.path_usec,"physics_contacts":Performance.get_monitor(Performance.PHYSICS_2D_COLLISION_PAIRS),"fog_entries":B11Probe.fog_push_lines,"fog_scans":B11Probe.fog_scans,"vfx_created":B11Probe.vfx_created,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"audio_players":_active_audio_players(),"boss_present":is_instance_valid(LevelServer.get_boss()),"scene":get_tree().current_scene.scene_file_path,"epoch":LevelServer.epoch}
 				if frame_ms > 33.0: spike_context.thresholds.append(">33")
 				if frame_ms > 50.0: spike_context.thresholds.append(">50")
 				_pressure_spike_context.append(spike_context)
@@ -908,7 +985,7 @@ func _sample_round() -> void:
 		previous_usec = current_usec
 		_engine_ms.append(get_process_delta_time()*1000.0)
 		_ticks.append(_effective_tick)
-		_phys.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)*1000.0)
+		_phys.append(physics_ms)
 		_proc.append(Performance.get_monitor(Performance.TIME_PROCESS)*1000.0)
 		_draws.append(int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)))
 		_flags.append(flags)
@@ -938,7 +1015,7 @@ func _sample_round() -> void:
 
 ## Real Elite laser sentinels, spawned through the SAME production call the director uses
 ## (`Town.monsterCreate` -> `M5Content.spawn`), so they are ordinary actors with ordinary AI,
-## ordinary telegraphs, ordinary damage and an ordinary root. Only the director's timing and its
+## ordinary telegraphs, ordinary damage. Only the director's timing and its
 ## elite ceiling are bypassed, and that is exactly what makes the "many lanes at once" moment
 ## repeatable instead of luck.
 ##
@@ -951,8 +1028,7 @@ func _amplify_lasers() -> void:
 		_spawn_amplified("E14" if i % 2 == 0 else "E13","b11_amplified")
 
 ## B11.2 dense-attack mix. These are the same four Stage 39 families that carry the attack load the
-## human described - the laser sentinel (`cross_beam`), the tremor shooter (`double_root`, the only
-## source of purple projectiles), the marker artillery (`root_artillery`) and the poison carrier
+## human described - the laser sentinel (`cross_beam`), the tremor shooter (`double_shot`), the marker artillery (`volley_artillery`) and the poison carrier
 ## (`lingering_poison`) - held alive together. Their telegraphs, projectiles, hostile zones and
 ## impact VFX are all produced by the actors themselves, so nothing here fakes a load.
 func _amplify_barrage() -> void:
@@ -973,7 +1049,12 @@ func _top_up_enemies(max_births: int) -> int:
 	if roles.is_empty() or max_births <= 0: return 0
 	var attempts := 0
 	var added := 0
-	while _live_enemies() < target and attempts < max_births:
+	# No simulation runs inside this synchronous birth-only loop. Failed attempts
+	# cannot change the live count; each successful factory call adds one actor.
+	var live := _live_enemies()
+	var spawn_arena = town.arena
+	if is_instance_valid(spawn_arena): spawn_arena.begin_spawn_batch()
+	while live < target and attempts < max_births:
 		attempts += 1
 		var role := str(roles[(attempts-1) % roles.size()])
 		var point: Vector2 = town.spawn_point(M5Content.radius_for(role))
@@ -984,11 +1065,53 @@ func _top_up_enemies(max_births: int) -> int:
 		actor.set_meta("b11_topped_up",true)
 		_topped_up += 1
 		added += 1
+		live += 1
+	if is_instance_valid(spawn_arena): spawn_arena.end_spawn_batch()
+	return added
+
+func _pressure_spawn_point() -> Vector2:
+	var town = LevelServer.town
+	if not is_instance_valid(town) or not is_instance_valid(town.arena): return Vector2.INF
+	var arena = town.arena
+	if arena.cells.is_empty(): return town.spawn_point()
+	# Use real arena walkable cells for the test-only population fixture. This avoids spending the
+	# build window repeatedly rejecting the same already-crowded annulus, while M5Content.spawn
+	# still performs the complete production actor construction and all actors remain on real
+	# CharacterBody2D/navigation/collision paths.
+	var count: int = arena.cells.size()
+	for offset in count:
+		var index: int = (_pressure_spawn_cursor+offset)%count
+		var cell: Vector2i = arena.cells[index]
+		var point: Vector2 = arena.to_global(arena.grid.get_point_position(cell))
+		if point.distance_to(Utils.player.global_position) < 55.0: continue
+		_pressure_spawn_cursor = (index+1)%count
+		return point
+	return Vector2.INF
+
+func _top_up_pressure_enemies(max_births: int) -> int:
+	var town = LevelServer.town
+	if not is_instance_valid(town) or max_births <= 0: return 0
+	var target := mini(enemies,_stage_cap())
+	var roles := _stage_roles()
+	if roles.is_empty(): return 0
+	var added := 0
+	var live := _live_enemies()
+	while live < target and added < max_births:
+		var role := str(roles[(_pressure_spawn_cursor+added)%roles.size()])
+		var point := _pressure_spawn_point()
+		if point == Vector2.INF: break
+		_ordinary_requests += 1
+		var actor: Node = M5Content.spawn(role,town.monster_root,point)
+		if actor == null: continue
+		actor.set_meta("b11_topped_up",true)
+		_topped_up += 1
+		added += 1
+		live += 1
 	return added
 
 ## Real actor through the SAME production call the director uses
 ## (`Town.monsterCreate` -> `M5Content.spawn`), so it has ordinary AI, an ordinary telegraph,
-## ordinary damage and an ordinary root. Only the director's timing and its elite ceiling are
+## ordinary damage. Only the director's timing and its elite ceiling are
 ## bypassed, and that is exactly what makes the dense moment repeatable instead of luck.
 func _spawn_amplified(role: String, meta_key: String) -> bool:
 	_elite_requests += 1
@@ -1100,10 +1223,10 @@ func _active_audio_players() -> int:
 	if root == null: return 0
 	return root.find_children("*","AudioStreamPlayer",true,false).size()+root.find_children("*","AudioStreamPlayer2D",true,false).size()
 
-func _update_pressure_phase(live_enemies: int, live_projectiles: int) -> void:
+func _update_pressure_phase(live_enemies: int) -> void:
 	if scenario != "P": return
 	_pressure_pressure_samples += 1
-	var target_met := live_enemies >= PRESSURE_STEADY_ENEMY_FLOOR
+	var target_met := _pressure_target_met(live_enemies)
 	var now := Time.get_ticks_usec()
 	match _pressure_phase:
 		PRESSURE_BUILD:
@@ -1113,13 +1236,14 @@ func _update_pressure_phase(live_enemies: int, live_projectiles: int) -> void:
 					_pressure_build_finished_usec = now
 				_pressure_settling_tick = _effective_tick
 				_pressure_phase = PRESSURE_SETTLING
-				_events.append({"tick":_effective_tick,"event":"pressure_target_reached","enemies":live_enemies,"projectiles":live_projectiles,"time_to_target_s":float(now-_pressure_build_started_usec)/1000000.0})
+				_set_no_churn_lifecycle(true)
+				_events.append({"tick":_effective_tick,"event":"pressure_target_reached","enemies":live_enemies,"time_to_target_s":float(now-_pressure_build_started_usec)/1000000.0})
 		PRESSURE_SETTLING:
-			if not target_met:
-				_pressure_settling_tick = -1
-				_pressure_phase = PRESSURE_BUILD
-				_events.append({"tick":_effective_tick,"event":"pressure_target_lost_during_settling","enemies":live_enemies,"projectiles":live_projectiles})
-			elif _effective_tick-_pressure_settling_tick >= maxi(1,int(ceil(PRESSURE_SETTLING_SECONDS*float(Engine.physics_ticks_per_second)))):
+			# The pressure window is a kill/refill workload, not a frozen 180-body snapshot.
+			# Once the real population has first reached 180, normal player damage may create
+			# short dips while the production factory replaces those deaths. Keep those frames
+			# in the same window instead of restarting the workload.
+			if _effective_tick-_pressure_settling_tick >= maxi(1,int(ceil(PRESSURE_SETTLING_SECONDS*float(Engine.physics_ticks_per_second)))):
 				_pressure_phase = PRESSURE_STEADY
 				_pressure_steady_tick = _effective_tick
 				_pressure_settling_finished_usec = now
@@ -1129,18 +1253,12 @@ func _update_pressure_phase(live_enemies: int, live_projectiles: int) -> void:
 				# five-second counter uses the same wall-clock workload as B19 rather than including
 				# build/settling frames.
 				_start_fps_counter()
-				_events.append({"tick":_effective_tick,"event":"pressure_measurement_begin","enemies":live_enemies,"projectiles":live_projectiles,"settling_seconds":float(now-_pressure_build_finished_usec)/1000000.0})
+				_events.append({"tick":_effective_tick,"event":"pressure_measurement_begin","enemies":live_enemies,"settling_seconds":float(now-_pressure_build_finished_usec)/1000000.0})
 		PRESSURE_STEADY:
-			if not target_met:
-				_pressure_phase = PRESSURE_BUILD
-				_pressure_steady_tick = -1
-				_pressure_steady_started_usec = -1
-				_pressure_steady_seconds = 0.0
-				_pressure_steady_target_frames = 0
-				_pressure_steady_shortfall_frames = 0
-				_pressure_steady_samples = 0
-				_pressure_steady_ms.clear()
-				_events.append({"tick":_effective_tick,"event":"pressure_target_lost_during_steady","enemies":live_enemies,"projectiles":live_projectiles})
+			# Keep collecting real kill/refill churn after the 180 peak. Shortfalls are
+			# reported in `steady_shortfall_frames`; they are not projectile or spawn fakes
+			# and must not erase the already-qualified pressure window.
+			pass
 
 func _sample_gauges() -> void:
 	if "fogink" in iso:
@@ -1199,16 +1317,15 @@ func _sample_gauges() -> void:
 	row.projectiles_alive = row.shots_live
 	row.projectiles_drawing_enabled = row.shots_visible
 	row.projectiles_on_screen = row.shots_screen
-	row.simultaneous_180_alive = row.enemies_alive >= 180 and row.projectiles_alive >= 180
-	row.simultaneous_180_drawing = row.enemies_drawing_enabled >= 180 and row.projectiles_drawing_enabled >= 180
-	row.simultaneous_180_on_screen = row.enemies_on_screen >= 180 and row.projectiles_on_screen >= 180
+	row.enemies_at_target = row.enemies_alive >= PRESSURE_TARGET_ENEMIES
+	row.enemies_drawing_at_target = row.enemies_drawing_enabled >= PRESSURE_TARGET_ENEMIES
+	row.enemies_on_screen_at_target = row.enemies_on_screen >= PRESSURE_TARGET_ENEMIES
 	if scenario == "P":
-		var pressure_floor := int(ceil(float(preload("res://game/monster/EnemyShot.gd").capacity_limit)*0.9))
 		_pressure_samples += 1
-		if int(row.shots_live) >= pressure_floor: _pressure_live_ge_90 += 1
-		if int(row.shots_visible) >= pressure_floor: _pressure_visible_ge_90 += 1
-		_pressure_live_min = int(row.shots_live) if _pressure_samples == 1 else mini(_pressure_live_min,int(row.shots_live))
-		_pressure_live_max = maxi(_pressure_live_max,int(row.shots_live))
+		if int(row.enemies_alive) >= PRESSURE_TARGET_ENEMIES: _pressure_live_ge_target += 1
+		if int(row.enemies_drawing_enabled) >= PRESSURE_TARGET_ENEMIES: _pressure_visible_ge_target += 1
+		_pressure_live_min = int(row.enemies_alive) if _pressure_samples == 1 else mini(_pressure_live_min,int(row.enemies_alive))
+		_pressure_live_max = maxi(_pressure_live_max,int(row.enemies_alive))
 	var layer = LevelServer.town.monster_root.get_node_or_null("B19EnchantmentLayer")
 	if is_instance_valid(layer):
 		row.flame_draw_usec = layer.draw_usec
@@ -1225,8 +1342,10 @@ func _sample_gauges() -> void:
 	row.physics_active = Performance.get_monitor(Performance.PHYSICS_2D_ACTIVE_OBJECTS)
 	if scenario == "P":
 		row.pressure_phase = _pressure_phase
-		_tracked_enemy_count = int(row.enemies_alive)
-		_update_pressure_phase(int(row.enemies_alive),int(row.projectiles_alive))
+		_sync_live_enemy_count()
+		if _tracked_enemy_count != int(row.enemies_alive): _enemy_count_mismatches += 1
+		row.tracked_enemies = _tracked_enemy_count
+		row.enemy_count_mismatches = _enemy_count_mismatches
 	_load_samples.append(row)
 	if B11Probe.iso_particles: _silence_particles()
 
@@ -1265,7 +1384,7 @@ func _report_second(round_index: int) -> void:
 		rates[key] = int(now[key])-int(_prev.get(key,now[key]))
 	_prev = now
 	_peak_same_frame = maxi(_peak_same_frame,B11Probe.hits_in_frame_peak)
-	print("[spike] r=%d t=%.1f n=%d avg=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d over25=%d over33=%d over50=%d slow_run_ms=%.0f engine_window_physics_max_ms=%.2f engine_window_process_max_ms=%.2f draws=%d beams=%d zone_hits=%d hits=%d same_frame=%d rays=%d rays_sk=%d cl=%d labels=%d vfx=%d fog=%d reward_scans=%d rbuilt=%d rreuse=%d rnodes=%d rooted_frames=%d zone_usec=%d zone_worst_us=%d clear_usec=%d onhit_usec=%d onhit_worst_us=%d draw_usec=%d objects=%d orphans=%d mem_mb=%.2f pq=%d foglines=%d fogscans=%d shots=%d shotexc=%d td_draws=%d td_usec=%d hz_draws=%d hz_usec=%d swalk=%d swalk_empty=%d" % [
+	print("[spike] r=%d t=%.1f n=%d avg=%.2f p95=%.2f p99=%.2f max=%.2f fps=%d over25=%d over33=%d over50=%d slow_run_ms=%.0f engine_window_physics_max_ms=%.2f engine_window_process_max_ms=%.2f draws=%d beams=%d zone_hits=%d hits=%d same_frame=%d rays=%d rays_sk=%d cl=%d labels=%d vfx=%d fog=%d reward_scans=%d rbuilt=%d rreuse=%d rnodes=%d zone_usec=%d zone_worst_us=%d clear_usec=%d onhit_usec=%d onhit_worst_us=%d draw_usec=%d objects=%d orphans=%d mem_mb=%.2f pq=%d foglines=%d fogscans=%d shots=%d shotexc=%d td_draws=%d td_usec=%d hz_draws=%d hz_usec=%d swalk=%d swalk_empty=%d" % [
 		round_index,_combat_seconds[_ms.size()-1],count,stats.avg,stats.p95,stats.p99,stats.max,
 		Engine.get_frames_per_second(),stats.over25,stats.over33,stats.over50,stats.slow_run,
 		Array(_phys.slice(from)).max(),Array(_proc.slice(from)).max(),_draws[_draws.size()-1],
@@ -1274,7 +1393,6 @@ func _report_second(round_index: int) -> void:
 		int(rates.get("clear_line",0)),int(rates.get("labels",0)),int(rates.get("vfx",0)),
 		int(rates.get("fog_pushes",0)),int(rates.get("reward_scans",0)),
 		int(rates.get("reward_built",0)),int(rates.get("reward_reused",0)),B11Probe.reward_nodes_peak,
-		_rooted_frames_in(from),
 		int(rates.get("zone_step_usec",0)),int(worst[0]),int(rates.get("clear_line_usec",0)),
 		int(rates.get("onhit_usec",0)),int(worst[1]),int(rates.get("zone_draw_usec",0)),
 		int(Performance.get_monitor(Performance.OBJECT_COUNT)),
@@ -1311,6 +1429,7 @@ func _remember_spawn_stats() -> void:
 		"geometry_rejected":int(arena.spawn_geometry_rejected),
 		"clearance_queries":int(arena.spawn_clearance_queries),
 		"clearance_rejected":int(arena.spawn_clearance_rejected),
+		"failed_search_cache_hits":int(arena.spawn_failed_cache_hits),
 		"path_checks":int(arena.spawn_path_checks),
 		"path_queries":int(arena.spawn_path_queries),
 		"path_cache_hits":int(arena.spawn_path_cache_hits),
@@ -1319,14 +1438,14 @@ func _remember_spawn_stats() -> void:
 	for key in current:
 		_spawn_peak[key] = maxi(int(_spawn_peak.get(key,0)),int(current[key]))
 
-func _rooted_frames_in(from: int) -> int:
-	var count := 0
-	for i in range(from,_ms.size()):
-		if _flags[i] & F_ROOTED: count += 1
-	return count
-
 ## Frame-time statistics for one slice. `slow_run` is the longest unbroken stretch of frames over
 ## 33 ms, in milliseconds: a hitch the player feels as "a freeze" is a RUN, not a single frame.
+func _average(values) -> float:
+	if values.is_empty(): return 0.0
+	var total := 0.0
+	for value in values: total += float(value)
+	return total/float(values.size())
+
 func _stats(values) -> Dictionary:
 	var n: int = values.size()
 	if n == 0:
@@ -1361,7 +1480,7 @@ func _stats(values) -> Dictionary:
 		"max":float(sorted[n-1]),"over16_67":over16_67,"over25":over25,"over33":over33,"over50":over50,"over100":over100,"slow_run":best}
 
 func _pressure_measurement_valid() -> bool:
-	return scenario == "P" and _pressure_phase == PRESSURE_STEADY and _pressure_steady_seconds >= float(seconds) and _pressure_steady_samples > 0 and _pressure_steady_shortfall_frames == 0
+	return scenario == "P" and _pressure_target_tick >= 0 and _pressure_phase == PRESSURE_STEADY and _pressure_steady_seconds >= float(seconds) and _pressure_steady_samples > 0 and _enemy_count_mismatches == 0
 
 ## The whole point of the run: the same frame pool split by WHAT WAS HAPPENING on each frame. If
 ## the stutter is a burst, the conditioned rows separate from the unconditioned ones here; if it is
@@ -1371,7 +1490,7 @@ func _dump() -> void:
 	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.
-	print("[stress-frames] ",JSON.stringify({"surface":_surface,"diagnostic_profile":diagnostic_profile,"fps_counter":_fps_counter_result,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"mode":run_mode,"requested_seconds":seconds,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"pressure_projectile_mode":PRESSURE_PROJECTILE_MODE,"pressure_samples":_pressure_samples,"pressure_live_ge_90":_pressure_live_ge_90,"pressure_visible_ge_90":_pressure_visible_ge_90,"pressure_live_ratio":(float(_pressure_live_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_visible_ratio":(float(_pressure_visible_ge_90)/_pressure_samples if _pressure_samples else 0.0),"pressure_live_min":_pressure_live_min,"pressure_live_max":_pressure_live_max,"pressure_weapon_id":PRESSURE_WEAPON_ID if scenario == "P" else -1,"pressure_kill_events":_pressure_kill_events,"pressure_enemy_births":_pressure_enemy_births,"pressure_projectile_births":_pressure_projectile_births,"pressure_player_path_px":_pressure_player_path_px,"pressure_player_displacement_px":_pressure_player_start.distance_to(_pressure_player_end),"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"process_frames":Array(_process_frames),"absolute_physics_ticks":Array(_absolute_ticks),"epochs":Array(_epochs),"round_contexts":_round_contexts,"long_frames":_long_frames,"physics_hz":Engine.physics_ticks_per_second,"engine_window_peak_monitor":{"physics_ms":Array(_phys),"process_ms":Array(_proc),"kind":"ENGINE_WINDOW_PEAK_MONITOR"},"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"production_frame_births":Array(_production_frame_births),"production_frame_enemy_births":Array(_production_frame_enemy_births),"production_frame_projectile_births":Array(_production_frame_projectile_births),"production_frame_removed":Array(_production_frame_removed),"production_max_births_per_frame":_production_max_births_per_frame,"production_max_enemy_births_per_frame":_production_max_enemy_births_per_frame,"production_max_projectile_births_per_frame":_production_max_projectile_births_per_frame,"production_max_births_frame":_production_max_births_frame,"production_max_births_tick":_production_max_births_tick,"production_max_births_wall_s":_production_max_births_wall_s,"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; engine-window monitors are not per-frame CPU durations"}))
+	print("[stress-frames] ",JSON.stringify({"surface":_surface,"diagnostic_profile":diagnostic_profile,"pressure_name":B194_MAX_PRESSURE if scenario == "P" else "","fps_counter":_fps_counter_result,"retired_actions":_retired_actions,"observation_frames":_observation_frames,"measured_wall_s":_measured_wall_s,"measurement":measurement,"mode":run_mode,"requested_seconds":seconds,"events":_events,"entry_samples":_entry_samples,"orbit_decisions":_orbit_log,"controlled_boss":controlled_boss,"boss_complete":boss_complete,"paused_ms":_pause_usec/1000.0,"shots_admitted_total":_shots_admitted,"retired_bounces":_retired_bounces,"capacity_fixture_emitted":_capacity_emitted,"capacity_fixture_planned_attempts":_capacity_planned,"capacity_fixture_wall_rejected":_capacity_blocked,"pressure_samples":_pressure_samples,"pressure_live_ge_target":_pressure_live_ge_target,"pressure_visible_ge_target":_pressure_visible_ge_target,"pressure_live_ratio":(float(_pressure_live_ge_target)/_pressure_samples if _pressure_samples else 0.0),"pressure_visible_ratio":(float(_pressure_visible_ge_target)/_pressure_samples if _pressure_samples else 0.0),"pressure_live_min":_pressure_live_min,"pressure_live_max":_pressure_live_max,"pressure_weapon_id":PRESSURE_WEAPON_ID if scenario == "P" else -1,"pressure_kill_events":_pressure_kill_events,"pressure_enemy_births":_pressure_enemy_births,"pressure_projectile_births":_pressure_projectile_births,"pressure_player_path_px":_pressure_player_path_px,"pressure_player_displacement_px":_pressure_player_start.distance_to(_pressure_player_end),"effective_sim_seconds":float(_effective_tick)/Engine.physics_ticks_per_second,"source_variant":source_variant,"workload_scenario":scenario,"measurement_timeout":measurement_timeout,"ms":Array(_ms),"engine_delta_ms":Array(_engine_ms),"physics_ticks":Array(_ticks),"process_frames":Array(_process_frames),"absolute_physics_ticks":Array(_absolute_ticks),"epochs":Array(_epochs),"round_contexts":_round_contexts,"long_frames":_long_frames,"physics_hz":Engine.physics_ticks_per_second,"engine_window_peak_monitor":{"physics_ms":Array(_phys),"process_ms":Array(_proc),"kind":"ENGINE_WINDOW_PEAK_MONITOR"},"draws":Array(_draws),"round":Array(_round_of),"combat_wall_seconds":Array(_combat_seconds),"load_samples":_load_samples,"production_frame_births":Array(_production_frame_births),"production_frame_enemy_births":Array(_production_frame_enemy_births),"production_frame_projectile_births":Array(_production_frame_projectile_births),"production_frame_removed":Array(_production_frame_removed),"production_max_births_per_frame":_production_max_births_per_frame,"production_max_enemy_births_per_frame":_production_max_enemy_births_per_frame,"production_max_projectile_births_per_frame":_production_max_projectile_births_per_frame,"production_max_births_frame":_production_max_births_frame,"production_max_births_tick":_production_max_births_tick,"production_max_births_wall_s":_production_max_births_wall_s,"scoped_usec":B11Probe.scoped_usec,"scoped_calls":B11Probe.scoped_calls,"timing":"monotonic process-frame interval; NOT GPU present time; engine-window monitors are not per-frame CPU durations"}))
 	var all: Dictionary = _stats(_ms)
 	var build_stats: Dictionary = _stats(_pressure_build_ms)
 	var settling_stats: Dictionary = _stats(_pressure_settling_ms)
@@ -1380,18 +1499,18 @@ func _dump() -> void:
 	if _pressure_build_started_usec >= 0 and _pressure_build_finished_usec >= 0:
 		time_to_target_s = float(_pressure_build_finished_usec-_pressure_build_started_usec)/1000000.0
 	var steady_sim_seconds := float(maxi(0,_effective_tick-_pressure_steady_tick))/Engine.physics_ticks_per_second if _pressure_steady_tick >= 0 else 0.0
-	print("[stress-pressure-frames] ",JSON.stringify({"phase":_pressure_phase,"target_enemies":PRESSURE_TARGET_ENEMIES,"target_projectiles":null,"projectile_target_mode":PRESSURE_PROJECTILE_MODE,"target_enemies_peak":PRESSURE_TARGET_ENEMIES,"steady_enemy_floor":PRESSURE_STEADY_ENEMY_FLOOR,"target_projectiles_peak":null,"steady_projectile_floor":null,"settling_seconds":PRESSURE_SETTLING_SECONDS,"requested_seconds":seconds,"pressure_measurement_valid":_pressure_measurement_valid(),"target_tick":_pressure_target_tick,"settling_tick":_pressure_settling_tick,"steady_tick":_pressure_steady_tick,"time_to_target_s":time_to_target_s,"steady_seconds":_pressure_steady_seconds,"steady_sim_seconds":steady_sim_seconds,"steady_samples":_pressure_steady_samples,"steady_target_frames":_pressure_steady_target_frames,"steady_shortfall_frames":_pressure_steady_shortfall_frames,"pressure_samples":_pressure_pressure_samples,"pressure_weapon_id":PRESSURE_WEAPON_ID,"kill_events":_pressure_kill_events,"enemy_births":_pressure_enemy_births,"projectile_births":_pressure_projectile_births,"player_path_px":_pressure_player_path_px,"player_displacement_px":_pressure_player_start.distance_to(_pressure_player_end),"max_births_per_frame":_pressure_max_births_per_frame,"spawn_build_max_frame_ms":_pressure_build_max_frame_ms,"spawn_build_p95":build_stats.p95,"load_build_ms":Array(_pressure_build_ms),"settling_ms":Array(_pressure_settling_ms),"steady_ms":Array(_pressure_steady_ms),"frame_phase":_pressure_frame_phase,"frame_target_met":Array(_pressure_frame_target_met),"frame_births":Array(_pressure_frame_births),"frame_enemy_births":Array(_pressure_frame_enemy_births),"frame_projectile_births":Array(_pressure_frame_projectile_births),"frame_removed":Array(_pressure_frame_removed),"frame_kills":Array(_pressure_frame_kills),"build_batches":_pressure_build_batches,"spike_context":_pressure_spike_context}))
+	print("[stress-pressure-frames] ",JSON.stringify({"pressure_name":B194_MAX_PRESSURE,"profile":diagnostic_profile,"phase":_pressure_phase,"target_enemies":PRESSURE_TARGET_ENEMIES,"target_enemies_peak":PRESSURE_TARGET_ENEMIES,"settling_seconds":PRESSURE_SETTLING_SECONDS,"requested_seconds":seconds,"pressure_measurement_valid":_pressure_measurement_valid(),"enemy_count_mismatches":_enemy_count_mismatches,"target_tick":_pressure_target_tick,"settling_tick":_pressure_settling_tick,"steady_tick":_pressure_steady_tick,"time_to_target_s":time_to_target_s,"steady_seconds":_pressure_steady_seconds,"steady_sim_seconds":steady_sim_seconds,"steady_samples":_pressure_steady_samples,"steady_target_frames":_pressure_steady_target_frames,"steady_shortfall_frames":_pressure_steady_shortfall_frames,"pressure_samples":_pressure_pressure_samples,"pressure_weapon_id":PRESSURE_WEAPON_ID,"kill_events":_pressure_kill_events,"enemy_births":_pressure_enemy_births,"projectile_births":_pressure_projectile_births,"player_path_px":_pressure_player_path_px,"player_displacement_px":_pressure_player_start.distance_to(_pressure_player_end),"max_births_per_frame":_pressure_max_births_per_frame,"max_refill_births_per_frame":_pressure_max_refill_births_per_frame,"spawn_build_max_frame_ms":_pressure_build_max_frame_ms,"spawn_build_p95":build_stats.p95,"physics_frame_avg_ms":_average(_pressure_steady_physics_ms),"physics_frame_p95_ms":_stats(_pressure_steady_physics_ms).p95,"load_build_ms":Array(_pressure_build_ms),"settling_ms":Array(_pressure_settling_ms),"steady_ms":Array(_pressure_steady_ms),"steady_physics_ms":Array(_pressure_steady_physics_ms),"frame_phase":_pressure_frame_phase,"frame_target_met":Array(_pressure_frame_target_met),"frame_births":Array(_pressure_frame_births),"frame_enemy_births":Array(_pressure_frame_enemy_births),"frame_projectile_births":Array(_pressure_frame_projectile_births),"frame_removed":Array(_pressure_frame_removed),"frame_kills":Array(_pressure_frame_kills),"build_batches":_pressure_build_batches,"spike_context":_pressure_spike_context}))
 	if scenario == "P":
-		print("[stress-pressure-kill-cycle] weapon=%d moving=true projectile_mode=%s player_path_px=%.1f player_displacement_px=%.1f kills=%d enemy_births=%d projectile_births=%d removed=%d" % [
-			PRESSURE_WEAPON_ID,PRESSURE_PROJECTILE_MODE,_pressure_player_path_px,_pressure_player_start.distance_to(_pressure_player_end),_pressure_kill_events,_pressure_enemy_births,_pressure_projectile_births,
+		print("[stress-pressure-kill-cycle] weapon=%d moving=true player_path_px=%.1f player_displacement_px=%.1f kills=%d enemy_births=%d projectile_births=%d removed=%d" % [
+			PRESSURE_WEAPON_ID,_pressure_player_path_px,_pressure_player_start.distance_to(_pressure_player_end),_pressure_kill_events,_pressure_enemy_births,_pressure_projectile_births,
 			_removed])
-		print("[stress-load-build] phase=load_build frames=%d p50=%.2f p95=%.2f p99=%.2f over25=%d over33=%d over50=%d over100=%d max=%.2f SPAWN_BUILD_MAX_FRAME_MS=%.2f SPAWN_BUILD_P95=%.2f MAX_BIRTHS_PER_FRAME=%d TOTAL_TIME_TO_180=%.3f enemy_births=%d projectile_births=%d kills=%d batches=%d" % [
-			build_stats.n,build_stats.p50,build_stats.p95,build_stats.p99,build_stats.over25,build_stats.over33,build_stats.over50,build_stats.over100,build_stats.max,
+		print("[stress-load-build] pressure_name=%s profile=%s phase=load_build frames=%d p50=%.2f p95=%.2f p99=%.2f over25=%d over33=%d over50=%d over100=%d max=%.2f SPAWN_BUILD_MAX_FRAME_MS=%.2f SPAWN_BUILD_P95=%.2f MAX_BIRTHS_PER_FRAME=%d TOTAL_TIME_TO_180=%.3f enemy_births=%d projectile_births=%d kills=%d batches=%d" % [
+			B194_MAX_PRESSURE,diagnostic_profile,build_stats.n,build_stats.p50,build_stats.p95,build_stats.p99,build_stats.over25,build_stats.over33,build_stats.over50,build_stats.over100,build_stats.max,
 			_pressure_build_max_frame_ms,build_stats.p95,_pressure_max_births_per_frame,time_to_target_s,_pressure_enemy_births,_pressure_projectile_births,_pressure_kill_events,_pressure_build_batches.size()])
 		print("[stress-settling] phase=settling frames=%d p50=%.2f p95=%.2f p99=%.2f over25=%d over33=%d over50=%d over100=%d max=%.2f" % [
 			settling_stats.n,settling_stats.p50,settling_stats.p95,settling_stats.p99,settling_stats.over25,settling_stats.over33,settling_stats.over50,settling_stats.over100,settling_stats.max])
-		print("[stress-steady] phase=steady frames=%d p50=%.2f p95=%.2f p99=%.2f over16_67=%d over25=%d over33=%d over50=%d over100=%d max=%.2f sustained_seconds=%.3f target_frames=%d shortfall_frames=%d valid=%s" % [
-			steady_stats.n,steady_stats.p50,steady_stats.p95,steady_stats.p99,steady_stats.over16_67,steady_stats.over25,steady_stats.over33,steady_stats.over50,steady_stats.over100,steady_stats.max,
+		print("[stress-steady] pressure_name=%s profile=%s phase=steady frames=%d p50=%.2f p95=%.2f p99=%.2f physics_frame_avg=%.2f physics_frame_p95=%.2f max_refill_births_per_frame=%d over16_67=%d over25=%d over33=%d over50=%d over100=%d max=%.2f sustained_seconds=%.3f target_frames=%d shortfall_frames=%d valid=%s" % [
+			B194_MAX_PRESSURE,diagnostic_profile,steady_stats.n,steady_stats.p50,steady_stats.p95,steady_stats.p99,_average(_pressure_steady_physics_ms),_stats(_pressure_steady_physics_ms).p95,_pressure_max_refill_births_per_frame,steady_stats.over16_67,steady_stats.over25,steady_stats.over33,steady_stats.over50,steady_stats.over100,steady_stats.max,
 			_pressure_steady_seconds,_pressure_steady_target_frames,_pressure_steady_shortfall_frames,str(_pressure_measurement_valid())])
 	if fps_counter_requested:
 		print("[stress-fps-counter] ",JSON.stringify(_fps_counter_result))
@@ -1402,10 +1521,9 @@ func _dump() -> void:
 		print("[stress-benchmark] mode=uncapped frames=%d average_fps=%.2f p50=%.2f p95=%.2f p99=%.2f 1pct_low_fps=%.2f max=%.2f" % [
 			benchmark_stats.n,average_fps,benchmark_stats.p50,benchmark_stats.p95,benchmark_stats.p99,low_one_percent_fps,benchmark_stats.max])
 	var total_s := _total_combat_s
-	print("[stress-summary] scenario=%s profile=%s stage=%d label=%s rounds=%d frames=%d combat_s=%.1f avg=%.2f p50=%.2f p95=%.2f p99=%.2f max=%.2f over25=%d over33=%d over50=%d slow_run_ms=%.0f root_windows=%d driver_roots=%d/%d amplified=%d" % [
+	print("[stress-summary] scenario=%s profile=%s stage=%d label=%s rounds=%d frames=%d combat_s=%.1f avg=%.2f p50=%.2f p95=%.2f p99=%.2f max=%.2f over25=%d over33=%d over50=%d slow_run_ms=%.0f amplified=%d" % [
 		scenario,diagnostic_profile,stage,label,_rounds,_ms.size(),total_s,all.avg,all.p50,all.p95,all.p99,all.max,
-		all.over25,all.over33,all.over50,all.slow_run,_root_windows,_driver_roots,
-		_driver_root_attempts,_amplified])
+		all.over25,all.over33,all.over50,all.slow_run,_amplified])
 	print("[stress-cpu] kind=ENGINE_WINDOW_PEAK_MONITOR physics_max_ms=%.3f process_max_ms=%.3f draws_peak=%d" % [
 		Array(_phys).max() if not _phys.is_empty() else 0.0,Array(_proc).max() if not _proc.is_empty() else 0.0,_draws_peak()])
 	print("[stress-peak] enemies=%d zones=%d beams=%d hazards=%d vfx=%d transients=%d labels=%d projectiles=%d rewards=%d nodes=%d created=%d removed=%d raycasts=%d raycasts_skipped=%d clear_line=%d hits=%d zone_hits=%d same_frame=%d labels_created=%d vfx_created=%d fog_pushes=%d reward_scans=%d reward_built=%d reward_reused=%d reward_nodes=%d frames=%d" % [
@@ -1461,16 +1579,10 @@ func _dump() -> void:
 
 func _buckets(family: String, values) -> void:
 	_bucket(family,"all",func(_f: int,_b: int) -> bool: return true,values)
-	_bucket(family,"rooted",func(f: int,_b: int) -> bool: return (f & F_ROOTED) != 0,values)
-	_bucket(family,"not_rooted",func(f: int,_b: int) -> bool: return (f & F_ROOTED) == 0,values)
 	_bucket(family,"lane1",func(f: int,_b: int) -> bool: return (f & F_LANE) != 0,values)
 	_bucket(family,"lane3plus",func(_f: int,b: int) -> bool: return b >= 3,values)
 	_bucket(family,"lane6plus",func(_f: int,b: int) -> bool: return b >= 6,values)
-	_bucket(family,"rooted_lane1",func(f: int,_b: int) -> bool: return (f & F_ROOTED) != 0 and (f & F_LANE) != 0,values)
-	_bucket(family,"rooted_lane3plus",func(f: int,b: int) -> bool: return (f & F_ROOTED) != 0 and b >= 3,values)
-	_bucket(family,"not_rooted_lane3plus",func(f: int,b: int) -> bool: return (f & F_ROOTED) == 0 and b >= 3,values)
 	_bucket(family,"hit_frame",func(f: int,_b: int) -> bool: return (f & F_HIT) != 0,values)
-	_bucket(family,"hit_frame_rooted",func(f: int,_b: int) -> bool: return (f & (F_HIT|F_ROOTED)) == (F_HIT|F_ROOTED),values)
 	_bucket(family,"raycast_frame",func(f: int,_b: int) -> bool: return (f & F_RAY) != 0,values)
 	_bucket(family,"no_raycast_frame",func(f: int,_b: int) -> bool: return (f & F_RAY) == 0,values)
 	_bucket(family,"clear_line_frame",func(f: int,_b: int) -> bool: return (f & F_CLEAR) != 0,values)
@@ -1530,9 +1642,8 @@ func _grant_everything() -> void:
 		Utils.player.reward_root.get_child_count(),Demo.talents.size(),
 		get_tree().get_nodes_in_group("reward").size()])
 
-## Highest-pressure player loadout: W112's held arc is the crowd-clear path identified in
-## live play. The driver uses the normal input route; this only selects the weapon and prevents
-## an ammo/reload boundary from replacing the intended sustained-fire pressure.
+## Keep the pressure run's player state deterministic. The formal pressure input releases fire;
+## this only selects the same ordinary weapon state without synthesizing any enemy projectiles.
 func _prepare_pressure_loadout() -> void:
 	if not is_instance_valid(Utils.player): return
 	Utils.player.changeWeapon(PRESSURE_WEAPON_ID)

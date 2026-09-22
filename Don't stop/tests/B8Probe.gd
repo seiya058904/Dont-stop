@@ -22,8 +22,7 @@ extends "res://tests/M8Runtime.gd"
 ## Categories are deliberately coarser than tags: the tag table keeps the game's own attack
 ## kinds, the category rollup answers the brief's "at least classify" list.
 const ZONE_KINDS := ["circle","line","charge","cone","beam","artillery","tremor","cross",
-	"cross_laser","band","root_shot"]
-const CONTROL_KINDS := ["control_shot:root","root_shot","tremor"]
+	"cross_laser","band","fan_shot"]
 
 ## Escape probe sampling. The driver already runs at frame rate; 10 Hz keeps the probe's cost
 ## independent of the frame rate and matches the density audit's cadence.
@@ -118,12 +117,10 @@ func category_for(tag: String, attacker) -> String:
 		# E06's self-destruct burst: a committed, telegraphed area denial, not body pressure.
 		if elite: return "elite_self_destruct"
 		return "self_destruct"
-	if tag.begins_with("control_shot"): return "control_projectile"
 	if tag == "shot:projectile" or tag == "projectile": return "enemy_projectile"
 	if tag.begins_with("shot:"): return "barrage_" + tag.substr(4)
 	if tag in ["artillery","tremor"]: return "artillery"
 	if tag in ["toxin","toxic_zone"]: return "poison_field"
-	if tag == "root_shot": return "control_zone"
 	if tag in ZONE_KINDS: return "beam_or_hostile_zone"
 	if tag == "" or tag == "percentage": return "other"
 	return "other"
@@ -135,8 +132,8 @@ func _bucket(table: Dictionary, key: String) -> Dictionary:
 func _on_damage(raw: float, applied: float, tag: String, attacker) -> void:
 	var now := _now()
 	var player = Utils.player
-	var rooted := is_instance_valid(player) and float(player.root_remaining) > 0.0
-	var post := is_instance_valid(player) and float(player.root_remaining) <= 0.0 and float(player.cc_immunity) > 0.0
+	var rooted := false # Historical report columns; immobilization has been removed.
+	var post := false
 	var who := ""
 	if is_instance_valid(attacker):
 		who = str(attacker.get_meta("content_id", attacker.name))

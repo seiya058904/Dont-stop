@@ -177,11 +177,7 @@ function parseKv(line) {
 		combat_s: summary ? parseFloat(summary.combat_s) : null,
 		frame_ms: summary ? { avg: n('avg'), p50: n('p50'), p95: n('p95'), p99: n('p99'), max: n('max') } : null,
 		spikes: summary ? { over25: n('over25'), over33: n('over33'), over50: n('over50'), slow_run_ms: n('slow_run_ms') } : null,
-		root: summary ? {
-			windows: n('root_windows'),
-			driver_applied: parseFloat(summary.driver_roots.split('/')[0]),
-			driver_attempts: parseFloat(summary.driver_roots.split('/')[1]),
-		} : null,
+
 		amplified: summary ? n('amplified') : null,
 		cpu,
 		peaks: peak,

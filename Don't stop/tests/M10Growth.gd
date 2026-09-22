@@ -79,11 +79,7 @@ func _ready():
 	PlayerData.player_hp = 20; before = PlayerData.player_hp
 	Utils.player.on_percentage_hit(0.3)
 	check(is_equal_approx(before-PlayerData.player_hp,6),"percentage current max independent from flat pressure")
-	check(Utils.player.apply_root(),"root starts")
-	check(not Utils.player.apply_root(),"root cannot refresh")
-	await wait(0.5); check(Utils.player.root_remaining==0 and Utils.player.cc_immunity>1,"post root immunity")
-	check(not Utils.player.apply_root(),"immunity blocks chain")
-	await wait(1.3); check(Utils.player.apply_root(),"root expires normally")
+	check(not Utils.player.has_method("apply_root"),"player no longer exposes immobilization")
 	LevelServer.state = "CAMP"; await wait(0.1)
 	for id in range(12,24):
 		if not get_reward(id): give(id)

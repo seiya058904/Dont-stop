@@ -221,12 +221,12 @@ func contact_reach() -> float:
 ## was the one path that could push the count past the cap.
 ## Returns the created projectile (null when the ceiling refused it) so a subclass can
 ## register it for cleanup; a Node is truthy, so existing `if shot(...)` callers still work.
-func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", control := 0.0, bounces := 0) -> Node:
+func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", bounces := 0) -> Node:
 	if preload("res://game/monster/EnemyShot.gd").live_count >= preload("res://game/monster/EnemyShot.gd").capacity_limit: return null
 	var node = CharacterBody2D.new(); node.set_script(load("res://game/monster/EnemyShot.gd"))
 	node.position = global_position; node.velocity = dir*speed_value; node.owner_ref = weakref(self)
-	node.damage = damage_value; node.style = style; node.control = control
-	node.bounces_left = bounces if control <= 0 else 0
+	node.damage = damage_value; node.style = style
+	node.bounces_left = bounces
 	get_tree().current_scene.add_child(node)
 	if muzzle_flash: preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,12,dir,style)
 	return node
