@@ -5,6 +5,7 @@ extends Control
 const pre = preload("res://ui/ModeSelect.tscn")
 
 func _ready() -> void:
+	_apply_web_rendering_fallback()
 	Utils.onGameStart.connect(self.onGameStart)
 	$VBoxContainer/start.mouse_entered.connect(_on_start_hovered)
 	# A web page is left by closing its tab; a button pretending to end the program
@@ -14,6 +15,21 @@ func _ready() -> void:
 		$VBoxContainer/quit.visible = false
 	Utils.startup_mark("menu-initialized")
 	_mark_menu_presented()
+
+## The Web Compatibility renderer has no useful post-process glow fallback on
+## software-rendered browsers: the title menu's first glow pass can block the
+## frame that should deliver the first button hover. Keep the authored map,
+## sprites, lights and combat materials intact; only skip this optional
+## compositor effect on Web so input remains responsive on low-end browsers.
+func _apply_web_rendering_fallback() -> void:
+	if not OS.has_feature("web"):
+		return
+	var scene := get_tree().current_scene
+	if scene == null:
+		return
+	var world := scene.get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if world != null and world.environment != null:
+		world.environment.glow_enabled = false
 
 func _mark_menu_presented() -> void:
 	await RenderingServer.frame_post_draw
