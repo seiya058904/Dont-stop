@@ -3,8 +3,8 @@
 // Usage:
 //   node tools/web-b11-1-stress.js <baseUrl> <evidenceDir> <label> <scenario> [key=value ...]
 //
-//   scenario   A | B | C | D                     (see game/diag/B11Stress.gd)
-//   key=value  stage=39 seconds=90 seed=20260918 lasers=4 root=2.0 park=1
+//   scenario   A | B | C | D | P                 (see game/diag/B11Stress.gd)
+//   key=value  stage=39 seconds=90 seed=20260918 lasers=4 root=2.0 park=1 pressure_births=4
 //              enemies=60 barrage=6 iso=vfx,labels,trails,fogcore,tddecor,particles
 //
 // B11.2 re-pointed the same four scenario names at four LOAD PROFILES (normal / dense enemies /
@@ -94,6 +94,11 @@ function parseKv(line) {
 	// a B11.1-era consumer of this JSON keeps reading exactly the fields it always read.
 	let load = null;
 	let ink = null;
+	let loadBuild = null;
+	let settling = null;
+	let steady = null;
+	let pressureFrames = null;
+	let benchmark = null;
 	let rawFrames = null;
 	const errors = [];
 	// Every line the page printed, bounded. The engine's own script errors arrive here, and a
@@ -166,6 +171,10 @@ function parseKv(line) {
 			rawFrames = JSON.parse(t.slice('[stress-frames] '.length));
 			return; // Store once, outside the bounded human-readable console log.
 		}
+		if (t.startsWith('[stress-pressure-frames] ')) {
+			pressureFrames = JSON.parse(t.slice('[stress-pressure-frames] '.length));
+			return; // Store the phase arrays outside the bounded human-readable console log.
+		}
 		if (allConsole.length < 600) allConsole.push(`${m.type()}: ${t}`);
 		if (t.startsWith('[spike] ')) spikes.push(parseKv(t.slice('[spike] '.length)));
 		else if (t.startsWith('[stress-bucket] ')) buckets.push(parseKv(t.slice('[stress-bucket] '.length)));
@@ -173,6 +182,10 @@ function parseKv(line) {
 		else if (t.startsWith('[stress-cpu] ')) { cpu = parseKv(t.slice('[stress-cpu] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress-peak] ')) { peak = parseKv(t.slice('[stress-peak] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress-load] ')) { load = parseKv(t.slice('[stress-load] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-load-build] ')) { loadBuild = parseKv(t.slice('[stress-load-build] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-settling] ')) { settling = parseKv(t.slice('[stress-settling] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-steady] ')) { steady = parseKv(t.slice('[stress-steady] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-benchmark] ')) { benchmark = parseKv(t.slice('[stress-benchmark] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress-ink] ')) { ink = parseKv(t.slice('[stress-ink] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress] ') || t.startsWith('[stress-')) markers.push(t);
 	});
@@ -265,6 +278,10 @@ function parseKv(line) {
 		if (peak) { peak.memory_static = null; peak.orphans = null; }
 		if (load) { load.mem_peak_mb = null; load.orphans_peak = null; }
 	}
+	if (rawFrames && pressureFrames) {
+		rawFrames.pressure = pressureFrames;
+		rawFrames.pressure_measurement_valid = pressureFrames.pressure_measurement_valid;
+	}
 
 	const n = k => (summary && Number.isFinite(parseFloat(summary[k])) ? parseFloat(summary[k]) : null);
 	const p = k => (peak && Number.isFinite(parseFloat(peak[k])) ? parseFloat(peak[k]) : null);
@@ -291,6 +308,11 @@ function parseKv(line) {
 		peaks: peak,
 		load,
 		ink,
+		load_build: loadBuild,
+		settling,
+		steady,
+		pressure: pressureFrames,
+		benchmark,
 		raw_frames: rawFrames,
 		bucket_rows: buckets,
 		per_second: spikes,
@@ -326,8 +348,21 @@ function parseKv(line) {
 			`status_walks=${ink.status_walks} status_walks_empty=${ink.status_walks_empty} ` +
 			`label_tweens=${ink.label_tweens} labels_created=${ink.labels_created}`);
 	}
+	if (pressureFrames) {
+		const projectileMode = pressureFrames.projectile_target_mode || 'legacy';
+		console.log(`  pressure phase=${pressureFrames.phase} enemy_target=${pressureFrames.target_enemies} projectile_target_mode=${projectileMode} ` +
+			`time_to_target_s=${f(pressureFrames.time_to_target_s)} steady_s=${f(pressureFrames.steady_seconds)} ` +
+			`steady_p95=${f(steady && steady.p95)} steady_p99=${f(steady && steady.p99)} ` +
+			`over16_67=${steady && steady.over16_67} over25=${steady && steady.over25} over33=${steady && steady.over33} ` +
+			`over50=${steady && steady.over50} max=${f(steady && steady.max)} valid=${pressureFrames.pressure_measurement_valid}`);
+	}
+	if (benchmark) {
+		console.log(`  benchmark average_fps=${f(benchmark.average_fps)} p50=${f(benchmark.p50)} p95=${f(benchmark.p95)} ` +
+			`p99=${f(benchmark.p99)} 1pct_low_fps=${f(benchmark['1pct_low_fps'])} max=${f(benchmark.max)}`);
+	}
 	for (const b of buckets) {
 		console.log(`  bucket[${b.family}] ${b.name} n=${b.n} share=${f(b.share)} avg=${f(b.avg)} p95=${f(b.p95)} p99=${f(b.p99)} max=${f(b.max)} over33=${b.over33} over50=${b.over50}`);
 	}
-	process.exit((summary || visualDone) && !errors.length && !rawFrames?.measurement_timeout ? 0 : 1);
+	const pressureOk = scenario !== 'P' || Boolean(pressureFrames && pressureFrames.pressure_measurement_valid);
+	process.exit((summary || visualDone) && !errors.length && !rawFrames?.measurement_timeout && pressureOk ? 0 : 1);
 })();

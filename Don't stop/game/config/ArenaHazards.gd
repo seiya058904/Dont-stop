@@ -20,6 +20,11 @@ const REGION = {
 	"R8":{"primary":"laser","secondary":"shock","tertiary":"poison"}
 }
 
+## The fixed arena-wide rotating laser is intentionally out of the shipped hazard plans:
+## it is visually noisy and its redraw/clip work is not worth keeping. This only filters
+## ArenaHazard plans; monster-fired TacticalEnemy beams and the player's laser are separate.
+const DISABLED_ARENA_KINDS := {"laser":true}
+
 ## Authored placement anchors in arena-local coordinates. They read as part of each map
 ## (loading aprons, coolant runs, core ring) instead of appearing at random, and every one
 ## is still validated at spawn time against the real collider set, the player distance
@@ -51,8 +56,14 @@ static func kinds_for(region: String, count: int) -> Array:
 	var entry = REGION.get(region,{})
 	var order = []
 	for key in ["primary","secondary","tertiary"]:
-		if entry.has(key) and not order.has(entry[key]): order.append(entry[key])
+		if entry.has(key) and not DISABLED_ARENA_KINDS.has(entry[key]) and not order.has(entry[key]): order.append(entry[key])
 	return order.slice(0,maxi(0,count))
+
+static func primary_for(region: String) -> String:
+	var entry = REGION.get(region,{})
+	for key in ["primary","secondary","tertiary"]:
+		if entry.has(key) and not DISABLED_ARENA_KINDS.has(entry[key]): return entry[key]
+	return ""
 
 ## Empty dictionary means "this stage fields no arena hazard".
 static func plan(stage: int) -> Dictionary:
@@ -74,14 +85,14 @@ static func plan(stage: int) -> Dictionary:
 		}
 	if stage <= 25:
 		# The first formal arena hazard: R5's spore contamination, gentle enough to teach.
-		return {"region":region,"kinds":[REGION[region].primary],"interval":11.0,"live_cap":2,"coverage":MAX_COVERAGE,
+		return {"region":region,"kinds":[primary_for(region)],"interval":11.0,"live_cap":2,"coverage":MAX_COVERAGE,
 			"warning":1.05,"active":4.6,"poison_share":0.015,"flat_damage":1.0,"pulses":1}
 	if stage <= 29:
 		return {"region":region,"kinds":kinds_for(region,2),"interval":8.5,"live_cap":4,"coverage":MAX_COVERAGE,
 			"warning":0.95,"active":4.8,"poison_share":0.016,"flat_damage":1.05,"pulses":1}
 	# Stage 30 is the normal campaign's final boss: hazards stay present but never
 	# out-shout the boss, so only the region's own primary kind is fielded.
-	return {"region":region,"kinds":[REGION[region].primary],"interval":8.0,"live_cap":3,"coverage":MAX_COVERAGE,
+	return {"region":region,"kinds":[primary_for(region)],"interval":8.0,"live_cap":3,"coverage":MAX_COVERAGE,
 		"warning":0.95,"active":4.4,"poison_share":0.015,"flat_damage":1.05,"pulses":1}
 
 static func _axis(from: float, to: float, ramp: float) -> float:

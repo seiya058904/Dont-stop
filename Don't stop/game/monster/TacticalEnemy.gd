@@ -30,6 +30,10 @@ var phase_label: Label
 var combo_queue: Array = []
 var bulwark_spent = false
 var continuous_barrage: Node = null
+var _draw_clock := 0.0
+var _draw_phase := ""
+var _draw_lock_frozen := true
+var _draw_facing := Vector2.LEFT
 
 const PHASE_TWO_AT := 0.70
 const PHASE_THREE_AT := 0.35
@@ -84,6 +88,20 @@ func _ensure_continuous_barrage() -> void:
 	continuous_barrage.name = "ContinuousBarrage"
 	add_child(continuous_barrage)
 
+func _request_visual_redraw(delta: float) -> void:
+	# Tactical AI remains 60 Hz; only its decorative actor ink is capped at 30 Hz.
+	# Phase/lock transitions and meaningful aim changes still repaint immediately, while
+	# E06's pulse and B04's rotating ring remain visually animated at the capped cadence.
+	_draw_clock -= delta
+	var aim_changed := absf(_draw_facing.angle_to(facing)) > 0.04
+	var state_changed := phase != _draw_phase or lock_frozen != _draw_lock_frozen
+	if _draw_clock > 0.0 and not aim_changed and not state_changed: return
+	_draw_clock = 1.0/30.0
+	_draw_phase = phase
+	_draw_lock_frozen = lock_frozen
+	_draw_facing = facing
+	queue_redraw()
+
 func move_towards(point: Vector2, delta: float, multiplier = 1.0):
 	path_refresh -= delta
 	if path_refresh <= 0 or global_position.distance_to(cached_step) < 6:
@@ -91,7 +109,7 @@ func move_towards(point: Vector2, delta: float, multiplier = 1.0):
 		path_refresh = 0.2
 	velocity = global_position.direction_to(cached_step)*SPEED*multiplier*(1.0-slow_amount if slow_time > 0 else 1.0)
 	var previous = global_position; _measured_move(); travelled += previous.distance_to(global_position)
-	anim.play("run" if velocity.length() > 1 else "idle")
+	_play_motion("run" if velocity.length() > 1 else "idle")
 
 ## Single factory for every warning footprint, so palette, fog piercing and the Hell warning
 ## floor cannot drift apart between attacks.
@@ -621,7 +639,8 @@ func _physics_process(delta):
 	if LevelServer.state != "COMBAT" or not is_instance_valid(Utils.player) or Utils.player.is_dead: velocity = Vector2.ZERO; return
 	ultimate_cooldown = maxf(0,ultimate_cooldown-delta)
 	phase_time -= delta; contact_cooldown = maxf(0,contact_cooldown-delta)
-	phase_flash = maxf(0,phase_flash-delta); queue_redraw()
+	phase_flash = maxf(0,phase_flash-delta)
+	_request_visual_redraw(delta)
 	if state_array.has(Utils.STATE_TYPE.STUN): return
 	if hit: _measured_move(); return
 	# B11.1: `filter()` allocates a new array (and re-converts the untyped result back to

@@ -74,15 +74,9 @@ func apply_root(seconds = 0.45) -> bool:
 	if is_dead or LevelServer.state != "COMBAT" or root_remaining > 0 or cc_immunity > 0: return false
 	root_remaining = clampf(seconds,0.4,0.5); root_epoch = LevelServer.epoch
 	is_dash = false; dash_part.emitting = false
-	Utils.showHitLabel("束缚",self)
+	# The control state remains authoritative. The player-side root ring and
+	# floating label are visual-only, so omit them from the pressure path.
 	return true
-
-func _draw():
-	if root_remaining > 0:
-		draw_circle(Vector2(0,4),22,Color(0.7,0.3,1,0.22))
-		draw_arc(Vector2(0,4),22,0,TAU,32,Color(0.95,0.65,1),3)
-		for offset in [-10,0,10]: draw_line(Vector2(-19,offset),Vector2(19,-offset),Color(0.8,0.45,1),2)
-	elif cc_immunity>0: draw_arc(Vector2(0,4),19,0,TAU,32,Color(0.35,1,0.85,0.8),2)
 
 func on_percentage_hit(fraction: float, attacker = null, source := "percentage"):
 	# Percentage is resolved from current maximum HP and follows defense/rewards.
@@ -106,7 +100,6 @@ func _init() -> void:
 	Utils.onGameStart.connect(self.onGameStart)
 
 func _ready():
-	add_child(load("res://game/hero/RootFeedback.gd").new())
 	set_physics_process(false)
 	set_process(false)
 	PlayerData.onPlayerLevelChange.connect(self.onPlayerLevelChange)

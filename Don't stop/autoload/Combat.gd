@@ -98,7 +98,10 @@ func _hit(target, context: Dictionary) -> bool:
 	var hunter_applied = context.get("hunter_applied",false)
 	if not hunter_applied and (target.is_elite or target.is_boss) and RewardServer.rank(14)>0:
 		amount *= 1.0+0.05*RewardServer.rank(14); hunter_applied = true
-	var resolved_context = context.duplicate(true)
+	# `_hit` only adds a top-level resolution flag. Nested payloads (gun/spec data) are
+	# read-only here; derived effects that mutate their context already deep-copy at
+	# their own boundary. Avoid cloning the full payload for every real hit.
+	var resolved_context = context.duplicate()
 	resolved_context.hunter_applied = hunter_applied
 	var critical = depth == 0 and randf() < context.get("crit",0.0)
 	if critical: amount *= 1.5
@@ -183,6 +186,11 @@ const CLEAR_LINE_MASK := 2147483649
 var clear_query: PhysicsRayQueryParameters2D = null
 
 func _clear_line_query(from: Vector2, to: Vector2) -> bool:
+	var town = LevelServer.town
+	var arena = town.arena if is_instance_valid(town) else null
+	if is_instance_valid(arena) and arena.has_method("static_line_may_hit") and not arena.static_line_may_hit(from,to):
+		if B11Probe.enabled: B11Probe.clear_line_static_skips += 1
+		return true
 	if clear_query == null:
 		clear_query = PhysicsRayQueryParameters2D.create(from,to,CLEAR_LINE_MASK)
 	else:
@@ -326,29 +334,41 @@ func arc(gun, start: Vector2, direction: Vector2, snapshot: Dictionary = {}):
 	if snapshot.is_empty(): snapshot = gun.shot_context()
 	var spec = WeaponCatalog.ARC
 	var budget = mini(16,int(spec.targets)+maxi(0,int(gun.effective.jumps)-3))
-	var candidates = _monsters_for_frame().filter(func(t): return not t.is_die and not t.is_queued_for_deletion())
-	candidates.sort_custom(func(a,b): return start.distance_squared_to(a.global_position)<start.distance_squared_to(b.global_position))
+	var candidates: Array = []
+	var range_sq := float(gun.effective.range)*float(gun.effective.range)
+	var link_range_sq := float(spec.link_range)*float(spec.link_range)
+	# The graph is resolved synchronously, so positions and instance ids cannot change while
+	# this list is used. Capture them once: the old sort comparator and every link candidate
+	# re-read global_position, which made one held W112 shot pay the same property/native
+	# boundary cost hundreds of times before doing any gameplay work.
+	for target in _monsters_for_frame():
+		if not is_instance_valid(target) or target.is_die or target.is_queued_for_deletion(): continue
+		var target_position: Vector2 = target.global_position
+		candidates.append([start.distance_squared_to(target_position),target,target_position+Vector2(0,-8),target.get_instance_id()])
+	candidates.sort_custom(func(a,b): return a[0]<b[0])
 	var visited = {}
 	var queue = []
 	var fx = load("res://game/effects/ArcDischarge.gd").new()
 	# Resolve the entire bounded graph before damage can free a target.
-	for target in candidates:
-		var p = target.global_position+Vector2(0,-8)
-		var offset = p-start
+	for candidate in candidates:
 		if queue.size() >= int(spec.roots): break
-		if offset.length()>gun.effective.range or absf(direction.angle_to(offset))>float(spec.root_angle) or not clear_line(start,p): continue
+		var target: BaseMonster = candidate[1]
+		var p: Vector2 = candidate[2]
+		var offset := p-start
+		if offset.length_squared()>range_sq or absf(direction.angle_to(offset))>float(spec.root_angle) or not clear_line(start,p): continue
 		queue.append({"target":target,"point":p,"from":start,"hop":0})
-		visited[target.get_instance_id()] = true
+		visited[candidate[3]] = true
 	var index = 0
 	while index < queue.size() and queue.size()<budget:
 		var parent = queue[index]; index += 1
 		var children = 0
-		for target in candidates:
+		for candidate in candidates:
 			if queue.size()>=budget or children>=2: break
-			if visited.has(target.get_instance_id()): continue
-			var p = target.global_position+Vector2(0,-8)
-			if parent.point.distance_to(p)>float(spec.link_range) or not clear_line(parent.point,p): continue
-			visited[target.get_instance_id()] = true
+			if visited.has(candidate[3]): continue
+			var target: BaseMonster = candidate[1]
+			var p: Vector2 = candidate[2]
+			if parent.point.distance_squared_to(p)>link_range_sq or not clear_line(parent.point,p): continue
+			visited[candidate[3]] = true
 			queue.append({"target":target,"point":p,"from":parent.point,"hop":parent.hop+1})
 			children += 1
 	for node in queue:

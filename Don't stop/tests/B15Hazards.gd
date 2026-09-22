@@ -23,6 +23,9 @@ func _ready():
 	shock._advance(0.5); shock._clip()
 	check(shock.origin().is_equal_approx(shock.global_position+Vector2(0,-23)),"moving shock has shared translated origin")
 	shock.queue_free()
+	for stage in [26,29,30,36,39,40]:
+		check(not "laser" in ArenaHazards.plan(stage).kinds,
+			"fixed rotating arena laser is disabled at stage %d" % stage)
 	for stage in range(31,41): check(not "poison" in ArenaHazards.plan(stage).kinds,"environment poison replaced stage %d"%stage)
 	print("B15 HAZARDS checks=",checks," failures=",failures)
 	await clean(); get_tree().quit(1 if failures else 0)

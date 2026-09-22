@@ -8,6 +8,8 @@ var locked_direction = Vector2.ZERO
 ## shared lock writes both, and TacticalEnemy (which extends this class) aims artillery at it.
 var locked_point = Vector2.ZERO
 var contact_cooldown = 0.0
+var _last_draw_phase := ""
+var _last_draw_lock_frozen := true
 
 ## ---- B11: the ONE bounded attack lock, shared by both rosters -------------------------------
 ##
@@ -233,7 +235,13 @@ func _physics_process(delta):
 	if is_die or not is_instance_valid(Utils.player) or Utils.player.is_dead or LevelServer.state != "COMBAT": return
 	phase_time -= delta
 	contact_cooldown = maxf(0,contact_cooldown-delta)
-	queue_redraw()
+	# E02/E04 draw static role marks outside their phase transitions. E05's muzzle pulse is the
+	# only continuously changing DemoEnemy drawing, and only after its aim is frozen. Avoid asking
+	# CanvasItem to rebuild the same geometry for every ordinary enemy on every physics tick.
+	if phase != _last_draw_phase or lock_frozen != _last_draw_lock_frozen or (role == "E05" and phase == "warn" and lock_frozen):
+		_last_draw_phase = phase
+		_last_draw_lock_frozen = lock_frozen
+		queue_redraw()
 	if phase == "spawn":
 		if phase_time <= 0: phase = "move"
 		return

@@ -4,6 +4,8 @@ var edges: Array = []
 var contacts: Array = []
 var age := 0.0
 var epoch := -1
+var _path_phase := -1
+var _cached_paths: Array = []
 func _ready():
 	epoch = LevelServer.epoch
 	add_to_group("combat_transient")
@@ -12,21 +14,33 @@ func _process(delta):
 	age += delta
 	if age > 0.19 or epoch != LevelServer.epoch: queue_free(); return
 	queue_redraw()
-func _draw():
-	var alpha = (1.0-age/0.19)*(0.55 if Combat.reduced_flash else 1.0)
+
+func _rebuild_paths(phase: int) -> void:
+	_cached_paths.clear()
 	for e in edges:
 		var path = PackedVector2Array([e[0]])
 		var normal = (e[1]-e[0]).normalized().orthogonal()
 		for i in range(1,8):
-			var p = e[0].lerp(e[1],i/8.0)+normal*sin(i*9.3+floor(age*35)*2.1)*4
+			var p = e[0].lerp(e[1],i/8.0)+normal*sin(i*9.3+phase*2.1)*4
 			path.append(p.round())
 		path.append(e[1])
+		_cached_paths.append(path)
+	_path_phase = phase
+
+func _draw():
+	var alpha = (1.0-age/0.19)*(0.55 if Combat.reduced_flash else 1.0)
+	var phase := floori(age*35.0)
+	if phase != _path_phase or _cached_paths.size() != edges.size(): _rebuild_paths(phase)
+	for edge_index in _cached_paths.size():
+		var path: PackedVector2Array = _cached_paths[edge_index]
+		var edge = edges[edge_index]
+		var normal = (edge[1]-edge[0]).normalized().orthogonal()
 		draw_polyline(path,Color(0.05,0.18,0.32,alpha),5)
 		draw_polyline(path,Color(0.25,0.65,1,alpha),3)
 		draw_polyline(path,Color(0.8,0.97,1,alpha),1)
 		for i in [2,5]:
 			var fork = path[i]+normal*(6 if i==2 else -7)
-			draw_polyline(PackedVector2Array([path[i],fork,fork+(e[1]-e[0]).normalized()*5]),Color(0.4,0.8,1,alpha*0.65),1)
+			draw_polyline(PackedVector2Array([path[i],fork,fork+(edge[1]-edge[0]).normalized()*5]),Color(0.4,0.8,1,alpha*0.65),1)
 	for p in contacts:
 		for i in 5:
 			var a = Vector2.RIGHT.rotated(i*TAU/5+age*9)

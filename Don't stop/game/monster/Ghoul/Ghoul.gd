@@ -8,10 +8,10 @@ func _ready():
 func _physics_process(delta):
 	super._physics_process(delta)
 	if velocity != Vector2.ZERO:
-		anim.play("run")
+		_play_motion("run")
 		if velocity.x > 0:
 			flip_h(false)
 		elif velocity.x < 0 && scale.x == 1:
 			flip_h(true)
 	else:
-		anim.play("idle")
+		_play_motion("idle")

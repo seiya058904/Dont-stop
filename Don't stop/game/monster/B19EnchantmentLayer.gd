@@ -1,7 +1,10 @@
 extends Node2D
 
 ## B19.1: one pause-aware clock for the glint in the actors' existing materials.
-## Only health bars are external; the enchantment follows the actual sprite mask.
+## The enchantment follows the actual sprite mask. Repeated enemy health bars are
+## intentionally disabled: they are a visual-only per-frame submission over the
+## whole monster group and do not carry gameplay state.
+const SHOW_HEALTH_BARS := false
 var animation_time := 0.0
 var animation_frame := -1
 var last_combat := false
@@ -27,9 +30,10 @@ func _process(delta: float) -> void:
 	animation_time = fmod(animation_time+delta,64.0)
 	animation_frame = int(animation_time*10.0)
 	RenderingServer.global_shader_parameter_set("b19_enchantment_time",animation_time)
-	queue_redraw()
+	if SHOW_HEALTH_BARS: queue_redraw()
 
 func _draw() -> void:
+	if not SHOW_HEALTH_BARS: return
 	if not last_combat or LevelServer.state != "COMBAT" or epoch != LevelServer.epoch: return
 	var started := Time.get_ticks_usec() if B11Probe.enabled else 0
 	var inverse := global_transform.affine_inverse()
