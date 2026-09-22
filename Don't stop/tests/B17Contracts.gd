@@ -42,4 +42,9 @@ func _ready():
 	pattern.free()
 	check("burst" in load("res://game/monster/TacticalEnemy.gd").BOSS_CYCLES["3"]["B04"],"B04 phase 3 schedules barrage")
 	print("B17 CONTRACTS checks=",checks," failures=",failures)
-	get_tree().quit(1 if failures else 0)
+	if failures:
+		get_tree().quit(1)
+	else:
+		# Use the production audio shutdown: raw quit can retain a playing Ogg
+		# stream/playback at exit, making the otherwise passing contract flaky.
+		await Demo.finish_quit()

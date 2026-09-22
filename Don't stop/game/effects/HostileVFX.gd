@@ -16,7 +16,6 @@ const INK = {
 	"laser":Color(0.45,0.95,1.0),
 	"sweep":Color(1.0,0.5,0.94),
 	"artillery":Color(1,0.78,0.3),
-	"root":Color(0.8,0.5,1.0),
 	"poison":Color(0.44,1.0,0.62),
 	"ice":Color(0.66,0.96,1.0),
 	"shock":Color(0.68,0.54,1.0),

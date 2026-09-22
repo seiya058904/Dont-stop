@@ -122,6 +122,32 @@ watchdog.unref?.();
 		],
 	});
 	const page = context.pages()[0] || await context.newPage();
+	// Test-profile observation only: preserve native arguments/return values and
+	// never flush or write storage for the product. Record transaction completion
+	// so an in-memory save cannot be mistaken for a committed browser save.
+	await page.addInitScript(() => {
+		let events = 0;
+		const report = (event) => {
+			if (events++ < 128) console.log('[idb-observe] ' + JSON.stringify({ navigation_ms: performance.now(), ...event }));
+		};
+		const transaction = IDBDatabase.prototype.transaction;
+		IDBDatabase.prototype.transaction = function (...args) {
+			const tx = Reflect.apply(transaction, this, args);
+			if (tx.mode === 'readwrite') {
+				const database = this.name;
+				report({ event: 'transaction-start', database });
+				tx.addEventListener('complete', () => report({ event: 'transaction-complete', database }));
+				tx.addEventListener('abort', () => report({ event: 'transaction-abort', database, error: tx.error?.name }));
+			}
+			return tx;
+		};
+		const put = IDBObjectStore.prototype.put;
+		IDBObjectStore.prototype.put = function (...args) {
+			const request = Reflect.apply(put, this, args);
+			if (this.name === 'FILE_DATA') report({ event: 'file-put', path: String(args[1]) });
+			return request;
+		};
+	});
 
 	// A dead renderer used to surface as an opaque "Target page ... has been
 	// closed" from whatever wait was in flight, which says nothing about where it
@@ -147,9 +173,26 @@ watchdog.unref?.();
 	// The read-only probe stream, and the one-shot save report it prints at boot.
 	let probeLines = [];
 	let probeSaveState = null;
+	let probeSaveHash = null;
+	const saveDiagnostics = [];
+	const storageEvents = [];
+	let durableFilesBeforeReload = null;
 	const rects = {};
+	let documentSequence = 0;
+	// The previous game can still emit while goto is waiting to navigate. Clear
+	// at the committed main-document boundary, before the new game starts, not
+	// before calling goto (which let old fixture messages contaminate acceptance).
+	page.on('framenavigated', frame => {
+		if (frame !== page.mainFrame()) return;
+		documentSequence += 1;
+		gameLines = [];
+		probeLines = [];
+		probeSaveState = null;
+		probeSaveHash = null;
+	});
 	page.on('console', m => {
 		const t = m.text();
+		if (t.startsWith('[idb-observe] ')) { storageEvents.push({ document: documentSequence, wall_ms: Date.now(), ...JSON.parse(t.slice('[idb-observe] '.length)) }); return; }
 		if (m.type() === 'error') consoleErrors.push(t);
 		if (t.startsWith('[probe] rect ')) {
 			const g = t.match(/rect (\S+) id=(\d+) text="([^"]*)" x=([\d.-]+) y=([\d.-]+) w=([\d.-]+) h=([\d.-]+) cx=([\d.-]+) cy=([\d.-]+)/);
@@ -157,6 +200,8 @@ watchdog.unref?.();
 			return;
 		}
 		if (t.startsWith('[probe] ')) {
+			if (t.startsWith('[probe] save_hash ')) { probeSaveHash = t.slice('[probe] save_hash '.length).trim(); return; }
+			if (t.startsWith('[probe] save_diagnostic ')) { saveDiagnostics.push({ document: documentSequence, wall_ms: Date.now(), text: t }); return; }
 			if (t.startsWith('[probe] save_state')) { probeSaveState = t.replace('[probe] save_state', '').trim(); return; }
 			if (!/frames=\d+/.test(t)) return;
 			probeLines.push(t);
@@ -293,6 +338,7 @@ watchdog.unref?.();
 		return { ok: true, rect: r };
 	}
 	async function shot(name) {
+		if (process.env.E2E_SCREENSHOTS === 'none') return;
 		try { await page.screenshot({ path: path.join(outDir, name) }); } catch (err) { note('screenshot ' + name + ' failed: ' + (err && err.message)); }
 	}
 
@@ -312,8 +358,6 @@ watchdog.unref?.();
 
 	// ========================================================= Phase A: cycles
 	rect = null;
-	probeLines = [];
-	gameLines = [];
 	let acceptanceFrom = 0;
 	await phase('acceptance-load', async () => {
 		await page.goto(q(url, 'probe=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -609,10 +653,31 @@ watchdog.unref?.();
 
 	// ================================ Phase P: the save survives it all
 	await phase('save-reload', async () => {
-		probeSaveState = null;
+		const latest = saveDiagnostics.filter(row => row.document === documentSequence).at(-1);
+		const expectedHash = latest ? JSON.parse(latest.text.slice('[probe] save_diagnostic '.length)).sha256 : null;
+		// Read only the fresh test profile's committed IndexedDB keys. This does
+		// not flush, wait for, or repair persistence on behalf of the game.
+		durableFilesBeforeReload = await page.evaluate(async () => {
+			const databases = await indexedDB.databases();
+			return Promise.all(databases.map(info => new Promise((resolve, reject) => {
+				const request = indexedDB.open(info.name);
+				request.onerror = () => reject(new Error('IndexedDB diagnostic open failed'));
+				request.onsuccess = () => {
+					const db = request.result;
+					if (!db.objectStoreNames.contains('FILE_DATA')) { db.close(); resolve({ name: info.name, keys: [] }); return; }
+					const tx = db.transaction('FILE_DATA', 'readonly');
+					const keys = tx.objectStore('FILE_DATA').getAllKeys();
+					tx.oncomplete = () => { db.close(); resolve({ name: info.name, keys: keys.result }); };
+					tx.onerror = () => { db.close(); reject(new Error('IndexedDB diagnostic read failed')); };
+				};
+			})));
+		});
 		await page.goto(q(url, 'probe=1'), { waitUntil: 'domcontentloaded', timeout: 60000 });
 		const t = Date.now();
-		while (Date.now() - t < 180000 && probeSaveState === null) await sleep(100);
+		while (Date.now() - t < 180000 && (probeSaveState === null || probeSaveHash === null)) await sleep(100);
+		marks.latest_save = { expected_sha256: expectedHash, reloaded_sha256: probeSaveHash };
+		token('LATEST_SAVE_SURVIVES_RELOAD', /^[a-f0-9]{64}$/.test(expectedHash || '') && probeSaveHash === expectedHash,
+			`latest in-memory save hash=${expectedHash}, reloaded hash=${probeSaveHash}`);
 		// "Readable" is the whole claim, and it is deliberately not "has a
 		// weapon": the format the product prints is gold="<n>" equipped="<s>",
 		// and a fresh camp legitimately reports an empty equipped value (the
@@ -686,6 +751,9 @@ watchdog.unref?.();
 		probe: {
 			transport: 'read-only ?probe=1 console channel (autoload/Smoke.gd), no page round trips',
 			save_state_at_reload: probeSaveState,
+			save_diagnostics: saveDiagnostics,
+			storage_events: storageEvents,
+			durable_files_before_reload: durableFilesBeforeReload,
 		},
 		rects_reported_by_the_game: rects,
 		console_errors: consoleErrors, page_errors: pageErrors,

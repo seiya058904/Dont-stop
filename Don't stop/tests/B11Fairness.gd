@@ -82,7 +82,7 @@ func _ready():
 		"the tracking window is shorter than the shortest warning, so a freeze always has room")
 	# The lead may spend the safety margin and nothing else. This is the exact quantity that made the
 	# old laser undodgeable, so it is checked for the kinds that were worst on origin/main.
-	for kind in ["beam","cross","cross_laser","artillery","root_shot","toxic_zone","band","tremor"]:
+	for kind in ["beam","cross","cross_laser","artillery","fan_shot","toxic_zone","band","tremor"]:
 		var wanted: float = float(MONSTER_TACTICAL.LEAD_WANTED.get(kind,-1.0))
 		check(wanted >= 0.0,"kind %s declares a wanted lead" % kind)
 		check(wanted < beam_escape,

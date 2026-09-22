@@ -134,6 +134,8 @@ var _startup_long_gaps: Array = []
 
 func _ready() -> void:
 	TranslationServer.set_locale("zh_CN")
+	if OS.has_feature("web"):
+		Engine.get_singleton("JavaScriptBridge").call("eval",WEB_IDBFS_BATCH)
 	_startup_origin_ms = Time.get_ticks_msec()
 	_startup_last_frame_ms = _startup_origin_ms
 	startup_mark("utils-ready")
@@ -155,7 +157,9 @@ func _process(_delta: float) -> void:
 		_finish_startup_trace()
 
 func startup_mark(stage: String) -> void:
-	if not _startup_trace_active or _startup_stages.has(stage):
+	# Keep one-shot interaction evidence even after the ten-second frame sample.
+	# Slow renderers must fail their budget with evidence, not lose late markers.
+	if _startup_stages.has(stage):
 		return
 	var now := Time.get_ticks_msec()
 	_startup_stages[stage] = {"t_ms":now,"since_utils_ms":now - _startup_origin_ms,
@@ -246,6 +250,49 @@ func get_aim_world_position() -> Vector2:
 	var vport := get_viewport()
 	return vport.get_canvas_transform().affine_inverse() * get_aim_viewport_position()
 
+## Godot 4.7.2's IDBFS enumerates one remote timestamp per asynchronous cursor
+## callback. Slow rendered frames turn a few dozen cache files into tens of
+## seconds of sync delay. Read the same index in two bulk requests instead.
+## Reconciliation, write scheduling, file contents and error propagation remain
+## IDBFS-owned. Older browsers retain the original cursor implementation.
+const WEB_IDBFS_BATCH := """
+(function () {
+	if (typeof IDBFS === 'undefined' || typeof IDBIndex === 'undefined'
+		|| typeof IDBIndex.prototype.getAll !== 'function'
+		|| typeof IDBIndex.prototype.getAllKeys !== 'function' || IDBFS.dontStopBulkIndex) return false;
+	IDBFS.getRemoteSet = function (mount, callback) {
+		IDBFS.getDB(mount.mountpoint, function (error, db) {
+			if (error) return callback(error);
+			let finished = false;
+			const finish = function (error, result) {
+				if (finished) return;
+				finished = true;
+				callback(error, result);
+			};
+			try {
+				const tx = db.transaction([IDBFS.DB_STORE_NAME], 'readonly');
+				tx.onerror = tx.onabort = function (event) {
+					event.preventDefault();
+					finish(tx.error || event.target.error || new Error('IDBFS index read aborted'));
+				};
+				const index = tx.objectStore(IDBFS.DB_STORE_NAME).index('timestamp');
+				const keys = index.getAllKeys();
+				const values = index.getAll();
+				tx.oncomplete = function () {
+					if (finished) return;
+					if (keys.result.length !== values.result.length) return finish(new Error('IDBFS index length mismatch'));
+					const entries = {};
+					for (let i = 0; i < keys.result.length; i++) entries[keys.result[i]] = { timestamp: values.result[i].timestamp };
+					finish(null, { type: 'remote', db, entries });
+				};
+			} catch (error) { finish(error); }
+		});
+	};
+	IDBFS.dontStopBulkIndex = true;
+	return true;
+})()
+"""
+
 ## The shell handshake. web/loader.html exposes exactly these two functions on
 ## window.__dontStop, and this file is the only caller, so the names live here
 ## once and are asserted by tools/web-aim-e2e.js: a mismatch used to mean the
@@ -284,11 +331,9 @@ func notify_web_boot_warmup_done() -> void:
 
 func _web_report_boot_ready() -> void:
 	if not OS.has_feature("web") or _web_boot_reported: return
-	# The menu can be built while the autoload is still paying first-use costs on the
-	# browser's single thread. The shell must stay in its real loading state until
-	# both sides of that hand-off have completed; otherwise it reveals a menu and
-	# immediately freezes again while the warm-up pass finishes behind it.
-	if not _web_boot_menu or not _web_boot_warmup: return
+	# Hand over the actually drawn menu. Optional full warmup must not gate the
+	# first screen; Web does not schedule that pass behind the revealed menu.
+	if not _web_boot_menu: return
 	_web_boot_reported = true
 	# Two drawn frames: the shell must only drop its overlay once the menu has
 	# actually been presented, not merely built.

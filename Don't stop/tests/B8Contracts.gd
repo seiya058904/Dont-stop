@@ -209,26 +209,26 @@ func _ready():
 	reset_watch()
 	var shot = load("res://game/monster/EnemyShot.gd").new()
 	shot.position = Utils.player.global_position+Vector2(-44,0)
-	shot.velocity = Vector2(120,0); shot.damage = 1.0; shot.style = "projectile"; shot.control = 0.0
+	shot.velocity = Vector2(120,0); shot.damage = 1.0; shot.style = "projectile"
 	get_tree().current_scene.add_child(shot)
 	await wait(0.9)
 	check("shot:projectile" in tags(),"a real enemy projectile reports its family (saw %s)" % str(tags()))
 	await wait(0.3)
 
 	reset_watch()
-	var rootshot = load("res://game/monster/EnemyShot.gd").new()
-	rootshot.position = Utils.player.global_position+Vector2(-44,0)
-	rootshot.velocity = Vector2(120,0); rootshot.damage = 1.0; rootshot.style = "root"; rootshot.control = 0.45
-	get_tree().current_scene.add_child(rootshot)
+	var pellet = load("res://game/monster/EnemyShot.gd").new()
+	pellet.position = Utils.player.global_position+Vector2(-44,0)
+	pellet.velocity = Vector2(120,0); pellet.damage = 1.0; pellet.style = "projectile"
+	get_tree().current_scene.add_child(pellet)
 	await wait(0.9)
-	check("control_shot:root" in tags(),"a real control projectile is not filed as plain damage (saw %s)" % str(tags()))
+	check("shot:projectile" in tags(),"converted projectile uses ordinary damage attribution (saw %s)" % str(tags()))
 	await wait(0.3)
 
 	reset_watch()
 	var barrage_pellet = load("res://game/monster/EnemyShot.gd").new()
 	barrage_pellet.position = Utils.player.global_position+Vector2(-44,0)
 	barrage_pellet.velocity = Vector2(120,0); barrage_pellet.damage = 1.0
-	barrage_pellet.style = "artillery"; barrage_pellet.control = 0.0
+	barrage_pellet.style = "artillery"
 	get_tree().current_scene.add_child(barrage_pellet)
 	await wait(0.9)
 	check("shot:artillery" in tags(),"a barrage pellet keeps its attack family (saw %s)" % str(tags()))
@@ -253,7 +253,9 @@ func _ready():
 		check("contact" in tags(),"a real body contact reports 'contact' (saw %s)" % str(tags()))
 		# Elite promotion is a property of the ACTOR, so the enrichment has to come from the
 		# attacker rather than from a second tag at the call site.
-		M5Content.promote_elite(runner,"pack")
+		# Attribution fixture: camp Stage 1 cannot admit a production elite.
+		# Set only the category flag; the real contact/damage path still runs.
+		runner.is_elite = true
 		reset_watch()
 		await wait(1.4)
 		var elite_seen := false

@@ -24,28 +24,33 @@
 			position: absolute; inset: 0; z-index: 10;
 			display: flex; flex-direction: column; align-items: center; justify-content: center;
 			background: #0d0c17;
-			transition: opacity .25s ease-out;
+			transition: opacity .12s ease-out;
 		}
 		#frame.gone { opacity: 0; pointer-events: none; }
 		#brand { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 		#brand img { width: 128px; height: 128px; image-rendering: pixelated; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
 		#brand h1 { margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 700; }
 		#status { margin-top: 6px; font-size: 14px; color: #9d9ab5; min-height: 20px; }
-		#bar { position: relative; width: 320px; height: 10px; margin-top: 14px; border-radius: 6px; background: #1f1d31; overflow: hidden; }
-		#bar-fill { width: 0%; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #7b6cff, #4dc9ff); transition: width .15s ease-out; }
-		/* Stage without a measurable percentage: an honest indeterminate sweep
-		   instead of a fake progress number. */
-		#bar.busy #bar-fill { width: 40% !important; animation: sweep 1.15s ease-in-out infinite; }
+		#bar { position: relative; width: min(320px, 80vw); height: 10px; margin-top: 14px; border-radius: 6px; background: #1f1d31; overflow: hidden; }
+		#bar-fill { width: 100%; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #7b6cff, #4dc9ff); transform: scaleX(0); transform-origin: left; transition: transform .18s ease-out; }
+		/* Measured stage completion and ongoing activity are separate. Only
+		   completed work advances the fill; compositor motion invents no progress. */
+		#bar::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(180,220,255,.35), transparent); opacity: 0; }
+		#bar.busy::after { opacity: 1; animation: sweep 1.15s linear infinite; }
 		@keyframes sweep {
 			0%   { transform: translateX(-110%); }
 			100% { transform: translateX(260%); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			#bar.busy::after { animation: none; transform: translateX(75%); }
+			#bar-fill, #frame { transition: none; }
 		}
 		#error { display: none; margin-top: 18px; max-width: 420px; padding: 12px 16px; font-size: 14px;
 			color: #ff9d9d; background: #2a1420; border-radius: 8px; text-align: center; line-height: 1.5; }
 		#retry { display: none; margin-top: 14px; padding: 10px 34px; font-size: 15px; letter-spacing: 2px;
 			color: #fff; background: #5a4fd8; border: none; border-radius: 10px; cursor: pointer; }
 		#retry:hover { background: #6c61ee; }
-		#note { position: absolute; bottom: 12px; font-size: 12px; color: #55516e; }
+		#note { position: absolute; bottom: 12px; font-size: 12px; color: #9d9ab5; }
 	</style>
 </head>
 <body>
@@ -54,8 +59,8 @@
 		<div id="brand">
 			<img src="index.icon.png" alt="Don't Stop" onerror="this.style.display='none'" />
 			<h1>Don't Stop</h1>
-			<div id="status">正在准备…</div>
-			<div id="bar"><div id="bar-fill"></div></div>
+			<div id="status" role="status">正在准备…</div>
+			<div id="bar" role="progressbar" aria-label="游戏启动" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div id="bar-fill"></div></div>
 			<div id="error"></div>
 			<button id="retry" type="button">重 试</button>
 		</div>
@@ -78,19 +83,34 @@
 			const originalDisable = proto.disable;
 			if (!originalGetParameter || !originalEnable || !originalDisable) continue;
 			const states = new WeakMap();
+			const watched = new WeakSet();
+			const lost = new WeakSet();
+			function watch(context) {
+				if (watched.has(context)) return;
+				watched.add(context);
+				context.canvas.addEventListener('webglcontextlost', function () {
+					lost.add(context);
+					states.set(context, null);
+				});
+				context.canvas.addEventListener('webglcontextrestored', function () {
+					lost.delete(context);
+					states.delete(context);
+				});
+			}
 			proto.getParameter = function (pname) {
 				if (pname !== SCISSOR_TEST) return originalGetParameter.apply(this, arguments);
+				watch(this);
 				if (!states.has(this)) states.set(this, originalGetParameter.apply(this, arguments));
 				return states.get(this);
 			};
 			proto.enable = function (cap) {
 				const result = originalEnable.apply(this, arguments);
-				if (cap === SCISSOR_TEST) states.set(this, true);
+				if (cap === SCISSOR_TEST) { watch(this); if (!lost.has(this)) states.set(this, true); }
 				return result;
 			};
 			proto.disable = function (cap) {
 				const result = originalDisable.apply(this, arguments);
-				if (cap === SCISSOR_TEST) states.set(this, false);
+				if (cap === SCISSOR_TEST) { watch(this); if (!lost.has(this)) states.set(this, false); }
 				return result;
 			};
 			Object.defineProperty(proto, '__dontStopScissorCache', { value: true });
@@ -141,6 +161,8 @@
 			// Stage timestamps, so download / engine bring-up / scene preparation /
 			// warm-up / menu can be told apart instead of being one anonymous wait.
 			stages: {},
+			gameStages: {},
+			completedStageFraction: 0,
 			activeStage: 'navigating',
 			lastProgressAt: null,
 			downloadStartedAt: null,
@@ -218,12 +240,16 @@
 
 		function setStatus(text, busy) {
 			statusEl.textContent = text;
+			barEl.setAttribute('aria-valuetext', text);
 			barEl.classList.toggle('busy', !!busy);
 		}
-		function setProgress(pct, text) {
-			barEl.classList.remove('busy');
-			fillEl.style.width = Math.max(0, Math.min(100, pct)) + '%';
-			if (text) statusEl.textContent = text;
+		function setProgress(fraction, text) {
+			// Transfer, engine setup, drawn menu: three actual stages, not a timer.
+			const limit = readyReported ? 1 : 2 / 3;
+			state.completedStageFraction = Math.max(state.completedStageFraction, Math.min(limit, fraction));
+			fillEl.style.transform = 'scaleX(' + state.completedStageFraction + ')';
+			barEl.setAttribute('aria-valuenow', String(state.completedStageFraction * 3));
+			setStatus(text, !readyReported);
 		}
 		function log(message) { console.log('[loader] ' + message); }
 
@@ -310,11 +336,12 @@
 		}
 
 		// The game calls these from GDScript (autoload/Utils.gd, WEB_SHELL_HOOKS)
-		// once the real title menu has been drawn AND the pre-warm pass has
-		// finished. This is the readiness signal the shell waits for; the engine's
+		// once the real title menu has been drawn. Full warmup is optional and
+		// never gates the Web menu. The engine's
 		// startGame() promise alone only means "the engine booted".
 		window.__dontStop = {
 			ready: function () {
+				if (fatal || revealed) return;
 				state.readyNoticeAt = performance.now();
 				if (SUPPRESS_READY) {
 					// Fault injection: behave exactly as if the game never called
@@ -324,7 +351,8 @@
 				}
 				readyReported = true;
 				if (stallTimer) { clearTimeout(stallTimer); stallTimer = null; }
-				setStatus('', false);
+				fillEl.style.transition = 'none';
+				setProgress(1, '准备完成');
 				errEl.style.display = 'none';
 				retryEl.style.display = 'none';
 				state.outcome = 'pending';
@@ -337,6 +365,7 @@
 			// project defines, and only used to tell "slow" from "stuck".
 			stage: function (name) {
 				mark(String(name || 'unknown'));
+				if (!revealed && !fatal && name === 'scene-prep') setProgress(2 / 3, '正在呈现主菜单…');
 			}
 		};
 
@@ -385,7 +414,6 @@
 			GODOT_CONFIG.args.push('--stress-scenario=' + (params.get('scenario') || 'A'));
 			GODOT_CONFIG.args.push('--stress-seed=' + (parseInt(params.get('seed'), 10) || 20260918));
 			GODOT_CONFIG.args.push('--stress-lasers=' + (parseInt(params.get('lasers'), 10) || 0));
-			GODOT_CONFIG.args.push('--stress-root=' + (parseFloat(params.get('root')) || 0));
 			// B11.2 adds the two density amplifiers and the visual-isolation switches. `enemies`
 			// tops the population up out of the stage's own role list (never past the stage's own
 			// cap), `barrage` holds the real laser/artillery/root/poison families alive together,
@@ -393,12 +421,16 @@
 			// trails, fogcore, tddecor, particles). All test-only; none of them is needed to play.
 			GODOT_CONFIG.args.push('--stress-enemies=' + (parseInt(params.get('enemies'), 10) || 0));
 			GODOT_CONFIG.args.push('--stress-barrage=' + (parseInt(params.get('barrage'), 10) || 0));
+			if (params.has('profile')) GODOT_CONFIG.args.push('--stress-profile=' + params.get('profile'));
 			if (params.has('iso')) GODOT_CONFIG.args.push('--stress-iso=' + params.get('iso'));
 			if (params.get('park') === '1') GODOT_CONFIG.args.push('--stress-park=1');
 			GODOT_CONFIG.args.push('--stress-label=' + (params.get('label') || 'run'));
 			if (params.has('camp_cycles')) GODOT_CONFIG.args.push('--stress-camp-cycles=' + params.get('camp_cycles'));
 			if (params.has('controlled_boss')) GODOT_CONFIG.args.push('--stress-controlled-boss');
 			if (params.has('measurement')) GODOT_CONFIG.args.push('--stress-measurement=' + params.get('measurement'));
+			if (params.has('mode')) GODOT_CONFIG.args.push('--stress-mode=' + params.get('mode'));
+			if (params.has('pressure_births')) GODOT_CONFIG.args.push('--stress-pressure-births=' + params.get('pressure_births'));
+			if (params.has('benchmark')) GODOT_CONFIG.args.push('--stress-benchmark=' + params.get('benchmark'));
 			if (params.has('source')) GODOT_CONFIG.args.push('--stress-source=' + params.get('source'));
 			if (params.has('normal_hp')) GODOT_CONFIG.args.push('--stress-normal-hp');
 			if (params.has('weapons')) GODOT_CONFIG.args.push('--stress-weapons=' + params.get('weapons'));
@@ -449,12 +481,25 @@
 		state.downloadStartedAt = performance.now();
 		mark('download');
 		engine.startGame({
+			onPrint: function () {
+				// Timestamp the existing game markers on the browser clock, before
+				// console transport/polling can add delay to the measured response.
+				const line = Array.from(arguments).join(' ');
+				const stage = /^\[startup\] stage=([^ ]+) t=(\d+) since_utils=(\d+) frame=(\d+)/.exec(line);
+				if (stage && !state.gameStages[stage[1]]) {
+					state.gameStages[stage[1]] = { navigation_ms: performance.now(),
+						engine_ms: Number(stage[2]), since_utils_ms: Number(stage[3]), process_frame: Number(stage[4]) };
+				}
+				console.log.apply(console, arguments);
+			},
 			onProgress: function (current, total) {
+				if (revealed || fatal || state.completedStageFraction >= 2 / 3) return;
 				// Every download chunk is real progress: it re-arms the stall check.
 				mark('download');
 				if (total > 0) {
 					// The only number shown is the engine's own download count.
-					setProgress(Math.round(current / total * 100), '正在下载游戏资源… ' + Math.round(current / total * 100) + '%');
+					setProgress(Math.min(1, current / total) / 3,
+						current >= total ? '资源已就绪，正在初始化引擎…' : '正在获取游戏资源…');
 				} else {
 					// No measurable total: say so instead of inventing a percentage.
 					setStatus('正在下载游戏资源…', true);
@@ -462,9 +507,9 @@
 			}
 		}).then(function () {
 			// The engine is up. That is NOT the same as "the game is ready": the
-			// title scene still has to build, draw and finish the warm-up pass.
+			// title scene still has to build and draw. Full warmup is not a gate.
 			state.engineStartedAt = performance.now();
-			setStatus('正在准备游戏内容…', true);
+			if (!revealed && !fatal) setProgress(2 / 3, '正在呈现主菜单…');
 			mark('engine-init');
 		}).catch(function (err) {
 			const detail = err && err.message ? ' (' + err.message + ')' : '';

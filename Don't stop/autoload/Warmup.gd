@@ -9,9 +9,8 @@ extends Node
 ##   Windows - boot/Boot.gd (the loading scene) calls start() after its own UI is
 ##             on screen, so the loading animation covers this real work and can
 ##             report per-scene progress.
-##   Web     - no loading scene exists (the DOM shell in web/loader.html is the
-##             loading UI), so this autoload starts itself as before and reports
-##             completion to the shell through Utils.
+##   Web     - full warmup is not scheduled at launch. Production resources pay
+##             their first-use costs on demand; menu readiness is draw-driven.
 ## start() is idempotent: a second call can never warm up twice.
 
 signal finished
@@ -54,7 +53,7 @@ func _ready() -> void:
 		return
 	total_scenes = WARM_SCENES.size() + Utils.weapon_list.size()
 	if OS.has_feature("web"):
-		start()
+		Utils.startup_mark("full-warmup-not-scheduled")
 
 ## Runs the pass. Safe to call more than once; only the first call does work.
 func start() -> void:
@@ -249,3 +248,88 @@ func _warm_lit_canvas() -> void:
 	_root.add_child(dash_particles)
 	dash_particles.emitting = true
 	dash_particles.restart()
+
+## Compatibility compiles these measured Canvas variants on first draw. Prepare
+## only these inert draws at the explicit camp departure, never on menu reveal.
+## Each draw has its own scheduling boundary and retained elapsed-time evidence.
+signal web_combat_prepared
+var _web_combat_preparing := false
+var _web_combat_prepared := false
+
+func prepare_web_combat() -> void:
+	if not OS.has_feature("web") or _web_combat_prepared:
+		return
+	if _web_combat_preparing:
+		await web_combat_prepared
+		return
+	_web_combat_preparing = true
+	Utils.startup_mark("combat-prepare-start")
+	# Let the camp's departure feedback paint before any preparation work.
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	var canvas := CanvasLayer.new()
+	canvas.process_mode = Node.PROCESS_MODE_ALWAYS
+	canvas.layer = 0
+	var root := Node2D.new()
+	root.modulate = Color(1,1,1,0.05)
+	root.position = Vector2(32,32)
+	canvas.add_child(root)
+	get_tree().root.add_child(canvas)
+	var light := PointLight2D.new()
+	light.texture = load("res://Sprites/light2.png")
+	root.add_child(light)
+	for kind in 3:
+		var started := Time.get_ticks_usec()
+		var primitive_script = load("res://game/diag/WarmupCanvas.gd")
+		var loaded := Time.get_ticks_usec()
+		var primitive = primitive_script.new()
+		primitive.draw_kind = kind
+		var instantiated := Time.get_ticks_usec()
+		root.add_child(primitive)
+		var added := Time.get_ticks_usec()
+		await RenderingServer.frame_post_draw
+		await get_tree().process_frame
+		_report_web_prepare_item("primitive-%d" % kind,started,loaded,instantiated,added)
+		primitive.queue_free()
+	var started := Time.get_ticks_usec()
+	var texture = load("res://game/monster/Monster 2/50x31 Monster 2 spritesheet without shadows.png")
+	var shader = load("res://shader/HitFlash.gdshader")
+	var loaded := Time.get_ticks_usec()
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.region_enabled = true
+	sprite.region_rect = Rect2(0,31,50,31)
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("enchantment_tier",2.0)
+	sprite.material = material
+	var instantiated := Time.get_ticks_usec()
+	root.add_child(sprite)
+	var added := Time.get_ticks_usec()
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	_report_web_prepare_item("hit-flash",started,loaded,instantiated,added)
+	sprite.queue_free()
+	started = Time.get_ticks_usec()
+	var scene = load("res://game/bullets/BulletSmoke.tscn")
+	loaded = Time.get_ticks_usec()
+	var smoke = scene.instantiate()
+	instantiated = Time.get_ticks_usec()
+	root.add_child(smoke)
+	_wake_particles(smoke)
+	added = Time.get_ticks_usec()
+	for frame in 3:
+		await RenderingServer.frame_post_draw
+		await get_tree().process_frame
+	_report_web_prepare_item("bullet-smoke",started,loaded,instantiated,added)
+	canvas.queue_free()
+	_web_combat_prepared = true
+	_web_combat_preparing = false
+	Utils.startup_mark("combat-prepare-done")
+	web_combat_prepared.emit()
+
+func _report_web_prepare_item(label: String, started: int, loaded: int, instantiated: int, added: int) -> void:
+	var ended := Time.get_ticks_usec()
+	print("[combat-prepare] ",JSON.stringify({"item":label,"load_ms":(loaded-started)/1000.0,
+		"instantiate_ms":(instantiated-loaded)/1000.0,"add_child_and_emit_ms":(added-instantiated)/1000.0,
+		"draw_window_ms":(ended-added)/1000.0,"total_ms":(ended-started)/1000.0}))

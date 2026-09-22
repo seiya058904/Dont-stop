@@ -13,7 +13,6 @@ extends RefCounted
 #   laser       cyan      thin warning line that brightens in the last 0.2-0.3 s
 #   sweep       magenta   rotating line with the turning chevron
 #   artillery   amber     ground target + timing ring
-#   root        purple    control attack
 #   poison      green     area denial
 #   ice         cyan      frost burst
 #   shock       violet    energy band
@@ -26,7 +25,6 @@ const STYLES = {
 	"laser":     {"edge":Color(0.42,0.94,1.0),"edge_hot":Color(0.88,1.0,1.0),"fill":Color(0.20,0.80,0.95),"active":Color(0.90,1.0,1.0),"active_fill":Color(0.30,0.88,1.0)},
 	"sweep":     {"edge":Color(1.0,0.45,0.92),"edge_hot":Color(1.0,0.82,0.98),"fill":Color(0.90,0.22,0.78),"active":Color(1.0,0.86,0.98),"active_fill":Color(1.0,0.34,0.86)},
 	"artillery": {"edge":Color(1,0.76,0.26),"edge_hot":Color(1,0.96,0.66),"fill":Color(0.95,0.58,0.10),"active":Color(1,0.96,0.70),"active_fill":Color(1,0.66,0.16)},
-	"root":      {"edge":Color(0.78,0.48,1.0),"edge_hot":Color(0.94,0.80,1.0),"fill":Color(0.58,0.26,0.92),"active":Color(0.94,0.82,1.0),"active_fill":Color(0.66,0.34,1.0)},
 	"poison":    {"edge":Color(0.42,1.0,0.60),"edge_hot":Color(0.80,1.0,0.86),"fill":Color(0.14,0.62,0.32),"active":Color(0.84,1.0,0.88),"active_fill":Color(0.22,0.72,0.38)},
 	"ice":       {"edge":Color(0.64,0.96,1.0),"edge_hot":Color(0.90,1.0,1.0),"fill":Color(0.28,0.66,0.86),"active":Color(0.92,1.0,1.0),"active_fill":Color(0.36,0.76,0.96)},
 	"shock":     {"edge":Color(0.66,0.52,1.0),"edge_hot":Color(0.90,0.84,1.0),"fill":Color(0.44,0.28,0.94),"active":Color(0.92,0.86,1.0),"active_fill":Color(0.52,0.34,1.0)},
@@ -149,15 +147,6 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 		canvas.draw_arc(Vector2.ZERO,radius*p,direction.angle()-angle,direction.angle()+angle,segments(radius*p,angle*2),edge*Color(1,1,1,0.55),2,true)
 		if decor:
 			canvas.draw_line(direction*radius*0.3,direction*radius*0.55,edge,1.2,true)
-			if style == "root":
-				# Control attacks get a waveform so they never look like plain damage.
-				var wave = PackedVector2Array()
-				for i in 16:
-					var t = float(i)/15.0
-					var along = direction.rotated(lerpf(-angle,angle,t))*radius*0.82
-					var cross = along.normalized().orthogonal()*sin(t*PI*4+progress*10)*7
-					wave.append(along+cross)
-				canvas.draw_polyline(wave,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.7),1.6,true)
 	else:
 		canvas.draw_circle(Vector2.ZERO,radius,fill)
 		canvas.draw_polyline(shape.ring,Color(0.07,0.04,0.08,0.8),4,true)

@@ -10,10 +10,6 @@ var warning = 0.8
 var duration = 0.12
 var tick = 0.2
 var damage = 1.0
-## Optional control payload in seconds, routed through Hero.apply_root() so the game keeps
-## exactly ONE stun system: the root window, the 1.2 s immunity and the epoch reset are all
-## unchanged, and the player can still aim, fire and reload while rooted.
-var control = 0.0
 var owner_ref: WeakRef
 var epoch = -1
 var elapsed = 0.0
@@ -223,9 +219,6 @@ func step(delta):
 			if damage > 0 and inside and Combat.clear_line(global_position,target.global_position):
 				target.onHit(damage,owner_ref.get_ref() if owner_ref else null,1.0,mode); hit_count += 1
 				if B11Probe.enabled: B11Probe.zone_hits += 1
-				# Applied after the damage so a root can never swallow the hit's feedback,
-				# and apply_root() itself refuses while the player is immune or already rooted.
-				if control > 0.0: target.apply_root(control)
 	active_clock -= delta
 	if active_elapsed >= duration: queue_free()
 

@@ -13,10 +13,7 @@ var elapsed = 0.0
 var next_wave = 0
 var next_due = 0.0
 var epoch = 0
-## Ink and control payload for the whole pattern, so a control volley is visually a control
-## volley (purple, waveform pellets) rather than indistinct orange pellets.
 var style = "projectile"
-var control = 0.0
 var deferred_seconds = 0.0
 var damage := 0.18
 var bounces := 0
@@ -69,7 +66,7 @@ func _physics_process(delta):
 		# Only alternating waves reflect; ordinary waves retain wall expiry.
 		var reflections = bounces if next_wave%2 == 0 else 0
 		var ink = style if reflections > 0 or style != "ricochet" else "laser"
-		if actor.shot(heading.rotated(angle),speed,damage,false,ink,control,reflections): emitted += 1
+		if actor.shot(heading.rotated(angle),speed,damage,false,ink,reflections): emitted += 1
 	actor.remember("barrage_wave")
 	actor.actions["barrage_projectiles"] = actor.actions.get("barrage_projectiles",0)+emitted
 	planned -= directions.size()

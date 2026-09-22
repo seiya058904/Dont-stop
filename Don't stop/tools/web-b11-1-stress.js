@@ -3,8 +3,8 @@
 // Usage:
 //   node tools/web-b11-1-stress.js <baseUrl> <evidenceDir> <label> <scenario> [key=value ...]
 //
-//   scenario   A | B | C | D                     (see game/diag/B11Stress.gd)
-//   key=value  stage=39 seconds=90 seed=20260918 lasers=4 root=2.0 park=1
+//   scenario   A | B | C | D | P                 (see game/diag/B11Stress.gd)
+//   key=value  stage=39 seconds=90 seed=20260918 lasers=4 park=1 pressure_births=4
 //              enemies=60 barrage=6 iso=vfx,labels,trails,fogcore,tddecor,particles
 //
 // B11.2 re-pointed the same four scenario names at four LOAD PROFILES (normal / dense enemies /
@@ -94,6 +94,11 @@ function parseKv(line) {
 	// a B11.1-era consumer of this JSON keeps reading exactly the fields it always read.
 	let load = null;
 	let ink = null;
+	let loadBuild = null;
+	let settling = null;
+	let steady = null;
+	let pressureFrames = null;
+	let benchmark = null;
 	let rawFrames = null;
 	const errors = [];
 	// Every line the page printed, bounded. The engine's own script errors arrive here, and a
@@ -103,7 +108,7 @@ function parseKv(line) {
 
 	const browser = await chromium.launch({
 		headless: process.env.B19_HEADLESS === "1",
-		args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'],
+		args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding'],
 	});
 	let memoryProcess = null;
 	const memoryFile = path.resolve(outDir,`process-memory-${label}.json`);
@@ -118,6 +123,21 @@ function parseKv(line) {
 	const viewport = {width:Number(process.env.B192_WIDTH || 1536),height:Number(process.env.B192_HEIGHT || 864)};
 	const context = await browser.newContext({ viewport, deviceScaleFactor:1, serviceWorkers:'block' });
 	const page = await context.newPage();
+	await page.addInitScript(() => {
+		const trace = window.__b194Frames = { gaps: [], ends: [], longTasks: [], visibility: [] };
+		let last = null;
+		const tick = now => {
+			if (last !== null) { trace.gaps.push(now - last); trace.ends.push(now); }
+			last = now;
+			requestAnimationFrame(tick);
+		};
+		requestAnimationFrame(tick);
+		document.addEventListener('visibilitychange', () => trace.visibility.push({ t: performance.now(), state: document.visibilityState }));
+		new PerformanceObserver(list => {
+			for (const e of list.getEntries()) trace.longTasks.push({ start_ms: e.startTime, duration_ms: e.duration });
+		}).observe({ type: 'longtask', buffered: true });
+	});
+
 	// Chromium happily reuses a cached index.pck across page loads, which made a freshly exported
 	// build invisible to earlier rounds of this project: the measurement was of the PREVIOUS build
 	// and the only symptom was a missing line.
@@ -151,6 +171,10 @@ function parseKv(line) {
 			rawFrames = JSON.parse(t.slice('[stress-frames] '.length));
 			return; // Store once, outside the bounded human-readable console log.
 		}
+		if (t.startsWith('[stress-pressure-frames] ')) {
+			pressureFrames = JSON.parse(t.slice('[stress-pressure-frames] '.length));
+			return; // Store the phase arrays outside the bounded human-readable console log.
+		}
 		if (allConsole.length < 600) allConsole.push(`${m.type()}: ${t}`);
 		if (t.startsWith('[spike] ')) spikes.push(parseKv(t.slice('[spike] '.length)));
 		else if (t.startsWith('[stress-bucket] ')) buckets.push(parseKv(t.slice('[stress-bucket] '.length)));
@@ -158,6 +182,10 @@ function parseKv(line) {
 		else if (t.startsWith('[stress-cpu] ')) { cpu = parseKv(t.slice('[stress-cpu] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress-peak] ')) { peak = parseKv(t.slice('[stress-peak] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress-load] ')) { load = parseKv(t.slice('[stress-load] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-load-build] ')) { loadBuild = parseKv(t.slice('[stress-load-build] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-settling] ')) { settling = parseKv(t.slice('[stress-settling] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-steady] ')) { steady = parseKv(t.slice('[stress-steady] '.length)); markers.push(t); }
+		else if (t.startsWith('[stress-benchmark] ')) { benchmark = parseKv(t.slice('[stress-benchmark] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress-ink] ')) { ink = parseKv(t.slice('[stress-ink] '.length)); markers.push(t); }
 		else if (t.startsWith('[stress] ') || t.startsWith('[stress-')) markers.push(t);
 	});
@@ -228,6 +256,10 @@ function parseKv(line) {
 			await page.screenshot({path:path.join(outDir,`capture-${label}-${captureCount++}.png`)});
 		}
 	}
+	const browserTiming = await page.evaluate(() => ({ ...window.__b194Frames,
+		marks: performance.getEntriesByType('mark').filter(e => e.name.startsWith('b194-')).map(e => e.toJSON()),
+		meaning: 'requestAnimationFrame wall intervals, not GPU present completion',
+	})).catch(() => null);
 	const surface = await page.evaluate(() => ({visibility:document.visibilityState,focus:document.hasFocus(),dpr:devicePixelRatio,canvas:[...document.querySelectorAll('canvas')].map(c=>({width:c.width,height:c.height,cssWidth:c.getBoundingClientRect().width,cssHeight:c.getBoundingClientRect().height}))})).catch(()=>null);
 	if (traceSession) {
 		fs.writeFileSync(path.join(outDir,`shader-waits-${label}.json`),JSON.stringify(await page.evaluate(()=>window.b192ShaderWaits)));
@@ -246,10 +278,15 @@ function parseKv(line) {
 		if (peak) { peak.memory_static = null; peak.orphans = null; }
 		if (load) { load.mem_peak_mb = null; load.orphans_peak = null; }
 	}
+	if (rawFrames && pressureFrames) {
+		rawFrames.pressure = pressureFrames;
+		rawFrames.pressure_measurement_valid = pressureFrames.pressure_measurement_valid;
+	}
 
 	const n = k => (summary && Number.isFinite(parseFloat(summary[k])) ? parseFloat(summary[k]) : null);
 	const p = k => (peak && Number.isFinite(parseFloat(peak[k])) ? parseFloat(peak[k]) : null);
 	const report = {
+		browserTiming,
 		visualStates, visualDone,
 		label, scenario, convergence, loadedResources, server_root:process.env.B11_BUILD_DIR, surface, visibilityEvents, source_variant: query.source || "unspecified", workload_scenario: scenario, url, build, gpu, errors,
 		process_memory: fs.existsSync(memoryFile) ? JSON.parse(fs.readFileSync(memoryFile,"utf8")) : null,
@@ -261,16 +298,17 @@ function parseKv(line) {
 		combat_s: summary ? parseFloat(summary.combat_s) : null,
 		frame_ms: summary ? { avg: n('avg'), p50: n('p50'), p95: n('p95'), p99: n('p99'), max: n('max') } : null,
 		spikes: summary ? { over25: n('over25'), over33: n('over33'), over50: n('over50'), slow_run_ms: n('slow_run_ms') } : null,
-		root: summary ? {
-			windows: n('root_windows'),
-			driver_applied: parseFloat(summary.driver_roots.split('/')[0]),
-			driver_attempts: parseFloat(summary.driver_roots.split('/')[1]),
-		} : null,
+
 		amplified: summary ? n('amplified') : null,
 		cpu,
 		peaks: peak,
 		load,
 		ink,
+		load_build: loadBuild,
+		settling,
+		steady,
+		pressure: pressureFrames,
+		benchmark,
 		raw_frames: rawFrames,
 		bucket_rows: buckets,
 		per_second: spikes,
@@ -285,7 +323,7 @@ function parseKv(line) {
 		`p99=${f(report.frame_ms && report.frame_ms.p99)} max=${f(report.frame_ms && report.frame_ms.max)} ` +
 		`over25=${report.spikes && report.spikes.over25} over33=${report.spikes && report.spikes.over33} ` +
 		`over50=${report.spikes && report.spikes.over50} slow_run_ms=${f(report.spikes && report.spikes.slow_run_ms)} ` +
-		`phys_avg=${f(cpu && cpu.phys_avg)} phys_p95=${f(cpu && cpu.phys_p95)} phys_max=${f(cpu && cpu.phys_max)} ` +
+		`ENGINE_WINDOW_PEAK_MONITOR physics_max_ms=${f(cpu && cpu.physics_max_ms)} process_max_ms=${f(cpu && cpu.process_max_ms)} ` +
 		`identity=${build.identity ? build.identity.slice(0, 16) : 'n/a'} gpu="${gpu}"`);
 	if (load) {
 		console.log(`  load objects_peak=${load.objects_peak} orphans_peak=${load.orphans_peak} ` +
@@ -306,8 +344,20 @@ function parseKv(line) {
 			`status_walks=${ink.status_walks} status_walks_empty=${ink.status_walks_empty} ` +
 			`label_tweens=${ink.label_tweens} labels_created=${ink.labels_created}`);
 	}
+	if (pressureFrames) {
+		console.log(`  pressure phase=${pressureFrames.phase} enemy_target=${pressureFrames.target_enemies} ` +
+			`time_to_target_s=${f(pressureFrames.time_to_target_s)} steady_s=${f(pressureFrames.steady_seconds)} ` +
+			`steady_p95=${f(steady && steady.p95)} steady_p99=${f(steady && steady.p99)} ` +
+			`over16_67=${steady && steady.over16_67} over25=${steady && steady.over25} over33=${steady && steady.over33} ` +
+			`over50=${steady && steady.over50} max=${f(steady && steady.max)} valid=${pressureFrames.pressure_measurement_valid}`);
+	}
+	if (benchmark) {
+		console.log(`  benchmark average_fps=${f(benchmark.average_fps)} p50=${f(benchmark.p50)} p95=${f(benchmark.p95)} ` +
+			`p99=${f(benchmark.p99)} 1pct_low_fps=${f(benchmark['1pct_low_fps'])} max=${f(benchmark.max)}`);
+	}
 	for (const b of buckets) {
 		console.log(`  bucket[${b.family}] ${b.name} n=${b.n} share=${f(b.share)} avg=${f(b.avg)} p95=${f(b.p95)} p99=${f(b.p99)} max=${f(b.max)} over33=${b.over33} over50=${b.over50}`);
 	}
-	process.exit((summary || visualDone) && !errors.length && !rawFrames?.measurement_timeout ? 0 : 1);
+	const pressureOk = scenario !== 'P' || Boolean(pressureFrames && pressureFrames.pressure_measurement_valid);
+	process.exit((summary || visualDone) && !errors.length && !rawFrames?.measurement_timeout && pressureOk ? 0 : 1);
 })();

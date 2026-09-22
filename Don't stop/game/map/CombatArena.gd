@@ -19,9 +19,11 @@ var obstacles: Array = []
 ## navigation) is updated with it, and R1's camp is deliberately untouched.
 var bounds = Rect2(-440,-330,880,660)
 const CELL := 16
+const SPAWN_GEOMETRY_BIN_SIZE := 64.0
 const GRID_ORIGIN := Vector2i(-28,-21)
 const GRID_SIZE := Vector2i(56,42)
 const CLEAR_MASK := 2147483649
+const DYNAMIC_CLEAR_MASK := 1
 const WALL_MASK := 2147483648
 ## Reusable physics query objects, keyed by quantised radius. See `_query_for()`.
 var _queries: Dictionary = {}
@@ -37,24 +39,122 @@ var _spawn_points := PackedVector2Array()
 var _spawn_transform := Transform2D()
 var _spawn_geometry_key: Array = []
 var _spawn_geometry := PackedByteArray()
+var _spawn_geometry_bins: Dictionary = {}
+var _spawn_valid_indices := PackedInt32Array()
+var _spawn_wall_clearance_sq := PackedFloat32Array()
+var _wall_rects: Array = []
+var _static_wall_fast_path := false
 ## The grid topology is built once in _ready() and has no runtime solid-point
 ## updates. Cache only this static connectivity result; geometry, physics
 ## clearance, dynamic occupancy and the caller's random candidate order remain
 ## per-request checks. If the arena ever mutates the grid, this cache must be
 ## cleared at the same mutation site.
 var _spawn_reachability: Dictionary = {}
+var _spawn_batch_depth := 0
+var _spawn_batch_failed: Dictionary = {}
+var spawn_failed_cache_hits := 0
+
+## Only bracket synchronous birth-only loops: no movement, removals or awaits.
+## Occupancy can only increase, so an exhausted search stays exhausted. Never
+## cache a successful point; every birth must still check current occupancy.
+func begin_spawn_batch() -> void:
+	if _spawn_batch_depth == 0: _spawn_batch_failed.clear()
+	_spawn_batch_depth += 1
+
+func end_spawn_batch() -> void:
+	_spawn_batch_depth -= 1
+	if _spawn_batch_depth == 0: _spawn_batch_failed.clear()
+
+func _spawn_failure_key(radius: float) -> Array:
+	return [_spawn_geometry_key.duplicate(),_spawn_transform,radius,Engine.get_physics_frames()]
 
 func _prepare_spawn_geometry(center: Vector2, minimum: float, maximum: float, side: int) -> void:
 	if _spawn_points.size() != cells.size() or _spawn_transform != global_transform:
 		_spawn_transform = global_transform
 		_spawn_points.clear()
-		for candidate in cells: _spawn_points.append(to_global(grid.get_point_position(candidate)))
+		_spawn_geometry_bins.clear()
+		_spawn_valid_indices = PackedInt32Array()
+		_spawn_wall_clearance_sq.resize(cells.size())
+		_static_wall_fast_path = is_equal_approx(global_transform.x.length(),1.0) \
+			and is_equal_approx(global_transform.y.length(),1.0) \
+			and is_zero_approx(global_transform.x.dot(global_transform.y))
+		for candidate in cells:
+			var index := _spawn_points.size()
+			var point := to_global(grid.get_point_position(candidate))
+			_spawn_points.append(point)
+			_spawn_wall_clearance_sq[index] = _static_wall_clearance_sq(point) if _static_wall_fast_path else -1.0
+			var bin := _spawn_geometry_bin(point)
+			var bucket: Array = _spawn_geometry_bins.get(bin,[])
+			bucket.append(index)
+			_spawn_geometry_bins[bin] = bucket
 		_spawn_geometry.resize(cells.size())
 		_spawn_geometry_key.clear()
 	var key: Array = [center,Utils.player.global_position,minimum,maximum,side]
 	if key != _spawn_geometry_key:
 		_spawn_geometry_key = key
-		_spawn_geometry.fill(0)
+		# Mark the complete candidate order as not-yet-tested, then leave only bins that can
+		# intersect the requested maximum radius untested. `_spawn_geometry_allows()` still runs
+		# the exact old distance/player/side predicates for those bins; this only removes work for
+		# cells that are mathematically outside the annulus and cannot be selected.
+		_spawn_geometry.fill(2)
+		var origin := _spawn_geometry_bin(center)
+		var span := ceili(maximum/SPAWN_GEOMETRY_BIN_SIZE)+1
+		for bx in range(-span,span+1):
+			for by in range(-span,span+1):
+				for index in _spawn_geometry_bins.get(origin+Vector2i(bx,by),[]):
+					_spawn_geometry[index] = 0
+		_spawn_valid_indices.resize(cells.size())
+		var valid_count := 0
+		for index in cells.size():
+			if _spawn_geometry_allows(index,center,minimum,maximum,side):
+				_spawn_valid_indices[valid_count] = index
+				valid_count += 1
+		_spawn_valid_indices.resize(valid_count)
+
+func _spawn_valid_start(offset: int) -> int:
+	# `_spawn_valid_indices` is in the same order as `cells`. Find the first valid
+	# index at or after the original random offset, then wrap. This is exactly the
+	# order produced by the old full-cell loop, without visiting every rejected cell.
+	var low := 0
+	var high := _spawn_valid_indices.size()
+	while low < high:
+		var middle: int = (low+high)>>1
+		if _spawn_valid_indices[middle] < offset: low = middle+1
+		else: high = middle
+	return low
+
+func _spawn_geometry_bin(point: Vector2) -> Vector2i:
+	return Vector2i(floori(point.x/SPAWN_GEOMETRY_BIN_SIZE),floori(point.y/SPAWN_GEOMETRY_BIN_SIZE))
+
+func _static_wall_clearance_sq(point: Vector2) -> float:
+	var local := to_local(point)
+	var nearest := INF
+	for raw_rect in _wall_rects:
+		var rect: Rect2 = raw_rect
+		var end := rect.position+rect.size
+		var dx := maxf(maxf(rect.position.x-local.x,0.0),local.x-end.x)
+		var dy := maxf(maxf(rect.position.y-local.y,0.0),local.y-end.y)
+		nearest = minf(nearest,dx*dx+dy*dy)
+	return nearest
+
+func static_line_may_hit(from: Vector2, to: Vector2) -> bool:
+	# Combat.clear_line excludes every dynamic actor, so inside an unchanged arena the
+	# only possible hit is one of these static rectangles. An AABB miss is a proof that
+	# the segment cannot touch a wall; ambiguous overlaps still use the exact physics ray.
+	if not _static_wall_fast_path: return true
+	var local_from := to_local(from)
+	var local_to := to_local(to)
+	if not bounds.grow(16.0).has_point(local_from) or not bounds.grow(16.0).has_point(local_to): return true
+	var min_x := minf(local_from.x,local_to.x)
+	var max_x := maxf(local_from.x,local_to.x)
+	var min_y := minf(local_from.y,local_to.y)
+	var max_y := maxf(local_from.y,local_to.y)
+	for raw_rect in _wall_rects:
+		var rect: Rect2 = raw_rect
+		if max_x < rect.position.x or min_x > rect.end.x: continue
+		if max_y < rect.position.y or min_y > rect.end.y: continue
+		return true
+	return false
 
 func _spawn_geometry_allows(index: int, center: Vector2, minimum: float, maximum: float, side: int) -> bool:
 	# Only immutable ring/arc arithmetic is reused between synchronous births.
@@ -97,7 +197,12 @@ func _spawn_reachable(candidate: Vector2i, target: Vector2i) -> bool:
 
 func _ready():
 	obstacles = M5Content.WALLS[region_id].duplicate()
-	for rect in [Rect2(-456,-346,912,16),Rect2(-456,330,912,16),Rect2(-456,-346,16,692),Rect2(440,-346,16,692)]+obstacles:
+	var wall_rects: Array = [Rect2(-456,-346,912,16),Rect2(-456,330,912,16),Rect2(-456,-346,16,692),Rect2(440,-346,16,692)]+obstacles
+	_wall_rects = wall_rects
+	_static_wall_fast_path = is_equal_approx(global_transform.x.length(),1.0) \
+		and is_equal_approx(global_transform.y.length(),1.0) \
+		and is_zero_approx(global_transform.x.dot(global_transform.y))
+	for rect in wall_rects:
 		var body = StaticBody2D.new(); body.collision_layer = 2147483648; body.collision_mask = 0
 		var shape = CollisionShape2D.new(); var box = RectangleShape2D.new(); box.size = rect.size; shape.shape = box; body.position = rect.get_center(); body.add_child(shape); add_child(body)
 	grid.region = Rect2i(GRID_ORIGIN,GRID_SIZE); grid.cell_size = Vector2(CELL,CELL); grid.offset = Vector2(CELL*0.5,CELL*0.5)
@@ -177,13 +282,21 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): target=nearest(Utils.player.global_position)
 	_prepare_spawn_geometry(center,minimum,maximum,int(side))
 	var offset = randi()%cells.size()
-	for i in cells.size():
-		var index: int = (offset+i)%cells.size()
+	var valid_count := _spawn_valid_indices.size()
+	M5Content.audit_candidates += cells.size()
+	var geometry_rejected := cells.size()-valid_count
+	spawn_geometry_rejected += geometry_rejected
+	M5Content.audit_rejected += geometry_rejected
+	var valid_start := _spawn_valid_start(offset)
+	var failure_key := _spawn_failure_key(radius) if _spawn_batch_depth > 0 else []
+	if _spawn_batch_failed.has(failure_key):
+		spawn_failed_cache_hits += 1
+		M5Content.audit_rejected += valid_count
+		M5Content.audit_arena_failed += 1
+		return Vector2.INF
+	for i in valid_count:
+		var index: int = _spawn_valid_indices[(valid_start+i)%valid_count]
 		var candidate = cells[index]; var point = _spawn_points[index]
-		M5Content.audit_candidates += 1
-		if not _spawn_geometry_allows(index,center,minimum,maximum,int(side)):
-			spawn_geometry_rejected += 1
-			M5Content.audit_rejected += 1; continue
 		# The grid above is built from two rectangle tests on the cell CENTRE, with a
 		# fixed 13 px margin that has nothing to do with how big the actor really is.
 		# Ask the physics world instead, using the actor's own radius, so a large
@@ -192,17 +305,13 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radi
 		# grid itself was built with. For a default-size enemy the grid's own solid/walkable answer
 		# already IS the clearance rule, and re-asking the physics world for every candidate made a
 		# single reinforcement cost up to ~677 shape queries. Large actors keep the real check.
-		if radius > grid_clearance:
-			spawn_clearance_queries += 1
-			var clearance_started := Time.get_ticks_usec() if B11Probe.enabled else 0
-			var clear := _is_clear(point,radius)
-			if B11Probe.enabled: B11Probe.cost("spawn_clearance",clearance_started)
-			if not clear:
-				spawn_clearance_rejected += 1
-				M5Content.audit_rejected += 1; continue
-		if _spawn_reachable(candidate,target): return point
+		if radius > grid_clearance and not _spawn_clear(index,point,radius):
+			M5Content.audit_rejected += 1; continue
+		if _spawn_reachable(candidate,target):
+			return point
 		M5Content.audit_rejected += 1
 	M5Content.audit_arena_failed += 1
+	if _spawn_batch_depth > 0: _spawn_batch_failed[failure_key] = true
 	return Vector2.INF
 
 ## Reachable reinforcement from the far side of the arena, for Hell Mode's multi-direction
@@ -215,25 +324,29 @@ func spawn_flank(center: Vector2, minimum: float, maximum: float, radius := -1.0
 	if not grid.is_in_boundsv(target) or grid.is_point_solid(target): target = nearest(Utils.player.global_position)
 	_prepare_spawn_geometry(center,minimum,maximum,-1)
 	var offset = randi()%cells.size()
-	for i in cells.size():
-		var index: int = (offset+i)%cells.size()
+	var valid_count := _spawn_valid_indices.size()
+	M5Content.audit_candidates += cells.size()
+	var geometry_rejected := cells.size()-valid_count
+	spawn_geometry_rejected += geometry_rejected
+	M5Content.audit_rejected += geometry_rejected
+	var valid_start := _spawn_valid_start(offset)
+	var failure_key := _spawn_failure_key(radius) if _spawn_batch_depth > 0 else []
+	if _spawn_batch_failed.has(failure_key):
+		spawn_failed_cache_hits += 1
+		M5Content.audit_rejected += valid_count
+		M5Content.audit_arena_failed += 1
+		return Vector2.INF
+	for i in valid_count:
+		var index: int = _spawn_valid_indices[(valid_start+i)%valid_count]
 		var candidate = cells[index]
 		var point = _spawn_points[index]
-		M5Content.audit_candidates += 1
-		if not _spawn_geometry_allows(index,center,minimum,maximum,-1):
-			spawn_geometry_rejected += 1
+		if radius > grid_clearance and not _spawn_clear(index,point,radius):
 			M5Content.audit_rejected += 1; continue
-		if radius > grid_clearance:
-			spawn_clearance_queries += 1
-			var clearance_started := Time.get_ticks_usec() if B11Probe.enabled else 0
-			var clear := _is_clear(point,radius)
-			if B11Probe.enabled: B11Probe.cost("spawn_clearance",clearance_started)
-			if not clear:
-				spawn_clearance_rejected += 1
-				M5Content.audit_rejected += 1; continue
-		if _spawn_reachable(candidate,target): return point
+		if _spawn_reachable(candidate,target):
+			return point
 		M5Content.audit_rejected += 1
 	M5Content.audit_arena_failed += 1
+	if _spawn_batch_depth > 0: _spawn_batch_failed[failure_key] = true
 	return Vector2.INF
 
 ## Reuses the same approach the town navigation builder uses (a circle cast against the
@@ -267,6 +380,30 @@ func _is_clear(point: Vector2, radius: float) -> bool:
 	query.transform = Transform2D(0,point)
 	query.exclude = _no_exclusions
 	return space.intersect_shape(query,1).is_empty()
+
+func _is_clear_dynamic(point: Vector2, radius: float) -> bool:
+	var space := get_world_2d().direct_space_state
+	if space == null: return true
+	var query := _query_for(radius)
+	query.collision_mask = DYNAMIC_CLEAR_MASK
+	query.transform = Transform2D(0,point)
+	query.exclude = _no_exclusions
+	return space.intersect_shape(query,1).is_empty()
+
+func _spawn_clear(index: int, point: Vector2, radius: float) -> bool:
+	# Static arena rectangles are immutable after _ready(). Reject a candidate that is
+	# definitely inside one without entering PhysicsServer2D; only the dynamic occupancy
+	# query remains. If the arena is transformed in a non-orthonormal way, retain the old
+	# combined query because the local rectangle distance is no longer exact in world space.
+	if _static_wall_fast_path and _spawn_wall_clearance_sq[index] < radius*radius:
+		spawn_clearance_rejected += 1
+		return false
+	spawn_clearance_queries += 1
+	var clearance_started := Time.get_ticks_usec() if B11Probe.enabled else 0
+	var clear := _is_clear_dynamic(point,radius) if _static_wall_fast_path else _is_clear(point,radius)
+	if B11Probe.enabled: B11Probe.cost("spawn_clearance",clearance_started)
+	if not clear: spawn_clearance_rejected += 1
+	return clear
 
 func _is_clear_excluding(point: Vector2, radius: float, rid: RID) -> bool:
 	var space := get_world_2d().direct_space_state

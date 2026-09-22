@@ -1,28 +1,11 @@
 name: Native gameplay tests
 
-# Deliberately separate from deploy-pages.yml: that pipeline was cut from ~3.5 h to about
-# 10 minutes and must keep its shape, so the B批's new gameplay contracts get their own
-# workflows that run in parallel with it instead of in front of the deploy.
-#
-# Split into a contracts job and a pressure job because the boss and density audits are
-# minutes-long real battles; putting them in the same job as the fast contracts would push a
-# single job past its useful timeout for no benefit.
-#
-# Every case is STATE DRIVEN: each scene drives the real production entry points
-# (LevelServer.monsterCreate, Town.depart, the hazard director, the fog gate) and asserts
-# engine state, printed counters and saved JSON. No screenshot diffing, no page.evaluate.
+# Full native regressions and pressure run only on manual/nightly candidates.
+# The PR/main import and core contracts live in deploy-pages.yml and expose
+# the unchanged protected check name "Stable preflight".
 on:
-  push:
-    branches: [main]
-    # A docs-only push cannot change what these tests observe, and the whole suite costs about
-    # 30 runner-minutes. deploy-pages.yml already skips its heavy jobs for a docs-only change;
-    # this matches it. No test reads a fixture out of docs/ - M11SaveMigration's fixture lives in
-    # tests/fixtures/ and everything under docs/iteration/evidence is OUTPUT the tests write.
-    paths-ignore:
-      - "Don't stop/docs/**"
-      - "**/*.md"
-  pull_request:
-    branches: [main]
+  schedule:
+    - cron: '17 4 * * *'
   workflow_dispatch:
     inputs:
       run_historical_evidence:
@@ -42,7 +25,7 @@ env:
 
 jobs:
   setup:
-    name: Stable preflight
+    name: Native candidate preflight
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:

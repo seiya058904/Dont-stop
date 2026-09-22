@@ -28,15 +28,15 @@ func _ready():
 	for stage in PLAN_STAGES_WITH_HAZARD:
 		var plan = ArenaHazards.plan(stage)
 		check(not plan.is_empty(),"stage %d has a hazard plan" % stage)
-		check(plan.kinds.size() >= 1 and plan.kinds.size() <= 3,"stage %d fields 1-3 hazard kinds" % stage)
+		check(plan.kinds == ["meteor"],"stage %d fields only the meteor family" % stage)
 		check(float(plan.warning) >= ArenaHazards.WARNING_FLOOR,"stage %d warns for at least the floor" % stage)
 		check(float(plan.coverage) <= ArenaHazards.HELL_COVERAGE,"stage %d coverage plan is inside the ceiling" % stage)
 	# The user's 21-25 requirement: at least one formal arena hazard, and it is the poison
 	# family, which is also what R5's map art anchors.
 	for stage in [21,22,23,24,25]:
-		check(ArenaHazards.plan(stage).kinds.has("poison"),"stage %d introduces the poison family" % stage)
+		check(ArenaHazards.plan(stage).kinds == ["meteor"],"stage %d introduces the meteor family" % stage)
 	check(ArenaHazards.plan(40).kinds.size() >= ArenaHazards.plan(31).kinds.size(),
-		"Hell escalates the number of overlapping hazard kinds, never reduces it")
+		"Hell retains the single arena hazard family")
 	check(HellMode.hazard_live_cap(31) >= 3 and HellMode.hazard_live_cap(40) <= 12,
 		"the simultaneous hazard cap is bounded at both ends")
 
@@ -151,7 +151,7 @@ func _ready():
 	check(Utils.player.slow_amount > 0.0,"a frost slick slows the player")
 	check(Utils.player.slow_amount <= Utils.player.MAX_ENV_SLOW,
 		"the frost slow is bounded and cannot distort control (%.2f)" % Utils.player.slow_amount)
-	check(Utils.player.SPEED > 0.0 and Utils.player.root_remaining <= 0.0,
+	check(Utils.player.SPEED > 0.0,
 		"the frost slow leaves movement, aim and firing intact")
 	for hazard in get_tree().get_nodes_in_group(StageHazard.GROUP): hazard.queue_free()
 	await wait(0.3)

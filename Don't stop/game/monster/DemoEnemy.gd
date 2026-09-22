@@ -8,6 +8,8 @@ var locked_direction = Vector2.ZERO
 ## shared lock writes both, and TacticalEnemy (which extends this class) aims artillery at it.
 var locked_point = Vector2.ZERO
 var contact_cooldown = 0.0
+var _last_draw_phase := ""
+var _last_draw_lock_frozen := true
 
 ## ---- B11: the ONE bounded attack lock, shared by both rosters -------------------------------
 ##
@@ -219,12 +221,12 @@ func contact_reach() -> float:
 ## was the one path that could push the count past the cap.
 ## Returns the created projectile (null when the ceiling refused it) so a subclass can
 ## register it for cleanup; a Node is truthy, so existing `if shot(...)` callers still work.
-func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", control := 0.0, bounces := 0) -> Node:
+func shot(dir: Vector2, speed_value = 100.0, damage_value = 1.0, muzzle_flash = true, style := "projectile", bounces := 0) -> Node:
 	if preload("res://game/monster/EnemyShot.gd").live_count >= preload("res://game/monster/EnemyShot.gd").capacity_limit: return null
 	var node = CharacterBody2D.new(); node.set_script(load("res://game/monster/EnemyShot.gd"))
 	node.position = global_position; node.velocity = dir*speed_value; node.owner_ref = weakref(self)
-	node.damage = damage_value; node.style = style; node.control = control
-	node.bounces_left = bounces if control <= 0 else 0
+	node.damage = damage_value; node.style = style
+	node.bounces_left = bounces
 	get_tree().current_scene.add_child(node)
 	if muzzle_flash: preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,12,dir,style)
 	return node
@@ -233,7 +235,13 @@ func _physics_process(delta):
 	if is_die or not is_instance_valid(Utils.player) or Utils.player.is_dead or LevelServer.state != "COMBAT": return
 	phase_time -= delta
 	contact_cooldown = maxf(0,contact_cooldown-delta)
-	queue_redraw()
+	# E02/E04 draw static role marks outside their phase transitions. E05's muzzle pulse is the
+	# only continuously changing DemoEnemy drawing, and only after its aim is frozen. Avoid asking
+	# CanvasItem to rebuild the same geometry for every ordinary enemy on every physics tick.
+	if phase != _last_draw_phase or lock_frozen != _last_draw_lock_frozen or (role == "E05" and phase == "warn" and lock_frozen):
+		_last_draw_phase = phase
+		_last_draw_lock_frozen = lock_frozen
+		queue_redraw()
 	if phase == "spawn":
 		if phase_time <= 0: phase = "move"
 		return

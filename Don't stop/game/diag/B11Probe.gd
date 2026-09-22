@@ -125,6 +125,8 @@ static var raycasts := 0
 static var raycasts_skipped := 0
 ## `Combat.clear_line()` physics queries, from every caller.
 static var clear_line_calls := 0
+## Clear-line requests proved to miss every arena wall by the static AABB broad phase.
+static var clear_line_static_skips := 0
 ## Hits that reached `Hero.onHit()`'s damage path (past the contact throttle and the shield).
 static var player_hits := 0
 ## Damaging ticks a HostileZone actually landed on the player.
@@ -192,7 +194,7 @@ static func note_player_hit() -> void:
 static func snapshot() -> Dictionary:
 	return {
 		"raycasts":raycasts, "raycasts_skipped":raycasts_skipped,
-		"clear_line":clear_line_calls, "hits":player_hits, "zone_hits":zone_hits,
+		"clear_line":clear_line_calls, "clear_line_static_skips":clear_line_static_skips, "hits":player_hits, "zone_hits":zone_hits,
 		"labels":labels_created, "vfx":vfx_created, "fog_pushes":fog_pushes,
 		"reward_scans":reward_scans,
 		"reward_built":reward_fanouts_built, "reward_reused":reward_fanouts_reused,

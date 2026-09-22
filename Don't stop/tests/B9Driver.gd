@@ -156,7 +156,7 @@ func _ready():
 	# whatever piece of camp scenery it happened to hit first.
 	var shot = load("res://game/monster/EnemyShot.gd").new()
 	shot.position = player_at()+Vector2(40,-60)
-	shot.velocity = Vector2(0,220); shot.damage = 1.0; shot.style = "projectile"; shot.control = 0.0
+	shot.velocity = Vector2(0,220); shot.damage = 1.0; shot.style = "projectile"
 	get_tree().current_scene.add_child(shot)
 	shot.set_physics_process(false)
 	check(is_instance_valid(shot) and shot.is_in_group("combat_transient"),

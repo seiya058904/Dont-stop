@@ -7,7 +7,8 @@
 // MIME types that matter: .wasm must be application/wasm or the engine falls back to a slow
 // non-streaming instantiate, and .pck must not be sniffed as text.
 //
-// Usage: node tools/b10-static-server.js <root> <port>
+// Usage: node tools/b10-static-server.js <root> <port> [--cache]
+// --cache is only for an immutable startup candidate's warm-cache measurement.
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -47,7 +48,7 @@ const server = http.createServer((req, res) => {
 			// threaded build would need.
 			'Cross-Origin-Opener-Policy': 'same-origin',
 			'Cross-Origin-Embedder-Policy': 'require-corp',
-			'Cache-Control': 'no-store',
+			'Cache-Control': process.argv[4] === '--cache' ? 'public, max-age=60' : 'no-store',
 		});
 		fs.createReadStream(full).pipe(res);
 	});

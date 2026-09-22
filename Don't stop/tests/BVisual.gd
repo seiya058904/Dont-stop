@@ -76,8 +76,8 @@ func _ready():
 	await shoot_warning("ui-sweep",telegraph("line","sweep",Vector2(-60,-120),Vector2.DOWN,300.0,300.0,12.0,0.0,1.1))
 	# Artillery: a ground target with a timing ring on the player's position.
 	await shoot_warning("ui-artillery",telegraph("circle","artillery",Vector2(120,-70),right,52.0,52.0,0.0,0.0))
-	# Root / control: purple, with the waveform that marks it as control rather than damage.
-	await shoot_warning("ui-root",telegraph("cone","root",Vector2(-90,90),right.rotated(-0.7),160.0,160.0,0.0,0.85))
+	# Converted fan: ordinary damage warning with the same footprint.
+	await shoot_warning("ui-fan",telegraph("cone","projectile",Vector2(-90,90),right.rotated(-0.7),160.0,160.0,0.0,0.85))
 	# Shock band: violet moving danger band.
 	await shoot_warning("ui-shock",telegraph("line","shock",Vector2(-120,140),Vector2.DOWN,320.0,320.0,30.0,0.0,0.5))
 

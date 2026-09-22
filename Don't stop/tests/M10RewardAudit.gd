@@ -45,16 +45,16 @@ func _ready():
 	var hit_counter = pulse.direct_hits
 	for shard in shards: Combat.hit(target,shard.context)
 	check(pulse.direct_hits==hit_counter,"fragment cannot recurse direct proc")
-	Utils.player.apply_root(); var before = Utils.player.global_position
+	var before = Utils.player.global_position
 	Input.action_press("right"); await wait(0.15)
-	check(Utils.player.global_position.distance_to(before)<0.01,"root blocks movement")
+	check(Utils.player.global_position.distance_to(before)>1.0,"ordinary damage does not block movement")
 	var gun = Utils.player.gun; gun.bullets_count = 0; gun.is_reloading = false
 	gun.change_timer.stop(); gun.reload_ammo()
-	check(gun.is_reloading and not gun.change_timer.is_stopped(),"root allows reload")
+	check(gun.is_reloading and not gun.change_timer.is_stopped(),"reload remains available")
 	Input.action_release("right"); await wait(1.8)
 	var ammo = gun.bullets_count; gun.can_shoot = true; Demo.fire_released = true
-	Utils.player.apply_root(); fire_at(target.global_position,0.02); await wait(0.05)
-	check(gun.bullets_count<ammo,"root allows real firing")
+	fire_at(target.global_position,0.02); await wait(0.05)
+	check(gun.bullets_count<ammo,"real firing remains available")
 	LevelServer.return_to_camp(); await wait(0.3)
 	# Old reward caps preserve storage counts; repeated refresh must not add stats.
 	for id in [2,3,4,5,6,7,8,9,10,11]:

@@ -47,6 +47,7 @@ var replacement_weapon := -1
 var slot_detail := ""
 var rendered_selection := ""
 var filters_open := false
+var departure_preparing := false
 
 func select_carried(id: int):
 	selection = str(id)
@@ -236,10 +237,8 @@ func _ready():
 	tools.text = "工具"
 	top.add_child(tools)
 	tools.get_popup().add_item("角色属性",0)
-	tools.get_popup().add_item("束缚攻击训练",1)
 	tools.get_popup().id_pressed.connect(func(id):
-		if id == 0: Demo.open_stats()
-		else: Demo.root_lesson())
+		if id == 0: Demo.open_stats())
 	button(top,"返回 [Esc]",queue_free)
 	var tabs = HBoxContainer.new()
 	body.add_child(tabs)
@@ -714,6 +713,8 @@ func depart(stage: int):
 	_depart_with(stage,true)
 
 func _depart_with(stage: int, trial: bool):
+	if departure_preparing:
+		return
 	if not DemoConfig.ENCOUNTERS.has(stage):
 		message.text = "该关卡不存在"
 		return
@@ -722,6 +723,13 @@ func _depart_with(stage: int, trial: bool):
 	# player choice; unarmed is a first-class state now.
 	if LevelServer.state != "CAMP":
 		message.text = "当前仍在战斗；需先完成或返回营地"
+		return
+	departure_preparing = true
+	message.text = "正在准备出发…"
+	if is_instance_valid(Warmup):
+		await Warmup.prepare_web_combat()
+	departure_preparing = false
+	if LevelServer.state != "CAMP":
 		return
 	Demo.pop_pause(self)
 	if LevelServer.town.depart(stage,trial):

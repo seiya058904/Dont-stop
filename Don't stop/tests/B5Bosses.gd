@@ -20,7 +20,7 @@ extends "res://tests/B8Runtime.gd"
 ##             reported rather than asserted.
 const PHASES = {
 	"B01":{"1":["charge","cleave","slam"],"3":["charge","slam","shockwave"]},
-	"B02":{"1":["brood","lockdown","pulse"],"3":["toxic_zone","root_shot","brood"]},
+	"B02":{"1":["brood","lockdown","pulse"],"3":["toxic_zone","fan_shot","brood"]},
 	"B03":{"1":["dash","sweep","burst"],"3":["cross_laser","sweep","burst"]},
 	"B04":{"1":["dash","sweep","burst"],"2":["sweep","dash","cross","band"],"3":["cross_laser","sweep","band"]}
 }

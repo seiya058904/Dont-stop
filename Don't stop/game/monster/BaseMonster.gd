@@ -20,6 +20,7 @@ var slow_amount = 0.0
 var slows: Dictionary = {}
 var knockback_time = 0.0
 func apply_slow(source: String, amount: float, seconds: float):
+	_wake_transient_process()
 	slows[source] = {"amount":amount,"seconds":seconds}
 	refresh_slow()
 func refresh_slow():
@@ -38,6 +39,7 @@ var variant_damage = 1.0
 var displayed_flash = -1.0
 
 func apply_burn(source: String, amount: float, seconds: float, context: Dictionary):
+	_wake_transient_process()
 	var saved = context.duplicate(true)
 	saved.damage = amount
 	saved.depth = 1
@@ -72,6 +74,13 @@ func _ready():
 	node.name = "EffectRoot"
 	add_child(node)
 	name = str(Time.get_ticks_usec())
+	# This process only advances transient feedback and status effects. Physics movement and
+	# authored attacks stay in `_physics_process`; sleeping the transient lane removes an empty
+	# callback from every ordinary enemy until a hit/status actually needs it.
+	set_process(false)
+
+func _wake_transient_process() -> void:
+	if not is_processing(): set_process(true)
 
 func setData(data):
 	SPEED = data['speed']
@@ -129,6 +138,8 @@ func _process(delta):
 		idle_frame_num = 0
 		critical_total = 0
 		label_time = 0.2
+	if knockback_time <= 0.0 and slows.is_empty() and burns.is_empty() and flash_time <= 0.0 and idle_frame_num <= 0.0 and critical_total <= 0.0:
+		set_process(false)
 	if B11Probe.enabled: B11Probe.cost("monster_process_inclusive",measured)
 
 func _physics_process(delta):
@@ -152,20 +163,24 @@ func _physics_process(delta):
 		_on_velocity_computed(new_velocity)
 
 	if velocity != Vector2.ZERO:
-		anim.play("run")
+		_play_motion("run")
 		if velocity.x > 0:
 			flip_h(false)
 		elif velocity.x < 0 && scale.x == 1:
 			flip_h(true)
 	else:
-		anim.play("idle")
+		_play_motion("idle")
 
 func _on_velocity_computed(safe_velocity: Vector2) -> void:
 	if state_array.has(Utils.STATE_TYPE.STUN):
-		anim.play("idle")
+		_play_motion("idle")
 		return
 	velocity = safe_velocity
 	_measured_move()
+
+func _play_motion(animation: StringName) -> void:
+	if anim.animation == animation: return
+	anim.play(animation)
 
 func flip_h(flip:bool):
 	if is_flip == flip:
@@ -186,6 +201,7 @@ func onHit(hit_num, _is_show_label = true, _is_death_effect = true):
 
 func receive_damage(amount: float, critical: bool, context: Dictionary):
 	if is_die: return
+	_wake_transient_process()
 	last_context = context
 	if critical: critical_total += amount
 	else: idle_frame_num += amount
@@ -219,6 +235,7 @@ func onDie(is_death_effect = true):
 			if node.connect_kill:
 				node.call("onKill",self)
 	set_physics_process(false)
+	set_process(false)
 	for item in get_node("EffectRoot").get_children():
 		item.queue_free()
 	get_node("CollisionShape2D").call_deferred("set_disabled",true)
