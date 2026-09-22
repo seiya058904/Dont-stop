@@ -13,6 +13,7 @@ func _ready() -> void:
 	# existing save-failure confirmation.
 	if OS.has_feature("web"):
 		$VBoxContainer/quit.visible = false
+		await _warm_web_first_use()
 	Utils.startup_mark("menu-initialized")
 	_mark_menu_presented()
 
@@ -38,6 +39,23 @@ func _apply_web_rendering_fallback() -> void:
 		if light != null:
 			light.shadow_enabled = false
 			light.enabled = false
+
+func _warm_web_first_use() -> void:
+	# The settings tree is already part of the menu scene; one covered frame
+	# compiles its controls before the first real click.
+	setting_ui.show()
+	await RenderingServer.frame_post_draw
+	setting_ui.hide()
+	# CampPanel is intentionally created on demand in normal play. Build and
+	# draw one disposable copy while the Web loader still covers the canvas so
+	# the first real Start click does not pay its UI shader/layout cost.
+	var warm_panel := Control.new()
+	warm_panel.set_script(load("res://ui/CampPanel.gd"))
+	Utils.canvasLayer.add_child(warm_panel)
+	Demo.pop_pause(warm_panel)
+	await RenderingServer.frame_post_draw
+	warm_panel.queue_free()
+	await get_tree().process_frame
 
 func _mark_menu_presented() -> void:
 	await RenderingServer.frame_post_draw
