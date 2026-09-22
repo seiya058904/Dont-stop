@@ -30,21 +30,14 @@ func _apply_web_rendering_fallback() -> void:
 	var world := scene.get_node_or_null("WorldEnvironment") as WorldEnvironment
 	if world != null and world.environment != null:
 		world.environment.glow_enabled = false
-	# Keep the authored map visible, but coalesce its static canvas quadrants on
-	# Web. The default small quadrants multiply draw submissions on SwiftShader;
-	# a larger batch preserves the same tiles and collision data while reducing
-	# the first-menu render cost.
-	for node in scene.find_children("*", "TileMap", true, false):
-		var tile_map := node as TileMap
-		if tile_map != null:
-			tile_map.rendering_quadrant_size = maxi(tile_map.rendering_quadrant_size, 64)
-	# Shadowed 2D lights are another optional post-process path that stalls
-	# SwiftShader during the first camp frame. Keep the lights themselves (and
-	# therefore the authored palette) while avoiding the shadow-map pass.
+	# Dynamic 2D lights are another optional path that makes SwiftShader spend
+	# most of the first camp frame in the lit Canvas shader. Keep the authored
+	# map, sprites and CanvasModulate; only disable the Web light pass.
 	for node in scene.find_children("*", "PointLight2D", true, false):
 		var light := node as PointLight2D
 		if light != null:
 			light.shadow_enabled = false
+			light.enabled = false
 
 func _mark_menu_presented() -> void:
 	await RenderingServer.frame_post_draw
