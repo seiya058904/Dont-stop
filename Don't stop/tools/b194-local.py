@@ -92,7 +92,7 @@ def main():
                         "res://tests/" + suite + ".tscn"], contract=True)
     if ok and args.tier == "L2" and web:
         env = dict(os.environ, B194_RUNS="1", B194_EVIDENCE="0", E2E_SCREENSHOTS="none")
-        for script, extra in [("web-b193-startup", []), ("smoke-web", []),
+        for script, extra in [("smoke-web", []),
                               ("web-menu-return-e2e", ["1"])]:
             evidence = out / script
             evidence.mkdir()

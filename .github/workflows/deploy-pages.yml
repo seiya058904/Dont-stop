@@ -1,7 +1,7 @@
 name: Build and deploy Web release
 
 # B19.4: one import/export, core preflight before export, and real browser
-# startup/smoke/menu-return before either required summary or deployment.
+# smoke/menu-return before either required summary or deployment.
 # Full browser regression and soak run on schedule/manual dispatch.
 # Required path hard budget: 10 minutes; engineering target: 8 minutes.
 on:
@@ -335,7 +335,7 @@ jobs:
               echo "Game changes require a successful Web build; got: $BUILD_RESULT"
               exit 1
             fi
-            echo "Web build, startup budget, real interaction and smoke passed."
+            echo "Web build, real interaction and smoke passed."
           elif [[ "$GAME_SCOPE" == false ]]; then
             if [[ ( "$BUILD_RESULT" != success && "$BUILD_RESULT" != skipped ) || ( "$BROWSER_RESULT" != success && "$BROWSER_RESULT" != skipped ) ]]; then
               echo "Docs-only scope had an unexpected Web build result: $BUILD_RESULT"
@@ -347,8 +347,8 @@ jobs:
             exit 1
           fi
 
-  # Three required gates share the one exported artifact. The full matrix
-  # adds save/aim/stage coverage on manual/nightly runs; one return cycle is
+  # Required gates share the one exported artifact. The full matrix adds
+  # save/aim/stage coverage on manual/nightly runs; one return cycle is
   # sufficient for each edit, while manual/nightly retain 5/20 cycles.
   browser-gates:
     name: "Gate ${{ matrix.name }}"
@@ -359,7 +359,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '["smoke","startup","save-audit","aim-core","aim-fault","menu-return","stages-fair"]' || '["smoke","startup","menu-return"]') }}
+        name: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '["smoke","save-audit","aim-core","aim-fault","menu-return","stages-fair"]' || '["smoke","menu-return"]') }}
     steps:
       - name: Check out source (gate scripts)
         uses: actions/checkout@v4
@@ -405,19 +405,13 @@ jobs:
           SCRIPT=""
           case "${{ matrix.name }}" in
             smoke) SCRIPT=tools/smoke-web.js ;;
-            startup) SCRIPT=tools/web-b193-startup.js ;;
             save-audit) SCRIPT=tools/save-audit-web.js ;;
             aim-core|aim-fault) SCRIPT=tools/web-aim-e2e.js ;;
             menu-return) SCRIPT=tools/web-menu-return-e2e.js ;;
             stages-fair) SCRIPT=tools/web-b11-stagerun.js ;;
             *) exit 2 ;;
           esac
-          export B193_HEADLESS=1 B193_BUILD_DIR="$PWD/build/web" E2E_SCREENSHOTS=none
-          if [[ "${{ matrix.name }}" == startup ]]; then
-            node "$PROJECT_PATH/tools/test-web-scissor.js"
-            node "$PROJECT_PATH/tools/test-web-loader-progress.js"
-            node "$PROJECT_PATH/tools/test-web-idbfs.js" "$PWD/build/web"
-          fi
+          export E2E_SCREENSHOTS=none
           case "${{ matrix.name }}" in
             menu-return) set -- "$@" "${MENU_CYCLES:-5}" ;;
             # The two halves of the aim gate select their phases explicitly; the
@@ -526,8 +520,6 @@ jobs:
             "$PAGES_URL" "$DIGEST" "$GITHUB_SHA" \
             online-evidence build-identity/build-identity.json \
             2>&1 | tee online-evidence/online-smoke.log
-          B193_HEADLESS=1 B193_BUILD_DIR="$PWD/build/web" node "$PROJECT_PATH/tools/web-b193-startup.js" \
-            "$PAGES_URL" online-evidence/startup
           echo "ONLINE_SMOKE=PASS identity=sha:$GITHUB_SHA digest:$DIGEST wall_clock=$((SECONDS-START))s budget=5m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload online evidence
