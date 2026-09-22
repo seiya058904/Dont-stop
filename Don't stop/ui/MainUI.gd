@@ -30,6 +30,13 @@ func _apply_web_rendering_fallback() -> void:
 	var world := scene.get_node_or_null("WorldEnvironment") as WorldEnvironment
 	if world != null and world.environment != null:
 		world.environment.glow_enabled = false
+	# Shadowed 2D lights are another optional post-process path that stalls
+	# SwiftShader during the first camp frame. Keep the lights themselves (and
+	# therefore the authored palette) while avoiding the shadow-map pass.
+	for node in scene.find_children("*", "PointLight2D", true, false):
+		var light := node as PointLight2D
+		if light != null:
+			light.shadow_enabled = false
 
 func _mark_menu_presented() -> void:
 	await RenderingServer.frame_post_draw
