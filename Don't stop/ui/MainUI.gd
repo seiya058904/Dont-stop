@@ -31,14 +31,13 @@ func _apply_web_rendering_fallback() -> void:
 	var world := scene.get_node_or_null("WorldEnvironment") as WorldEnvironment
 	if world != null and world.environment != null:
 		world.environment.glow_enabled = false
-	# Dynamic 2D lights are another optional path that makes SwiftShader spend
-	# most of the first camp frame in the lit Canvas shader. Keep the authored
-	# map, sprites and CanvasModulate; only disable the Web light pass.
+	# Keep the authored dynamic lighting visible on Web. Disabling the whole
+	# light pass made the map visibly darker; only its expensive shadow pass
+	# is skipped for the browser compatibility path.
 	for node in scene.find_children("*", "PointLight2D", true, false):
 		var light := node as PointLight2D
 		if light != null:
 			light.shadow_enabled = false
-			light.enabled = false
 
 func _warm_web_first_use() -> void:
 	# The settings tree is already part of the menu scene; one covered frame
