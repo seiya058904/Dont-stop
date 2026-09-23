@@ -269,6 +269,20 @@ const MENU_START = { x: 41, y: 136 };
 		await page.mouse.move(c.x, c.y); await sleep(110);
 		await page.mouse.down(); await sleep(120); await page.mouse.up();
 	};
+	const clickDesignAcrossFrames = async (dx, dy, frameCount, budgetMs, label) => {
+		const c = toCss(dx, dy);
+		await page.mouse.move(c.x, c.y); await sleep(110);
+		const baseline = stateNow();
+		if (!baseline) return { ok: false, state: null, label: `${label}: no frame baseline` };
+		await page.mouse.down();
+		let held;
+		try {
+			held = await waitState(s => s.frames >= baseline.frames + frameCount, budgetMs, label);
+		} finally {
+			await page.mouse.up();
+		}
+		return { ...held, baselineFrames: baseline.frames };
+	};
 	const clickTag = async tag => {
 		const r = rects[tag];
 		if (!r) return { ok: false, why: `${tag} was never reported` };
@@ -364,7 +378,13 @@ const MENU_START = { x: 41, y: 136 };
 	// --- a SECOND session: the one thing the old freeze-on-leave bug destroyed
 	const sessBefore = (atMenu.state || stateNow()).sess;
 	const fromRestart = gameLines.length;
-	await clickDesign(MENU_START.x, MENU_START.y);
+	// The software-rendered CI build can run below 1 fps. A fixed 120 ms mouse
+	// hold may begin and end between engine frames, so keep the real click down
+	// until the returned menu's game loop has observed at least two more frames.
+	const restartClick = await clickDesignAcrossFrames(
+		MENU_START.x, MENU_START.y, 2, 20000, 'restart-click-frames');
+	token('RETURN_MENU_CLICK_CROSSED_ENGINE_FRAMES', restartClick.ok,
+		`held across ${restartClick.state ? restartClick.state.frames - restartClick.baselineFrames : 0} unpaused frames`);
 	const pressed2 = await waitGameLine(/menu start button pressed/, fromRestart, 10000);
 	// The claim is "the returned menu accepted the press and a real, running round
 	// opened" - instrumented by the round flag plus the pause-aware frame counter.
