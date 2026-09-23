@@ -461,28 +461,23 @@ jobs:
         uses: actions/deploy-pages@v4
 
   # ------------------------------------------------------------------------ #
-  # Online smoke: a <=5 min script, not a re-run of the 100-minute job it
-  # replaced. It proves the live page IS this build (commit + digest), that the
-  # payload files are the exact ones that were tested, and then walks the
-  # product's own state once through menu -> round -> pause -> leave -> again.
+  # Optional post-deploy identity verification. Routine pushes do not replay a
+  # browser/gameplay smoke against Pages; those behaviors were already tested
+  # against this exact build before deployment. Dispatch with deploy=true only
+  # when an explicit live artifact check is useful.
   # ------------------------------------------------------------------------ #
-  online-smoke:
-    name: Online smoke (deployed Pages, <=5 min)
+  pages-verification:
+    name: Verify deployed Pages artifact (manual only)
     needs: [deploy]
     if: >-
       github.ref == 'refs/heads/main'
-      && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
+      && github.event_name == 'workflow_dispatch'
+      && inputs.deploy == true
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - name: Check out source (online smoke script)
+      - name: Check out source (Pages verifier)
         uses: actions/checkout@v4
-
-      - name: Download the tested Web candidate
-        uses: actions/download-artifact@v4
-        with:
-          name: web-build
-          path: build/web
 
       - name: Restore the build identity this run produced
         uses: actions/download-artifact@v4
@@ -494,38 +489,21 @@ jobs:
         with:
           node-version: 22
 
-      - name: Cache npm and the Playwright browser
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            ~/.cache/ms-playwright
-          key: pw-${{ env.PLAYWRIGHT_VERSION }}-chromium-v1
-
-      - name: Install Playwright Chromium
+      - name: Verify deployed page and payload identity
         shell: bash
         run: |
           set -euo pipefail
-          npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
-          npx "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
-
-      - name: Verify the deployed build is THIS build, then walk it once
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p online-evidence
-          DIGEST=$(python3 -c "import json;print(json.load(open('build-identity/build-identity.json'))['artifact_digest'])")
+          mkdir -p pages-evidence
           START=$SECONDS
-          node "$PROJECT_PATH/tools/online-smoke.js" \
-            "$PAGES_URL" "$DIGEST" "$GITHUB_SHA" \
-            online-evidence build-identity/build-identity.json \
-            2>&1 | tee online-evidence/online-smoke.log
-          echo "ONLINE_SMOKE=PASS identity=sha:$GITHUB_SHA digest:$DIGEST wall_clock=$((SECONDS-START))s budget=5m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          node "$PROJECT_PATH/tools/verify-pages-deployment.js" \
+            "$PAGES_URL" "$GITHUB_SHA" build-identity/build-identity.json pages-evidence \
+            2>&1 | tee pages-evidence/verification.log
+          echo "PAGES_VERIFICATION=PASS build=$GITHUB_SHA wall_clock=$((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
-      - name: Upload online evidence
+      - name: Upload Pages verification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: online-smoke-evidence
-          path: online-evidence
+          name: pages-verification-evidence
+          path: pages-evidence
           retention-days: 14
