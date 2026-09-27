@@ -1,5 +1,9 @@
 # Don't Stop
 
+<img width="1672" height="941" alt="ChatGPT 图像 2026年9月27日 22_38_06" src="https://github.com/user-attachments/assets/4255e037-0979-4876-bab1-7939bfc17a9b" />
+
+
+
 Don't Stop is a top-down 2D survival shooter/roguelite built with Godot 4. Fight through encounters, collect weapons and upgrades, and return to camp to shape the next run.
 
 ## Play
