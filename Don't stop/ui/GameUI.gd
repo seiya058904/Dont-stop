@@ -59,10 +59,15 @@ func _ready() -> void:
 	_setup_weapon_readout()
 	PlayerData.level_rewards_applied.connect(show_level_rewards)
 	level_bar.show_percentage=false
-	exp_text=Label.new(); exp_text.position=level_bar.position; exp_text.size=level_bar.size; exp_text.add_theme_font_size_override("font_size",5); box_top.add_child(exp_text)
+	exp_text=Label.new(); exp_text.position=Vector2(36,10); exp_text.size=Vector2(64,8); exp_text.add_theme_font_size_override("font_size",5); box_top.add_child(exp_text)
+	_style_floating_text(exp_text)
 	for child in level_panel.get_children(): child.hide()
-	level_panel.size=Vector2(180,48)
-	level_notice=Label.new(); level_notice.position=Vector2(4,3); level_notice.size=Vector2(172,44); level_notice.add_theme_font_size_override("font_size",7); level_panel.add_child(level_notice)
+	level_panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	level_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	level_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	level_panel.size=Vector2(156,30)
+	level_notice=Label.new(); level_notice.size=Vector2(156,30); level_notice.add_theme_font_size_override("font_size",6); level_panel.add_child(level_notice)
+	_style_floating_text(level_notice)
 	change_audio.bus = "UI"
 	Demo.restored.connect(on_restore)
 	Demo.changed.connect(_update_unarmed_hud)
@@ -82,21 +87,28 @@ func _ready() -> void:
 func _style_hud() -> void:
 	var skin = preload("res://ui/GildedTheme.gd")
 	theme = skin.build(7)
-	# One compact instrument panel; the middle of the arena stays unobstructed.
-	var back := Panel.new()
-	back.position = Vector2(-3,-3)
-	back.size = Vector2(101,61)
-	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	back.add_theme_stylebox_override("panel",skin.plate(Color("10191fec"),Color("566366"),3))
-	box_top.add_child(back)
-	box_top.move_child(back,0)
+	# Floating status text leaves enemies and warnings visible between the readouts.
 	for label in [gold_label,reward_label,level_label]:
 		label.label_settings = null
 		label.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
 		label.add_theme_color_override("font_color",skin.GOLD)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		_style_floating_text(label)
+	gold_label.position.y = 24
+	reward_label.position.y = 36
 	for bar in [hp_bar,level_bar]:
 		bar.add_theme_stylebox_override("background",skin.plate(Color("071115"),Color("3d535b"),0))
 		bar.add_theme_stylebox_override("fill",skin.plate(Color("62b79d") if bar == hp_bar else skin.GOLD,Color("bce4ca") if bar == hp_bar else Color("f0d5a0"),0))
+	# Experience is a fine track below its numbers, never a rounded cap over text.
+	level_bar.show_percentage = false
+	var exp_track := StyleBoxFlat.new()
+	exp_track.bg_color = Color("071115b0")
+	var exp_fill := StyleBoxFlat.new()
+	exp_fill.bg_color = skin.GOLD
+	level_bar.add_theme_stylebox_override("background",exp_track)
+	level_bar.add_theme_stylebox_override("fill",exp_fill)
+	level_bar.position = Vector2(36,20)
+	level_bar.size = Vector2(58,2)
 	var ammo_back := Panel.new()
 	ammo_back.position = Vector2(-31,-27)
 	ammo_back.size = Vector2(130,48)
@@ -104,6 +116,11 @@ func _style_hud() -> void:
 	ammo_back.add_theme_stylebox_override("panel",skin.plate(Color("10191fe8"),Color("41525a"),3))
 	bottom_bls.add_child(ammo_back)
 	bottom_bls.move_child(ammo_back,0)
+
+func _style_floating_text(label: Label) -> void:
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_color_override("font_outline_color",Color("071115"))
+	label.add_theme_constant_override("outline_size",2)
 
 func _setup_weapon_readout() -> void:
 	# Keep the combat centre clear; the current gun belongs beside its ammunition.
@@ -333,9 +350,11 @@ func onPlayerLevelChange(level):
 func show_level_rewards(rewards: Dictionary):
 	if Demo.loading: return
 	level_notice.text=PlayerData.PROGRESSION.notice(rewards)
-	level_panel.position=Vector2(8,65); level_panel.show()
+	level_panel.position=Vector2(8,60); level_panel.modulate.a=1.0; level_panel.show()
 	if notice_tween: notice_tween.kill()
-	notice_tween=create_tween(); notice_tween.tween_interval(3.0); notice_tween.tween_callback(level_panel.hide)
+	notice_tween=create_tween(); notice_tween.tween_interval(2.75)
+	notice_tween.tween_property(level_panel,"modulate:a",0.0,0.25)
+	notice_tween.tween_callback(level_panel.hide)
 
 func onPlayerExpChange(exp,max_exp):
 	level_bar.max_value = max_exp
