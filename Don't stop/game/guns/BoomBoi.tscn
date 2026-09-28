@@ -1,5 +1,6 @@
-[gd_scene load_steps=19 format=3 uid="uid://b5766vf0e5ckg"]
+[gd_scene load_steps=16 format=3 uid="uid://b5766vf0e5ckg"]
 
+[ext_resource type="Script" path="res://game/effects/LightweightParticles.gd" id="9_cpu"]
 [ext_resource type="Script" path="res://game/guns/BoomBoi.gd" id="1_5fns6"]
 [ext_resource type="Texture2D" path="res://Sprites/Presentation/weapon-6.svg" id="2_7wcnc"]
 [ext_resource type="Texture2D" uid="uid://6cng77rsgedk" path="res://game/bullets/assets/lights2.png" id="3_5vsnc"]
@@ -18,38 +19,9 @@ colors = PackedColorArray(0.202513, 0.970151, 1, 1, 0.502386, 0.816418, 1, 1)
 _data = [Vector2(0, 0.572727), 0.0, 0.0, 0, 0, Vector2(0.614458, 0.809091), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_lk6o1"]
-curve = SubResource("Curve_gtmmr")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vqneb"]
-resource_local_to_scene = true
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(1, 5, 1)
-gravity = Vector3(0, -98, 0)
-scale_max = 2.0
-scale_curve = SubResource("CurveTexture_lk6o1")
-
 [sub_resource type="Gradient" id="Gradient_m380u"]
 offsets = PackedFloat32Array(0.57037, 1)
 colors = PackedColorArray(0.584314, 0.92549, 0.945098, 0.639216, 0.462745, 0.854902, 1, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_4vxhs"]
-gradient = SubResource("Gradient_m380u")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_f1lxr"]
-particle_flag_disable_z = true
-spread = 90.0
-initial_velocity_min = 25.0
-initial_velocity_max = 25.0
-angular_velocity_min = 5.0
-angular_velocity_max = 5.0
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 100.0
-linear_accel_max = 100.0
-scale_min = 0.3
-scale_curve = SubResource("CurveTexture_lk6o1")
-color_ramp = SubResource("GradientTexture1D_4vxhs")
 
 [sub_resource type="Animation" id="Animation_4mjfa"]
 resource_name = "run"
@@ -96,6 +68,7 @@ reload_stream = ExtResource("4_0ip26")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 position = Vector2(4, -1)
+enabled = false
 target_position = Vector2(1000, 0)
 collision_mask = 2147483651
 
@@ -112,22 +85,42 @@ begin_cap_mode = 1
 end_cap_mode = 1
 antialiased = true
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="RayCast2D/Line2D"]
+[node name="GPUParticles2D" type="CPUParticles2D" parent="RayCast2D/Line2D"]
+script = ExtResource("9_cpu")
 self_modulate = Color(2, 2, 2, 1)
 emitting = false
 amount = 50
-process_material = SubResource("ParticleProcessMaterial_vqneb")
 lifetime = 0.3
+fixed_fps = 30
+draw_order = 1
+emission_shape = 3
+emission_rect_extents = Vector2(1, 5)
+gravity = Vector2(0, -98)
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_gtmmr")
 
-[node name="GPUParticles2D2" type="GPUParticles2D" parent="RayCast2D"]
+[node name="GPUParticles2D2" type="CPUParticles2D" parent="RayCast2D"]
+script = ExtResource("9_cpu")
 self_modulate = Color(2, 2, 2, 1)
 position = Vector2(33, 0)
 emitting = false
 amount = 24
-process_material = SubResource("ParticleProcessMaterial_f1lxr")
 texture = ExtResource("3_5vsnc")
 lifetime = 0.3
 preprocess = 0.2
+fixed_fps = 30
+draw_order = 1
+spread = 90.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 25.0
+initial_velocity_max = 25.0
+angular_velocity_min = 5.0
+angular_velocity_max = 5.0
+linear_accel_min = 100.0
+linear_accel_max = 100.0
+scale_amount_min = 0.3
+scale_amount_curve = SubResource("Curve_gtmmr")
+color_ramp = SubResource("Gradient_m380u")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_7wcnc")

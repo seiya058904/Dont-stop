@@ -24,13 +24,18 @@ func _shootAnim():
 	if not is_use or not is_instance_valid(player) or player.is_dead or get_tree().paused: return
 	super._shootAnim()
 	play_shot_feedback(timer.wait_time)
-	add_child(particles_pre.instantiate())
+	# TierMuzzle already supplies the source flash. Preserve the removed legacy
+	# emitter's RNG advancement without allocating another particle system.
+	for _legacy_draw in (2 if DisplayServer.get_name() == "headless" else 3): randi()
 
 func _on_timer_timeout():
 	can_shoot = true
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
+	# No invisible beam geometry/material updates while idle. RayCast2D is
+	# queried explicitly below, so its automatic physics query is disabled.
+	if not is_cast and line_2d.width <= 0.0: return
 	cast.target_position = Vector2(effective.range,0)
 	var endpoint = cast.to_global(cast.target_position)
 	cast.force_raycast_update()
@@ -48,7 +53,7 @@ func _physics_process(delta: float) -> void:
 	line_2d.set_point_position(1, end)
 	particles_box.position = (start + end) * 0.5
 	particles_box.rotation = (end - start).angle()
-	particles_box.process_material.emission_box_extents.x = start.distance_to(end) * 0.5
+	particles_box.emission_rect_extents.x = start.distance_to(end) * 0.5
 	particles_end.global_position = endpoint
 
 func bulletHurt(coller):

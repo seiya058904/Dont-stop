@@ -193,10 +193,9 @@ func _warm_scene(path: String, scene: PackedScene = null) -> int:
 	return 1
 
 func _wake_particles(node: Node) -> void:
-	if node is GPUParticles2D:
-		var p := node as GPUParticles2D
-		p.emitting = true
-		p.restart()
+	if node is GPUParticles2D or node is CPUParticles2D:
+		node.emitting = true
+		node.restart()
 	for child in node.get_children():
 		_wake_particles(child)
 

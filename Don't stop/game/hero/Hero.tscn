@@ -1,5 +1,6 @@
-[gd_scene load_steps=52 format=3 uid="uid://8lekrqo3cykw"]
+[gd_scene load_steps=48 format=3 uid="uid://8lekrqo3cykw"]
 
+[ext_resource type="Script" path="res://game/effects/LightweightParticles.gd" id="9_cpu"]
 [ext_resource type="Script" path="res://game/hero/Hero.gd" id="1_83vm3"]
 [ext_resource type="Material" uid="uid://b1rr1d7kl8ium" path="res://shader/SmoothPixel.tres" id="1_e1xul"]
 [ext_resource type="Texture2D" uid="uid://die8toapequn2" path="res://game/hero/undead_shadow.png" id="2_b1ar1"]
@@ -265,14 +266,8 @@ max_value = 360.0
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, -360), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_pje6m"]
-curve = SubResource("Curve_rny4l")
-
 [sub_resource type="Gradient" id="Gradient_uuovj"]
 colors = PackedColorArray(0.578442, 0.870588, 0.749955, 1, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_ub1nm"]
-gradient = SubResource("Gradient_uuovj")
 
 [sub_resource type="Curve" id="Curve_u77m8"]
 min_value = -200.0
@@ -280,34 +275,9 @@ max_value = 200.0
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_2ultx"]
-curve = SubResource("Curve_u77m8")
-
 [sub_resource type="Curve" id="Curve_lbkqq"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.0090909), 0.0, 0.0, 0, 0]
 point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_bdoqj"]
-curve = SubResource("Curve_lbkqq")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hmw5a"]
-particle_flag_disable_z = true
-emission_shape = 1
-emission_sphere_radius = 28.13
-angle_min = 15.0
-angle_max = 100.0
-angle_curve = SubResource("CurveTexture_pje6m")
-direction = Vector3(-1, 0, 0)
-initial_velocity_min = 100.0
-initial_velocity_max = 100.0
-orbit_velocity_min = 0.05
-orbit_velocity_max = 0.1
-gravity = Vector3(0, 0, 0)
-linear_accel_max = 19.7
-linear_accel_curve = SubResource("CurveTexture_2ultx")
-scale_min = 0.0
-scale_curve = SubResource("CurveTexture_bdoqj")
-color_ramp = SubResource("GradientTexture1D_ub1nm")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5kl1j"]
 radius = 7.0
@@ -344,13 +314,31 @@ frame_progress = 0.15302
 
 [node name="GunRoot" type="Node2D" parent="body"]
 
-[node name="DashParticles2D" type="GPUParticles2D" parent="body"]
+[node name="DashParticles2D" type="CPUParticles2D" parent="body"]
 position = Vector2(0, -8)
+texture = ExtResource("6_gdjfy")
 emitting = false
 amount = 50
-process_material = SubResource("ParticleProcessMaterial_hmw5a")
-texture = ExtResource("6_gdjfy")
 lifetime = 0.5
+fixed_fps = 30
+draw_order = 1
+emission_shape = 1
+emission_sphere_radius = 28.13
+direction = Vector2(-1, 0)
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+orbit_velocity_min = 0.05
+orbit_velocity_max = 0.1
+linear_accel_max = 19.7
+linear_accel_curve = SubResource("Curve_u77m8")
+angle_min = 15.0
+angle_max = 100.0
+angle_curve = SubResource("Curve_rny4l")
+scale_amount_min = 0.0
+scale_amount_curve = SubResource("Curve_lbkqq")
+color_ramp = SubResource("Gradient_uuovj")
+script = ExtResource("9_cpu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, -7)

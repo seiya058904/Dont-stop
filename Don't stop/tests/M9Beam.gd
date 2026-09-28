@@ -20,6 +20,8 @@ func _ready():
 		for blocked in [false,true]:
 			aim(gun)
 			gun.global_position = origin
+			# Keep production recoil anchored to the fixture's relocated muzzle.
+			gun.capture_pose()
 			gun.global_rotation = 0
 			gun.recoil = 0
 			gun.set_physics_process(true)
@@ -32,7 +34,7 @@ func _ready():
 			await wait(0.15)
 			var ray_end = gun.cast.get_collision_point() if gun.cast.is_colliding() else gun.cast.to_global(gun.cast.target_position)
 			var line_end = gun.line_2d.to_global(gun.line_2d.points[1])
-			var row = {"distance":distance,"wall":blocked,"actual_hit":target.HP<100000,"ray_end":str(ray_end),"line_end":str(line_end),"endpoint_error":ray_end.distance_to(line_end),"particle_length_local":gun.particles_box.process_material.emission_box_extents.x*2,"end_particle":str(gun.particles_end.global_position),"range":gun.effective.range}
+			var row = {"distance":distance,"wall":blocked,"actual_hit":target.HP<100000,"ray_end":str(ray_end),"line_end":str(line_end),"endpoint_error":ray_end.distance_to(line_end),"particle_length_local":gun.particles_box.emission_rect_extents.x*2,"end_particle":str(gun.particles_end.global_position),"range":gun.effective.range}
 			rows.append(row)
 			check(row.actual_hit == (distance <= 1000 and (not blocked or distance < 600)),"distance/wall damage " + str(distance) + "/" + str(blocked))
 			check(row.endpoint_error < 0.1,"beam endpoint " + str(distance) + "/" + str(blocked))
@@ -66,8 +68,8 @@ func _ready():
 				check(screen_end.distance_to(get_viewport().get_canvas_transform()*ray_end)<0.002,"camera pan and zoom preserve projected endpoint")
 				await get_tree().physics_frame
 			gun.cancel_actions()
-	DirAccess.make_dir_recursive_absolute("res://docs/iteration/evidence/m9")
-	var file = FileAccess.open("res://docs/iteration/evidence/m9/beam-final.json",FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute("res://output/performance")
+	var file = FileAccess.open("res://output/performance/beam-final.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(rows,"\t"))
 	file.close()
 	print("M9_BEAM_CHECKS ",checks," FAILURES ",failures)
