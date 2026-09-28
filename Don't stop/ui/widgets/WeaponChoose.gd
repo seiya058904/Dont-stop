@@ -13,6 +13,8 @@ func _exit_tree() -> void:
 	Utils.set_gameplay_mouse_mode()
 
 func _ready() -> void:
+	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").entrance($Panel)
 	var guns = Utils.weapon_list.keys().duplicate()
 
 	for i in 3:

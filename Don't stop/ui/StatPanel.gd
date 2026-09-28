@@ -22,11 +22,13 @@ func button(parent,text_value: String,action: Callable) -> Button:
 	var node=Button.new(); node.text=text_value; node.custom_minimum_size.y=17; node.pressed.connect(action); parent.add_child(node); return node
 func _ready():
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var t=Theme.new(); t.default_font=load("res://fonts/fusion-pixel.otf"); t.default_font_size=7; theme=t
-	var shade=ColorRect.new(); shade.color=Color("14232e"); shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); add_child(shade)
+	theme=preload("res://ui/GildedTheme.gd").build()
+	var shade=Panel.new(); shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); add_child(shade)
 	body=VBoxContainer.new(); body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); body.offset_left=10; body.offset_top=7; body.offset_right=-10; body.offset_bottom=-7; add_child(body)
 	var header=HBoxContainer.new(); body.add_child(header)
 	var title=label(header,"角色属性 · 来源与最终值"); title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	title.add_theme_color_override("font_color",Color("dfbf82"))
+	title.add_theme_font_size_override("font_size",9)
 	button(header,"返回 [Esc]",queue_free)
 	var tabs=HBoxContainer.new(); body.add_child(tabs)
 	for pair in [["build","我的构筑"],["player","玩家"],["weapon","当前武器"],["effects","条件 / 效果"],["level","等级说明"]]: button(tabs,pair[1],func(): tab=pair[0]; render())
@@ -38,6 +40,7 @@ func _ready():
 		if side==0: listing=box
 		else: details=box
 	render()
+	preload("res://ui/GildedTheme.gd").entrance(body)
 func render():
 	for parent in [listing,details,overview]:
 		for child in parent.get_children(): parent.remove_child(child); child.queue_free()

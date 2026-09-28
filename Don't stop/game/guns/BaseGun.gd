@@ -134,12 +134,12 @@ func play_shot_feedback(duration: float, offset := Vector2(-1, -1)) -> void:
 	if recoil_tween != null and recoil_tween.is_valid(): recoil_tween.kill()
 	position = resting_position + offset
 	recoil_tween = create_tween()
-	recoil_tween.tween_property(self, "position", resting_position, seconds)
+	recoil_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).tween_property(self, "position", resting_position, seconds)
 	if is_instance_valid(gun_image):
 		if sprite_tween != null and sprite_tween.is_valid(): sprite_tween.kill()
-		gun_image.scale = resting_scale * Vector2(0.5, 1.1)
+		gun_image.scale = resting_scale * Vector2(0.88, 1.04)
 		sprite_tween = create_tween()
-		sprite_tween.tween_property(gun_image, "scale", resting_scale, seconds)
+		sprite_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).tween_property(gun_image, "scale", resting_scale, seconds)
 
 ## Puts the gun back on its anchor and cancels any pending recoil. Called
 ## whenever an action is interrupted, so switching weapons, reloading, dying,

@@ -238,11 +238,15 @@ static func _identity(canvas: Node2D, region: String, bounds: Rect2, obstacles: 
 ## Walls. Same rectangles the physics uses; the drawing only adds a lit top face, a cast
 ## shadow and a region-specific material band, so "wall vs floor" is never ambiguous.
 static func _wall(canvas: Node2D, region: String, rect: Rect2):
+	# Soft contact shadow and reflected lower lip give the existing colliders depth.
+	for layer in range(3,0,-1):
+		canvas.draw_rect(Rect2(rect.position+Vector2(3+layer*2,4+layer*2),rect.size+Vector2(layer,layer)),Color(0.015,0.022,0.03,0.055))
 	canvas.draw_rect(Rect2(rect.position+Vector2(5,7),rect.size),Color(0,0,0,0.30))
 	canvas.draw_rect(rect,Color("151b20"))
 	canvas.draw_rect(rect.grow(-2),WALL[region])
 	canvas.draw_rect(rect.grow(-2).grow(-2),WALL[region].darkened(0.16),false,1)
 	canvas.draw_line(rect.position+Vector2(2,2),Vector2(rect.end.x-2,rect.position.y+2),WALL[region].lightened(0.22),2)
+	canvas.draw_line(Vector2(rect.position.x+3,rect.end.y-2),rect.end-Vector2(3,2),ACCENT[region].darkened(0.38),1)
 	match region:
 		"R2":
 			for x in range(int(rect.position.x)+9,int(rect.end.x)-4,12):

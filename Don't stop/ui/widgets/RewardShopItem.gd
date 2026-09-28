@@ -9,7 +9,8 @@ signal onMouseIn(info)
 signal onClick(id)
 
 func _ready() -> void:
-	create_tween().tween_property(self,"scale",Vector2(1,1),0.2).from(Vector2(0,0))
+	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").entrance(self)
 
 func setData(id):
 	self.id = id

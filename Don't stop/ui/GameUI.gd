@@ -55,6 +55,7 @@ var ammo_segments: Array = []
 var ammo_lit := -1.0
 
 func _ready() -> void:
+	_style_hud()
 	_setup_weapon_readout()
 	PlayerData.level_rewards_applied.connect(show_level_rewards)
 	level_bar.show_percentage=false
@@ -77,6 +78,32 @@ func _ready() -> void:
 	PlayerData.onWeaponBulletsChange.connect(self.onWeaponBulletsChange) #武器化监听
 	PlayerData.onHpChange.connect(func hpChange(hp,max_hp): #血量变化监听
 		hp_bar.max_value = max_hp;hp_bar.value = hp)
+
+func _style_hud() -> void:
+	var skin = preload("res://ui/GildedTheme.gd")
+	theme = skin.build(7)
+	# One compact instrument panel; the middle of the arena stays unobstructed.
+	var back := Panel.new()
+	back.position = Vector2(-3,-3)
+	back.size = Vector2(101,61)
+	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	back.add_theme_stylebox_override("panel",skin.plate(Color("10191fec"),Color("566366"),3))
+	box_top.add_child(back)
+	box_top.move_child(back,0)
+	for label in [gold_label,reward_label,level_label]:
+		label.label_settings = null
+		label.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
+		label.add_theme_color_override("font_color",skin.GOLD)
+	for bar in [hp_bar,level_bar]:
+		bar.add_theme_stylebox_override("background",skin.plate(Color("071115"),Color("3d535b"),0))
+		bar.add_theme_stylebox_override("fill",skin.plate(Color("62b79d") if bar == hp_bar else skin.GOLD,Color("bce4ca") if bar == hp_bar else Color("f0d5a0"),0))
+	var ammo_back := Panel.new()
+	ammo_back.position = Vector2(-31,-27)
+	ammo_back.size = Vector2(130,48)
+	ammo_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ammo_back.add_theme_stylebox_override("panel",skin.plate(Color("10191fe8"),Color("41525a"),3))
+	bottom_bls.add_child(ammo_back)
+	bottom_bls.move_child(ammo_back,0)
 
 func _setup_weapon_readout() -> void:
 	# Keep the combat centre clear; the current gun belongs beside its ammunition.
@@ -120,6 +147,8 @@ func _update_weapon_readout() -> void:
 	if current_weapon_label.text != next_text: current_weapon_label.text = next_text
 	var next_texture: Texture2D = null if gun == null else gun.image
 	if current_weapon_icon.texture != next_texture: current_weapon_icon.texture = next_texture
+	var tint: Color = Color("a7bbc2") if gun == null else [Color("becad0"),Color("8ed8b0"),Color("79c6ef"),Color("c6a0ee"),Color("ffd47d")][clampi(WeaponCatalog.tier(gun.weapon_id),1,5)-1]
+	current_weapon_label.add_theme_color_override("font_color",tint)
 	var empty: bool = gun == null or gun.bullets_count == 0
 	if int(empty) != readout_empty:
 		readout_empty = int(empty)

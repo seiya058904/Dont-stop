@@ -5,6 +5,7 @@ extends Control
 const pre = preload("res://ui/ModeSelect.tscn")
 
 func _ready() -> void:
+	_build_presentation()
 	_apply_web_rendering_fallback()
 	Utils.onGameStart.connect(self.onGameStart)
 	$VBoxContainer/start.mouse_entered.connect(_on_start_hovered)
@@ -16,6 +17,44 @@ func _ready() -> void:
 		await _warm_web_first_use()
 	Utils.startup_mark("menu-initialized")
 	_mark_menu_presented()
+
+func _build_presentation() -> void:
+	var skin = preload("res://ui/GildedTheme.gd")
+	theme = skin.build(8)
+	var title := $TextureRect as TextureRect
+	title.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	title.position = Vector2(22,34)
+	title.size = Vector2(177,61)
+	title.modulate = Color("f2d6a0")
+	var nav := $VBoxContainer as VBoxContainer
+	nav.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	nav.position = Vector2(24,116)
+	nav.size = Vector2(106,88)
+	nav.add_theme_constant_override("separation",5)
+	for button in nav.get_children():
+		if button is Button:
+			button.remove_theme_stylebox_override("pressed")
+			button.custom_minimum_size.y = 23
+			button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	# The existing mod entry has no action; do not present a dead menu choice.
+	$VBoxContainer/mod.hide()
+	skin.primary($VBoxContainer/start)
+	var caption := Label.new()
+	caption.name = "MenuCaption"
+	caption.text = "整备武装，直面下一波。"
+	caption.position = Vector2(24,95)
+	caption.add_theme_font_size_override("font_size",7)
+	caption.add_theme_color_override("font_color",skin.MUTED)
+	caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(caption)
+	var rule := ColorRect.new()
+	rule.name = "MenuRule"
+	rule.position = Vector2(24,28)
+	rule.size = Vector2(32,1)
+	rule.color = skin.GOLD
+	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(rule)
+	skin.entrance(nav)
 
 ## The Web Compatibility renderer has no useful post-process glow fallback on
 ## software-rendered browsers: the title menu's first glow pass can block the
@@ -98,6 +137,8 @@ func onModeChoose(mode):
 
 func onGameStart():
 	$VBoxContainer.visible = false
+	$MenuCaption.hide()
+	$MenuRule.hide()
 	get_tree().create_tween().tween_property($TextureRect,"modulate:a",0,0.5)
 
 func _on_setting_pressed() -> void:

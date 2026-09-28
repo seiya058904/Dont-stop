@@ -4,7 +4,7 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var shade = ColorRect.new()
-	shade.color = Color(0.03,0.07,0.1,0.98)
+	shade.color = Color("10191ffa")
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(shade)
 	var box = VBoxContainer.new()
@@ -14,13 +14,12 @@ func _ready():
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(scroll)
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var t = Theme.new()
-	t.default_font = load("res://fonts/fusion-pixel.otf")
-	t.default_font_size = 8
+	var t = preload("res://ui/GildedTheme.gd").build(8)
 	box.theme = t
 	scroll.add_child(box)
 	var heading = Label.new()
 	heading.text = "设置 · 调整后立即保存"
+	heading.add_theme_color_override("font_color",Color("dfbf82"))
 	box.add_child(heading)
 	if is_instance_valid(Utils.player):
 		var stats=Button.new(); stats.text="角色属性"; stats.pressed.connect(Demo.open_stats); box.add_child(stats)
@@ -59,6 +58,7 @@ func _ready():
 	back.position = Vector2(85,192)
 	back.size = Vector2(116,31)
 	back.theme = t
+	preload("res://ui/GildedTheme.gd").primary(back)
 	add_child(back)
 	var exit = Button.new()
 	# On Web there is no process to end and a tab is left by closing it, so the

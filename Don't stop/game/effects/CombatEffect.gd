@@ -12,7 +12,7 @@ var closed_trace := false
 var epoch := -1
 var detail_slot := false
 static var detail_slots := 0
-const DETAIL_LIMIT := 64 # + existing hostile burst cap 32 = 96 optional burst slots.
+const DETAIL_LIMIT := 64 # Resolved-path decorations; contact accents have their own 32-slot cap.
 func _ready():
 	add_to_group("combat_transient")
 	z_index = 3
@@ -42,7 +42,10 @@ func _process(delta):
 func _draw():
 	var opacity = clampf(1.0-life/0.24,0,1)
 	for segment in segments:
+		if detail_slot and not Combat.reduced_flash:
+			draw_line(segment[0],segment[1],Color(color,opacity*0.08),width+3)
 		draw_line(segment[0],segment[1],Color(color,opacity),width)
+		draw_line(segment[0],segment[1],Color(color.lightened(0.65),opacity*0.65),maxf(0.5,width*0.25))
 	if radius > 0:
 		var expansion = clampf(life/0.14,0,1)
 		if footprint.size() >= 3:
@@ -68,7 +71,10 @@ func _draw():
 		for i in range(1,points.size()):
 			var a = points[i-1]
 			var b = points[i]
+			if detail_slot and not closed_trace and not Combat.reduced_flash:
+				draw_line(a,b,Color(color,opacity*0.12),width+3)
 			draw_line(a,b,Color(color,opacity),width)
+			if not closed_trace: draw_line(a,b,Color(color.lightened(0.6),opacity*0.7),maxf(0.5,width*0.3))
 			if i == points.size()-1 and not closed_trace:
 				draw_circle(b,2,Color(1,1,0.7,opacity))
 				if detail_slot:

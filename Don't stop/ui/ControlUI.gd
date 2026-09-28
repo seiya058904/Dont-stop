@@ -6,6 +6,11 @@ extends CanvasLayer
 
 func _ready() -> void:
 	Utils.canvasLayer = self
+	var atmosphere = preload("res://ui/Atmosphere.gd").new()
+	add_child(atmosphere)
+	move_child(atmosphere,0)
+	toast.add_theme_color_override("font_color",Color("f4dfb4"))
+	toast.add_theme_stylebox_override("normal",preload("res://ui/GildedTheme.gd").plate(Color("14212be8"),Color("8c7959"),4))
 	print("[boot-probe] controlui_ready t=%d" % Time.get_ticks_msec())
 
 func crosshairChange(is_show):

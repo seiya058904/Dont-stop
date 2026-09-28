@@ -58,13 +58,36 @@ func draw_aura(id: int, tip: Vector2):
 	var center: Vector2 = tip + AURA_OFFSETS.get(id,Vector2(-10,0))
 	var legendary = WeaponCatalog.tier(id) == 5
 	var intensity = 0.78 if Combat.reduced_flash else 0.9+0.1*sin(clock*2.4)
-	# Stepped translucent pixels form a local energy sheath, not a player halo.
-	for side in [-1,1]:
-		for x in range(-13,11,2):
-			var edge = 4.0+2.0*sin(float(x+13)/24.0*PI)
-			for layer in 3:
-				draw_rect(Rect2(center+Vector2(x,side*(edge+layer*2)),Vector2(2,2)),Color(color, intensity*(0.22-layer*0.06)))
-	var count = 18 if legendary else 9
+	# Fine energy contours follow each mechanism; the gun remains the silhouette.
+	var glow = preload("res://game/effects/PresentationLight.gd").texture()
+	draw_texture_rect(glow,Rect2(center-Vector2(22,12),Vector2(44,24)),false,Color(color,0.18*intensity))
+	match id:
+		113:
+			for side in [-1,1]:
+				draw_line(center+Vector2(-15,side*5),center+Vector2(11,side*5),Color(color,0.3*intensity),1)
+				var head = fmod(clock*15,26)-15
+				draw_line(center+Vector2(head,side*5),center+Vector2(head+3,side*5),Color(color.lightened(0.6),intensity),1)
+		121:
+			for side in [-1,1]:
+				var orbit = PackedVector2Array()
+				for k in 25:
+					var angle = k*TAU/24+clock*side*0.65
+					orbit.append(center+Vector2(cos(angle)*15,sin(angle)*5).rotated(side*0.5))
+				draw_polyline(orbit,Color(color,0.35*intensity),0.65,true)
+		112:
+			for side in [-1,1]:
+				var path = PackedVector2Array()
+				for k in 7: path.append(center+Vector2(-14+k*4,side*(6+sin(clock*5+k*2)*1.5)))
+				draw_polyline(path,Color(color,0.5*intensity),0.7,true)
+		116,120,124:
+			for i in 3:
+				var p = center+Vector2(-10+i*8,6)
+				draw_line(p,p+Vector2(4,0),Color(color,0.75*intensity),1)
+		_:
+			for side in [-1,1]:
+				var start = clock*0.5+side*PI
+				draw_arc(center,9,start,start+1.1,10,Color(color,0.45*intensity),0.7,true)
+	var count = 10 if legendary else 6
 	for i in count:
 		var phase = clock*(1.1 if legendary else 0.7)+i*TAU/count
 		var pos = center+Vector2(cos(phase)*15,sin(phase)*9)

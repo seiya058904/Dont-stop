@@ -27,7 +27,7 @@ config/icon="res://game-icon.png"
 # boot_splash/bg_color keeps the same colour behind the engine's own start-up so
 # the hand-over stays seamless. show_image=false is explicit on purpose: only
 # removing the image key would let Godot fall back to its default splash.
-boot_splash/bg_color=Color(0.0509804, 0.0470588, 0.0901961, 1)
+boot_splash/bg_color=Color(0.0627451, 0.0980392, 0.121569, 1)
 boot_splash/show_image=false
 
 [autoload]

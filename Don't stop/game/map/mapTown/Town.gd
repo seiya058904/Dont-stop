@@ -28,6 +28,20 @@ var camp_prompt: Label
 
 func _ready():
 	LevelServer.town = self
+	var lighting = preload("res://game/map/EnvironmentLights.gd").new()
+	lighting.anchors.assign([$PositionHome.position+Vector2(-40,-42),$PositionHome.position+Vector2(64,-65),$PositionHome.position+Vector2(80,24)])
+	add_child(lighting)
+	for readout in [$CanvasLayer/level,$CanvasLayer/timeout]:
+		readout.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		readout.offset_left = -103
+		readout.offset_right = -6
+		readout.offset_top = 6 if readout == $CanvasLayer/timeout else 19
+		readout.offset_bottom = 19 if readout == $CanvasLayer/timeout else 32
+		readout.add_theme_stylebox_override("normal",preload("res://ui/GildedTheme.gd").plate(Color("10191fe8"),Color("41525a"),2))
+		readout.add_theme_font_override("font",preload("res://fonts/fusion-pixel.otf"))
+		readout.add_theme_font_size_override("font_size",6)
+		readout.add_theme_color_override("font_color",Color("e4cfaa"))
+		readout.hide()
 	# A fresh Main.tscn instance already carries the authored bright ambient and light, so
 	# only the runtime stage needs dropping - never a second write to the scene defaults.
 	ArenaVisibility.reset()
@@ -37,6 +51,8 @@ func _ready():
 	camp_prompt.add_theme_font_size_override("font_size",8)
 	camp_prompt.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$CanvasLayer.add_child(camp_prompt)
+	camp_prompt.visible = Utils.is_game_start
+	camp_prompt.add_theme_color_override("font_color",Color("dfbf82"))
 	call_deferred("build_navigation")
 	LevelServer.monsterCreate.connect(self.monsterCreate)
 	LevelServer.roundVictory.connect(self.roundVictory)
@@ -56,6 +72,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func onGameStart():
+	camp_prompt.show()
+	$CanvasLayer/timeout.text = "营地整备"
+	$CanvasLayer/level.text = "E 营地  /  Tab 配置"
 	$CanvasLayer/level.visible = true
 	$CanvasLayer/timeout.visible = true
 

@@ -9,13 +9,17 @@ var badge: Label
 const PHASE_TWO_AT := 0.70
 const PHASE_THREE_AT := 0.35
 func _ready():
-	position = Vector2(120,8); size = Vector2(180,35); mouse_filter = Control.MOUSE_FILTER_IGNORE
-	style = StyleBoxFlat.new(); style.bg_color = Color(0.05,0.06,0.08,0.82); style.set_corner_radius_all(3)
+	position = Vector2(111,8); size = Vector2(180,35); mouse_filter = Control.MOUSE_FILTER_IGNORE
+	style = preload("res://ui/GildedTheme.gd").plate(Color("111821f2"),Color("907652"),3)
 	title = Label.new(); title.add_theme_font_size_override("font_size",8); add_child(title)
+	title.add_theme_font_override("font",preload("res://fonts/fusion-pixel.otf"))
+	title.add_theme_color_override("font_color",Color("f1d8aa"))
+	title.size = Vector2(165,12)
+	title.clip_text = true
 	phases = Label.new(); phases.position.y = 20; phases.add_theme_font_size_override("font_size",6); add_child(phases)
 	# HELL badge: the round's difficulty layer has to be visible for the whole fight, not
 	# only on the stage-select screen.
-	badge = Label.new(); badge.position = Vector2(182,2); badge.add_theme_font_size_override("font_size",7)
+	badge = Label.new(); badge.position = Vector2(168,2); badge.add_theme_font_size_override("font_size",5)
 	badge.text = "HELL"; badge.modulate = Color(0.86,0.55,1); add_child(badge)
 func _process(_delta):
 	var boss = LevelServer.get_boss()
@@ -38,10 +42,12 @@ func _process(_delta):
 	phases.modulate = Color(0.85,0.5,1) if third else (Color(1,0.62,0.25) if second else Color(0.95,0.86,0.68))
 	queue_redraw()
 func _draw():
-	draw_style_box(style,Rect2(-5,-3,218,41))
+	draw_style_box(style,Rect2(-5,-3,196,41))
 	draw_rect(Rect2(0,13,180,5),Color(0.13,0.07,0.06))
 	var ink = Color(0.85,0.4,1) if third else (Color(1,0.39,0.12) if second else Color(0.98,0.69,0.24))
 	draw_rect(Rect2(0,13,180*ratio,5),ink)
+	draw_rect(Rect2(0,13,180*ratio,1),ink.lightened(0.5))
+	for i in range(1,18): draw_line(Vector2(i*10,14),Vector2(i*10,18),Color(0.05,0.07,0.1,0.3),0.5)
 	# Real thresholds drawn on the bar itself, not just in the label.
 	for mark in [PHASE_TWO_AT,PHASE_THREE_AT]:
 		draw_line(Vector2(180*mark,11),Vector2(180*mark,20),Color(0.05,0.04,0.06),2)

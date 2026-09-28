@@ -10,7 +10,7 @@
 			margin: 0; padding: 0; width: 100%; height: 100%;
 			/* Matches boot_splash/bg_color so the shell, the boot splash and the
 			   loading scene all share one background. */
-			background: #0d0c17; color: #e8e6f0;
+			background: #10191f; color: #e8e6f0;
 			font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
 			overflow: hidden; user-select: none; -webkit-user-select: none;
 		}
@@ -23,16 +23,16 @@
 		#frame {
 			position: absolute; inset: 0; z-index: 10;
 			display: flex; flex-direction: column; align-items: center; justify-content: center;
-			background: #0d0c17;
+			background: radial-gradient(ellipse at 50% 38%, #243640 0%, #10191f 65%);
 			transition: opacity .12s ease-out;
 		}
 		#frame.gone { opacity: 0; pointer-events: none; }
 		#brand { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-		#brand img { width: 128px; height: 128px; image-rendering: pixelated; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
-		#brand h1 { margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 700; }
-		#status { margin-top: 6px; font-size: 14px; color: #9d9ab5; min-height: 20px; }
-		#bar { position: relative; width: min(320px, 80vw); height: 10px; margin-top: 14px; border-radius: 6px; background: #1f1d31; overflow: hidden; }
-		#bar-fill { width: 100%; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #7b6cff, #4dc9ff); transform: scaleX(0); transform-origin: left; transition: transform .18s ease-out; }
+		#brand img { width: 128px; height: 128px; image-rendering: pixelated; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
+		#brand h1 { margin: 0; font-size: 28px; letter-spacing: -0.5px; font-weight: 700; }
+		#status { margin-top: 6px; font-size: 14px; color: #a7bbc2; min-height: 20px; }
+		#bar { position: relative; width: min(320px, 80vw); height: 5px; margin-top: 14px; border-radius: 2px; background: #26363e; overflow: hidden; }
+		#bar-fill { width: 100%; height: 100%; border-radius: 2px; background: linear-gradient(90deg, #a67c45, #edcf94); transform: scaleX(0); transform-origin: left; transition: transform .18s ease-out; }
 		/* Measured stage completion and ongoing activity are separate. Only
 		   completed work advances the fill; compositor motion invents no progress. */
 		#bar::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(180,220,255,.35), transparent); opacity: 0; }
@@ -48,9 +48,9 @@
 		#error { display: none; margin-top: 18px; max-width: 420px; padding: 12px 16px; font-size: 14px;
 			color: #ff9d9d; background: #2a1420; border-radius: 8px; text-align: center; line-height: 1.5; }
 		#retry { display: none; margin-top: 14px; padding: 10px 34px; font-size: 15px; letter-spacing: 2px;
-			color: #fff; background: #5a4fd8; border: none; border-radius: 10px; cursor: pointer; }
-		#retry:hover { background: #6c61ee; }
-		#note { position: absolute; bottom: 12px; font-size: 12px; color: #9d9ab5; }
+			color: #111b21; background: #bd9963; border: none; border-radius: 10px; cursor: pointer; }
+		#retry:hover { background: #d6b27b; }
+		#note { position: absolute; bottom: 12px; font-size: 12px; color: #a7bbc2; }
 	</style>
 </head>
 <body>

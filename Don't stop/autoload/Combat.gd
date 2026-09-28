@@ -120,6 +120,8 @@ func _hit(target, context: Dictionary) -> bool:
 	damage_events += 1
 	var hp_before = target.HP
 	target.receive_damage(amount, critical, resolved_context)
+	if depth == 0 and hp_before > target.HP:
+		_contact_accent(target,critical,context)
 	if not target.training and hp_before > target.HP and context.get("native_attack",depth == 0):
 		Demo.linked_blast(target.global_position,resolved_context)
 		fission(target,resolved_context)
@@ -142,6 +144,19 @@ func _hit(target, context: Dictionary) -> bool:
 			if reward.connect_afterAtk: reward.afterAtk(target,amount)
 	dispatch_depth = old_depth
 	return true
+
+func _contact_accent(target, critical: bool, context: Dictionary) -> void:
+	var accent = preload("res://game/effects/ImpactAccent.gd")
+	if accent.active >= accent.LIMIT: return
+	var now := Time.get_ticks_msec()
+	if now-int(target.get_meta("contact_ink_ms",-1000)) < 75: return
+	target.set_meta("contact_ink_ms",now)
+	var effect = accent.new()
+	effect.position = target.global_position+Vector2(0,-7)
+	effect.critical = critical
+	var gun = context.get("gun")
+	if is_instance_valid(gun): effect.tint = preload("res://game/effects/WeaponIdle.gd").PALETTES.get(gun.weapon_id,Color("f3c786"))
+	get_tree().current_scene.add_child(effect)
 
 func secondary_hit(source, context: Dictionary, damage: float, talent: String):
 	if Demo.cooldown(talent) > 0: return

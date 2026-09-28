@@ -23,9 +23,7 @@ func _ready():
 	focus_entered.connect(show_build_tooltip)
 	focus_exited.connect(hide_build_tooltip)
 	for state in ["normal","hover","pressed","focus"]:
-		var style=StyleBoxFlat.new()
-		style.bg_color=Color("314955") if state=="normal" else Color("526f78")
-		style.border_color=Color("91b9bd"); style.set_border_width_all(1); style.set_content_margin_all(3)
+		var style=preload("res://ui/GildedTheme.gd").plate(Color("1c2e37") if state=="normal" else Color("30444c"),Color("41525a") if state=="normal" else Color("dfbf82"),3)
 		add_theme_stylebox_override(state,style)
 func _make_custom_tooltip(for_text: String) -> Object:
 	var box=VBoxContainer.new()
@@ -45,8 +43,8 @@ func show_build_tooltip():
 		old.hide(); old.queue_free()
 	popup=PanelContainer.new(); popup.add_to_group("build_tooltip"); popup.z_index=100
 	popup.set_meta("source",description); popup.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var style=StyleBoxFlat.new(); style.bg_color=Color("10212e"); style.border_color=Color("b9dce0")
-	style.set_border_width_all(1); style.set_content_margin_all(4); popup.add_theme_stylebox_override("panel",style)
+	var style=preload("res://ui/GildedTheme.gd").plate(Color("10191f"),Color("dfbf82"),4)
+	popup.add_theme_stylebox_override("panel",style)
 	var content=_make_custom_tooltip(description); popup.add_child(content)
 	for child in content.get_children(): child.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	content.mouse_filter=Control.MOUSE_FILTER_IGNORE

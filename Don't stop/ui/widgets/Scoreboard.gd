@@ -16,6 +16,8 @@ func _exit_tree() -> void:
 	Demo.pop_pause(self)
 
 func _ready() -> void:
+	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").entrance($Panel)
 	time.text = "%s: %s" %[tr("SURVIVAL TIME"),int(data["time"])]
 	kill.text = "%s: %s" %[tr("DEFEAT ENEMIES"),data["kill"]]
 	gold.text = "%s: %s" %[tr("OBTAIN GOLD"),data["gold"]]

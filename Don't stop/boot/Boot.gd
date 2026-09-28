@@ -92,7 +92,7 @@ func _capture(name: String) -> void:
 
 func _build_ui() -> void:
 	var bg := ColorRect.new()
-	bg.color = Color("0d0c17")
+	bg.color = Color("10191f")
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
@@ -127,12 +127,12 @@ func _build_ui() -> void:
 	_status.text = "正在准备…"
 	_status.add_theme_font_override("font", load("res://fonts/fusion-pixel.otf"))
 	_status.add_theme_font_size_override("font_size", 8)
-	_status.add_theme_color_override("font_color", Color("9d9ab5"))
+	_status.add_theme_color_override("font_color", Color("a7bbc2"))
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(_centered(_status))
 
 	_track = ColorRect.new()
-	_track.color = Color("1f1d31")
+	_track.color = Color("26363e")
 	_track.custom_minimum_size = Vector2(170, 6)
 	_track.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_track.clip_contents = true
@@ -140,8 +140,8 @@ func _build_ui() -> void:
 	column.add_child(track_wrap)
 
 	var grad := Gradient.new()
-	grad.set_color(0, Color("7b6cff"))
-	grad.set_color(1, Color("4dc9ff"))
+	grad.set_color(0, Color("a67c45"))
+	grad.set_color(1, Color("edcf94"))
 	var tex := GradientTexture2D.new()
 	tex.gradient = grad
 	tex.width = 170

@@ -4,6 +4,7 @@ var quitting = false
 var note: Label
 
 func _ready():
+	theme = preload("res://ui/GildedTheme.gd").build(8)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Demo.push_pause(self)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

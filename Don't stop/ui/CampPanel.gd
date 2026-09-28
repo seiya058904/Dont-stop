@@ -29,6 +29,7 @@ var quality_box: OptionButton
 var tab_state: Dictionary = {}
 var search_box: LineEdit
 var weapon_preview: TextureRect
+var weapon_display: Control
 var weapon_aura: Node2D
 var weapon_heading: Label
 var weapon_badge: Label
@@ -160,6 +161,7 @@ func label(parent, text: String, size = 7) -> Label:
 	var item = Label.new()
 	item.text = text
 	item.add_theme_font_size_override("font_size",size)
+	if size >= 9: item.add_theme_color_override("font_color",Color("e8cf9e"))
 	item.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	parent.add_child(item)
 	return item
@@ -172,44 +174,15 @@ func button(parent, text: String, action: Callable) -> Button:
 	item.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	item.pressed.connect(action)
 	parent.add_child(item)
+	if parent == action_bar and not text.begins_with("卸下") and not text.begins_with("移出"):
+		preload("res://ui/GildedTheme.gd").primary(item)
 	return item
 
 func _ready():
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var theme_res = Theme.new()
-	theme_res.default_font = load("res://fonts/fusion-pixel.otf")
-	theme_res.default_font_size = 7
-	var style = StyleBoxFlat.new()
-	style.bg_color = Color("172129")
-	style.border_color = Color("536775")
-	style.set_border_width_all(1)
-	style.set_content_margin_all(3)
-	theme_res.set_stylebox("panel","PanelContainer",style)
-	for state in ["normal","hover","pressed","focus","disabled"]:
-		var bs = style.duplicate()
-		bs.bg_color = {"normal":Color("25323b"),"hover":Color("354650"),"pressed":Color("46534b"),"focus":Color(0,0,0,0),"disabled":Color("1b252d")}[state]
-		bs.border_color = Color("dec899") if state in ["pressed","focus"] else Color("465b68")
-		theme_res.set_stylebox(state,"Button",bs)
-		if state != "focus": theme_res.set_stylebox(state,"OptionButton",bs)
-	theme_res.set_color("font_color","Button",Color("e7eded"))
-	theme_res.set_color("font_disabled_color","Button",Color("899ca7"))
-	theme_res.set_color("font_color","Label",Color("d8e1e5"))
-	var input_style = style.duplicate()
-	input_style.bg_color = Color("101920")
-	theme_res.set_stylebox("normal","LineEdit",input_style)
-	var input_focus = input_style.duplicate()
-	input_focus.border_color = Color("dec899")
-	theme_res.set_stylebox("focus","LineEdit",input_focus)
-	theme_res.set_color("font_placeholder_color","LineEdit",Color("9aadb7"))
-	for state in ["scroll","grabber","grabber_highlight","grabber_pressed"]:
-		var track = StyleBoxFlat.new()
-		track.bg_color = Color("25323b") if state == "scroll" else Color("687c86")
-		track.content_margin_left = 2
-		track.content_margin_right = 2
-		theme_res.set_stylebox(state,"VScrollBar",track)
-	theme = theme_res
+	theme = preload("res://ui/GildedTheme.gd").build()
 	var shade = ColorRect.new()
-	shade.color = Color(0.02,0.04,0.08,0.8)
+	shade.color = Color(0.02,0.035,0.055,0.9)
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(shade)
 	panel = PanelContainer.new()
@@ -225,8 +198,11 @@ func _ready():
 	var top = HBoxContainer.new()
 	body.add_child(top)
 	var heading = label(top,"营地整备",9)
+	heading.add_theme_color_override("font_color",Color("f0d5a0"))
 	heading.autowrap_mode = TextServer.AUTOWRAP_OFF
 	wallet = label(top,"",7)
+	wallet.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	wallet.add_theme_color_override("font_color",Color("dfbf82"))
 	wallet.autowrap_mode = TextServer.AUTOWRAP_OFF
 	wallet.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	save_retry = button(top,"重试保存",func():
@@ -307,9 +283,12 @@ func _ready():
 	columns.add_child(right)
 	weapon_header=HBoxContainer.new()
 	weapon_preview=TextureRect.new(); weapon_preview.name="WeaponPreview"
-	weapon_preview.custom_minimum_size=Vector2(96,32); weapon_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	weapon_preview.custom_minimum_size=Vector2(96,43); weapon_preview.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	weapon_preview.stretch_mode=TextureRect.STRETCH_KEEP_CENTERED; weapon_preview.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 	weapon_header.add_child(weapon_preview)
+	weapon_header.add_theme_constant_override("separation",6)
+	weapon_display = preload("res://ui/WeaponDisplay.gd").new()
+	weapon_preview.add_child(weapon_display)
 	weapon_aura = preload("res://game/effects/WeaponIdle.gd").new()
 	weapon_preview.add_child(weapon_aura)
 	weapon_preview.resized.connect(func(): weapon_aura.position=weapon_preview.size/2)
@@ -338,9 +317,11 @@ func _ready():
 	message = label(body,"WASD 移动 · R 装填 · Shift 冲刺 · Esc 返回",7)
 	message.custom_minimum_size.y = 18
 	message.max_lines_visible = 2
+	message.add_theme_color_override("font_color",Color("a7bbc2"))
 	if Utils.player.gun: selected_gun = Utils.player.gun.weapon_id
 	Demo.changed.connect(request_refresh)
 	render()
+	preload("res://ui/GildedTheme.gd").entrance(panel)
 
 func request_refresh():
 	if refresh_pending: return
@@ -516,6 +497,9 @@ func show_weapon(id: String, gun):
 	var owned = PlayerData.player_weapon_list.has(int(id))
 	if owned: gun = PlayerData.player_weapon_list[int(id)]
 	weapon_preview.texture=weapon_art(gun.image)
+	weapon_display.tint = tier_color(WeaponCatalog.tier(int(id)))
+	weapon_display.tier = WeaponCatalog.tier(int(id))
+	weapon_heading.add_theme_color_override("font_color",weapon_display.tint.lightened(0.22))
 	weapon_aura.preview_id = int(id) if WeaponCatalog.tier(int(id)) >= 4 else -1
 	weapon_aura.preview_tip = Vector2(12,0)
 	weapon_aura.position = weapon_preview.size/2
@@ -795,9 +779,10 @@ func tier_style(item: Button,tier: int):
 
 func row_style(item: Button,color: Color):
 	for state in ["normal","hover","pressed","focus"]:
-		var style = StyleBoxFlat.new()
-		style.bg_color = {"normal":Color("1d2a33"),"hover":Color("2c3b45"),"pressed":Color("344750"),"focus":Color(0,0,0,0)}[state]
+		var style = preload("res://ui/GildedTheme.gd").plate()
+		style.bg_color = {"normal":Color("17252e"),"hover":Color("2d404b"),"pressed":Color("243740").lerp(color,0.14),"focus":Color(0,0,0,0)}[state]
 		style.border_color = Color("e0cb9c") if state == "focus" else color
+		style.set_border_width_all(0)
 		style.border_width_left = 1
 		if state in ["pressed","focus"]: style.set_border_width_all(1)
 		style.set_content_margin_all(3)

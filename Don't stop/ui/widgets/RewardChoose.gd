@@ -6,6 +6,14 @@ const pre = preload("res://ui/widgets/RewardShopItem.tscn")
 @onready var info_label = $NinePatchRect/Label3
 
 func _ready() -> void:
+	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	var back := Panel.new()
+	back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$NinePatchRect.texture = null
+	$NinePatchRect.add_child(back)
+	$NinePatchRect.move_child(back,0)
+	preload("res://ui/GildedTheme.gd").entrance($NinePatchRect)
 	PlayerData.onRewardChange.connect(self.onRewardChange)
 	loadList(false)
 	onRewardChange(PlayerData.reward_point)

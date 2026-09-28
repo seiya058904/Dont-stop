@@ -197,6 +197,11 @@ func _spawn_reachable(candidate: Vector2i, target: Vector2i) -> bool:
 
 func _ready():
 	obstacles = M5Content.WALLS[region_id].duplicate()
+	var lighting = preload("res://game/map/EnvironmentLights.gd").new()
+	lighting.ink = RegionTheme.ACCENT[region_id]
+	for rect in obstacles:
+		lighting.anchors.append(rect.position+Vector2(rect.size.x*0.5,0))
+	add_child(lighting)
 	var wall_rects: Array = [Rect2(-456,-346,912,16),Rect2(-456,330,912,16),Rect2(-456,-346,16,692),Rect2(440,-346,16,692)]+obstacles
 	_wall_rects = wall_rects
 	_static_wall_fast_path = is_equal_approx(global_transform.x.length(),1.0) \

@@ -3,6 +3,10 @@ extends Control
 var handled = false
 var click:Callable
 
+func _ready() -> void:
+	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").entrance($Panel)
+
 func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
