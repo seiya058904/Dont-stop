@@ -47,23 +47,35 @@ func _draw():
 		draw_line(segment[0],segment[1],Color(color,opacity),width)
 		draw_line(segment[0],segment[1],Color(color.lightened(0.65),opacity*0.65),maxf(0.5,width*0.25))
 	if radius > 0:
-		var expansion = clampf(life/0.14,0,1)
+		# A fast pressure front, followed by sparse settling fragments. All geometry
+		# remains inside the resolved footprint; the boundary never implies extra damage.
+		var progress = clampf(life/0.24,0,1)
+		var expansion = 1.0-pow(1.0-clampf(life/0.14,0,1),3)
 		if footprint.size() >= 3:
 			var wave = PackedVector2Array()
 			for p in footprint: wave.append(p*expansion)
 			# At the first draw tick expansion is exactly zero, so every vertex collapses
 			# to one point and WebGL rejects the polygon. Keep the rest of the impact ink,
 			# but submit the fill only once it has non-zero area.
-			if expansion > 0.0001: draw_colored_polygon(wave,Color(0.35,0.85,0.65,opacity*0.32))
-			draw_circle(Vector2.ZERO,radius*0.2*opacity,Color(0.9,1,0.65,opacity*(0.3 if Combat.reduced_flash else 0.7)))
-			for i in 8:
-				var p = footprint[(i*footprint.size())/8]*expansion
-				draw_rect(Rect2(p.round(),Vector2(3,2)),Color(0.8,1,0.6,opacity))
+			if expansion > 0.0001 and detail_slot:
+				draw_colored_polygon(wave,Color(0.35,0.85,0.65,opacity*opacity*(0.08 if Combat.reduced_flash else 0.18)))
+				wave.append(wave[0])
+				draw_polyline(wave,Color(0.85,1,0.78,opacity*0.65),1)
+			if detail_slot:
+				for i in 8:
+					var edge = footprint[(i*footprint.size())/8]
+					var travel = (0.28+expansion*0.66)*(0.82+float(i%3)*0.06)
+					var p = edge*travel
+					var tail = p.move_toward(Vector2.ZERO,1.0+(1.0-progress)*3.0)
+					draw_line(tail,p,Color(0.94,0.77,0.43,opacity*opacity),1)
 		if footprint.size() >= 3:
-			draw_colored_polygon(footprint,Color(0.3,1.0,0.8,opacity*0.12))
+			draw_colored_polygon(footprint,Color(0.3,1.0,0.8,opacity*0.05))
 			draw_polyline(footprint_edge,Color(0.3,1.0,0.8,opacity),2)
 		else: draw_arc(Vector2.ZERO,radius,0,TAU,32,Color(0.3,1.0,0.8,opacity),2)
-		if life < 0.06 and not Combat.reduced_flash: draw_circle(Vector2.ZERO,radius*0.3,Color(1,0.9,0.5,opacity*0.5))
+		if life < 0.06 and detail_slot and not Combat.reduced_flash:
+			var core = PackedVector2Array()
+			for p in footprint: core.append(p*0.16*(1.0-life/0.06))
+			if core.size() >= 3: draw_colored_polygon(core,Color(1,0.92,0.68,opacity*0.6))
 	else:
 		# The essential resolved outline is never subject to the decoration budget.
 		if closed_trace and detail_slot:

@@ -7,12 +7,14 @@ const pre = preload("res://ui/widgets/RewardShopItem.tscn")
 
 func _ready() -> void:
 	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").modal_backdrop(self)
 	var back := Panel.new()
 	back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$NinePatchRect.texture = null
 	$NinePatchRect.add_child(back)
 	$NinePatchRect.move_child(back,0)
+	preload("res://ui/GildedTheme.gd").primary($NinePatchRect/Button2)
 	preload("res://ui/GildedTheme.gd").entrance($NinePatchRect)
 	PlayerData.onRewardChange.connect(self.onRewardChange)
 	loadList(false)
@@ -23,6 +25,7 @@ func onRewardChange(reward):
 
 func loadList(reload):
 	for item in list.get_children():
+		list.remove_child(item)
 		item.queue_free()
 	for item in RewardServer.getShopList(reload):
 		var ins = pre.instantiate()
@@ -30,6 +33,8 @@ func loadList(reload):
 		ins.setData(item)
 		ins.onClick.connect(self.onClick)
 		ins.onMouseIn.connect(self.onMouseIn)
+	if list.get_child_count() > 0:
+		onMouseIn(list.get_child(0).ins.reward_info)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):

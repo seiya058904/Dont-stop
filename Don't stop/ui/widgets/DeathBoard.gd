@@ -5,6 +5,8 @@ var click:Callable
 
 func _ready() -> void:
 	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").modal_backdrop(self)
+	preload("res://ui/GildedTheme.gd").primary($Panel/Button)
 	preload("res://ui/GildedTheme.gd").entrance($Panel)
 
 func _enter_tree() -> void:

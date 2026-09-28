@@ -80,6 +80,15 @@ static func entrance(node: Control) -> void:
 	node.modulate.a = 0.35
 	node.create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).tween_property(node,"modulate:a",1.0,0.22)
 
+static func modal_backdrop(root: Control) -> void:
+	var scrim := ColorRect.new()
+	scrim.name = "ModalBackdrop"
+	scrim.color = Color("050b10b8")
+	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.add_child(scrim)
+	root.move_child(scrim,0)
+	entrance(scrim)
+
 static func legacy_tree(node: Node) -> void:
 	if node is Control:
 		node.theme = build()

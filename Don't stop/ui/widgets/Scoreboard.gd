@@ -17,12 +17,14 @@ func _exit_tree() -> void:
 
 func _ready() -> void:
 	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	preload("res://ui/GildedTheme.gd").modal_backdrop(self)
+	preload("res://ui/GildedTheme.gd").primary($Panel/Button)
 	preload("res://ui/GildedTheme.gd").entrance($Panel)
-	time.text = "%s: %s" %[tr("SURVIVAL TIME"),int(data["time"])]
-	kill.text = "%s: %s" %[tr("DEFEAT ENEMIES"),data["kill"]]
-	gold.text = "%s: %s" %[tr("OBTAIN GOLD"),data["gold"]]
+	time.text = "%02d:%02d" % [int(data["time"])/60,int(data["time"])%60]
+	kill.text = str(data["kill"])
+	gold.text = str(data["gold"])
 	if data.has("stage"):
-		var route = Label.new(); route.text = ("试玩" if data.get("trial",false) else "正常进度")+" · "+DemoConfig.ENCOUNTERS[data.stage].name+(" · 核心完成，可回营重玩" if data.stage == 30 else ""); route.position = Vector2(18,18); route.add_theme_font_size_override("font_size",10); add_child(route)
+		$Panel/Route.text = ("试玩" if data.get("trial",false) else "正常进度")+" · "+DemoConfig.ENCOUNTERS[data.stage].name+("\n核心完成，可回营重玩" if data.stage == 30 else "")
 
 func setData(data):
 	self.data = data

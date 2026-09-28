@@ -109,13 +109,9 @@ func _style_hud() -> void:
 	level_bar.add_theme_stylebox_override("fill",exp_fill)
 	level_bar.position = Vector2(36,20)
 	level_bar.size = Vector2(58,2)
-	var ammo_back := Panel.new()
-	ammo_back.position = Vector2(-31,-27)
-	ammo_back.size = Vector2(130,48)
-	ammo_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	ammo_back.add_theme_stylebox_override("panel",skin.plate(Color("10191fe8"),Color("41525a"),3))
-	bottom_bls.add_child(ammo_back)
-	bottom_bls.move_child(ammo_back,0)
+	# Match the transparent status HUD; the gun itself supplies the visual identity.
+	_style_floating_text(ammo_count_label)
+	_style_floating_text(ammo_label)
 
 func _style_floating_text(label: Label) -> void:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -133,6 +129,7 @@ func _setup_weapon_readout() -> void:
 	current_weapon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	current_weapon_label.add_theme_font_size_override("font_size",6)
 	current_weapon_label.add_theme_color_override("font_color",Color("d9e2de"))
+	_style_floating_text(current_weapon_label)
 	bottom_bls.add_child(current_weapon_label)
 	current_weapon_icon = TextureRect.new()
 	current_weapon_icon.position = Vector2(-26,-11)

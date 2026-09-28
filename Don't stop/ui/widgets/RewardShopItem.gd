@@ -10,6 +10,12 @@ signal onClick(id)
 
 func _ready() -> void:
 	preload("res://ui/GildedTheme.gd").legacy_tree(self)
+	# One visible focus/hover surface behind the real icon; the whole card is clickable.
+	move_child($Button,0)
+	$Button.flat = false
+	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rw_name.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Button.focus_entered.connect(_on_button_mouse_entered)
 	preload("res://ui/GildedTheme.gd").entrance(self)
 
 func setData(id):

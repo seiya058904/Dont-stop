@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var toast = $Control/Label
 @onready var toast_ui = $Control
 @onready var timer = $Control/Timer
+var toast_tween: Tween
 
 func _ready() -> void:
 	Utils.canvasLayer = self
@@ -21,15 +22,19 @@ func _on_virtual_joystick_2_on_touch(vector) -> void:
 
 func showToast(msg,time):
 	timer.stop()
+	if toast_tween and toast_tween.is_valid(): toast_tween.kill()
 	timer.start(time)
+	if not toast_ui.visible: toast_ui.modulate.a = 0.0
 	toast_ui.visible = true
-	create_tween().tween_property(toast_ui,"modulate:a",1,0.1).from(0)
+	toast_tween = create_tween()
+	toast_tween.tween_property(toast_ui,"modulate:a",1,0.1)
 	toast.text = tr(msg)
 
 func _on_timer_timeout():
-	var tween = create_tween()
-	tween.tween_property(toast_ui,"modulate:a",0,0.2)
-	tween.tween_callback(self.toast_hide)
+	if toast_tween and toast_tween.is_valid(): toast_tween.kill()
+	toast_tween = create_tween()
+	toast_tween.tween_property(toast_ui,"modulate:a",0,0.2)
+	toast_tween.tween_callback(self.toast_hide)
 
 func toast_hide():
 	toast_ui.visible = false
