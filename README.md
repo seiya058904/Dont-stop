@@ -1,10 +1,12 @@
 # Don't Stop
 
-<img width="1672" height="941" alt="ChatGPT 图像 2026年9月27日 22_38_06" src="https://github.com/user-attachments/assets/4255e037-0979-4876-bab1-7939bfc17a9b" />
+![Don't Stop main menu](Don't%20stop/docs/iteration/evidence/gilded/after-menu.png)
 
 
 
 Don't Stop is a top-down 2D survival shooter/roguelite built with Godot 4. Fight through encounters, collect weapons and upgrades, and return to camp to shape the next run.
+
+Version 1.2.0 completes the gilded visual pass, transparent combat HUD, final reward/result polish, and first-use firing and dash performance fixes. See the [release verification record](Don't%20stop/docs/iteration/release-v1.2.0.md) and [v1.2.0 release](https://github.com/seiya058904/Dont-stop/releases/tag/v1.2.0).
 
 ## Play
 
