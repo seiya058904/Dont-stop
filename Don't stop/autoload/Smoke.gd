@@ -87,7 +87,9 @@ func _ready() -> void:
 	# fight the driver over rounds and panels.
 	if not ("--smoke" in args):
 		return
-	e2e = "--e2e" in args
+	# The one invulnerability gate is owned by Demo and is true only for an exact
+	# explicit --e2e argument. Smoke/probe/test_mode state cannot turn it on.
+	e2e = Demo.is_e2e_mode()
 	if e2e:
 		# Track projectile spawns even while the tree is paused (round restarts).
 		process_mode = Node.PROCESS_MODE_ALWAYS

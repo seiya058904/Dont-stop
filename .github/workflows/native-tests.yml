@@ -187,6 +187,14 @@ jobs:
           run_case B14Growth
           run_case B14Rail
           run_case B14Feedback
+          # P0 release gate: normal and explicit E2E command lines must diverge
+          # only at the deliberate invulnerability guard, with real HP assertions.
+          run_case P0ReleaseDamage
+          run_case P0ReleaseDamage --e2e
+          # P0 HUD gate: the live product HP bar is compared against PlayerData on
+          # every frame of a real round where monsters attack a player who never
+          # presses anything, so "HP stayed full" can never again be ambiguous.
+          run_case P0HudParity
           run_case B14EncounterContracts
           run_case B17Contracts
           run_case B19Contracts

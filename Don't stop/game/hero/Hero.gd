@@ -270,8 +270,9 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	if is_instance_valid(attacker) and not incoming_percentage and attacker.get("variant_damage") != null:
 		hurt *= attacker.variant_damage
 	# E2E driver mode keeps the test character alive so real inputs can be
-	# asserted against; gated behind the --e2e cmdline flag only.
-	if "--e2e" in OS.get_cmdline_args() or "--e2e" in OS.get_cmdline_user_args(): return
+	# asserted against. Demo derives this once from the exact --e2e token;
+	# Demo.test_mode, trial departures and smoke/probe state never grant immunity.
+	if Demo.is_e2e_mode(): return
 	if is_dead or LevelServer.state != "COMBAT" or get_tree().paused: return
 	if source_throttled(source):
 		contact_blocked += 1

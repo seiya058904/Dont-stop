@@ -38,6 +38,10 @@ var pause_stack: Array = []
 var loading = false
 var save_blocked = false
 var test_mode = false
+## E2E invulnerability is a command-line capability, never a product/test-mode state.
+## Keeping the gate here gives every damage caller the same exact-token decision and
+## prevents a smoke driver's mutable state from leaking into a normal launch.
+var e2e_mode := false
 var fire_released = true
 var save_store = CampSaveStore.new()
 var dirty = false
@@ -117,6 +121,9 @@ func talent_status(id: String) -> String:
 	return "已启用；按所列条件触发"
 
 func _ready():
+	e2e_mode = _has_cmdline_flag("--e2e")
+	if e2e_mode:
+		print("[test] e2e invulnerability enabled by explicit --e2e")
 	print("[boot-probe] demo_ready t=%d" % Time.get_ticks_msec())
 	get_tree().auto_accept_quit = false
 	get_tree().root.close_requested.connect(quit_game)
@@ -131,6 +138,14 @@ func _ready():
 	apply_audio_settings()
 	Utils.onGameStart.connect(_start)
 	PlayerData.onPlayerLevelChange.connect(_level_changed)
+
+func _has_cmdline_flag(flag: String) -> bool:
+	var args := OS.get_cmdline_args()
+	args.append_array(OS.get_cmdline_user_args())
+	return flag in args
+
+func is_e2e_mode() -> bool:
+	return e2e_mode
 
 func _start():
 	TranslationServer.set_locale("zh_CN")

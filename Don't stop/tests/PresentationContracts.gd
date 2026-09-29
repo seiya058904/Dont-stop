@@ -3,6 +3,18 @@ extends "res://tests/M8Runtime.gd"
 func _ready():
 	await boot()
 	dismiss()
+	# The result card is information-dense by design: keep its live layout close
+	# to the authored 174x116 design rectangle instead of regressing to a modal
+	# that consumes most of the viewport.
+	var result_card = load("res://ui/widgets/Scoreboard.tscn").instantiate()
+	result_card.setData({"time":125,"kill":18,"gold":42,"stage":1,"trial":false})
+	add_child(result_card)
+	await get_tree().process_frame
+	check(result_card.get_node("Panel").size.x >= 160 and result_card.get_node("Panel").size.x <= 180,"result card keeps a compact width")
+	check(result_card.get_node("Panel").size.y >= 105 and result_card.get_node("Panel").size.y <= 120,"result card keeps a compact height")
+	check(result_card.get_node("Panel/Button").size.y <= 18,"result card confirmation stays concise")
+	result_card.queue_free()
+	await get_tree().process_frame
 	configure(124,false)
 	var ui = Utils.canvasLayer.get_node("GameUI")
 	for sample in [[100,40.0],[60,24.0],[1,0.4],[0,0.0]]:
