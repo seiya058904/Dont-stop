@@ -11,6 +11,7 @@
 			/* Matches boot_splash/bg_color so the shell, the boot splash and the
 			   loading scene all share one background. */
 			background: #10191f; color: #e8e6f0;
+			--unit: min(0.243902vw, 0.434783vh);
 			font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
 			overflow: hidden; user-select: none; -webkit-user-select: none;
 		}
@@ -23,16 +24,18 @@
 		#frame {
 			position: absolute; inset: 0; z-index: 10;
 			display: flex; flex-direction: column; align-items: center; justify-content: center;
-			background: radial-gradient(ellipse at 50% 38%, #243640 0%, #10191f 65%);
+			background: #10191f;
 			transition: opacity .12s ease-out;
 		}
 		#frame.gone { opacity: 0; pointer-events: none; }
-		#brand { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-		#brand img { width: 128px; height: 128px; image-rendering: pixelated; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
-		#brand h1 { margin: 0; font-size: 28px; letter-spacing: -0.5px; font-weight: 700; }
-		#status { margin-top: 6px; font-size: 14px; color: #a7bbc2; min-height: 20px; }
-		#bar { position: relative; width: min(320px, 80vw); height: 5px; margin-top: 14px; border-radius: 2px; background: #26363e; overflow: hidden; }
-		#bar-fill { width: 100%; height: 100%; border-radius: 2px; background: linear-gradient(90deg, #a67c45, #edcf94); transform: scaleX(0); transform-origin: left; transition: transform .18s ease-out; }
+		#brand { display: flex; flex-direction: column; align-items: center; gap: 0; width: calc(var(--unit) * 144); }
+		#brand img { width: 100%; height: calc(var(--unit) * 50); object-fit: contain; image-rendering: pixelated; margin: 0 0 calc(var(--unit) * 7); }
+		#brand::before { content: ""; width: calc(var(--unit) * 14); height: max(1px, var(--unit)); background: #bd9963; margin-bottom: calc(var(--unit) * 7); }
+		#brand h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+		#brand .tagline { margin: 0 0 calc(var(--unit) * 7); color: #bd9963; font-size: clamp(12px, calc(var(--unit) * 7), 26px); letter-spacing: .12em; }
+		#status { margin-top: calc(var(--unit) * 7); font-size: clamp(12px, calc(var(--unit) * 7), 26px); color: #a7bbc2; min-height: 20px; order: 4; }
+		#bar { position: relative; width: 100%; height: max(2px, calc(var(--unit) * 2)); margin-top: 0; border-radius: 0; background: #26363e; overflow: hidden; }
+		#bar-fill { width: 100%; height: 100%; border-radius: 0; background: linear-gradient(90deg, #a67c45, #edcf94); transform: scaleX(0); transform-origin: left; transition: transform .18s ease-out; }
 		/* Measured stage completion and ongoing activity are separate. Only
 		   completed work advances the fill; compositor motion invents no progress. */
 		#bar::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(180,220,255,.35), transparent); opacity: 0; }
@@ -46,25 +49,25 @@
 			#bar-fill, #frame { transition: none; }
 		}
 		#error { display: none; margin-top: 18px; max-width: 420px; padding: 12px 16px; font-size: 14px;
-			color: #ff9d9d; background: #2a1420; border-radius: 8px; text-align: center; line-height: 1.5; }
+			color: #ff9d9d; background: #2a1420; border: 1px solid #6c4143; border-radius: 2px; order: 5; text-align: center; line-height: 1.5; }
 		#retry { display: none; margin-top: 14px; padding: 10px 34px; font-size: 15px; letter-spacing: 2px;
-			color: #111b21; background: #bd9963; border: none; border-radius: 10px; cursor: pointer; }
+			color: #111b21; background: #bd9963; border: 1px solid #edcf94; border-radius: 2px; cursor: pointer; order: 6; }
 		#retry:hover { background: #d6b27b; }
-		#note { position: absolute; bottom: 12px; font-size: 12px; color: #a7bbc2; }
+		#retry:focus-visible { outline: 2px solid #f1d8aa; outline-offset: 4px; }
 	</style>
 </head>
 <body>
 	<div id="canvas-host"><canvas id="canvas"></canvas></div>
 	<div id="frame">
 		<div id="brand">
-			<img src="index.icon.png" alt="Don't Stop" onerror="this.style.display='none'" />
+			<img src="data:image/png;base64,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" alt="Don't Stop" />
 			<h1>Don't Stop</h1>
+			<p class="tagline">移动 · 构筑 · 生存</p>
 			<div id="status" role="status">正在准备…</div>
 			<div id="bar" role="progressbar" aria-label="游戏启动" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div id="bar-fill"></div></div>
 			<div id="error"></div>
 			<button id="retry" type="button">重 试</button>
 		</div>
-		<div id="note">Don't Stop</div>
 	</div>
 	<script>
 	// Godot's WebGL commit path reads SCISSOR_TEST before every offscreen
@@ -466,7 +469,7 @@
 		}
 
 		log('args=' + JSON.stringify(GODOT_CONFIG.args || null));
-		setStatus('正在初始化引擎…', true);
+		setStatus('正在启动游戏…', true);
 
 		let engine;
 		try {
@@ -499,7 +502,7 @@
 				if (total > 0) {
 					// The only number shown is the engine's own download count.
 					setProgress(Math.min(1, current / total) / 3,
-						current >= total ? '资源已就绪，正在初始化引擎…' : '正在获取游戏资源…');
+						current >= total ? '资源已就绪，正在启动游戏…' : '正在获取游戏资源…');
 				} else {
 					// No measurable total: say so instead of inventing a percentage.
 					setStatus('正在下载游戏资源…', true);

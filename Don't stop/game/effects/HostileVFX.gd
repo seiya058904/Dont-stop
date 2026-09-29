@@ -45,6 +45,7 @@ func _draw():
 	if B11Probe.enabled: B11Probe.vfx_draws += 1
 	if B11Probe.iso_vfx: return
 	var p = age/lifetime
+	var travel = 1.0-pow(1.0-p,3)
 	var color = Color(tint.r,minf(1.0,tint.g+0.28*(1-p)),tint.b,(1-p)*0.7)
 	if style in ["shield","refill","heal"]:
 		if style=="shield":
@@ -57,15 +58,22 @@ func _draw():
 			if style=="heal":draw_line(at-Vector2(0,4),at+Vector2(0,4),color,2)
 			else:draw_line(at+Vector2(-4,3),at+Vector2(4,3),color,2)
 		return
-	draw_arc(Vector2.ZERO,radius*(0.25+0.75*p),0,TAU,28,color,1.8*(1-p)+0.5,true)
+	# The source of a shot has recoil and a forward impulse, not an explosion ring.
+	if style in ["projectile","laser","sweep"]:
+		var spread = 0.42 if style == "projectile" else 0.14
+		var reach = radius*(0.6+travel*0.9)
+		var fade = maxf(0,1.0-p/0.6)
+		if fade > 0:
+			draw_colored_polygon(PackedVector2Array([Vector2.ZERO,direction.rotated(-spread)*reach*0.68,direction*reach,direction.rotated(spread)*reach*0.68]),Color(tint,fade*0.6))
+			draw_line(-direction*2,direction*reach*0.72,Color(1,0.97,0.86,fade),2.4*(1-p),true)
+		for side in [-1,1]:
+			var axis = direction.rotated(spread*side)
+			draw_line(axis*radius*travel*0.55,axis*radius*(0.35+travel*0.65),color,1.1,true)
+		return
+	draw_arc(Vector2.ZERO,radius*(0.25+0.75*travel),0,TAU,28,color,1.8*(1-p)+0.5,true)
 	var sparks = PackedVector2Array()
 	for i in 8:
 		var dir = direction.rotated(i*TAU/8)
-		sparks.append(dir*radius*p*0.6)
-		sparks.append(dir*radius*(p*0.8+0.18))
+		sparks.append(dir*radius*travel*0.6)
+		sparks.append(dir*radius*(travel*0.8+0.18))
 	draw_multiline(sparks,color,1.4,true)
-	# A muzzle flash is a directional cone, not a symmetric ring: projectile sources read
-	# as "fired from there" rather than "exploded here".
-	if style in ["projectile","laser","sweep"] and p < 0.6:
-		var spread = 0.45 if style == "projectile" else 0.12
-		draw_colored_polygon(PackedVector2Array([Vector2.ZERO,direction.rotated(-spread)*radius*1.5,direction*radius*1.9,direction.rotated(spread)*radius*1.5]),Color(tint.r,tint.g,tint.b,(1.0-p/0.6)*0.45))

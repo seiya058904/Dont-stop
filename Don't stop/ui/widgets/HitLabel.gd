@@ -10,6 +10,9 @@ func _exit_tree() -> void:
 
 func _ready() -> void:
 	add_to_group("damage_labels")
+	# One feedback layer keeps numbers readable and consecutive font draws batchable.
+	z_as_relative = false
+	z_index = 8
 	# The arena is 410x230: the theme's default 16px obscures the actor on fast fire.
 	add_theme_font_size_override("font_size",8)
 	add_theme_color_override("font_shadow_color",Color("071018"))

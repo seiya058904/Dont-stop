@@ -108,7 +108,9 @@ function parseKv(line) {
 
 	const browser = await chromium.launch({
 		headless: process.env.B19_HEADLESS === "1",
-		args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding'],
+		// Optional throughput diagnostic. The normal acceptance path keeps browser vsync.
+		// Use with benchmark=uncapped; never mix these samples with normal frame pacing.
+		args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', '--disable-renderer-backgrounding', ...(process.env.B11_UNCAPPED_BROWSER === '1' ? ['--disable-frame-rate-limit', '--disable-gpu-vsync'] : [])],
 	});
 	let memoryProcess = null;
 	const memoryFile = path.resolve(outDir,`process-memory-${label}.json`);
@@ -291,6 +293,7 @@ function parseKv(line) {
 		label, scenario, convergence, loadedResources, server_root:process.env.B11_BUILD_DIR, surface, visibilityEvents, source_variant: query.source || "unspecified", workload_scenario: scenario, url, build, gpu, errors,
 		process_memory: fs.existsSync(memoryFile) ? JSON.parse(fs.readFileSync(memoryFile,"utf8")) : null,
 		headed: process.env.B19_HEADLESS !== "1", browser_version: browser.version(), viewport,
+		browser_uncapped: process.env.B11_UNCAPPED_BROWSER === '1',
 		wall_clock_s: Math.round((Date.now() - started) / 1000),
 		seconds_requested: parseInt(query.seconds, 10) || 90,
 		rounds: summary ? parseFloat(summary.rounds) : null,

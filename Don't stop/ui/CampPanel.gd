@@ -524,7 +524,7 @@ func show_weapon(id: String, gun):
 			var cell=label(comparisons,line,7); cell.custom_minimum_size.x=108; cell.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	else:
 		if not Utils.player.gun: label(detail,"未装备 · 以下为候选属性",7)
-		label(detail,"Damage %.2f · RPM %.0f\nMagazine %d · Reload %.2fs\nCrit %.1f%% · %s" % [stats.damage,stats.rate*60,stats.magazine,stats.reload,stats.crit*100,"飞行至碰撞" if int(id)==121 else "Range %.0f"%stats.range],8)
+		label(detail,"伤害 %.2f · 射速 %.0f/分\n弹匣 %d · 装填 %.2f秒\n暴击 %.1f%% · %s" % [stats.damage,stats.rate*60,stats.magazine,stats.reload,stats.crit*100,"飞行至碰撞" if int(id)==121 else "射程 %.0f"%stats.range],8)
 	label(detail," / ".join(WeaponCatalog.labels(int(id))))
 	var more = Button.new()
 	more.toggle_mode = true
@@ -788,7 +788,7 @@ func row_style(item: Button,color: Color):
 		style.set_content_margin_all(3)
 		item.add_theme_stylebox_override(state,style)
 func comparison(stat: String,current: float,candidate: float) -> String:
-	var names={"damage":"Damage","rate":"RPM","magazine":"Magazine","reload":"Reload","crit":"Crit","range":"Range","spread":"Spread","impulse":"Knockback","pierce":"Pierce","shards":"Shards","max_hp":"Max HP","speed":"Speed","pickup":"Pickup"}
+	var names={"damage":"伤害","rate":"射速/分","magazine":"弹匣","reload":"装填/秒","crit":"暴击/%","range":"射程","spread":"散布","impulse":"击退","pierce":"贯穿","shards":"裂片","max_hp":"生命上限","speed":"移速","pickup":"拾取范围"}
 	var delta=candidate-current
 	var change="%+.0f" % delta if stat in ["magazine","pierce","shards","bounces","max_hp"] else ("%+.1fpp" % (delta*100) if stat=="crit" else ("%+.0f%%" % (delta/current*100) if current!=0 else "%+.1f" % delta))
 	var factor=60.0 if stat=="rate" else (100.0 if stat=="crit" else 1.0)

@@ -8,6 +8,8 @@ Don't Stop is a top-down 2D survival shooter/roguelite built with Godot 4. Fight
 
 Version 1.2.0 completes the gilded visual pass, transparent combat HUD, final reward/result polish, and first-use firing and dash performance fixes. See the [release verification record](Don't%20stop/docs/iteration/release-v1.2.0.md) and [v1.2.0 release](https://github.com/seiya058904/Dont-stop/releases/tag/v1.2.0).
 
+The subsequent [Performance + Presentation deep pass](Don't%20stop/docs/iteration/deep-pass.md) records the local candidate's rendering changes, paired measurements, visual evidence and remaining limitations. Its delivery package is separate from the published v1.2.0 release above.
+
 ## Play
 
 - [Play in the browser](https://seiya058904.github.io/Dont-stop/)

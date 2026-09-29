@@ -24,95 +24,95 @@ func _draw():
 	if aura_enabled and PALETTES.has(id): draw_aura(id,tip)
 	if preview_id >= 0: return
 	var a = (0.58+0.16*sin(clock*4))*(0.65 if Combat.reduced_flash else 1.0)
-	match gun.weapon_id:
-		112:
-			for i in 4:
-				draw_rect(Rect2(tip+Vector2(-16+i*3,-2),Vector2(2,3)),Color(0.25,0.7,1,a*0.45))
-			for side in [-1,1]:
-				draw_polyline(PackedVector2Array([tip+Vector2(-5,side*3),tip+Vector2(-3,side*4),tip+Vector2(-2,side*2)]),Color(0.5,0.85,1,a),1)
-		116:
-			for i in 4:
-				draw_line(tip+Vector2(-15+i*3,-3),tip+Vector2(-15+i*3,2),Color(1,0.3+0.1*i,0.05,a*0.7),1)
-			draw_rect(Rect2(tip-Vector2(5,2),Vector2(4,4)),Color(1,0.3,0.03,a*0.5))
-			for i in 3: draw_rect(Rect2(tip+Vector2(-5+i,-3-fmod(clock*3+i,3)),Vector2.ONE),Color(1,0.6,0.15,a*0.4))
-		113:
-			for i in 5:
-				var light = 0.9 if int(clock*5)%5==i else 0.3
-				draw_rect(Rect2(tip+Vector2(-20+i*3,-2),Vector2(2,4)),Color(0.35,0.7,1,a*light))
-			for side in [-1,1]: draw_line(tip+Vector2(-12,side*3),tip+Vector2(-4,side*3),Color(0.5,0.8,1,a*0.7),1)
-		120:
-			for i in 3:
-				draw_line(tip+Vector2(-14+i*3,3),tip+Vector2(-12+i*3,3),Color(1,0.6,0.2,a),1)
-			for i in 3: draw_rect(Rect2(tip+Vector2(-8+i*2,-3),Vector2.ONE),Color(1,0.55,0.12,a if int(clock*2)%3==i else a*0.25))
-		6:
-			for i in 4:
-				draw_line(tip+Vector2(-16+i*3,-2),tip+Vector2(-14+i*3,1),Color(0.4,1,0.55,a*0.7),2)
-			draw_line(tip+Vector2(-7,-2),tip+Vector2(-2,-2),Color(0.65,1,0.7,a),1)
-		124:
-			for i in 3:
-				var y = sin(clock*(2.0+18.0*gun.spin)+i*TAU/3)*2
-				draw_line(tip+Vector2(-7,y),tip+Vector2(-1,y),Color(0.7,0.8,0.85,a),1)
+	if gun.weapon_id == 124:
+		for i in 3:
+			var y = sin(clock*(2.0+18.0*gun.spin)+i*TAU/3)*2
+			draw_line(tip+Vector2(-7,y),tip+Vector2(-1,y),Color(0.7,0.8,0.85,a),1)
 
 func draw_aura(id: int, tip: Vector2):
 	var color: Color = PALETTES[id]
 	var center: Vector2 = tip + AURA_OFFSETS.get(id,Vector2(-10,0))
-	var legendary = WeaponCatalog.tier(id) == 5
-	var intensity = 0.78 if Combat.reduced_flash else 0.9+0.1*sin(clock*2.4)
-	# Fine energy contours follow each mechanism; the gun remains the silhouette.
+	var intensity = 0.65 if Combat.reduced_flash else 0.82+0.08*sin(clock*2.4)
+	var steel := Color("71838a")
+	var recess := Color("111e26")
+	# Energy belongs to the mechanism. Keep the receiver readable, with restrained
+	# reflected light and distinctive rails, chambers, fins or a containment field.
 	var glow = preload("res://game/effects/PresentationLight.gd").texture()
-	draw_texture_rect(glow,Rect2(center-Vector2(22,12),Vector2(44,24)),false,Color(color,0.18*intensity))
+	draw_texture_rect(glow,Rect2(center-Vector2(16,8),Vector2(32,16)),false,Color(color,0.10*intensity))
 	match id:
 		113:
+			var charge = gun.charge_time if is_instance_valid(gun) else 0.0
 			for side in [-1,1]:
-				draw_line(center+Vector2(-15,side*5),center+Vector2(11,side*5),Color(color,0.3*intensity),1)
-				var head = fmod(clock*15,26)-15
-				draw_line(center+Vector2(head,side*5),center+Vector2(head+3,side*5),Color(color.lightened(0.6),intensity),1)
+				var rail := center+Vector2(-14,side*4.5)
+				draw_line(rail,rail+Vector2(25,0),recess,3)
+				draw_line(rail,rail+Vector2(25,0),steel,1)
+				for cell in 4:
+					var hot := clampf(charge/0.8*4-cell,0.0,1.0)
+					draw_line(rail+Vector2(2+cell*6,0),rail+Vector2(5+cell*6,0),Color(color,0.25+hot*0.75),1.5)
 		121:
 			for side in [-1,1]:
-				var orbit = PackedVector2Array()
-				for k in 25:
-					var angle = k*TAU/24+clock*side*0.65
-					orbit.append(center+Vector2(cos(angle)*15,sin(angle)*5).rotated(side*0.5))
-				draw_polyline(orbit,Color(color,0.35*intensity),0.65,true)
+				var orbit := PackedVector2Array()
+				for k in 17:
+					var angle = k*TAU/16
+					orbit.append(center+Vector2(cos(angle)*12,sin(angle)*5).rotated(side*0.55))
+				draw_polyline(orbit,Color(color,0.36*intensity),0.7,true)
+				var angle = clock*side*1.1
+				var lock = center+Vector2(cos(angle)*12,sin(angle)*5).rotated(side*0.55)
+				draw_rect(Rect2(lock.round()-Vector2.ONE,Vector2(2,2)),Color("e3c4ff"))
 		112:
 			for side in [-1,1]:
-				var path = PackedVector2Array()
-				for k in 7: path.append(center+Vector2(-14+k*4,side*(6+sin(clock*5+k*2)*1.5)))
-				draw_polyline(path,Color(color,0.5*intensity),0.7,true)
-		116,120,124:
-			for i in 3:
-				var p = center+Vector2(-10+i*8,6)
-				draw_line(p,p+Vector2(4,0),Color(color,0.75*intensity),1)
-		_:
+				var rail = center+Vector2(-9,side*5)
+				draw_line(rail,rail+Vector2(17,0),recess,3)
+				for cell in 3:
+					var at = rail+Vector2(cell*7,0)
+					draw_rect(Rect2(at-Vector2(1,1),Vector2(3,2)),steel)
+				var phase = sin(clock*7+side)*0.9
+				draw_polyline(PackedVector2Array([rail,rail+Vector2(4,phase),rail+Vector2(10,-phase),rail+Vector2(16,0)]),Color(color,intensity),0.8,true)
+		116:
 			for side in [-1,1]:
-				var start = clock*0.5+side*PI
-				draw_arc(center,9,start,start+1.1,10,Color(color,0.45*intensity),0.7,true)
-	var count = 10 if legendary else 6
-	for i in count:
-		var phase = clock*(1.1 if legendary else 0.7)+i*TAU/count
-		var pos = center+Vector2(cos(phase)*15,sin(phase)*9)
-		match id:
-			116: pos = center+Vector2((i*7%25)-12,-4-fmod(clock*8+i*1.7,11))
-			113: pos = center+Vector2(13-fmod(clock*12+i*2.3,27),(-1 if i%2 else 1)*7)
-			120: pos = center+Vector2((i%3)*9-9,(-1 if i%2 else 1)*(6+sin(phase)*2))
-			124: pos = center+Vector2(8+fmod(clock*10+i*1.7,9),sin(phase)*7)
-			111: pos = center+Vector2(cos(phase)*12,sin(phase*2)*8)
-			114: pos = center+Vector2(cos(phase)*(10+sin(clock*2)),sin(phase)*8)
-			115: pos = tip+Vector2(cos(phase*0.5)*7-3,sin(phase*0.5)*9)
-			122: pos = center+Vector2(cos(phase)*10,sin(phase)*10)
-		pos = pos.round()
-		draw_rect(Rect2(pos-Vector2.ONE,Vector2(3,3)),Color(color,0.22*intensity))
-		draw_rect(Rect2(pos,Vector2.ONE),Color(color.lightened(0.45),0.85*intensity))
-		if id == 112 and i%3 == 0:
-			var end = center+Vector2(cos(phase+0.28)*13,sin(phase+0.28)*7)
-			draw_polyline(PackedVector2Array([pos,(pos+end)/2+Vector2(1,-2),end]),Color(color.lightened(0.35),0.8*intensity),1)
-		elif id == 121 and i%3 == 0:
-			draw_rect(Rect2(pos,Vector2(2,2)),Color("e3c4ff"))
-		elif id in [111,122] and i%2 == 0:
-			draw_line(pos-Vector2(1,2),pos+Vector2(1,1),Color(color.lightened(0.5),intensity),1)
-		elif id in [6,114,115,120] and i%3 == 0:
-			draw_arc(center,8+i%3,phase,phase+0.55,5,Color(color,0.65*intensity),1)
-	if id == 113:
-		var charge = gun.charge_time if is_instance_valid(gun) else 0.0
-		for side in [-1,1]:
-			draw_line(center+Vector2(-12,side*6),center+Vector2(12,side*6),Color(color,0.5+minf(0.4,charge)),1)
+				for fin in 4:
+					var at = center+Vector2(-10+fin*4,side*4)
+					draw_rect(Rect2(at,Vector2(2,2)),Color("a77b56"))
+					draw_line(at+Vector2(0,side),at+Vector2(1,side),Color(color,intensity*(0.35+fin*0.12)),1)
+		120:
+			for side in [-1,1]:
+				for chamber in 3:
+					var at = center+Vector2(-11+chamber*7,side*4)
+					draw_rect(Rect2(at,Vector2(5,3)),recess)
+					draw_line(at,at+Vector2(4,0),steel,1)
+					draw_rect(Rect2(at+Vector2(3,1),Vector2.ONE),Color(color,intensity if int(clock*2)%3==chamber else 0.28))
+		124:
+			# Feed belt and barrel collar. Actual spin remains driven by gun.spin below.
+			draw_line(center+Vector2(-11,4),center+Vector2(-1,4),recess,3)
+			for tooth in 4:
+				draw_rect(Rect2(center+Vector2(-11+tooth*3,4),Vector2(2,2)),Color("b79962"))
+			for side in [-1,1]: draw_line(tip+Vector2(-5,side*3),tip+Vector2(-2,side*3),steel,1.5)
+		6:
+			for side in [-1,1]:
+				var rear := tip+Vector2(-12,side*4)
+				var joint := tip+Vector2(-3,side*4)
+				var nose := tip+Vector2(0,side*2)
+				# The bevel and inset exercise both lit primitive/attribute paths while
+				# equipped, as the beam and muzzle do. Keep both: Web compiles them lazily.
+				draw_line(rear,joint,recess,3)
+				draw_line(joint,nose,recess,3)
+				draw_polyline(PackedVector2Array([rear,joint,nose]),steel,1)
+				for cell in 3: draw_rect(Rect2(center+Vector2(-8+cell*4,side*4),Vector2(2,1)),Color(color,intensity*(0.5+0.2*sin(clock*3-cell))))
+		111:
+			for prism in 3:
+				var at = center+Vector2(-7+prism*6,-4)
+				draw_colored_polygon(PackedVector2Array([at,at+Vector2(2,-2),at+Vector2(4,0),at+Vector2(2,1)]),Color(color,0.7*intensity))
+		114:
+			for side in [-1,1]:
+				draw_arc(center,5,side*PI+0.3,side*PI+2.2,9,steel,1.6,true)
+				draw_arc(center,4,side*PI+0.5,side*PI+1.8,8,Color(color,intensity),0.8,true)
+		115:
+			for side in [-1,1]:
+				draw_line(tip+Vector2(-5,side*4),tip+Vector2(0,side*6),steel,2)
+				draw_line(tip+Vector2(-4,side*4),tip+Vector2(-1,side*5),Color(color,intensity),1)
+		122:
+			var hub := tip+Vector2(-4,0)
+			for tooth in 6:
+				var axis := Vector2.RIGHT.rotated(tooth*TAU/6+clock*0.8)
+				draw_line(hub+axis*4,hub+axis*6,steel,1.5,true)
+			draw_arc(hub,4,0,TAU,17,Color(color,0.5*intensity),0.8,true)
