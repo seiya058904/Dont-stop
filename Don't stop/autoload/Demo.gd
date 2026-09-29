@@ -390,11 +390,19 @@ func on_kill(monster, context: Dictionary):
 func snapshot() -> Dictionary:
 	var weapons = []
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
+	# The persisted max-HP pool is clamped to what this save's own level can justify, so
+	# no driver - and no future one - can write a diagnostic survivability pool into the
+	# player's real camp. The round's own return_to_camp() saves, so without this an
+	# inflated pool reached the save and every later normal launch restored it, leaving a
+	# health bar that reads 100% however much damage lands.
+	var hp_ceiling = CampSnapshot.hp_max_ceiling(PlayerData.player_level)
+	var saved_hp_max: float = minf(float(PlayerData.player_hp_max),hp_ceiling)
+	var saved_hp: float = minf(float(PlayerData.player_hp),saved_hp_max)
 	# `selected_stage` is written as it is. Any stage 1-40 is a legal selection on any save,
 	# including a brand-new one, so there is nothing here to clamp and nothing to repair on the
 	# next load. `next_stage` remains the linear campaign pointer and is still bounded by
 	# CampSnapshot.normalize(); it is deliberately NOT written from a direct stage departure.
-	return {"schema_version":6,"weapon_slots":PlayerData.weapon_slots.duplicate(),"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":6,"weapon_slots":PlayerData.weapon_slots.duplicate(),"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":saved_hp,"hp_max":saved_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}

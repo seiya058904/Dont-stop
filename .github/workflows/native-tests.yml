@@ -195,6 +195,9 @@ jobs:
           # every frame of a real round where monsters attack a player who never
           # presses anything, so "HP stayed full" can never again be ambiguous.
           run_case P0HudParity
+          # P0 save gate: a diagnostic survivability pool must never be persisted and
+          # must be repaired on load, because a 100001/100001 bar reads 100% forever.
+          run_case P0SaveSanity
           run_case B14EncounterContracts
           run_case B17Contracts
           run_case B19Contracts
