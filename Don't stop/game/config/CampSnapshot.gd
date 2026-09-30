@@ -23,8 +23,14 @@ static func number(value, integral = false) -> bool:
 ## therefore never written and never restored as if it were a real build.
 const HP_HEADROOM := 120.0
 
-static func hp_max_ceiling(level: int) -> float:
-	return 5.0 + maxf(0.0,float(level) - 1.0) * PROGRESSION.HP_PER_LEVEL + HP_HEADROOM
+static func hp_max_ceiling(level: int, legacy: Array = [], legacy_state: Dictionary = {}) -> float:
+	# Validation still accepts early 99-layer helmets and 1000-kill bacteria.
+	# The normal headroom already covers today's 4 layers / 100 kills; add only
+	# the supported historical excess, using the same rule on load and snapshot.
+	var helmet_layers = mini(legacy.count("2"),99)
+	var bacteria_kills = clampf(float(legacy_state.get("10",0)),0.0,1000.0) if "10" in legacy else 0.0
+	var historical_hp = maxf(0.0,float(helmet_layers)-4.0)*3.0 + maxf(0.0,bacteria_kills-100.0)*0.1
+	return 5.0 + maxf(0.0,float(level) - 1.0) * PROGRESSION.HP_PER_LEVEL + HP_HEADROOM + historical_hp
 
 static func validate(data) -> bool:
 	if not data is Dictionary: return false
@@ -200,11 +206,11 @@ static func normalize(data: Dictionary) -> Dictionary:
 	result.owned_global_upgrades = upgrades
 	result.erase("attachments"); result.erase("next_instance"); result.erase("compatibility")
 	result.schema_version = 6
-	# Repair, don't reject: a pool above what this save's own level can justify is a
+	# Repair, don't reject: a pool above what this save's level and supported history can justify is a
 	# diagnostic leak rather than a corrupt file, so the pool is brought back to the
 	# ceiling and the current HP inside it. Rejecting here would instead raise the
 	# "存档损坏" recovery dialog on a save the player can otherwise keep using.
-	var ceiling = hp_max_ceiling(int(result.level))
+	var ceiling = hp_max_ceiling(int(result.level),result.get("legacy",[]),result.get("legacy_state",{}))
 	if float(result.hp_max) > ceiling:
 		push_warning("[save] max HP %.1f exceeds the reachable ceiling %.1f at level %d; clamping (diagnostic leak)" % [float(result.hp_max),ceiling,int(result.level)])
 		result.hp_max = ceiling
