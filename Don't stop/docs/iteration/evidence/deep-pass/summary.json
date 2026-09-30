@@ -1,0 +1,5400 @@
+{
+  "baseline": "a8e5daf46a1333876aaa7aadcf04857101209957",
+  "machine": {
+    "cpu": "AMD Ryzen 7 9700X 8-Core Processor             ",
+    "cores": 8,
+    "threads": 16,
+    "os": "Microsoft Windows 11 企业版",
+    "version": "10.0.22631",
+    "build": "22631",
+    "ram_bytes": 33945550848,
+    "gpu": "AMD Radeon RX 7900 XT",
+    "godot": "4.7.2.stable.official.ed1daf0bf"
+  },
+  "method": "First planned, complete, unpaused window per repetition. Post-window ObjectDB error is retained as an end-to-end failure, not silently removed from frame statistics. For repeated cases average the per-run percentiles and retain worst max; never claim a pooled percentile.",
+  "paired": [
+    {
+      "case": "Web 60 Hz · D / 35 s",
+      "before": {
+        "avg": 16.66945351347576,
+        "p50": 16.662500381469698,
+        "p95": 18.89499950408935,
+        "p99": 21.07999992370605,
+        "max": 43.1699981689453,
+        "draws": 816.9692585122968,
+        "over25": 8,
+        "over33": 5,
+        "over50": 0,
+        "labels": [
+          "before-normal-D-1",
+          "before-normal-D-2"
+        ]
+      },
+      "after": {
+        "avg": 16.662751681115147,
+        "p50": 16.63749980926515,
+        "p95": 18.88749980926515,
+        "p99": 20.850000381469748,
+        "max": 44.7599983215332,
+        "draws": 520.9823473282443,
+        "over25": 6,
+        "over33": 4,
+        "over50": 0,
+        "labels": [
+          "after-normal-D-1",
+          "after-normal-D-2"
+        ]
+      }
+    },
+    {
+      "case": "Web 60 Hz · P / 稳态 25 s",
+      "before": {
+        "avg": 16.666651740114542,
+        "p50": 16.6125001907349,
+        "p95": 19.60499954223635,
+        "p99": 20.89499950408935,
+        "max": 25.5049991607666,
+        "draws": 558.6884591774094,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "before-normal-P-1",
+          "before-normal-P-2"
+        ]
+      },
+      "after": {
+        "avg": 16.665851108344604,
+        "p50": 16.60750007629395,
+        "p95": 19.61999988555905,
+        "p99": 21.1749992370605,
+        "max": 27.6049995422363,
+        "draws": 355.2058516326472,
+        "over25": 3,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "after-normal-P-1",
+          "after-normal-P-2"
+        ]
+      }
+    },
+    {
+      "case": "Web uncapped · D / 35 s",
+      "before": {
+        "avg": 3.8978193414821387,
+        "p50": 2.49500000476837,
+        "p95": 10.109999656677264,
+        "p99": 12.0350003242493,
+        "max": 40.9449996948242,
+        "draws": 785.6355464023989,
+        "over25": 5,
+        "over33": 2,
+        "over50": 0,
+        "labels": [
+          "before-uncapped-D-1",
+          "before-uncapped-D-2"
+        ]
+      },
+      "after": {
+        "avg": 3.784183274553362,
+        "p50": 2.122500002384185,
+        "p95": 11.427499771118164,
+        "p99": 15.1100001335144,
+        "max": 40.7900009155273,
+        "draws": 504.89035829309694,
+        "over25": 16,
+        "over33": 5,
+        "over50": 0,
+        "labels": [
+          "after-uncapped-D-1",
+          "after-uncapped-D-2"
+        ]
+      }
+    },
+    {
+      "case": "Web uncapped · P / 稳态 25 s",
+      "before": {
+        "avg": 5.613310520066417,
+        "p50": 3.26500010490417,
+        "p95": 13.414999961853,
+        "p99": 18.1599998474121,
+        "max": 25.9400005340576,
+        "draws": 537.1447058823529,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "before-uncapped-P-1"
+        ]
+      },
+      "after": {
+        "avg": 4.013895748497107,
+        "p50": 2.29999995231628,
+        "p95": 11.1750001907349,
+        "p99": 15.164999961853,
+        "max": 20.7150001525879,
+        "draws": 343.83769487750556,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "after-uncapped-P-1"
+        ]
+      }
+    },
+    {
+      "case": "Windows release · D / 35 s",
+      "before": {
+        "avg": 2.1483468657998963,
+        "p50": 1.502499997615815,
+        "p95": 6.922499895095825,
+        "p99": 7.995000123977659,
+        "max": 22.6280002593994,
+        "draws": 790.8043272993159,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "before-windows-D-1",
+          "before-windows-D-2"
+        ]
+      },
+      "after": {
+        "avg": 1.8038482261492317,
+        "p50": 1.2074999809265101,
+        "p95": 6.61500000953674,
+        "p99": 7.57450008392334,
+        "max": 72.120002746582,
+        "draws": 519.5049666975005,
+        "over25": 1,
+        "over33": 1,
+        "over50": 1,
+        "labels": [
+          "after-windows-D-1",
+          "after-windows-D-2"
+        ]
+      }
+    },
+    {
+      "case": "Windows release · P / 稳态 25 s",
+      "before": {
+        "avg": 2.019444184621201,
+        "p50": 1.27400004863739,
+        "p95": 6.97100019454956,
+        "p99": 8.74199962615967,
+        "max": 12.3360004425049,
+        "draws": 542.8514675573875,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "before-windows-P-1"
+        ]
+      },
+      "after": {
+        "avg": 1.6718684753130075,
+        "p50": 1.03999996185303,
+        "p95": 6.67799997329712,
+        "p99": 8.43400001525879,
+        "max": 14.8100004196167,
+        "draws": 325.0972255157695,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "after-windows-P-1"
+        ]
+      }
+    },
+    {
+      "case": "Godot native · D / 35 s",
+      "before": {
+        "avg": 2.561475449145319,
+        "p50": 1.62000000476837,
+        "p95": 8.06900024414063,
+        "p99": 9.26099967956543,
+        "max": 34.1549987792969,
+        "draws": 785.1387155963303,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "labels": [
+          "before-native-D-1"
+        ]
+      },
+      "after": {
+        "avg": 2.195851479414112,
+        "p50": 1.36899995803833,
+        "p95": 7.43300008773804,
+        "p99": 8.4680004119873,
+        "max": 33.257999420166,
+        "draws": 550.3677784770296,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "labels": [
+          "after-native-D-1"
+        ]
+      }
+    },
+    {
+      "case": "Godot native · P / 稳态 25 s",
+      "before": {
+        "avg": 3.3364980688282087,
+        "p50": 1.875,
+        "p95": 9.8730001449585,
+        "p99": 12.6800003051758,
+        "max": 26.1560001373291,
+        "draws": 524.3698456576826,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "before-native-P-1"
+        ]
+      },
+      "after": {
+        "avg": 2.158634535410217,
+        "p50": 1.22200000286102,
+        "p95": 8.01599979400635,
+        "p99": 10.2399997711182,
+        "max": 16.693000793457,
+        "draws": 360.61774822288464,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "labels": [
+          "after-native-P-1-attempt2"
+        ]
+      }
+    },
+    {
+      "case": "Web 4K 60 Hz · D / 20 s",
+      "before": {
+        "avg": 16.692135681379494,
+        "p50": 16.6299991607666,
+        "p95": 19.6149997711182,
+        "p99": 22.6049995422363,
+        "max": 78.129997253418,
+        "draws": 815.9857621440536,
+        "over25": 6,
+        "over33": 2,
+        "over50": 1,
+        "labels": [
+          "before-4k-D-1"
+        ]
+      },
+      "after": {
+        "avg": 16.68598826538609,
+        "p50": 16.7099990844727,
+        "p95": 19.3950004577637,
+        "p99": 22.1149997711182,
+        "max": 73.3649978637695,
+        "draws": 512.1867671691792,
+        "over25": 4,
+        "over33": 2,
+        "over50": 1,
+        "labels": [
+          "after-4k-D-1"
+        ]
+      }
+    },
+    {
+      "case": "Web Boss 40 · 完整三阶段",
+      "before": {
+        "avg": 16.659930380479707,
+        "p50": 16.6599998474121,
+        "p95": 18.2049999237061,
+        "p99": 18.9099998474121,
+        "max": 35.1399993896484,
+        "draws": 476.92955112219454,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "labels": [
+          "presentation-before-normal-A-1"
+        ]
+      },
+      "after": {
+        "avg": 16.659043007586593,
+        "p50": 16.6550006866455,
+        "p95": 18.0849990844727,
+        "p99": 19.0499992370605,
+        "max": 34.0900001525879,
+        "draws": 311.81400665004156,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "labels": [
+          "presentation-after-normal-A-1"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "label": "after-native-D-1",
+      "platform": "native",
+      "scenario": "D",
+      "stats": {
+        "frames": 15890,
+        "avg": 2.195851479414112,
+        "p50": 1.36899995803833,
+        "p95": 7.43300008773804,
+        "p99": 8.4680004119873,
+        "max": 33.257999420166,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 15890,
+        "avg": 2.195851479414112,
+        "p50": 1.36899995803833,
+        "p95": 7.43300008773804,
+        "p99": 8.4680004119873,
+        "max": 33.257999420166,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 550.3677784770296,
+      "draws_peak": 743,
+      "load": {
+        "frames": "15890",
+        "combat_s": "35.0",
+        "objects_peak": "12591",
+        "orphans_peak": "0",
+        "canvas_items_peak": "3094",
+        "mem_static_peak_mb": "133.4",
+        "draws_avg": "550.4",
+        "draws_peak": "743",
+        "path_queries": "26644",
+        "path_per_s": "761.3",
+        "created": "33847",
+        "removed": "33207",
+        "created_per_s": "967.1",
+        "removed_per_s": "948.8",
+        "enemies_peak": "180",
+        "projectiles_peak": "10",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "7",
+        "labels_peak": "85",
+        "transients_peak": "225",
+        "rewards_peak": "22",
+        "nodes_peak": "3410",
+        "topped_up": "48"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 380,
+        "enemy_shot_step": 25338,
+        "footprint": 13199,
+        "hit_outer_inclusive": 413127,
+        "monster_move": 7347037,
+        "monster_process_inclusive": 650845,
+        "spawn_clearance": 70106,
+        "spawn_finalize": 19571,
+        "spawn_instantiate": 50261,
+        "spawn_path": 5536,
+        "spawn_prepare": 108647,
+        "spawn_ready": 82127
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 220,
+        "enemy_shot_step": 4187,
+        "footprint": 97,
+        "hit_outer_inclusive": 3620,
+        "monster_move": 322771,
+        "monster_process_inclusive": 111722,
+        "spawn_clearance": 26074,
+        "spawn_finalize": 1206,
+        "spawn_instantiate": 1206,
+        "spawn_path": 579,
+        "spawn_prepare": 1206,
+        "spawn_ready": 1206
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 100.596,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\after-native-D-1.json",
+      "diagnostics": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 518.9921875
+    },
+    {
+      "label": "before-native-D-1",
+      "platform": "native",
+      "scenario": "D",
+      "stats": {
+        "frames": 13625,
+        "avg": 2.561475449145319,
+        "p50": 1.62000000476837,
+        "p95": 8.06900024414063,
+        "p99": 9.26099967956543,
+        "max": 34.1549987792969,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 13625,
+        "avg": 2.561475449145319,
+        "p50": 1.62000000476837,
+        "p95": 8.06900024414063,
+        "p99": 9.26099967956543,
+        "max": 34.1549987792969,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 785.1387155963303,
+      "draws_peak": 1010,
+      "load": {
+        "frames": "13625",
+        "combat_s": "35.0",
+        "objects_peak": "12543",
+        "orphans_peak": "0",
+        "canvas_items_peak": "3500",
+        "mem_static_peak_mb": "133.4",
+        "draws_avg": "785.1",
+        "draws_peak": "1010",
+        "path_queries": "26494",
+        "path_per_s": "757.0",
+        "created": "33782",
+        "removed": "33144",
+        "created_per_s": "965.2",
+        "removed_per_s": "947.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "6",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "9",
+        "labels_peak": "76",
+        "transients_peak": "230",
+        "rewards_peak": "22",
+        "nodes_peak": "3401",
+        "topped_up": "48"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 356,
+        "enemy_shot_step": 32318,
+        "footprint": 13344,
+        "hit_outer_inclusive": 419742,
+        "monster_move": 7612274,
+        "monster_process_inclusive": 609019,
+        "spawn_clearance": 88348,
+        "spawn_finalize": 19251,
+        "spawn_instantiate": 48857,
+        "spawn_path": 4511,
+        "spawn_prepare": 105754,
+        "spawn_ready": 81665
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 204,
+        "enemy_shot_step": 5454,
+        "footprint": 95,
+        "hit_outer_inclusive": 3699,
+        "monster_move": 322182,
+        "monster_process_inclusive": 92304,
+        "spawn_clearance": 32998,
+        "spawn_finalize": 1173,
+        "spawn_instantiate": 1173,
+        "spawn_path": 476,
+        "spawn_prepare": 1173,
+        "spawn_ready": 1173
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 93.027,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\before-native-D-1.json",
+      "diagnostics": [
+        "WARNING: 22 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 519.30859375
+    },
+    {
+      "label": "after-native-P-1-attempt2",
+      "platform": "native",
+      "scenario": "P",
+      "stats": {
+        "frames": 11588,
+        "avg": 2.158634535410217,
+        "p50": 1.22200000286102,
+        "p95": 8.01599979400635,
+        "p99": 10.2399997711182,
+        "max": 16.693000793457,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 13083,
+        "avg": 2.073528930286164,
+        "p50": 1.19400000572205,
+        "p95": 7.88600015640259,
+        "p99": 10.1829996109009,
+        "max": 34.048999786377,
+        "over25": 2,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 360.61774822288464,
+      "draws_peak": 607,
+      "load": {
+        "frames": "13083",
+        "combat_s": "27.2",
+        "objects_peak": "12638",
+        "orphans_peak": "0",
+        "canvas_items_peak": "2753",
+        "mem_static_peak_mb": "140.7",
+        "draws_avg": "360.6",
+        "draws_peak": "607",
+        "path_queries": "23296",
+        "path_per_s": "855.4",
+        "created": "26808",
+        "removed": "26208",
+        "created_per_s": "984.4",
+        "removed_per_s": "962.4",
+        "enemies_peak": "180",
+        "projectiles_peak": "6",
+        "hazards_peak": "1",
+        "zones_peak": "4",
+        "beams_peak": "1",
+        "vfx_peak": "6",
+        "labels_peak": "41",
+        "transients_peak": "208",
+        "rewards_peak": "22",
+        "nodes_peak": "3622",
+        "topped_up": "1290"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 169,
+        "enemy_shot_step": 9073,
+        "footprint": 7007,
+        "hit_outer_inclusive": 291217,
+        "monster_move": 6610454,
+        "monster_process_inclusive": 184711,
+        "spawn_clearance": 28485,
+        "spawn_finalize": 25498,
+        "spawn_instantiate": 65210,
+        "spawn_path": 4893,
+        "spawn_prepare": 170464,
+        "spawn_ready": 123137
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 118,
+        "enemy_shot_step": 1636,
+        "footprint": 68,
+        "hit_outer_inclusive": 2239,
+        "monster_move": 266747,
+        "monster_process_inclusive": 25383,
+        "spawn_clearance": 8860,
+        "spawn_finalize": 1951,
+        "spawn_instantiate": 1951,
+        "spawn_path": 591,
+        "spawn_prepare": 1951,
+        "spawn_ready": 1951
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 99.264,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\after-native-P-1-attempt2.json",
+      "diagnostics": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 531.94140625
+    },
+    {
+      "label": "before-native-P-1",
+      "platform": "native",
+      "scenario": "P",
+      "stats": {
+        "frames": 7497,
+        "avg": 3.3364980688282087,
+        "p50": 1.875,
+        "p95": 9.8730001449585,
+        "p99": 12.6800003051758,
+        "max": 26.1560001373291,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 8682,
+        "avg": 3.124690742685231,
+        "p50": 1.75300002098084,
+        "p95": 9.67300033569336,
+        "p99": 12.5139999389648,
+        "max": 43.9630012512207,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 524.3698456576826,
+      "draws_peak": 822,
+      "load": {
+        "frames": "8682",
+        "combat_s": "27.2",
+        "objects_peak": "12719",
+        "orphans_peak": "0",
+        "canvas_items_peak": "3037",
+        "mem_static_peak_mb": "140.8",
+        "draws_avg": "524.4",
+        "draws_peak": "822",
+        "path_queries": "23631",
+        "path_per_s": "868.3",
+        "created": "28802",
+        "removed": "28192",
+        "created_per_s": "1058.2",
+        "removed_per_s": "1035.8",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "1",
+        "vfx_peak": "6",
+        "labels_peak": "44",
+        "transients_peak": "226",
+        "rewards_peak": "22",
+        "nodes_peak": "3693",
+        "topped_up": "1466"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 474,
+        "enemy_shot_step": 39740,
+        "footprint": 7796,
+        "hit_outer_inclusive": 326238,
+        "monster_move": 6548768,
+        "monster_process_inclusive": 157110,
+        "spawn_clearance": 35962,
+        "spawn_finalize": 30450,
+        "spawn_instantiate": 83335,
+        "spawn_path": 5863,
+        "spawn_prepare": 196078,
+        "spawn_ready": 142295
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 256,
+        "enemy_shot_step": 6134,
+        "footprint": 68,
+        "hit_outer_inclusive": 2327,
+        "monster_move": 267924,
+        "monster_process_inclusive": 15914,
+        "spawn_clearance": 10372,
+        "spawn_finalize": 2131,
+        "spawn_instantiate": 2131,
+        "spawn_path": 629,
+        "spawn_prepare": 2131,
+        "spawn_ready": 2131
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 92.198,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\before-native-P-1.json",
+      "diagnostics": [
+        "WARNING: 16 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 528.93359375
+    },
+    {
+      "label": "presentation-after-normal-A-1",
+      "platform": "web",
+      "scenario": "A",
+      "stats": {
+        "frames": 4812,
+        "avg": 16.659043007586593,
+        "p50": 16.6550006866455,
+        "p95": 18.0849990844727,
+        "p99": 19.0499992370605,
+        "max": 34.0900001525879,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 4812,
+        "avg": 16.659043007586593,
+        "p50": 16.6550006866455,
+        "p95": 18.0849990844727,
+        "p99": 19.0499992370605,
+        "max": 34.0900001525879,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 311.81400665004156,
+      "draws_peak": 861,
+      "load": {
+        "frames": "4812",
+        "combat_s": "80.2",
+        "objects_peak": "8317",
+        "orphans_peak": null,
+        "canvas_items_peak": "11582",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "311.8",
+        "draws_peak": "861",
+        "path_queries": "134",
+        "path_per_s": "1.7",
+        "created": "23295",
+        "removed": "22692",
+        "created_per_s": "290.3",
+        "removed_per_s": "282.8",
+        "enemies_peak": "1",
+        "projectiles_peak": "179",
+        "hazards_peak": "1",
+        "zones_peak": "4",
+        "beams_peak": "4",
+        "vfx_peak": "21",
+        "labels_peak": "26",
+        "transients_peak": "230",
+        "rewards_peak": "22",
+        "nodes_peak": "1378",
+        "topped_up": "0",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "18.720",
+        "process_max_ms": "155.505",
+        "draws_peak": "861"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 16360,
+        "enemy_shot_step": 893595,
+        "footprint": 4055,
+        "hit_outer_inclusive": 411080,
+        "monster_move": 7385,
+        "monster_process_inclusive": 306060,
+        "spawn_clearance": 45,
+        "spawn_finalize": 10,
+        "spawn_instantiate": 60,
+        "spawn_path": 245,
+        "spawn_prepare": 15,
+        "spawn_ready": 605
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 8322,
+        "enemy_shot_step": 175754,
+        "footprint": 42,
+        "hit_outer_inclusive": 851,
+        "monster_move": 1244,
+        "monster_process_inclusive": 4734,
+        "spawn_clearance": 1,
+        "spawn_finalize": 1,
+        "spawn_instantiate": 1,
+        "spawn_path": 1,
+        "spawn_prepare": 1,
+        "spawn_ready": 1
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 66.44,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-presentation-after-normal-A-1-A.json",
+      "boss_complete": true,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "presentation-before-normal-A-1",
+      "platform": "web",
+      "scenario": "A",
+      "stats": {
+        "frames": 4812,
+        "avg": 16.659930380479707,
+        "p50": 16.6599998474121,
+        "p95": 18.2049999237061,
+        "p99": 18.9099998474121,
+        "max": 35.1399993896484,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 4812,
+        "avg": 16.659930380479707,
+        "p50": 16.6599998474121,
+        "p95": 18.2049999237061,
+        "p99": 18.9099998474121,
+        "max": 35.1399993896484,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 476.92955112219454,
+      "draws_peak": 1054,
+      "load": {
+        "frames": "4812",
+        "combat_s": "80.2",
+        "objects_peak": "8307",
+        "orphans_peak": null,
+        "canvas_items_peak": "13700",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "476.9",
+        "draws_peak": "1054",
+        "path_queries": "138",
+        "path_per_s": "1.7",
+        "created": "23055",
+        "removed": "22436",
+        "created_per_s": "287.3",
+        "removed_per_s": "279.6",
+        "enemies_peak": "1",
+        "projectiles_peak": "172",
+        "hazards_peak": "1",
+        "zones_peak": "4",
+        "beams_peak": "4",
+        "vfx_peak": "25",
+        "labels_peak": "40",
+        "transients_peak": "224",
+        "rewards_peak": "22",
+        "nodes_peak": "1362",
+        "topped_up": "0",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "18.115",
+        "process_max_ms": "164.025",
+        "draws_peak": "1054"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 15830,
+        "enemy_shot_step": 889855,
+        "footprint": 3690,
+        "hit_outer_inclusive": 392035,
+        "monster_move": 8085,
+        "monster_process_inclusive": 304390,
+        "spawn_clearance": 40,
+        "spawn_finalize": 15,
+        "spawn_instantiate": 55,
+        "spawn_path": 250,
+        "spawn_prepare": 10,
+        "spawn_ready": 1395
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 8283,
+        "enemy_shot_step": 173298,
+        "footprint": 42,
+        "hit_outer_inclusive": 809,
+        "monster_move": 1240,
+        "monster_process_inclusive": 4723,
+        "spawn_clearance": 1,
+        "spawn_finalize": 1,
+        "spawn_instantiate": 1,
+        "spawn_path": 1,
+        "spawn_prepare": 1,
+        "spawn_ready": 1
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 63.31,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-presentation-before-normal-A-1-A.json",
+      "boss_complete": true,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-4k-D-1",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 1194,
+        "avg": 16.68598826538609,
+        "p50": 16.7099990844727,
+        "p95": 19.3950004577637,
+        "p99": 22.1149997711182,
+        "max": 73.3649978637695,
+        "over25": 4,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1194,
+        "avg": 16.68598826538609,
+        "p50": 16.7099990844727,
+        "p95": 19.3950004577637,
+        "p99": 22.1149997711182,
+        "max": 73.3649978637695,
+        "over25": 4,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "draws_avg": 512.1867671691792,
+      "draws_peak": 656,
+      "load": {
+        "frames": "1194",
+        "combat_s": "20.0",
+        "objects_peak": "9826",
+        "orphans_peak": null,
+        "canvas_items_peak": "3012",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "512.2",
+        "draws_peak": "656",
+        "path_queries": "14253",
+        "path_per_s": "712.6",
+        "created": "16483",
+        "removed": "15859",
+        "created_per_s": "824.1",
+        "removed_per_s": "793.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "5",
+        "vfx_peak": "8",
+        "labels_peak": "83",
+        "transients_peak": "117",
+        "rewards_peak": "22",
+        "nodes_peak": "2973",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "37.390",
+        "process_max_ms": "170.750",
+        "draws_peak": "656"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 555,
+        "enemy_shot_step": 38905,
+        "footprint": 8425,
+        "hit_outer_inclusive": 415720,
+        "monster_move": 3380410,
+        "monster_process_inclusive": 303970,
+        "spawn_clearance": 47100,
+        "spawn_finalize": 13765,
+        "spawn_instantiate": 43090,
+        "spawn_path": 5380,
+        "spawn_prepare": 68105,
+        "spawn_ready": 56960
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 172,
+        "enemy_shot_step": 4091,
+        "footprint": 49,
+        "hit_outer_inclusive": 1718,
+        "monster_move": 176141,
+        "monster_process_inclusive": 8938,
+        "spawn_clearance": 13946,
+        "spawn_finalize": 622,
+        "spawn_instantiate": 622,
+        "spawn_path": 374,
+        "spawn_prepare": 622,
+        "spawn_ready": 622
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 62.75,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-4k-D-1-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-4k-D-1-attempt2",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 1194,
+        "avg": 16.68675458712357,
+        "p50": 16.6800003051758,
+        "p95": 19.6299991607666,
+        "p99": 22.2099990844727,
+        "max": 78.3150024414062,
+        "over25": 4,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1194,
+        "avg": 16.68675458712357,
+        "p50": 16.6800003051758,
+        "p95": 19.6299991607666,
+        "p99": 22.2099990844727,
+        "max": 78.3150024414062,
+        "over25": 4,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "draws_avg": 521.5460636515913,
+      "draws_peak": 653,
+      "load": {
+        "frames": "1194",
+        "combat_s": "20.0",
+        "objects_peak": "9739",
+        "orphans_peak": null,
+        "canvas_items_peak": "2699",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "521.5",
+        "draws_peak": "653",
+        "path_queries": "14015",
+        "path_per_s": "700.8",
+        "created": "18352",
+        "removed": "17703",
+        "created_per_s": "917.6",
+        "removed_per_s": "885.1",
+        "enemies_peak": "180",
+        "projectiles_peak": "7",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "8",
+        "labels_peak": "86",
+        "transients_peak": "128",
+        "rewards_peak": "22",
+        "nodes_peak": "2938",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "38.860",
+        "process_max_ms": "173.780",
+        "draws_peak": "653"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 645,
+        "enemy_shot_step": 39450,
+        "footprint": 9440,
+        "hit_outer_inclusive": 453710,
+        "monster_move": 3367615,
+        "monster_process_inclusive": 319095,
+        "spawn_clearance": 58935,
+        "spawn_finalize": 15365,
+        "spawn_instantiate": 47695,
+        "spawn_path": 5405,
+        "spawn_prepare": 78135,
+        "spawn_ready": 62400
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 172,
+        "enemy_shot_step": 3721,
+        "footprint": 52,
+        "hit_outer_inclusive": 1928,
+        "monster_move": 172714,
+        "monster_process_inclusive": 8793,
+        "spawn_clearance": 16994,
+        "spawn_finalize": 690,
+        "spawn_instantiate": 690,
+        "spawn_path": 338,
+        "spawn_prepare": 690,
+        "spawn_ready": 690
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 64.335,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-4k-D-1-attempt2-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-4k-D-1-attempt3",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 1195,
+        "avg": 16.676029301503338,
+        "p50": 16.6350002288818,
+        "p95": 18.5699996948242,
+        "p99": 21.2900009155273,
+        "max": 69.879997253418,
+        "over25": 5,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1195,
+        "avg": 16.676029301503338,
+        "p50": 16.6350002288818,
+        "p95": 18.5699996948242,
+        "p99": 21.2900009155273,
+        "max": 69.879997253418,
+        "over25": 5,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "draws_avg": 534.1405857740585,
+      "draws_peak": 702,
+      "load": {
+        "frames": "1195",
+        "combat_s": "20.0",
+        "objects_peak": "9822",
+        "orphans_peak": null,
+        "canvas_items_peak": "2714",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "534.1",
+        "draws_peak": "702",
+        "path_queries": "14204",
+        "path_per_s": "710.2",
+        "created": "18299",
+        "removed": "17656",
+        "created_per_s": "915.0",
+        "removed_per_s": "882.8",
+        "enemies_peak": "180",
+        "projectiles_peak": "9",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "7",
+        "labels_peak": "74",
+        "transients_peak": "133",
+        "rewards_peak": "22",
+        "nodes_peak": "2994",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "35.220",
+        "process_max_ms": "156.970",
+        "draws_peak": "702"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 440,
+        "enemy_shot_step": 24605,
+        "footprint": 7685,
+        "hit_outer_inclusive": 320370,
+        "monster_move": 2945370,
+        "monster_process_inclusive": 211225,
+        "spawn_clearance": 48485,
+        "spawn_finalize": 12495,
+        "spawn_instantiate": 29620,
+        "spawn_path": 4405,
+        "spawn_prepare": 66105,
+        "spawn_ready": 44910
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 164,
+        "enemy_shot_step": 3592,
+        "footprint": 50,
+        "hit_outer_inclusive": 1869,
+        "monster_move": 174538,
+        "monster_process_inclusive": 8678,
+        "spawn_clearance": 16224,
+        "spawn_finalize": 682,
+        "spawn_instantiate": 682,
+        "spawn_path": 355,
+        "spawn_prepare": 682,
+        "spawn_ready": 682
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 59.11,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-4k-D-1-attempt3-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-normal-D-1",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 2096,
+        "avg": 16.66399571050193,
+        "p50": 16.6299991607666,
+        "p95": 18.7399997711182,
+        "p99": 20.4300003051758,
+        "max": 43.25,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 2096,
+        "avg": 16.66399571050193,
+        "p50": 16.6299991607666,
+        "p95": 18.7399997711182,
+        "p99": 20.4300003051758,
+        "max": 43.25,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 520.4432251908397,
+      "draws_peak": 655,
+      "load": {
+        "frames": "2096",
+        "combat_s": "35.0",
+        "objects_peak": "9706",
+        "orphans_peak": null,
+        "canvas_items_peak": "2624",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "520.4",
+        "draws_peak": "655",
+        "path_queries": "26877",
+        "path_per_s": "767.9",
+        "created": "28808",
+        "removed": "28166",
+        "created_per_s": "823.1",
+        "removed_per_s": "804.7",
+        "enemies_peak": "180",
+        "projectiles_peak": "10",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "5",
+        "vfx_peak": "8",
+        "labels_peak": "80",
+        "transients_peak": "148",
+        "rewards_peak": "22",
+        "nodes_peak": "3018",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "36.885",
+        "process_max_ms": "157.780",
+        "draws_peak": "655"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 685,
+        "enemy_shot_step": 41160,
+        "footprint": 13600,
+        "hit_outer_inclusive": 513370,
+        "monster_move": 6171000,
+        "monster_process_inclusive": 321300,
+        "spawn_clearance": 60000,
+        "spawn_finalize": 19550,
+        "spawn_instantiate": 47430,
+        "spawn_path": 5650,
+        "spawn_prepare": 106735,
+        "spawn_ready": 71580
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 280,
+        "enemy_shot_step": 5903,
+        "footprint": 91,
+        "hit_outer_inclusive": 2789,
+        "monster_move": 328139,
+        "monster_process_inclusive": 12405,
+        "spawn_clearance": 18864,
+        "spawn_finalize": 1015,
+        "spawn_instantiate": 1015,
+        "spawn_path": 442,
+        "spawn_prepare": 1015,
+        "spawn_ready": 1015
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 59.58,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-D-1-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-normal-D-1-attempt2",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 2096,
+        "avg": 16.663866883766737,
+        "p50": 16.6350002288818,
+        "p95": 18.6499996185303,
+        "p99": 20.5599994659424,
+        "max": 42.0400009155273,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 2096,
+        "avg": 16.663866883766737,
+        "p50": 16.6350002288818,
+        "p95": 18.6499996185303,
+        "p99": 20.5599994659424,
+        "max": 42.0400009155273,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 528.6264312977099,
+      "draws_peak": 673,
+      "load": {
+        "frames": "2096",
+        "combat_s": "35.0",
+        "objects_peak": "9917",
+        "orphans_peak": null,
+        "canvas_items_peak": "3092",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "528.6",
+        "draws_peak": "673",
+        "path_queries": "26897",
+        "path_per_s": "768.5",
+        "created": "28470",
+        "removed": "27848",
+        "created_per_s": "813.4",
+        "removed_per_s": "795.7",
+        "enemies_peak": "180",
+        "projectiles_peak": "10",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "10",
+        "labels_peak": "79",
+        "transients_peak": "163",
+        "rewards_peak": "22",
+        "nodes_peak": "3130",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "35.980",
+        "process_max_ms": "157.260",
+        "draws_peak": "673"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 745,
+        "enemy_shot_step": 48515,
+        "footprint": 13960,
+        "hit_outer_inclusive": 526245,
+        "monster_move": 5962955,
+        "monster_process_inclusive": 358970,
+        "spawn_clearance": 69740,
+        "spawn_finalize": 18695,
+        "spawn_instantiate": 44265,
+        "spawn_path": 6215,
+        "spawn_prepare": 103760,
+        "spawn_ready": 67795
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 296,
+        "enemy_shot_step": 7226,
+        "footprint": 91,
+        "hit_outer_inclusive": 3022,
+        "monster_move": 326096,
+        "monster_process_inclusive": 14289,
+        "spawn_clearance": 22703,
+        "spawn_finalize": 1005,
+        "spawn_instantiate": 1005,
+        "spawn_path": 507,
+        "spawn_prepare": 1005,
+        "spawn_ready": 1005
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 58.82,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-D-1-attempt2-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-normal-D-1-attempt3",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 2096,
+        "avg": 16.663955155228628,
+        "p50": 16.6350002288818,
+        "p95": 18.75,
+        "p99": 20.8999996185303,
+        "max": 41.6300010681152,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 2096,
+        "avg": 16.663955155228628,
+        "p50": 16.6350002288818,
+        "p95": 18.75,
+        "p99": 20.8999996185303,
+        "max": 41.6300010681152,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 528.7027671755725,
+      "draws_peak": 690,
+      "load": {
+        "frames": "2096",
+        "combat_s": "35.0",
+        "objects_peak": "10084",
+        "orphans_peak": null,
+        "canvas_items_peak": "2741",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "528.7",
+        "draws_peak": "690",
+        "path_queries": "26899",
+        "path_per_s": "768.5",
+        "created": "29702",
+        "removed": "29065",
+        "created_per_s": "848.6",
+        "removed_per_s": "830.4",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "7",
+        "labels_peak": "84",
+        "transients_peak": "168",
+        "rewards_peak": "22",
+        "nodes_peak": "3196",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "35.030",
+        "process_max_ms": "161.880",
+        "draws_peak": "690"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 765,
+        "enemy_shot_step": 51805,
+        "footprint": 15250,
+        "hit_outer_inclusive": 545215,
+        "monster_move": 6057190,
+        "monster_process_inclusive": 392475,
+        "spawn_clearance": 69510,
+        "spawn_finalize": 19255,
+        "spawn_instantiate": 45765,
+        "spawn_path": 6600,
+        "spawn_prepare": 104525,
+        "spawn_ready": 69755
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 288,
+        "enemy_shot_step": 6732,
+        "footprint": 93,
+        "hit_outer_inclusive": 3252,
+        "monster_move": 325550,
+        "monster_process_inclusive": 16146,
+        "spawn_clearance": 22468,
+        "spawn_finalize": 1021,
+        "spawn_instantiate": 1021,
+        "spawn_path": 538,
+        "spawn_prepare": 1021,
+        "spawn_ready": 1021
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 59.135,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-D-1-attempt3-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-normal-D-2",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 2096,
+        "avg": 16.661507651728368,
+        "p50": 16.6450004577637,
+        "p95": 19.0349998474121,
+        "p99": 21.2700004577637,
+        "max": 44.7599983215332,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 2096,
+        "avg": 16.661507651728368,
+        "p50": 16.6450004577637,
+        "p95": 19.0349998474121,
+        "p99": 21.2700004577637,
+        "max": 44.7599983215332,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 521.5214694656488,
+      "draws_peak": 656,
+      "load": {
+        "frames": "2096",
+        "combat_s": "35.0",
+        "objects_peak": "9990",
+        "orphans_peak": null,
+        "canvas_items_peak": "2672",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "521.5",
+        "draws_peak": "656",
+        "path_queries": "26860",
+        "path_per_s": "767.4",
+        "created": "29373",
+        "removed": "28740",
+        "created_per_s": "839.2",
+        "removed_per_s": "821.1",
+        "enemies_peak": "180",
+        "projectiles_peak": "11",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "8",
+        "labels_peak": "83",
+        "transients_peak": "179",
+        "rewards_peak": "22",
+        "nodes_peak": "3175",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "38.010",
+        "process_max_ms": "168.560",
+        "draws_peak": "656"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 800,
+        "enemy_shot_step": 49220,
+        "footprint": 14765,
+        "hit_outer_inclusive": 647995,
+        "monster_move": 6366785,
+        "monster_process_inclusive": 451880,
+        "spawn_clearance": 78750,
+        "spawn_finalize": 21505,
+        "spawn_instantiate": 60580,
+        "spawn_path": 7190,
+        "spawn_prepare": 114770,
+        "spawn_ready": 85490
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 275,
+        "enemy_shot_step": 6329,
+        "footprint": 94,
+        "hit_outer_inclusive": 3246,
+        "monster_move": 326506,
+        "monster_process_inclusive": 14833,
+        "spawn_clearance": 23195,
+        "spawn_finalize": 999,
+        "spawn_instantiate": 999,
+        "spawn_path": 509,
+        "spawn_prepare": 999,
+        "spawn_ready": 999
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 65.535,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-D-2-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-uncapped-D-1",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 7833,
+        "avg": 4.460715565254055,
+        "p50": 2.39499998092651,
+        "p95": 13.625,
+        "p99": 18.7250003814697,
+        "max": 39.9949989318848,
+        "over25": 14,
+        "over33": 4,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 7833,
+        "avg": 4.460715565254055,
+        "p50": 2.39499998092651,
+        "p95": 13.625,
+        "p99": 18.7250003814697,
+        "max": 39.9949989318848,
+        "over25": 14,
+        "over33": 4,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 508.5072130728967,
+      "draws_peak": 698,
+      "load": {
+        "frames": "7833",
+        "combat_s": "35.0",
+        "objects_peak": "10097",
+        "orphans_peak": null,
+        "canvas_items_peak": "2587",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "508.5",
+        "draws_peak": "698",
+        "path_queries": "27076",
+        "path_per_s": "773.6",
+        "created": "31771",
+        "removed": "31121",
+        "created_per_s": "907.7",
+        "removed_per_s": "889.2",
+        "enemies_peak": "180",
+        "projectiles_peak": "11",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "6",
+        "labels_peak": "78",
+        "transients_peak": "189",
+        "rewards_peak": "22",
+        "nodes_peak": "3261",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "34.850",
+        "process_max_ms": "160.585",
+        "draws_peak": "698"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 915,
+        "enemy_shot_step": 61240,
+        "footprint": 17210,
+        "hit_outer_inclusive": 799780,
+        "monster_move": 7100195,
+        "monster_process_inclusive": 730935,
+        "spawn_clearance": 92445,
+        "spawn_finalize": 27650,
+        "spawn_instantiate": 81065,
+        "spawn_path": 8625,
+        "spawn_prepare": 154060,
+        "spawn_ready": 114340
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 263,
+        "enemy_shot_step": 6185,
+        "footprint": 97,
+        "hit_outer_inclusive": 3410,
+        "monster_move": 325760,
+        "monster_process_inclusive": 50786,
+        "spawn_clearance": 24240,
+        "spawn_finalize": 1116,
+        "spawn_instantiate": 1116,
+        "spawn_path": 517,
+        "spawn_prepare": 1116,
+        "spawn_ready": 1116
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 59.645,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-uncapped-D-1-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-uncapped-D-2",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 11243,
+        "avg": 3.1076509838526696,
+        "p50": 1.85000002384186,
+        "p95": 9.22999954223633,
+        "p99": 11.4949998855591,
+        "max": 40.7900009155273,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 11243,
+        "avg": 3.1076509838526696,
+        "p50": 1.85000002384186,
+        "p95": 9.22999954223633,
+        "p99": 11.4949998855591,
+        "max": 40.7900009155273,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 501.27350351329716,
+      "draws_peak": 727,
+      "load": {
+        "frames": "11243",
+        "combat_s": "35.0",
+        "objects_peak": "9853",
+        "orphans_peak": null,
+        "canvas_items_peak": "2978",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "501.3",
+        "draws_peak": "727",
+        "path_queries": "26534",
+        "path_per_s": "758.1",
+        "created": "29807",
+        "removed": "29155",
+        "created_per_s": "851.6",
+        "removed_per_s": "833.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "14",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "5",
+        "vfx_peak": "8",
+        "labels_peak": "80",
+        "transients_peak": "193",
+        "rewards_peak": "22",
+        "nodes_peak": "3180",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "35.580",
+        "process_max_ms": "163.820",
+        "draws_peak": "727"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 1230,
+        "enemy_shot_step": 76810,
+        "footprint": 13815,
+        "hit_outer_inclusive": 594480,
+        "monster_move": 7093975,
+        "monster_process_inclusive": 626930,
+        "spawn_clearance": 80055,
+        "spawn_finalize": 20295,
+        "spawn_instantiate": 55145,
+        "spawn_path": 5910,
+        "spawn_prepare": 113190,
+        "spawn_ready": 78685
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 484,
+        "enemy_shot_step": 9883,
+        "footprint": 91,
+        "hit_outer_inclusive": 2881,
+        "monster_move": 329055,
+        "monster_process_inclusive": 59471,
+        "spawn_clearance": 24633,
+        "spawn_finalize": 969,
+        "spawn_instantiate": 969,
+        "spawn_path": 420,
+        "spawn_prepare": 969,
+        "spawn_ready": 969
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 58.805,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-uncapped-D-2-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "before-4k-D-1",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 1194,
+        "avg": 16.692135681379494,
+        "p50": 16.6299991607666,
+        "p95": 19.6149997711182,
+        "p99": 22.6049995422363,
+        "max": 78.129997253418,
+        "over25": 6,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1194,
+        "avg": 16.692135681379494,
+        "p50": 16.6299991607666,
+        "p95": 19.6149997711182,
+        "p99": 22.6049995422363,
+        "max": 78.129997253418,
+        "over25": 6,
+        "over33": 2,
+        "over50": 1,
+        "over100": 0
+      },
+      "draws_avg": 815.9857621440536,
+      "draws_peak": 1004,
+      "load": {
+        "frames": "1194",
+        "combat_s": "20.0",
+        "objects_peak": "9874",
+        "orphans_peak": null,
+        "canvas_items_peak": "3198",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "816.0",
+        "draws_peak": "1004",
+        "path_queries": "14195",
+        "path_per_s": "709.8",
+        "created": "18788",
+        "removed": "18141",
+        "created_per_s": "939.4",
+        "removed_per_s": "907.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "5",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "6",
+        "labels_peak": "85",
+        "transients_peak": "114",
+        "rewards_peak": "22",
+        "nodes_peak": "2918",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "38.270",
+        "process_max_ms": "179.290",
+        "draws_peak": "1004"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 525,
+        "enemy_shot_step": 32510,
+        "footprint": 8855,
+        "hit_outer_inclusive": 444320,
+        "monster_move": 3178815,
+        "monster_process_inclusive": 296975,
+        "spawn_clearance": 52880,
+        "spawn_finalize": 15450,
+        "spawn_instantiate": 45780,
+        "spawn_path": 5285,
+        "spawn_prepare": 79720,
+        "spawn_ready": 61925
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 136,
+        "enemy_shot_step": 3149,
+        "footprint": 53,
+        "hit_outer_inclusive": 1908,
+        "monster_move": 173641,
+        "monster_process_inclusive": 9120,
+        "spawn_clearance": 15317,
+        "spawn_finalize": 712,
+        "spawn_instantiate": 712,
+        "spawn_path": 361,
+        "spawn_prepare": 712,
+        "spawn_ready": 712
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 56.56,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-4k-D-1-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-normal-D-1",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 2097,
+        "avg": 16.657885059557543,
+        "p50": 16.6550006866455,
+        "p95": 18.7549991607666,
+        "p99": 20.5049991607666,
+        "max": 43,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 2097,
+        "avg": 16.657885059557543,
+        "p50": 16.6550006866455,
+        "p95": 18.7549991607666,
+        "p99": 20.5049991607666,
+        "max": 43,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 826.9151168335718,
+      "draws_peak": 983,
+      "load": {
+        "frames": "2097",
+        "combat_s": "35.0",
+        "objects_peak": "9977",
+        "orphans_peak": null,
+        "canvas_items_peak": "3675",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "826.9",
+        "draws_peak": "983",
+        "path_queries": "26823",
+        "path_per_s": "766.4",
+        "created": "29295",
+        "removed": "28659",
+        "created_per_s": "837.0",
+        "removed_per_s": "818.8",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "7",
+        "labels_peak": "80",
+        "transients_peak": "169",
+        "rewards_peak": "22",
+        "nodes_peak": "3152",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "36.165",
+        "process_max_ms": "160.520",
+        "draws_peak": "983"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 965,
+        "enemy_shot_step": 59450,
+        "footprint": 15060,
+        "hit_outer_inclusive": 546310,
+        "monster_move": 6314915,
+        "monster_process_inclusive": 392310,
+        "spawn_clearance": 61580,
+        "spawn_finalize": 18825,
+        "spawn_instantiate": 46740,
+        "spawn_path": 5990,
+        "spawn_prepare": 102950,
+        "spawn_ready": 68855
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 356,
+        "enemy_shot_step": 9290,
+        "footprint": 94,
+        "hit_outer_inclusive": 3152,
+        "monster_move": 327322,
+        "monster_process_inclusive": 15417,
+        "spawn_clearance": 19348,
+        "spawn_finalize": 987,
+        "spawn_instantiate": 987,
+        "spawn_path": 481,
+        "spawn_prepare": 987,
+        "spawn_ready": 987
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 53.475,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-normal-D-1-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-normal-D-2",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 2094,
+        "avg": 16.681021967393978,
+        "p50": 16.6700000762939,
+        "p95": 19.0349998474121,
+        "p99": 21.6550006866455,
+        "max": 43.1699981689453,
+        "over25": 5,
+        "over33": 3,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 2094,
+        "avg": 16.681021967393978,
+        "p50": 16.6700000762939,
+        "p95": 19.0349998474121,
+        "p99": 21.6550006866455,
+        "max": 43.1699981689453,
+        "over25": 5,
+        "over33": 3,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 807.023400191022,
+      "draws_peak": 974,
+      "load": {
+        "frames": "2094",
+        "combat_s": "35.0",
+        "objects_peak": "9828",
+        "orphans_peak": null,
+        "canvas_items_peak": "3334",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "807.0",
+        "draws_peak": "974",
+        "path_queries": "26764",
+        "path_per_s": "764.7",
+        "created": "28461",
+        "removed": "27827",
+        "created_per_s": "813.2",
+        "removed_per_s": "795.1",
+        "enemies_peak": "180",
+        "projectiles_peak": "7",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "7",
+        "labels_peak": "82",
+        "transients_peak": "179",
+        "rewards_peak": "22",
+        "nodes_peak": "3135",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "36.205",
+        "process_max_ms": "169.810",
+        "draws_peak": "974"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 635,
+        "enemy_shot_step": 39015,
+        "footprint": 15175,
+        "hit_outer_inclusive": 563465,
+        "monster_move": 6819090,
+        "monster_process_inclusive": 379210,
+        "spawn_clearance": 73010,
+        "spawn_finalize": 19415,
+        "spawn_instantiate": 50840,
+        "spawn_path": 5850,
+        "spawn_prepare": 106295,
+        "spawn_ready": 74230
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 199,
+        "enemy_shot_step": 4679,
+        "footprint": 93,
+        "hit_outer_inclusive": 2845,
+        "monster_move": 327831,
+        "monster_process_inclusive": 13455,
+        "spawn_clearance": 22619,
+        "spawn_finalize": 973,
+        "spawn_instantiate": 973,
+        "spawn_path": 462,
+        "spawn_prepare": 973,
+        "spawn_ready": 973
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 58.025,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-normal-D-2-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-uncapped-D-1",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 9125,
+        "avg": 3.8281687690247206,
+        "p50": 2.46499991416931,
+        "p95": 9.85499954223633,
+        "p99": 11.6450004577637,
+        "max": 40.7400016784668,
+        "over25": 3,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 9125,
+        "avg": 3.8281687690247206,
+        "p50": 2.46499991416931,
+        "p95": 9.85499954223633,
+        "p99": 11.6450004577637,
+        "max": 40.7400016784668,
+        "over25": 3,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 783.4738630136986,
+      "draws_peak": 988,
+      "load": {
+        "frames": "9125",
+        "combat_s": "35.0",
+        "objects_peak": "9935",
+        "orphans_peak": null,
+        "canvas_items_peak": "3615",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "783.5",
+        "draws_peak": "988",
+        "path_queries": "26836",
+        "path_per_s": "766.7",
+        "created": "32902",
+        "removed": "32250",
+        "created_per_s": "940.1",
+        "removed_per_s": "921.4",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "6",
+        "labels_peak": "89",
+        "transients_peak": "188",
+        "rewards_peak": "22",
+        "nodes_peak": "3221",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "34.150",
+        "process_max_ms": "159.205",
+        "draws_peak": "988"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 580,
+        "enemy_shot_step": 44055,
+        "footprint": 14820,
+        "hit_outer_inclusive": 610820,
+        "monster_move": 5726750,
+        "monster_process_inclusive": 579915,
+        "spawn_clearance": 88905,
+        "spawn_finalize": 23275,
+        "spawn_instantiate": 61360,
+        "spawn_path": 6835,
+        "spawn_prepare": 130455,
+        "spawn_ready": 90850
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 212,
+        "enemy_shot_step": 5593,
+        "footprint": 97,
+        "hit_outer_inclusive": 3334,
+        "monster_move": 322685,
+        "monster_process_inclusive": 54117,
+        "spawn_clearance": 25886,
+        "spawn_finalize": 1191,
+        "spawn_instantiate": 1191,
+        "spawn_path": 487,
+        "spawn_prepare": 1191,
+        "spawn_ready": 1191
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 52.61,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-uncapped-D-1-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-uncapped-D-2",
+      "platform": "web",
+      "scenario": "D",
+      "stats": {
+        "frames": 8808,
+        "avg": 3.9674699139395573,
+        "p50": 2.52500009536743,
+        "p95": 10.3649997711182,
+        "p99": 12.4250001907349,
+        "max": 40.9449996948242,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 8808,
+        "avg": 3.9674699139395573,
+        "p50": 2.52500009536743,
+        "p95": 10.3649997711182,
+        "p99": 12.4250001907349,
+        "max": 40.9449996948242,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 787.797229791099,
+      "draws_peak": 991,
+      "load": {
+        "frames": "8808",
+        "combat_s": "35.0",
+        "objects_peak": "9956",
+        "orphans_peak": null,
+        "canvas_items_peak": "3254",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "787.8",
+        "draws_peak": "991",
+        "path_queries": "26798",
+        "path_per_s": "765.7",
+        "created": "30682",
+        "removed": "30016",
+        "created_per_s": "876.6",
+        "removed_per_s": "857.6",
+        "enemies_peak": "180",
+        "projectiles_peak": "5",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "2",
+        "vfx_peak": "6",
+        "labels_peak": "90",
+        "transients_peak": "179",
+        "rewards_peak": "22",
+        "nodes_peak": "3153",
+        "topped_up": "48",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "34.160",
+        "process_max_ms": "161.245",
+        "draws_peak": "991"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 435,
+        "enemy_shot_step": 18745,
+        "footprint": 15115,
+        "hit_outer_inclusive": 593015,
+        "monster_move": 6442195,
+        "monster_process_inclusive": 631470,
+        "spawn_clearance": 59075,
+        "spawn_finalize": 20930,
+        "spawn_instantiate": 54615,
+        "spawn_path": 7335,
+        "spawn_prepare": 111695,
+        "spawn_ready": 81140
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 127,
+        "enemy_shot_step": 1866,
+        "footprint": 94,
+        "hit_outer_inclusive": 3200,
+        "monster_move": 325336,
+        "monster_process_inclusive": 58928,
+        "spawn_clearance": 17031,
+        "spawn_finalize": 1012,
+        "spawn_instantiate": 1012,
+        "spawn_path": 523,
+        "spawn_prepare": 1012,
+        "spawn_ready": 1012
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 52.125,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-uncapped-D-2-D.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-normal-P-1",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 1502,
+        "avg": 16.664956727770768,
+        "p50": 16.5750007629395,
+        "p95": 19.6399993896484,
+        "p99": 21.1749992370605,
+        "max": 27.6049995422363,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1629,
+        "avg": 16.66147023503668,
+        "p50": 16.5750007629395,
+        "p95": 19.6849994659424,
+        "p99": 21.4500007629395,
+        "max": 44.4500007629395,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 354.74708410067524,
+      "draws_peak": 518,
+      "load": {
+        "frames": "1629",
+        "combat_s": "27.2",
+        "objects_peak": "10063",
+        "orphans_peak": null,
+        "canvas_items_peak": "2676",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "354.7",
+        "draws_peak": "518",
+        "path_queries": "22466",
+        "path_per_s": "825.5",
+        "created": "25953",
+        "removed": "25348",
+        "created_per_s": "953.6",
+        "removed_per_s": "931.3",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "1",
+        "zones_peak": "6",
+        "beams_peak": "5",
+        "vfx_peak": "10",
+        "labels_peak": "38",
+        "transients_peak": "180",
+        "rewards_peak": "22",
+        "nodes_peak": "3381",
+        "topped_up": "1283",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "20.910",
+        "process_max_ms": "162.670",
+        "draws_peak": "518"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 515,
+        "enemy_shot_step": 36445,
+        "footprint": 9140,
+        "hit_outer_inclusive": 413200,
+        "monster_move": 5299300,
+        "monster_process_inclusive": 119565,
+        "spawn_clearance": 29295,
+        "spawn_finalize": 31435,
+        "spawn_instantiate": 75055,
+        "spawn_path": 6930,
+        "spawn_prepare": 204750,
+        "spawn_ready": 127100
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 224,
+        "enemy_shot_step": 4920,
+        "footprint": 70,
+        "hit_outer_inclusive": 2151,
+        "monster_move": 266174,
+        "monster_process_inclusive": 3361,
+        "spawn_clearance": 6560,
+        "spawn_finalize": 1905,
+        "spawn_instantiate": 1905,
+        "spawn_path": 589,
+        "spawn_prepare": 1905,
+        "spawn_ready": 1905
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 60.975,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-P-1-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-normal-P-2",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 1501,
+        "avg": 16.66674548891844,
+        "p50": 16.6399993896484,
+        "p95": 19.6000003814697,
+        "p99": 21.1749992370605,
+        "max": 26.625,
+        "over25": 2,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1628,
+        "avg": 16.661953302461846,
+        "p50": 16.625,
+        "p95": 19.6399993896484,
+        "p99": 21.4750003814697,
+        "max": 44.1650009155273,
+        "over25": 5,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 355.6646191646192,
+      "draws_peak": 571,
+      "load": {
+        "frames": "1628",
+        "combat_s": "27.2",
+        "objects_peak": "10041",
+        "orphans_peak": null,
+        "canvas_items_peak": "2644",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "355.7",
+        "draws_peak": "571",
+        "path_queries": "22609",
+        "path_per_s": "831.2",
+        "created": "23852",
+        "removed": "23249",
+        "created_per_s": "876.9",
+        "removed_per_s": "854.7",
+        "enemies_peak": "180",
+        "projectiles_peak": "10",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "6",
+        "labels_peak": "35",
+        "transients_peak": "186",
+        "rewards_peak": "22",
+        "nodes_peak": "3431",
+        "topped_up": "1217",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "21.230",
+        "process_max_ms": "167.285",
+        "draws_peak": "571"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 590,
+        "enemy_shot_step": 33580,
+        "footprint": 9120,
+        "hit_outer_inclusive": 388845,
+        "monster_move": 5253885,
+        "monster_process_inclusive": 91525,
+        "spawn_clearance": 31905,
+        "spawn_finalize": 29170,
+        "spawn_instantiate": 66590,
+        "spawn_path": 5635,
+        "spawn_prepare": 188910,
+        "spawn_ready": 115380
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 232,
+        "enemy_shot_step": 5017,
+        "footprint": 69,
+        "hit_outer_inclusive": 1967,
+        "monster_move": 269527,
+        "monster_process_inclusive": 3049,
+        "spawn_clearance": 7846,
+        "spawn_finalize": 1750,
+        "spawn_instantiate": 1750,
+        "spawn_path": 491,
+        "spawn_prepare": 1750,
+        "spawn_ready": 1750
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 62.57,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-P-2-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "after-normal-P-2-attempt2",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 1501,
+        "avg": 16.677714859303595,
+        "p50": 16.5400009155273,
+        "p95": 19.7999992370605,
+        "p99": 21.3400001525879,
+        "max": 40.5900001525879,
+        "over25": 1,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1628,
+        "avg": 16.673095818397336,
+        "p50": 16.5499992370605,
+        "p95": 19.8099994659424,
+        "p99": 21.5,
+        "max": 40.8050003051758,
+        "over25": 4,
+        "over33": 3,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 332.4066339066339,
+      "draws_peak": 491,
+      "load": {
+        "frames": "1628",
+        "combat_s": "27.2",
+        "objects_peak": "10153",
+        "orphans_peak": null,
+        "canvas_items_peak": "2136",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "332.4",
+        "draws_peak": "491",
+        "path_queries": "22251",
+        "path_per_s": "817.6",
+        "created": "25498",
+        "removed": "24899",
+        "created_per_s": "936.9",
+        "removed_per_s": "914.8",
+        "enemies_peak": "180",
+        "projectiles_peak": "9",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "5",
+        "labels_peak": "34",
+        "transients_peak": "203",
+        "rewards_peak": "22",
+        "nodes_peak": "3459",
+        "topped_up": "1361",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "20.790",
+        "process_max_ms": "161.875",
+        "draws_peak": "491"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 590,
+        "enemy_shot_step": 36680,
+        "footprint": 8815,
+        "hit_outer_inclusive": 395015,
+        "monster_move": 5291650,
+        "monster_process_inclusive": 101840,
+        "spawn_clearance": 26080,
+        "spawn_finalize": 30945,
+        "spawn_instantiate": 71555,
+        "spawn_path": 6480,
+        "spawn_prepare": 207580,
+        "spawn_ready": 124395
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 228,
+        "enemy_shot_step": 5195,
+        "footprint": 69,
+        "hit_outer_inclusive": 2075,
+        "monster_move": 266121,
+        "monster_process_inclusive": 3092,
+        "spawn_clearance": 5853,
+        "spawn_finalize": 1906,
+        "spawn_instantiate": 1906,
+        "spawn_path": 524,
+        "spawn_prepare": 1906,
+        "spawn_ready": 1906
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 60.015,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-normal-P-2-attempt2-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-uncapped-P-1",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 6235,
+        "avg": 4.013895748497107,
+        "p50": 2.29999995231628,
+        "p95": 11.1750001907349,
+        "p99": 15.164999961853,
+        "max": 20.7150001525879,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 7184,
+        "avg": 3.7805185122607288,
+        "p50": 2.20000004768372,
+        "p95": 10.9099998474121,
+        "p99": 15.0500001907349,
+        "max": 49.564998626709,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 343.83769487750556,
+      "draws_peak": 548,
+      "load": {
+        "frames": "7184",
+        "combat_s": "27.2",
+        "objects_peak": "10328",
+        "orphans_peak": null,
+        "canvas_items_peak": "2370",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "343.8",
+        "draws_peak": "548",
+        "path_queries": "23564",
+        "path_per_s": "865.3",
+        "created": "29405",
+        "removed": "28805",
+        "created_per_s": "1079.7",
+        "removed_per_s": "1057.7",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "2",
+        "vfx_peak": "6",
+        "labels_peak": "40",
+        "transients_peak": "259",
+        "rewards_peak": "22",
+        "nodes_peak": "3720",
+        "topped_up": "1489",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "25.885",
+        "process_max_ms": "196.880",
+        "draws_peak": "548"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 415,
+        "enemy_shot_step": 26170,
+        "footprint": 10360,
+        "hit_outer_inclusive": 529785,
+        "monster_move": 5473045,
+        "monster_process_inclusive": 212425,
+        "spawn_clearance": 33145,
+        "spawn_finalize": 40565,
+        "spawn_instantiate": 112950,
+        "spawn_path": 9780,
+        "spawn_prepare": 271260,
+        "spawn_ready": 176790
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 160,
+        "enemy_shot_step": 2934,
+        "footprint": 69,
+        "hit_outer_inclusive": 2400,
+        "monster_move": 267848,
+        "monster_process_inclusive": 12453,
+        "spawn_clearance": 5967,
+        "spawn_finalize": 2196,
+        "spawn_instantiate": 2196,
+        "spawn_path": 668,
+        "spawn_prepare": 2196,
+        "spawn_ready": 2196
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 65.315,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41426836,
+          "sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "46ef8015f378aa068ce9129de707b269785341281d51496228150443314c0027"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-after-uncapped-P-1-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-normal-P-1",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 1502,
+        "avg": 16.666484682918707,
+        "p50": 16.6149997711182,
+        "p95": 19.5849990844727,
+        "p99": 20.8899993896484,
+        "max": 24.1749992370605,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1629,
+        "avg": 16.663977896770664,
+        "p50": 16.6149997711182,
+        "p95": 19.6149997711182,
+        "p99": 21.0949993133545,
+        "max": 43.4150009155273,
+        "over25": 2,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 557.8434622467771,
+      "draws_peak": 818,
+      "load": {
+        "frames": "1629",
+        "combat_s": "27.2",
+        "objects_peak": "10056",
+        "orphans_peak": null,
+        "canvas_items_peak": "3295",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "557.8",
+        "draws_peak": "818",
+        "path_queries": "22647",
+        "path_per_s": "832.1",
+        "created": "25079",
+        "removed": "24479",
+        "created_per_s": "921.5",
+        "removed_per_s": "899.4",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "1",
+        "zones_peak": "4",
+        "beams_peak": "2",
+        "vfx_peak": "10",
+        "labels_peak": "35",
+        "transients_peak": "181",
+        "rewards_peak": "22",
+        "nodes_peak": "3405",
+        "topped_up": "1269",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "20.170",
+        "process_max_ms": "162.280",
+        "draws_peak": "818"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 540,
+        "enemy_shot_step": 34685,
+        "footprint": 8700,
+        "hit_outer_inclusive": 391125,
+        "monster_move": 5185690,
+        "monster_process_inclusive": 111235,
+        "spawn_clearance": 39345,
+        "spawn_finalize": 28410,
+        "spawn_instantiate": 64655,
+        "spawn_path": 6395,
+        "spawn_prepare": 191205,
+        "spawn_ready": 112880
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 212,
+        "enemy_shot_step": 4787,
+        "footprint": 70,
+        "hit_outer_inclusive": 2034,
+        "monster_move": 265155,
+        "monster_process_inclusive": 3177,
+        "spawn_clearance": 9830,
+        "spawn_finalize": 1857,
+        "spawn_instantiate": 1857,
+        "spawn_path": 553,
+        "spawn_prepare": 1857,
+        "spawn_ready": 1857
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 57.555,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-normal-P-1-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-normal-P-2",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 1501,
+        "avg": 16.666818797310377,
+        "p50": 16.6100006103516,
+        "p95": 19.625,
+        "p99": 20.8999996185303,
+        "max": 25.5049991607666,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1629,
+        "avg": 16.656608355142968,
+        "p50": 16.6149997711182,
+        "p95": 19.625,
+        "p99": 21.0200004577637,
+        "max": 47.7249984741211,
+        "over25": 4,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 559.5334561080417,
+      "draws_peak": 816,
+      "load": {
+        "frames": "1629",
+        "combat_s": "27.2",
+        "objects_peak": "9987",
+        "orphans_peak": null,
+        "canvas_items_peak": "3230",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "559.5",
+        "draws_peak": "816",
+        "path_queries": "23689",
+        "path_per_s": "871.5",
+        "created": "25311",
+        "removed": "24711",
+        "created_per_s": "931.1",
+        "removed_per_s": "909.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "9",
+        "hazards_peak": "1",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "11",
+        "labels_peak": "34",
+        "transients_peak": "162",
+        "rewards_peak": "22",
+        "nodes_peak": "3354",
+        "topped_up": "1279",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "19.940",
+        "process_max_ms": "159.955",
+        "draws_peak": "816"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 555,
+        "enemy_shot_step": 25965,
+        "footprint": 8135,
+        "hit_outer_inclusive": 396710,
+        "monster_move": 4883710,
+        "monster_process_inclusive": 101035,
+        "spawn_clearance": 37350,
+        "spawn_finalize": 29630,
+        "spawn_instantiate": 71375,
+        "spawn_path": 7055,
+        "spawn_prepare": 197830,
+        "spawn_ready": 121480
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 206,
+        "enemy_shot_step": 3593,
+        "footprint": 67,
+        "hit_outer_inclusive": 1997,
+        "monster_move": 266661,
+        "monster_process_inclusive": 2849,
+        "spawn_clearance": 9107,
+        "spawn_finalize": 1878,
+        "spawn_instantiate": 1878,
+        "spawn_path": 579,
+        "spawn_prepare": 1878,
+        "spawn_ready": 1878
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 52.965,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-normal-P-2-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "before-normal-P-2-attempt2",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 1502,
+        "avg": 16.666168423689474,
+        "p50": 16.6350002288818,
+        "p95": 19.6900005340576,
+        "p99": 20.8549995422363,
+        "max": 23.5200004577637,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 1630,
+        "avg": 16.653926367425797,
+        "p50": 16.6350002288818,
+        "p95": 19.7000007629395,
+        "p99": 21.1149997711182,
+        "max": 41.810001373291,
+        "over25": 2,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 553.2484662576687,
+      "draws_peak": 806,
+      "load": {
+        "frames": "1630",
+        "combat_s": "27.2",
+        "objects_peak": "9979",
+        "orphans_peak": null,
+        "canvas_items_peak": "2996",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "553.2",
+        "draws_peak": "806",
+        "path_queries": "22782",
+        "path_per_s": "837.1",
+        "created": "23932",
+        "removed": "23333",
+        "created_per_s": "879.3",
+        "removed_per_s": "857.3",
+        "enemies_peak": "180",
+        "projectiles_peak": "9",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "6",
+        "labels_peak": "39",
+        "transients_peak": "161",
+        "rewards_peak": "22",
+        "nodes_peak": "3370",
+        "topped_up": "1224",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "20.795",
+        "process_max_ms": "166.815",
+        "draws_peak": "806"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 760,
+        "enemy_shot_step": 50575,
+        "footprint": 8680,
+        "hit_outer_inclusive": 416405,
+        "monster_move": 5138865,
+        "monster_process_inclusive": 114305,
+        "spawn_clearance": 27525,
+        "spawn_finalize": 29205,
+        "spawn_instantiate": 72095,
+        "spawn_path": 6095,
+        "spawn_prepare": 194430,
+        "spawn_ready": 123130
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 280,
+        "enemy_shot_step": 6580,
+        "footprint": 68,
+        "hit_outer_inclusive": 1916,
+        "monster_move": 267170,
+        "monster_process_inclusive": 3079,
+        "spawn_clearance": 6043,
+        "spawn_finalize": 1743,
+        "spawn_instantiate": 1743,
+        "spawn_path": 490,
+        "spawn_prepare": 1743,
+        "spawn_ready": 1743
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 56.745,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-normal-P-2-attempt2-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "before-uncapped-P-1",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 4457,
+        "avg": 5.613310520066417,
+        "p50": 3.26500010490417,
+        "p95": 13.414999961853,
+        "p99": 18.1599998474121,
+        "max": 25.9400005340576,
+        "over25": 1,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 5100,
+        "avg": 5.323718625769457,
+        "p50": 3.125,
+        "p95": 13.3050003051758,
+        "p99": 18.2549991607666,
+        "max": 43.6500015258789,
+        "over25": 4,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 537.1447058823529,
+      "draws_peak": 841,
+      "load": {
+        "frames": "5100",
+        "combat_s": "27.2",
+        "objects_peak": "10313",
+        "orphans_peak": null,
+        "canvas_items_peak": "3692",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "537.1",
+        "draws_peak": "841",
+        "path_queries": "23372",
+        "path_per_s": "858.7",
+        "created": "28945",
+        "removed": "28345",
+        "created_per_s": "1063.5",
+        "removed_per_s": "1041.5",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "1",
+        "zones_peak": "4",
+        "beams_peak": "2",
+        "vfx_peak": "8",
+        "labels_peak": "45",
+        "transients_peak": "253",
+        "rewards_peak": "22",
+        "nodes_peak": "3693",
+        "topped_up": "1469",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "25.720",
+        "process_max_ms": "184.255",
+        "draws_peak": "841"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 415,
+        "enemy_shot_step": 21505,
+        "footprint": 10865,
+        "hit_outer_inclusive": 543115,
+        "monster_move": 5777035,
+        "monster_process_inclusive": 208520,
+        "spawn_clearance": 29750,
+        "spawn_finalize": 42550,
+        "spawn_instantiate": 116360,
+        "spawn_path": 13850,
+        "spawn_prepare": 271975,
+        "spawn_ready": 181625
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 116,
+        "enemy_shot_step": 2095,
+        "footprint": 72,
+        "hit_outer_inclusive": 2362,
+        "monster_move": 266717,
+        "monster_process_inclusive": 10225,
+        "spawn_clearance": 5035,
+        "spawn_finalize": 2149,
+        "spawn_instantiate": 2149,
+        "spawn_path": 628,
+        "spawn_prepare": 2149,
+        "spawn_ready": 2149
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 57.665,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-uncapped-P-1-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": false,
+      "post_window_error": true,
+      "errors": [
+        "ERROR: Condition \"slot >= slot_max\" is true. Returning: nullptr"
+      ]
+    },
+    {
+      "label": "before-uncapped-P-1-attempt2",
+      "platform": "web",
+      "scenario": "P",
+      "stats": {
+        "frames": 4496,
+        "avg": 5.563989099658681,
+        "p50": 3.25500011444092,
+        "p95": 13.3599996566772,
+        "p99": 17.7549991607666,
+        "max": 43.7350006103516,
+        "over25": 2,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 5303,
+        "avg": 5.117393926773013,
+        "p50": 3.03500008583069,
+        "p95": 13.1049995422363,
+        "p99": 17.3199996948242,
+        "max": 43.7350006103516,
+        "over25": 3,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 540.8425419573827,
+      "draws_peak": 838,
+      "load": {
+        "frames": "5303",
+        "combat_s": "27.2",
+        "objects_peak": "10218",
+        "orphans_peak": null,
+        "canvas_items_peak": "3543",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "540.8",
+        "draws_peak": "838",
+        "path_queries": "23644",
+        "path_per_s": "869.8",
+        "created": "28754",
+        "removed": "28154",
+        "created_per_s": "1057.8",
+        "removed_per_s": "1035.7",
+        "enemies_peak": "180",
+        "projectiles_peak": "7",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "5",
+        "vfx_peak": "9",
+        "labels_peak": "32",
+        "transients_peak": "211",
+        "rewards_peak": "22",
+        "nodes_peak": "3562",
+        "topped_up": "1415",
+        "mem_peak_mb": null
+      },
+      "engine_window_peak_monitor": {
+        "kind": "ENGINE_WINDOW_PEAK_MONITOR",
+        "physics_max_ms": "22.580",
+        "process_max_ms": "179.355",
+        "draws_peak": "838"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 775,
+        "enemy_shot_step": 39775,
+        "footprint": 10600,
+        "hit_outer_inclusive": 526360,
+        "monster_move": 5631155,
+        "monster_process_inclusive": 178455,
+        "spawn_clearance": 30745,
+        "spawn_finalize": 41060,
+        "spawn_instantiate": 110985,
+        "spawn_path": 9475,
+        "spawn_prepare": 275295,
+        "spawn_ready": 173630
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 212,
+        "enemy_shot_step": 4365,
+        "footprint": 71,
+        "hit_outer_inclusive": 2328,
+        "monster_move": 266389,
+        "monster_process_inclusive": 9395,
+        "spawn_clearance": 5030,
+        "spawn_finalize": 2143,
+        "spawn_instantiate": 2143,
+        "spawn_path": 651,
+        "spawn_prepare": 2143,
+        "spawn_ready": 2143
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 56.49,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41420592,
+          "sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        },
+        "identity": "0947f2432d55ab67c49c62717b4b6088b9f0c75123f889ab9cf3cd343f5bed43"
+      },
+      "paused_ms": 0,
+      "path": "output\\deep-pass\\final-paired-web\\stress-before-uncapped-P-1-attempt2-P.json",
+      "boss_complete": false,
+      "browser_version": "153.0.8010.12",
+      "gpu": "ANGLE (AMD, AMD Radeon RX 7900 XT (0x0000744C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "timing_valid": true,
+      "end_to_end_pass": true,
+      "post_window_error": false,
+      "errors": []
+    },
+    {
+      "label": "after-windows-D-1",
+      "platform": "windows",
+      "scenario": "D",
+      "stats": {
+        "frames": 18868,
+        "avg": 1.853551674740885,
+        "p50": 1.2039999961853,
+        "p95": 6.88199996948242,
+        "p99": 7.96600008010864,
+        "max": 72.120002746582,
+        "over25": 1,
+        "over33": 1,
+        "over50": 1,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 18868,
+        "avg": 1.853551674740885,
+        "p50": 1.2039999961853,
+        "p95": 6.88199996948242,
+        "p99": 7.96600008010864,
+        "max": 72.120002746582,
+        "over25": 1,
+        "over33": 1,
+        "over50": 1,
+        "over100": 0
+      },
+      "draws_avg": 510.58819164723343,
+      "draws_peak": 654,
+      "load": {
+        "frames": "18868",
+        "combat_s": "35.0",
+        "objects_peak": "12158",
+        "orphans_peak": "0",
+        "canvas_items_peak": "2469",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "510.6",
+        "draws_peak": "654",
+        "path_queries": "27002",
+        "path_per_s": "771.5",
+        "created": "31321",
+        "removed": "30659",
+        "created_per_s": "894.9",
+        "removed_per_s": "876.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "9",
+        "hazards_peak": "0",
+        "zones_peak": "3",
+        "beams_peak": "2",
+        "vfx_peak": "6",
+        "labels_peak": "88",
+        "transients_peak": "170",
+        "rewards_peak": "22",
+        "nodes_peak": "3164",
+        "topped_up": "48"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 273,
+        "enemy_shot_step": 19862,
+        "footprint": 10940,
+        "hit_outer_inclusive": 328159,
+        "monster_move": 7474531,
+        "monster_process_inclusive": 625692,
+        "spawn_clearance": 57626,
+        "spawn_finalize": 14620,
+        "spawn_instantiate": 36427,
+        "spawn_path": 5027,
+        "spawn_prepare": 82380,
+        "spawn_ready": 57460
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 184,
+        "enemy_shot_step": 3960,
+        "footprint": 91,
+        "hit_outer_inclusive": 3329,
+        "monster_move": 327622,
+        "monster_process_inclusive": 130197,
+        "spawn_clearance": 23885,
+        "spawn_finalize": 1025,
+        "spawn_instantiate": 1025,
+        "spawn_path": 535,
+        "spawn_prepare": 1025,
+        "spawn_ready": 1025
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 29.964,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "18e51930dc5b80104446fc6b0b3c71ffc9449d4849314a3f35bb3b991c26bc50",
+        "pck_sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\after-windows-D-1.json",
+      "diagnostics": [
+        "WARNING: 19 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 498.16796875
+    },
+    {
+      "label": "after-windows-D-2",
+      "platform": "windows",
+      "scenario": "D",
+      "stats": {
+        "frames": 19934,
+        "avg": 1.7541447775575785,
+        "p50": 1.21099996566772,
+        "p95": 6.34800004959106,
+        "p99": 7.18300008773804,
+        "max": 22.7099990844727,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 19934,
+        "avg": 1.7541447775575785,
+        "p50": 1.21099996566772,
+        "p95": 6.34800004959106,
+        "p99": 7.18300008773804,
+        "max": 22.7099990844727,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 528.4217417477677,
+      "draws_peak": 712,
+      "load": {
+        "frames": "19934",
+        "combat_s": "35.0",
+        "objects_peak": "12278",
+        "orphans_peak": "0",
+        "canvas_items_peak": "2925",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "528.4",
+        "draws_peak": "712",
+        "path_queries": "26584",
+        "path_per_s": "759.5",
+        "created": "34548",
+        "removed": "33896",
+        "created_per_s": "987.1",
+        "removed_per_s": "968.5",
+        "enemies_peak": "180",
+        "projectiles_peak": "9",
+        "hazards_peak": "0",
+        "zones_peak": "3",
+        "beams_peak": "2",
+        "vfx_peak": "9",
+        "labels_peak": "81",
+        "transients_peak": "213",
+        "rewards_peak": "22",
+        "nodes_peak": "3323",
+        "topped_up": "48"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 402,
+        "enemy_shot_step": 21816,
+        "footprint": 11793,
+        "hit_outer_inclusive": 334766,
+        "monster_move": 6400374,
+        "monster_process_inclusive": 598396,
+        "spawn_clearance": 66582,
+        "spawn_finalize": 16994,
+        "spawn_instantiate": 40649,
+        "spawn_path": 4858,
+        "spawn_prepare": 97730,
+        "spawn_ready": 67021
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 252,
+        "enemy_shot_step": 4151,
+        "footprint": 97,
+        "hit_outer_inclusive": 3635,
+        "monster_move": 319451,
+        "monster_process_inclusive": 125812,
+        "spawn_clearance": 29427,
+        "spawn_finalize": 1259,
+        "spawn_instantiate": 1259,
+        "spawn_path": 518,
+        "spawn_prepare": 1259,
+        "spawn_ready": 1259
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 30.762,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "18e51930dc5b80104446fc6b0b3c71ffc9449d4849314a3f35bb3b991c26bc50",
+        "pck_sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\after-windows-D-2.json",
+      "diagnostics": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 481.04296875
+    },
+    {
+      "label": "before-windows-D-1",
+      "platform": "windows",
+      "scenario": "D",
+      "stats": {
+        "frames": 16295,
+        "avg": 2.14623105276328,
+        "p50": 1.49899995326996,
+        "p95": 7.00099992752075,
+        "p99": 7.8289999961853,
+        "max": 22.6280002593994,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 16295,
+        "avg": 2.14623105276328,
+        "p50": 1.49899995326996,
+        "p95": 7.00099992752075,
+        "p99": 7.8289999961853,
+        "max": 22.6280002593994,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 782.6077938017797,
+      "draws_peak": 997,
+      "load": {
+        "frames": "16295",
+        "combat_s": "35.0",
+        "objects_peak": "12420",
+        "orphans_peak": "0",
+        "canvas_items_peak": "3673",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "782.6",
+        "draws_peak": "997",
+        "path_queries": "26747",
+        "path_per_s": "764.2",
+        "created": "33566",
+        "removed": "32930",
+        "created_per_s": "959.0",
+        "removed_per_s": "940.9",
+        "enemies_peak": "180",
+        "projectiles_peak": "6",
+        "hazards_peak": "0",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "8",
+        "labels_peak": "90",
+        "transients_peak": "204",
+        "rewards_peak": "22",
+        "nodes_peak": "3314",
+        "topped_up": "48"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 442,
+        "enemy_shot_step": 29528,
+        "footprint": 11730,
+        "hit_outer_inclusive": 354843,
+        "monster_move": 6837565,
+        "monster_process_inclusive": 602340,
+        "spawn_clearance": 61557,
+        "spawn_finalize": 15222,
+        "spawn_instantiate": 36406,
+        "spawn_path": 5655,
+        "spawn_prepare": 88179,
+        "spawn_ready": 59227
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 252,
+        "enemy_shot_step": 6344,
+        "footprint": 94,
+        "hit_outer_inclusive": 3844,
+        "monster_move": 321979,
+        "monster_process_inclusive": 115061,
+        "spawn_clearance": 26500,
+        "spawn_finalize": 1118,
+        "spawn_instantiate": 1118,
+        "spawn_path": 615,
+        "spawn_prepare": 1118,
+        "spawn_ready": 1118
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 27.038,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "18e51930dc5b80104446fc6b0b3c71ffc9449d4849314a3f35bb3b991c26bc50",
+        "pck_sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\before-windows-D-1.json",
+      "diagnostics": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 478.9765625
+    },
+    {
+      "label": "before-windows-D-2",
+      "platform": "windows",
+      "scenario": "D",
+      "stats": {
+        "frames": 16264,
+        "avg": 2.1504626788365124,
+        "p50": 1.50600004196167,
+        "p95": 6.8439998626709,
+        "p99": 8.16100025177002,
+        "max": 22.5590000152588,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 16264,
+        "avg": 2.1504626788365124,
+        "p50": 1.50600004196167,
+        "p95": 6.8439998626709,
+        "p99": 8.16100025177002,
+        "max": 22.5590000152588,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 799.000860796852,
+      "draws_peak": 1040,
+      "load": {
+        "frames": "16264",
+        "combat_s": "35.0",
+        "objects_peak": "12357",
+        "orphans_peak": "0",
+        "canvas_items_peak": "3820",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "799.0",
+        "draws_peak": "1040",
+        "path_queries": "26741",
+        "path_per_s": "764.0",
+        "created": "33139",
+        "removed": "32497",
+        "created_per_s": "946.8",
+        "removed_per_s": "928.5",
+        "enemies_peak": "180",
+        "projectiles_peak": "10",
+        "hazards_peak": "0",
+        "zones_peak": "6",
+        "beams_peak": "4",
+        "vfx_peak": "8",
+        "labels_peak": "81",
+        "transients_peak": "209",
+        "rewards_peak": "22",
+        "nodes_peak": "3359",
+        "topped_up": "48"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 508,
+        "enemy_shot_step": 32841,
+        "footprint": 11563,
+        "hit_outer_inclusive": 334408,
+        "monster_move": 6788841,
+        "monster_process_inclusive": 578508,
+        "spawn_clearance": 60268,
+        "spawn_finalize": 15064,
+        "spawn_instantiate": 35753,
+        "spawn_path": 4724,
+        "spawn_prepare": 88097,
+        "spawn_ready": 59133
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 340,
+        "enemy_shot_step": 7783,
+        "footprint": 94,
+        "hit_outer_inclusive": 3532,
+        "monster_move": 325189,
+        "monster_process_inclusive": 112436,
+        "spawn_clearance": 26555,
+        "spawn_finalize": 1136,
+        "spawn_instantiate": 1136,
+        "spawn_path": 541,
+        "spawn_prepare": 1136,
+        "spawn_ready": 1136
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 26.695,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "18e51930dc5b80104446fc6b0b3c71ffc9449d4849314a3f35bb3b991c26bc50",
+        "pck_sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\before-windows-D-2.json",
+      "diagnostics": [
+        "WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 480.015625
+    },
+    {
+      "label": "after-windows-P-1",
+      "platform": "windows",
+      "scenario": "P",
+      "stats": {
+        "frames": 14963,
+        "avg": 1.6718684753130075,
+        "p50": 1.03999996185303,
+        "p95": 6.67799997329712,
+        "p99": 8.43400001525879,
+        "max": 14.8100004196167,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 16868,
+        "avg": 1.607593846069426,
+        "p50": 1.01800000667572,
+        "p95": 6.56899976730347,
+        "p99": 8.3769998550415,
+        "max": 19.4270000457764,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 325.0972255157695,
+      "draws_peak": 543,
+      "load": {
+        "frames": "16868",
+        "combat_s": "27.1",
+        "objects_peak": "12735",
+        "orphans_peak": "0",
+        "canvas_items_peak": "2273",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "325.1",
+        "draws_peak": "543",
+        "path_queries": "23673",
+        "path_per_s": "871.9",
+        "created": "29134",
+        "removed": "28534",
+        "created_per_s": "1073.1",
+        "removed_per_s": "1051.0",
+        "enemies_peak": "180",
+        "projectiles_peak": "8",
+        "hazards_peak": "1",
+        "zones_peak": "5",
+        "beams_peak": "4",
+        "vfx_peak": "5",
+        "labels_peak": "36",
+        "transients_peak": "271",
+        "rewards_peak": "22",
+        "nodes_peak": "3842",
+        "topped_up": "1510"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 296,
+        "enemy_shot_step": 17965,
+        "footprint": 6636,
+        "hit_outer_inclusive": 236675,
+        "monster_move": 5570909,
+        "monster_process_inclusive": 157386,
+        "spawn_clearance": 20173,
+        "spawn_finalize": 23330,
+        "spawn_instantiate": 55884,
+        "spawn_path": 4971,
+        "spawn_prepare": 164682,
+        "spawn_ready": 101761
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 192,
+        "enemy_shot_step": 4111,
+        "footprint": 70,
+        "hit_outer_inclusive": 2268,
+        "monster_move": 266685,
+        "monster_process_inclusive": 24980,
+        "spawn_clearance": 6916,
+        "spawn_finalize": 2165,
+        "spawn_instantiate": 2165,
+        "spawn_path": 618,
+        "spawn_prepare": 2165,
+        "spawn_ready": 2165
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 31.0,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "18e51930dc5b80104446fc6b0b3c71ffc9449d4849314a3f35bb3b991c26bc50",
+        "pck_sha256": "a48e1fa9199c3e81cd9b85c9d587b065a015d9d4f0b41b5b49f4c9fab512e638"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\after-windows-P-1.json",
+      "diagnostics": [
+        "WARNING: 21 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 489.30859375
+    },
+    {
+      "label": "before-windows-P-1",
+      "platform": "windows",
+      "scenario": "P",
+      "stats": {
+        "frames": 12389,
+        "avg": 2.019444184621201,
+        "p50": 1.27400004863739,
+        "p95": 6.97100019454956,
+        "p99": 8.74199962615967,
+        "max": 12.3360004425049,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "overall": {
+        "frames": 14071,
+        "avg": 1.9277919836723045,
+        "p50": 1.24199998378754,
+        "p95": 6.84700012207031,
+        "p99": 8.65999984741211,
+        "max": 19.6529998779297,
+        "over25": 0,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "draws_avg": 542.8514675573875,
+      "draws_peak": 888,
+      "load": {
+        "frames": "14071",
+        "combat_s": "27.1",
+        "objects_peak": "12558",
+        "orphans_peak": "0",
+        "canvas_items_peak": "3414",
+        "mem_static_peak_mb": "0.0",
+        "draws_avg": "542.9",
+        "draws_peak": "888",
+        "path_queries": "23765",
+        "path_per_s": "875.3",
+        "created": "29707",
+        "removed": "29101",
+        "created_per_s": "1094.2",
+        "removed_per_s": "1071.9",
+        "enemies_peak": "180",
+        "projectiles_peak": "7",
+        "hazards_peak": "1",
+        "zones_peak": "7",
+        "beams_peak": "4",
+        "vfx_peak": "9",
+        "labels_peak": "32",
+        "transients_peak": "249",
+        "rewards_peak": "22",
+        "nodes_peak": "3695",
+        "topped_up": "1474"
+      },
+      "scope_usec": {
+        "enemy_shot_draw": 296,
+        "enemy_shot_step": 20812,
+        "footprint": 6637,
+        "hit_outer_inclusive": 241129,
+        "monster_move": 5506773,
+        "monster_process_inclusive": 148353,
+        "spawn_clearance": 21636,
+        "spawn_finalize": 24036,
+        "spawn_instantiate": 56570,
+        "spawn_path": 5223,
+        "spawn_prepare": 166099,
+        "spawn_ready": 105459
+      },
+      "scope_calls": {
+        "enemy_shot_draw": 207,
+        "enemy_shot_step": 4643,
+        "footprint": 69,
+        "hit_outer_inclusive": 2351,
+        "monster_move": 267765,
+        "monster_process_inclusive": 23173,
+        "spawn_clearance": 7634,
+        "spawn_finalize": 2199,
+        "spawn_instantiate": 2199,
+        "spawn_path": 667,
+        "spawn_prepare": 2199,
+        "spawn_ready": 2199
+      },
+      "entry_samples": [
+        {
+          "depart_to_combat_ms": 26.47,
+          "round": 1,
+          "state": "COMBAT"
+        }
+      ],
+      "identity": {
+        "exe_sha256": "18e51930dc5b80104446fc6b0b3c71ffc9449d4849314a3f35bb3b991c26bc50",
+        "pck_sha256": "0b335f9fcd6ecf2fc04555faf66ad0eea7bd2e83891e429829f37245990f69fa"
+      },
+      "paused_ms": 0.0,
+      "path": "output\\deep-pass\\final-paired-native\\before-windows-P-1.json",
+      "diagnostics": [
+        "WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "rss_peak_mb": 496.73828125
+    }
+  ],
+  "validation": {
+    "DeepPresentation": {
+      "name": "DeepPresentation",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 5.01,
+      "passes": 34,
+      "issues": []
+    },
+    "PresentationStates": {
+      "name": "PresentationStates",
+      "rendered": true,
+      "exit": 0,
+      "seconds": 9.03,
+      "passes": 6,
+      "issues": []
+    },
+    "PresentationWorld": {
+      "name": "PresentationWorld",
+      "rendered": true,
+      "exit": 0,
+      "seconds": 107.23,
+      "passes": 8,
+      "issues": []
+    },
+    "PresentationCapture": {
+      "name": "PresentationCapture",
+      "rendered": true,
+      "exit": 0,
+      "seconds": 16.06,
+      "passes": 0,
+      "issues": []
+    },
+    "PresentationBoundary": {
+      "name": "PresentationBoundary",
+      "rendered": true,
+      "exit": 0,
+      "seconds": 9.05,
+      "passes": 9,
+      "issues": []
+    },
+    "BaselineRegression": {
+      "name": "BaselineRegression",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 4,
+      "issues": []
+    },
+    "B17Contracts": {
+      "name": "B17Contracts",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 20,
+      "issues": []
+    },
+    "M3Weapons": {
+      "name": "M3Weapons",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 38.14,
+      "passes": 72,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B11Stages": {
+      "name": "B11Stages",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 14.05,
+      "passes": 57,
+      "issues": []
+    },
+    "B11Fairness": {
+      "name": "B11Fairness",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 61,
+      "issues": []
+    },
+    "B6Progression": {
+      "name": "B6Progression",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 5.03,
+      "passes": 41,
+      "issues": []
+    },
+    "B3Hazards": {
+      "name": "B3Hazards",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 23.08,
+      "passes": 128,
+      "issues": []
+    },
+    "B4Fog": {
+      "name": "B4Fog",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 14.06,
+      "passes": 110,
+      "issues": []
+    },
+    "M6EncounterAudit": {
+      "name": "M6EncounterAudit",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 872.33,
+      "passes": 60,
+      "issues": []
+    },
+    "M8Encounters": {
+      "name": "M8Encounters",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 1414.73,
+      "passes": 60,
+      "issues": []
+    },
+    "B12Catalog": {
+      "name": "B12Catalog",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 182,
+      "issues": []
+    },
+    "B12Save": {
+      "name": "B12Save",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.01,
+      "passes": 14,
+      "issues": []
+    },
+    "B12UI": {
+      "name": "B12UI",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 75,
+      "issues": [
+        "ERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.",
+        "ERROR: 2 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+        "ERROR: 1 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+        "ERROR: 11 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+        "ERROR: 35 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B12LineOfSightRegression": {
+      "name": "B12LineOfSightRegression",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 12,
+      "issues": []
+    },
+    "B13Catalog": {
+      "name": "B13Catalog",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 5.03,
+      "passes": 532,
+      "issues": []
+    },
+    "B13UpgradeEffects": {
+      "name": "B13UpgradeEffects",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 85,
+      "issues": []
+    },
+    "B13TalentEffects": {
+      "name": "B13TalentEffects",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 28.05,
+      "passes": 37,
+      "issues": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B13Economy": {
+      "name": "B13Economy",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 159,
+      "issues": []
+    },
+    "B13Unequip": {
+      "name": "B13Unequip",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 55,
+      "issues": []
+    },
+    "B13UI": {
+      "name": "B13UI",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.03,
+      "passes": 138,
+      "issues": []
+    },
+    "CampPresentation": {
+      "name": "CampPresentation",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 38,
+      "issues": []
+    },
+    "PresentationContracts": {
+      "name": "PresentationContracts",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 55,
+      "issues": []
+    },
+    "PresentationRng": {
+      "name": "PresentationRng",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 8,
+      "issues": []
+    },
+    "PresentationLifecycle": {
+      "name": "PresentationLifecycle",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 15.08,
+      "passes": 52,
+      "issues": []
+    },
+    "M4Talents": {
+      "name": "M4Talents",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 9.03,
+      "passes": 233,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B14Loadout": {
+      "name": "B14Loadout",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 86,
+      "issues": []
+    },
+    "B14Growth": {
+      "name": "B14Growth",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 8.03,
+      "passes": 13,
+      "issues": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B14Rail": {
+      "name": "B14Rail",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 8,
+      "issues": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B14Feedback": {
+      "name": "B14Feedback",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.03,
+      "passes": 6,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B14EncounterContracts": {
+      "name": "B14EncounterContracts",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 85,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B19Contracts": {
+      "name": "B19Contracts",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 24,
+      "issues": []
+    },
+    "B191Runtime": {
+      "name": "B191Runtime",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 55,
+      "issues": []
+    },
+    "B17Sources": {
+      "name": "B17Sources",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 5,
+      "issues": []
+    },
+    "B17Saved": {
+      "name": "B17Saved",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.01,
+      "passes": 13,
+      "issues": []
+    },
+    "B17Resources": {
+      "name": "B17Resources",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 10,
+      "issues": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B17NativeRules": {
+      "name": "B17NativeRules",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 13,
+      "issues": [
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "R1Timeline": {
+      "name": "R1Timeline",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 9.03,
+      "passes": 41,
+      "issues": []
+    },
+    "B16Camp": {
+      "name": "B16Camp",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 5.03,
+      "passes": 15,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B16Growth": {
+      "name": "B16Growth",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 7,
+      "issues": [
+        "ERROR: 4 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B16Pickup": {
+      "name": "B16Pickup",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 7.03,
+      "passes": 12,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B16Save": {
+      "name": "B16Save",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.02,
+      "passes": 80,
+      "issues": [
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B16Effects": {
+      "name": "B16Effects",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 3.01,
+      "passes": 5,
+      "issues": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B16CombatMix": {
+      "name": "B16CombatMix",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 10.05,
+      "passes": 27,
+      "issues": [
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B192Safety": {
+      "name": "B192Safety",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 9,
+      "issues": []
+    },
+    "B192Spawn": {
+      "name": "B192Spawn",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.01,
+      "passes": 134,
+      "issues": []
+    },
+    "BeamPerformance": {
+      "name": "BeamPerformance",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.02,
+      "passes": 13,
+      "issues": []
+    },
+    "M9Beam": {
+      "name": "M9Beam",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 8.03,
+      "passes": 312,
+      "issues": []
+    },
+    "B194Combat": {
+      "name": "B194Combat",
+      "rendered": false,
+      "exit": 0,
+      "seconds": 4.03,
+      "passes": 69,
+      "issues": []
+    },
+    "PresentationBosses": {
+      "name": "PresentationBosses",
+      "rendered": true,
+      "exit": 0,
+      "seconds": 330.06,
+      "passes": 158,
+      "issues": []
+    },
+    "final-DeepPresentation": {
+      "name": "final-DeepPresentation",
+      "exit": 0,
+      "seconds": 3.89,
+      "passes": 34,
+      "issues": []
+    },
+    "final-PresentationRng": {
+      "name": "final-PresentationRng",
+      "exit": 0,
+      "seconds": 2.78,
+      "passes": 8,
+      "issues": []
+    },
+    "final-PresentationContracts": {
+      "name": "final-PresentationContracts",
+      "exit": 0,
+      "seconds": 3.42,
+      "passes": 55,
+      "issues": []
+    },
+    "final-PresentationCapture": {
+      "name": "final-PresentationCapture",
+      "exit": 0,
+      "seconds": 15.53,
+      "passes": 0,
+      "issues": []
+    },
+    "final-hell-unlock": {
+      "name": "final-hell-unlock",
+      "exit": 0,
+      "seconds": 4.55,
+      "passes": 41,
+      "issues": []
+    },
+    "B12Strength": {
+      "name": "B12Strength",
+      "exit": 1,
+      "timeout": false,
+      "seconds": 3.72,
+      "passes": 405,
+      "issues": [
+        "FAIL B17 source fingerprint autoload/Combat.gd",
+        "FAIL B17 source fingerprint autoload/Demo.gd",
+        "FAIL B17 source fingerprint autoload/server/LevelServer.gd",
+        "FAIL B17 source fingerprint autoload/Smoke.gd",
+        "FAIL B17 source fingerprint autoload/Utils.gd",
+        "FAIL B17 source fingerprint autoload/Warmup.gd",
+        "FAIL B17 source fingerprint game/bullets/BulletSmoke.tscn",
+        "FAIL B17 source fingerprint game/bullets/MechanismProjectile.gd",
+        "FAIL B17 source fingerprint game/config/ArenaHazards.gd",
+        "FAIL B17 source fingerprint game/config/CombatStatus.gd",
+        "FAIL B17 source fingerprint game/config/M5Content.gd",
+        "FAIL B17 source fingerprint game/diag/B11Probe.gd",
+        "FAIL B17 source fingerprint game/diag/B11Stress.gd",
+        "FAIL B17 source fingerprint game/effects/ArcDischarge.gd",
+        "FAIL B17 source fingerprint game/effects/CombatEffect.gd",
+        "FAIL B17 source fingerprint game/effects/CombatFootprint.gd",
+        "FAIL B17 source fingerprint game/effects/CombatTelegraph.gd",
+        "FAIL B17 source fingerprint game/effects/EliteAura.gd",
+        "FAIL B17 source fingerprint game/effects/HostileVFX.gd",
+        "FAIL B17 source fingerprint game/effects/TierMuzzle.gd",
+        "FAIL B17 source fingerprint game/effects/WeaponIdle.gd",
+        "FAIL B17 source fingerprint game/guns/BaseGun.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.tscn",
+        "FAIL B17 source fingerprint game/hero/Hero.gd",
+        "FAIL B17 source fingerprint game/hero/Hero.tscn",
+        "FAIL B17 source fingerprint game/hero/RootFeedback.gd",
+        "FAIL B17 source fingerprint game/map/ArenaHazardDirector.gd",
+        "FAIL B17 source fingerprint game/map/ArenaVisibility.gd",
+        "FAIL B17 source fingerprint game/map/CombatArena.gd",
+        "FAIL B17 source fingerprint game/map/FogPierce.gd",
+        "FAIL B17 source fingerprint game/map/FogPierceCanvas.gd",
+        "FAIL B17 source fingerprint game/map/mapTown/Town.gd",
+        "FAIL B17 source fingerprint game/map/RegionTheme.gd",
+        "FAIL B17 source fingerprint game/monster/BaseMonster.gd",
+        "FAIL B17 source fingerprint game/monster/BossUltimate.gd",
+        "FAIL B17 source fingerprint game/monster/DemoEnemy.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyBarrage.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyShot.gd",
+        "FAIL B17 source fingerprint game/monster/Ghoul/Ghoul.gd",
+        "FAIL B17 source fingerprint game/monster/HostileZone.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 1/Monster1.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.tscn",
+        "FAIL B17 source fingerprint game/monster/TacticalEnemy.gd",
+        "FAIL B17 source fingerprint game/reward/BaseReward.gd",
+        "FAIL B17 source fingerprint tests/B17Contracts.gd",
+        "FAIL B17 source fingerprint tests/B17Sources.gd",
+        "FAIL B17 source fingerprint ui/BossHUD.gd",
+        "FAIL B17 source fingerprint ui/BuildIcon.gd",
+        "FAIL B17 source fingerprint ui/CampPanel.gd",
+        "FAIL B17 source fingerprint ui/ControlUI.gd",
+        "FAIL B17 source fingerprint ui/DemoHUD.gd",
+        "FAIL B17 source fingerprint ui/DemoSettings.gd",
+        "FAIL B17 source fingerprint ui/GameUI.gd",
+        "FAIL B17 source fingerprint ui/MainUI.gd",
+        "FAIL B17 source fingerprint ui/RootLessonPanel.gd",
+        "FAIL B17 source fingerprint ui/SaveDialog.gd",
+        "FAIL B17 source fingerprint ui/StatPanel.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/HitLabel.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.tscn",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.tscn",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.gd",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/WeaponChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/WeaponListItem.gd",
+        "FAIL retained legendary horde floor 113.0/late",
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B13Strength": {
+      "name": "B13Strength",
+      "exit": 1,
+      "timeout": false,
+      "seconds": 3.34,
+      "passes": 285,
+      "issues": [
+        "FAIL B17 source fingerprint autoload/Combat.gd",
+        "FAIL B17 source fingerprint autoload/Demo.gd",
+        "FAIL B17 source fingerprint autoload/server/LevelServer.gd",
+        "FAIL B17 source fingerprint autoload/Smoke.gd",
+        "FAIL B17 source fingerprint autoload/Utils.gd",
+        "FAIL B17 source fingerprint autoload/Warmup.gd",
+        "FAIL B17 source fingerprint game/bullets/BulletSmoke.tscn",
+        "FAIL B17 source fingerprint game/bullets/MechanismProjectile.gd",
+        "FAIL B17 source fingerprint game/config/ArenaHazards.gd",
+        "FAIL B17 source fingerprint game/config/CombatStatus.gd",
+        "FAIL B17 source fingerprint game/config/M5Content.gd",
+        "FAIL B17 source fingerprint game/diag/B11Probe.gd",
+        "FAIL B17 source fingerprint game/diag/B11Stress.gd",
+        "FAIL B17 source fingerprint game/effects/ArcDischarge.gd",
+        "FAIL B17 source fingerprint game/effects/CombatEffect.gd",
+        "FAIL B17 source fingerprint game/effects/CombatFootprint.gd",
+        "FAIL B17 source fingerprint game/effects/CombatTelegraph.gd",
+        "FAIL B17 source fingerprint game/effects/EliteAura.gd",
+        "FAIL B17 source fingerprint game/effects/HostileVFX.gd",
+        "FAIL B17 source fingerprint game/effects/TierMuzzle.gd",
+        "FAIL B17 source fingerprint game/effects/WeaponIdle.gd",
+        "FAIL B17 source fingerprint game/guns/BaseGun.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.tscn",
+        "FAIL B17 source fingerprint game/hero/Hero.gd",
+        "FAIL B17 source fingerprint game/hero/Hero.tscn",
+        "FAIL B17 source fingerprint game/hero/RootFeedback.gd",
+        "FAIL B17 source fingerprint game/map/ArenaHazardDirector.gd",
+        "FAIL B17 source fingerprint game/map/ArenaVisibility.gd",
+        "FAIL B17 source fingerprint game/map/CombatArena.gd",
+        "FAIL B17 source fingerprint game/map/FogPierce.gd",
+        "FAIL B17 source fingerprint game/map/FogPierceCanvas.gd",
+        "FAIL B17 source fingerprint game/map/mapTown/Town.gd",
+        "FAIL B17 source fingerprint game/map/RegionTheme.gd",
+        "FAIL B17 source fingerprint game/monster/BaseMonster.gd",
+        "FAIL B17 source fingerprint game/monster/BossUltimate.gd",
+        "FAIL B17 source fingerprint game/monster/DemoEnemy.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyBarrage.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyShot.gd",
+        "FAIL B17 source fingerprint game/monster/Ghoul/Ghoul.gd",
+        "FAIL B17 source fingerprint game/monster/HostileZone.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 1/Monster1.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.tscn",
+        "FAIL B17 source fingerprint game/monster/TacticalEnemy.gd",
+        "FAIL B17 source fingerprint game/reward/BaseReward.gd",
+        "FAIL B17 source fingerprint tests/B17Contracts.gd",
+        "FAIL B17 source fingerprint tests/B17Sources.gd",
+        "FAIL B17 source fingerprint ui/BossHUD.gd",
+        "FAIL B17 source fingerprint ui/BuildIcon.gd",
+        "FAIL B17 source fingerprint ui/CampPanel.gd",
+        "FAIL B17 source fingerprint ui/ControlUI.gd",
+        "FAIL B17 source fingerprint ui/DemoHUD.gd",
+        "FAIL B17 source fingerprint ui/DemoSettings.gd",
+        "FAIL B17 source fingerprint ui/GameUI.gd",
+        "FAIL B17 source fingerprint ui/MainUI.gd",
+        "FAIL B17 source fingerprint ui/RootLessonPanel.gd",
+        "FAIL B17 source fingerprint ui/SaveDialog.gd",
+        "FAIL B17 source fingerprint ui/StatPanel.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/HitLabel.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.tscn",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.tscn",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.gd",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/WeaponChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/WeaponListItem.gd",
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "M10Bosses": {
+      "name": "M10Bosses",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 120.2,
+      "passes": 24,
+      "issues": []
+    },
+    "B5Bosses": {
+      "name": "B5Bosses",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 338.91,
+      "passes": 166,
+      "issues": []
+    },
+    "M10Density": {
+      "name": "M10Density",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 94.45,
+      "passes": 11,
+      "issues": []
+    },
+    "M10Density-probe": {
+      "name": "M10Density-probe",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 94.39,
+      "passes": 6,
+      "issues": []
+    },
+    "B11Perf-39": {
+      "name": "B11Perf-39",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 78.73,
+      "passes": 6,
+      "issues": [
+        "WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 3 resources still in use at exit (run with --verbose for details)."
+      ]
+    },
+    "B11Perf-40": {
+      "name": "B11Perf-40",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 78.89,
+      "passes": 6,
+      "issues": [
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ]
+    }
+  },
+  "pending": [],
+  "regression_failures": [],
+  "historical_failures": [
+    "B12Strength",
+    "B13Strength"
+  ],
+  "historical_baseline": [
+    {
+      "name": "B12Strength",
+      "exit": 1,
+      "seconds": 3.89,
+      "passes": 405,
+      "issues": [
+        "FAIL B17 source fingerprint autoload/Combat.gd",
+        "FAIL B17 source fingerprint autoload/Demo.gd",
+        "FAIL B17 source fingerprint autoload/server/LevelServer.gd",
+        "FAIL B17 source fingerprint autoload/Smoke.gd",
+        "FAIL B17 source fingerprint autoload/Utils.gd",
+        "FAIL B17 source fingerprint autoload/Warmup.gd",
+        "FAIL B17 source fingerprint game/bullets/BulletSmoke.tscn",
+        "FAIL B17 source fingerprint game/bullets/MechanismProjectile.gd",
+        "FAIL B17 source fingerprint game/config/ArenaHazards.gd",
+        "FAIL B17 source fingerprint game/config/CombatStatus.gd",
+        "FAIL B17 source fingerprint game/config/M5Content.gd",
+        "FAIL B17 source fingerprint game/diag/B11Probe.gd",
+        "FAIL B17 source fingerprint game/diag/B11Stress.gd",
+        "FAIL B17 source fingerprint game/effects/ArcDischarge.gd",
+        "FAIL B17 source fingerprint game/effects/CombatEffect.gd",
+        "FAIL B17 source fingerprint game/effects/CombatFootprint.gd",
+        "FAIL B17 source fingerprint game/effects/CombatTelegraph.gd",
+        "FAIL B17 source fingerprint game/effects/EliteAura.gd",
+        "FAIL B17 source fingerprint game/effects/HostileVFX.gd",
+        "FAIL B17 source fingerprint game/effects/TierMuzzle.gd",
+        "FAIL B17 source fingerprint game/effects/WeaponIdle.gd",
+        "FAIL B17 source fingerprint game/guns/BaseGun.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.tscn",
+        "FAIL B17 source fingerprint game/hero/Hero.gd",
+        "FAIL B17 source fingerprint game/hero/Hero.tscn",
+        "FAIL B17 source fingerprint game/hero/RootFeedback.gd",
+        "FAIL B17 source fingerprint game/map/ArenaHazardDirector.gd",
+        "FAIL B17 source fingerprint game/map/ArenaVisibility.gd",
+        "FAIL B17 source fingerprint game/map/CombatArena.gd",
+        "FAIL B17 source fingerprint game/map/FogPierce.gd",
+        "FAIL B17 source fingerprint game/map/FogPierceCanvas.gd",
+        "FAIL B17 source fingerprint game/map/mapTown/Town.gd",
+        "FAIL B17 source fingerprint game/map/RegionTheme.gd",
+        "FAIL B17 source fingerprint game/monster/BaseMonster.gd",
+        "FAIL B17 source fingerprint game/monster/BossUltimate.gd",
+        "FAIL B17 source fingerprint game/monster/DemoEnemy.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyBarrage.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyShot.gd",
+        "FAIL B17 source fingerprint game/monster/Ghoul/Ghoul.gd",
+        "FAIL B17 source fingerprint game/monster/HostileZone.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 1/Monster1.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.tscn",
+        "FAIL B17 source fingerprint game/monster/TacticalEnemy.gd",
+        "FAIL B17 source fingerprint game/reward/BaseReward.gd",
+        "FAIL B17 source fingerprint tests/B17Contracts.gd",
+        "FAIL B17 source fingerprint tests/B17Sources.gd",
+        "FAIL B17 source fingerprint ui/BossHUD.gd",
+        "FAIL B17 source fingerprint ui/BuildIcon.gd",
+        "FAIL B17 source fingerprint ui/CampPanel.gd",
+        "FAIL B17 source fingerprint ui/ControlUI.gd",
+        "FAIL B17 source fingerprint ui/DemoHUD.gd",
+        "FAIL B17 source fingerprint ui/DemoSettings.gd",
+        "FAIL B17 source fingerprint ui/GameUI.gd",
+        "FAIL B17 source fingerprint ui/MainUI.gd",
+        "FAIL B17 source fingerprint ui/RootLessonPanel.gd",
+        "FAIL B17 source fingerprint ui/SaveDialog.gd",
+        "FAIL B17 source fingerprint ui/StatPanel.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/HitLabel.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.tscn",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.tscn",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.gd",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/WeaponChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/WeaponListItem.gd",
+        "FAIL retained legendary horde floor 113.0/late",
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "same_failure_labels_as_after": true,
+      "failure_count": 71
+    },
+    {
+      "name": "B13Strength",
+      "exit": 1,
+      "seconds": 3.33,
+      "passes": 285,
+      "issues": [
+        "FAIL B17 source fingerprint autoload/Combat.gd",
+        "FAIL B17 source fingerprint autoload/Demo.gd",
+        "FAIL B17 source fingerprint autoload/server/LevelServer.gd",
+        "FAIL B17 source fingerprint autoload/Smoke.gd",
+        "FAIL B17 source fingerprint autoload/Utils.gd",
+        "FAIL B17 source fingerprint autoload/Warmup.gd",
+        "FAIL B17 source fingerprint game/bullets/BulletSmoke.tscn",
+        "FAIL B17 source fingerprint game/bullets/MechanismProjectile.gd",
+        "FAIL B17 source fingerprint game/config/ArenaHazards.gd",
+        "FAIL B17 source fingerprint game/config/CombatStatus.gd",
+        "FAIL B17 source fingerprint game/config/M5Content.gd",
+        "FAIL B17 source fingerprint game/diag/B11Probe.gd",
+        "FAIL B17 source fingerprint game/diag/B11Stress.gd",
+        "FAIL B17 source fingerprint game/effects/ArcDischarge.gd",
+        "FAIL B17 source fingerprint game/effects/CombatEffect.gd",
+        "FAIL B17 source fingerprint game/effects/CombatFootprint.gd",
+        "FAIL B17 source fingerprint game/effects/CombatTelegraph.gd",
+        "FAIL B17 source fingerprint game/effects/EliteAura.gd",
+        "FAIL B17 source fingerprint game/effects/HostileVFX.gd",
+        "FAIL B17 source fingerprint game/effects/TierMuzzle.gd",
+        "FAIL B17 source fingerprint game/effects/WeaponIdle.gd",
+        "FAIL B17 source fingerprint game/guns/BaseGun.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.gd",
+        "FAIL B17 source fingerprint game/guns/BoomBoi.tscn",
+        "FAIL B17 source fingerprint game/hero/Hero.gd",
+        "FAIL B17 source fingerprint game/hero/Hero.tscn",
+        "FAIL B17 source fingerprint game/hero/RootFeedback.gd",
+        "FAIL B17 source fingerprint game/map/ArenaHazardDirector.gd",
+        "FAIL B17 source fingerprint game/map/ArenaVisibility.gd",
+        "FAIL B17 source fingerprint game/map/CombatArena.gd",
+        "FAIL B17 source fingerprint game/map/FogPierce.gd",
+        "FAIL B17 source fingerprint game/map/FogPierceCanvas.gd",
+        "FAIL B17 source fingerprint game/map/mapTown/Town.gd",
+        "FAIL B17 source fingerprint game/map/RegionTheme.gd",
+        "FAIL B17 source fingerprint game/monster/BaseMonster.gd",
+        "FAIL B17 source fingerprint game/monster/BossUltimate.gd",
+        "FAIL B17 source fingerprint game/monster/DemoEnemy.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyBarrage.gd",
+        "FAIL B17 source fingerprint game/monster/EnemyShot.gd",
+        "FAIL B17 source fingerprint game/monster/Ghoul/Ghoul.gd",
+        "FAIL B17 source fingerprint game/monster/HostileZone.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 1/Monster1.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.gd",
+        "FAIL B17 source fingerprint game/monster/Monster 2/Monster2.tscn",
+        "FAIL B17 source fingerprint game/monster/TacticalEnemy.gd",
+        "FAIL B17 source fingerprint game/reward/BaseReward.gd",
+        "FAIL B17 source fingerprint tests/B17Contracts.gd",
+        "FAIL B17 source fingerprint tests/B17Sources.gd",
+        "FAIL B17 source fingerprint ui/BossHUD.gd",
+        "FAIL B17 source fingerprint ui/BuildIcon.gd",
+        "FAIL B17 source fingerprint ui/CampPanel.gd",
+        "FAIL B17 source fingerprint ui/ControlUI.gd",
+        "FAIL B17 source fingerprint ui/DemoHUD.gd",
+        "FAIL B17 source fingerprint ui/DemoSettings.gd",
+        "FAIL B17 source fingerprint ui/GameUI.gd",
+        "FAIL B17 source fingerprint ui/MainUI.gd",
+        "FAIL B17 source fingerprint ui/RootLessonPanel.gd",
+        "FAIL B17 source fingerprint ui/SaveDialog.gd",
+        "FAIL B17 source fingerprint ui/StatPanel.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.gd",
+        "FAIL B17 source fingerprint ui/widgets/DeathBoard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/HitLabel.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardChoose.tscn",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.gd",
+        "FAIL B17 source fingerprint ui/widgets/RewardShopItem.tscn",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.gd",
+        "FAIL B17 source fingerprint ui/widgets/Scoreboard.tscn",
+        "FAIL B17 source fingerprint ui/widgets/WeaponChoose.gd",
+        "FAIL B17 source fingerprint ui/widgets/WeaponListItem.gd",
+        "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "same_failure_labels_as_after": true,
+      "failure_count": 70
+    }
+  ],
+  "final_web_functional": [
+    {
+      "name": "smoke",
+      "exit": 0,
+      "seconds": 58.34
+    },
+    {
+      "name": "loadout",
+      "exit": 0,
+      "seconds": 48.51
+    },
+    {
+      "name": "menu-return",
+      "exit": 0,
+      "seconds": 100.42
+    },
+    {
+      "name": "tour",
+      "exit": 0,
+      "seconds": 166.95
+    }
+  ]
+}

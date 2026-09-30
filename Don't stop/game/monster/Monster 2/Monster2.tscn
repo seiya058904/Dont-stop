@@ -266,6 +266,7 @@ script = ExtResource("1_4jthf")
 SPEED = 300.0
 
 [node name="UndeadShadow" type="Sprite2D" parent="."]
+z_index = -2
 position = Vector2(0, -2)
 scale = Vector2(0.7, 0.703)
 texture = ExtResource("2_3c0cq")

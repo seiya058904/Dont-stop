@@ -38,6 +38,10 @@ var pause_stack: Array = []
 var loading = false
 var save_blocked = false
 var test_mode = false
+## E2E invulnerability is a command-line capability, never a product/test-mode state.
+## Keeping the gate here gives every damage caller the same exact-token decision and
+## prevents a smoke driver's mutable state from leaking into a normal launch.
+var e2e_mode := false
 var fire_released = true
 var save_store = CampSaveStore.new()
 var dirty = false
@@ -117,6 +121,9 @@ func talent_status(id: String) -> String:
 	return "已启用；按所列条件触发"
 
 func _ready():
+	e2e_mode = _has_cmdline_flag("--e2e")
+	if e2e_mode:
+		print("[test] e2e invulnerability enabled by explicit --e2e")
 	print("[boot-probe] demo_ready t=%d" % Time.get_ticks_msec())
 	get_tree().auto_accept_quit = false
 	get_tree().root.close_requested.connect(quit_game)
@@ -131,6 +138,14 @@ func _ready():
 	apply_audio_settings()
 	Utils.onGameStart.connect(_start)
 	PlayerData.onPlayerLevelChange.connect(_level_changed)
+
+func _has_cmdline_flag(flag: String) -> bool:
+	var args := OS.get_cmdline_args()
+	args.append_array(OS.get_cmdline_user_args())
+	return flag in args
+
+func is_e2e_mode() -> bool:
+	return e2e_mode
 
 func _start():
 	TranslationServer.set_locale("zh_CN")
@@ -375,11 +390,19 @@ func on_kill(monster, context: Dictionary):
 func snapshot() -> Dictionary:
 	var weapons = []
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
+	# The persisted max-HP pool is clamped to what this save's own level can justify, so
+	# no driver - and no future one - can write a diagnostic survivability pool into the
+	# player's real camp. The round's own return_to_camp() saves, so without this an
+	# inflated pool reached the save and every later normal launch restored it, leaving a
+	# health bar that reads 100% however much damage lands.
+	var hp_ceiling = CampSnapshot.hp_max_ceiling(PlayerData.player_level)
+	var saved_hp_max: float = minf(float(PlayerData.player_hp_max),hp_ceiling)
+	var saved_hp: float = minf(float(PlayerData.player_hp),saved_hp_max)
 	# `selected_stage` is written as it is. Any stage 1-40 is a legal selection on any save,
 	# including a brand-new one, so there is nothing here to clamp and nothing to repair on the
 	# next load. `next_stage` remains the linear campaign pointer and is still bounded by
 	# CampSnapshot.normalize(); it is deliberately NOT written from a direct stage departure.
-	return {"schema_version":6,"weapon_slots":PlayerData.weapon_slots.duplicate(),"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":PlayerData.player_hp,"hp_max":PlayerData.player_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
+	return {"schema_version":6,"weapon_slots":PlayerData.weapon_slots.duplicate(),"campaign_complete":campaign_complete,"hell_complete":hell_complete,"build_profile":DemoConfig.PROFILE,"gold":PlayerData.gold,"points":PlayerData.reward_point,"reserve_magazines":PlayerData.reserve_magazines,"level":PlayerData.player_level,"exp":PlayerData.player_exp,"hp":saved_hp,"hp_max":saved_hp_max,"weapons":weapons,"owned_global_upgrades":owned_global_upgrades.duplicate(),"talents":talents,"talent_payments":talent_payments,"legacy":purchases,"legacy_state":legacy_state(),"next_stage":next_stage,"selected_stage":selected_stage,"unequipped":explicitly_unequipped,"equipped":str(Utils.player.gun.weapon_id) if is_instance_valid(Utils.player) and Utils.player.gun else ""}
 
 func legacy_state() -> Dictionary:
 	var result = {}

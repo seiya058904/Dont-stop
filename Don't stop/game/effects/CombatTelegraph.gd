@@ -103,7 +103,8 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 	var shape = geometry(kind,direction,radius,length,width,angle,sweep,cache)
 	var ink = palette(style_for(kind,style))
 	var p = clampf(progress,0,1)
-	var pulse = 0.5+0.5*sin(p*PI*16) if p>0.72 else p
+	# A continuous tightening cue has a readable direction in time. No late strobe.
+	var pulse = p*p*(3.0-2.0*p)
 	var edge = Color(ink.edge.r,ink.edge.g,ink.edge.b,0.72+0.26*pulse)
 	var fill = Color(ink.fill.r,ink.fill.g,ink.fill.b,0.09+0.13*p)
 	# The warning is not static: as the timer runs out the ink shifts toward `edge_hot`, so
@@ -132,7 +133,10 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 			var near = p > 0.75
 			canvas.draw_line(Vector2.ZERO,direction*length,edge,width*1.5 if active else (2.6 if near else 0.8),true)
 			if near and not active: canvas.draw_line(Vector2.ZERO,direction*length,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.55),1.2,true)
-			if active: canvas.draw_line(Vector2.ZERO,direction*length,Color(1,1,1,0.9),width*0.45,true)
+			if active:
+				canvas.draw_line(Vector2.ZERO,direction*length,Color(1,1,1,0.9),width*0.45,true)
+				# Terminate at the resolved endpoint; never imply damage beyond a wall.
+				canvas.draw_line(direction*length-normal*0.72,direction*length+normal*0.72,Color(1,1,1,0.85),1.4,true)
 		if decor and sweep != 0 and not active:
 			canvas.draw_colored_polygon(shape.sector,Color(ink.fill.r,ink.fill.g,ink.fill.b,0.06))
 			canvas.draw_line(Vector2.ZERO,direction.rotated(sweep)*length,edge*Color(1,1,1,0.6),1,true)

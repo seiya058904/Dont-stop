@@ -13,6 +13,7 @@ var spawn_requests = 0
 var grid = AStarGrid2D.new()
 var cells: Array[Vector2i] = []
 var obstacles: Array = []
+var art: ArrayMesh
 ## 768x576 -> 880x660 (+14.6% on each axis). The user asked for roughly +12-18% and for the
 ## change to be a real re-layout, not a scene-wide scale: every dependent system below
 ## (grid region, border walls, obstacle table, spawn ring, boss ring, hazard anchors,
@@ -223,6 +224,9 @@ func _ready():
 				cells.append(cell)
 				_walkable[cell] = true
 	z_index = -4
+	var painter := preload("res://game/map/ArenaMesh.gd").new()
+	RegionTheme.draw_arena(painter,region_id,bounds,obstacles)
+	art = painter.finish()
 func cell(point: Vector2) -> Vector2i:
 	var local = to_local(point); return Vector2i(floori(local.x/float(CELL)),floori(local.y/float(CELL)))
 ## Nearest WALKABLE grid cell, in bounded time.
@@ -458,4 +462,4 @@ func hazard_point(extent: float) -> Vector2:
 		if extent*0.55+10.0 <= grid_clearance or _is_clear(point,extent*0.55+10.0): return point
 	return Vector2.INF
 func _draw():
-	preload("res://game/map/RegionTheme.gd").draw_arena(self,region_id,bounds,obstacles)
+	if art: draw_mesh(art,null)

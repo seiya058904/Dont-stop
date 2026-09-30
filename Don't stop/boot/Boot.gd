@@ -62,12 +62,9 @@ func _ready() -> void:
 	# Belongs to no one: the loading screen must never act on input.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_build_ui()
 	# Keeping the transition patterns as a real dependency is the point of the
 	# constant above; touch it so the load cannot be optimised away silently.
 	print("[boot] transition patterns loaded=%d" % TRANSITION_PATTERNS.size())
-	print("[boot] shell drawn at t=%d" % _boot_ms)
-	Utils.startup_mark("loading-shell-built")
 	if OS.has_feature("web"):
 		# The DOM shell already covered the whole engine boot; go straight in.
 		# Deferred on purpose: replacing the current scene from inside its own
@@ -80,6 +77,9 @@ func _ready() -> void:
 		Utils.startup_mark("scene-prep-start")
 		get_tree().change_scene_to_file.call_deferred(MAIN_SCENE)
 		return
+	_build_ui()
+	print("[boot] shell drawn at t=%d" % _boot_ms)
+	Utils.startup_mark("loading-shell-built")
 	_run.call_deferred()
 
 ## Saves a real screenshot of this viewport (not the desktop) when asked to.
@@ -107,21 +107,25 @@ func _build_ui() -> void:
 	# Everything below is sized in DESIGN units: the project viewport is only
 	# 410x230 and the window stretches it, so a "128 px" icon would be a third of
 	# the screen. Sizes here match the browser shell's proportions.
-	var icon := TextureRect.new()
-	icon.texture = load("res://game-icon.png")
-	icon.custom_minimum_size = Vector2(38, 38)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	column.add_child(_centered(icon))
+	var rule := ColorRect.new()
+	rule.color = Color("bd9963")
+	rule.custom_minimum_size = Vector2(14,1)
+	column.add_child(_centered(rule))
 
 	var wordmark := TextureRect.new()
 	wordmark.texture = load("res://Sprites/ui/title.png")
-	wordmark.custom_minimum_size = Vector2(96, 46)
+	wordmark.custom_minimum_size = Vector2(144, 50)
 	wordmark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	wordmark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	wordmark.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	column.add_child(_centered(wordmark))
+
+	var tagline := Label.new()
+	tagline.text = "移动 · 构筑 · 生存"
+	tagline.add_theme_font_override("font",load("res://fonts/fusion-pixel.otf"))
+	tagline.add_theme_font_size_override("font_size",7)
+	tagline.add_theme_color_override("font_color",Color("bd9963"))
+	column.add_child(_centered(tagline))
 
 	_status = Label.new()
 	_status.text = "正在准备…"
@@ -129,11 +133,12 @@ func _build_ui() -> void:
 	_status.add_theme_font_size_override("font_size", 8)
 	_status.add_theme_color_override("font_color", Color("a7bbc2"))
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(_centered(_status))
+	var status_wrap := _centered(_status)
+	column.add_child(status_wrap)
 
 	_track = ColorRect.new()
 	_track.color = Color("26363e")
-	_track.custom_minimum_size = Vector2(170, 6)
+	_track.custom_minimum_size = Vector2(144, 2)
 	_track.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_track.clip_contents = true
 	var track_wrap := _centered(_track)
@@ -144,8 +149,8 @@ func _build_ui() -> void:
 	grad.set_color(1, Color("edcf94"))
 	var tex := GradientTexture2D.new()
 	tex.gradient = grad
-	tex.width = 170
-	tex.height = 6
+	tex.width = 144
+	tex.height = 2
 	tex.fill_from = Vector2(0, 0.5)
 	tex.fill_to = Vector2(1, 0.5)
 	_fill = TextureRect.new()
@@ -154,13 +159,15 @@ func _build_ui() -> void:
 	_fill.stretch_mode = TextureRect.STRETCH_SCALE
 	_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fill.position = Vector2.ZERO
-	_fill.size = Vector2(0, 6)
+	_fill.size = Vector2(0, 2)
 	_track.add_child(_fill)
 	_activity = ColorRect.new()
 	_activity.color = Color(0.65, 0.85, 1.0, 0.3)
 	_activity.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_activity.size = Vector2(38, 6)
+	_activity.size = Vector2(28, 2)
+	_activity.hide()
 	_track.add_child(_activity)
+	column.move_child(status_wrap,-1)
 
 func _centered(node: Control) -> Control:
 	var wrap := CenterContainer.new()
@@ -174,10 +181,12 @@ func _set_progress(value: float, text: String) -> void:
 		_status.text = text
 	if value < 0.0:
 		_sweep = true
+		_activity.show()
 		return
 	# Three real work stages; smoothing never advances beyond completed work.
 	_progress_target = maxf(_progress_target, clampf(value, 0.0, 1.0))
 	_sweep = value < 1.0
+	_activity.visible = _sweep
 	if value >= 1.0:
 		_progress_shown = 1.0
 		_fill.size.x = _track.custom_minimum_size.x
@@ -301,6 +310,6 @@ func _fail(message: String) -> void:
 	box.add_theme_font_size_override("font_size", 8)
 	box.add_theme_color_override("font_color", Color("ff9d9d"))
 	box.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	box.custom_minimum_size = Vector2(420, 0)
+	box.custom_minimum_size = Vector2(340, 0)
 	box.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	add_child(_centered(box))

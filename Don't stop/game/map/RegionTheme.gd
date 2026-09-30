@@ -1,9 +1,8 @@
 extends RefCounted
 class_name RegionTheme
 
-## Region art. One flat `_draw` per arena, executed once when the arena enters the tree and
-## then replayed from the canvas item's command buffer - no per-frame redraw, because Web is
-## Godot nothreads and every one of these regions has to keep 100+ monsters affordable.
+## Region art is assembled once into ArenaMesh. Vertex colours preserve lighting and
+## transparent layer order without hundreds of canvas submissions or a raster cache.
 ##
 ## What each region must do, per the B批 brief: be identifiable at a glance, and give the
 ## fight a different FLOOR (lanes, channels, pools, ring) rather than a different palette.
@@ -23,17 +22,56 @@ const ACCENT = {
 	"R6":Color("8f9ddc"),"R7":Color("5fe0a8"),"R8":Color("a06fe8")
 }
 
-static func draw_arena(canvas: Node2D, region: String, bounds: Rect2, obstacles: Array):
+static func draw_arena(canvas, region: String, bounds: Rect2, obstacles: Array):
 	var rng = RandomNumberGenerator.new(); rng.seed = 900+int(region.substr(1))
 	canvas.draw_rect(bounds,FLOOR[region])
+	_floor_structure(canvas,region,bounds)
 	_ground(canvas,region,rng)
 	_identity(canvas,region,bounds,obstacles,rng)
 	for rect in obstacles: _wall(canvas,region,rect)
 	_identification_frame(canvas,region,bounds)
 
+## Low-contrast construction joints establish scale; attack ink remains brighter.
+static func _floor_structure(canvas, region: String, bounds: Rect2):
+	var base: Color = FLOOR[region]
+	if region in ["R2","R4","R7"]:
+		var cell := Vector2(88,64) if region != "R4" else Vector2(110,55)
+		for row in 11:
+			for column in 11:
+				var p: Vector2 = bounds.position+Vector2(column*cell.x-(44 if row%2 else 0),row*cell.y)
+				var panel := Rect2(p+Vector2(2,2),cell-Vector2(4,4)).intersection(bounds.grow(-6))
+				if panel.size.x < 12 or panel.size.y < 12: continue
+				canvas.draw_rect(panel,base.darkened(0.18),false,1)
+				canvas.draw_line(panel.position+Vector2(1,1),Vector2(panel.end.x-1,panel.position.y+1),base.lightened(0.045),1)
+				if (row+column)%3==0:
+					for x in [panel.position.x+4,panel.end.x-4]:
+						canvas.draw_rect(Rect2(x,panel.position.y+4,1,1),base.lightened(0.15))
+		# Recessed drainage grates: flat hardware rather than false obstacles.
+		for side in [-1,1]:
+			var p := Vector2(side*315-16,-18)
+			canvas.draw_rect(Rect2(p,Vector2(32,36)),base.darkened(0.42))
+			for y in range(3,34,5):
+				canvas.draw_line(p+Vector2(3,y),p+Vector2(29,y),base.lightened(0.13),1)
+	elif region in ["R6","R8"]:
+		# Segmented stone/ceramic inlays lead toward the core without glowing.
+		var rings := [110.0,172.0,264.0,320.0]
+		for ring in rings:
+			for segment in 12:
+				var start := segment*TAU/12+0.012
+				canvas.draw_arc(Vector2.ZERO,ring,start,start+TAU/12-0.024,9,base.lightened(0.10),1)
+		for segment in 12:
+			var axis := Vector2.RIGHT.rotated(segment*TAU/12)
+			canvas.draw_line(axis*110,axis*320,base.darkened(0.3),1)
+	elif region == "R5":
+		for row in range(-5,6):
+			for column in [-3,-2,2,3]:
+				var p := Vector2(column*70+(row%2)*12,row*58)
+				canvas.draw_rect(Rect2(p,Vector2(54,40)),base.darkened(0.12))
+				canvas.draw_line(p,p+Vector2(54,0),base.lightened(0.07),1)
+
 ## Broad ground formations. These exist so the biome is readable before any fine decal, and
 ## they are deliberately large and low-contrast so they never compete with a telegraph.
-static func _ground(canvas: Node2D, region: String, rng: RandomNumberGenerator):
+static func _ground(canvas, region: String, rng: RandomNumberGenerator):
 	for i in 18:
 		var center = Vector2(rng.randf_range(-360,360),rng.randf_range(-268,268))
 		var patch = PackedVector2Array()
@@ -82,7 +120,7 @@ static func _ground(canvas: Node2D, region: String, rng: RandomNumberGenerator):
 				if i%6==0: canvas.draw_arc(p,4,0,TAU,8,Color("7a5ec0",0.4),1,true)
 
 ## The region's own gameplay-floor language: the shapes that make this map play differently.
-static func _identity(canvas: Node2D, region: String, bounds: Rect2, obstacles: Array, rng: RandomNumberGenerator):
+static func _identity(canvas, region: String, bounds: Rect2, obstacles: Array, rng: RandomNumberGenerator):
 	match region:
 		"R2":
 			# Freight yard: painted lanes running east-west, hazard stripes at the loading
@@ -237,16 +275,27 @@ static func _identity(canvas: Node2D, region: String, bounds: Rect2, obstacles: 
 
 ## Walls. Same rectangles the physics uses; the drawing only adds a lit top face, a cast
 ## shadow and a region-specific material band, so "wall vs floor" is never ambiguous.
-static func _wall(canvas: Node2D, region: String, rect: Rect2):
+static func _wall(canvas, region: String, footprint: Rect2):
+	var rect := footprint
 	# Soft contact shadow and reflected lower lip give the existing colliders depth.
 	for layer in range(3,0,-1):
 		canvas.draw_rect(Rect2(rect.position+Vector2(3+layer*2,4+layer*2),rect.size+Vector2(layer,layer)),Color(0.015,0.022,0.03,0.055))
 	canvas.draw_rect(Rect2(rect.position+Vector2(5,7),rect.size),Color(0,0,0,0.30))
-	canvas.draw_rect(rect,Color("151b20"))
+	# The front face is INSIDE the collider. Its sill is the exact physical edge.
+	var face_height := minf(8.0,footprint.size.y*0.28)
+	canvas.draw_rect(footprint,Color("10191e"))
+	var face := Rect2(footprint.position+Vector2(2,footprint.size.y-face_height),Vector2(footprint.size.x-4,face_height-1))
+	canvas.draw_rect(face,WALL[region].darkened(0.48))
+	canvas.draw_line(face.position,Vector2(face.end.x,face.position.y),WALL[region].darkened(0.18),1)
+	for x in range(int(face.position.x)+9,int(face.end.x)-3,24):
+		canvas.draw_line(Vector2(x,face.position.y+2),Vector2(x,face.end.y-1),WALL[region].darkened(0.66),2)
+	canvas.draw_line(Vector2(face.position.x,face.end.y),face.end,ACCENT[region].darkened(0.56),1)
+	rect = Rect2(footprint.position,Vector2(footprint.size.x,footprint.size.y-face_height))
 	canvas.draw_rect(rect.grow(-2),WALL[region])
-	canvas.draw_rect(rect.grow(-2).grow(-2),WALL[region].darkened(0.16),false,1)
-	canvas.draw_line(rect.position+Vector2(2,2),Vector2(rect.end.x-2,rect.position.y+2),WALL[region].lightened(0.22),2)
-	canvas.draw_line(Vector2(rect.position.x+3,rect.end.y-2),rect.end-Vector2(3,2),ACCENT[region].darkened(0.38),1)
+	canvas.draw_rect(rect.grow(-4),WALL[region].darkened(0.16),false,1)
+	canvas.draw_line(rect.position+Vector2(2,2),Vector2(rect.end.x-2,rect.position.y+2),WALL[region].lightened(0.26),2)
+	canvas.draw_line(rect.position+Vector2(2,3),Vector2(rect.position.x+2,rect.end.y-1),WALL[region].lightened(0.10),1)
+	canvas.draw_line(Vector2(rect.end.x-2,rect.position.y+3),rect.end-Vector2(2,1),WALL[region].darkened(0.3),2)
 	match region:
 		"R2":
 			for x in range(int(rect.position.x)+9,int(rect.end.x)-4,12):
@@ -286,7 +335,7 @@ static func _wall(canvas: Node2D, region: String, rect: Rect2):
 
 ## The arena rim. A two-tone frame with region accent ticks: at a glance, each region's
 ## outer boundary looks like its own place rather than the same box in another colour.
-static func _identification_frame(canvas: Node2D, region: String, bounds: Rect2):
+static func _identification_frame(canvas, region: String, bounds: Rect2):
 	canvas.draw_rect(bounds.grow(2),Color(0,0,0,0.5),false,6)
 	canvas.draw_rect(bounds,ACCENT[region].darkened(0.55),false,3)
 	canvas.draw_rect(bounds.grow(-4),Color("819398",0.35),false,1)

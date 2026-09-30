@@ -177,6 +177,7 @@ jobs:
           run_case B13UI
           run_case CampPresentation
           run_case PresentationContracts
+          run_case DeepPresentation
           run_case PresentationRng
           run_case PresentationLifecycle
           # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
@@ -186,6 +187,17 @@ jobs:
           run_case B14Growth
           run_case B14Rail
           run_case B14Feedback
+          # P0 release gate: normal and explicit E2E command lines must diverge
+          # only at the deliberate invulnerability guard, with real HP assertions.
+          run_case P0ReleaseDamage
+          run_case P0ReleaseDamage --e2e
+          # P0 HUD gate: the live product HP bar is compared against PlayerData on
+          # every frame of a real round where monsters attack a player who never
+          # presses anything, so "HP stayed full" can never again be ambiguous.
+          run_case P0HudParity
+          # P0 save gate: a diagnostic survivability pool must never be persisted and
+          # must be repaired on load, because a 100001/100001 bar reads 100% forever.
+          run_case P0SaveSanity
           run_case B14EncounterContracts
           run_case B17Contracts
           run_case B19Contracts

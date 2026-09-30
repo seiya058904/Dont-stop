@@ -81,8 +81,16 @@ func _ready() -> void:
 	PlayerData.playerWeaponListChange.connect(self.playerWeaponListChange) #武器列表化监听
 	PlayerData.onWeaponChangeAnim.connect(self.onWeaponChangeAnim) #武器化监听
 	PlayerData.onWeaponBulletsChange.connect(self.onWeaponBulletsChange) #武器化监听
-	PlayerData.onHpChange.connect(func hpChange(hp,max_hp): #血量变化监听
-		hp_bar.max_value = max_hp;hp_bar.value = hp)
+	PlayerData.onHpChange.connect(_sync_hp_readout) #血量变化监听
+	_sync_hp_readout(PlayerData.player_hp,PlayerData.player_hp_max)
+
+func _sync_hp_readout(hp, max_hp) -> void:
+	# The bar used to rely on a signal emitted during scene handover. A normal
+	# release can construct GameUI after that signal, leaving the product HUD at
+	# its authored 100% value until the first later event. Always mirror the live
+	# PlayerData state on construction and on every real damage/heal transition.
+	hp_bar.max_value = max_hp
+	hp_bar.value = hp
 
 func _style_hud() -> void:
 	var skin = preload("res://ui/GildedTheme.gd")

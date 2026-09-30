@@ -1,8 +1,30 @@
 extends RefCounted
 class_name CampSnapshot
 
+## Static preload rather than the `PlayerData` autoload: this file is consulted while
+## a save is being read, and it must not depend on autoload ordering.
+const PROGRESSION = preload("res://game/config/LevelProgression.gd")
+
 static func number(value, integral = false) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and value >= 0 and (not integral or value == floor(value)) and value <= 9007199254740991.0
+
+## The largest max-HP pool a legitimate build can hold at `level`.
+##
+## The pool is base 5 + the 0.5/level growth + the T07 talent (9) + the helmet reward
+## (12) + the saved bacteria/legacy history (10), so a level-40 build tops out around
+## 56. `HP_HEADROOM` is a deliberately wide allowance above that.
+##
+## The ceiling exists because max HP is the one persisted stat a diagnostic driver can
+## inflate to make a long measurement survivable: Smoke's `--perf` and `--stage-tour`
+## rigs set the pool to 100000, and because they did not arm test mode, the round's own
+## `return_to_camp()` saved that pool into the player's real camp file. Every later
+## normal launch then restored it, and a 100001/100001 health bar reads "100%" no matter
+## how much damage lands - which is exactly "完全不掉血". A pool beyond this ceiling is
+## therefore never written and never restored as if it were a real build.
+const HP_HEADROOM := 120.0
+
+static func hp_max_ceiling(level: int) -> float:
+	return 5.0 + maxf(0.0,float(level) - 1.0) * PROGRESSION.HP_PER_LEVEL + HP_HEADROOM
 
 static func validate(data) -> bool:
 	if not data is Dictionary: return false
@@ -178,4 +200,13 @@ static func normalize(data: Dictionary) -> Dictionary:
 	result.owned_global_upgrades = upgrades
 	result.erase("attachments"); result.erase("next_instance"); result.erase("compatibility")
 	result.schema_version = 6
+	# Repair, don't reject: a pool above what this save's own level can justify is a
+	# diagnostic leak rather than a corrupt file, so the pool is brought back to the
+	# ceiling and the current HP inside it. Rejecting here would instead raise the
+	# "存档损坏" recovery dialog on a save the player can otherwise keep using.
+	var ceiling = hp_max_ceiling(int(result.level))
+	if float(result.hp_max) > ceiling:
+		push_warning("[save] max HP %.1f exceeds the reachable ceiling %.1f at level %d; clamping (diagnostic leak)" % [float(result.hp_max),ceiling,int(result.level)])
+		result.hp_max = ceiling
+		result.hp = minf(float(result.hp),ceiling)
 	return result
