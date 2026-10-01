@@ -390,12 +390,12 @@ func on_kill(monster, context: Dictionary):
 func snapshot() -> Dictionary:
 	var weapons = []
 	for gun in PlayerData.player_weapon_list.values(): weapons.append({"id":str(gun.weapon_id),"ammo":gun.bullets_count})
-	# The persisted max-HP pool is clamped to what this save's own level can justify, so
+	# The persisted max-HP pool is clamped to what this save's level and supported history can justify, so
 	# no driver - and no future one - can write a diagnostic survivability pool into the
 	# player's real camp. The round's own return_to_camp() saves, so without this an
 	# inflated pool reached the save and every later normal launch restored it, leaving a
 	# health bar that reads 100% however much damage lands.
-	var hp_ceiling = CampSnapshot.hp_max_ceiling(PlayerData.player_level)
+	var hp_ceiling = CampSnapshot.hp_max_ceiling(PlayerData.player_level,purchases,legacy_state())
 	var saved_hp_max: float = minf(float(PlayerData.player_hp_max),hp_ceiling)
 	var saved_hp: float = minf(float(PlayerData.player_hp),saved_hp_max)
 	# `selected_stage` is written as it is. Any stage 1-40 is a legal selection on any save,
