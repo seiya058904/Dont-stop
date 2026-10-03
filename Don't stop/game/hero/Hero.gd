@@ -310,7 +310,7 @@ func onHit(hurt, attacker = null, minimum_pressure = 1.0, source := ""):
 	PlayerData.player_hp -= hurt
 	for cb in fanout_received:
 		cb.call()
-	Utils.showHitLabel(hurt,self)
+	Utils.showHitLabelMore(hurt,self,Vector2(0,-12),Color("ffae91"))
 	get_tree().call_group("control","hit")
 	#Utils.freeze_frame = true
 	Utils.freezeFrame(0.1)
@@ -335,7 +335,8 @@ func showDash():
 	dash.texture = anim.sprite_frames.get_frame_texture(anim.animation,anim.frame)
 	dash.global_position = global_position
 	dash.flip_h = body.scale.x != 1
-	get_tree().root.call_deferred("add_child",dash)
+	dash.add_to_group("combat_transient")
+	get_tree().current_scene.call_deferred("add_child",dash)
 
 func addEquip(equip):
 	if $EquipRoot.get_child_count() > 0:

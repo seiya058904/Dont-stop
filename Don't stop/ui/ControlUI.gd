@@ -4,12 +4,17 @@ extends CanvasLayer
 @onready var toast_ui = $Control
 @onready var timer = $Control/Timer
 var toast_tween: Tween
+var hit_tween: Tween
 
 func _ready() -> void:
 	Utils.canvasLayer = self
+	# Each scene owns its flash state, including during a menu handover.
+	$Sprite2D.material = $Sprite2D.material.duplicate()
 	var atmosphere = preload("res://ui/Atmosphere.gd").new()
 	add_child(atmosphere)
 	move_child(atmosphere,0)
+	# Distort the world behind the readouts, never HP, ammunition or the reticle.
+	move_child($Sprite2D,1)
 	toast.add_theme_color_override("font_color",Color("f4dfb4"))
 	toast.add_theme_stylebox_override("normal",preload("res://ui/GildedTheme.gd").plate(Color("14212be8"),Color("8c7959"),4))
 	print("[boot-probe] controlui_ready t=%d" % Time.get_ticks_msec())
@@ -40,8 +45,11 @@ func toast_hide():
 	toast_ui.visible = false
 
 func hit():
-	var material_hit = $Sprite2D.material
+	if hit_tween and hit_tween.is_valid(): hit_tween.kill()
+	if Combat.reduced_flash:
+		$Sprite2D.hide()
+		return
 	$Sprite2D.visible = true
-	var tween = create_tween().set_ease(Tween.EASE_IN)
-	tween.tween_property(material_hit,"shader_parameter/fade",0,0.2).from(0.01)
-	tween.tween_callback(func back(): $Sprite2D.visible = false)
+	hit_tween = create_tween().set_ease(Tween.EASE_IN)
+	hit_tween.tween_property($Sprite2D.material,"shader_parameter/fade",0,0.2).from(0.01)
+	hit_tween.tween_callback($Sprite2D.hide)

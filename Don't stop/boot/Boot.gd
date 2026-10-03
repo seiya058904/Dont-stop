@@ -47,6 +47,9 @@ var _progress_shown := 0.0
 var _sweep := false
 var _sweep_time := 0.0
 var _boot_ms := 0
+var _design: Control
+var _phase: Label
+var _stages: Array[Label] = []
 ## Dev/evidence only: `--boot-capture=<dir>` saves one PNG of the real framebuffer
 ## at each launch stage, so the launch sequence can be documented without
 ## screenshotting the desktop. Empty in a normal launch.
@@ -91,89 +94,78 @@ func _capture(name: String) -> void:
 		img.save_png(_capture_dir.path_join(name))
 
 func _build_ui() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color("10191f")
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
-
-	var column := VBoxContainer.new()
-	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.add_theme_constant_override("separation", 7)
-	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(column)
-
-	# Everything below is sized in DESIGN units: the project viewport is only
-	# 410x230 and the window stretches it, so a "128 px" icon would be a third of
-	# the screen. Sizes here match the browser shell's proportions.
+	var backdrop := preload("res://boot/LoadingBackdrop.gd").new()
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(backdrop)
+	_design = Control.new()
+	_design.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_design.size = Vector2(410,230)
+	add_child(_design)
 	var rule := ColorRect.new()
-	rule.color = Color("bd9963")
-	rule.custom_minimum_size = Vector2(14,1)
-	column.add_child(_centered(rule))
-
+	rule.color = Color("dfbd7e")
+	_place(rule,Vector2(29,67),Vector2(20,0.6))
 	var wordmark := TextureRect.new()
 	wordmark.texture = load("res://Sprites/ui/title.png")
-	wordmark.custom_minimum_size = Vector2(144, 50)
 	wordmark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	wordmark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	wordmark.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	column.add_child(_centered(wordmark))
-
-	var tagline := Label.new()
-	tagline.text = "移动 · 构筑 · 生存"
-	tagline.add_theme_font_override("font",load("res://fonts/fusion-pixel.otf"))
-	tagline.add_theme_font_size_override("font_size",7)
-	tagline.add_theme_color_override("font_color",Color("bd9963"))
-	column.add_child(_centered(tagline))
-
-	_status = Label.new()
-	_status.text = "正在准备…"
-	_status.add_theme_font_override("font", load("res://fonts/fusion-pixel.otf"))
-	_status.add_theme_font_size_override("font_size", 8)
-	_status.add_theme_color_override("font_color", Color("a7bbc2"))
-	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var status_wrap := _centered(_status)
-	column.add_child(status_wrap)
-
+	_place(wordmark,Vector2(29,79),Vector2(188,33))
+	_label("移动 · 构筑 · 生存",Vector2(29,124),Vector2(200,12),6,Color("dfbd7e"))
+	_status = _label("正在准备出发…",Vector2(29,175),Vector2(296,12),6,Color("d1dedf"))
+	_phase = _label("01 / 03",Vector2(339,175),Vector2(42,12),6,Color("dfbd7e"))
+	_phase.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_track = ColorRect.new()
-	_track.color = Color("26363e")
-	_track.custom_minimum_size = Vector2(144, 2)
-	_track.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_track.color = Color("30434a")
+	_track.custom_minimum_size = Vector2(352,1)
 	_track.clip_contents = true
-	var track_wrap := _centered(_track)
-	column.add_child(track_wrap)
-
+	_place(_track,Vector2(29,191),Vector2(352,1))
 	var grad := Gradient.new()
-	grad.set_color(0, Color("a67c45"))
-	grad.set_color(1, Color("edcf94"))
+	grad.set_color(0,Color("967844"))
+	grad.set_color(1,Color("efd499"))
 	var tex := GradientTexture2D.new()
 	tex.gradient = grad
-	tex.width = 144
-	tex.height = 2
-	tex.fill_from = Vector2(0, 0.5)
-	tex.fill_to = Vector2(1, 0.5)
+	tex.width = 352
+	tex.height = 1
 	_fill = TextureRect.new()
 	_fill.texture = tex
 	_fill.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_fill.stretch_mode = TextureRect.STRETCH_SCALE
 	_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_fill.position = Vector2.ZERO
-	_fill.size = Vector2(0, 2)
+	_fill.size = Vector2(0,1)
 	_track.add_child(_fill)
 	_activity = ColorRect.new()
-	_activity.color = Color(0.65, 0.85, 1.0, 0.3)
+	_activity.color = Color(0.94,0.83,0.60,0.35)
 	_activity.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_activity.size = Vector2(28, 2)
+	_activity.size = Vector2(70,1)
 	_activity.hide()
 	_track.add_child(_activity)
-	column.move_child(status_wrap,-1)
+	for i in 3:
+		var step := _label(["载入资源","武器与特效","进入营地"][i],Vector2(29+i*137,197),Vector2(78,10),5,Color("8b9fa4"))
+		if i == 2: step.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		_stages.append(step)
+	_label("WASD 移动 · 鼠标瞄准 · Shift 冲刺",Vector2(29,213),Vector2(300,10),5,Color("a5b8bc"))
+	resized.connect(_layout_ui)
+	_layout_ui()
 
-func _centered(node: Control) -> Control:
-	var wrap := CenterContainer.new()
-	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrap.add_child(node)
-	return wrap
+func _place(node: Control, at: Vector2, extent: Vector2) -> void:
+	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	node.position = at
+	node.size = extent
+	_design.add_child(node)
+
+func _label(text: String, at: Vector2, extent: Vector2, font_size: int, tint: Color) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.add_theme_font_override("font",load("res://fonts/fusion-pixel.otf"))
+	label.add_theme_font_size_override("font_size",font_size)
+	label.add_theme_color_override("font_color",tint)
+	_place(label,at,extent)
+	return label
+
+func _layout_ui() -> void:
+	if _design == null: return
+	var factor := minf(size.x/410.0,size.y/230.0)
+	_design.scale = Vector2.ONE*factor
+	_design.position = (size-Vector2(410,230)*factor)*0.5
 
 ## progress 0..1, or a negative value for "no measurable progress".
 func _set_progress(value: float, text: String) -> void:
@@ -185,6 +177,10 @@ func _set_progress(value: float, text: String) -> void:
 		return
 	# Three real work stages; smoothing never advances beyond completed work.
 	_progress_target = maxf(_progress_target, clampf(value, 0.0, 1.0))
+	var phase := mini(2,int(_progress_target*3.0))
+	_phase.text = "%02d / 03" % (phase+1)
+	for i in _stages.size():
+		_stages[i].add_theme_color_override("font_color",Color("e9ce99") if i == phase else (Color("b4c6c3") if i < phase else Color("8b9fa4")))
 	_sweep = value < 1.0
 	_activity.visible = _sweep
 	if value >= 1.0:
@@ -196,13 +192,13 @@ func _process(delta: float) -> void:
 	if _fill == null or _track == null: return
 	_progress_shown = lerpf(_progress_shown, _progress_target, 1.0-exp(-18.0*delta))
 	_fill.size.x = _track.custom_minimum_size.x * _progress_shown
-	if not _sweep: return
+	if not _sweep or Combat.reduced_flash: return
 	_sweep_time += delta
 	var width: float = _track.custom_minimum_size.x
 	var bar := _activity.size.x
 	# Activity is separate from measured progress: it cannot imply completion.
 	var span := width + bar
-	_activity.position.x = fposmod(_sweep_time * span / 1.15, span) - bar
+	_activity.position.x = fposmod(_sweep_time * span / 1.8, span) - bar
 
 func _run() -> void:
 	# Draw the shell before doing anything expensive. Three processed frames with
@@ -312,4 +308,4 @@ func _fail(message: String) -> void:
 	box.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.custom_minimum_size = Vector2(340, 0)
 	box.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	add_child(_centered(box))
+	_place(box,Vector2(29,137),Vector2(352,34))

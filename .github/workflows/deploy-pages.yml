@@ -189,6 +189,8 @@ jobs:
           }
           run_case BaselineRegression
           run_case B194Contracts
+          run_case CombatReadability
+          run_case CameraTransitions
           run_case B17Contracts
           run_case M3Weapons
 
@@ -400,6 +402,9 @@ jobs:
           trap 'kill "$SERVER" 2>/dev/null || true' EXIT
           sleep 2
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
+          if [ "${{ matrix.name }}" = smoke ]; then
+            node "$PROJECT_PATH/tools/web-loader-check.js" http://localhost:8788/index.html "$OUT/loader"
+          fi
           # Every gate script takes the same shape: <url> <evidenceDir> [gateArg].
           set -- "http://localhost:8788/index.html" "$OUT"
           SCRIPT=""

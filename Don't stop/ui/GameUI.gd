@@ -29,6 +29,11 @@ var level_notice: Label
 var notice_tween: Tween
 var current_weapon_label: Label
 var current_weapon_icon: TextureRect
+var reload_bar: ProgressBar
+var hp_text: Label
+var hp_trail: ProgressBar
+var hp_trail_tween: Tween
+var hp_initialized := false
 var readout_clock := 0.0
 var readout_empty := -1
 
@@ -89,8 +94,26 @@ func _sync_hp_readout(hp, max_hp) -> void:
 	# release can construct GameUI after that signal, leaving the product HUD at
 	# its authored 100% value until the first later event. Always mirror the live
 	# PlayerData state on construction and on every real damage/heal transition.
+	var previous_hp: float = hp_bar.value
 	hp_bar.max_value = max_hp
 	hp_bar.value = hp
+	hp_text.text = "%s / %s" % [_hp_number(hp),_hp_number(max_hp)]
+	hp_text.add_theme_color_override("font_color",Color("ffb7a0") if hp > 0 and hp <= max_hp*0.3 else Color("eff4e6"))
+	if hp_trail_tween and hp_trail_tween.is_valid(): hp_trail_tween.kill()
+	var old_max: float = hp_trail.max_value
+	hp_trail.max_value = max_hp
+	if not hp_initialized or hp >= previous_hp or not is_equal_approx(old_max,max_hp) or Combat.reduced_flash:
+		hp_trail.value = hp
+	else:
+		# Real HP updates immediately. The amber trail only explains the recent loss.
+		hp_trail_tween = create_tween()
+		hp_trail_tween.tween_interval(0.2)
+		hp_trail_tween.tween_property(hp_trail,"value",hp,0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	hp_initialized = true
+
+func _hp_number(value: float) -> String:
+	# Positive fractional HP must never read as dead through rounding.
+	return ("%.2f" % (maxf(0.01,value) if value > 0 else 0.0)).trim_suffix("0").trim_suffix("0").trim_suffix(".")
 
 func _style_hud() -> void:
 	var skin = preload("res://ui/GildedTheme.gd")
@@ -107,6 +130,29 @@ func _style_hud() -> void:
 	for bar in [hp_bar,level_bar]:
 		bar.add_theme_stylebox_override("background",skin.plate(Color("071115"),Color("3d535b"),0))
 		bar.add_theme_stylebox_override("fill",skin.plate(Color("62b79d") if bar == hp_bar else skin.GOLD,Color("bce4ca") if bar == hp_bar else Color("f0d5a0"),0))
+	hp_bar.step = 0.0
+	hp_bar.show_percentage = false
+	hp_trail = ProgressBar.new()
+	hp_trail.position = hp_bar.position
+	hp_trail.size = hp_bar.size
+	hp_trail.show_percentage = false
+	hp_trail.add_theme_font_size_override("font_size",5)
+	hp_trail.step = 0.0
+	hp_trail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hp_trail.add_theme_stylebox_override("background",skin.plate(Color("071115"),Color("3d535b"),0))
+	hp_trail.add_theme_stylebox_override("fill",skin.plate(Color("bc9266"),Color("efd0a0"),0))
+	box_top.add_child(hp_trail)
+	hp_trail.size = hp_bar.size
+	box_top.move_child(hp_trail,hp_bar.get_index())
+	hp_bar.add_theme_stylebox_override("background",StyleBoxEmpty.new())
+	hp_text = Label.new()
+	hp_text.size = hp_bar.size
+	hp_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hp_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hp_text.add_theme_font_size_override("font_size",5)
+	_style_floating_text(hp_text)
+	hp_bar.add_child(hp_text)
+	hp_text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	# Experience is a fine track below its numbers, never a rounded cap over text.
 	level_bar.show_percentage = false
 	var exp_track := StyleBoxFlat.new()
@@ -147,6 +193,22 @@ func _setup_weapon_readout() -> void:
 	current_weapon_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	current_weapon_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bottom_bls.add_child(current_weapon_icon)
+	reload_bar = ProgressBar.new()
+	reload_bar.position = Vector2(-26,-26)
+	reload_bar.size = Vector2(120,1)
+	reload_bar.show_percentage = false
+	reload_bar.add_theme_font_size_override("font_size",1)
+	reload_bar.step = 0.0
+	reload_bar.max_value = 1.0
+	reload_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var reload_track := StyleBoxFlat.new()
+	reload_track.bg_color = Color("20343bbb")
+	var reload_fill := StyleBoxFlat.new()
+	reload_fill.bg_color = Color("e4c18a")
+	reload_bar.add_theme_stylebox_override("background",reload_track)
+	reload_bar.add_theme_stylebox_override("fill",reload_fill)
+	bottom_bls.add_child(reload_bar)
+	reload_bar.size = Vector2(120,2)
 	weapon_bullet_list.offset_left = -26
 	weapon_bullet_list.offset_right = 94
 	ammo_count_label.add_theme_font_size_override("font_size",7)
@@ -165,7 +227,12 @@ func _process(delta: float) -> void:
 func _update_weapon_readout() -> void:
 	if not is_instance_valid(current_weapon_label): return
 	var gun := _equipped_gun()
-	var next_text: String = "未装备武器" if gun == null else ("装填 · " if gun.is_reloading else "")+gun.weapon_name
+	var reloading: bool = gun != null and gun.is_reloading
+	var next_text: String = "未装备武器" if gun == null else gun.weapon_name
+	if reloading: next_text = "装填 %.1f秒 · %s" % [gun.change_timer.time_left,gun.weapon_name]
+	elif gun != null and gun.bullets_count == 0 and PlayerData.reserve_magazines == 0: next_text = "弹药耗尽 · "+gun.weapon_name
+	reload_bar.visible = reloading
+	if reloading: reload_bar.value = 1.0-gun.change_timer.time_left/maxf(0.001,gun.change_timer.wait_time)
 	if current_weapon_label.text != next_text: current_weapon_label.text = next_text
 	var next_texture: Texture2D = null if gun == null else gun.image
 	if current_weapon_icon.texture != next_texture: current_weapon_icon.texture = next_texture
@@ -183,13 +250,15 @@ func onGameStart():
 	onGoldChange(PlayerData.gold)
 	onRewardChange(PlayerData.reward_point)
 	onAmmoChange(PlayerData.reserve_magazines)
-	var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT).set_parallel(true)
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_parallel(true)
 	tween.tween_property(box_top,"position:y",box_top.position.y,0.3).from(box_top.position.y-box_top.size.y)
 	tween.tween_property(bottom_bls,"position:y",bottom_bls.position.y,0.3).from(bottom_bls.position.y+bottom_bls.size.y)
 	tween.tween_property(weapon_lsit_node,"position:y",weapon_lsit_node.position.y,0.3).from(weapon_lsit_node.position.y+weapon_lsit_node.size.y)
 	show()
 
 func on_restore():
+	hp_initialized = false
+	_sync_hp_readout(PlayerData.player_hp,PlayerData.player_hp_max)
 	for box in [weapon_lsit_node,rw_grid,weapon_bullet_list]:
 		for child in box.get_children(): child.free()
 	# The segment pool and the drawn state belonged to the previous session; drop
@@ -240,7 +309,7 @@ func onWeaponChangeAnim(weapon_id,tag = Utils.GUN_CHANGE_TYPE.CHANGE):
 			ammo_count_label.text = "%s" %[weapon.bullets_count]
 			weapon_change_image.texture = weapon.image
 			if weapon_feedback_tween and weapon_feedback_tween.is_valid(): weapon_feedback_tween.kill()
-			weapon_feedback_tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
+			weapon_feedback_tween = create_tween().set_ease(Tween.EASE_IN_OUT)
 			weapon_feedback_tween.tween_property(weapon_change_image,"modulate:a",1.0,0.3).from(0.0)
 			weapon_feedback_tween.tween_property(weapon_change_image,"modulate:a",0.0,0.3).from(1.0).set_delay(0.5)
 	call_deferred("loadWeaponBullets",weapon_id)

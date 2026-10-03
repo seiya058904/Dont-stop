@@ -1,6 +1,8 @@
 extends Camera2D
 
 var is_shake = false
+var shake_tween: Tween
+const MAX_LOOK_AHEAD := 48.0
 
 var center_horizontal = false
 var center_vertical = false
@@ -8,20 +10,12 @@ var center_horizontal_pos:int
 var center_vertical_pos:int
 
 
-func _process(_delta:float)->void :
-	if Engine.get_process_frames() % 5 == 0:
-		var target_pos = Utils.player.global_position
-		var camera_pos = get_global_transform().origin
-		var distance = Utils.get_aim_world_position().distance_to(camera_pos)
-		var max_distance = 10  # 最大距离
-		var max_offset = 5  # 最大偏移量
-		var t = distance / max_distance  # 计算插值系数
-		var new_offset = (Utils.get_aim_world_position() - camera_pos).normalized() * max_offset * t  # 计算相机的偏移量
-
-		var x = int(lerp(position.x,new_offset.x,0.1))
-		var y = int(lerp(position.y,new_offset.y,0.1))
-		position = Vector2(x,y)
-		#Utils.player.light2d.offset = new_offset
+func _process(delta: float) -> void:
+	# Screen-space aim cannot inherit the previous arena's world transform.
+	# Bound the lead so even a cursor outside the window keeps the hero in view.
+	var cursor_delta := Utils.get_aim_viewport_position()-get_viewport_rect().size*0.5
+	var lead := (cursor_delta/zoom*0.5).limit_length(MAX_LOOK_AHEAD)
+	position = position.lerp(lead,1.0-exp(-6.0*delta))
 	if center_horizontal:
 		global_position.x = center_horizontal_pos
 	if center_vertical:
@@ -30,6 +24,15 @@ func _process(_delta:float)->void :
 func _ready():
 	add_to_group("camera")
 
+func reset_after_teleport() -> void:
+	if shake_tween and shake_tween.is_valid(): shake_tween.kill()
+	is_shake = false
+	position = Vector2.ZERO
+	offset = Vector2.ZERO
+	reset_physics_interpolation()
+	reset_smoothing()
+	force_update_scroll()
+
 func shootShake(_step):
 	if float(Utils.shake) <= 0:
 		return
@@ -37,8 +40,8 @@ func shootShake(_step):
 		return
 	is_shake = true
 	_step *= Utils.shake
-	var tween = get_tree().create_tween().set_trans(Tween.TRANS_LINEAR)
-	tween.tween_property(self,"offset",_step,0.1)
-	tween.tween_property(self,"offset",Vector2.ZERO,0.1)
-	tween.tween_callback(func end():
+	shake_tween = create_tween().set_trans(Tween.TRANS_LINEAR)
+	shake_tween.tween_property(self,"offset",_step,0.1)
+	shake_tween.tween_property(self,"offset",Vector2.ZERO,0.1)
+	shake_tween.tween_callback(func end():
 		is_shake = false)

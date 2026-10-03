@@ -23,12 +23,14 @@ var hit_ids: Array[int] = []
 var has_split = false
 func _ready():
 	add_to_group("combat_transient")
+	# Only the drawn tracer is emissive. Sprite shading and world lights remain.
+	material = preload("res://game/effects/EmissiveInk.tres")
 	if get_tree().get_nodes_in_group("projectile_lights").size() < 16:
 		add_to_group("projectile_lights")
 	else:
 		light2d.enabled = false
 	set_physics_process(false)
-	get_tree().create_tween().set_ease(Tween.EASE_OUT_IN).tween_property(self,"scale",Vector2(1.2,1.2),0.1).from(Vector2(0.5,1.5))
+	create_tween().set_ease(Tween.EASE_OUT_IN).tween_property(self,"scale",Vector2(1.2,1.2),0.1).from(Vector2(0.5,1.5))
 	timer = Timer.new()
 	add_child(timer)
 	timer.timeout.connect(self._on_timer_timeout)

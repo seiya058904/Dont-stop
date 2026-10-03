@@ -108,7 +108,7 @@ func onTimeTick(timeout) -> void:
 #回合开始
 func onRoundStart():
 	camp_prompt.hide()
-	Utils.showToast("START_TIP",2)
+	Utils.showToast("击败首领，留意地面预警。" if DemoConfig.ENCOUNTERS[LevelServer.level].has("boss") else "START_TIP",2)
 	$CanvasLayer/timeout.visible = true
 	$CanvasLayer/level.visible = true
 	$CanvasLayer/level.text = DemoConfig.ENCOUNTERS[LevelServer.level].name
@@ -117,7 +117,7 @@ func onRoundStart():
 func onRoundEnd():
 	camp_prompt.show()
 	if is_instance_valid(arena): arena.queue_free(); arena = null
-	Utils.player.global_position = $PositionHome.global_position
+	place_player($PositionHome.global_position)
 	$CanvasLayer/timeout.text = "营地整备 · E 商店 / Tab 配置"
 	for item in $TileMap2/PortalRoot.get_children(): item.reset()
 	# Belt and braces with LevelServer.return_to_camp(): the camp is bright in every path
@@ -469,6 +469,16 @@ func spawn_near(center: Vector2, minimum: float, maximum: float, radius := -1.0)
 var arena
 func prepare_region(id: String):
 	if is_instance_valid(arena): arena.queue_free(); arena = null
-	if id == "R1": Utils.player.global_position = portal_lv1.global_position+Vector2(0,35); return
+	if id == "R1": place_player(portal_lv1.global_position+Vector2(0,35)); return
 	arena = load("res://game/map/CombatArena.gd").new(); arena.region_id = id; arena.position = Vector2(10000+int(id.substr(1))*1000,-6000); add_child(arena)
-	Utils.player.global_position = arena.global_position
+	place_player(arena.global_position)
+
+func place_player(point: Vector2) -> void:
+	Utils.player.global_position = point
+	Utils.player.reset_physics_interpolation()
+	# Combat starts in this same frame. Neither smoothing layer may fly across
+	# the empty world between the camp and arenas thousands of pixels away.
+	var anchor := $TileMap2/PlayerRoot/Anchor
+	anchor.global_position = point
+	anchor.reset_physics_interpolation()
+	anchor.get_node("Camera2D").reset_after_teleport()

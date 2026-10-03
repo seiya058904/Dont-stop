@@ -6,6 +6,8 @@ var shot_id := -1
 const FAMILIES = {1:"scatter",5:"scatter",8:"scatter",6:"beam",111:"prism",112:"arc",113:"rail",114:"plasma",115:"cone",116:"thermal",117:"heavy",118:"shard",119:"rocket",120:"rocket",121:"gravity",122:"disc",124:"rotary"}
 func _ready():
 	z_index = 2
+	# A muzzle emits its own light; it does not need the lit geometry variant.
+	material = preload("res://game/effects/EmissiveInk.tres")
 	set_process(false)
 func pulse(level: int, weapon_id: int = -1):
 	tier = level

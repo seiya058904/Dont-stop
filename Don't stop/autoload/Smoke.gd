@@ -316,7 +316,7 @@ func _e2e_stream() -> void:
 ## The state line's shape, in one place. B11 replaced the inline literal with this constant and an
 ## explicit `fields` Array so the specifier count and the argument count are both readable in one
 ## screen; see `_probe_report()`.
-const PROBE_FORMAT := "[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d stage=%d camp=%s hellc=%s next=%d sel=%d pt=%d fog=%s scroll=%d"
+const PROBE_FORMAT := "[probe] sess=%d frames=%d proj=%d start=%s sm=%s pause=%s panels=%d ingame=%s gun=%d bullets=%d/%d mm=%d player=%s aimvp=%s crh=%s hp=%.1f aimworld=%s projv=(%.1f, %.1f) projang=%.1f projshots=%d fr=%s fps=%d stage=%d camp=%s hellc=%s next=%d sel=%d pt=%d fog=%s scroll=%d player_vp=%s"
 
 var _probe_frames := 0
 var _probe_proj := 0
@@ -584,6 +584,7 @@ func _probe_report() -> void:
 		str(ArenaVisibility.fog_active()),
 		# scroll: how far the open camp panel's listing is scrolled, or -1 when no camp panel is up.
 		camp_scroll(),
+		Utils.player.get_global_transform_with_canvas().origin if player_id != 0 else Vector2.ZERO,
 	]
 	print(PROBE_FORMAT % fields)
 
