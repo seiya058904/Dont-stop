@@ -190,6 +190,8 @@ jobs:
           run_case BaselineRegression
           run_case B194Contracts
           run_case CombatReadability
+          run_case WeaponVisualPose
+          run_case CampPresentation
           run_case CameraTransitions
           run_case B17Contracts
           run_case M3Weapons

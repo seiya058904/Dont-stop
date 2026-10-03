@@ -47,7 +47,6 @@ func _process(delta):
 		if spec.mode == "rotary": drive_spin(Input.is_action_pressed("shoot") and Demo.fire_released and not is_reloading,delta)
 		super._process(delta)
 		if not Input.is_action_pressed("shoot"): sustained = false
-	queue_redraw()
 
 func _physics_process(delta):
 	if WeaponCatalog.definition(weapon_id).mode != "thermal": return
@@ -90,7 +89,6 @@ func cancel_actions():
 	sustained = false
 	spin = 0.0
 	thermal_clock = 0.0
-	queue_redraw()
 
 func reload_ammo():
 	stop_thermal_visual()
@@ -99,12 +97,6 @@ func reload_ammo():
 	charge_time = 0.0
 	sustained = false
 	super.reload_ammo()
-
-func _draw():
-	if charging:
-		draw_arc(gun_tip.position,5+charge_time*5,0,TAU,18,Color(0.7,0.9,1),1)
-	if spin > 0:
-		draw_arc(gun_tip.position,4,spin*TAU,spin*TAU+PI,8,Color(1,0.8,0.4),1)
 
 func _shoot():
 	if not is_use or player.is_dead or get_tree().paused or bullets_count <= 0 or is_reloading: return

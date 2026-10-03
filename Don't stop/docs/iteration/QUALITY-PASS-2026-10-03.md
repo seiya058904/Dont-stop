@@ -152,3 +152,51 @@ DontStop.exe -- --stress --stress-stage=39 --stress-seconds=35 --stress-scenario
 
 Use isolated browser/save profiles. GPU benchmarks must run serially; verify
 completed combat duration and zero pauses before comparing results.
+
+## Weapon artwork and attachment follow-up
+
+Baseline: `7ca9633eb3de51ec4357419b38968609286d96fd` on `main`.
+
+- Refined the 19 existing `Sprites/Presentation/weapon-*.svg` assets at their
+  original 32×16 size. Dark joints, steel bevels, brass fittings and distinct
+  chambers replace flat blocks. Fixed rails, collars and coils belong to the
+  texture; the five existing hand-drawn PNG weapons remain intact.
+- `BaseGun.gd` parents `WeaponIdle.gd` to the actual sprite. Its texture-offset
+  signal keeps running bob attached synchronously; reload rotation/translation,
+  recoil scaling, mirrored aim and interrupted reloads share the sprite pose.
+  Firing anchors and combat values are unchanged.
+- Replaced oversized floating decorations with contained electrode arcs, rail
+  charge cells, prism glints, plasma/gravity cores and barrel reflections. Rail
+  charge uses effective warm-up duration. `MechanismGun.gd` no longer draws
+  detached generic circles or redraws an empty root every frame.
+- `CampPanel.gd` maps effects through the preview's crop and integer scale.
+  Cropped bounds are cached with the texture, avoiding repeated image readback.
+
+Verification:
+
+- `WeaponVisualPose`: reproduced 66 failures before the fix, then 144/144 passed
+  against real reload/run animations for all 11 effect-bearing weapons.
+- `CampPresentation`: 71/71, including 33 source-pixel alignment assertions.
+  Both suites are required Web preflight checks and included in native CI.
+- CombatReadability (24), PresentationLifecycle (52), PresentationRng (8),
+  M9Beam (312), PresentationContracts (58), DeepPresentation (34): all clean.
+  Total: **703 clean assertions in eight suites**. B14Rail additionally passed
+  8 behavior assertions but reported the same four-resource exit warning seen
+  in the earlier `after-core` run; it is not counted as clean.
+- Godot 4.7.2 Web and Windows release exports succeeded. Real Web inputs bought,
+  fired, reloaded, interrupted reloads and aimed/moved with weapons 113, 121 and
+  6: 19 captures, zero runtime errors. The Windows export's existing B17 driver
+  completed 12 weapon sequences, 8 aim directions, movement/firing, dark/light
+  arenas and four UI sizes (1280–1920 wide), saved 902 frames and exited cleanly.
+  A custom external SceneTree capture attempt timed out and is excluded; the
+  supported in-game driver supplied the Windows evidence.
+- Same-machine fresh-context Web comparison for weapon 6: first-shot max frame
+  66.67 ms on the baseline, 66.66 ms after; second/third shots and first dash
+  max/p95 16.67 ms on both. No performance improvement is claimed for this pass.
+
+Evidence remains under `D:\temp\dont-stop-20261003`: `weapon-atlas.png`,
+`weapon-pose-browser-baseline`, `weapon-polish-browser`, `weapon-polish-checks`,
+`weapon-polish-verified`, `weapon-polish-final`, `weapon-polish-native-motion`,
+`weapon-polish-cold-baseline` and `weapon-polish-cold`. The diagnostic desktop
+crop is `native-window-inspect.png`; it is not a gameplay acceptance capture.
+Low-end/mobile GPU behavior and subjective human approval remain unverified.

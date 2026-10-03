@@ -44,6 +44,20 @@ func _ready():
 	check(preview.get_width() <= 96 and preview.get_height() <= 32,"preview fits its reserved display area")
 	check(preview.get_width() % used.size.x == 0 and preview.get_height() % used.size.y == 0,"preview scales source pixels by an integer")
 	check("传说" in panel.weapon_badge.text and "金币" in panel.weapon_badge.text,"legendary preview keeps rarity and price")
+	for id in preload("res://game/effects/WeaponIdle.gd").PALETTES:
+		panel.selection = str(id)
+		panel.render()
+		await wait(0.03)
+		var art: TextureRect = panel.weapon_preview
+		var bounds: Rect2i = models[str(id)].image.get_image().get_used_rect()
+		var factor := art.texture.get_width()/float(bounds.size.x)
+		var image_start := art.size/2-art.texture.get_size()/2
+		# Independent source-pixel landmarks: muzzle, receiver and lower rail.
+		# Each must land on the enlarged artwork, not the uncropped 32x16 image.
+		for pixel in [Vector2(21,8),Vector2(13,8),Vector2(18,11)]:
+			var expected: Vector2 = art.get_global_transform()*(image_start+(pixel-Vector2(bounds.position))*factor)
+			var actual: Vector2 = panel.weapon_aura.to_global(panel.weapon_aura.preview_tip+pixel-Vector2(21,8))
+			check(actual.distance_to(expected) < 0.01,str(id)+" preview energy matches source pixel "+str(pixel))
 	check(str(before) == str(EffectiveStats.calculate(Utils.player.gun)),"presentation never changes equipped effective stats")
 	print("CAMP_PRESENTATION_CHECKS ",checks," FAILURES ",failures)
 	dismiss()

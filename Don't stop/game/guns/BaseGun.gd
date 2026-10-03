@@ -91,7 +91,7 @@ func _ready() -> void:
 	if WeaponCatalog.tier(weapon_id) >= 4:
 		var idle = preload("res://game/effects/WeaponIdle.gd").new()
 		idle.gun = self
-		add_child(idle)
+		gun_image.add_child(idle)
 		idle_visual = idle
 	base_stats = {"damage":damage,"magazine":bullets_max_count,"reload":change_speed,"rate":fire_rate,"impulse":knockback_speed}
 	tags = DemoConfig.weapon_tags(weapon_id)

@@ -501,7 +501,14 @@ func show_weapon(id: String, gun):
 	weapon_display.tier = WeaponCatalog.tier(int(id))
 	weapon_heading.add_theme_color_override("font_color",weapon_display.tint.lightened(0.22))
 	weapon_aura.preview_id = int(id) if WeaponCatalog.tier(int(id)) >= 4 else -1
-	weapon_aura.preview_tip = Vector2(12,0)
+	# The preview is cropped and enlarged; map the same texture pixels as the held
+	# weapon instead of leaving its energy at the original size or a guessed tip.
+	var sprite: Sprite2D = gun.get_node("Sprite2D")
+	var offset: Vector2 = gun.idle_visual.resting_sprite_offset if is_instance_valid(gun.idle_visual) else sprite.offset
+	var used: Rect2i = preview_textures[gun.image].source_rect
+	var crop_center: Vector2 = Vector2(used.position)+Vector2(used.size)/2-gun.image.get_size()/2+offset
+	weapon_aura.preview_tip = gun.get_node("GunTip").position-crop_center
+	weapon_aura.scale = Vector2.ONE*weapon_preview.texture.get_width()/maxf(1,used.size.x)
 	weapon_aura.position = weapon_preview.size/2
 	assert(weapon_preview.texture!=null,"Missing weapon preview: "+id)
 	weapon_heading.text=tr(gun.weapon_name)
@@ -765,14 +772,16 @@ func quality_color(quality: int) -> Color:
 func quality_style(item: Button,quality: int):
 	row_style(item,quality_color(quality))
 func weapon_art(texture: Texture2D) -> Texture2D:
-	if preview_textures.has(texture): return preview_textures[texture]
+	if preview_textures.has(texture): return preview_textures[texture].texture
 	var image=texture.get_image()
-	if not image or image.get_used_rect().size==Vector2i.ZERO: return texture
-	var cropped = image.get_region(image.get_used_rect())
+	var used := image.get_used_rect() if image else Rect2i(Vector2i.ZERO,Vector2i(texture.get_size()))
+	preview_textures[texture] = {"texture":texture,"source_rect":used}
+	if not image or used.size==Vector2i.ZERO: return texture
+	var cropped = image.get_region(used)
 	var factor = maxi(1,mini(96 / cropped.get_width(),32 / cropped.get_height()))
 	cropped.resize(cropped.get_width()*factor,cropped.get_height()*factor,Image.INTERPOLATE_NEAREST)
 	var preview = ImageTexture.create_from_image(cropped)
-	preview_textures[texture] = preview
+	preview_textures[texture].texture = preview
 	return preview
 func tier_style(item: Button,tier: int):
 	row_style(item,tier_color(tier))
