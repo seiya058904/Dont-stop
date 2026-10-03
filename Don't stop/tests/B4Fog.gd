@@ -79,10 +79,10 @@ func _ready():
 		check(hell_radius < normal_radius,"Hell is genuinely tighter than normal on the same map")
 	check(absf(modulate.color.g-HellMode.fog(31).ambient) < 0.02,"the tween lands on the stage-31 target ambient")
 	check(absf(light.texture_scale-HellMode.light_scale(31)) < 0.02,"the tween lands on the stage-31 target light scale")
-	# HUD must not be darkened: ControlUI is a CanvasLayer (layer 2), so it is a different
+	# HUD must not be darkened: ControlUI is a CanvasLayer (layer 3), so it is a different
 	# canvas from the one that carries the CanvasModulate. That is exactly why the camp UI,
 	# the crosshair and the Boss HUD stay readable while the world is dark.
-	check(Utils.canvasLayer.layer == 2 and modulate.get_parent() != Utils.canvasLayer,
+	check(Utils.canvasLayer.layer == 3 and modulate.get_parent() != Utils.canvasLayer,
 		"the HUD lives on its own canvas, outside the modulated one")
 
 	# ---- Restoring is exact -------------------------------------------------------------
