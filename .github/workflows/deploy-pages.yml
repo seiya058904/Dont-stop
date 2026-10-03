@@ -359,14 +359,27 @@ jobs:
     needs: [changes, build]
     if: needs.changes.outputs.game == 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: ${{ matrix.job_budget_minutes || 8 }}
+    env:
+      GATE_JOB_BUDGET_MINUTES: ${{ matrix.job_budget_minutes || 8 }}
     strategy:
       fail-fast: false
       matrix:
         name: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '["smoke","save-audit","aim-core","aim-fault","menu-return","stages-fair"]' || '["smoke","menu-return"]') }}
+        include:
+          - name: menu-return
+            # Observed CI cycles span 31-50s: 21 iterations can take 17.5m,
+            # before startup/reload. 25m watchdog leaves room for the full soak;
+            # 30m job reserves installation and diagnostic-upload time.
+            job_budget_minutes: ${{ (github.event_name == 'schedule' || inputs.menu_cycles == '20') && 30 || 8 }}
+            watchdog_ms: ${{ (github.event_name == 'schedule' || inputs.menu_cycles == '20') && 1500000 || 420000 }}
     steps:
       - name: Check out source (gate scripts)
         uses: actions/checkout@v4
+
+      - name: Verify continuous-soak budget contract
+        if: matrix.name == 'menu-return'
+        run: python3 "$PROJECT_PATH/tools/test-menu-soak-policy.py"
 
       - name: Download the Web build under test (the same bytes as every other job)
         uses: actions/download-artifact@v4
@@ -420,7 +433,10 @@ jobs:
           esac
           export E2E_SCREENSHOTS=none
           case "${{ matrix.name }}" in
-            menu-return) set -- "$@" "${MENU_CYCLES:-5}" ;;
+            menu-return)
+              set -- "$@" "${MENU_CYCLES:-5}"
+              export E2E_WATCHDOG_MS='${{ matrix.watchdog_ms }}'
+              ;;
             # The two halves of the aim gate select their phases explicitly; the
             # script's default is `all`, which would run them serialised.
             aim-core)    set -- "$@" core ;;
@@ -435,7 +451,7 @@ jobs:
             echo "GATE_${{ matrix.name }}=FAIL tier=${TIER} after $((SECONDS-START))s" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
             exit 1
           fi
-          echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=8m" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload gate evidence
         if: always()
