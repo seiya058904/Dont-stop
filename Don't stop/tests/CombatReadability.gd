@@ -6,9 +6,11 @@ func _ready():
 	configure(0)
 	var ui = Utils.canvasLayer.get_node("GameUI")
 	var controls = Utils.canvasLayer
-	var flash = controls.get_node("Sprite2D")
+	var flash = controls.hit_flash
 	var original_flash_setting: bool = Combat.reduced_flash
-	check(flash.get_index() < ui.get_index(),"hit distortion is drawn below the combat HUD")
+	check(controls.world_effects.layer < controls.layer,"hit distortion is drawn below the combat HUD")
+	check(controls.world_effects.layer < LevelServer.town.get_node("CanvasLayer").layer,"stage and timer are above hit postprocessing")
+	check(controls.layer > LevelServer.town.get_node("CanvasLayer").layer,"camp and recovery dialogs cover map readouts")
 	check(ui.hp_trail.size.y <= ui.hp_bar.size.y,"damage trail stays within the HP track")
 	check(ui.reload_bar.size.y <= 3,"reload feedback remains a fine track")
 	Combat.reduced_flash = false
@@ -83,6 +85,46 @@ func _ready():
 	dismiss()
 	await wait(0.05)
 	check(get_tree().get_nodes_in_group("combat_transient").is_empty(),"returning to camp removes dash ghosts immediately")
+
+	var rng_gun = Utils.weapon_list["6"].instantiate()
+	add_child(rng_gun)
+	seed(206104)
+	var expected_rng: Array = []
+	for i in 6: expected_rng.append(randi())
+	seed(206104)
+	var prepared = Warmup.build_w6_canvas(rng_gun)
+	add_child(prepared)
+	var observed_rng: Array = []
+	for i in 6: observed_rng.append(randi())
+	check(observed_rng == expected_rng,"W6 preparation consumes no gameplay RNG")
+	check(prepared.find_children("*","CPUParticles2D",true,false).is_empty() and prepared.find_children("*","MultiMeshInstance2D",true,false).size() == 2,"W6 preparation uses inert renderer draws without particle constructors")
+	prepared.queue_free()
+	rng_gun.queue_free()
+	for id in RewardServer.reward_list:
+		var reward = RewardServer.reward_list[id].instantiate()
+		if reward.only_start: reward.free()
+		else: RewardServer.addReward(reward)
+	await wait(0.1)
+	check(ui.rw_grid.columns == ui.rw_grid.get_child_count() and ui.rw_grid.size.y <= 12,"full reward build stays in one bounded strip")
+	check(ui.rw_grid.get_global_rect().size.x <= 281 and ui.rw_grid.position.y >= 185,"full reward build leaves top and central threats clear")
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--capture-readability="):
+			var output = arg.trim_prefix("--capture-readability=")
+			DirAccess.make_dir_recursive_absolute(output)
+			LevelServer.town.depart(40,true)
+			await wait(0.25)
+			LevelServer.timerStop()
+			check(is_instance_valid(LevelServer.get_boss()),"readability capture contains a real stage-40 boss")
+			get_tree().paused = true
+			await RenderingServer.frame_post_draw
+			play_view.get_texture().get_image().save_png(output+"/full-boss.png")
+			controls.hit()
+			controls.hit_tween.pause()
+			flash.material.set_shader_parameter("fade",0.01)
+			check(flash.visible,"readability capture uses the production hit shader at its peak")
+			await RenderingServer.frame_post_draw
+			play_view.get_texture().get_image().save_png(output+"/full-boss-hit.png")
+			get_tree().paused = false
 	print("COMBAT_READABILITY checks=",checks," failures=",failures)
 	if failures: get_tree().quit(1)
 	else: await Demo.quit_game()

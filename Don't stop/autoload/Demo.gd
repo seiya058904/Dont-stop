@@ -46,6 +46,10 @@ var fire_released = true
 var save_store = CampSaveStore.new()
 var dirty = false
 var save_result = {"success":true,"reason":""}
+var save_revision := 0
+var creating_new_save := false
+var committed_web_save := PackedByteArray()
+var pending_web_save := ""
 var save_dialog
 var save_path = "user://camp-v1.json"
 var ui
@@ -414,7 +418,10 @@ func legacy_state() -> Dictionary:
 
 func save_camp() -> Dictionary:
 	if loading or test_mode: return {"success":true,"skipped":true,"reason":"测试或恢复中，不写磁盘"}
+	if OS.has_feature("web") and creating_new_save: return save_result
+	save_revision += 1
 	dirty = true
+	save_store.mark_web_dirty(true)
 	if save_blocked:
 		save_result = {"success":false,"reason":"原存档待处理；临时试玩不会覆盖"}
 	elif LevelServer.state != "CAMP":
@@ -422,12 +429,41 @@ func save_camp() -> Dictionary:
 	else:
 		var data = snapshot()
 		save_result = save_store.save(save_path,data) if valid_save(data) else {"success":false,"reason":"当前配置未通过完整校验"}
+	if save_result.get("pending",false):
+		pending_web_save = FileAccess.get_file_as_string(save_path)
+		if not save_store.web_confirmed.is_connected(_web_save_confirmed): save_store.web_confirmed.connect(_web_save_confirmed)
+		save_store.confirm_web(save_path,save_revision)
 	if save_result.success: dirty = false
 	changed.emit()
 	return save_result
 
+func _web_save_confirmed(revision: int, success: bool, reason: String) -> void:
+	# A confirmation of an older snapshot must never clear newer unsaved changes.
+	if revision != save_revision: return
+	save_result = {"success":success,"reason":reason,"durable":success}
+	dirty = not success
+	save_store.mark_web_dirty(dirty)
+	if success: committed_web_save = pending_web_save.to_utf8_buffer()
+	print("[save-durable] revision=%d success=%s dirty=%s" % [revision,str(success),str(dirty)])
+	if creating_new_save:
+		creating_new_save = false
+		if success: load_camp()
+		elif FileAccess.file_exists(save_path+".previous"):
+			var original = FileAccess.get_file_as_string(save_path+".previous")
+			save_store.restore_previous(save_path+".previous",save_path+".tmp",save_path,original)
+	if is_instance_valid(ui): ui.message.text = reason
+	changed.emit()
+	if not success and is_instance_valid(Utils.canvasLayer): Utils.showToast(reason,5)
+
+func export_current_save() -> String:
+	if not OS.has_feature("web") or not valid_save(snapshot()): return "导出失败；当前配置未通过校验"
+	JavaScriptBridge.download_buffer(JSON.stringify(snapshot(),"\t").to_utf8_buffer(),"DontStop-progress.json","application/json")
+	return "已请求下载当前进度；浏览器存档仍需重试保存"
+
 func load_camp() -> bool:
+	if OS.has_feature("web") and dirty: return false
 	if not FileAccess.file_exists(save_path): return false
+	if OS.has_feature("web"): committed_web_save = FileAccess.get_file_as_bytes(save_path)
 	var parser = JSON.new()
 	var parse_error = parser.parse(FileAccess.get_file_as_string(save_path))
 	var parsed = parser.data if parse_error == OK else null
@@ -523,16 +559,53 @@ func show_save_dialog(recovery = false, quitting = false):
 	Utils.canvasLayer.add_child(save_dialog)
 
 func export_bad_save() -> String:
+	if OS.has_feature("web"):
+		var file = FileAccess.open(save_path,FileAccess.READ)
+		if file == null: return "导出失败；无法读取原文件"
+		var bytes = file.get_buffer(file.get_length())
+		var error = file.get_error()
+		file.close()
+		if error != OK: return "导出失败；读取原文件失败"
+		JavaScriptBridge.download_buffer(bytes,"DontStop-invalid-%d.json" % Time.get_ticks_usec(),"application/octet-stream")
+		return "已请求下载坏档原文；原文件未改动"
 	var destination = save_path+".invalid-"+str(Time.get_ticks_usec())+".json"
 	return ProjectSettings.globalize_path(destination) if DirAccess.copy_absolute(save_path,destination) == OK else "导出失败；原文件未改动"
 
 func create_new_save() -> bool:
+	if creating_new_save: return false
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
 	var fresh = {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"unequipped":false,"equipped":""}
 	var result = save_store.save(save_path,fresh)
+	if result.get("pending",false):
+		save_revision += 1
+		dirty = true
+		creating_new_save = true
+		save_result = result
+		pending_web_save = FileAccess.get_file_as_string(save_path)
+		if not save_store.web_confirmed.is_connected(_web_save_confirmed): save_store.web_confirmed.connect(_web_save_confirmed)
+		save_store.confirm_web(save_path,save_revision)
+		changed.emit()
+		return false
 	if not result.success: return false
 	return load_camp()
+
+func discard_and_leave():
+	if OS.has_feature("web") and dirty:
+		# Invalidate outstanding confirmations before restoring the last committed
+		# snapshot in MEMFS. A new session must never load discarded pending bytes.
+		save_revision += 1
+		if not committed_web_save.is_empty():
+			var file = FileAccess.open(save_path,FileAccess.WRITE)
+			if file == null: return
+			file.store_buffer(committed_web_save)
+			file.close()
+		else:
+			if FileAccess.file_exists(save_path) and DirAccess.remove_absolute(save_path) != OK: return
+		dirty = false
+		creating_new_save = false
+		save_store.mark_web_dirty(false)
+	leave_after_save()
 
 func open_panel():
 	if is_instance_valid(ui): return
@@ -740,7 +813,7 @@ func _swap_to_main_menu() -> bool:
 	if previous != null and previous != next: previous.queue_free()
 	return true
 
-func finish_quit():
+func finish_quit(exit_code: int = 0):
 	if quitting_game: return
 	quitting_game = true
 	# Release the custom cursor texture before the renderer shuts down.
@@ -750,7 +823,7 @@ func finish_quit():
 	# Ogg playback retirement is asynchronous. A 100 ms exit window still
 	# leaked the Music playback in repeated B17 runs; 400 ms drains it.
 	await get_tree().create_timer(0.4,true).timeout
-	get_tree().quit()
+	get_tree().quit(exit_code)
 
 func _notification(what):
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and Utils.is_game_start and LevelServer.state == "COMBAT" and pause_stack.is_empty():

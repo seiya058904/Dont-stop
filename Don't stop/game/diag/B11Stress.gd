@@ -231,7 +231,8 @@ func _physics_process(_delta: float) -> void:
 		_events.append({"tick":tick,"event":"top_up","usec":Time.get_ticks_usec()-top_up_started,"ordinary_added":_topped_up-births_before})
 	_observe_boss_tick()
 	if not park: _drive_movement(int(tick*1000/Engine.physics_ticks_per_second))
-	var sample_window_done := (scenario == "P" and _pressure_phase == PRESSURE_STEADY and _pressure_steady_seconds >= float(seconds)) or (stage != 40 and scenario != "P" and seconds < 45 and tick >= seconds*Engine.physics_ticks_per_second) or (stage == 40 and boss_complete)
+	var remaining := maxf(0.0,float(seconds)-_total_combat_s)
+	var sample_window_done := (scenario == "P" and _pressure_phase == PRESSURE_STEADY and _pressure_steady_seconds >= float(seconds) and tick >= remaining*Engine.physics_ticks_per_second) or (stage != 40 and scenario != "P" and tick >= remaining*Engine.physics_ticks_per_second) or (stage == 40 and boss_complete)
 	# Coded ablation runs retain every frame after the first target arrival, including
 	# density drops and refill spikes. They are never formal steady-state acceptance.
 	if run_mode == "ablation" and _pressure_build_finished_usec >= 0:
@@ -301,6 +302,7 @@ var _peak_same_frame := 0
 # ---- round bookkeeping -----------------------------------------------------------------------
 var _rounds := 0
 var _total_combat_s := 0.0
+var _completed_rounds: Array = []
 var _amplified := 0
 var _topped_up := 0
 var _ordinary_requests := 0
@@ -654,12 +656,18 @@ func run() -> void:
 		print("[stress] done scenario=%s profile=%s rounds=%d frames=%d wall_s=%.1f" % [
 			scenario,diagnostic_profile,_rounds,_ms.size(),_total_combat_s])
 		_dump()
-		await Demo.quit_game()
+		# Idle diagnostics contain no effective combat and cannot satisfy this gate.
+		if not OS.has_feature("web"): await Demo.finish_quit(1)
+		else: await Demo.quit_game()
 		return
 	# Stage 39 is a 45 s survival round, so the requested window is accumulated over consecutive
 	# rounds. The protocol is identical in the BEFORE and the AFTER build.
-	while _total_combat_s < float(seconds) and _rounds < 1:
+	while _total_combat_s < float(seconds) and not measurement_timeout:
+		var before := _total_combat_s
 		await _one_round()
+		if _total_combat_s <= before or (scenario == "P" and not _pressure_measurement_valid()):
+			measurement_timeout = true
+			break
 	Input.action_release("shoot")
 	Utils.aim_override = null
 	print("[stress] done scenario=%s rounds=%d frames=%d combat_s=%.1f" % [
@@ -667,6 +675,10 @@ func run() -> void:
 	_dump()
 	_restore_pressure_diagnostics()
 	if camp_cycles > 0: await _check_camp_cycles()
+	if not OS.has_feature("web") and not _completion_valid():
+		print("[stress-failure] requested window was not completed")
+		await Demo.finish_quit(1)
+		return
 	var b18_mode = false
 	for arg in OS.get_cmdline_args()+OS.get_cmdline_user_args():
 		if arg == "--b18": b18_mode = true
@@ -725,6 +737,8 @@ func _one_round() -> void:
 		await get_tree().create_timer(0.25).timeout
 	_entry_samples.append({"round":_rounds,"depart_to_combat_ms":(Time.get_ticks_usec()-depart_usec)/1000.0,"state":LevelServer.state})
 	if LevelServer.state != "COMBAT": return
+	# Keep the amplified P diagnostic alive for its requested steady window.
+	if scenario == "P": LevelServer.level_time = maxf(LevelServer.level_time,float(seconds)+45.0)
 	await _sample_round()
 
 ## The sampling loop. One pass per rendered frame; the cost of the observation itself is bounded
@@ -958,8 +972,8 @@ func _sample_round() -> void:
 					_pressure_steady_samples += 1
 					if target_met: _pressure_steady_target_frames += 1
 					else: _pressure_steady_shortfall_frames += 1
-					if _pressure_steady_started_usec >= 0:
-						_pressure_steady_seconds = float(maxi(0,current_usec-_pressure_steady_started_usec))/1000000.0
+					# Paused frames reset previous_usec and contribute no time.
+					_pressure_steady_seconds += maxf(0.0,frame_ms)/1000.0
 			if frame_ms > 25.0:
 				var spike_context := {"index":_ms.size()-1,"ms":frame_ms,"phase":_pressure_phase,"thresholds":[">25"] as Array,"target_met":target_met,"enemies_alive":_tracked_enemy_count,"projectiles_alive":live_projectiles,"spawn_count":_frame_enemy_births,"projectile_spawn":_frame_projectile_births,"death_free_count":_frame_removed,"events":_events.size(),"event_tail":_events.slice(maxi(0,_events.size()-4),_events.size()),"path_requests":_path_queries(),"path_usec":B11Probe.path_usec,"physics_contacts":Performance.get_monitor(Performance.PHYSICS_2D_COLLISION_PAIRS),"fog_entries":B11Probe.fog_push_lines,"fog_scans":B11Probe.fog_scans,"vfx_created":B11Probe.vfx_created,"weapon":Utils.player.gun.weapon_id if Utils.player.gun else -1,"audio_players":_active_audio_players(),"boss_present":is_instance_valid(LevelServer.get_boss()),"scene":get_tree().current_scene.scene_file_path,"epoch":LevelServer.epoch}
 				if frame_ms > 33.0: spike_context.thresholds.append(">33")
@@ -1010,6 +1024,7 @@ func _sample_round() -> void:
 	var round_s := 0.0
 	round_s = float(_effective_tick)/Engine.physics_ticks_per_second
 	_total_combat_s += round_s
+	_completed_rounds.append({"round":round_index,"effective_ticks":_effective_tick,"combat_s":round_s,"epoch":_round_contexts[-1].epoch})
 	print("[stress] round=%d end state=%s round_s=%.1f total_s=%.1f" % [
 		round_index,LevelServer.state,round_s,_total_combat_s])
 
@@ -1482,11 +1497,15 @@ func _stats(values) -> Dictionary:
 func _pressure_measurement_valid() -> bool:
 	return scenario == "P" and _pressure_target_tick >= 0 and _pressure_phase == PRESSURE_STEADY and _pressure_steady_seconds >= float(seconds) and _pressure_steady_samples > 0 and _enemy_count_mismatches == 0
 
+func _completion_valid() -> bool:
+	return not measurement_timeout and _total_combat_s >= float(seconds) and not _completed_rounds.is_empty() and _observation_frames > 0 and (scenario != "P" or _pressure_measurement_valid())
+
 ## The whole point of the run: the same frame pool split by WHAT WAS HAPPENING on each frame. If
 ## the stutter is a burst, the conditioned rows separate from the unconditioned ones here; if it is
 ## not, they do not - and that is the answer either way.
 func _dump() -> void:
 	_remember_spawn_stats()
+	print("[stress-completion] ",JSON.stringify({"valid":_completion_valid(),"requested_s":seconds,"combat_s":_total_combat_s,"physics_hz":Engine.physics_ticks_per_second,"rounds":_completed_rounds,"observation_frames":_observation_frames,"timeout":measurement_timeout}))
 	if not presentation_boss_log.is_empty(): print("[stress-boss] ",JSON.stringify(presentation_boss_log))
 	# Optional post-run evidence only: no allocation/serialization in measured frames.
 	# Retain the existing B11 summaries; consumers can derive an exact warm window.

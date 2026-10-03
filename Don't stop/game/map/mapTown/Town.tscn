@@ -2009,6 +2009,7 @@ position = Vector2(1503, 914)
 position = Vector2(1773, 745)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="timeout" type="Label" parent="CanvasLayer"]
 anchors_preset = 1

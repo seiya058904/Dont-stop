@@ -135,7 +135,7 @@ shader_parameter/direction_b = Vector2(-0.7, -0.3)
 
 [node name="ControlUI" type="CanvasLayer" groups=["control"]]
 process_mode = 3
-layer = 2
+layer = 3
 script = ExtResource("1_hodr7")
 
 [node name="GameUI" type="Control" parent="."]

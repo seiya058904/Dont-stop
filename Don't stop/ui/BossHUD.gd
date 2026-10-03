@@ -28,12 +28,9 @@ func _process(delta):
 	var boss = LevelServer.get_boss()
 	visible = LevelServer.state == "COMBAT" and is_instance_valid(boss) and not boss.is_die
 	if not visible: return
-	# The existing reward grid can now wrap to two rows. Keep both HUDs readable.
+	# Boss information has a fixed viewport-edge footprint, independent of inventory.
 	position.y = 8
 	badge.visible = HellMode.is_hell(LevelServer.level)
-	var rewards = Utils.canvasLayer.get_node_or_null("GameUI/RwGridContainer")
-	if rewards and rewards.get_child_count()>0 and rewards.get_global_rect().intersects(Rect2(position,Vector2(196,32))):
-		position.y = rewards.get_global_rect().end.y+4
 	observe_health(clampf(boss.HP/boss.max_hp,0,1),boss.get_instance_id(),delta)
 	second = boss.phase_two
 	third = boss.phase_three

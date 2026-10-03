@@ -30,6 +30,7 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { validateCompletion } = require('./stress-completion');
 
 const base = process.argv[2];
 const outDir = process.argv[3] || 'b11-1-stress-evidence';
@@ -100,6 +101,7 @@ function parseKv(line) {
 	let pressureFrames = null;
 	let benchmark = null;
 	let rawFrames = null;
+	let completion = null;
 	const errors = [];
 	// Every line the page printed, bounded. The engine's own script errors arrive here, and a
 	// harness that reports "no summary line" without showing them is how a whole measurement round
@@ -164,6 +166,7 @@ function parseKv(line) {
 
 	page.on('console', m => {
 		const t = m.text();
+		if (t.startsWith('[stress-completion] ')) completion = JSON.parse(t.slice(20));
 		if(t.startsWith('B192_VISUAL ')) { const state=JSON.parse(t.slice(12)); visualStates.push(state); visualQueue.push(state.name); }
 		if(t==='B192_VISUAL_DONE') visualDone=true;
 		if (m.type() === "error" || t.startsWith("[stress] ")) console.log(t);
@@ -288,6 +291,7 @@ function parseKv(line) {
 	const n = k => (summary && Number.isFinite(parseFloat(summary[k])) ? parseFloat(summary[k]) : null);
 	const p = k => (peak && Number.isFinite(parseFloat(peak[k])) ? parseFloat(peak[k]) : null);
 	const report = {
+		completion, completion_valid: validateCompletion(completion, Number(query.seconds)),
 		browserTiming,
 		visualStates, visualDone,
 		label, scenario, convergence, loadedResources, server_root:process.env.B11_BUILD_DIR, surface, visibilityEvents, source_variant: query.source || "unspecified", workload_scenario: scenario, url, build, gpu, errors,
@@ -362,5 +366,5 @@ function parseKv(line) {
 		console.log(`  bucket[${b.family}] ${b.name} n=${b.n} share=${f(b.share)} avg=${f(b.avg)} p95=${f(b.p95)} p99=${f(b.p99)} max=${f(b.max)} over33=${b.over33} over50=${b.over50}`);
 	}
 	const pressureOk = scenario !== 'P' || Boolean(pressureFrames && pressureFrames.pressure_measurement_valid);
-	process.exit((summary || visualDone) && !errors.length && !rawFrames?.measurement_timeout && pressureOk ? 0 : 1);
+	process.exit((summary ? report.completion_valid : visualDone) && !errors.length && !rawFrames?.measurement_timeout && pressureOk ? 0 : 1);
 })();
