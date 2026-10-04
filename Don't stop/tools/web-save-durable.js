@@ -20,10 +20,11 @@ fs.mkdirSync(out, { recursive: true });
  });
  const lines = [], rects = {}, report = { checks: [] };
  let page = await context.newPage();
- let carry, canvas;
+ let carry, canvas, camp;
  function observe() { page.on('console', m => {
   const t = m.text(); lines.push(t);
   if (t.startsWith('[loadout] ')) carry = JSON.parse(t.slice(10));
+  if (t.startsWith('[camp] ')) camp = JSON.parse(t.slice(7));
   const r = t.match(/rect (\S+) id=(\d+) text="([^"]*)" x=([\d.-]+) y=([\d.-]+) w=([\d.-]+) h=([\d.-]+) cx=([\d.-]+) cy=([\d.-]+) on_screen=(true|false)/);
   if (r) rects[r[1]] = { x: +r[8], y: +r[9], visible: r[10] === 'true', text: r[3] };
  });
@@ -42,6 +43,8 @@ fs.mkdirSync(out, { recursive: true });
  }
  function check(ok, title) { assert(ok, title); report.checks.push(title); console.log('PASS ' + title); }
  async function start() {
+  await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready');
+  await page.waitForTimeout(500);
   await until(() => rects['menu-start-button']?.visible, 'menu');
   canvas = await page.locator('canvas').boundingBox();
   await click('menu-start-button');
@@ -125,20 +128,75 @@ fs.mkdirSync(out, { recursive: true });
   await until(() => carry?.saved === true && carry.owned.length === 0, 'confirmed new-save takeover');
   await reload(); check(carry.owned.length === 0 && carry.saved, 'new-save takeover becomes usable only after durable confirmation and survives refresh');
   await context.close();
-  const blocked = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
-  await blocked.addInitScript(() => { IDBFactory.prototype.open = () => { throw new DOMException('Injected storage disabled', 'SecurityError'); }; });
-  for (const key of Object.keys(rects)) delete rects[key]; carry = null;
-  page = await blocked.newPage(); observe();
-  await page.goto(url + '?probe=1'); await start();
-  await until(() => carry?.saved === false && /不可用/.test(carry.message), 'disabled storage warning');
-  check(await page.evaluate(() => window.towdownSave.dirty), 'disabled storage keeps an unsaved-session unload guard');
-  await click('camp-settings-button'); await click('leave-entry');
-  await until(() => rects['save-export-progress']?.visible, 'unsaved quit dialog');
-  const backup = page.waitForEvent('download'); await click('save-export-progress');
-  const progress = await backup, progressPath = path.join(out, 'disabled-storage-progress.json'); await progress.saveAs(progressPath);
-  check(JSON.parse(fs.readFileSync(progressPath, 'utf8')).schema_version === 6, 'disabled storage still allows a real current-progress backup download');
-  check(await page.evaluate(() => window.towdownSave.dirty), 'export does not falsely claim browser persistence');
-  await page.screenshot({ path: path.join(out, 'disabled-storage.png') });
+  // No durable snapshot exists in these fresh contexts. The older discard test
+  // above only covered rollback to an already committed file, so it could not
+  // catch autoload talents leaking into the next session after explicit discard.
+  for (const fault of ['unavailable', 'abort', 'quota']) {
+   const blocked = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
+   await blocked.addInitScript(kind => {
+    if (kind === 'unavailable') {
+     IDBFactory.prototype.open = () => { throw new DOMException('Injected storage disabled', 'SecurityError'); };
+    } else {
+     const put = IDBObjectStore.prototype.put;
+     IDBObjectStore.prototype.put = function (...args) {
+      if (kind === 'quota') throw new DOMException('Injected full storage', 'QuotaExceededError');
+      const request = put.apply(this, args); this.transaction.abort(); return request;
+     };
+    }
+   }, fault);
+   const lineStart = lines.length;
+   for (const key of Object.keys(rects)) delete rects[key]; carry = null; camp = null;
+   page = await blocked.newPage(); observe();
+   await page.goto(url + '?probe=1');
+   await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready');
+   await start();
+   await until(() => carry?.saved === false && /不可用|未确认|失败/.test(carry.message), 'first-save failure');
+   check(await page.evaluate(() => window.towdownSave.dirty), fault + ': failed first save keeps the unload guard');
+   await click('camp-talent-tab');
+   for (const id of ['T01', 'T07']) {
+    await select(id); await until(() => camp?.selection === id, 'talent selection');
+    check(camp.rank === 0, fault + ': fresh ' + id + ' starts at rank zero');
+    await click('camp-action-0'); await until(() => camp?.selection === id && camp.rank === 1, 'talent purchase');
+   }
+   await click('camp-settings-button'); await click('leave-entry');
+   async function downloadProgress(name) {
+    const pending = page.waitForEvent('download'); await click('save-export-progress');
+    const progress = await pending, progressPath = path.join(out, fault + '-' + name + '.json');
+    await progress.saveAs(progressPath); return JSON.parse(fs.readFileSync(progressPath, 'utf8'));
+   }
+   const beforeDiscard = await downloadProgress('before-discard');
+   check(beforeDiscard.schema_version === 6 && beforeDiscard.talents.T01 === 1 && beforeDiscard.talents.T07 === 1,
+    fault + ': real progress export contains both unsaved purchases');
+   check(await page.evaluate(() => window.towdownSave.dirty), fault + ': export does not claim browser persistence');
+   check(!lines.slice(lineStart).some(t => t.startsWith('[save-durable]') && t.includes('success=true')),
+    fault + ': no snapshot was ever durably committed');
+   await page.screenshot({ path: path.join(out, fault + '-first-save-discard.png') });
+   delete rects['menu-start-button']; carry = null; camp = null;
+   await click('save-discard'); await start(); await click('camp-talent-tab'); await select('T01');
+   await until(() => camp?.selection === 'T01', 'restarted talent selection');
+   await page.screenshot({ path: path.join(out, fault + '-after-discard.png') });
+   check(camp.rank === 0, fault + ': same-page restart rolls back the discarded talent');
+   await click('camp-settings-button'); await click('leave-entry');
+   const afterDiscard = await downloadProgress('after-discard');
+   check(Object.keys(afterDiscard.talents).length === 0 && afterDiscard.talent_payments.length === 0,
+    fault + ': discard clears talent ranks and purchase receipts');
+   check(afterDiscard.hp === 5 && afterDiscard.hp_max === 5 && afterDiscard.level === 1 && afterDiscard.exp === 0,
+    fault + ': discard restores legal initial health and progression');
+   check(afterDiscard.gold === 9999 && afterDiscard.points === 9999 && afterDiscard.reserve_magazines === 10
+    && afterDiscard.weapons.length === 0 && afterDiscard.owned_global_upgrades.length === 0,
+    fault + ': discard restores the initial wallet, supplies and ownership');
+   check(afterDiscard.weapon_slots.every(id => id === -1) && afterDiscard.equipped === '' && !afterDiscard.unequipped
+    && !afterDiscard.campaign_complete && !afterDiscard.hell_complete && afterDiscard.next_stage === 1
+    && afterDiscard.selected_stage === 1 && afterDiscard.legacy.length === 0
+    && Object.keys(afterDiscard.legacy_state).length === 0,
+    fault + ': discard restores empty loadout, legacy ownership and stage progress');
+   for (const key of Object.keys(rects)) delete rects[key]; carry = null; camp = null;
+   await page.reload(); await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready');
+   await start(); await click('camp-talent-tab'); await select('T01');
+   await until(() => camp?.selection === 'T01', 'reloaded talent selection');
+   check(camp.rank === 0, fault + ': full-page reload remains a fresh session');
+   await blocked.close();
+  }
   const unexpected = lines.filter(t => t.includes('SCRIPT ERROR:') || t.startsWith('PAGEERROR '));
   check(!unexpected.length, 'no engine script errors or uncaught browser errors');
   report.success = true;

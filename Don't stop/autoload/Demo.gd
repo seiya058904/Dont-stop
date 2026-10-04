@@ -49,6 +49,9 @@ var save_result = {"success":true,"reason":""}
 var save_revision := 0
 var creating_new_save := false
 var committed_web_save := PackedByteArray()
+## Consumed by the next real session, after the outgoing Hero has been released.
+## Removing an uncommitted Web file alone cannot roll back autoload numbers.
+var _discarded_without_snapshot := false
 var pending_web_save := ""
 var save_dialog
 var save_path = "user://camp-v1.json"
@@ -162,7 +165,10 @@ func _start():
 	Utils.shake = ConfigUtils.getConfig("demo","shake") if ConfigUtils.getConfig("demo","shake") != null else 0.35
 	Combat.reduced_flash = ConfigUtils.getConfig("demo","reduced_flash") == true
 	if not test_mode:
-		load_camp()
+		if _discarded_without_snapshot:
+			_restore_camp_snapshot(_initial_camp_snapshot())
+		else:
+			load_camp()
 		# This build is a playtest: refill once at startup, not on each save/load.
 		PlayerData.gold = maxi(PlayerData.gold,DemoConfig.INITIAL_GOLD)
 		PlayerData.reward_point = maxi(PlayerData.reward_point,DemoConfig.INITIAL_TALENT_POINTS)
@@ -472,6 +478,9 @@ func load_camp() -> bool:
 		save_result = {"success":false,"reason":"存档损坏，原文保持；当前为临时试玩"}
 		if not test_mode: show_save_dialog.call_deferred(true)
 		return false
+	return _restore_camp_snapshot(parsed)
+
+func _restore_camp_snapshot(parsed: Dictionary) -> bool:
 	var data = CampSnapshot.normalize(parsed)
 	# Validation has completed. From here, restore the entire graph before any recalc.
 	loading = true
@@ -537,6 +546,7 @@ func load_camp() -> bool:
 	if data.equipped != "" and PlayerData.weapon_slots.has(int(data.equipped)): Utils.player.changeWeapon(int(data.equipped))
 	if Utils.player.gun == null and data.equipped != "" and data.has("weapon_slots"): explicitly_unequipped = true
 	loading = false
+	_discarded_without_snapshot = false
 	save_blocked = false; dirty = false
 	save_result = {"success":true,"reason":"已恢复"}
 	restored.emit()
@@ -571,11 +581,14 @@ func export_bad_save() -> String:
 	var destination = save_path+".invalid-"+str(Time.get_ticks_usec())+".json"
 	return ProjectSettings.globalize_path(destination) if DirAccess.copy_absolute(save_path,destination) == OK else "导出失败；原文件未改动"
 
+func _initial_camp_snapshot() -> Dictionary:
+	return {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"unequipped":false,"equipped":""}
+
 func create_new_save() -> bool:
 	if creating_new_save: return false
 	var exported = export_bad_save()
 	if exported.begins_with("导出失败"): return false
-	var fresh = {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"unequipped":false,"equipped":""}
+	var fresh = _initial_camp_snapshot()
 	var result = save_store.save(save_path,fresh)
 	if result.get("pending",false):
 		save_revision += 1
@@ -602,6 +615,8 @@ func discard_and_leave():
 			file.close()
 		else:
 			if FileAccess.file_exists(save_path) and DirAccess.remove_absolute(save_path) != OK: return
+			# Restore on the next Hero, not while the outgoing frame may still own guns.
+			_discarded_without_snapshot = true
 		dirty = false
 		creating_new_save = false
 		save_store.mark_web_dirty(false)
