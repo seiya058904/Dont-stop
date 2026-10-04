@@ -44,7 +44,8 @@ is tested before deployment against exactly the artifact being published.
 There is no rebuild, artifact download for the main browser smoke, main menu-return,
 main PR-summary dependency, or second browser installation on this path.
 Production runs do not cancel each other mid-deployment/verification; PR updates
-can supersede older PR runs. A docs-only push intentionally leaves the last
+can supersede older PR runs. Non-deploy manual/monthly acceptance has separate
+concurrency groups and cannot hold the production workflow queue. A docs-only push intentionally leaves the last
 game release online; its build SHA is the last deploying commit.
 
 PR checks must pass before merging code into main. Branch protection was absent

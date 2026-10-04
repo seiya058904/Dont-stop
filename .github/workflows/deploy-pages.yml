@@ -27,7 +27,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.ref }}
+  # Full non-deploy acceptance must never queue routine production pushes.
+  group: pages-${{ github.ref }}-${{ (github.event_name == 'push' || inputs.deploy == true) && 'release' || github.event_name }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
