@@ -1,0 +1,25 @@
+name: Pinned browser
+description: Restore Playwright and Chromium together on the Ubuntu 24.04 runner
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - uses: actions/cache@v4
+      id: cache
+      with:
+        path: |
+          node_modules
+          ~/.cache/ms-playwright
+        key: pw-${{ runner.os }}-ubuntu24-${{ env.PLAYWRIGHT_VERSION }}-runtime-v1
+    - shell: bash
+      run: |
+        set -euo pipefail
+        if [ '${{ steps.cache.outputs.cache-hit }}' != true ]; then
+          npm install --no-save --package-lock=false "playwright@${PLAYWRIGHT_VERSION}"
+        fi
+        # Chromium's system libraries are present in the pinned hosted image.
+        # Do not repeat apt update/install on every restored browser cache.
+        npx --no-install playwright install chromium
+        node -e 'if (require("playwright/package.json").version !== process.env.PLAYWRIGHT_VERSION) process.exit(1)'

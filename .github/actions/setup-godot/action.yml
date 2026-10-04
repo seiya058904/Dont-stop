@@ -1,0 +1,39 @@
+name: Pinned Godot
+description: Cache the engine and only the export template actually used
+inputs:
+  web:
+    description: Install the Web release template
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: ${{ runner.temp }}/godot-engine
+        key: godot-${{ runner.os }}-${{ env.GODOT_VERSION }}-engine-v1
+    - shell: bash
+      run: |
+        set -euo pipefail
+        BIN="$RUNNER_TEMP/godot-engine/Godot_v${GODOT_VERSION}_linux.x86_64"
+        mkdir -p "$RUNNER_TEMP/godot-engine"
+        if [ ! -x "$BIN" ]; then
+          curl --fail --location --retry 3 "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_linux.x86_64.zip" -o "$RUNNER_TEMP/godot-engine.zip"
+          unzip -q "$RUNNER_TEMP/godot-engine.zip" -d "$RUNNER_TEMP/godot-engine"
+        fi
+        echo "GODOT=$BIN" >> "$GITHUB_ENV"
+    - uses: actions/cache@v4
+      if: inputs.web == 'true'
+      with:
+        path: ~/.local/share/godot/export_templates/4.7.2.stable
+        key: godot-${{ runner.os }}-${{ env.GODOT_VERSION }}-web-extracted-v1
+    - shell: bash
+      if: inputs.web == 'true'
+      run: |
+        set -euo pipefail
+        DEST="$HOME/.local/share/godot/export_templates/4.7.2.stable"
+        if [ ! -s "$DEST/web_nothreads_release.zip" ]; then
+          mkdir -p "$DEST"
+          curl --fail --location --retry 3 "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_export_templates.tpz" -o "$RUNNER_TEMP/templates.tpz"
+          unzip -p "$RUNNER_TEMP/templates.tpz" templates/version.txt > "$DEST/version.txt"
+          unzip -p "$RUNNER_TEMP/templates.tpz" templates/web_nothreads_release.zip > "$DEST/web_nothreads_release.zip"
+        fi
