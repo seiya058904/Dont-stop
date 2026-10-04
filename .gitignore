@@ -82,3 +82,8 @@
 /Don't stop/docs/iteration/evidence/r4/online/03-panel.png
 /Don't stop/docs/iteration/evidence/r4/online/04-fire.png
 /output/
+
+# Python tool bytecode and local browser sessions are reproducible.
+**/__pycache__/
+**/*.py[cod]
+/.playwright-cli/
