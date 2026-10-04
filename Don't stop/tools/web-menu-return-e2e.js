@@ -354,6 +354,11 @@ watchdog.unref?.();
 		note('fixture: profile seeded with the default weapon, game reported ready=' + seeded.ok + ' in ' + ms(seeded.ms) +
 			' (setup only, not an acceptance phase)');
 		token('FIXTURE_PROFILE_SEEDED', seeded.ok, 'the seeding run reached [e2e] ready');
+		// Ready describes gameplay, not IndexedDB completion. A slow renderer can
+		// otherwise navigate away while the fixture's save is still dirty and
+		// trigger Chromium's blocked-beforeunload warning (no user gesture yet).
+		await page.waitForFunction(() => window.towdownSave?.dirty === false, null, { timeout: 30000 });
+		token('FIXTURE_PROFILE_DURABLE', true, 'the existing save bridge confirmed the seeded profile before navigation');
 	});
 
 	// ========================================================= Phase A: cycles

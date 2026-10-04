@@ -34,6 +34,10 @@ var _draw_clock := 0.0
 var _draw_phase := ""
 var _draw_lock_frozen := true
 var _draw_facing := Vector2.LEFT
+var _body_rest := Vector2.ZERO
+var _body_offset := Vector2.ZERO
+var _body_phase := ""
+var _body_windup := 1.0
 
 const PHASE_TWO_AT := 0.70
 const PHASE_THREE_AT := 0.35
@@ -62,6 +66,7 @@ func elite_modifier() -> String:
 
 func _ready():
 	super._ready()
+	_body_rest = sprite_body.position
 	var d = M5Content.definition(role)
 	HP = d.hp; max_hp = HP; SPEED = d.speed; armor = d.get("armor",0.0)
 	born_epoch = LevelServer.epoch
@@ -89,6 +94,22 @@ func _ensure_continuous_barrage() -> void:
 	add_child(continuous_barrage)
 
 func _request_visual_redraw(delta: float) -> void:
+	# Anticipation is confined to the artwork. The feet, hitbox, aim lock and
+	# attack origin remain on the actor's original transform.
+	var offset := Vector2.ZERO
+	if phase != _body_phase:
+		_body_phase = phase
+		if phase == "warn": _body_windup = maxf(0.01,phase_time)
+	if phase == "warn" and attack_kind != "ultimate":
+		var tension := 1.0-clampf(phase_time/_body_windup,0,1)
+		offset = -locked_direction*(1.0+2.0*tension)*(1.4 if is_boss else 1.0)
+	elif phase == "dash": offset = locked_direction*2.0
+	# Most actors are moving normally, with no artwork offset. Do not dirty
+	# their canvas transform or run an exponential for an already settled pose.
+	if offset != _body_offset:
+		_body_offset = _body_offset.lerp(offset,1.0-exp(-delta*20.0))
+		if _body_offset.distance_squared_to(offset) < 0.0001: _body_offset = offset
+		sprite_body.position = _body_rest+_body_offset
 	# Tactical AI remains 60 Hz; only its decorative actor ink is capped at 30 Hz.
 	# Phase/lock transitions and meaningful aim changes still repaint immediately, while
 	# E06's pulse and B04's rotating ring remain visually animated at the capped cadence.
@@ -784,6 +805,7 @@ func receive_damage(amount: float, critical: bool, context: Dictionary):
 	super.receive_damage(amount,critical,context)
 
 func onDie(effects = true):
+	sprite_body.position = _body_rest
 	if is_die: return
 	for ref in owned_attacks:
 		if is_instance_valid(ref.get_ref()): ref.get_ref().queue_free()
@@ -820,7 +842,14 @@ func _draw():
 	# Source-only charge brackets use the actual tracking/frozen state. The
 	# footprint still owns the firing edge (including the fog fairness extension).
 	if phase=="warn" and attack_kind!="ultimate":
-		var ink=Color(0.95,0.78,0.35) if not lock_frozen else Color(0.9,0.98,1)
+		var family := "projectile"
+		if attack_kind in ["charge","dash"]: family = "charge"
+		elif attack_kind in ["beam","cross_laser","sweep","cross"]: family = "laser" if attack_kind != "sweep" else "sweep"
+		elif attack_kind in ["toxin","toxic_zone"]: family = "poison"
+		elif attack_kind in ["slam","detonate","cleave"]: family = "detonate"
+		elif attack_kind in ["brood","summon"]: family = "summon"
+		var palette = preload("res://game/effects/CombatTelegraph.gd").palette(family)
+		var ink: Color = palette.edge_hot if lock_frozen else palette.edge
 		var extent=16.0 if lock_frozen else 21.0
 		var center=Vector2(0,-8)
 		for i in 4:
@@ -828,6 +857,15 @@ func _draw():
 			var point=center+dir*extent
 			draw_line(point,point-dir.rotated(-0.65)*5,ink,1.5,true)
 			draw_line(point,point-dir.rotated(0.65)*5,ink,1.5,true)
+		# One source-bound arrow joins the attacker to the locked lane. Open
+		# brackets mean tracking; closed brackets and a solid nose mean frozen.
+		var aim: Vector2 = locked_direction.normalized()
+		var nose: Vector2 = center+aim*(extent+4)
+		var side := aim.orthogonal()*3.0
+		var arrow := PackedVector2Array([nose-aim*5-side,nose,nose-aim*5+side])
+		draw_polyline(arrow,Color("10151f"),4,true)
+		draw_polyline(arrow,ink,1.6,true)
+		if lock_frozen: draw_line(nose-aim*4,nose,ink,2,true)
 	var color = Color(0.4,0.9,1) if armor <= 0 else Color(1,0.8,0.3)
 	if role in ["E03","E09","B01"]:
 		var dir = facing.angle(); draw_arc(Vector2(0,-7),28 if is_boss else 18,dir-1.05,dir+1.05,12,color,3)

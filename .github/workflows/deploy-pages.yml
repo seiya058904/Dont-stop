@@ -114,6 +114,7 @@ jobs:
             run_case BaselineRegression
             run_case CombatReadability
             run_case WeaponVisualPose
+            run_case DeepQuality
             run_case CampPresentation
             run_case CameraTransitions
             run_case B17Contracts

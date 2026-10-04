@@ -27,9 +27,59 @@ static func draw_arena(canvas, region: String, bounds: Rect2, obstacles: Array):
 	canvas.draw_rect(bounds,FLOOR[region])
 	_floor_structure(canvas,region,bounds)
 	_ground(canvas,region,rng)
+	_material(canvas,region,bounds,obstacles)
 	_identity(canvas,region,bounds,obstacles,rng)
 	for rect in obstacles: _wall(canvas,region,rect)
 	_identification_frame(canvas,region,bounds)
+
+## Material, not more emissive decoration: recessed joints, directional wear,
+## mineral facets and contact dirt. Baked into the existing single mesh once.
+## Its private seed cannot affect the authored layout or any gameplay RNG.
+static func _material(canvas, region: String, bounds: Rect2, obstacles: Array):
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 41004+int(region.substr(1))
+	var base: Color = FLOOR[region]
+	var metal := region in ["R2","R4","R7"]
+	# Use the construction joints already established by _floor_structure.
+	# A second, unrelated tile grid would make the floor look double-exposed.
+	var cell := Vector2(88,64) if region != "R4" else Vector2(110,55)
+	for row in 11:
+		for column in 11:
+			var p := bounds.position+Vector2(column*cell.x-(44 if row%2 else 0),row*cell.y)
+			var panel := Rect2(p+Vector2(3,3),cell-Vector2(6,6)).intersection(bounds.grow(-7))
+			if panel.size.x < 20 or panel.size.y < 20: continue
+			if metal:
+				# Brushed direction follows a plate, never a screen-space texture.
+				var tint := base.lightened(0.045) if (row+column)%3 == 0 else base.darkened(0.07)
+				canvas.draw_shaded_rect(panel,Color(tint.lightened(0.07),0.48),Color(tint.darkened(0.16),0.32))
+				for y in [6,8,38,40]:
+					if y >= panel.size.y-2: continue
+					canvas.draw_line(panel.position+Vector2(7,y),panel.position+Vector2(minf(42,panel.size.x-7),y),Color(base.lightened(0.20),0.17),1)
+				canvas.draw_line(panel.position+Vector2(2,2),Vector2(panel.end.x-2,panel.position.y+2),Color(base.lightened(0.28),0.25),1)
+				if (row-column)%4 == 0:
+					var seam := panel.position+Vector2(6,15)
+					canvas.draw_rect(Rect2(seam,Vector2(16,2)),base.darkened(0.45))
+					canvas.draw_line(seam+Vector2(0,2),seam+Vector2(16,2),base.lightened(0.10),1)
+	for i in 850:
+		var p := Vector2(rng.randf_range(bounds.position.x+8,bounds.end.x-8),rng.randf_range(bounds.position.y+8,bounds.end.y-8)).floor()
+		var shade := rng.randf_range(0.025,0.14)
+		var ink := base.lightened(shade) if i%3 == 0 else base.darkened(shade)
+		var extent := Vector2(rng.randi_range(1,4),1)
+		if region == "R3":
+			extent.x = rng.randi_range(2,7)
+			ink = Color("97b9c1",rng.randf_range(0.08,0.22))
+		elif region == "R5":
+			extent = Vector2(1,rng.randi_range(1,3))
+		elif region in ["R6","R8"] and i%8 == 0:
+			canvas.draw_line(p,p+Vector2(4,-3),Color(base.lightened(0.23),0.55),1)
+		canvas.draw_rect(Rect2(p,extent),ink)
+	for rect in obstacles:
+		# Accumulated dirt and worn sill follow real collision footprints.
+		for layer in range(4,0,-1):
+			canvas.draw_rect(rect.grow(layer*2),Color(base.darkened(0.65),0.045),false,2)
+		for x in range(int(rect.position.x)+3,int(rect.end.x)-2,9):
+			var p := Vector2(x,rect.end.y+2)
+			canvas.draw_line(p,p+Vector2(3+(x%5),1),Color(base.lightened(0.20),0.4),1)
 
 ## Low-contrast construction joints establish scale; attack ink remains brighter.
 static func _floor_structure(canvas, region: String, bounds: Rect2):
@@ -332,6 +382,13 @@ static func _wall(canvas, region: String, footprint: Rect2):
 			canvas.draw_rect(rect.grow(-4),Color("1b1630"),false,2)
 			canvas.draw_line(rect.position+Vector2(4,4),rect.end-Vector2(4,4),ACCENT[region],2)
 			canvas.draw_line(Vector2(rect.end.x-4,rect.position.y+4),Vector2(rect.position.x+4,rect.end.y-4),ACCENT[region],2)
+	# Asymmetric bevel wear and fastening points give each slab a top plane.
+	for corner in [rect.position+Vector2(5,5),Vector2(rect.end.x-5,rect.position.y+5),rect.end-Vector2(5,5),Vector2(rect.position.x+5,rect.end.y-5)]:
+		canvas.draw_rect(Rect2(corner-Vector2.ONE,Vector2(3,3)),WALL[region].darkened(0.55))
+		canvas.draw_rect(Rect2(corner-Vector2.ONE,Vector2(2,1)),WALL[region].lightened(0.35))
+	for x in range(int(rect.position.x)+13,int(rect.end.x)-5,31):
+		canvas.draw_line(Vector2(x,rect.position.y+2),Vector2(x+5,rect.position.y+2),WALL[region].lightened(0.42),1)
+		canvas.draw_line(Vector2(x+2,rect.position.y+3),Vector2(x+5,rect.position.y+3),WALL[region].darkened(0.35),1)
 
 ## The arena rim. A two-tone frame with region accent ticks: at a glance, each region's
 ## outer boundary looks like its own place rather than the same box in another colour.

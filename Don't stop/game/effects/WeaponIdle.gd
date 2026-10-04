@@ -6,6 +6,13 @@ var resting_sprite_offset := Vector2.ZERO
 # Pure visual mode shares the held weapon renderer, without constructing a gun.
 var preview_id := -1
 var preview_tip := Vector2.ZERO
+var action_remaining := 0.0
+var action_duration := 0.12
+
+func cycle_action(seconds: float) -> void:
+	action_duration = clampf(seconds,0.06,0.24)
+	action_remaining = action_duration
+	queue_redraw()
 const PALETTES = {112:Color("66cfff"),121:Color("c68cff"),116:Color("ff863d"),113:Color("90bfff"),120:Color("ffbf69"),124:Color("ffd47a"),6:Color("70ffac"),111:Color("b7a0ff"),114:Color("ff78ce"),115:Color("77eeff"),122:Color("c8e5e9")}
 func _ready() -> void:
 	if not is_instance_valid(gun): return
@@ -22,13 +29,39 @@ func _process(delta):
 	if not visible: return
 	if not is_visible_in_tree(): return
 	clock += delta
-	queue_redraw()
+	var was_active := action_remaining > 0
+	action_remaining = maxf(0.0,action_remaining-delta)
+	var id: int = preview_id if preview_id >= 0 else gun.weapon_id
+	if was_active or (aura_enabled and PALETTES.has(id)): queue_redraw()
 func _draw():
 	if not visible: return
 	if preview_id < 0 and not is_instance_valid(gun): return
 	var id = preview_id if preview_id >= 0 else gun.weapon_id
 	var tip = preview_tip if preview_id >= 0 else gun.gun_tip.position
 	if aura_enabled and PALETTES.has(id): draw_aura(id,tip)
+	if preview_id < 0 and action_remaining > 0: draw_action(id,tip)
+
+func draw_action(id: int, tip: Vector2) -> void:
+	# All presentation textures share muzzle (21,8). Never move GunTip, rotate
+	# the root, or consume RNG to animate a cosmetic part.
+	var origin := tip-Vector2(21,8)
+	var t := 1.0-action_remaining/action_duration
+	var stroke := sin(minf(t/0.22,1.0)*PI*0.5) if t < 0.22 else pow((1.0-t)/0.78,2)
+	var color: Color = PALETTES.get(id,Color("c5b18d"))
+	if id in [6,111,112,113,114,115,116,121]:
+		# Cooling shutters separate, then latch; the chamber remains anchored.
+		for side in [-1,1]:
+			var at := origin+Vector2(15,8+side*(2+stroke))
+			draw_line(at-Vector2(3,0),at+Vector2(3,0),Color("0c161e"),2)
+			draw_line(at-Vector2(2,0),at+Vector2(2,0),color,0.8)
+	elif id != 122:
+		# A recessed ejection port and sliding bolt, not whole-body squash.
+		draw_rect(Rect2(origin+Vector2(9,5),Vector2(7,3)),Color("10191f"))
+		var bolt := origin+Vector2(12-stroke*3,5)
+		draw_rect(Rect2(bolt,Vector2(4,2)),Color("647a83"))
+		draw_line(bolt,bolt+Vector2(3,0),Color("c1d0c7"),1)
+		if id in [1,5,8,117,118,119,120]:
+			draw_line(origin+Vector2(16-stroke*2,10),origin+Vector2(20-stroke*2,10),color,1)
 
 func draw_aura(id: int, tip: Vector2):
 	var color: Color = PALETTES[id]

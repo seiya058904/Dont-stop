@@ -174,8 +174,12 @@ static func paint(canvas: Node2D, kind: String, direction: Vector2, radius: floa
 				var a = i*TAU/7.0+progress*3.0
 				canvas.draw_circle(Vector2.RIGHT.rotated(a)*radius*0.55,2.0+2.0*p,Color(ink.edge_hot.r,ink.edge_hot.g,ink.edge_hot.b,0.45))
 		elif decor and style == "detonate":
-			# Self-destruct: a fast inner blink that accelerates as the fuse burns down.
-			canvas.draw_circle(Vector2.ZERO,4.0+3.0*sin(progress*40.0),Color(1,0.4,0.3,0.85))
+			# Fuse closes monotonically. Four teeth read urgency without strobing
+			# or implying the damage radius is changing.
+			for i in 4:
+				var axis := Vector2.RIGHT.rotated(PI/4+i*PI/2)
+				var at: Vector2 = axis*(4+(1-p)*7)
+				canvas.draw_line(at,at+axis*3,edge,2,true)
 		elif decor:
 			canvas.draw_multiline(shape.marks,edge,1.4,true)
 	# Common origin charge halo, never an opaque screen flash.

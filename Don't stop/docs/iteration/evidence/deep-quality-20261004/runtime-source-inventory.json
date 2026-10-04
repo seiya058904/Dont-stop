@@ -1,0 +1,718 @@
+[
+  {
+    "path": "Don't stop/autoload/Combat.gd",
+    "sha256": "78220c83536cc859cfc01f9b2f89ce36ec676ce156021338d8cd293511f29a16"
+  },
+  {
+    "path": "Don't stop/autoload/ConfigUtils.gd",
+    "sha256": "3d819a70e084d8c495b1ff0591ad60ad3f1d83441facfe1d704339bb9316faf8"
+  },
+  {
+    "path": "Don't stop/autoload/Demo.gd",
+    "sha256": "2e5c3aa9aa313dd5a8f43f7c259340787637dd5e3bb09ad8d5401cd502729058"
+  },
+  {
+    "path": "Don't stop/autoload/PlayerData.gd",
+    "sha256": "3952a6e64b47ce8c069d8d1c3557b1e86750d4067882652e8bc944a7742cea7b"
+  },
+  {
+    "path": "Don't stop/autoload/server/EquipServer.gd",
+    "sha256": "0db6c38cb381d4b6e3e050944e7a6f71b0fdd70ffa5d715432db76cada8b3c8e"
+  },
+  {
+    "path": "Don't stop/autoload/server/LevelServer.gd",
+    "sha256": "b1c1271ac7b4529863447ff2b8f4463d2e5af12c4dc71e78a18be2705205d0ef"
+  },
+  {
+    "path": "Don't stop/autoload/server/MapServer.gd",
+    "sha256": "006c373933f8e49903c974a70b81864df932f34b72076a11916696e4577e804a"
+  },
+  {
+    "path": "Don't stop/autoload/server/PlayerServer.gd",
+    "sha256": "e1fd8e40b3a8d7fc874c1e4d2fdec371b5257a7b236dab333dea174572758370"
+  },
+  {
+    "path": "Don't stop/autoload/server/RewardServer.gd",
+    "sha256": "8228a4edea0253617fe6aa3c3b626a3167b26933f3462f695ec548b0ee42a813"
+  },
+  {
+    "path": "Don't stop/autoload/Smoke.gd",
+    "sha256": "737e50fcb9dcb82f959ab8811d53debcc9690192c4fe46f6e4d3be05fe51d405"
+  },
+  {
+    "path": "Don't stop/autoload/Utils.gd",
+    "sha256": "a5f5f22a7d9450656e928ff98737ceb6c7e68672f6b8e2c3c82fad6fe9fcfc6c"
+  },
+  {
+    "path": "Don't stop/autoload/Warmup.gd",
+    "sha256": "57730318dc66e97fe91fc2fd9dbb264719abcd426a271a65a6133accd27a6d1c"
+  },
+  {
+    "path": "Don't stop/boot/Boot.gd",
+    "sha256": "196697c3bddce4527db64666dbd95923310c7aa11480005e737074d70351c74c"
+  },
+  {
+    "path": "Don't stop/boot/LoadingBackdrop.gd",
+    "sha256": "ffb6172c68a03fb41bbff09779804604051fbe71bde9d7ac0683ff73e4c1933c"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/new-source/game/monster/B19EnchantmentLayer.gd",
+    "sha256": "9ab387c348d261a626d25bf9db056cc57dae4df86a33740024650c6476feb18e"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/new-source/game/monster/ContinuousBarrage.gd",
+    "sha256": "85f53fff5b822f331fe660ac14eb1fc41ad6982fc34496f3779166be7594221a"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/autoload/Combat.gd",
+    "sha256": "08a1bb2c2f561c0ef40a0e21a339791758206f5132e672772aa61614fb67adbf"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/autoload/Utils.gd",
+    "sha256": "985ac0be884bbb77f3aba0e8ae79b6e8f59e2427492bd0b9b19f213da6028ce0"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/config/B18Variants.gd",
+    "sha256": "15bfd9dabc584ef87fd92c928a37291435220c98d09e8fcd28f560c154782e24"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/config/M5Content.gd",
+    "sha256": "319a2f250fc87892c7bcba643e4217adff4675f8a8b85160b2582fa69f41f75e"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/diag/B11Probe.gd",
+    "sha256": "43c156389081de998530d51d8cf2776e120427e361655e8ef791258a884e54d3"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/diag/B11Stress.gd",
+    "sha256": "90ccb0dd6c3b3a28f8f1ce6442ea98417f67a9ca3694f1b4e86757f2dff93e5a"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/effects/CombatFootprint.gd",
+    "sha256": "3513ba6f4c0ea5ae62acffb90c53ca93c0f703f712346767fababf770005b151"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/monster/BaseMonster.gd",
+    "sha256": "80cf7cf6de44203c0bb1dd940412c55ebe507fe24a405bb21ec2dff89be4f95a"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/monster/ContinuousBarrage.gd",
+    "sha256": "85f53fff5b822f331fe660ac14eb1fc41ad6982fc34496f3779166be7594221a"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/monster/DemoEnemy.gd",
+    "sha256": "84bd7d0bab6e0bc053f1c388545d4efe91e3d01984ed015986f98580289c0038"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/game/monster/TacticalEnemy.gd",
+    "sha256": "364adb0d21ca9f11ff2d4865bf4ee30ca7546c07d7d5af456f633d1fa6e0f37e"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/perf-before-source/ui/widgets/HitLabel.gd",
+    "sha256": "95258efb1ab349a92e326856733a15053097e698b3fffb70498a4f2a1400741e"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/prechange/untracked/Don't stop/game/monster/B19EnchantmentLayer.gd",
+    "sha256": "aad9792f173a0ecdb4f6f9668ebd4ab7850305dc0462ac65d4bce51ba0d1231c"
+  },
+  {
+    "path": "Don't stop/docs/iteration/evidence/b19-1/prechange/untracked/Don't stop/game/monster/ContinuousBarrage.gd",
+    "sha256": "e7c23e92fe08867877391199ebcce1f06d741088bde093f9a894fee8c17da937"
+  },
+  {
+    "path": "Don't stop/game/attachments/BaseAttachment.gd",
+    "sha256": "bbebc5a615ed13381d00dbd982de85710deab844f273bd19310d6002048e6211"
+  },
+  {
+    "path": "Don't stop/game/attachments/ExtendedRifleMagazine.gd",
+    "sha256": "10039a3e7915f2704d0719d1ae2dbb9988ff86defa9d1ff9ad0d3dae91c7ba29"
+  },
+  {
+    "path": "Don't stop/game/attachments/GrenadeLauncher.gd",
+    "sha256": "992d903b98e7845bc613ab6bd40485adf9d7c9b720f8d0668f725a06df6d2882"
+  },
+  {
+    "path": "Don't stop/game/attachments/MachineGunMagazine.gd",
+    "sha256": "bccab033ac3469cb52306705d560c01a265586c0d6498790cc50572ba73500f0"
+  },
+  {
+    "path": "Don't stop/game/attachments/QuickdrawMagazine.gd",
+    "sha256": "07897d3ff525643b581d4fc65a3f1a17b63a9a0252df5cdc3bd200fd343bcd30"
+  },
+  {
+    "path": "Don't stop/game/attachments/QuickExpansionMagazine.gd",
+    "sha256": "33b323e2d2c54f6f77722c6781d74fd2ecfeb44c24b85332fa9659f83c36d169"
+  },
+  {
+    "path": "Don't stop/game/attachments/ShotgunShellPouch.gd",
+    "sha256": "73649b6791b44fb618d77627325e833762da64c0a9c35fbd6e057e5c7a9614cb"
+  },
+  {
+    "path": "Don't stop/game/attachments/SubmachineGunMagazine.gd",
+    "sha256": "3afc01b1814c34eb63a68ab197da7614d02cc5285e9d94eff66954fd8e0b32e1"
+  },
+  {
+    "path": "Don't stop/game/attachments/UniversalExtendedMagazines.gd",
+    "sha256": "05530525c28ee5f4a2e4dad1576536e3f6c84951ee188087eb79bcebc61c93bb"
+  },
+  {
+    "path": "Don't stop/game/BaseFrame.gd",
+    "sha256": "858162cab2ff8d90f8a20a523fa3de5fc281c6fb1db05a8c52325e6ee24145b9"
+  },
+  {
+    "path": "Don't stop/game/bullets/Bullet.gd",
+    "sha256": "5859c4f31534299b984380e611f1710e7b5ebba54f033d673f56c70ffa27ca46"
+  },
+  {
+    "path": "Don't stop/game/bullets/BulletShell.gd",
+    "sha256": "fb479850e27fa1a2a92946782006723117eca5b1e8d3812fc86a465b6c4f3682"
+  },
+  {
+    "path": "Don't stop/game/bullets/MechanismProjectile.gd",
+    "sha256": "4256c0ae67132788f89a728709761776d8ffbdf287d2158afae0d6b6a8828e25"
+  },
+  {
+    "path": "Don't stop/game/bullets/PlasmaBullet.gd",
+    "sha256": "75b4018efae11fdee9dda8a262c69ba2e6dc9eeb57c63666177d674236b0364d"
+  },
+  {
+    "path": "Don't stop/game/bullets/SmpBullet.gd",
+    "sha256": "95015d2ba4c634ac02171d00cc1ac81faea8f66fe5b5d08769090872e2156380"
+  },
+  {
+    "path": "Don't stop/game/config/ArenaHazards.gd",
+    "sha256": "fe0204bccfc916b3fa384314a4951636db3762ecb82ce6d6e0d9776e33879900"
+  },
+  {
+    "path": "Don't stop/game/config/AttachmentCatalog.gd",
+    "sha256": "7dacdac95fcb35fd90938b590851aae554e08da6175036c5677717eec736dad8"
+  },
+  {
+    "path": "Don't stop/game/config/B18Variants.gd",
+    "sha256": "edde0616beb35afe89bb4ff07f1e962be972b68c8fb3d8e6665cdbfcf3d7430a"
+  },
+  {
+    "path": "Don't stop/game/config/CampSaveStore.gd",
+    "sha256": "5986bf49d25918dd5292ad3a04b5c7bba3690b9cc693e00147e23ea84318c6ce"
+  },
+  {
+    "path": "Don't stop/game/config/CampSnapshot.gd",
+    "sha256": "fe359756897d91423b6c3b1a4a1fc60f317b0de2276bc4e914d3e2d0b729b768"
+  },
+  {
+    "path": "Don't stop/game/config/CombatStatus.gd",
+    "sha256": "d1d7df5b130d9e357f3a8d4482f54d0e9bbb60a57bebf223ccbc62f082c12c28"
+  },
+  {
+    "path": "Don't stop/game/config/DemoConfig.gd",
+    "sha256": "7dd6d5869c610f79d5e842e1b339b88f800dd10ad0b9b7638faaf13e66236ecc"
+  },
+  {
+    "path": "Don't stop/game/config/EffectiveStats.gd",
+    "sha256": "68facd73fd9ff439343b89d55740848f77812da52d7067ee43ce8c56e4fae1e9"
+  },
+  {
+    "path": "Don't stop/game/config/HellMode.gd",
+    "sha256": "6fe85543b4fa3f961d322ca8f2c53cccc3009d196dd4ff6c37fc423a18362f8b"
+  },
+  {
+    "path": "Don't stop/game/config/LevelProgression.gd",
+    "sha256": "d433bd46c68e4ad04823b1b0c9bc306c2cf41c041e4308b7f92c2aa1b9d4e9f6"
+  },
+  {
+    "path": "Don't stop/game/config/M5Content.gd",
+    "sha256": "d021bdefc078344bba98b8123f2b5e7d4f013da3984890bd337c69c361c33450"
+  },
+  {
+    "path": "Don't stop/game/config/StatLedger.gd",
+    "sha256": "a15f98fdba2330687cce17694225cb6590b21f8f5264d23c12fce5aee3332028"
+  },
+  {
+    "path": "Don't stop/game/config/WeaponCatalog.gd",
+    "sha256": "7108ddbdf01e527fbed63ae179faaf9bb3b0a1d6ec27a6e2ec5a145b2eff6701"
+  },
+  {
+    "path": "Don't stop/game/diag/B11Probe.gd",
+    "sha256": "d30a0601d781b7523bf3e08feaba748bdabd187568d4afca3d81df5e788fae46"
+  },
+  {
+    "path": "Don't stop/game/diag/B11Stress.gd",
+    "sha256": "2ab51eb22a545f81acd6b38d152ed6072e7dfc644df356588033b39a7645aa4b"
+  },
+  {
+    "path": "Don't stop/game/diag/B17Visual.gd",
+    "sha256": "78d25af1b0b26c6190bedd2d98c8c563639b97087788011145a6199d54fc5353"
+  },
+  {
+    "path": "Don't stop/game/diag/B18Play.gd",
+    "sha256": "f3debc43728f321619f52a82576c93d167d8770c09d990966600e73acbf51acc"
+  },
+  {
+    "path": "Don't stop/game/diag/B18Run.gd",
+    "sha256": "c57abc7ed4d2d418e767d5b4b2a4cb2d2b0eb734a8b9074c3c9510e4d74c3370"
+  },
+  {
+    "path": "Don't stop/game/diag/B192Visual.gd",
+    "sha256": "31d4431b29f91eb24f8a715ca1c6a9ca7d44b273747d69011a6b4fd54e9568cc"
+  },
+  {
+    "path": "Don't stop/game/diag/WarmupCanvas.gd",
+    "sha256": "ca9a60da8aec92a2a71dd3b849055d90d74e6cb687cddc69bbc9c340f5a12edd"
+  },
+  {
+    "path": "Don't stop/game/effects/ArcDischarge.gd",
+    "sha256": "009115fb50b08e7f073bb605309638cc6c524cd22bef6ca604557d8360451d76"
+  },
+  {
+    "path": "Don't stop/game/effects/CombatEffect.gd",
+    "sha256": "c264b0c40973f9fd8eebafc99f49c245a919bdad4c714b30bf70dcf451b7ac60"
+  },
+  {
+    "path": "Don't stop/game/effects/CombatFootprint.gd",
+    "sha256": "0a62f4ef0d5eaf00bbc6eb53c4c22811cf67c4a405854d03d86bb8bc90a540a0"
+  },
+  {
+    "path": "Don't stop/game/effects/CombatTelegraph.gd",
+    "sha256": "aa72852872b479aeb753b5be8cde2fde681269524be5cfcf36ae17f1a8b4aac9"
+  },
+  {
+    "path": "Don't stop/game/effects/EliteAura.gd",
+    "sha256": "f75a20c0f82b05981de9eea75550dbf67f1c6688b026cc199fe9bcb1f9a376f0"
+  },
+  {
+    "path": "Don't stop/game/effects/GravityField.gd",
+    "sha256": "3ba451432e14d098c07d4b630363623963ed597ef8393831e353c31a1f677fa5"
+  },
+  {
+    "path": "Don't stop/game/effects/HeatContact.gd",
+    "sha256": "796f5cf0dcd3637f177f49eb071631d6a918f4bbf61a2ec2b38ae73c334d9455"
+  },
+  {
+    "path": "Don't stop/game/effects/HostileVFX.gd",
+    "sha256": "bfe94191248df5dc262d564a0d6bb5e33f44d36a96b0a91d82c8db78beaa749c"
+  },
+  {
+    "path": "Don't stop/game/effects/ImpactAccent.gd",
+    "sha256": "cc8227b06ab462cbd76d9e9d559b16879bb8a2046acea70dbaf303d49d667662"
+  },
+  {
+    "path": "Don't stop/game/effects/LightweightParticles.gd",
+    "sha256": "20f9b39e85ea6db83f90a1737da06c1cb0930fd6aae15f10023427d660fab0bf"
+  },
+  {
+    "path": "Don't stop/game/effects/MeteorBody.gd",
+    "sha256": "9091b6cd69d8636ef31675d06bce801590034cb318cf77e72c4a164a0f8df67d"
+  },
+  {
+    "path": "Don't stop/game/effects/PresentationLight.gd",
+    "sha256": "d5d09c71f37a2b8db445a9811cb9400f51fea5df3bbef5393263a1b7203c8353"
+  },
+  {
+    "path": "Don't stop/game/effects/ThermalStream.gd",
+    "sha256": "ed810ee6381bd6455921a5f5ae5d5212751de47dfbea8b2633a4be0d598acd48"
+  },
+  {
+    "path": "Don't stop/game/effects/TierMuzzle.gd",
+    "sha256": "eca55feb95e52b4e7c3752389b30c480770e5c97f43594dda2421751b5af0784"
+  },
+  {
+    "path": "Don't stop/game/effects/WeaponIdle.gd",
+    "sha256": "6984a2bd923cef80d98ba69b8e03f2a4f7de2d4654e01f7cd8e2d1e05dab2a5d"
+  },
+  {
+    "path": "Don't stop/game/equip/BaseEquip.gd",
+    "sha256": "c779ed002c687ecddee20e7d3fa0a523952c918a7a0d58ca10ee83201477dd98"
+  },
+  {
+    "path": "Don't stop/game/equip/EquipOnFloor.gd",
+    "sha256": "bfd15de70cbcc3132efd13857907134f14439f95b45ad86e587287c4ca3073b0"
+  },
+  {
+    "path": "Don't stop/game/guns/AlienMachine.gd",
+    "sha256": "cd2df091854e0fc6fdbe7d3bfadbc722eec26d2cb695d9a2f73cd87784f15a5e"
+  },
+  {
+    "path": "Don't stop/game/guns/AlienRifle.gd",
+    "sha256": "cd2df091854e0fc6fdbe7d3bfadbc722eec26d2cb695d9a2f73cd87784f15a5e"
+  },
+  {
+    "path": "Don't stop/game/guns/ArcCaster.gd",
+    "sha256": "111626c1522df6b2e99fdeec9174ac884c89e03fe1b6662c3486ef5f1061be57"
+  },
+  {
+    "path": "Don't stop/game/guns/BabyZapZap.gd",
+    "sha256": "9e335d3081082bba76d00f180b0865a725221f257d930468d868eb176087e62a"
+  },
+  {
+    "path": "Don't stop/game/guns/BaseGun.gd",
+    "sha256": "76604f3453b8f7471703b4725353273adea11188bd44be64f7a8ab5ecc8a34e1"
+  },
+  {
+    "path": "Don't stop/game/guns/BoomBoi.gd",
+    "sha256": "8238150a015ca4a063a23182b884c2e6038a38b164bfc9a22ed0e9af4c8daf34"
+  },
+  {
+    "path": "Don't stop/game/guns/BurstCarbine.gd",
+    "sha256": "c9be67703cd6fa5e112506f4f81d3b6bf265bc432e0bf96fb19306d0f189b357"
+  },
+  {
+    "path": "Don't stop/game/guns/EmpireShotgun.gd",
+    "sha256": "bdfcc9781e7d3abaca55066aa62b1c258089c919a1571eb18c11613d3250699a"
+  },
+  {
+    "path": "Don't stop/game/guns/GunSprite.gd",
+    "sha256": "e44891569d31d6606da68d70c9a91458f4fa9d674a6222ec55366ac01df30765"
+  },
+  {
+    "path": "Don't stop/game/guns/MechanismGun.gd",
+    "sha256": "62e6959ee8b60c53e5e1bd9f2d163c269dc48c45b068e99df2e54778d0d4f164"
+  },
+  {
+    "path": "Don't stop/game/guns/PlasmaOrb.gd",
+    "sha256": "5df4eea1a6eadd399325571250505be0b85baef4839fc211d0c0e255e5ec7cfd"
+  },
+  {
+    "path": "Don't stop/game/guns/RebalShotgun.gd",
+    "sha256": "bab368157d1660e10cb96b92c74ae4b557aec5734bf224beea4539890cce1847"
+  },
+  {
+    "path": "Don't stop/game/guns/ShotgunBlaster.gd",
+    "sha256": "5506d9cea67cbdb4645ffeaccc64618b226176e82d695c7e962f450167b22b39"
+  },
+  {
+    "path": "Don't stop/game/guns/Sniper.gd",
+    "sha256": "5f8069fcf24ab423bda6e726e3129db8882c5c45acc64a8335f1646d770e7093"
+  },
+  {
+    "path": "Don't stop/game/guns/Uzi.gd",
+    "sha256": "0656d190e56e5062f96aa4d77d79dacc920a42e3f367d66b21345d19185a7f75"
+  },
+  {
+    "path": "Don't stop/game/hero/Camera2D.gd",
+    "sha256": "7a7015a2a9821264e874fe0fed3760cf15bffb70afeda82205d44a5c78430005"
+  },
+  {
+    "path": "Don't stop/game/hero/Hero.gd",
+    "sha256": "37487963209f911020223c4d8083a553ed3a90b017f00748163f52614e435905"
+  },
+  {
+    "path": "Don't stop/game/items/BaseItem.gd",
+    "sha256": "efe2135a35b6686a5d46ad937403fd8eba89d4957b4d61d0b355252a92726b05"
+  },
+  {
+    "path": "Don't stop/game/items/Gold.gd",
+    "sha256": "41b39807aeba3718c70c3ab1f5b9c313f2379bdab214c11ca340cb1cb604c601"
+  },
+  {
+    "path": "Don't stop/game/items/HpPack.gd",
+    "sha256": "bc2e5b7309a6a3b4b6c328304e212b8748d2037b46b7f485d4ea150e77370684"
+  },
+  {
+    "path": "Don't stop/game/map/ArenaHazardDirector.gd",
+    "sha256": "d43053955534605c8b2e411b8fbeb546cc19105d5e92d5180f7a1dc4569968ea"
+  },
+  {
+    "path": "Don't stop/game/map/ArenaMesh.gd",
+    "sha256": "1ceae962c7dfe1b6d375884fa1aaf994ee39596985104824cdf4fb3b64df71ff"
+  },
+  {
+    "path": "Don't stop/game/map/ArenaVisibility.gd",
+    "sha256": "781c239c3f85945cd9257034a31e666c4db2ba776a515f290eeba100a72738f0"
+  },
+  {
+    "path": "Don't stop/game/map/CombatArena.gd",
+    "sha256": "bacf3418a4c38338d29d682d259edffaee28a1f0ea3a3f953b2c8d475bba9977"
+  },
+  {
+    "path": "Don't stop/game/map/EnvironmentLights.gd",
+    "sha256": "1ee78cb1bcdd3266cf7ba0188fe1892c18e21936400eadc283159310b5f36e78"
+  },
+  {
+    "path": "Don't stop/game/map/FogPierce.gd",
+    "sha256": "e55d7b9e58951f0254551b6d1cc19c717e2db827943309807a15bbf46d28d2e9"
+  },
+  {
+    "path": "Don't stop/game/map/FogPierceCanvas.gd",
+    "sha256": "bfbefb8c75de47b881e0c424bf7b5a1c097934aa8b188053c93f19f0bb44aa36"
+  },
+  {
+    "path": "Don't stop/game/map/mapTown/Town.gd",
+    "sha256": "4b66707552a00d3dac0a8ae1b335a720914d6ce23367b24d51d87563f2ea5409"
+  },
+  {
+    "path": "Don't stop/game/map/Moon/Moon.gd",
+    "sha256": "a4ac4e2bf55c3ec0f51b53efe198fcea09242669eb2d6f0af5afbfa2cbba965a"
+  },
+  {
+    "path": "Don't stop/game/map/RegionTheme.gd",
+    "sha256": "2f52a2cb6a2e1382ae1cf0e08a017281d97f262dca455865e9dc949cd9be682a"
+  },
+  {
+    "path": "Don't stop/game/map/SnowWorld/MonsterBuilder.gd",
+    "sha256": "4a598dddcc4534c3d2388d96c722802890743ea3798ee061b84269c9e7664e98"
+  },
+  {
+    "path": "Don't stop/game/map/SnowWorld/SnowWorld.gd",
+    "sha256": "f37e4f5c34ecd4779db98f33f14f22a3ae343eb1af14035b2adf722196f5e218"
+  },
+  {
+    "path": "Don't stop/game/map/StageHazard.gd",
+    "sha256": "737774b382c323ed10e827872b450fa4b5731b80fb5ca26be0fda7a42b765873"
+  },
+  {
+    "path": "Don't stop/game/map/test.gd",
+    "sha256": "60d56bf414b2b3b5f5966a620e24d7c56f82994980e5f123075d9693022df901"
+  },
+  {
+    "path": "Don't stop/game/monster/B19EnchantmentLayer.gd",
+    "sha256": "e8d3b1dfd148c9a52526077db040f854144cf11cbbb3f80de6913d2e2b4b2a03"
+  },
+  {
+    "path": "Don't stop/game/monster/BaseMonster.gd",
+    "sha256": "3dae81a73891af993c37b8993d4ede5b60ed6edf01a89525bb2546a01cd560f8"
+  },
+  {
+    "path": "Don't stop/game/monster/BossUltimate.gd",
+    "sha256": "065674788289b8dc39e704a756dec18b1c15cb0ec23bd62e5cc2b788d527c4e9"
+  },
+  {
+    "path": "Don't stop/game/monster/ContinuousBarrage.gd",
+    "sha256": "28b340f38421c16e1d412f2fbed111b16f72438b84f5158c64dcd8d499206020"
+  },
+  {
+    "path": "Don't stop/game/monster/DemoEnemy.gd",
+    "sha256": "5bebb550485d8d584b114cf0861a330b10c4e3464e48ff3b0fa248315c7aba4b"
+  },
+  {
+    "path": "Don't stop/game/monster/EnemyBarrage.gd",
+    "sha256": "5af1151ba4c49b57e9da8014853ed5b2fed76d4453cd96ed8a690307a15c85be"
+  },
+  {
+    "path": "Don't stop/game/monster/EnemyShot.gd",
+    "sha256": "febe0c0df793c50ac3e24055037ed5545c02a08ba2bc200e1ae5c88a6c9da7d3"
+  },
+  {
+    "path": "Don't stop/game/monster/Ghoul/Ghoul.gd",
+    "sha256": "119975832221f4d1663421059393b1613b8938dee71274accea54beba5701d7e"
+  },
+  {
+    "path": "Don't stop/game/monster/HostileZone.gd",
+    "sha256": "d1fbb38ce3780bfa2b0b3e472768feeb5cd18d0b1f1524e22b3ea437cbdde5df"
+  },
+  {
+    "path": "Don't stop/game/monster/Monster 1/Monster1.gd",
+    "sha256": "d1e1acc717c2436c3cb45baba95294d88beccf769b09407f5190bcb027efffb0"
+  },
+  {
+    "path": "Don't stop/game/monster/Monster 2/Monster2.gd",
+    "sha256": "595f865d4dca135342381202cc3218082774c382cf4ea27a4f7eaac7903acd5b"
+  },
+  {
+    "path": "Don't stop/game/monster/TacticalEnemy.gd",
+    "sha256": "b9b57c2bf5bdbbce1823332c233df3e0f64e75ccdd23ff755a84c3f658ba4e96"
+  },
+  {
+    "path": "Don't stop/game/npc/MapNpc.gd",
+    "sha256": "c3f06a4e4b230232833d36f203beb435f94d8a077fced775ec2a5dd62ede74b3"
+  },
+  {
+    "path": "Don't stop/game/npc/RewardNpc.gd",
+    "sha256": "2f7667bffd35fcc57dfd3ad20026fcb7622fad5438e6e39af407d485f653913f"
+  },
+  {
+    "path": "Don't stop/game/other/Grenade.gd",
+    "sha256": "117e0f7deff8242aaa7f20d6842d0bf45b81a6a810e376b1833bcdaa86fe4fca"
+  },
+  {
+    "path": "Don't stop/game/other/Portal.gd",
+    "sha256": "ec64c5117460a52ee1c28de06fc3637a8db652dd4abf0b8b5c5c9818f5cf01aa"
+  },
+  {
+    "path": "Don't stop/game/reward/AlienHelmentReward.gd",
+    "sha256": "9666091b440f764bac4197ef281e171bdd4ef945030f9ee3e9bc9ae966892b09"
+  },
+  {
+    "path": "Don't stop/game/reward/AmberStar.gd",
+    "sha256": "8d052181212cfd7eb2b508a4df46a97b00a415aa73530c50c7fc18eaa60fdba1"
+  },
+  {
+    "path": "Don't stop/game/reward/BaseReward.gd",
+    "sha256": "035ae97eb78a18572e746c123e1caced097a39d7268e04709cfbc6f5a892eb22"
+  },
+  {
+    "path": "Don't stop/game/reward/BlueAxe.gd",
+    "sha256": "3e0c3b34387d3337c5b00508fd13d552e334cd7af0339ef8a2963b1770761fb2"
+  },
+  {
+    "path": "Don't stop/game/reward/BlueBoots.gd",
+    "sha256": "c7e704264c247d4c7d19e8ff0368a98a56836b6fc05a70c7c5bebce5b0408712"
+  },
+  {
+    "path": "Don't stop/game/reward/CombatReward.gd",
+    "sha256": "16747b3898365cd0bfb51b341feb308fd556d59cf6922e8a4a946d05a767cfde"
+  },
+  {
+    "path": "Don't stop/game/reward/GoldReward.gd",
+    "sha256": "9505cd068e2ed6c152bbf1b3513b65fa1255d9d708b034aa1328f36ca5f81ca6"
+  },
+  {
+    "path": "Don't stop/game/reward/HeathPack.gd",
+    "sha256": "b165d7164ef8432bb2bcfacd1d18f49c4ba787898a2aff5ebca8df87c4ae55d9"
+  },
+  {
+    "path": "Don't stop/game/reward/HpReward.gd",
+    "sha256": "0119fb216b2ccdde0749a069613e7ea9117a32022b12ed547a3e59f1527c886b"
+  },
+  {
+    "path": "Don't stop/game/reward/WarningShield.gd",
+    "sha256": "f82019046bdba382ce8e8b401078869863c8d4bb19881938144b70f33b68ddf6"
+  },
+  {
+    "path": "Don't stop/joystick/virtual_joystick.gd",
+    "sha256": "a892c4d07bc6f91ec770292439a96b1046feeadfb4b4baa29de7c695125cc759"
+  },
+  {
+    "path": "Don't stop/ui/Atmosphere.gd",
+    "sha256": "9533d3ab7260457dc900d15fef6ae19cd45ab0b2a947f2dffb44f5420bd42caa"
+  },
+  {
+    "path": "Don't stop/ui/BossHUD.gd",
+    "sha256": "ef638c59d5eedbaf9d03e2b7261d37566acb5545756420477fb16f6f7deafa91"
+  },
+  {
+    "path": "Don't stop/ui/BuildIcon.gd",
+    "sha256": "d8cad11cb599fea61f6807790022416bc2e122b87e7d21b38e0ebbf71978bdb9"
+  },
+  {
+    "path": "Don't stop/ui/CampPanel.gd",
+    "sha256": "6cf771ec6b8a55f2cf847fe44e44f3cf8f5242ea9afef16292d5e09ed120f0e7"
+  },
+  {
+    "path": "Don't stop/ui/ControlUI.gd",
+    "sha256": "85642c45b782d72ed353e2950bdfec90371d20dda91de8c0c3aecb4c577385b5"
+  },
+  {
+    "path": "Don't stop/ui/DemoHUD.gd",
+    "sha256": "8bc51099d29d35d277712701f467dc8b2d6c799566210226e66aa298e14fb7d6"
+  },
+  {
+    "path": "Don't stop/ui/DemoSettings.gd",
+    "sha256": "f45cabc9b68d3fe9fb4a7f69e384651645d5c267a8453972022ff6c7dae2e59e"
+  },
+  {
+    "path": "Don't stop/ui/GameUI.gd",
+    "sha256": "49f8772b640c132368066481d8913b75ecf6514b71640c81fbe1d6fe9398c160"
+  },
+  {
+    "path": "Don't stop/ui/GildedTheme.gd",
+    "sha256": "f07e910d298c6660dc8bfbb4e72fe8f7649cd031e2a2c85a078da3d587436d61"
+  },
+  {
+    "path": "Don't stop/ui/Inventory.gd",
+    "sha256": "b51fe47187162c9b425cfd072ed57d7906705a415d5039fa17d59f18a7e8a550"
+  },
+  {
+    "path": "Don't stop/ui/MainUI.gd",
+    "sha256": "d48fb3f1262c8a49aee81947594b78f1286cfb88b280102e90501535f1024a86"
+  },
+  {
+    "path": "Don't stop/ui/ModeSelect.gd",
+    "sha256": "25e0bf8f6833a59d18cd4a6dd1269ccc17135b112754bcd4dca5b47e219ea19e"
+  },
+  {
+    "path": "Don't stop/ui/ModUI.gd",
+    "sha256": "0edb1ff0f86cad3e9e5ac197caa537d4f158acec430a7f39ee0e009d4fa5bacb"
+  },
+  {
+    "path": "Don't stop/ui/SaveDialog.gd",
+    "sha256": "829ce0356262bd6e94017b38d97503ae2ea83b3fc1ae68baa0092541f0f19250"
+  },
+  {
+    "path": "Don't stop/ui/SettingUI.gd",
+    "sha256": "70d17e25bb1c020b26775b118205025d133a6c4e5ac99bf490008dcb2d443bc4"
+  },
+  {
+    "path": "Don't stop/ui/snow/ChooseUI.gd",
+    "sha256": "81f24b6fe4676e69f077d70b0f4cc3a0ac887fd69f0e89f1f7fa342f75db492b"
+  },
+  {
+    "path": "Don't stop/ui/snow/EquipTexture.gd",
+    "sha256": "f1472c32b2df1aa757438c33ae2aa39005006782726f70f4507281b8eaa48139"
+  },
+  {
+    "path": "Don't stop/ui/StatPanel.gd",
+    "sha256": "e4d4ec1fbff6db0d34c7d747237a374e5dc8e0953e74e08aa826f480b2f08330"
+  },
+  {
+    "path": "Don't stop/ui/WeaponAmItem.gd",
+    "sha256": "326c31d1908f7abdee7d872bd04f8a06385e343b2bbd932cc0fbb83102b9a786"
+  },
+  {
+    "path": "Don't stop/ui/WeaponDisplay.gd",
+    "sha256": "eaaabeee7c39e48e4bdd9c2016afbb7c31ca88a8b105d56b6e020c13d62be403"
+  },
+  {
+    "path": "Don't stop/ui/widgets/AttachmentUIItem.gd",
+    "sha256": "367219ae9076a6a3398c5cabda93ce9743012ec12f3c0643f0244db3777336b4"
+  },
+  {
+    "path": "Don't stop/ui/widgets/BulletCountItem.gd",
+    "sha256": "e5516bbcd0c5d1306956a0999f3ef9e337671bce2a3393d0b0100e6808252d5c"
+  },
+  {
+    "path": "Don't stop/ui/widgets/Crosshair.gd",
+    "sha256": "378132c753f03170de47b160aee8a3190aad4f146a9b1530709991b43ab33297"
+  },
+  {
+    "path": "Don't stop/ui/widgets/DeathBoard.gd",
+    "sha256": "b41bc80a4fb3b38ee38ad3838b5db600c02227a544c24f2ecd03dcf1e95a59d0"
+  },
+  {
+    "path": "Don't stop/ui/widgets/HitLabel.gd",
+    "sha256": "abe8f7c85ac38496097039d85af100c30969b200f89ddbf80d459fc43c33157b"
+  },
+  {
+    "path": "Don't stop/ui/widgets/RewardChoose.gd",
+    "sha256": "b238f862a5d5eb49b39bf5e10d1bbd8f2da475746e8999d9af58184f13ea701a"
+  },
+  {
+    "path": "Don't stop/ui/widgets/RewardShopItem.gd",
+    "sha256": "69863785a2faf728c1f833d276a8b8936c75a8069ffee6e060e9a43cb9aa28cd"
+  },
+  {
+    "path": "Don't stop/ui/widgets/RewardTopItem.gd",
+    "sha256": "3598d0f3b9adc0918a958bfd93924c3bb03669ab723eb91b8c1f0c1a2797a954"
+  },
+  {
+    "path": "Don't stop/ui/widgets/Scoreboard.gd",
+    "sha256": "c96a9405ef5b2e7a0d9c163e07ec59f3a28cd8254b742657cc23c265b66aa20d"
+  },
+  {
+    "path": "Don't stop/ui/widgets/ShopPanel.gd",
+    "sha256": "18133b0e6ab359adf5758945567d980bd2d316fd104622e2ad733b86dc657959"
+  },
+  {
+    "path": "Don't stop/ui/widgets/ShopWeaponItem.gd",
+    "sha256": "d77d7242e4e9310bcea3342267c7949c60408d1a74e1bf2547264cb430d870b3"
+  },
+  {
+    "path": "Don't stop/ui/widgets/Tooltip.gd",
+    "sha256": "c425ebdac95d6db15cff5f549811d8f9993196ccdb0631376d9b48f469d6a5d5"
+  },
+  {
+    "path": "Don't stop/ui/widgets/WeaponChoose.gd",
+    "sha256": "227cb2734ae1eeae9178fbb712b8390ac51ddf06ea958b2eaafd54debfc9220d"
+  },
+  {
+    "path": "Don't stop/ui/widgets/WeaponChooseItem.gd",
+    "sha256": "b1b1a9d6e974706c85c1861f2837bd337c2ceccc127a7b710ffd276df7c45122"
+  },
+  {
+    "path": "Don't stop/ui/widgets/WeaponListItem.gd",
+    "sha256": "7094eb8c51e68390768b85886ad23ba999db129f2497bce20e1c2980e6bbe151"
+  },
+  {
+    "path": "Don't stop/ui/widgets/WeaponTopItem.gd",
+    "sha256": "a9ce6a5f1adbd49ad3e9109134efd99b5bb359391201e209b6453e8927c320b5"
+  }
+]
