@@ -61,6 +61,13 @@ var ammo_lit := -1.0
 
 func _ready() -> void:
 	_style_hud()
+	# One bounded inventory strip above the loadout, clear of the central arena
+	# and Boss plate. Keep every reward and its count, including a full build.
+	rw_grid.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	rw_grid.position = Vector2(8,188)
+	rw_grid.size = Vector2(280,12)
+	rw_grid.add_theme_constant_override("h_separation",2)
+	rw_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_setup_weapon_readout()
 	PlayerData.level_rewards_applied.connect(show_level_rewards)
 	level_bar.show_percentage=false
@@ -417,6 +424,11 @@ func onRewardAdd(rw:BaseReward):
 		ins.name = str(rw.id)
 		rw_grid.add_child(ins)
 		ins.setData(rw)
+	rw_grid.columns = maxi(1,rw_grid.get_child_count())
+	var icon_size := minf(12.0,(280.0-(rw_grid.columns-1)*2.0)/rw_grid.columns)
+	for item in rw_grid.get_children():
+		item.custom_minimum_size = Vector2(icon_size,12)
+		item.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func onPlayerLevelChange(level):
 	level_label.text = "Lv. " + str(level)

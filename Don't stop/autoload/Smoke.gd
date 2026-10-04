@@ -639,6 +639,7 @@ func _probe_report_rects() -> void:
 		if script == null: continue
 		var path: String = (script as Script).resource_path
 		if path.ends_with("ui/CampPanel.gd"):
+			_probe_emit_rect("camp-save-retry",panel.save_retry)
 			_probe_report_rect("camp-close-button", panel, "返回")
 			_probe_report_rect("camp-settings-button", panel, "设置")
 			# The stage tab itself, and the departure button a stage entry opens in the detail pane:
@@ -677,9 +678,17 @@ func _probe_report_rects() -> void:
 			if carry_state != _last_carry_state:
 				_last_carry_state = carry_state
 				print("[loadout] ",carry_state)
+		elif path.ends_with("ui/SaveDialog.gd"):
+			_probe_report_rect("save-export-original",panel,"导出坏档原文")
+			_probe_report_rect("save-export-progress",panel,"下载当前进度备份")
+			_probe_report_rect("save-retry",panel,"重试保存（不重复购买）")
+			_probe_report_rect("save-cancel",panel,"取消返回")
+			_probe_report_rect("save-discard",panel,"放弃本次未保存变化并返回")
+			_probe_report_rect("save-create-new",panel,"明确建立新体验档（先备份原文）")
 		elif path.ends_with("ui/DemoSettings.gd"):
 			_probe_report_rect("settings-back-button", panel, "返回")
 			_probe_report_rect("leave-entry", panel, "返回主菜单")
+			_probe_report_rect("native-exit", panel, "退出游戏")
 		elif path.ends_with("ui/widgets/Scoreboard.gd"):
 			# The results panel a finished round shows. It owns the pause stack, so a driver that wants
 			# to play a second round has to close it with the product's own button.

@@ -280,6 +280,9 @@ func set_use(use:bool):
 	visible = is_use
 	if player && is_use:
 		player.gun = self
+		var warmup = get_node_or_null("/root/Warmup")
+		if OS.has_feature("web") and weapon_id == 6 and is_instance_valid(warmup):
+			warmup.prepare_web_weapon.call_deferred(self)
 		PlayerData.emit_signal("onWeaponChangeAnim",weapon_id,Utils.GUN_CHANGE_TYPE.CHANGE)
 		if bullets_count == 0 and not Demo.loading and LevelServer.state != "CAMP":
 			reload_ammo()

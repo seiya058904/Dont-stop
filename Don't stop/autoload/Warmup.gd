@@ -254,6 +254,79 @@ func _warm_lit_canvas() -> void:
 signal web_combat_prepared
 var _web_combat_preparing := false
 var _web_combat_prepared := false
+var _web_w6_preparing := false
+var _web_w6_prepared := false
+
+func prepare_web_weapon(gun: Node) -> void:
+	if not OS.has_feature("web") or _web_w6_prepared or _web_w6_preparing or not is_instance_valid(gun) or gun.weapon_id != 6: return
+	_web_w6_preparing = true
+	# Only the equipped W6's measured first-use draw, after its camp UI paints.
+	# Construct no gameplay actor, fire no shot and consume no global RNG.
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	if not is_instance_valid(gun):
+		_web_w6_preparing = false
+		return
+	var started := Time.get_ticks_usec()
+	var canvas := build_w6_canvas(gun)
+	get_tree().root.add_child(canvas)
+	for frame in 4:
+		await RenderingServer.frame_post_draw
+		await get_tree().process_frame
+	canvas.queue_free()
+	_web_w6_preparing = false
+	_web_w6_prepared = true
+	print("[weapon-prepare] item=w6-draw elapsed_ms=%.3f" % ((Time.get_ticks_usec()-started)/1000.0))
+
+func build_w6_canvas(gun: Node) -> CanvasLayer:
+	var source: Line2D = gun.get_node("RayCast2D/Line2D")
+	var canvas := CanvasLayer.new()
+	canvas.layer = 0
+	var line := Line2D.new()
+	line.points = PackedVector2Array([Vector2(20,20),Vector2(60,20)])
+	line.width = 3.0
+	for key in ["material","gradient","antialiased","joint_mode","begin_cap_mode","end_cap_mode","default_color"]:
+		line.set(key,source.get(key))
+	line.modulate = Color(1,1,1,0.01)
+	canvas.add_child(line)
+	var light := PointLight2D.new()
+	light.texture = load("res://Sprites/light2.png")
+	light.position = Vector2(40,20)
+	canvas.add_child(light)
+	# CPUParticles2D renders a colored/custom-data 2D MultiMesh. Prepare that
+	# exact renderer variant without constructing emitters (their constructor
+	# draws from the global RNG even when fixed_seed is set afterwards).
+	for path in ["RayCast2D/Line2D/GPUParticles2D","RayCast2D/GPUParticles2D2"]:
+		var source_particles = gun.get_node(path)
+		var arrays: Array = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = PackedVector2Array([Vector2(-1,-1),Vector2(1,-1),Vector2(1,1),Vector2(-1,1)])
+		arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([Vector2.ZERO,Vector2.RIGHT,Vector2.ONE,Vector2.DOWN])
+		arrays[Mesh.ARRAY_COLOR] = PackedColorArray([Color.WHITE,Color.WHITE,Color.WHITE,Color.WHITE])
+		arrays[Mesh.ARRAY_INDEX] = PackedInt32Array([0,1,2,2,3,0])
+		var mesh := ArrayMesh.new()
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+		var multimesh := MultiMesh.new()
+		multimesh.transform_format = MultiMesh.TRANSFORM_2D
+		multimesh.use_colors = true
+		multimesh.use_custom_data = true
+		multimesh.mesh = mesh
+		multimesh.instance_count = 1
+		multimesh.set_instance_transform_2d(0,Transform2D(0,Vector2(40,20)))
+		multimesh.set_instance_color(0,Color.WHITE)
+		var visual := MultiMeshInstance2D.new()
+		visual.multimesh = multimesh
+		visual.texture = source_particles.texture
+		visual.material = source_particles.material
+		visual.modulate = Color(1,1,1,0.01)
+		canvas.add_child(visual)
+	var muzzle = load("res://game/effects/TierMuzzle.gd").new()
+	muzzle.position = Vector2(40,20)
+	muzzle.modulate = Color(1,1,1,0.01)
+	canvas.add_child(muzzle)
+	# _ready must assign the actual emissive material before pulse draws.
+	muzzle.ready.connect(func(): muzzle.pulse(WeaponCatalog.tier(6),6))
+	return canvas
 
 func prepare_web_combat() -> void:
 	if not OS.has_feature("web") or _web_combat_prepared:

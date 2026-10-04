@@ -30,6 +30,7 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { validateCompletion } = require('./stress-completion');
 
 const base = process.argv[2];
 const outDir = process.argv[3] || 'b11-1-stress-evidence';
@@ -90,6 +91,7 @@ function parseKv(line) {
 	let load = null;
 	let ink = null;
 	let rawFrames = null;
+	let completion = null;
 	const errors = [];
 	// Every line the page printed, bounded. The engine's own script errors arrive here, and a
 	// harness that reports "no summary line" without showing them is how a whole measurement round
@@ -122,6 +124,8 @@ function parseKv(line) {
 
 	page.on('console', m => {
 		const t = m.text();
+		if (t.startsWith('ERROR:') || t.startsWith('SCRIPT ERROR:')) errors.push(t);
+		if (t.startsWith('[stress-completion] ')) completion = JSON.parse(t.slice(20));
 		if (t.includes('depart=true state=COMBAT')) needsActivation = true;
 		if (t.startsWith('B18_')) { observations.push(t); console.log(t.slice(0,250)); }
 		if (t.startsWith('[stress] ')) console.log(t);
@@ -169,6 +173,7 @@ function parseKv(line) {
 	const n = k => (summary && Number.isFinite(parseFloat(summary[k])) ? parseFloat(summary[k]) : null);
 	const p = k => (peak && Number.isFinite(parseFloat(peak[k])) ? parseFloat(peak[k]) : null);
 	const report = {
+		completion, completion_valid: validateCompletion(completion, Number(query.seconds)),
 		label, scenario, url, build, gpu, errors, browserVersion, surface, observations,
 		wall_clock_s: Math.round((Date.now() - started) / 1000),
 		seconds_requested: parseInt(query.seconds, 10) || 90,
@@ -221,5 +226,5 @@ function parseKv(line) {
 	for (const b of buckets) {
 		console.log(`  bucket[${b.family}] ${b.name} n=${b.n} share=${f(b.share)} avg=${f(b.avg)} p95=${f(b.p95)} p99=${f(b.p99)} max=${f(b.max)} over33=${b.over33} over50=${b.over50}`);
 	}
-	process.exit(summary ? 0 : 1);
+	process.exit(summary && report.completion_valid && !errors.length && !rawFrames?.measurement_timeout ? 0 : 1);
 })();

@@ -39,17 +39,22 @@ func _ready():
 	Demo.test_mode = false
 	check(Demo.save_camp().success,"R04 initial snapshot written")
 	var previous = FileAccess.get_file_as_string(Demo.save_path)
-	for fault in ["open","write","replace","readback"]:
+	var faults = ["open","write","replace","readback"]
+	for index in faults.size():
+		var fault = faults[index]
 		store.fault = fault
 		var before = PlayerData.gold
-		var count = PlayerData.player_am_list.size()
-		var purchase = Demo.try_purchase("attachment","110")
+		var count = Demo.owned_global_upgrades.size()
+		var purchase = Demo.try_purchase("attachment",str(110+index))
 		check(purchase.success and not purchase.saved and Demo.dirty,"R04 transaction succeeds but saving "+fault+" fails visibly")
 		check(FileAccess.get_file_as_string(Demo.save_path) == previous,"R04 prior snapshot byte-identical after "+fault)
-		check(PlayerData.gold == before-purchase.charged_amount and PlayerData.player_am_list.size() == count+1,"R04 charged once "+fault)
+		if not purchase.success:
+			get_tree().quit(1)
+			return
+		check(PlayerData.gold == before-purchase.charged_amount and Demo.owned_global_upgrades.size() == count+1,"R04 charged once "+fault)
 		store.fault = ""
 		check(Demo.save_camp().success and not Demo.dirty,"R04 retry saves "+fault)
-		check(PlayerData.gold == before-purchase.charged_amount and PlayerData.player_am_list.size() == count+1,"R04 retry never charges or grants again")
+		check(PlayerData.gold == before-purchase.charged_amount and Demo.owned_global_upgrades.size() == count+1,"R04 retry never charges or grants again")
 		previous = FileAccess.get_file_as_string(Demo.save_path)
 		var expected = Demo.snapshot().duplicate(true)
 		var loaded = Demo.load_camp()
@@ -57,17 +62,17 @@ func _ready():
 	Demo.test_mode = true
 	check(Utils.player.reward_root.get_node("REWARD BLUE BACTERIA").kill_count == 1000,"legacy bacteria lifetime cap survives load")
 	var old = data.duplicate(true)
-	old = M7Fixtures.legacy(old,1); old.erase("legacy_state")
+	old.attachments = []; old.next_instance = 1; old = M7Fixtures.legacy(old,1); old.erase("legacy_state")
 	check(CampSnapshot.normalize(old).legacy_state["10"] == 1000,"v1 bacteria cap migrates from persisted HP")
 	var cases = []
 	var malformed = data.duplicate(true)
-	malformed.attachments = [{"definition":"unknown","instance":1,"gun":"0"}]; malformed.next_instance = 2; cases.append(malformed)
+	malformed.owned_global_upgrades = ["unknown"]; cases.append(malformed)
 	malformed = data.duplicate(true); malformed.weapons[0].ammo = 1.5; cases.append(malformed)
 	malformed = data.duplicate(true); malformed.exp = PlayerData.getMaxExp(); cases.append(malformed)
 	malformed = data.duplicate(true); malformed.hp = malformed.hp_max+1; cases.append(malformed)
 	malformed = data.duplicate(true); malformed.legacy_state["10"] = 1001; cases.append(malformed)
 	malformed = data.duplicate(true)
-	malformed.attachments = [{"definition":"122","instance":1,"gun":"missing"}]; malformed.next_instance = 2; cases.append(malformed)
+	malformed.owned_global_upgrades = ["110","110"]; cases.append(malformed)
 	for value in [{},[null]]:
 		var bad = data.duplicate(true); bad.legacy = value; cases.append(bad)
 	var bad = data.duplicate(true); bad.weapons[0].id = "missing"; cases.append(bad)
@@ -85,7 +90,8 @@ func _ready():
 	var raw = FileAccess.get_file_as_string(Demo.save_path)
 	var exported = Demo.export_bad_save()
 	check(FileAccess.get_file_as_string(exported) == raw,"R03 export preserves bad original bytes")
-	old = data.duplicate(true); old = M7Fixtures.legacy(old,1); old.erase("legacy"); old.erase("legacy_state")
+	old = data.duplicate(true); old.attachments = []; old.next_instance = 1; old = M7Fixtures.legacy(old,1); old.erase("legacy"); old.erase("legacy_state")
+	old.hp = 5; old.hp_max = 5
 	check(Demo.valid_save(old),"R03 legal missing-legacy v1")
 	data.legacy.append("0"); data.legacy.append("1"); data.hp = 0
 	file = FileAccess.open(Demo.save_path,FileAccess.WRITE); file.store_string(JSON.stringify(data)); file.close()

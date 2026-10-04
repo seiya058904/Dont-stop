@@ -349,6 +349,9 @@ func update_wallet():
 	wallet.text = "金币 %d  ·  天赋点 %d" % [PlayerData.gold,PlayerData.reward_point]
 	if Demo.dirty or Demo.save_blocked: wallet.text += " · 未保存"
 	save_retry.visible = Demo.dirty or Demo.save_blocked
+	save_retry.disabled = Demo.save_result.get("pending",false)
+	save_retry.text = "保存中…" if save_retry.disabled else "重试保存"
+	if Demo.dirty and not Demo.save_blocked: message.text = Demo.save_result.reason
 
 func clear_box(box):
 	if box == detail and is_instance_valid(action_bar):

@@ -1,6 +1,71 @@
 extends RefCounted
 class_name CampSaveStore
 
+signal web_confirmed(revision: int, success: bool, reason: String)
+var _web_callback
+
+# force_fs_sync has no completion result. Confirm the exact bytes in a separate
+# IndexedDB read transaction, after commit, rather than reading MEMFS again.
+const WEB_CONFIRM = """
+window.towdownSave = window.towdownSave || {
+ dirty: false,
+ verify(path, text, revision, callback) {
+  this.dirty = true;
+  let finished = false, db = null;
+  const finish = (ok, reason) => {
+   if (finished) return;
+   finished = true; clearTimeout(timeout);
+   if (db) db.close();
+   callback(revision, ok, reason);
+  };
+  const timeout = setTimeout(() => finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出'), 8000);
+  try {
+   const open = indexedDB.open('/userfs');
+   open.onerror = () => finish(false, '浏览器存储不可用；请重试或导出当前进度');
+   open.onblocked = () => finish(false, '浏览器存储被阻止；请关闭同源游戏页后重试');
+   open.onsuccess = () => {
+    db = open.result;
+    if (finished) { db.close(); return; }
+    if (!db.objectStoreNames.contains('FILE_DATA')) return finish(false, '浏览器未启用持久化；请导出当前进度');
+    const poll = () => {
+     if (finished) return;
+     try {
+      const tx = db.transaction('FILE_DATA', 'readonly');
+      const read = tx.objectStore('FILE_DATA').get(path);
+      let matches = false;
+      read.onsuccess = () => { matches = !!read.result && new TextDecoder().decode(read.result.contents) === text; };
+      tx.oncomplete = () => matches ? finish(true, '已保存到浏览器') : setTimeout(poll, 100);
+      tx.onabort = tx.onerror = () => finish(false, '浏览器存储读取失败；请重试或导出当前进度');
+     } catch (e) { finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
+    };
+    poll();
+   };
+  } catch (e) { finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
+ }
+};
+if (!window.towdownSaveUnload) {
+ window.towdownSaveUnload = true;
+ window.addEventListener('beforeunload', e => {
+  if (window.towdownSave.dirty) { e.preventDefault(); e.returnValue = ''; }
+ });
+}
+"""
+
+func _ensure_web_bridge() -> void:
+	if _web_callback == null:
+		JavaScriptBridge.eval(WEB_CONFIRM, true)
+		_web_callback = JavaScriptBridge.create_callback(func(args): web_confirmed.emit(int(args[0]),bool(args[1]),str(args[2])))
+
+func confirm_web(path: String, revision: int) -> void:
+	_ensure_web_bridge()
+	JavaScriptBridge.get_interface("towdownSave").verify(ProjectSettings.globalize_path(path),FileAccess.get_file_as_string(path),revision,_web_callback)
+	JavaScriptBridge.force_fs_sync()
+
+func mark_web_dirty(value: bool) -> void:
+	if OS.has_feature("web"):
+		_ensure_web_bridge()
+		JavaScriptBridge.eval("if (window.towdownSave) window.towdownSave.dirty = " + ("true" if value else "false"),true)
+
 func open_temp(path: String):
 	return FileAccess.open(path,FileAccess.WRITE)
 
@@ -34,6 +99,8 @@ func save(path: String, data: Dictionary) -> Dictionary:
 		if had_previous and restore_previous(previous_path,temporary,path,previous_text):
 			return {"success":false,"reason":"存档回读不一致；已恢复上一份快照"}
 		return {"success":false,"reason":"存档回读不一致；上一快照保留在.previous文件，请重试保存" if had_previous else "首次存档回读失败；请重试保存"}
+	if OS.has_feature("web"):
+		return {"success":false,"pending":true,"memory_written":true,"reason":"进度在内存中；正在确认浏览器持久化…"}
 	return {"success":true,"reason":"已保存"}
 
 func restore_previous(previous_path: String, temporary: String, path: String, text: String) -> bool:
