@@ -1,11 +1,13 @@
 name: Native gameplay tests
 
-# Full native regressions and pressure run only on manual/nightly candidates.
-# The PR/main import and core contracts live in deploy-pages.yml and expose
+# Full native regressions and pressure run only on manual/monthly/Release candidates.
+# The PR import and core contracts live in deploy-pages.yml and expose
 # the unchanged protected check name "Stable preflight".
 on:
   schedule:
-    - cron: '17 4 * * *'
+    - cron: '17 4 1 * *'
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       run_historical_evidence:
@@ -30,68 +32,21 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Cache the pinned Godot binary
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}/godot
-          key: godot-${{ env.GODOT_VERSION }}-native-v2
-      - name: Install pinned Godot (cache-aware)
-        shell: bash
-        run: |
-          set -euo pipefail
-          BIN="$RUNNER_TEMP/godot/bin/Godot_v${GODOT_VERSION}_linux.x86_64"
-          mkdir -p "$RUNNER_TEMP/godot/bin"
-          if [ ! -x "$BIN" ]; then
-            curl --fail --location --retry 3 --retry-delay 2 \
-              "$GODOT_RELEASE_BASE/Godot_v${GODOT_VERSION}_linux.x86_64.zip" \
-              --output "$RUNNER_TEMP/godot/godot.zip"
-            unzip -q "$RUNNER_TEMP/godot/godot.zip" -d "$RUNNER_TEMP/godot/bin"
-          fi
-          chmod +x "$BIN"
-          echo "GODOT=$BIN" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-godot
       - name: Import the project
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/godot"
-          for pass in 1 2; do
-            "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit \
-              --log-file "$RUNNER_TEMP/godot/import-$pass.log"
-          done
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$RUNNER_TEMP/godot/import-2.log" \
-            | grep -v 'resources still in use'; then
-            echo 'Stable preflight import reported an error.'
-            exit 1
-          fi
-
-      - name: Run stable core regression preflight
-        shell: bash
-        run: |
-          set -euo pipefail
-          run_case () {
-            local name="$1"
-            local log="$RUNNER_TEMP/preflight-$name.log"
-            set +e
-            timeout 300 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
-              "res://tests/$name.tscn" > "$log" 2>&1
-            local code=$?
-            set -e
-            local issues checks
-            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
-            checks=$(grep -cE '^PASS ' "$log" || true)
-            echo "::group::preflight $name (exit $code, checks $checks, issues $issues)"
-            tail -n 40 "$log"
-            echo '::endgroup::'
-            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
-              echo "PREFLIGHT_FAILED: $name"
-              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
-              exit 1
-            fi
-          }
-          run_case BaselineRegression
-          run_case B17Contracts
-          run_case M3Weapons
+          "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit --log-file "$RUNNER_TEMP/import.log"
+          python3 "$PROJECT_PATH/tools/b194_import_check.py" "$PROJECT_PATH" "$RUNNER_TEMP/import.log"
+          tar -C "$PROJECT_PATH" -cf "$RUNNER_TEMP/native-import.tar" .godot
+      - name: Share the imported candidate (no second import in consumers)
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-import
+          path: ${{ runner.temp }}/native-import.tar
+          retention-days: 1
 
   contracts:
     needs: setup
@@ -102,18 +57,17 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Restore the pinned Godot binary
-        uses: actions/cache@v4
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
         with:
-          path: ${{ runner.temp }}/godot
-          key: godot-${{ env.GODOT_VERSION }}-native-v2
+          name: native-import
+          path: ${{ runner.temp }}/native-import
+      - name: Restore the already imported candidate
+        run: tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
       - name: Save-file contracts, hazard system, fog and progression
         shell: bash
-        env:
-          GODOT: ${{ runner.temp }}/godot/bin/Godot_v4.7.2-stable_linux.x86_64
         run: |
           set -euo pipefail
-          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
           run_case () {
             local name="$1"; shift
             local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' -').log"
@@ -136,6 +90,8 @@ jobs:
             echo "PASSED: $name $* checks=$checks"
           }
           run_case BaselineRegression
+          run_case B194Contracts
+          run_case LegacyHpCompatibility
           # B11: the stage table is the product's selectability contract (1-40, always open), and the
           # attack audit is the fairness contract (computed reaction window, frozen lock geometry,
           # bounded contact hit rate). Both are state driven and read the live actors.
@@ -232,18 +188,17 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - name: Restore the pinned Godot binary
-        uses: actions/cache@v4
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
         with:
-          path: ${{ runner.temp }}/godot
-          key: godot-${{ env.GODOT_VERSION }}-native-v2
+          name: native-import
+          path: ${{ runner.temp }}/native-import
+      - name: Restore the already imported candidate
+        run: tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
       - name: Boss phases, Hell density and spawn legality
         shell: bash
-        env:
-          GODOT: ${{ runner.temp }}/godot/bin/Godot_v4.7.2-stable_linux.x86_64
         run: |
           set -euo pipefail
-          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
           run_case () {
             local name="$1"; shift
             local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' ,=-').log"
@@ -296,18 +251,17 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Restore the pinned Godot binary
-        uses: actions/cache@v4
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
         with:
-          path: ${{ runner.temp }}/godot
-          key: godot-${{ env.GODOT_VERSION }}-native-v2
+          name: native-import
+          path: ${{ runner.temp }}/native-import
+      - name: Restore the already imported candidate
+        run: tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
       - name: Audit B17 frozen evidence without blocking current CI
         shell: bash
-        env:
-          GODOT: ${{ runner.temp }}/godot/bin/Godot_v4.7.2-stable_linux.x86_64
         run: |
           set -euo pipefail
-          "$GODOT" --headless --path "$PROJECT_PATH" --import --quit
           failed=0
           run_case () {
             local name="$1"; shift

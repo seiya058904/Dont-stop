@@ -1,6 +1,6 @@
 // Verify that GitHub Pages serves the exact Web payload produced by this build.
 // Gameplay and browser interaction are covered by the pre-deploy Web gates; this
-// opt-in post-deploy check only validates published identity and bytes.
+// mandatory post-deploy check validates published identity and bytes.
 //
 // Usage:
 //   node verify-pages-deployment.js <pageUrl> <expectedBuildSha> <identityFile> [outDir]
@@ -60,10 +60,18 @@ async function main() {
 		`build=${identity.build_sha || 'missing'} digest=${identity.artifact_digest || 'missing'}`);
 	if (!identityValid) throw new Error('build identity is missing or does not match this workflow run');
 
-	const requestOptions = () => ({ signal: AbortSignal.timeout(90000), redirect: 'follow' });
+	const requestOptions = () => ({
+		signal: AbortSignal.timeout(30000), redirect: 'follow',
+		headers: { 'Cache-Control': 'no-cache' },
+	});
+	const freshUrl = value => {
+		const target = new URL(value);
+		target.searchParams.set('verify-build', expectedSha);
+		return target;
+	};
 	let html = '';
 	try {
-		const pageResponse = await fetch(pageUrl, requestOptions());
+		const pageResponse = await fetch(freshUrl(pageUrl), requestOptions());
 		html = await pageResponse.text();
 		token('DEPLOYED_PAGE_IS_SERVED', pageResponse.ok && html.length > 200,
 			`HTTP ${pageResponse.status}, ${Buffer.byteLength(html)} bytes`);
@@ -84,7 +92,7 @@ async function main() {
 	for (const name of payloadNames) {
 		const expected = identity.payload[name];
 		try {
-			const response = await fetch(new URL(name, baseUrl), requestOptions());
+			const response = await fetch(freshUrl(new URL(name, baseUrl)), requestOptions());
 			const actual = await hashResponse(response, aggregateHash);
 			const served = response.ok && actual.bytes > 1024;
 			payloadResults[name] = { status: response.status, ...actual };

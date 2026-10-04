@@ -1,4 +1,4 @@
-"""Guard the nightly continuous-session contract and its two timeout layers."""
+"""Guard the monthly continuous-session contract and its two timeout layers."""
 import pathlib
 import re
 import unittest
@@ -14,7 +14,7 @@ class MenuSoakPolicy(unittest.TestCase):
         self.assertIn('timeout-minutes: ${{ matrix.job_budget_minutes || 8 }}', gate)
         self.assertIn('GATE_JOB_BUDGET_MINUTES: ${{ matrix.job_budget_minutes || 8 }}', gate)
         for field, soak, quick in [('job_budget_minutes', 30, 8), ('watchdog_ms', 1500000, 420000)]:
-            self.assertRegex(gate, re.escape(f"{field}: ${{{{ (github.event_name == 'schedule' || inputs.menu_cycles == '20') && {soak} || {quick} }}}}"))
+            self.assertRegex(gate, re.escape(f"{field}: ${{{{ (github.event_name == 'schedule' || github.event_name == 'release' || inputs.menu_cycles == '20') && {soak} || {quick} }}}}"))
         # Latest historical maximum was ~50s per cycle. Include the restart,
         # two minutes of startup/reload and at least 25% run-time headroom.
         self.assertGreaterEqual(1500000, ((20 + 1) * 50 + 120) * 1000 * 1.25)
@@ -24,8 +24,8 @@ class MenuSoakPolicy(unittest.TestCase):
         self.assertIn('if: always()', gate)
         self.assertNotIn('continue-on-error', gate)
 
-    def test_nightly_does_not_shard_or_reduce_the_session(self):
-        self.assertIn("github.event_name == 'schedule' && '20'", WORKFLOW)
+    def test_monthly_does_not_shard_or_reduce_the_session(self):
+        self.assertIn("(github.event_name == 'schedule' || github.event_name == 'release') && '20'", WORKFLOW)
         self.assertIn('for (let cycle = 1; cycle <= CYCLES; cycle++)', DRIVER)
         self.assertIn('await runCycle(CYCLES + 1, \'RESTART_AFTER_LAST_RETURN\')', DRIVER)
         self.assertIn('startedCycles === CYCLES && cleanCycles === CYCLES + 1', DRIVER)
