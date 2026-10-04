@@ -163,10 +163,10 @@ jobs:
             "$PROJECT_PATH/build/web" "$GITHUB_SHA" "$RUNNER_TEMP/build-identity.json"
 
       - uses: ./.github/actions/setup-browser
-        if: steps.scope.outputs.game == 'true' && (github.event_name == 'push' || github.event_name == 'pull_request')
+        if: steps.scope.outputs.game == 'true' && github.event_name == 'push'
 
       - name: Real browser gates on the final candidate
-        if: steps.scope.outputs.game == 'true' && (github.event_name == 'push' || github.event_name == 'pull_request')
+        if: steps.scope.outputs.game == 'true' && github.event_name == 'push'
         shell: bash
         run: |
           set -euo pipefail
@@ -180,30 +180,8 @@ jobs:
           done
           export E2E_SCREENSHOTS=none
           node "$PROJECT_PATH/tools/web-loader-check.js" http://localhost:8788/index.html smoke-evidence/loader
-          # Parallel processes share one browser installation and one immutable export.
-          # wait -n propagates the first failure; the remaining process is stopped.
-          pids=()
-          node "$PROJECT_PATH/tools/smoke-web.js" http://localhost:8788/index.html smoke-evidence > smoke-evidence/run.log 2>&1 &
-          pids+=($!)
-          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
-            node "$PROJECT_PATH/tools/web-menu-return-e2e.js" http://localhost:8788/index.html menu-return-evidence 1 > menu-return-evidence/run.log 2>&1 &
-            pids+=($!)
-          fi
-          trap 'kill "$SERVER" "${pids[@]}" 2>/dev/null || true' EXIT
-          while [ "${#pids[@]}" -gt 0 ]; do
-            if ! wait -n -p finished "${pids[@]}"; then
-              cat smoke-evidence/run.log
-              cat menu-return-evidence/run.log 2>/dev/null || true
-              exit 1
-            fi
-            pending=()
-            for pid in "${pids[@]}"; do
-              if [ "$pid" != "$finished" ]; then pending+=("$pid"); fi
-            done
-            pids=("${pending[@]}")
-          done
-          cat smoke-evidence/run.log
-          cat menu-return-evidence/run.log 2>/dev/null || true
+          # Main has one browser process; PR/acceptance use isolated matrix runners.
+          node "$PROJECT_PATH/tools/smoke-web.js" http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/run.log
           # Recompute all payload hashes after the browser tests: fail if they changed.
           node "$PROJECT_PATH/tools/verify-pages-deployment.js" http://localhost:8788/index.html "$GITHUB_SHA" "$RUNNER_TEMP/build-identity.json" smoke-evidence/identity
 
@@ -213,8 +191,8 @@ jobs:
         with:
           path: "Don't stop/build/web"
 
-      - name: Upload Web candidate for full browser acceptance
-        if: github.event_name == 'schedule' || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      - name: Upload Web candidate for PR/full browser acceptance
+        if: steps.scope.outputs.game == 'true' && github.event_name != 'push'
         uses: actions/upload-artifact@v4
         with:
           name: web-build
@@ -254,19 +232,27 @@ jobs:
 
   web-required-gate:
     name: Web required gate
-    needs: build
+    needs: [build, browser-gates]
     if: always() && github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
       - env:
           RESULT: ${{ needs.build.result }}
-        run: test "$RESULT" = success
+          GAME: ${{ needs.build.outputs.game }}
+          BROWSER: ${{ needs.browser-gates.result }}
+        run: |
+          test "$RESULT" = success
+          if [ "$GAME" = true ]; then
+            test "$BROWSER" = success
+          else
+            test "$GAME" = false && test "$BROWSER" = skipped
+          fi
 
   browser-gates:
     name: "Gate ${{ matrix.name }}"
     needs: build
-    if: github.event_name == 'schedule' || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    if: needs.build.outputs.game == 'true' && github.event_name != 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ matrix.job_budget_minutes || 8 }}
     env:
@@ -274,7 +260,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        name: [smoke, save-audit, aim-core, aim-fault, menu-return, stages-fair]
+        name: ${{ fromJSON(github.event_name == 'pull_request' && '["smoke","menu-return"]' || '["smoke","save-audit","aim-core","aim-fault","menu-return","stages-fair"]') }}
         include:
           - name: menu-return
             # Observed CI cycles span 31-50s: 21 iterations can take 17.5m,
@@ -364,7 +350,7 @@ jobs:
   deploy:
     name: Deploy and verify live Pages identity
     needs: [build, browser-gates]
-    # The full matrix is intentionally skipped on daily pushes.
+    # Browser smoke already passed on the build runner for daily pushes.
     if: >-
       always() && needs.build.result == 'success'
       && needs.build.outputs.game == 'true'

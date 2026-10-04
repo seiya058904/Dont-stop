@@ -8,10 +8,11 @@ meeting the target.
 ## Daily PR safety
 
 `deploy-pages.yml` checks scope, imports once, exports once and runs the existing
-loader, smoke and one-cycle menu-return drivers. Browser drivers run concurrently
-on the same runner with the same export and one Playwright installation. Their
-original assertions and game timeouts remain intact; the first failure stops the
-other driver. The menu driver still includes pause, save/reload and the final
+loader, smoke and one-cycle menu-return drivers. PR browser drivers run concurrently
+on isolated runners with the same exported artifact and shared runtime cache.
+The first real trial showed CPU contention when both software-rendered browsers
+shared a runner, so isolation is retained for PR safety. Their original assertions
+and game timeouts remain intact; matrix fail-fast stops the other driver. The menu driver still includes pause, save/reload and the final
 restart after return. No game or test scene is modified.
 
 Native suites: B194Contracts, P0SaveSanity, BaselineRegression, CombatReadability,
@@ -40,7 +41,7 @@ verification is mandatory on every deploying push. CDN propagation has four
 bounded attempts; stale SHA or mismatched bytes always fail. Browser behavior
 is tested before deployment against exactly the artifact being published.
 
-There is no rebuild, artifact download for daily browser gates, main menu-return,
+There is no rebuild, artifact download for the main browser smoke, main menu-return,
 main PR-summary dependency, or second browser installation on this path.
 Production runs do not cancel each other mid-deployment/verification; PR updates
 can supersede older PR runs. A docs-only push intentionally leaves the last
