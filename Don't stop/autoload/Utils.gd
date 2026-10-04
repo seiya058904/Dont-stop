@@ -133,6 +133,9 @@ var _startup_menu_gaps: Array = []
 var _startup_long_gaps: Array = []
 
 func _ready() -> void:
+	# Interpolate only explicitly opted-in physics roots. Render-time UI, recoil,
+	# damage labels and particles keep their existing animation clock.
+	get_tree().root.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	TranslationServer.set_locale("zh_CN")
 	if OS.has_feature("web"):
 		Engine.get_singleton("JavaScriptBridge").call("eval",WEB_IDBFS_BATCH)

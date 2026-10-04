@@ -190,7 +190,9 @@ renderer/rendering_method.web="gl_compatibility"
 textures/canvas_textures/default_texture_filter=3
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
-2d/snap/snap_2d_transforms_to_pixel=true
+# Intermediate logical-pixel snapping would quantize interpolated motion into
+# ~9-pixel jumps at 4K. Keep final screen-space vertex snapping for crisp edges.
+2d/snap/snap_2d_transforms_to_pixel=false
 2d/snap/snap_2d_vertices_to_pixel=true
 
 [shader_globals]
@@ -199,3 +201,7 @@ b19_enchantment_time={
 "type": "float",
 "value": 0.0
 }
+
+[physics]
+
+common/physics_interpolation=true

@@ -33,12 +33,15 @@ const INK = {
 	"ricochet":Color(1.0,0.4,0.8)
 }
 func _enter_tree():
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
 	if live_count >= capacity_limit:
 		set_physics_process(false); queue_free(); return
 	live_count += 1
 	registered = true
 
 func _ready():
+	# Never blend a newly admitted projectile from an earlier/default location.
+	reset_physics_interpolation()
 	# B11.2 test-only counter (game/diag/B11Probe.gd): kept so the AFTER run can report the burst
 	# cost as zero rather than merely absent.
 	if B11Probe.enabled: B11Probe.shot_created += 1
