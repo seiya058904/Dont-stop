@@ -7,9 +7,21 @@ fs.mkdirSync(out,{recursive:true});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--use-angle=d3d11','--enable-gpu','--ignore-gpu-blocklist']});
- const context=await browser.newContext({viewport:{width:1280,height:720},serviceWorkers:'block'});
+ const viewport={width:Number(process.env.B192_WIDTH||1280),height:Number(process.env.B192_HEIGHT||720)};
+ const context=await browser.newContext({viewport,deviceScaleFactor:1,serviceWorkers:'block'});
  const page=await context.newPage(),lines=[],rects={},errors=[];let camp,carry,canvas,state;
- const report={url,gun,windows:[],errors};
+ const report={url,gun,viewport,windows:[],errors};
+ // Both timestamps use the page's clock. The projectile probe runs after velocity
+ // becomes readable, so this is an observation upper bound, not display/input lag.
+ await page.addInitScript(()=>{
+  const log=console.log.bind(console);
+  console.log=(...args)=>{
+   if(window.shotMeasure && String(args[0]).startsWith('[probe] proj-shot ') && window.shotMeasure.pointerdown!=null && window.shotMeasure.projectileObserved==null)
+    window.shotMeasure.projectileObserved=performance.now();
+   log(...args);
+  };
+  document.addEventListener('pointerdown',()=>{if(window.shotMeasure)window.shotMeasure.pointerdown=performance.now();},true);
+ });
  const cdp=await browser.newBrowserCDPSession();report.gpu=(await cdp.send('SystemInfo.getInfo')).gpu.devices;
  page.on('pageerror',e=>errors.push(String(e)));
  page.on('console',m=>{const t=m.text();lines.push(t);
@@ -22,9 +34,10 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  });
  async function until(fn,label,ms=30000){const end=Date.now()+ms;while(!fn()){if(Date.now()>end)throw Error(label);await sleep(100);}return fn();}
  async function click(tag){await until(()=>rects[tag]?.visible,'missing '+tag);const r=rects[tag],s=Math.min(canvas.width/410,canvas.height/230);await page.mouse.click(canvas.x+(canvas.width-410*s)/2+r.x*s,canvas.y+(canvas.height-230*s)/2+r.y*s,{delay:80});await sleep(450);}
- async function measure(name,action){await page.evaluate(()=>{window.shotMeasure={frames:[],tasks:[],last:performance.now()};});await action();await sleep(3500);const data=await page.evaluate(()=>window.shotMeasure);const sorted=data.frames.slice().sort((a,b)=>a-b);report.windows.push({name,frames:sorted.length,max_ms:Math.max(...sorted),p95_ms:sorted[Math.floor(sorted.length*.95)],long_tasks:data.tasks,state});console.log(JSON.stringify(report.windows.at(-1)));}
+ async function measure(name,action){await page.evaluate(()=>{window.shotMeasure={frames:[],tasks:[],last:performance.now()};});await action();await sleep(3500);const data=await page.evaluate(()=>window.shotMeasure);const sorted=data.frames.slice().sort((a,b)=>a-b);report.windows.push({name,frames:sorted.length,max_ms:Math.max(...sorted),p95_ms:sorted[Math.floor(sorted.length*.95)],input_to_projectile_observed_ms:data.projectileObserved!=null?data.projectileObserved-data.pointerdown:null,long_tasks:data.tasks,state});console.log(JSON.stringify(report.windows.at(-1)));}
  try{
   await page.goto(url+'?probe=1');await until(()=>rects['menu-start-button']?.visible,'title',60000);
+  report.navigation_to_title_observed_ms=await page.evaluate(()=>performance.now());
   await page.evaluate(()=>{window.shotMeasure=null;let last=performance.now();function frame(t){if(window.shotMeasure)window.shotMeasure.frames.push(t-last);last=t;requestAnimationFrame(frame);}requestAnimationFrame(frame);new PerformanceObserver(list=>{if(window.shotMeasure)window.shotMeasure.tasks.push(...list.getEntries().map(e=>e.duration));}).observe({entryTypes:['longtask']});});
   canvas=await page.locator('#canvas-host canvas').boundingBox();await click('menu-start-button');await until(()=>camp,'camp');
   await click('camp-search-box');await page.keyboard.type(gun);await sleep(500);await click('camp-entry-'+gun);await click('camp-action-0');await until(()=>carry?.owned.includes(+gun),'purchase');
