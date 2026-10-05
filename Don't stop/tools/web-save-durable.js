@@ -169,7 +169,21 @@ fs.mkdirSync(out, { recursive: true });
   let restoredTalentDisk;
   await reload(async () => { restoredTalentDisk = await disk(); }); await click('camp-talent-tab'); await select('T01');
   await until(() => camp?.selection === 'T01', 'reloaded confirmed purchase');
-  await until(() => carry.saved, 'reloaded profile startup save');
+  // Startup saves use the same bounded confirmation as ordinary camp saves.
+  // A slow browser may explicitly fail that confirmation; retry its real UI
+  // rather than assuming that every startup transaction must succeed first try.
+  // The pre-start disk snapshot below still has to contain the paid purchase.
+  await until(() => carry?.saved || /不可用|未确认|失败/.test(carry?.message || ''), 'reloaded profile startup save result');
+  if (!carry.saved) {
+   report.startupConfirmationFailure = { message: carry.message, disk: await disk(), camp, carry };
+   check(await page.evaluate(() => window.towdownSave.dirty) && camp.rank === 1,
+    'DS-001 a failed startup confirmation keeps the restored purchase and unload guard');
+   await click('camp-save-retry');
+   await until(() => carry?.saved, 'reloaded profile startup save retry');
+   const retried = await disk();
+   check(retried.talents.T01 === 1 && retried.talent_payments.filter(p => p.id === 'T01').length === 1,
+    'DS-001 startup save retry commits the restored purchase exactly once');
+  }
   check(restoredTalentDisk.talents.T01 === 1 && restoredTalentDisk.gold === paidTalentGold
    && restoredTalentDisk.talent_payments.filter(p => p.id === 'T01').length === 1
    && camp.rank === 1 && carry.gold === Math.max(9999, paidTalentGold) && carry.owned.length === 0 && carry.saved,
@@ -247,6 +261,11 @@ fs.mkdirSync(out, { recursive: true });
   const unexpected = lines.filter(t => t.includes('SCRIPT ERROR:') || t.startsWith('PAGEERROR '));
   check(!unexpected.length, 'no engine script errors or uncaught browser errors');
   report.success = true;
- } catch (e) { report.error = String(e); process.exitCode = 1; await page.screenshot({ path: path.join(out, 'failure.png') }).catch(() => {}); }
+ } catch (e) {
+  report.error = String(e); process.exitCode = 1;
+  report.failureState = { url: page.url(), carry, camp, recovery, disk: await disk().catch(err => ({ error: String(err) })) };
+  console.error(report.error);
+  await page.screenshot({ path: path.join(out, 'failure.png') }).catch(() => {});
+ }
  finally { fs.writeFileSync(path.join(out, 'result.json'), JSON.stringify(report, null, 2)); fs.writeFileSync(path.join(out, 'console.log'), lines.join('\n')); await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
