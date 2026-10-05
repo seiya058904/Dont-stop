@@ -48,8 +48,10 @@ fs.mkdirSync(out, { recursive: true });
    && document.getElementById('frame')?.style.display === 'none');
   await until(() => rects['menu-start-button']?.visible, 'menu');
   canvas = await page.locator('canvas').boundingBox();
+  const inputStart = lines.length;
+  carry = null; camp = null;
   await click('menu-start-button');
-  await until(() => carry, 'camp');
+  await until(() => lines.slice(inputStart).includes('[leave] menu start button pressed (game_start=false)') && carry, 'accepted Start and new camp state');
  }
  async function reload(beforeStart) {
   for (const key of Object.keys(rects)) delete rects[key]; carry = null; camp = null; recovery = null;

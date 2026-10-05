@@ -14,11 +14,12 @@ class MenuSoakPolicy(unittest.TestCase):
         gate = WORKFLOW.split('  browser-gates:', 1)[1].split('  deploy:', 1)[0]
         expression = re.search(r'timeout-minutes: \$\{\{ (.+) \}\}', gate).group(1)
         self.assertIn('GATE_JOB_BUDGET_MINUTES: ${{ ' + expression + ' }}', gate)
-        budget = re.fullmatch(r"matrix.name == '([^']+)' && (\d+) \|\| matrix.job_budget_minutes \|\| (\d+)", expression)
+        budget = re.fullmatch(r"matrix.name == '([^']+)' && (\d+) \|\| matrix.name == '([^']+)' && (\d+) \|\| matrix.job_budget_minutes \|\| (\d+)", expression)
         self.assertIsNotNone(budget)
-        special, full_save, fallback = budget.group(1), int(budget.group(2)), int(budget.group(3))
-        for name, matrix_budget, expected in [('menu-return', 30, 30), ('menu-return', 8, 8), ('smoke', None, 8), ('save-audit', None, 20)]:
-            resolved = full_save if name == special else matrix_budget or fallback
+        special = {budget.group(1): int(budget.group(2)), budget.group(3): int(budget.group(4))}
+        fallback = int(budget.group(5))
+        for name, matrix_budget, expected in [('menu-return', 30, 30), ('menu-return', 8, 8), ('stages-fair', 12, 12), ('smoke', None, 8), ('save-audit', None, 20)]:
+            resolved = special.get(name, matrix_budget or fallback)
             self.assertEqual(resolved, expected, name)
         for field, soak, quick in [('job_budget_minutes', 30, 8), ('watchdog_ms', 1500000, 420000)]:
             self.assertRegex(gate, re.escape(f"{field}: ${{{{ (github.event_name == 'schedule' || github.event_name == 'release' || inputs.menu_cycles == '20') && {soak} || {quick} }}}}"))
@@ -38,6 +39,7 @@ class MenuSoakPolicy(unittest.TestCase):
         self.assertIn('save-audit', json.loads(names.group(2)))
         self.assertNotIn('- name: save-audit', gate)
         self.assertIn('tools/web-save-durable.js', gate)
+        self.assertNotIn('- name: stages-fair', gate)
 
     def test_monthly_does_not_shard_or_reduce_the_session(self):
         self.assertIn("(github.event_name == 'schedule' || github.event_name == 'release') && '20'", WORKFLOW)
