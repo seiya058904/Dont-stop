@@ -579,6 +579,8 @@ watchdog.unref?.();
 				clicked.ok ? JSON.stringify(clicked.rect) : clicked.why);
 			const requested = await waitGameLine(/returning to the main menu/, from, 15000);
 			const menuUp = await waitGameLine(/main menu is up .*ready=true/, from, 25000);
+			token(`${label}_NO_SAVE_DIALOG_FLASH`, !gameLines.slice(from).some(t => t.startsWith('[save-dialog] opened')),
+				'ordinary camp leave never created a SaveDialog, including between probe frames');
 			// The menu is described by the product's own state, not by pixels: the
 			// round is over, nothing owns the pause stack, and the menu's hero holds
 			// no weapon. (A player node is NOT a discriminator here: the title scene

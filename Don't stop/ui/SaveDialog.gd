@@ -7,6 +7,7 @@ var recovery_actions: Array[Button] = []
 var leave_actions: Array[Button] = []
 
 func _ready():
+	print("[save-dialog] opened recovery=%s quitting=%s" % [str(recovery),str(quitting)])
 	theme = preload("res://ui/GildedTheme.gd").build(8)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	focus_mode = Control.FOCUS_ALL
