@@ -241,6 +241,7 @@ jobs:
           path: |
             ${{ runner.temp }}/*.log
             Don't stop/docs/iteration/evidence/m10/density.json
+            Don't stop/docs/iteration/evidence/m10/boss-*.json
             Don't stop/docs/iteration/evidence/b/bosses.json
           if-no-files-found: warn
 
