@@ -10,6 +10,8 @@
 
 `R1RecoveryUI` 以真实文件和可控确认覆盖 pending 操作、禁用按钮信号绕过、过期确认、失败恢复/退出/重试、确认后购买及重载。`R1Persistence` 保持原有文件故障矩阵。`web-save-durable.js` 使用实际 canvas 控件与真实 IndexedDB 故障，延迟成功回调期间尝试退出/Escape/T01 购买，断言没有接受随后会被覆盖的修改；确认后购买须实际持久化并跨完整 reload 保留。两项 native 调用纳入完整 active CI（62 → 64）；完整 Web save gate 同时运行 durability/recovery，不以 MEMFS 写入代替持久化。
 
+首轮完整 Web CI 在确认后购买已经实际提交、刷新后等级仍为 1 的情况下，遇到随后启动保存的既有 8 秒确认失败提示。新增回归原先只等待自动成功；修正为观察真实终态，若失败则断言 dirty/unload 保护及已恢复购买仍在，再点击实际重试入口并确认 IndexedDB 提交及唯一付款记录。保留首次失败日志，不更改产品确认超时、不绕过持久化断言，也不把这次未采集 profiler 的慢环境归因为产品性能问题。
+
 ## 保留的性能修复与验收口径
 
 Camera / 60 Hz physics / 选择性插值与 Web shader warmup 方案沿用已验收的 v1.3.2，不扩大优化。[v1.3.2 审计](release-v1.3.2.md) 保留首枪 lit Canvas USE_PRIMITIVE 调用链、shader link 等待证据、单变量对照、输入延迟 A/B、M10 Boss 夹具时序根因及修复过程。

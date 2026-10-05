@@ -25,7 +25,7 @@ python "Don't stop/tools/test-menu-soak-policy.py"
 
 按改动选择额外场景，以当前 CI 中的调用为准。新缓存的首次导入可能先报告字体/光标尚未导入；只有导入校验器确认资源已生成，且后续 B194Contracts 通过，才能接受这些特定早期诊断。其他脚本错误或失败断言不能忽略。
 
-正式候选须运行 `native-tests.yml` 中全部 active cases（当前 56 个 contracts 和 6 个 pressure 调用，参数也是用例身份的一部分），含 DeepQuality、CameraTransitions、WebPhysicsContracts、Boss full/pressure/contracts。`historical-evidence` 是显式选用的历史测量，不计 active gate。用隔离源码副本和 APPDATA/user-data 运行会写 evidence 的场景，避免污染 canonical 记录或真实存档。通过必须同时有正常退出、PASS 断言且无 FAIL/SCRIPT ERROR；不能把旧提交结果转记到新候选。
+正式候选须运行 `native-tests.yml` 中全部 active cases（当前 58 个 contracts 和 6 个 pressure 调用，参数也是用例身份的一部分），含 DeepQuality、CameraTransitions、WebPhysicsContracts、Boss full/pressure/contracts。`historical-evidence` 是显式选用的历史测量，不计 active gate。用隔离源码副本和 APPDATA/user-data 运行会写 evidence 的场景，避免污染 canonical 记录或真实存档。通过必须同时有正常退出、PASS 断言且无 FAIL/SCRIPT ERROR；不能把旧提交结果转记到新候选。
 
 完整 active native acceptance 不传引擎 `--quit-after`：该参数按 render frames 终止，长套件可能以 exit 0、部分 PASS 提前退出。保留外部 wall-time timeout，等夹具自然完成；M6/M8 必须有 30 关完整记录及结束标记。contracts job 60 分钟，M6/M8 单用例预算分别 1800/2400 秒，其他短用例 900 秒；pressure 保留 1800 秒预算。快速 preflight 的有限帧防挂不能替代完整验收。
 
