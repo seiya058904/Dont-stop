@@ -36,7 +36,15 @@ window.towdownSave = window.towdownSave || {
    if (db) db.close();
    callback(revision, ok, reason);
   };
-  const timeout = setTimeout(() => { trace('verify-timeout'); finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出'); }, 8000);
+  // Keep the existing fast confirmation window, then allow one evidence-based
+  // commit grace period: the CI trace observed this exact snapshot at 13.14 s.
+  let timeout = setTimeout(() => {
+   trace('verify-slow-path', { fast_deadline_ms: 8000, grace_ms: 10000 });
+   timeout = setTimeout(() => {
+    trace('verify-timeout', { total_deadline_ms: 18000 });
+    finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出');
+   }, 10000);
+  }, 8000);
   try {
    trace('open-start', { database: '/userfs' });
    const open = indexedDB.open('/userfs');

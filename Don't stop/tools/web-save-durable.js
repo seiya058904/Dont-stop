@@ -133,11 +133,13 @@ fs.mkdirSync(out, { recursive: true });
   });
   (report.durableConfirmations ||= []).push(diagnostic);
   fs.writeFileSync(path.join(out, 'durable-confirmation-' + report.durableConfirmations.length + '.json'), JSON.stringify(diagnostic, null, 2));
-  check(await page.evaluate(() => window.leaveConfirmations[0].args[1] === true), 'leave waits for a real successful IndexedDB commit');
+  const callbackSucceeded = await page.evaluate(() => window.leaveConfirmations[0].args[1] === true);
   await page.evaluate(() => {
    window.towdownSave.verify = window.leaveVerifier;
    window.leaveConfirmations.shift().release();
   });
+  if (!callbackSucceeded) await until(() => carry?.saved === false && /未确认|不可用|失败/.test(carry?.message || ''), 'terminal confirmation failure', 5000);
+  check(callbackSucceeded, 'leave waits for a real successful IndexedDB commit');
  }
  async function start() {
   await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready'
@@ -222,6 +224,18 @@ fs.mkdirSync(out, { recursive: true });
   const purchasedDisk = await disk();
   check(purchasedDisk.gold === purchasedGold && purchasedDisk.weapons.some(w => +w.id === 0)
    && dialogCount() === dialogs, 'purchase is durable before returning to the main menu');
+  for (const id of [3, 4]) {
+   await start(); await settleStartupSave(); await select(id); await holdConfirmation();
+   await click('camp-action-0');
+   await until(() => carry?.owned.includes(id) && !carry.saved, 'repeated purchased snapshot pending ' + id);
+   const cycleGold = carry.gold; dialogs = dialogCount(); revision = recovery.revision;
+   await leaveCamp();
+   check(dialogCount() === dialogs && recovery.revision === revision, 'immediate post-purchase leave stays pending for weapon ' + id);
+   await releaseConfirmation(); await returned();
+   const cycleDisk = await disk();
+   check(cycleDisk.gold === cycleGold && cycleDisk.weapons.some(w => +w.id === id),
+    'weapon ' + id + ' purchase is committed before immediate return');
+  }
   await start(); await settleStartupSave();
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
