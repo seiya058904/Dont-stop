@@ -71,7 +71,7 @@ window.towdownSave = window.towdownSave || {
        else setTimeout(poll, 100);
       };
       tx.onabort = () => { trace('transaction-abort', { poll: currentPoll, error: String(tx.error || '') }); finish(false, '浏览器存储读取失败；请重试或导出当前进度'); };
-      tx.onerror = () => trace('transaction-error', { poll: currentPoll, error: String(tx.error || '') });
+      tx.onerror = () => { trace('transaction-error', { poll: currentPoll, error: String(tx.error || '') }); finish(false, '浏览器存储读取失败；请重试或导出当前进度'); };
      } catch (e) { trace('poll-error', { poll: currentPoll, error: String(e) }); finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
     };
     poll();
