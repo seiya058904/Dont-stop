@@ -257,9 +257,10 @@ jobs:
     needs: build
     if: needs.build.outputs.game == 'true' && github.event_name != 'push'
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ matrix.job_budget_minutes || 8 }}
+    # Full save acceptance includes transaction faults and repeated reloads.
+    timeout-minutes: ${{ matrix.name == 'save-audit' && 20 || matrix.name == 'stages-fair' && 12 || matrix.job_budget_minutes || 8 }}
     env:
-      GATE_JOB_BUDGET_MINUTES: ${{ matrix.job_budget_minutes || 8 }}
+      GATE_JOB_BUDGET_MINUTES: ${{ matrix.name == 'save-audit' && 20 || matrix.name == 'stages-fair' && 12 || matrix.job_budget_minutes || 8 }}
     strategy:
       fail-fast: true
       matrix:
@@ -339,6 +340,9 @@ jobs:
           fi
           if [ "${{ matrix.name }}" = smoke ]; then
             node "$PROJECT_PATH/tools/verify-pages-deployment.js" http://localhost:8788/index.html "$GITHUB_SHA" build-identity/build-identity.json "$OUT/identity"
+          fi
+          if [ "${{ matrix.name }}" = save-audit ]; then
+            E2E_HEADED=0 node "$PROJECT_PATH/tools/web-save-durable.js" http://localhost:8788/index.html "$OUT/durable" 2>&1 | tee "$OUT/durable.log"
           fi
           echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 

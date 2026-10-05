@@ -1,6 +1,12 @@
 extends Node
 class FaultStore extends CampSaveStore:
 	func open_temp(_path): return null
+class PendingStore extends CampSaveStore:
+	var revision = -1
+	func save(path, data):
+		var result = super.save(path,data)
+		return {"success":false,"pending":true,"reason":"正在确认新档"} if result.success else result
+	func confirm_web(_path, incoming_revision): revision = incoming_revision
 var checks = 0
 var failures = 0
 func check(ok, name):
@@ -31,7 +37,50 @@ func _ready():
 	await frames()
 	Demo.try_purchase("weapon","0")
 	check(Demo.dirty and FileAccess.get_file_as_string(Demo.save_path) == raw,"R03 temporary purchase cannot overwrite bad file")
-	check(Demo.create_new_save(),"R03 explicit fresh profile backs up and takes over")
+	var pending = PendingStore.new()
+	Demo.save_store = pending
+	PlayerData.gold = 333; PlayerData.reward_point = 444
+	check(not Demo.create_new_save() and Demo.creating_new_save,"DS-001 new profile remains a pending recovery transaction")
+	await frames()
+	var dialog = Demo.save_dialog
+	var revision = Demo.save_revision
+	var before = JSON.stringify(Demo.snapshot())
+	check(is_instance_valid(dialog) and Demo.top_pause(dialog),"DS-001 pending transaction owns the recovery pause")
+	check(dialog.leave_actions.all(func(b): return b.disabled) and dialog.recovery_actions.all(func(b): return b.disabled),"DS-001 recovery and exit buttons are disabled while pending")
+	# Emitting a signal bypasses disabled-button input: callbacks must guard too.
+	dialog.leave_actions[0].pressed.emit()
+	Demo.quit_game(); Demo.discard_and_leave(); Demo.leave_after_save()
+	Demo.show_save_dialog(true,true)
+	await frames()
+	check(is_instance_valid(dialog) and Demo.save_dialog == dialog and Demo.top_pause(dialog),"DS-001 close, quit and discard cannot release or replace pending recovery")
+	check(not Demo.try_purchase("talent","T01").success,"DS-001 pending T01 purchase is rejected before charging")
+	check(not Demo.reset_talents(Demo.reset_revision).success and not Demo.unequip_weapon().success,"DS-001 pending reset and unequip are rejected")
+	check(not PlayerData.equip_owned(0).success and not PlayerData.remove_slot(0).success and not PlayerData.clear_loadout().success,"DS-001 pending loadout commands are rejected")
+	Demo.replenish()
+	check(not LevelServer.town.depart(1,true) and not Demo.load_camp(),"DS-001 pending departure and snapshot reload are rejected")
+	check(not Demo.save_camp().success and Demo.save_revision == revision and JSON.stringify(Demo.snapshot()) == before,"DS-001 pending commands accept no new state or save revision")
+	pending.web_confirmed.emit(revision-1,true,"旧确认")
+	check(Demo.creating_new_save and JSON.stringify(Demo.snapshot()) == before,"DS-001 stale confirmation cannot unlock the active transaction")
+	pending.web_confirmed.emit(revision,false,"确认失败")
+	await frames()
+	check(not Demo.creating_new_save and Demo.dirty and Demo.save_blocked,"DS-001 failed confirmation unlocks actions but retains blocked dirty recovery")
+	check(FileAccess.get_file_as_string(Demo.save_path) == raw and FileAccess.get_file_as_string(Demo.save_path+".previous") == raw,"DS-001 failed confirmation restores and preserves the original backup")
+	check(dialog.leave_actions.all(func(b): return not b.disabled),"DS-001 failed confirmation allows an explicit temporary exit")
+	dialog.leave_actions[0].pressed.emit()
+	await frames()
+	check(not is_instance_valid(Demo.save_dialog),"DS-001 failed recovery can be dismissed")
+	check(not Demo.create_new_save() and Demo.creating_new_save,"DS-001 retry reopens and locks a recovery transaction")
+	await frames()
+	check(is_instance_valid(Demo.save_dialog) and Demo.top_pause(Demo.save_dialog),"DS-001 retry cannot proceed without a recovery dialog")
+	pending.web_confirmed.emit(pending.revision,true,"确认完成")
+	await frames()
+	check(not Demo.creating_new_save and not Demo.save_blocked and not Demo.dirty and not is_instance_valid(Demo.save_dialog),"DS-001 successful confirmation restores the fresh profile before releasing recovery")
+	check(Demo.rank("T01") == 0 and PlayerData.gold == DemoConfig.INITIAL_GOLD,"DS-001 no accepted pending purchase is silently overwritten")
+	Demo.save_store = CampSaveStore.new()
+	var talent = Demo.try_purchase("talent","T01")
+	var paid_gold = PlayerData.gold
+	check(talent.success and talent.saved and Demo.rank("T01") == 1,"DS-001 post-confirmation purchase is accepted and saved normally")
+	check(Demo.load_camp() and Demo.rank("T01") == 1 and PlayerData.gold == paid_gold,"DS-001 post-confirmation purchase survives snapshot reload")
 	Demo.save_store = FaultStore.new()
 	var purchase = Demo.try_purchase("weapon","0")
 	Demo.quit_game(); await frames()
@@ -43,4 +92,5 @@ func _ready():
 	Demo.save_store = CampSaveStore.new()
 	check(Demo.save_camp().success and PlayerData.gold == gold,"R04 retry persists without another charge")
 	print("R1 RECOVERY UI checks=",checks," failures=",failures)
-	await Demo.quit_game()
+	Demo.stop_attacks()
+	get_tree().quit(1 if failures else 0)

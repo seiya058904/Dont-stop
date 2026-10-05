@@ -83,6 +83,8 @@ jobs:
             checks=$(grep -cE '^PASS ' "$log" || true)
             if [ "$name" = M6EncounterAudit ] && ! grep -qE '^M6 AUDIT COMPLETE tier=basic rows=30 failures=0' "$log"; then completed=0; fi
             if [ "$name" = M8Encounters ] && ! grep -qE '^M8 ENCOUNTERS SUMMARY checks=60 failures=0' "$log"; then completed=0; fi
+            if [ "$name" = R1RecoveryUI ] && ! grep -qE '^R1 RECOVERY UI checks=[0-9]+ failures=0' "$log"; then completed=0; fi
+            if [ "$name" = R1Persistence ] && ! grep -qE '^R1 PERSISTENCE checks=[0-9]+ failures=0' "$log"; then completed=0; fi
             echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
             tail -n 40 "$log"
             echo "::endgroup::"
@@ -108,6 +110,8 @@ jobs:
           # save namespace and migration contract this batch actually touches is asserted by
           # B6Progression, which is green on Linux.
           run_case B6Progression
+          run_case R1Persistence
+          run_case R1RecoveryUI
           run_case B6Progression --hell-unlock
           run_case B3Hazards
           run_case B4Fog

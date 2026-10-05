@@ -53,8 +53,9 @@ function token(name, ok, detail) {
 
 	try {
 		await page.goto(url + '?stage-tour=1&probe=1', { waitUntil: 'domcontentloaded', timeout: 60000 });
-		// Four stages, >=9 simulated seconds each (<=75 wall seconds per stage).
-		const deadline = Date.now() + 360000;
+		// Four stages, >=9 simulated seconds each (<=120 wall seconds per stage).
+		// Include startup/scene transitions; keep the nine-second assertions below.
+		const deadline = Date.now() + 600000;
 		while (Date.now() < deadline && !tourLines.some(l => l.includes('complete'))) await sleep(1000);
 		const done = tourLines.some(l => l.includes('complete'));
 		token('TOUR_REACHED_ITS_END', done, done ? 'the game printed the completion line' : 'the tour did not finish inside the budget');

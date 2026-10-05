@@ -707,6 +707,7 @@ func depart(stage: int):
 	_depart_with(stage,true)
 
 func _depart_with(stage: int, trial: bool):
+	if Demo.creating_new_save: return
 	if departure_preparing:
 		return
 	if not DemoConfig.ENCOUNTERS.has(stage):

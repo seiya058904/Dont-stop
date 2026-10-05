@@ -4,10 +4,13 @@ var quitting = false
 var note: Label
 var retry: Button
 var recovery_actions: Array[Button] = []
+var leave_actions: Array[Button] = []
 
 func _ready():
 	theme = preload("res://ui/GildedTheme.gd").build(8)
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	focus_mode = Control.FOCUS_ALL
+	grab_focus()
 	Demo.push_pause(self)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var shade = ColorRect.new()
@@ -50,17 +53,25 @@ func _ready():
 	# Web "quit" returns to a live main menu, so the labels say 返回 there instead
 	# of promising to end a program that a browser tab cannot end.
 	var leave_word := "返回" if OS.has_feature("web") else "退出"
-	add_button(box,("取消" + leave_word) if quitting else "临时试玩 / 返回",queue_free)
-	if quitting: add_button(box,("放弃本次未保存变化并" + leave_word),Demo.discard_and_leave)
+	leave_actions.append(add_button(box,("取消" + leave_word) if quitting else "临时试玩 / 返回",close_dialog))
+	if quitting: leave_actions.append(add_button(box,("放弃本次未保存变化并" + leave_word),Demo.discard_and_leave))
 	update_state()
 
 func update_state():
 	note.text = Demo.save_result.reason
 	if is_instance_valid(retry): retry.disabled = Demo.save_result.get("pending",false)
 	for button in recovery_actions: button.disabled = Demo.creating_new_save
+	for button in leave_actions: button.disabled = Demo.creating_new_save
+	if Demo.creating_new_save:
+		# Move keyboard focus off the underlying camp's last purchase button too.
+		grab_focus()
+		return
 	if not Demo.dirty and not Demo.save_blocked and Demo.save_result.success:
 		if quitting: Demo.leave_after_save()
 		else: queue_free()
+
+func close_dialog():
+	if not Demo.creating_new_save: queue_free()
 
 func add_button(box, text, action):
 	var button = Button.new()
