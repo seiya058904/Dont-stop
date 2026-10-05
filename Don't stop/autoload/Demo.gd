@@ -65,6 +65,7 @@ var ammo_kills = 0
 var crowd_clock = 0.0
 var crowd_active = false
 var quitting_game = false
+var waiting_to_leave := false
 ## B13 unequip: set when the player explicitly drops their weapon in the camp, and cleared by
 ## ANY successful equip. It is the difference between "has no weapon yet" (buying the first gun
 ## auto-equips it) and "chose to be unarmed" (buying another gun must NOT silently re-arm).
@@ -445,7 +446,9 @@ func save_camp() -> Dictionary:
 		pending_web_save = FileAccess.get_file_as_string(save_path)
 		if not save_store.web_confirmed.is_connected(_web_save_confirmed): save_store.web_confirmed.connect(_web_save_confirmed)
 		save_store.confirm_web(save_path,save_revision)
-	if save_result.success: dirty = false
+	if save_result.success:
+		dirty = false
+		committed_web_save = FileAccess.get_file_as_bytes(save_path)
 	changed.emit()
 	return save_result
 
@@ -466,6 +469,15 @@ func _web_save_confirmed(revision: int, success: bool, reason: String) -> void:
 	if is_instance_valid(ui): ui.message.text = reason
 	changed.emit()
 	if not success and is_instance_valid(Utils.canvasLayer): Utils.showToast(reason,5)
+	if waiting_to_leave:
+		waiting_to_leave = false
+		pop_pause(self)
+		if success:
+			# Recheck the live snapshot before leaving, even if another command
+			# changed it while this exact revision was being confirmed.
+			quit_game()
+		else:
+			show_save_dialog(save_blocked, true)
 
 func export_current_save() -> String:
 	if not OS.has_feature("web") or not valid_save(snapshot()): return "导出失败；当前配置未通过校验"
@@ -476,7 +488,7 @@ func load_camp() -> bool:
 	if creating_new_save: return false
 	if OS.has_feature("web") and dirty: return false
 	if not FileAccess.file_exists(save_path): return false
-	if OS.has_feature("web"): committed_web_save = FileAccess.get_file_as_bytes(save_path)
+	committed_web_save = FileAccess.get_file_as_bytes(save_path)
 	var parser = JSON.new()
 	var parse_error = parser.parse(FileAccess.get_file_as_string(save_path))
 	var parsed = parser.data if parse_error == OK else null
@@ -616,7 +628,7 @@ func create_new_save() -> bool:
 	return load_camp()
 
 func discard_and_leave():
-	if creating_new_save: return
+	if creating_new_save or waiting_to_leave: return
 	if OS.has_feature("web") and dirty:
 		# Invalidate outstanding confirmations before restoring the last committed
 		# snapshot in MEMFS. A new session must never load discarded pending bytes.
@@ -659,21 +671,38 @@ func open_stats():
 	var panel=load("res://ui/StatPanel.gd").new()
 	Utils.canvasLayer.add_child(panel)
 
+func save_before_leave() -> Dictionary:
+	# Only CAMP snapshots can be reused. Combat and recovery retain the
+	# existing refusal/dirty semantics and their explicit leave choices.
+	if save_blocked or LevelServer.state != "CAMP": return save_camp()
+	# JSON loads numbers as floats; normalize both representations so a
+	# restored 1.0 does not invent a change from the persisted integer 1.
+	var text = JSON.stringify(JSON.parse_string(JSON.stringify(snapshot())))
+	if save_result.get("pending",false) and text == JSON.stringify(JSON.parse_string(pending_web_save)):
+		return save_result
+	if not dirty and not committed_web_save.is_empty() and text == JSON.stringify(JSON.parse_string(committed_web_save.get_string_from_utf8())):
+		return {"success":true,"durable":true,"reason":"已保存"}
+	return save_camp()
+
+func _input(_event):
+	# Pause alone does not stop ALWAYS-processing camp controls. Keep the
+	# current screen visible while confirmation owns the leave request.
+	if waiting_to_leave: get_viewport().set_input_as_handled()
+
 func quit_game():
 	if creating_new_save: return
-	if quitting_game: return
+	if quitting_game or waiting_to_leave: return
 	stop_attacks()
-	# The save question is settled BEFORE any platform branch, and its outcome is
-	# logged because it is the one thing that can turn "leave the game" into "stay
-	# where you are with a dialog": if saving fails the player keeps the session and
-	# the recovery dialog, which is the existing product contract.
-	var save_ok := true
 	if Utils.is_game_start:
-		save_ok = save_camp().success
-		print("[leave] save on the way out success=%s web=%s" % [str(save_ok), str(OS.has_feature("web"))])
-	if Utils.is_game_start and not save_ok:
-		show_save_dialog(save_blocked, true)
-		return
+		var result = save_before_leave()
+		print("[leave] save on the way out success=%s pending=%s web=%s" % [str(result.success), str(result.get("pending",false)), str(OS.has_feature("web"))])
+		if result.get("pending",false):
+			waiting_to_leave = true
+			push_pause(self)
+			return
+		if not result.success:
+			show_save_dialog(save_blocked, true)
+			return
 	leave_after_save()
 
 ## Single platform-aware exit: ends the process on native, returns to a live main
@@ -681,7 +710,7 @@ func quit_game():
 ## save-failure dialog, so no path can reach get_tree().quit() on a platform that
 ## has no process to end - that is what left the browser showing a frozen frame.
 func leave_after_save() -> void:
-	if creating_new_save: return
+	if creating_new_save or waiting_to_leave: return
 	if OS.has_feature("web"):
 		# A browser tab has no process to end: quitting the engine just freezes the
 		# last frame with nothing to take over, which is what the player saw as a

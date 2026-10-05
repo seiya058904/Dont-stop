@@ -37,12 +37,46 @@ fs.mkdirSync(out, { recursive: true });
  }
  async function click(tag) {
   await until(() => rects[tag]?.visible, tag);
+  // A pending leave creates its failure controls only after confirmation
+  // fails. Never click rectangles retained from the previous session.
+  if (tag === 'leave-entry') {
+   for (const key of Object.keys(rects)) if (key.startsWith('save-')) delete rects[key];
+  }
   const r = rects[tag], scale = Math.min(canvas.width / 410, canvas.height / 230);
   await page.mouse.click(canvas.x + (canvas.width - 410 * scale) / 2 + r.x * scale,
    canvas.y + (canvas.height - 230 * scale) / 2 + r.y * scale);
   await page.waitForTimeout(500);
  }
  function check(ok, title) { assert(ok, title); report.checks.push(title); console.log('PASS ' + title); }
+ function dialogCount() { return lines.filter(t => t.startsWith('[save-dialog] opened')).length; }
+ async function leaveCamp() {
+  await click('camp-settings-button');
+  delete rects['menu-start-button'];
+  await click('leave-entry');
+ }
+ async function returned() {
+  await until(() => rects['menu-start-button']?.visible, 'returned main menu');
+ }
+ async function holdConfirmation() {
+  await page.evaluate(() => {
+   window.leaveConfirmations = [];
+   const verify = window.towdownSave.verify;
+   window.leaveVerifier = verify;
+   window.towdownSave.verify = function (path, text, revision, callback) {
+    return verify.call(this, path, text, revision, (...args) => {
+     window.leaveConfirmations.push({ args, release: () => callback(...args) });
+    });
+   };
+  });
+ }
+ async function releaseConfirmation() {
+  await page.waitForFunction(() => window.leaveConfirmations.length === 1);
+  check(await page.evaluate(() => window.leaveConfirmations[0].args[1] === true), 'leave waits for a real successful IndexedDB commit');
+  await page.evaluate(() => {
+   window.towdownSave.verify = window.leaveVerifier;
+   window.leaveConfirmations.shift().release();
+  });
+ }
  async function start() {
   await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready'
    && document.getElementById('frame')?.style.display === 'none');
@@ -97,17 +131,60 @@ fs.mkdirSync(out, { recursive: true });
   await page.goto(url + '?probe=1'); await start();
   await settleStartupSave();
   const initial = await disk(); check(initial && initial.weapons.length === 0, 'initial snapshot is committed in IndexedDB');
+  let dialogs = dialogCount(), revision = recovery.revision;
+  await leaveCamp(); await returned();
+  check(dialogCount() === dialogs, 'Home no edits returns with zero SaveDialog creations');
+  check(recovery.revision === revision, 'durable Home return creates no new revision');
+  await holdConfirmation(); await start();
+  await page.waitForFunction(() => window.leaveConfirmations.length === 1);
+  await until(() => recovery?.dirty, 'startup confirmation pending');
+  revision = recovery.revision; dialogs = dialogCount();
+  await leaveCamp();
+  check(dialogCount() === dialogs && recovery.revision === revision && !rects['menu-start-button'],
+   'pending Home return stays silent and reuses the submitted revision');
+  await page.keyboard.press('Escape'); await page.keyboard.press('Enter');
+  check(dialogCount() === dialogs && recovery.revision === revision && !rects['menu-start-button'],
+   'pending leave blocks keyboard dismissal and duplicate exit');
+  check(await page.evaluate(() => window.towdownSave.dirty), 'pending leave preserves beforeunload protection');
+  await releaseConfirmation(); await returned();
+  check(dialogCount() === dialogs, 'pending Home confirmation returns without a Dialog flash');
+  await start(); await settleStartupSave();
+  await select(0); await holdConfirmation();
+  await click('camp-action-0');
+  await until(() => carry?.owned.includes(0) && !carry.saved, 'purchased snapshot pending');
+  const purchasedGold = carry.gold;
+  dialogs = dialogCount(); revision = recovery.revision;
+  await leaveCamp();
+  check(dialogCount() === dialogs && recovery.revision === revision, 'immediate post-purchase leave does not flash or resubmit');
+  await releaseConfirmation(); await returned();
+  const purchasedDisk = await disk();
+  check(purchasedDisk.gold === purchasedGold && purchasedDisk.weapons.some(w => +w.id === 0)
+   && dialogCount() === dialogs, 'purchase is durable before returning to the main menu');
+  await start(); await settleStartupSave();
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
    await click('camp-action-0');
    await until(() => carry?.owned.includes(id) && carry.saved === false, 'unsaved purchase');
    const paid = carry.gold;
+   if (fault === 'abort') {
+    dialogs = dialogCount();
+    await leaveCamp();
+    check(dialogCount() === dialogs, 'failed transaction leave does not show Dialog while confirmation is pending');
+   }
    // Timer delivery and Godot's visible callback need not have completed at a
    // fixed wall-clock sleep on a software-rendered runner. Observe the actual
    // terminal failure before checking it; keep all failure/disk assertions.
    await until(() => !carry.saved && /未确认|不可用|失败/.test(carry.message), fault + ' confirmation failure');
    check(carry.saved === false && /未确认|不可用|失败/.test(carry.message), fault + ': failure is visible and memory stays dirty');
    check(!(await disk()).weapons.some(w => +w.id === id), fault + ': old durable snapshot survives failed transaction');
+   if (fault === 'abort') {
+    await until(() => dialogCount() === dialogs + 1 && recovery?.dialog, 'terminal failure opens protection');
+    await until(() => rects['save-discard']?.visible && rects['save-retry']?.visible, 'full failure actions');
+    check(await page.evaluate(() => window.towdownSave.dirty), 'failed pending leave keeps the unload guard');
+    await click('save-cancel');
+    await until(() => !recovery.dialog, 'cancel failed leave');
+    await page.keyboard.press('Escape');
+   }
    await page.screenshot({ path: path.join(out, fault + '-failed.png') });
    await page.evaluate(() => window.saveFault = '');
    await click('camp-save-retry'); await until(() => carry?.saved === true, 'durable retry');

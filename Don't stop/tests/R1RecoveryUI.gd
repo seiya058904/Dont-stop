@@ -81,6 +81,36 @@ func _ready():
 	var paid_gold = PlayerData.gold
 	check(talent.success and talent.saved and Demo.rank("T01") == 1,"DS-001 post-confirmation purchase is accepted and saved normally")
 	check(Demo.load_camp() and Demo.rank("T01") == 1 and PlayerData.gold == paid_gold,"DS-001 post-confirmation purchase survives snapshot reload")
+	var durable_revision = Demo.save_revision
+	check(Demo.save_before_leave().success and Demo.save_revision == durable_revision,"LEAVE unchanged durable camp reuses snapshot without a revision")
+	Demo.save_store = pending
+	PlayerData.gold -= 1
+	check(Demo.save_before_leave().get("pending",false) and Demo.save_revision == durable_revision+1,"LEAVE real new camp state submits a snapshot")
+	var leave_revision = Demo.save_revision
+	Demo.quit_game(); await frames()
+	check(Demo.waiting_to_leave and Demo.top_pause(Demo) and not is_instance_valid(Demo.save_dialog),"LEAVE pending waits silently with input paused")
+	Demo.quit_game()
+	check(Demo.save_revision == leave_revision,"LEAVE repeated leave does not resubmit pending snapshot")
+	pending.web_confirmed.emit(leave_revision-1,true,"旧确认")
+	check(Demo.waiting_to_leave and Demo.dirty,"LEAVE stale confirmation cannot complete leave")
+	Demo.discard_and_leave(); Demo.leave_after_save()
+	check(Demo.waiting_to_leave and Demo.top_pause(Demo),"LEAVE pending cannot bypass confirmation through another exit callback")
+	PlayerData.gold -= 1
+	pending.web_confirmed.emit(leave_revision,true,"确认完成")
+	check(Demo.waiting_to_leave and Demo.dirty and Demo.save_revision == leave_revision+1 and not is_instance_valid(Demo.save_dialog),"LEAVE confirmation rechecks and saves newer live state before leaving")
+	leave_revision = Demo.save_revision
+	pending.web_confirmed.emit(leave_revision,false,"确认超时")
+	await frames()
+	check(not Demo.waiting_to_leave and Demo.dirty and Demo.save_dialog.quitting,"LEAVE timeout opens the full protection dialog")
+	check(Demo.save_dialog.leave_actions.size() == 2 and is_instance_valid(Demo.save_dialog.retry),"LEAVE failed pending retains cancel discard and retry")
+	Demo.save_dialog.close_dialog(); await frames()
+	Demo.save_store = CampSaveStore.new()
+	check(Demo.save_camp().success,"LEAVE failed confirmation remains retryable")
+	LevelServer.state = "COMBAT"
+	Demo.quit_game(); await frames()
+	check(not Demo.waiting_to_leave and Demo.dirty and Demo.save_dialog.quitting,"LEAVE combat still requires unsaved-state confirmation")
+	Demo.save_dialog.close_dialog(); await frames()
+	LevelServer.state = "CAMP"
 	Demo.save_store = FaultStore.new()
 	var purchase = Demo.try_purchase("weapon","0")
 	Demo.quit_game(); await frames()
