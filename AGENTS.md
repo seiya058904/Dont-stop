@@ -5,8 +5,8 @@
 - Git 根是本目录；Godot 项目是 `Don't stop/project.godot`，不是外层目录。命令中的项目路径必须整体引用，避免空格和英文撇号被 shell 拆分。
 - `boot/Boot.tscn` 是配置入口，加载 `game/map/Main.tscn`；Web 启动界面由 `web/loader.html` 提供。以上路径均相对于 Godot 项目目录。
 - 项目内 `autoload/` 管理全局状态，`game/` 包含玩法与配置，`ui/` 包含界面，`Sprites/`、`audio/`、`fonts/`、`shader/` 与 `addons/` 是产品资源。`tests/` 是原生回归场景，`tools/` 是导出、浏览器与证据校验工具。
-- 根 README 提供正式下载与试玩入口。封板版本为 `v1.3.3`；Release tag 指向通过验收的 `main`，Pages 发布该 main 构建中实际测试过的 Web bytes。今后的仅文档提交可以不重新部署游戏；不能据 Git 最新 SHA 推断线上身份。
-- `Don't stop/docs/iteration/release-v1.3.3.md` 是最终收口记录，`release-v1.3.2.md` 保留性能与 Boss 审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
+- 根 README 提供正式下载与试玩入口。封板版本为 `v1.3.4`；Release tag 指向通过验收的 `main`，Pages 发布该 main 构建中实际测试过的 Web bytes。今后的仅文档提交可以不重新部署游戏；不能据 Git 最新 SHA 推断线上身份。
+- `Don't stop/docs/iteration/release-v1.3.4.md` 是最终收口记录，`release-v1.3.2.md` 保留性能与 Boss 审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
 
 ## 运行与验证
 
