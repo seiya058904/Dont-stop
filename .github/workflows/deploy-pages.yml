@@ -257,18 +257,15 @@ jobs:
     needs: build
     if: needs.build.outputs.game == 'true' && github.event_name != 'push'
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ matrix.job_budget_minutes || 8 }}
+    # Full save acceptance includes transaction faults and repeated reloads.
+    timeout-minutes: ${{ matrix.name == 'save-audit' && 20 || matrix.job_budget_minutes || 8 }}
     env:
-      GATE_JOB_BUDGET_MINUTES: ${{ matrix.job_budget_minutes || 8 }}
+      GATE_JOB_BUDGET_MINUTES: ${{ matrix.name == 'save-audit' && 20 || matrix.job_budget_minutes || 8 }}
     strategy:
       fail-fast: true
       matrix:
         name: ${{ fromJSON(github.event_name == 'pull_request' && '["smoke","menu-return"]' || '["smoke","save-audit","aim-core","aim-fault","menu-return","stages-fair"]') }}
         include:
-          - name: save-audit
-            # Includes the original profile audit plus real transaction faults,
-            # recovery confirmation delivery, and repeated full-page reloads.
-            job_budget_minutes: 20
           - name: menu-return
             # Observed CI cycles span 31-50s: 21 iterations can take 17.5m,
             # before startup/reload. 25m watchdog leaves room for the full soak;
