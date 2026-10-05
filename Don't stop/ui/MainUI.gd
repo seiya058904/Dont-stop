@@ -93,6 +93,8 @@ func _warm_web_first_use() -> void:
 	Demo.pop_pause(warm_panel)
 	await RenderingServer.frame_post_draw
 	warm_panel.queue_free()
+	# Finish measured first-shot Canvas compilation while the loader covers us.
+	await Warmup.prepare_web_first_shot()
 	await get_tree().process_frame
 
 func _mark_menu_presented() -> void:
