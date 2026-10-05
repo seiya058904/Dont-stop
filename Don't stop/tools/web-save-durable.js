@@ -44,8 +44,8 @@ fs.mkdirSync(out, { recursive: true });
  }
  function check(ok, title) { assert(ok, title); report.checks.push(title); console.log('PASS ' + title); }
  async function start() {
-  await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready');
-  await page.waitForTimeout(500);
+  await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready'
+   && document.getElementById('frame')?.style.display === 'none');
   await until(() => rects['menu-start-button']?.visible, 'menu');
   canvas = await page.locator('canvas').boundingBox();
   await click('menu-start-button');
@@ -129,9 +129,10 @@ fs.mkdirSync(out, { recursive: true });
     tx.oncomplete = resolve; tx.onabort = () => reject(tx.error);
    }); db.close();
   }, bytes);
-  for (const key of Object.keys(rects)) delete rects[key]; carry = null;
-  await page.reload(); await until(() => rects['menu-start-button']?.visible, 'menu');
-  canvas = await page.locator('canvas').boundingBox(); await click('menu-start-button');
+  for (const key of Object.keys(rects)) delete rects[key]; carry = null; camp = null; recovery = null;
+  // Probe rectangles can exist behind the loader. Corrupt recovery uses the
+  // same real input-ready barrier as a healthy start, without awaiting a save.
+  await page.reload(); await start();
   await until(() => rects['save-export-original']?.visible, 'recovery dialog');
   const download = page.waitForEvent('download'); await click('save-export-original');
   const file = await download; const filename = path.join(out, file.suggestedFilename()); await file.saveAs(filename);
