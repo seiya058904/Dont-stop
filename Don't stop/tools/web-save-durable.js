@@ -37,6 +37,11 @@ fs.mkdirSync(out, { recursive: true });
  }
  async function click(tag) {
   await until(() => rects[tag]?.visible, tag);
+  // A pending leave creates its failure controls only after confirmation
+  // fails. Never click rectangles retained from the previous session.
+  if (tag === 'leave-entry') {
+   for (const key of Object.keys(rects)) if (key.startsWith('save-')) delete rects[key];
+  }
   const r = rects[tag], scale = Math.min(canvas.width / 410, canvas.height / 230);
   await page.mouse.click(canvas.x + (canvas.width - 410 * scale) / 2 + r.x * scale,
    canvas.y + (canvas.height - 230 * scale) / 2 + r.y * scale);
