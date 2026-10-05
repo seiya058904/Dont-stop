@@ -67,11 +67,18 @@ var is_atk = false
 var death_callback :Callable
 
 func _ready():
+	# Only the collision body's physics motion is interpolated. Its children
+	# still inherit that motion, while authored flips/anticipation stay immediate.
+	sprite_body.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
+	# Opting in during ready happens after CanvasItem's automatic entry reset.
+	reset_physics_interpolation()
 	add_to_group("monsters")
 	Combat.invalidate_group_cache()
 	_update_body_material()
 	var node = Node2D.new()
 	node.name = "EffectRoot"
+	node.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	add_child(node)
 	name = str(Time.get_ticks_usec())
 	# This process only advances transient feedback and status effects. Physics movement and

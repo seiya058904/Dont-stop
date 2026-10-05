@@ -88,7 +88,7 @@ func _ready() -> void:
 	add_to_group("guns")
 	tier_muzzle = preload("res://game/effects/TierMuzzle.gd").new()
 	gun_tip.add_child(tier_muzzle)
-	if WeaponCatalog.tier(weapon_id) >= 4:
+	if image and image.resource_path.begins_with("res://Sprites/Presentation/"):
 		var idle = preload("res://game/effects/WeaponIdle.gd").new()
 		idle.gun = self
 		gun_image.add_child(idle)
@@ -137,9 +137,10 @@ func play_shot_feedback(duration: float, offset := Vector2(-1, -1)) -> void:
 	recoil_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).tween_property(self, "position", resting_position, seconds)
 	if is_instance_valid(gun_image):
 		if sprite_tween != null and sprite_tween.is_valid(): sprite_tween.kill()
-		gun_image.scale = resting_scale * Vector2(0.88, 1.04)
-		sprite_tween = create_tween()
-		sprite_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).tween_property(gun_image, "scale", resting_scale, seconds)
+		# Metal keeps its silhouette. Working parts cycle within the sprite;
+		# the established positional recoil and firing anchor remain unchanged.
+		gun_image.scale = resting_scale
+		if is_instance_valid(idle_visual): idle_visual.cycle_action(seconds)
 
 ## Puts the gun back on its anchor and cancels any pending recoil. Called
 ## whenever an action is interrupted, so switching weapons, reloading, dying,
@@ -148,6 +149,9 @@ func play_shot_feedback(duration: float, offset := Vector2(-1, -1)) -> void:
 func restore_pose() -> void:
 	if recoil_tween != null and recoil_tween.is_valid(): recoil_tween.kill()
 	if sprite_tween != null and sprite_tween.is_valid(): sprite_tween.kill()
+	if is_instance_valid(idle_visual):
+		idle_visual.action_remaining = 0.0
+		idle_visual.queue_redraw()
 	if not pose_captured: return
 	position = resting_position
 	if is_instance_valid(gun_image): gun_image.scale = resting_scale

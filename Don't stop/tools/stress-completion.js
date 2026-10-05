@@ -6,11 +6,15 @@ function validateCompletion(proof, requested) {
  if (!Number.isFinite(proof.combat_s) || proof.combat_s < requested || !(proof.observation_frames > 0) || !Array.isArray(proof.rounds) || !proof.rounds.length) return false;
  if (!Number.isInteger(proof.physics_hz) || proof.physics_hz <= 0) return false;
  let seconds = 0;
+ let ticks = 0;
  for (const [i, round] of proof.rounds.entries()) {
   if (round.round !== i + 1 || !Number.isInteger(round.effective_ticks) || round.effective_ticks <= 0 || !Number.isFinite(round.combat_s) || round.combat_s <= 0) return false;
   if (Math.abs(round.combat_s - round.effective_ticks / proof.physics_hz) > 0.001) return false;
   seconds += round.combat_s;
+  ticks += round.effective_ticks;
  }
- return Math.abs(seconds - proof.combat_s) < 0.001 && seconds >= requested;
+ // Split rounds can serialize 2699/60 + 1/60 as 44.99999999999997.
+ // Integer simulation ticks prove completion without accepting a short run.
+ return Math.abs(seconds - proof.combat_s) < 0.001 && ticks / proof.physics_hz >= requested;
 }
 module.exports = { validateCompletion };

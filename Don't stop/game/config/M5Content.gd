@@ -167,6 +167,12 @@ static func spawn(id: String, parent: Node, point: Vector2, summoned = false):
 	var contact_sensor := actor.get_node_or_null("Area2D") as Area2D
 	if contact_sensor != null:
 		contact_sensor.monitoring = id == "E01"
+		# Inactive sensors still carry a moving PhysicsServer shape. Keep the
+		# sensor node and E01 melee intact; detach only geometry that cannot
+		# observe or be observed under this role's existing collision contract.
+		if not contact_sensor.monitoring and not contact_sensor.monitorable and contact_sensor.collision_layer == 0:
+			var sensor_shape := contact_sensor.get_node_or_null("CollisionShape2D") as CollisionShape2D
+			if sensor_shape != null: sensor_shape.disabled = true
 	var d = definition(id)
 	# Hell Mode pressure is applied here, once, per actor: bounded HP/speed axes and a
 	# damage axis the actor reads when it deals damage. Bosses are excluded - B04 is

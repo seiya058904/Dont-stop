@@ -51,10 +51,9 @@ jobs:
   contracts:
     needs: setup
     runs-on: ubuntu-24.04
-    # B13.1 added M4Talents (the 24-talent behaviour audit) to this job; 30 min keeps the
-    # whole contracts block comfortably inside one timeout as cases accumulate. Cases are
-    # never dropped to save time.
-    timeout-minutes: 30
+    # M6/M8 each walk all 30 stages in real time. Give them time to finish;
+    # an engine frame limit can otherwise exit successfully part-way through.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-godot
@@ -71,18 +70,23 @@ jobs:
           run_case () {
             local name="$1"; shift
             local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' -').log"
+            local budget=900
+            if [ "$name" = M6EncounterAudit ]; then budget=1800; fi
+            if [ "$name" = M8Encounters ]; then budget=2400; fi
             set +e
-            timeout 900 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
+            timeout "$budget" "$GODOT" --headless --path "$PROJECT_PATH" \
               "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
             local code=$?
             set -e
-            local issues checks
+            local issues checks completed=1
             issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
             checks=$(grep -cE '^PASS ' "$log" || true)
+            if [ "$name" = M6EncounterAudit ] && ! grep -qE '^M6 AUDIT COMPLETE tier=basic rows=30 failures=0' "$log"; then completed=0; fi
+            if [ "$name" = M8Encounters ] && ! grep -qE '^M8 ENCOUNTERS SUMMARY checks=60 failures=0' "$log"; then completed=0; fi
             echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
             tail -n 40 "$log"
             echo "::endgroup::"
-            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
+            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ] || [ "$completed" -ne 1 ]; then
               echo "FAILED: $name $*"
               grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
               exit 1
@@ -138,6 +142,8 @@ jobs:
           run_case PresentationLifecycle
           run_case CombatReadability
           run_case WeaponVisualPose
+          run_case DeepQuality
+          run_case WebPhysicsContracts
           run_case CameraTransitions
           # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
           # job as the B13 contracts that pin their new magnitudes.
@@ -203,7 +209,7 @@ jobs:
             local name="$1"; shift
             local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' ,=-').log"
             set +e
-            timeout 1800 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 90000 \
+            timeout 1800 "$GODOT" --headless --path "$PROJECT_PATH" \
               "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
             local code=$?
             set -e
@@ -239,6 +245,7 @@ jobs:
           path: |
             ${{ runner.temp }}/*.log
             Don't stop/docs/iteration/evidence/m10/density.json
+            Don't stop/docs/iteration/evidence/m10/boss-*.json
             Don't stop/docs/iteration/evidence/b/bosses.json
           if-no-files-found: warn
 

@@ -14,6 +14,12 @@ var grid = AStarGrid2D.new()
 var cells: Array[Vector2i] = []
 var obstacles: Array = []
 var art: ArrayMesh
+## Exact A* results for the immutable arena topology. Store only the next local
+## waypoint, not an actor route; steering and collision still run every tick.
+const STEP_CACHE_LIMIT := 4096
+var _step_cache: Dictionary = {}
+var path_cache_hits := 0
+var path_searches := 0
 ## 768x576 -> 880x660 (+14.6% on each axis). The user asked for roughly +12-18% and for the
 ## change to be a real re-layout, not a scene-wide scale: every dependent system below
 ## (grid region, border walls, obstacle table, spawn ring, boss ring, hazard anchors,
@@ -275,9 +281,20 @@ func path_step(from: Vector2, target: Vector2) -> Vector2:
 	var a = cell(from); var b = cell(target)
 	if not grid.is_in_boundsv(a) or grid.is_point_solid(a): a = nearest(from)
 	if not grid.is_in_boundsv(b) or grid.is_point_solid(b): b = nearest(target)
-	var path = grid.get_point_path(a,b)
+	var key := Vector4i(a.x,a.y,b.x,b.y)
+	var step: Vector2
+	if _step_cache.has(key):
+		path_cache_hits += 1
+		step = _step_cache[key]
+	else:
+		path_searches += 1
+		var path = grid.get_point_path(a,b)
+		step = path[1] if path.size()>1 else grid.get_point_position(b)
+		# Bounded per-arena storage; freeing/replacing the arena releases it.
+		if _step_cache.size() >= STEP_CACHE_LIMIT: _step_cache.clear()
+		_step_cache[key] = step
 	if B11Probe.enabled: B11Probe.path_usec += Time.get_ticks_usec()-t0
-	return to_global(path[1]) if path.size()>1 else to_global(grid.get_point_position(b))
+	return to_global(step)
 func spawn_near(center: Vector2, minimum: float, maximum: float, side = -1, radius := -1.0) -> Vector2:
 	spawn_requests += 1
 	# A negative radius means "the actor's own size". Every enemy instantiates the

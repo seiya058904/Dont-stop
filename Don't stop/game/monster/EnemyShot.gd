@@ -10,6 +10,7 @@ static var b194_ignore_player_hits := false
 static var _fog_cache_frame := -1
 static var _fog_cache_active := false
 static var _fog_cache_radius := 4096.0
+static var _collision_shape: CircleShape2D
 var registered := false
 var _ink_dirty := false
 var _body_ink: Node2D
@@ -32,12 +33,15 @@ const INK = {
 	"ricochet":Color(1.0,0.4,0.8)
 }
 func _enter_tree():
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
 	if live_count >= capacity_limit:
 		set_physics_process(false); queue_free(); return
 	live_count += 1
 	registered = true
 
 func _ready():
+	# Never blend a newly admitted projectile from an earlier/default location.
+	reset_physics_interpolation()
 	# B11.2 test-only counter (game/diag/B11Probe.gd): kept so the AFTER run can report the burst
 	# cost as zero rather than merely absent.
 	if B11Probe.enabled: B11Probe.shot_created += 1
@@ -66,12 +70,15 @@ func _ready():
 	# shot, which is the map. `tests/B11ShotLayer.gd` asserts all four halves of that contract.
 	collision_mask = 0 if b194_skip_wall_collision else 2147483648
 	var shape = CollisionShape2D.new()
-	shape.shape = CircleShape2D.new()
-	shape.shape.radius = 3
+	if _collision_shape == null:
+		_collision_shape = CircleShape2D.new()
+		_collision_shape.radius = 3
+	shape.shape = _collision_shape
 	add_child(shape)
 	z_index = 5
 	_body_ink = Node2D.new()
 	_body_ink.draw.connect(_draw_body)
+	_body_ink.rotation = velocity.angle()
 	add_child(_body_ink)
 
 func _exit_tree():
@@ -96,8 +103,10 @@ func _draw_ink():
 # Retain its body commands; only the moving trail needs rebuilding each frame.
 func _draw_body() -> void:
 	var ink = INK.get(style,INK.projectile)
-	_body_ink.draw_circle(Vector2.ZERO,4,Color(ink.r*0.15,ink.g*0.15,ink.b*0.15))
+	# A dark rim survives bright floors; the pale nose reads travel direction.
+	_body_ink.draw_circle(Vector2.ZERO,4,Color("10151f"))
 	_body_ink.draw_circle(Vector2.ZERO,2.8,Color(ink.r,ink.g,ink.b))
+	_body_ink.draw_line(Vector2(0,-1),Vector2(3,0),Color("fff2d4"),1.4)
 	if style in ["laser","ricochet"]:
 		_body_ink.draw_polyline(PackedVector2Array([Vector2(-5,0),Vector2(0,-4),Vector2(5,0),Vector2(0,4),Vector2(-5,0)]),Color(ink,0.9),1)
 	elif style == "poison":
@@ -163,6 +172,7 @@ func _step(delta):
 		if not b194_hold_lifecycle: bounces_left -= 1
 		bounces_done += 1
 		velocity = velocity.bounce(normal)
+		_body_ink.rotation = velocity.angle()
 		remaining = collision.get_remainder().bounce(normal)
 		trail.clear()
 		preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,8,normal,"ricochet")

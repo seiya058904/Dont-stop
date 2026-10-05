@@ -1,6 +1,8 @@
 extends Label
 
 static var live_count := 0
+var age := 0.0
+var origin_y := 0.0
 
 func _enter_tree() -> void:
 	live_count += 1
@@ -20,13 +22,22 @@ func _ready() -> void:
 	add_theme_constant_override("shadow_offset_y",1)
 	# B11.1 test-only counter (game/diag/B11Probe.gd): damage-number churn rate.
 	if B11Probe.enabled: B11Probe.labels_created += 1
-	var tween = create_tween().set_parallel(true).set_ease(Tween.EASE_OUT)
-	if B11Probe.enabled: B11Probe.label_tweens += 1
-	tween.set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(self,"scale",Vector2.ONE,0.16).from(Vector2(1.2,1.2))
-	tween.tween_property(self,"position:y",position.y - 24,0.65)
-	tween.tween_property(self,"modulate:a",0.0,0.22).set_delay(0.55)
-	tween.tween_callback(self.queue_free).set_delay(1)
+	origin_y = position.y
+	_update_motion()
+
+func _process(delta: float) -> void:
+	age += delta
+	if age >= 1.0:
+		queue_free()
+		return
+	_update_motion()
+
+func _update_motion() -> void:
+	# The same three cubic-out curves and one-second parent-owned lifetime,
+	# without allocating a Tween and four Tweeners for every damage number.
+	scale = Vector2.ONE*(1.0+0.2*pow(1.0-clampf(age/0.16,0,1),3))
+	position.y = origin_y-24.0*(1.0-pow(1.0-clampf(age/0.65,0,1),3))
+	modulate.a = pow(1.0-clampf((age-0.55)/0.22,0,1),3)
 
 func setNumber(number):
 	# The existing feedback channel also carries status text such as "护盾".

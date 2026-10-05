@@ -1864,6 +1864,7 @@ y_sort_enabled = true
 position = Vector2(225, 117)
 
 [node name="Anchor" type="Node2D" parent="TileMap2/PlayerRoot"]
+physics_interpolation_mode = 1
 script = SubResource("GDScript_a2gud")
 
 [node name="Camera2D" type="Camera2D" parent="TileMap2/PlayerRoot/Anchor"]

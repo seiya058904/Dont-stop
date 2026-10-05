@@ -4,7 +4,7 @@ extends "res://tests/M8Runtime.gd"
 ##
 ## Harness note (read this before trusting any brightness number): in the native rig
 ## Utils.get_aim_world_position() resolves against the ROOT viewport, so the aim lands near
-## the world origin while the arena sits at (10000+N*1000,-6000). Camera2D._process() then
+## the world origin while the arena sits at (10000+N*1000,-6000). Camera tracking then
 ## chases a runaway lead, and because the retained fog light is a CHILD of that camera it is
 ## dragged thousands of pixels away from the player. That is purely an artefact of the test
 ## window; in a real session the light is locked to the screen centre. This rig freezes the
@@ -23,12 +23,14 @@ func visual_ready(size := Vector2i(960,720)) -> void:
 	anchor = world.get_node_or_null("Town/TileMap2/PlayerRoot/Anchor")
 	if game_camera != null:
 		game_camera.set_process(false)
+		game_camera.set_physics_process(false)
 		game_camera.position = Vector2.ZERO
 	await settle_anchor()
 	if is_instance_valid(render_camera):
 		recenter()
 		return
 	render_camera = Camera2D.new()
+	render_camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	play_view.add_child(render_camera)
 	render_camera.global_position = Utils.player.global_position
 	render_camera.make_current()

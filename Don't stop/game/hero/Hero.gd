@@ -89,6 +89,11 @@ func _init() -> void:
 	Utils.onGameStart.connect(self.onGameStart)
 
 func _ready():
+	# Smooth translation between physics ticks without blending a facing flip
+	# through zero scale or resampling the gun's render-time animations.
+	body.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
+	reset_physics_interpolation()
 	set_physics_process(false)
 	set_process(false)
 	PlayerData.onPlayerLevelChange.connect(self.onPlayerLevelChange)

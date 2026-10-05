@@ -42,6 +42,12 @@ func draw_rect(rect: Rect2, ink: Color, filled := true, width := -1.0) -> void:
 func draw_line(a: Vector2, b: Vector2, ink: Color, width := -1.0, antialiased := false) -> void:
 	draw_polyline(PackedVector2Array([a,b]),ink,width,antialiased)
 
+func draw_shaded_rect(rect: Rect2, upper: Color, lower: Color) -> void:
+	# Vertex shading stays in the same lit surface as the rest of the arena.
+	_quad(rect.position,Vector2(rect.end.x,rect.position.y),rect.end,Vector2(rect.position.x,rect.end.y),upper)
+	colors[colors.size()-2] = lower
+	colors[colors.size()-1] = lower
+
 func draw_polyline(points: PackedVector2Array, ink: Color, width := -1.0, antialiased := false) -> void:
 	if points.size() < 2: return
 	var closed := points[0].is_equal_approx(points[-1])

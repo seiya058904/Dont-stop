@@ -9,8 +9,10 @@ var badge: Label
 var trailing_ratio := 1.0
 var trail_delay := 0.0
 var observed_boss := -1
+var attack_status: Label
 const PHASE_TWO_AT := 0.70
 const PHASE_THREE_AT := 0.35
+const ATTACK_CUES := {"dash":"突进","recover":"恢复","transition":"阶段转换","spawn":"入场"}
 func _ready():
 	position = Vector2(111,8); size = Vector2(180,28); mouse_filter = Control.MOUSE_FILTER_IGNORE
 	style = preload("res://ui/GildedTheme.gd").plate(Color("111821bf"),Color("907652"),3)
@@ -20,6 +22,14 @@ func _ready():
 	title.size = Vector2(165,12)
 	title.clip_text = true
 	phases = Label.new(); phases.position.y = 20; phases.add_theme_font_size_override("font_size",6); add_child(phases)
+	attack_status = Label.new()
+	attack_status.position = Vector2(92,20)
+	attack_status.size = Vector2(88,9)
+	attack_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	attack_status.clip_text = true
+	attack_status.add_theme_font_size_override("font_size",6)
+	attack_status.add_theme_font_override("font",preload("res://fonts/fusion-pixel.otf"))
+	add_child(attack_status)
 	# HELL badge: the round's difficulty layer has to be visible for the whole fight, not
 	# only on the stage-select screen.
 	badge = Label.new(); badge.position = Vector2(168,2); badge.add_theme_font_size_override("font_size",5)
@@ -38,8 +48,10 @@ func _process(delta):
 	# Three explicit phases with the active one marked, so the switch at 70% and 35% is a
 	# readout the player can plan against instead of a surprise.
 	var marker = "  ◀"
-	phases.text = "PHASE I" + (marker if not second else "") + "  |  PHASE II" + (marker if second and not third else "") + "  |  PHASE III" + (marker if third else "")
+	phases.text = "I" + (marker if not second else "") + "  |  II" + (marker if second and not third else "") + "  |  III" + (marker if third else "")
 	phases.modulate = Color(0.85,0.5,1) if third else (Color(1,0.62,0.25) if second else Color(0.95,0.86,0.68))
+	attack_status.text = ("锁定" if boss.lock_frozen else "瞄准") if boss.phase == "warn" else ATTACK_CUES.get(boss.phase,"交战")
+	attack_status.modulate = Color("f5cf91") if boss.phase == "warn" else Color("a7bbc2")
 	queue_redraw()
 
 func observe_health(value: float, identity: int, delta: float) -> void:

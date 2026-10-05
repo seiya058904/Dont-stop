@@ -25,6 +25,14 @@ func _ready() -> void:
 	gold.text = str(data["gold"])
 	if data.has("stage"):
 		$Panel/Route.text = ("试玩" if data.get("trial",false) else "正常进度")+" · "+DemoConfig.ENCOUNTERS[data.stage].name+("\n核心完成，可回营重玩" if data.stage == 30 else "")
+	# Reveal rows as a short receipt, keeping the actual values intact and the
+	# return action immediately usable even while the presentation settles.
+	$Panel/Button.text = "返回营地"
+	for i in 3:
+		var row = $Panel.get_node("TextureRect"+str(i+2))
+		row.modulate.a = 0.35
+		create_tween().tween_property(row,"modulate:a",1.0,0.16).set_delay(i*0.06)
+	$Panel/Button.grab_focus()
 
 func setData(data):
 	self.data = data

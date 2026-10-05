@@ -9,8 +9,8 @@ extends Node
 ##   Windows - boot/Boot.gd (the loading scene) calls start() after its own UI is
 ##             on screen, so the loading animation covers this real work and can
 ##             report per-scene progress.
-##   Web     - full warmup is not scheduled at launch. Production resources pay
-##             their first-use costs on demand; menu readiness is draw-driven.
+##   Web     - only measured first-shot Canvas variants are prepared under the
+##             loading cover; the title is revealed after their actual draws.
 ## start() is idempotent: a second call can never warm up twice.
 
 signal finished
@@ -405,3 +405,80 @@ func _report_web_prepare_item(label: String, started: int, loaded: int, instanti
 	print("[combat-prepare] ",JSON.stringify({"item":label,"load_ms":(loaded-started)/1000.0,
 		"instantiate_ms":(instantiated-loaded)/1000.0,"add_child_and_emit_ms":(added-instantiated)/1000.0,
 		"draw_window_ms":(ended-added)/1000.0,"total_ms":(ended-started)/1000.0}))
+
+## Only the Canvas draws identified in cold real-input Web traces. This runs
+## under the browser's loading cover, before the title accepts a Start click.
+## No actors, particle emitters, audio, gameplay groups or RNG are constructed.
+var _web_first_shot_prepared := false
+
+func prepare_web_first_shot() -> void:
+	if not OS.has_feature("web") or _web_first_shot_prepared: return
+	Utils.startup_mark("first-shot-prepare-start")
+	await RenderingServer.frame_post_draw
+	var canvas := CanvasLayer.new()
+	canvas.layer = 0
+	get_tree().root.add_child(canvas)
+	var light := PointLight2D.new()
+	light.texture = load("res://Sprites/light2.png")
+	light.position = Vector2(32,32)
+	canvas.add_child(light)
+	# WeaponIdle.draw_action's positive-width draw_line => lit USE_PRIMITIVE.
+	var primitive = load("res://game/diag/WarmupCanvas.gd").new()
+	primitive.draw_kind = 0
+	primitive.position = Vector2(16,16)
+	primitive.modulate.a = 0.01
+	canvas.add_child(primitive)
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	primitive.queue_free()
+	# The production muzzle supplies unshaded primitive and polygon variants.
+	var muzzle = load("res://game/effects/TierMuzzle.gd").new()
+	muzzle.position = Vector2(32,32)
+	muzzle.modulate.a = 0.01
+	canvas.add_child(muzzle)
+	muzzle.pulse(2,0)
+	# The preceding cold link can make the next process delta exceed the real
+	# muzzle's 70 ms lifetime. Hold this inert draw until post_draw confirms it.
+	muzzle.set_process(false)
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	muzzle.queue_free()
+	# First impact's particle-animation Canvas material, without instantiating
+	# its emitter or advancing the gameplay RNG. Read the actual scene resource.
+	var state: SceneState = load("res://game/bullets/BulletSmoke.tscn").get_state()
+	var smoke_material: Material
+	var smoke_texture: Texture2D
+	for node in state.get_node_count():
+		if state.get_node_name(node) != "GPUParticles2D": continue
+		for prop in state.get_node_property_count(node):
+			match state.get_node_property_name(node,prop):
+				"material": smoke_material = state.get_node_property_value(node,prop)
+				"texture": smoke_texture = state.get_node_property_value(node,prop)
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = PackedVector2Array([Vector2(-1,-1),Vector2(1,-1),Vector2(1,1),Vector2(-1,1)])
+	arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([Vector2.ZERO,Vector2.RIGHT,Vector2.ONE,Vector2.DOWN])
+	arrays[Mesh.ARRAY_COLOR] = PackedColorArray([Color.WHITE,Color.WHITE,Color.WHITE,Color.WHITE])
+	arrays[Mesh.ARRAY_INDEX] = PackedInt32Array([0,1,2,2,3,0])
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+	var multimesh := MultiMesh.new()
+	multimesh.transform_format = MultiMesh.TRANSFORM_2D
+	multimesh.use_colors = true
+	multimesh.use_custom_data = true
+	multimesh.mesh = mesh
+	multimesh.instance_count = 1
+	multimesh.set_instance_transform_2d(0,Transform2D(0,Vector2(32,32)))
+	multimesh.set_instance_color(0,Color.WHITE)
+	var visual := MultiMeshInstance2D.new()
+	visual.multimesh = multimesh
+	visual.texture = smoke_texture
+	visual.material = smoke_material
+	visual.modulate.a = 0.01
+	canvas.add_child(visual)
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	canvas.queue_free()
+	await RenderingServer.frame_post_draw
+	_web_first_shot_prepared = true
+	Utils.startup_mark("first-shot-prepare-done")
