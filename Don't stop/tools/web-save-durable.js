@@ -53,7 +53,22 @@ fs.mkdirSync(out, { recursive: true });
  }
  async function reload(beforeStart) {
   for (const key of Object.keys(rects)) delete rects[key]; carry = null; camp = null; recovery = null;
-  await page.reload(); if (beforeStart) await beforeStart(); await start();
+  await page.reload(); if (beforeStart) await beforeStart(); await start(); await settleStartupSave();
+ }
+ async function settleStartupSave() {
+  // The nominal purchase test starts after startup's own save has settled.
+  // Otherwise a slow renderer makes two different transactions overlap and
+  // tests a startup-sync race instead of post-recovery purchasing.
+  await until(() => carry?.saved || /不可用|未确认|失败/.test(carry?.message || ''), 'startup save result');
+  if (!carry.saved) {
+   const gold = carry.gold, owned = [...carry.owned], slots = [...carry.slots];
+   (report.startupConfirmationFailures ||= []).push({ message: carry.message, disk: await disk(), carry });
+   check(await page.evaluate(() => window.towdownSave.dirty), 'startup confirmation failure retains the unload guard');
+   await click('camp-save-retry');
+   await until(() => carry?.saved, 'startup save retry');
+   check(carry.gold === gold && JSON.stringify(carry.owned) === JSON.stringify(owned) && JSON.stringify(carry.slots) === JSON.stringify(slots),
+    'startup save retry confirms without charging or changing restored state');
+  }
  }
  async function select(id) {
   await click('camp-search-box'); await page.keyboard.press('Control+A'); await page.keyboard.type(String(id));
@@ -73,7 +88,7 @@ fs.mkdirSync(out, { recursive: true });
  }
  try {
   await page.goto(url + '?probe=1'); await start();
-  await until(() => carry?.saved === true, 'initial durable save');
+  await settleStartupSave();
   const initial = await disk(); check(initial && initial.weapons.length === 0, 'initial snapshot is committed in IndexedDB');
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
@@ -173,21 +188,7 @@ fs.mkdirSync(out, { recursive: true });
   let restoredTalentDisk;
   await reload(async () => { restoredTalentDisk = await disk(); }); await click('camp-talent-tab'); await select('T01');
   await until(() => camp?.selection === 'T01', 'reloaded confirmed purchase');
-  // Startup saves use the same bounded confirmation as ordinary camp saves.
-  // A slow browser may explicitly fail that confirmation; retry its real UI
-  // rather than assuming that every startup transaction must succeed first try.
-  // The pre-start disk snapshot below still has to contain the paid purchase.
-  await until(() => carry?.saved || /不可用|未确认|失败/.test(carry?.message || ''), 'reloaded profile startup save result');
-  if (!carry.saved) {
-   report.startupConfirmationFailure = { message: carry.message, disk: await disk(), camp, carry };
-   check(await page.evaluate(() => window.towdownSave.dirty) && camp.rank === 1,
-    'DS-001 a failed startup confirmation keeps the restored purchase and unload guard');
-   await click('camp-save-retry');
-   await until(() => carry?.saved, 'reloaded profile startup save retry');
-   const retried = await disk();
-   check(retried.talents.T01 === 1 && retried.talent_payments.filter(p => p.id === 'T01').length === 1,
-    'DS-001 startup save retry commits the restored purchase exactly once');
-  }
+  // reload() already confirmed startup before these read-only UI operations.
   check(restoredTalentDisk.talents.T01 === 1 && restoredTalentDisk.gold === paidTalentGold
    && restoredTalentDisk.talent_payments.filter(p => p.id === 'T01').length === 1
    && camp.rank === 1 && carry.gold === Math.max(9999, paidTalentGold) && carry.owned.length === 0 && carry.saved,
