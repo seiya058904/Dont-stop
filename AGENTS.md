@@ -5,8 +5,8 @@
 - Git 根是本目录；Godot 项目是 `Don't stop/project.godot`，不是外层目录。命令中的项目路径必须整体引用，避免空格和英文撇号被 shell 拆分。
 - `boot/Boot.tscn` 是配置入口，加载 `game/map/Main.tscn`；Web 启动界面由 `web/loader.html` 提供。以上路径均相对于 Godot 项目目录。
 - 项目内 `autoload/` 管理全局状态，`game/` 包含玩法与配置，`ui/` 包含界面，`Sprites/`、`audio/`、`fonts/`、`shader/` 与 `addons/` 是产品资源。`tests/` 是原生回归场景，`tools/` 是导出、浏览器与证据校验工具。
-- 根 README 提供正式下载与试玩入口。封板版本为 `v1.3.2`；Release tag 指向通过验收的 `main`，Pages 发布该 main 构建中实际测试过的 Web bytes。今后的仅文档提交可以不重新部署游戏；不能据 Git 最新 SHA 推断线上身份。
-- `Don't stop/docs/iteration/release-v1.3.2.md` 是本版收口记录；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
+- 根 README 提供正式下载与试玩入口。封板版本为 `v1.3.3`；Release tag 指向通过验收的 `main`，Pages 发布该 main 构建中实际测试过的 Web bytes。今后的仅文档提交可以不重新部署游戏；不能据 Git 最新 SHA 推断线上身份。
+- `Don't stop/docs/iteration/release-v1.3.3.md` 是最终收口记录，`release-v1.3.2.md` 保留性能与 Boss 审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
 
 ## 运行与验证
 
@@ -44,6 +44,7 @@ mkdir -p output
 node "Don't stop/tools/smoke-web.js" http://127.0.0.1:8788/index.html output
 node "Don't stop/tools/web-loader-check.js" http://127.0.0.1:8788/index.html output/loader
 node "Don't stop/tools/save-audit-web.js" http://127.0.0.1:8788/index.html output/save
+node "Don't stop/tools/web-save-durable.js" http://127.0.0.1:8788/index.html output/durable
 node "Don't stop/tools/web-aim-e2e.js" http://127.0.0.1:8788/index.html output/aim-core core
 node "Don't stop/tools/web-aim-e2e.js" http://127.0.0.1:8788/index.html output/aim-fault fault
 node "Don't stop/tools/web-menu-return-e2e.js" http://127.0.0.1:8788/index.html output/menu-return 20
@@ -58,6 +59,7 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 
 - 保持玩法、数值、RNG 序列及存档兼容性。开发存档目录为 `TowDownGame-Iteration`，`public_release` 使用 `TowDownGame`；测试须隔离用户数据，不能覆盖真实存档。
 - Web 保存只有 IndexedDB 提交并确认指定快照后才能报告成功；失败保持 dirty 状态与重试/导出能力。不得把仅写入 MEMFS 或调用文件同步当作持久化成功。
+- 坏档“明确建立新体验档”是串行恢复事务：`creating_new_save` 到确认成功/失败之间，恢复弹窗保持顶层暂停、退出按钮禁用并持有键盘焦点；购买/退款/补给/携带栏/装备/出发/离开入口拒绝写操作。不能仅在 `save_camp()` 返回 pending 后仍接受修改，也不能用递增 revision 掩盖丢状态。成功恢复新档后才解除锁；失败恢复 `.previous`、保留原文并允许重试或明确退出。普通保存保持既有 revision/dirty/精确快照确认语义。
 - SceneManager 的转场图案有动态路径；保留 Boot 中的资源引用与导出 include filter。不要因未出现静态调用而删除资源。
 - `.godot/`、`build/`、隔离测试副本、临时 profile/log/ZIP、Python 字节码可再生成；清理前核对用途、跟踪状态、引用和唯一证据，并逐个验证目标。正式资源、资源旁 `.import` 描述、canonical docs、最终审计/性能证据、release provenance、fixture 和历史原件须保留。根 `archive/` 含历史原件与 PLAY_GAME 所需工具，不能整体删除。
 - Pages 身份由提交 SHA、`index.wasm || index.pck || index.js` 的摘要及各文件哈希共同证明；使用 `tools/stamp-build-identity.py`、`tools/verify-pages-deployment.js` 的实际接口，不能仅以 HTTP 200 验收。
@@ -80,7 +82,7 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 ## CI/CD 与发布
 
 - `deploy-pages.yml`：PR 做 native preflight 和独立 runner 的 smoke/menu-return 必需 gates；main 快速链做 import、B194Contracts/P0SaveSanity、一次 Web export、loader/smoke/identity，然后部署同一 bytes 并验证线上身份。仅文档变更跳过游戏构建/部署。
-- 月度、Release published、manual full Web acceptance 包含 smoke、save-audit、aim core/fault、20 次 menu-return soak、stages-fair。manual 默认不部署，只有 main 且 `deploy=true` 才上线。
+- 月度、Release published、manual full Web acceptance 包含 smoke、save-audit（含 `web-save-durable.js` 的真实故障/恢复事务测试）、aim core/fault、20 次 menu-return soak、stages-fair。manual 默认不部署，只有 main 且 `deploy=true` 才上线。完整 active native 包含 64 个调用；R1Persistence/R1RecoveryUI 固定覆盖普通保存、坏档事务 pending、旧确认、失败/重试/退出与确认后购买。
 - `native-tests.yml`：月度、Release published、manual 完整 active native acceptance，独立 contracts/pressure jobs；历史证据按显式参数选择。`build-windows.yml` 是 manual headless export/package，不需启动本地 Windows 游戏。
 - Release 为非 draft、非 prerelease 的正式 patch tag。Windows/Web ZIP 与 SHA-256 按既有命名上传；下载回验。tag 必须指向已验证 main，Web 资产优先复用经过验收的 Pages artifact，不将同 SHA 的重新构建视为同 bytes。
 - 普通文档维护不触发重型验收或新 Release。发版时最终代码、最终包、实际 Actions run 与在线身份须关联；保留历史失败及最终修复证据，不把信息诊断写成零告警。

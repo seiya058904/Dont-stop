@@ -6,8 +6,8 @@ const fs = require('node:fs'), path = require('node:path');
 const [url, out] = process.argv.slice(2);
 fs.mkdirSync(out, { recursive: true });
 (async () => {
- const browser = await chromium.launch({ headless: false, executablePath: process.env.CHROME_EXE,
-  args: ['--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows'] });
+ const browser = await chromium.launch({ headless: process.env.E2E_HEADED !== '1', executablePath: process.env.CHROME_EXE,
+  args: ['--enable-unsafe-swiftshader', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows'] });
  const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
  await context.addInitScript(() => {
   const put = IDBObjectStore.prototype.put;
@@ -20,11 +20,12 @@ fs.mkdirSync(out, { recursive: true });
  });
  const lines = [], rects = {}, report = { checks: [] };
  let page = await context.newPage();
- let carry, canvas, camp;
+ let carry, canvas, camp, recovery;
  function observe() { page.on('console', m => {
   const t = m.text(); lines.push(t);
   if (t.startsWith('[loadout] ')) carry = JSON.parse(t.slice(10));
   if (t.startsWith('[camp] ')) camp = JSON.parse(t.slice(7));
+  if (t.startsWith('[save-recovery] ')) recovery = JSON.parse(t.slice(16));
   const r = t.match(/rect (\S+) id=(\d+) text="([^"]*)" x=([\d.-]+) y=([\d.-]+) w=([\d.-]+) h=([\d.-]+) cx=([\d.-]+) cy=([\d.-]+) on_screen=(true|false)/);
   if (r) rects[r[1]] = { x: +r[8], y: +r[9], visible: r[10] === 'true', text: r[3] };
  });
@@ -50,9 +51,9 @@ fs.mkdirSync(out, { recursive: true });
   await click('menu-start-button');
   await until(() => carry, 'camp');
  }
- async function reload() {
-  for (const key of Object.keys(rects)) delete rects[key]; carry = null;
-  await page.reload(); await start();
+ async function reload(beforeStart) {
+  for (const key of Object.keys(rects)) delete rects[key]; carry = null; camp = null; recovery = null;
+  await page.reload(); if (beforeStart) await beforeStart(); await start();
  }
  async function select(id) {
   await click('camp-search-box'); await page.keyboard.press('Control+A'); await page.keyboard.type(String(id));
@@ -123,10 +124,56 @@ fs.mkdirSync(out, { recursive: true });
   const afterFailure = page.waitForEvent('download'); await click('save-export-original');
   const restoredOriginal = await afterFailure, restoredPath = path.join(out, 'failed-takeover-original.json'); await restoredOriginal.saveAs(restoredPath);
   check(fs.readFileSync(restoredPath).equals(Buffer.from(bytes)), 'failed new-save takeover retains the corrupt original byte for byte');
+  await until(() => recovery?.pending === false && recovery.dialog, 'failed recovery unlocks its dialog');
+  await click('save-temporary'); await until(() => recovery?.dialog === false, 'failed recovery can be dismissed');
+  await click('camp-talent-tab'); await select('T01');
+  await until(() => camp?.selection === 'T01' && camp.rank === 0, 'prepare real T01 purchase control');
+  await click('camp-save-retry'); await until(() => recovery?.dialog, 'retry opens recovery again');
   await page.evaluate(() => window.saveFault = '');
+  // Hold delivery of a real successful IndexedDB confirmation. We neither fake
+  // persistence nor invoke a game mutation: only the callback delivery is delayed.
+  await page.evaluate(() => {
+   window.recoveryConfirmations = [];
+   const verify = window.towdownSave.verify;
+   window.towdownSave.verify = function (path, text, revision, callback) {
+    return verify.call(this, path, text, revision, (...args) => {
+     window.recoveryConfirmations.push({ args, release: () => callback(...args) });
+    });
+   };
+  });
   const retryDownload = page.waitForEvent('download'); await click('save-create-new'); await retryDownload;
+  await page.waitForFunction(() => window.recoveryConfirmations.length === 1);
+  await until(() => recovery?.pending && recovery.dialog && recovery.leave_disabled, 'pending transaction locks recovery exit');
+  const pendingRevision = recovery.revision, pendingGold = carry.gold;
+  check(await page.evaluate(() => window.recoveryConfirmations[0].args[1] === true), 'pending takeover has a real durable confirmation awaiting delivery');
+  await click('save-temporary'); await page.keyboard.press('Escape');
+  await click('camp-action-0'); await page.keyboard.press('Enter');
+  await page.waitForTimeout(1000);
+  check(recovery.pending && recovery.dialog && recovery.leave_disabled && recovery.revision === pendingRevision,
+   'DS-001 pending close and Escape cannot leave or replace recovery');
+  check(camp.selection === 'T01' && camp.rank === 0 && carry.gold === pendingGold,
+   'DS-001 pending real T01 purchase accepts no charge or rank change');
+  check(await page.evaluate(() => window.towdownSave.dirty), 'DS-001 pending takeover retains the unload guard');
+  await page.screenshot({ path: path.join(out, 'ds001-pending-blocked.png') });
+  await page.evaluate(() => window.recoveryConfirmations.shift().release());
+  await until(() => recovery?.pending === false && recovery.dialog === false, 'confirmation releases recovery');
   await until(() => carry?.saved === true && carry.owned.length === 0, 'confirmed new-save takeover');
-  await reload(); check(carry.owned.length === 0 && carry.saved, 'new-save takeover becomes usable only after durable confirmation and survives refresh');
+  check(camp.rank === 0 && carry.gold === 9999, 'DS-001 completed takeover contains no overwritten accepted pending purchase');
+  // Restore the original verifier for ordinary saving after this transaction.
+  await reload(); await click('camp-talent-tab'); await select('T01');
+  await until(() => camp?.selection === 'T01' && camp.rank === 0, 'confirmed fresh profile survives refresh');
+  await click('camp-action-0'); await until(() => camp.rank === 1 && carry.saved, 'post-confirmation T01 purchase saves');
+  const paidTalentGold = carry.gold, talentDisk = await disk();
+  check(talentDisk.talents.T01 === 1 && talentDisk.gold === paidTalentGold,
+   'DS-001 post-confirmation purchase is committed with its charge');
+  let restoredTalentDisk;
+  await reload(async () => { restoredTalentDisk = await disk(); }); await click('camp-talent-tab'); await select('T01');
+  await until(() => camp?.selection === 'T01', 'reloaded confirmed purchase');
+  await until(() => carry.saved, 'reloaded profile startup save');
+  check(restoredTalentDisk.talents.T01 === 1 && restoredTalentDisk.gold === paidTalentGold
+   && restoredTalentDisk.talent_payments.filter(p => p.id === 'T01').length === 1
+   && camp.rank === 1 && carry.gold === Math.max(9999, paidTalentGold) && carry.owned.length === 0 && carry.saved,
+   'DS-001 confirmed purchase survives a full reload without rollback or duplicate charge');
   await context.close();
   // No durable snapshot exists in these fresh contexts. The older discard test
   // above only covered rollback to an already committed file, so it could not

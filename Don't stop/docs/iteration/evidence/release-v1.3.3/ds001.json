@@ -1,0 +1,334 @@
+{
+  "issue": "DS-001",
+  "status": "fixed + regression verified",
+  "baseline": "55220de7934a01bb690f7b507c3ac9fa373bcc7f",
+  "reproduction": {
+    "url": "http://127.0.0.1:8815/release-v1.3.2/main-web-55220de/index.html",
+    "steps": [
+      {
+        "name": "confirmation-pending",
+        "at": 1791191959982,
+        "carry": {
+          "detail_height": 92,
+          "detail_scroll": 0,
+          "equipped": -1,
+          "gold": 9999,
+          "heading": "冲击波霰弹枪",
+          "message": "WASD 移动 · R 装填 · Shift 冲刺 · Esc 返回",
+          "owned": [],
+          "saved": false,
+          "selection": "1",
+          "slots": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ]
+        },
+        "camp": {
+          "actions": 16,
+          "detail": 92,
+          "order": [
+            "1",
+            "3",
+            "9",
+            "8",
+            "0",
+            "2",
+            "5",
+            "123",
+            "7",
+            "117",
+            "118",
+            "4",
+            "119",
+            "111",
+            "115",
+            "114",
+            "122",
+            "121",
+            "6",
+            "120",
+            "116",
+            "113",
+            "124",
+            "112"
+          ],
+          "rank": 0,
+          "selection": "1",
+          "status": "",
+          "tab": "weapon"
+        }
+      },
+      {
+        "name": "pending-purchase-accepted",
+        "at": 1791191961847,
+        "carry": {
+          "detail_height": 103,
+          "detail_scroll": 0,
+          "equipped": -1,
+          "gold": 9849,
+          "heading": "",
+          "message": "火力强化（普通）：0 → 1 / 3 · 支付 150金币\n常驻：每级武器伤害 +15%（含基础伤害）\n已购买但尚未保存；请重试保存（不会再次扣款）",
+          "owned": [],
+          "saved": false,
+          "selection": "T01",
+          "slots": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ]
+        },
+        "camp": {
+          "actions": 16,
+          "detail": 103,
+          "order": [
+            "T01"
+          ],
+          "rank": 1,
+          "selection": "T01",
+          "status": "选择一种支付方式",
+          "tab": "talent"
+        }
+      },
+      {
+        "name": "old-confirmation-overwrites-purchase",
+        "at": 1791191962235,
+        "carry": {
+          "detail_height": 104,
+          "detail_scroll": 0,
+          "equipped": -1,
+          "gold": 9999,
+          "heading": "",
+          "message": "已保存到浏览器",
+          "owned": [],
+          "saved": true,
+          "selection": "T01",
+          "slots": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ]
+        },
+        "camp": {
+          "actions": 16,
+          "detail": 104,
+          "order": [
+            "T01"
+          ],
+          "rank": 0,
+          "selection": "T01",
+          "status": "选择一种支付方式",
+          "tab": "talent"
+        }
+      }
+    ],
+    "reproduced": true
+  },
+  "native": [
+    {
+      "case": "import",
+      "exit": 0,
+      "seconds": 7.804549694061279,
+      "checks": 0,
+      "issues": []
+    },
+    {
+      "case": "import-check",
+      "exit": 0,
+      "seconds": 0.08253169059753418,
+      "checks": 0,
+      "issues": []
+    },
+    {
+      "case": "R1RecoveryUI",
+      "exit": 0,
+      "seconds": 3.3375658988952637,
+      "checks": 28,
+      "issues": []
+    },
+    {
+      "case": "R1Persistence",
+      "exit": 0,
+      "seconds": 2.7757585048675537,
+      "checks": 51,
+      "issues": []
+    },
+    {
+      "case": "B194Contracts",
+      "exit": 0,
+      "seconds": 2.399534225463867,
+      "checks": 6,
+      "issues": []
+    },
+    {
+      "case": "P0SaveSanity",
+      "exit": 0,
+      "seconds": 2.771113157272339,
+      "checks": 10,
+      "issues": []
+    },
+    {
+      "case": "B6Progression",
+      "exit": 0,
+      "seconds": 4.899446487426758,
+      "checks": 41,
+      "issues": []
+    },
+    {
+      "case": "B14Loadout",
+      "exit": 0,
+      "seconds": 3.327103614807129,
+      "checks": 86,
+      "issues": []
+    },
+    {
+      "case": "B13Economy",
+      "exit": 0,
+      "seconds": 3.339715003967285,
+      "checks": 159,
+      "issues": []
+    },
+    {
+      "case": "B13Unequip",
+      "exit": 0,
+      "seconds": 3.8884401321411133,
+      "checks": 55,
+      "issues": []
+    },
+    {
+      "case": "B16Save",
+      "exit": 0,
+      "seconds": 2.8674275875091553,
+      "checks": 80,
+      "issues": []
+    },
+    {
+      "case": "CameraTransitions",
+      "exit": 0,
+      "seconds": 4.159079551696777,
+      "checks": 48,
+      "issues": []
+    },
+    {
+      "case": "WebPhysicsContracts",
+      "exit": 0,
+      "seconds": 3.8815577030181885,
+      "checks": 154,
+      "issues": []
+    }
+  ],
+  "web": {
+    "checks": [
+      "initial snapshot is committed in IndexedDB",
+      "abort: failure is visible and memory stays dirty",
+      "abort: old durable snapshot survives failed transaction",
+      "abort: retry never charges purchase again",
+      "abort: retry is actually committed",
+      "abort: refresh restores ownership and loadout",
+      "quota: failure is visible and memory stays dirty",
+      "quota: old durable snapshot survives failed transaction",
+      "quota: retry never charges purchase again",
+      "quota: retry is actually committed",
+      "quota: refresh restores ownership and loadout",
+      "explicit discard returns to the committed loadout instead of pending MEMFS bytes",
+      "corrupt original download preserves every byte including invalid UTF-8",
+      "failed new-save takeover retains the corrupt original byte for byte",
+      "pending takeover has a real durable confirmation awaiting delivery",
+      "DS-001 pending close and Escape cannot leave or replace recovery",
+      "DS-001 pending real T01 purchase accepts no charge or rank change",
+      "DS-001 pending takeover retains the unload guard",
+      "DS-001 completed takeover contains no overwritten accepted pending purchase",
+      "DS-001 post-confirmation purchase is committed with its charge",
+      "DS-001 confirmed purchase survives a full reload without rollback or duplicate charge",
+      "unavailable: failed first save keeps the unload guard",
+      "unavailable: fresh T01 starts at rank zero",
+      "unavailable: fresh T07 starts at rank zero",
+      "unavailable: real progress export contains both unsaved purchases",
+      "unavailable: export does not claim browser persistence",
+      "unavailable: no snapshot was ever durably committed",
+      "unavailable: same-page restart rolls back the discarded talent",
+      "unavailable: discard clears talent ranks and purchase receipts",
+      "unavailable: discard restores legal initial health and progression",
+      "unavailable: discard restores the initial wallet, supplies and ownership",
+      "unavailable: discard restores empty loadout, legacy ownership and stage progress",
+      "unavailable: full-page reload remains a fresh session",
+      "abort: failed first save keeps the unload guard",
+      "abort: fresh T01 starts at rank zero",
+      "abort: fresh T07 starts at rank zero",
+      "abort: real progress export contains both unsaved purchases",
+      "abort: export does not claim browser persistence",
+      "abort: no snapshot was ever durably committed",
+      "abort: same-page restart rolls back the discarded talent",
+      "abort: discard clears talent ranks and purchase receipts",
+      "abort: discard restores legal initial health and progression",
+      "abort: discard restores the initial wallet, supplies and ownership",
+      "abort: discard restores empty loadout, legacy ownership and stage progress",
+      "abort: full-page reload remains a fresh session",
+      "quota: failed first save keeps the unload guard",
+      "quota: fresh T01 starts at rank zero",
+      "quota: fresh T07 starts at rank zero",
+      "quota: real progress export contains both unsaved purchases",
+      "quota: export does not claim browser persistence",
+      "quota: no snapshot was ever durably committed",
+      "quota: same-page restart rolls back the discarded talent",
+      "quota: discard clears talent ranks and purchase receipts",
+      "quota: discard restores legal initial health and progression",
+      "quota: discard restores the initial wallet, supplies and ownership",
+      "quota: discard restores empty loadout, legacy ownership and stage progress",
+      "quota: full-page reload remains a fresh session",
+      "no engine script errors or uncaught browser errors"
+    ],
+    "success": true
+  },
+  "initial_web_attempt": {
+    "result": {
+      "checks": [
+        "initial snapshot is committed in IndexedDB",
+        "abort: failure is visible and memory stays dirty",
+        "abort: old durable snapshot survives failed transaction",
+        "abort: retry never charges purchase again",
+        "abort: retry is actually committed",
+        "abort: refresh restores ownership and loadout",
+        "quota: failure is visible and memory stays dirty",
+        "quota: old durable snapshot survives failed transaction",
+        "quota: retry never charges purchase again",
+        "quota: retry is actually committed",
+        "quota: refresh restores ownership and loadout",
+        "explicit discard returns to the committed loadout instead of pending MEMFS bytes",
+        "corrupt original download preserves every byte including invalid UTF-8",
+        "failed new-save takeover retains the corrupt original byte for byte",
+        "pending takeover has a real durable confirmation awaiting delivery",
+        "DS-001 pending close and Escape cannot leave or replace recovery",
+        "DS-001 pending real T01 purchase accepts no charge or rank change",
+        "DS-001 pending takeover retains the unload guard",
+        "DS-001 completed takeover contains no overwritten accepted pending purchase",
+        "DS-001 post-confirmation purchase is committed with its charge"
+      ],
+      "error": "AssertionError [ERR_ASSERTION]: DS-001 confirmed purchase survives a full reload without rollback or duplicate charge"
+    },
+    "explanation": "The added reload assertion initially expected a below-9999 wallet after game start. Existing Demo._start refills the playtest wallet at every start. The final test verifies the exact persisted charge and single receipt before Start, then preserves the existing startup refill; product economy was not changed."
+  },
+  "source_sha256": {
+    "Don't stop/autoload/Demo.gd": "75a16eda026d0a97f7305bd889f3c80e312972b894eeb22fe00a415eef5071ad",
+    "Don't stop/autoload/PlayerData.gd": "f3977841f029fe6384d534616661d1df0a7917577b2e910279727cc1122fd47f",
+    "Don't stop/autoload/Smoke.gd": "2f9c23a681cf7721eda1df4052feee592b2bc48c2a7d0c3d5602631f401b64b5",
+    "Don't stop/game/map/mapTown/Town.gd": "54e5f7369403a18fffd27b5653bd73b36b430ea6cd5bb7cd3e9c24addef4de5b",
+    "Don't stop/ui/CampPanel.gd": "9d8cf6d4af7dc89d820b8c45dc5d2e5fc1082ff4fa30658c8b27b179c84470ba",
+    "Don't stop/ui/SaveDialog.gd": "e5102fd36aa0805d69a03078d9aef2728a7559a24b31e77f2c38e4166ada508f",
+    "Don't stop/tests/R1RecoveryUI.gd": "4e0da19f15ba8c6cc9d73fc4d34c46f7ea7811a6583f1ac01124aca5f290f8f8",
+    "Don't stop/tools/web-save-durable.js": "b418149d9f756e060c01395497b57f33f28816d26835f1ee145349696e65fa31"
+  },
+  "scope": "Serial fresh-profile recovery only; normal save protocol, corrupt byte backup, game rules and render behavior unchanged."
+}

@@ -616,6 +616,12 @@ func camp_scroll() -> int:
 ## guesswork that made an earlier version fall back to a hard-coded layout.
 func _probe_report_rects() -> void:
 	_probe_rect_diag()
+	var recovery_dialog = Demo.save_dialog
+	var recovery_live = is_instance_valid(recovery_dialog) and not recovery_dialog.is_queued_for_deletion()
+	var recovery_state = JSON.stringify({"pending":Demo.creating_new_save,"dialog":recovery_live,"revision":Demo.save_revision,"dirty":Demo.dirty,"blocked":Demo.save_blocked,"leave_disabled":recovery_dialog.leave_actions.all(func(b): return b.disabled) if recovery_live else false})
+	if recovery_state != _last_recovery_state:
+		_last_recovery_state = recovery_state
+		print("[save-recovery] ",recovery_state)
 	var canvas = Utils.canvasLayer
 	if not is_instance_valid(canvas):
 		return
@@ -683,6 +689,7 @@ func _probe_report_rects() -> void:
 			_probe_report_rect("save-export-progress",panel,"下载当前进度备份")
 			_probe_report_rect("save-retry",panel,"重试保存（不重复购买）")
 			_probe_report_rect("save-cancel",panel,"取消返回")
+			_probe_report_rect("save-temporary",panel,"临时试玩 / 返回")
 			_probe_report_rect("save-discard",panel,"放弃本次未保存变化并返回")
 			_probe_report_rect("save-create-new",panel,"明确建立新体验档（先备份原文）")
 		elif path.ends_with("ui/DemoSettings.gd"):
@@ -704,6 +711,7 @@ func _probe_report_rects() -> void:
 var _probe_rect_diag_at := -1000
 var _last_carry_state := ""
 var _last_camp_state := ""
+var _last_recovery_state := ""
 
 func _probe_loadout_controls(node: Node) -> void:
 	if node is Button:

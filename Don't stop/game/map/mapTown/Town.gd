@@ -353,6 +353,7 @@ func _nav_point_clear(point: Vector2, radius: float) -> bool:
 	return get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
 
 func depart(stage: int, is_trial: bool) -> bool:
+	if Demo.creating_new_save: return false
 	var target_stage = stage if is_trial else Demo.next_stage
 	if not LevelServer.can_start(target_stage): return false
 	var previous_stage = Demo.selected_stage

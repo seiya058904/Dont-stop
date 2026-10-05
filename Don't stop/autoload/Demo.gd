@@ -82,6 +82,7 @@ func reset_preview() -> Dictionary:
 	return result
 
 func reset_talents(revision: int) -> Dictionary:
+	if creating_new_save: return {"success":false,"reason":save_result.reason}
 	if LevelServer.state != "CAMP" or revision != reset_revision: return {"success":false,"reason":"配置已变化或不在营地，请重新查看退款预览"}
 	var refund = reset_preview()
 	if talents.is_empty(): return {"success":false,"reason":"当前无计划天赋可重置"}
@@ -263,6 +264,7 @@ func top_pause(owner_node) -> bool:
 	return not pause_stack.is_empty() and pause_stack.back() == owner_node
 
 func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
+	if creating_new_save: return {"success":false,"reason":save_result.reason}
 	var result = {"success":false,"reason":"无效商品或支付方式"}
 	if LevelServer.state != "CAMP":
 		result.reason = "战斗中仅查看配置；请返回营地购买，未扣款"
@@ -337,6 +339,7 @@ func try_purchase(kind: String, id: String, currency = "gold") -> Dictionary:
 	return result
 
 func replenish():
+	if creating_new_save: return
 	if LevelServer.state != "CAMP": return
 	PlayerData.gold = maxi(PlayerData.gold,9999)
 	PlayerData.reward_point = maxi(PlayerData.reward_point,9999)
@@ -352,6 +355,7 @@ func replenish():
 ## may unequip. PREPARING / COMBAT / DEAD / RESOLVING all refuse, so no caller, hotkey,
 ## test or future panel can drop a weapon mid-fight even if a button is visible.
 func unequip_weapon() -> Dictionary:
+	if creating_new_save: return {"success":false,"reason":save_result.reason}
 	if LevelServer.state != "CAMP": return {"success":false,"reason":"仅营地可卸下武器；请先返回营地"}
 	if not is_instance_valid(Utils.player) or not Utils.player.gun: return {"success":false,"reason":"当前没有装备武器"}
 	var name = tr(Utils.player.gun.weapon_name)
@@ -423,8 +427,10 @@ func legacy_state() -> Dictionary:
 	return result
 
 func save_camp() -> Dictionary:
+	# A fresh-profile takeover is one recovery transaction. Its snapshot must be
+	# confirmed before any camp command may accept a new state.
+	if creating_new_save: return save_result
 	if loading or test_mode: return {"success":true,"skipped":true,"reason":"测试或恢复中，不写磁盘"}
-	if OS.has_feature("web") and creating_new_save: return save_result
 	save_revision += 1
 	dirty = true
 	save_store.mark_web_dirty(true)
@@ -467,6 +473,7 @@ func export_current_save() -> String:
 	return "已请求下载当前进度；浏览器存档仍需重试保存"
 
 func load_camp() -> bool:
+	if creating_new_save: return false
 	if OS.has_feature("web") and dirty: return false
 	if not FileAccess.file_exists(save_path): return false
 	if OS.has_feature("web"): committed_web_save = FileAccess.get_file_as_bytes(save_path)
@@ -558,6 +565,10 @@ func valid_save(data) -> bool:
 	return CampSnapshot.validate(data)
 
 func show_save_dialog(recovery = false, quitting = false):
+	if is_instance_valid(save_dialog) and save_dialog.is_queued_for_deletion(): save_dialog = null
+	# A leave request cannot replace/unpause the active takeover dialog.
+	if creating_new_save and is_instance_valid(save_dialog): return
+	if creating_new_save: recovery = true
 	if is_instance_valid(save_dialog):
 		if not quitting or save_dialog.quitting: return
 		# A close request must also offer cancel/discard while recovery is open.
@@ -596,6 +607,7 @@ func create_new_save() -> bool:
 		creating_new_save = true
 		save_result = result
 		pending_web_save = FileAccess.get_file_as_string(save_path)
+		show_save_dialog(true)
 		if not save_store.web_confirmed.is_connected(_web_save_confirmed): save_store.web_confirmed.connect(_web_save_confirmed)
 		save_store.confirm_web(save_path,save_revision)
 		changed.emit()
@@ -604,6 +616,7 @@ func create_new_save() -> bool:
 	return load_camp()
 
 func discard_and_leave():
+	if creating_new_save: return
 	if OS.has_feature("web") and dirty:
 		# Invalidate outstanding confirmations before restoring the last committed
 		# snapshot in MEMFS. A new session must never load discarded pending bytes.
@@ -623,12 +636,14 @@ func discard_and_leave():
 	leave_after_save()
 
 func open_panel():
+	if creating_new_save: return
 	if is_instance_valid(ui): return
 	ui = Control.new()
 	ui.set_script(load("res://ui/CampPanel.gd"))
 	Utils.canvasLayer.add_child(ui)
 
 func open_settings():
+	if creating_new_save: return
 	var settings = Control.new()
 	settings.set_script(load("res://ui/DemoSettings.gd"))
 	print("[e2e] open-settings enter canvas=%s valid=%s" % [
@@ -640,10 +655,12 @@ func open_settings():
 	print("[e2e] open-settings pause=%d" % Demo.pause_stack.size())
 
 func open_stats():
+	if creating_new_save: return
 	var panel=load("res://ui/StatPanel.gd").new()
 	Utils.canvasLayer.add_child(panel)
 
 func quit_game():
+	if creating_new_save: return
 	if quitting_game: return
 	stop_attacks()
 	# The save question is settled BEFORE any platform branch, and its outcome is
@@ -664,6 +681,7 @@ func quit_game():
 ## save-failure dialog, so no path can reach get_tree().quit() on a platform that
 ## has no process to end - that is what left the browser showing a frozen frame.
 func leave_after_save() -> void:
+	if creating_new_save: return
 	if OS.has_feature("web"):
 		# A browser tab has no process to end: quitting the engine just freezes the
 		# last frame with nothing to take over, which is what the player saw as a
@@ -685,6 +703,7 @@ func leave_after_save() -> void:
 ## the awaited scene swap, so the guard was open while the old scene was still
 ## being torn down and a second start could begin on top of it.
 func return_to_main_menu() -> void:
+	if creating_new_save: return
 	if quitting_game: return
 	quitting_game = true
 	print("[leave] returning to the main menu web=%s game_start=%s" % [

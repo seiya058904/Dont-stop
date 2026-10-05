@@ -63,6 +63,7 @@ func _disarm() -> void:
 	onWeaponChanged.emit()
 
 func remove_slot(slot: int) -> Dictionary:
+	if Demo.creating_new_save: return {"success":false,"reason":Demo.save_result.reason}
 	if LevelServer.state != "CAMP": return {"success":false,"reason":"仅营地可调整携带栏"}
 	if slot < 0 or slot >= 7: return {"success":false,"reason":"无效槽位"}
 	var id = weapon_slots[slot]
@@ -71,12 +72,14 @@ func remove_slot(slot: int) -> Dictionary:
 	return _loadout_result("已移出槽位%d；保留所有已购武器" % (slot+1))
 
 func clear_loadout() -> Dictionary:
+	if Demo.creating_new_save: return {"success":false,"reason":Demo.save_result.reason}
 	if LevelServer.state != "CAMP": return {"success":false,"reason":"仅营地可调整携带栏"}
 	_disarm()
 	weapon_slots = [-1,-1,-1,-1,-1,-1,-1]
 	return _loadout_result("已卸下全部；保留所有已购武器")
 
 func equip_owned(id: int, slot: int = -1) -> Dictionary:
+	if Demo.creating_new_save: return {"success":false,"reason":Demo.save_result.reason}
 	if LevelServer.state != "CAMP": return {"success":false,"reason":"仅营地可调整携带栏"}
 	if not is_instance_valid(Utils.player) or Utils.player.is_dead or not player_weapon_list.has(id): return {"success":false,"reason":"武器未拥有或当前不能装备"}
 	if Time.get_ticks_msec() < switch_deadline and Utils.player.gun != player_weapon_list[id]: return {"success":false,"reason":"切换冷却中，请稍后重试"}
@@ -183,6 +186,8 @@ var switch_deadline = 0
 var switch_remaining = 0.0
 func changeWeapon(weapon_id: int, from_panel = false, persist = true) -> bool:
 	switch_reason = ""
+	if Demo.creating_new_save:
+		switch_reason = Demo.save_result.reason; return false
 	if not is_instance_valid(Utils.player) or not player_weapon_list.has(weapon_id) or Utils.player.is_dead:
 		switch_reason = "当前不能切换武器"; return false
 	if from_panel and LevelServer.state != "CAMP":

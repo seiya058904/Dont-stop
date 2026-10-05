@@ -265,6 +265,10 @@ jobs:
       matrix:
         name: ${{ fromJSON(github.event_name == 'pull_request' && '["smoke","menu-return"]' || '["smoke","save-audit","aim-core","aim-fault","menu-return","stages-fair"]') }}
         include:
+          - name: save-audit
+            # Includes the original profile audit plus real transaction faults,
+            # recovery confirmation delivery, and repeated full-page reloads.
+            job_budget_minutes: 20
           - name: menu-return
             # Observed CI cycles span 31-50s: 21 iterations can take 17.5m,
             # before startup/reload. 25m watchdog leaves room for the full soak;
@@ -339,6 +343,9 @@ jobs:
           fi
           if [ "${{ matrix.name }}" = smoke ]; then
             node "$PROJECT_PATH/tools/verify-pages-deployment.js" http://localhost:8788/index.html "$GITHUB_SHA" build-identity/build-identity.json "$OUT/identity"
+          fi
+          if [ "${{ matrix.name }}" = save-audit ]; then
+            E2E_HEADED=0 node "$PROJECT_PATH/tools/web-save-durable.js" http://localhost:8788/index.html "$OUT/durable" 2>&1 | tee "$OUT/durable.log"
           fi
           echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
