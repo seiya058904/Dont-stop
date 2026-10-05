@@ -18,6 +18,8 @@
 
 强制软件渲染的附加诊断还定位到坏档刷新分支在 loader 撤下前点击 Start：菜单坐标已经由 probe 报告，但事件没有进入游戏，磁盘仍是同一坏档。该分支复用正常启动屏障，只有游戏报告 ready 且遮罩实际隐藏后才接受测试点击；未改产品 loader 或存储协议。
 
+同一诊断在已完成 DS-001 和持久化断言后，发现搜索 T07 时驱动仍点了旧列表坐标。搜索会重建 Control；驱动现在等待真实过滤顺序、新 Control identity 和布局再点击，避免依赖固定 400 ms 睡眠。未修改营地 UI 或降低选择/购买断言。
+
 ## 保留的性能修复与验收口径
 
 Camera / 60 Hz physics / 选择性插值与 Web shader warmup 方案沿用已验收的 v1.3.2，不扩大优化。[v1.3.2 审计](release-v1.3.2.md) 保留首枪 lit Canvas USE_PRIMITIVE 调用链、shader link 等待证据、单变量对照、输入延迟 A/B、M10 Boss 夹具时序根因及修复过程。

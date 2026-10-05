@@ -27,7 +27,7 @@ fs.mkdirSync(out, { recursive: true });
   if (t.startsWith('[camp] ')) camp = JSON.parse(t.slice(7));
   if (t.startsWith('[save-recovery] ')) recovery = JSON.parse(t.slice(16));
   const r = t.match(/rect (\S+) id=(\d+) text="([^"]*)" x=([\d.-]+) y=([\d.-]+) w=([\d.-]+) h=([\d.-]+) cx=([\d.-]+) cy=([\d.-]+) on_screen=(true|false)/);
-  if (r) rects[r[1]] = { x: +r[8], y: +r[9], visible: r[10] === 'true', text: r[3] };
+  if (r) rects[r[1]] = { id: r[2], x: +r[8], y: +r[9], visible: r[10] === 'true', text: r[3] };
  });
  page.on('pageerror', e => lines.push('PAGEERROR ' + e.message)); }
  observe();
@@ -71,8 +71,13 @@ fs.mkdirSync(out, { recursive: true });
   }
  }
  async function select(id) {
+  const tag = 'camp-entry-' + id, previous = rects[tag]?.id;
   await click('camp-search-box'); await page.keyboard.press('Control+A'); await page.keyboard.type(String(id));
-  await page.waitForTimeout(400); await click('camp-entry-' + id);
+  // render() replaces list controls after text_changed. A retained rectangle
+  // from the old list can be visible but point to a different row after filtering.
+  await until(() => camp?.order[0] === String(id) && rects[tag]?.visible && rects[tag].id !== previous
+   && rects[tag].y > rects['camp-search-box'].y, 'filtered control layout ' + id);
+  await click(tag);
  }
  async function disk() {
   return page.evaluate(async () => {
