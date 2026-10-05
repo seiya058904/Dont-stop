@@ -27,6 +27,8 @@ python "Don't stop/tools/test-menu-soak-policy.py"
 
 正式候选须运行 `native-tests.yml` 中全部 active cases（当前 56 个 contracts 和 6 个 pressure 调用，参数也是用例身份的一部分），含 DeepQuality、CameraTransitions、WebPhysicsContracts、Boss full/pressure/contracts。`historical-evidence` 是显式选用的历史测量，不计 active gate。用隔离源码副本和 APPDATA/user-data 运行会写 evidence 的场景，避免污染 canonical 记录或真实存档。通过必须同时有正常退出、PASS 断言且无 FAIL/SCRIPT ERROR；不能把旧提交结果转记到新候选。
 
+完整 active native acceptance 不传引擎 `--quit-after`：该参数按 render frames 终止，长套件可能以 exit 0、部分 PASS 提前退出。保留外部 wall-time timeout，等夹具自然完成；M6/M8 必须有 30 关完整记录及结束标记。contracts job 60 分钟，M6/M8 单用例预算分别 1800/2400 秒，其他短用例 900 秒；pressure 保留 1800 秒预算。快速 preflight 的有限帧防挂不能替代完整验收。
+
 M10Bosses headless `full` 会自动将 stage 10/20/30 放入独立 headless 进程和用户数据目录，并给子用例带 `--fixed-fps 120`（两个 render steps / 一个 60 Hz physics tick）。bot 按 render clock 开火；固定 RNG seed 不固定 uncapped 相位，连续战斗还会携带 bot clock、cooldowns、RNG 消耗及 epoch 派生的 hazard seed。隔离只用于夹具，未设产品 FPS 上限，也不手工改生产状态；budget/TTK 以实际 physics ticks 计算，wall_seconds 单列。单独运行 `only10/only20/only30` 子用例时须自行在 scene 前带 `--fixed-fps 120`。不能改 Boss、加血或暂停 DPS 使测试通过。
 
 导出预设名必须精确匹配 `Don't stop/export_presets.cfg`；输出路径相对于项目目录：

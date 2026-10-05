@@ -16,6 +16,8 @@
 
 先等待攻击再允许 DPS 的夹具尝试已撤回：延长战斗后，基线的 8 HP bot 也出现提前死亡，说明仅等待机制不能消除 render-clock 竞争。失败记录保留，不通过加血、放宽断言或暂停真实战斗制造通过。
 
+最终 CI 审计还实测发现旧 `--quit-after 60000` 可以在长 native fixture 完成前 exit 0：M8 416.6 秒只跑 9/30 关、19/60 项检查，没有 SUMMARY，却满足旧 gate 的部分 PASS 条件。完整 active native 流程因此移除引擎 render-frame 截断，保留外部超时，并明确要求 M6/M8 的 30 关完成标记；未减少用例或降低产品断言。[原始复现摘要](evidence/release-v1.3.2/native-frame-limit.json) 保留。快速 preflight 不能代替完整验收。
+
 ## 首枪根因与修复
 
 真实鼠标触发 `BaseGun._process → GunSprite._shoot → _shootAnim/play_shot_feedback → WeaponIdle.cycle_action → _draw → draw_action`。正宽度 `draw_line` 首次使用 Godot GLES3 Canvas **lit USE_PRIMITIVE** variant；program LINK_STATUS 查询阻塞 Chromium 主线程等待 shader/program 完成。一次同步 WebGL/CDP 记录中 `getProgramParameter(35714)` 为 105.3 ms，`GLES2Implementation::GetProgramiv` 为 105.258 ms，等待落在 `GetBucketContents → WaitForCmd → CommandBufferHelper::Finish → CommandBufferProxyImpl::WaitForGetOffset`，不是对 GPU 硬件忙时长的测量。
