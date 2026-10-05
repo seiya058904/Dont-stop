@@ -80,7 +80,10 @@ fs.mkdirSync(out, { recursive: true });
    await click('camp-action-0');
    await until(() => carry?.owned.includes(id) && carry.saved === false, 'unsaved purchase');
    const paid = carry.gold;
-   await page.waitForTimeout(8500);
+   // Timer delivery and Godot's visible callback need not have completed at a
+   // fixed wall-clock sleep on a software-rendered runner. Observe the actual
+   // terminal failure before checking it; keep all failure/disk assertions.
+   await until(() => !carry.saved && /未确认|不可用|失败/.test(carry.message), fault + ' confirmation failure');
    check(carry.saved === false && /未确认|不可用|失败/.test(carry.message), fault + ': failure is visible and memory stays dirty');
    check(!(await disk()).weapons.some(w => +w.id === id), fault + ': old durable snapshot survives failed transaction');
    await page.screenshot({ path: path.join(out, fault + '-failed.png') });
@@ -93,7 +96,8 @@ fs.mkdirSync(out, { recursive: true });
   }
   await select(2); await page.evaluate(() => window.saveFault = 'abort'); await click('camp-action-0');
   await until(() => carry?.owned.includes(2) && !carry.saved, 'discard test purchase');
-  await page.waitForTimeout(8500); await click('camp-settings-button'); await click('leave-entry');
+  await until(() => !carry.saved && /未确认|不可用|失败/.test(carry.message), 'discard purchase confirmation failure');
+  await click('camp-settings-button'); await click('leave-entry');
   delete rects['menu-start-button']; carry = null;
   await click('save-discard');
   await start();
@@ -120,7 +124,7 @@ fs.mkdirSync(out, { recursive: true });
   await page.screenshot({ path: path.join(out, 'original-downloaded.png') });
   await page.evaluate(() => window.saveFault = 'abort');
   const takeoverDownload = page.waitForEvent('download'); await click('save-create-new'); await takeoverDownload;
-  await page.waitForTimeout(8500);
+  await until(() => recovery?.pending === false && recovery.dialog && /未确认|不可用|失败/.test(carry?.message || ''), 'failed takeover confirmation');
   const afterFailure = page.waitForEvent('download'); await click('save-export-original');
   const restoredOriginal = await afterFailure, restoredPath = path.join(out, 'failed-takeover-original.json'); await restoredOriginal.saveAs(restoredPath);
   check(fs.readFileSync(restoredPath).equals(Buffer.from(bytes)), 'failed new-save takeover retains the corrupt original byte for byte');
