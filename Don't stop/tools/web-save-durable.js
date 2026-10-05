@@ -63,14 +63,76 @@ fs.mkdirSync(out, { recursive: true });
    const verify = window.towdownSave.verify;
    window.leaveVerifier = verify;
    window.towdownSave.verify = function (path, text, revision, callback) {
+    const started = performance.now(), traceStart = window.towdownSave.diagnostics.length;
+    const observation = { reads: [], expected_hash: null, done: false };
+    const hashBytes = bytes => {
+     let hash = 0x811c9dc5;
+     for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
+     return (hash >>> 0).toString(16).padStart(8, '0');
+    };
+    observation.expected_hash = hashBytes(new TextEncoder().encode(text));
+    const independentRead = async () => {
+     const openStarted = performance.now();
+     const entry = { started_at: new Date().toISOString(), elapsed_ms: openStarted - started, phase: 'open-start' };
+     observation.reads.push(entry);
+     let db;
+     try {
+      db = await new Promise((resolve, reject) => {
+       const request = indexedDB.open('/userfs');
+       request.onsuccess = () => resolve(request.result);
+       request.onerror = () => reject(request.error || new Error('IndexedDB open failed'));
+       request.onblocked = () => reject(new Error('IndexedDB open blocked'));
+      });
+      entry.phase = 'read-start'; entry.connection_name = db.name; entry.connection_version = db.version;
+      if (!db.objectStoreNames.contains('FILE_DATA')) throw new Error('FILE_DATA missing');
+      const result = await new Promise((resolve, reject) => {
+       const tx = db.transaction('FILE_DATA', 'readonly');
+       const request = tx.objectStore('FILE_DATA').get(path);
+       let row;
+       request.onsuccess = () => { row = request.result; };
+       request.onerror = () => reject(request.error || new Error('IndexedDB request failed'));
+       tx.oncomplete = () => resolve(row);
+       tx.onabort = () => reject(tx.error || new Error('IndexedDB transaction aborted'));
+       tx.onerror = () => { entry.transaction_error = String(tx.error || ''); };
+      });
+      if (result) {
+       const bytes = result.contents instanceof Uint8Array ? result.contents : new Uint8Array(result.contents);
+       entry.row_hash = hashBytes(bytes); entry.row_bytes = bytes.length;
+       entry.match = new TextDecoder().decode(bytes) === text;
+       entry.row_observed_at = new Date().toISOString();
+      } else { entry.row_hash = null; entry.match = false; }
+      entry.phase = 'transaction-complete';
+     } catch (error) { entry.phase = 'error'; entry.error = String(error); }
+     finally { if (db) db.close(); entry.completed_at = new Date().toISOString(); entry.duration_ms = performance.now() - openStarted; }
+    };
+    const monitor = (async () => {
+     while (!observation.done) {
+      await independentRead();
+      if (!observation.done) await new Promise(resolve => setTimeout(resolve, 100));
+     }
+    })();
     return verify.call(this, path, text, revision, (...args) => {
-     window.leaveConfirmations.push({ args, release: () => callback(...args) });
+     observation.done = true;
+     window.leaveConfirmations.push({ args, callback_received_at: new Date().toISOString(), callback_elapsed_ms: performance.now() - started,
+      trace_start: traceStart, observation, monitor, release: () => callback(...args) });
     });
    };
   });
  }
  async function releaseConfirmation() {
   await page.waitForFunction(() => window.leaveConfirmations.length === 1);
+  const diagnostic = await page.evaluate(async () => {
+   const confirmation = window.leaveConfirmations[0];
+   await confirmation.monitor;
+   return {
+    callback: { revision: confirmation.args[0], success: confirmation.args[1], reason: confirmation.args[2],
+     callback_received_at: confirmation.callback_received_at, elapsed_ms: confirmation.callback_elapsed_ms },
+    verifier: window.towdownSave.diagnostics.slice(confirmation.trace_start),
+    independent_connection: confirmation.observation
+   };
+  });
+  (report.durableConfirmations ||= []).push(diagnostic);
+  fs.writeFileSync(path.join(out, 'durable-confirmation-' + report.durableConfirmations.length + '.json'), JSON.stringify(diagnostic, null, 2));
   check(await page.evaluate(() => window.leaveConfirmations[0].args[1] === true), 'leave waits for a real successful IndexedDB commit');
   await page.evaluate(() => {
    window.towdownSave.verify = window.leaveVerifier;
