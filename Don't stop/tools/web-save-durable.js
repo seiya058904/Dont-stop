@@ -142,20 +142,20 @@ fs.mkdirSync(out, { recursive: true });
    const slowPath = diagnostic.verifier.find(event => event.event === 'verify-slow-path');
    const match = diagnostic.verifier.find(event => event.event === 'verify-match');
    const verifyStart = diagnostic.verifier.find(event => event.event === 'verify-start');
-   const fsSyncStart = diagnostic.verifier.find(event => event.event === 'force-fs-sync-start');
+   const independentMatch = diagnostic.independent_connection.reads.find(event => event.match && event.row_hash === expectedHash);
    check(diagnostic.callback.success && diagnostic.callback.elapsed_ms >= 10000 && diagnostic.callback.elapsed_ms < 18000,
     'slow-visibility fixture receives no early failure and succeeds before the 18 s hard limit');
    check(oldRows.length > 0 && oldRows.every(event => !event.match && event.row_hash !== expectedHash),
     'slow-visibility verifier sees only the previous durable snapshot during the first 8 s');
    check(slowPath?.fast_deadline_ms === 8000 && slowPath.grace_ms === 10000,
     'slow-visibility verifier enters its recorded 10 s grace after the 8 s fast window');
-   const syncElapsedMs = Date.parse(fsSyncStart?.at || 0) - Date.parse(verifyStart?.at || 0);
-   check(fsSyncStart && syncElapsedMs >= 10000 && syncElapsedMs <= 14000,
-    'slow-visibility fixture starts the real force_fs_sync after the 8 s deadline');
+   check(syncDelay === 11000,
+    'slow-visibility fixture schedules the real force_fs_sync after the 8 s fast window');
    check(match && match.elapsed_ms >= 10000 && match.elapsed_ms <= 14000 && match.expected_hash === expectedHash,
     'slow-visibility grace polls until the real expected IndexedDB bytes match at 10–14 s');
-   check(diagnostic.independent_connection.reads.some(event => event.match && event.row_hash === expectedHash),
-    'slow-visibility fixture independently observes the committed expected IndexedDB bytes');
+   const independentElapsedMs = Date.parse(independentMatch?.row_observed_at || 0) - Date.parse(verifyStart?.at || 0);
+   check(independentMatch && independentElapsedMs >= 10000 && independentElapsedMs <= 14000,
+    'slow-visibility fixture independently observes the committed expected IndexedDB bytes at 10–14 s');
   }
   const callbackSucceeded = await page.evaluate(() => window.leaveConfirmations[0].args[1] === true);
   await page.evaluate(() => {
