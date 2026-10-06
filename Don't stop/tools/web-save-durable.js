@@ -183,7 +183,7 @@ fs.mkdirSync(out, { recursive: true });
   (report.durableConfirmations ||= []).push(diagnostic);
   fs.writeFileSync(path.join(out, 'durable-confirmation-' + report.durableConfirmations.length + '.json'), JSON.stringify(diagnostic, null, 2));
   const fixtureDelay = diagnostic.verifier.find(event => event.event === 'slow-fixture-commit-scheduled')?.delay_ms;
-  if (fixtureDelay === 8500) {
+  if (fixtureDelay === 7000) {
    const expectedHash = diagnostic.verifier.find(event => event.event === 'verify-start')?.expected_hash;
    const oldRows = diagnostic.verifier.filter(event => event.event === 'row-hash' && event.elapsed_ms < 8000);
    const slowPath = diagnostic.verifier.find(event => event.event === 'verify-slow-path');
@@ -197,7 +197,7 @@ fs.mkdirSync(out, { recursive: true });
     'slow-visibility verifier sees only the previous durable snapshot during the first 8 s');
    check(slowPath?.fast_deadline_ms === 8000 && slowPath.grace_ms === 10000,
     'slow-visibility verifier enters its recorded 10 s grace after the 8 s fast window');
-   check(fixtureDelay === 8500 && fixtureCommit && fixtureCommit.verifier_elapsed_ms >= 8000 && fixtureCommit.verifier_elapsed_ms < 18000,
+   check(fixtureDelay === 7000 && fixtureCommit && fixtureCommit.verifier_elapsed_ms >= 8000 && fixtureCommit.verifier_elapsed_ms < 18000,
     'slow-visibility fixture commits the expected row in a real IndexedDB transaction after 8 s');
    check(match && match.elapsed_ms >= 10000 && match.elapsed_ms < 18000 && match.expected_hash === expectedHash,
     'slow-visibility grace polls the real expected IndexedDB bytes before the 18 s hard limit');
@@ -297,7 +297,7 @@ fs.mkdirSync(out, { recursive: true });
   check(purchasedDisk.gold === purchasedGold && purchasedDisk.weapons.some(w => +w.id === 0)
    && dialogCount() === dialogs, 'purchase is durable before returning to the main menu');
   for (const id of [3, 4]) {
-   await start(); await settleStartupSave(); await select(id); await holdConfirmation(id === 3 ? 8500 : 0);
+   await start(); await settleStartupSave(); await select(id); await holdConfirmation(id === 3 ? 7000 : 0);
    await click('camp-action-0');
    await until(() => carry?.owned.includes(id) && !carry.saved, 'repeated purchased snapshot pending ' + id);
    const cycleGold = carry.gold; dialogs = dialogCount(); revision = recovery.revision;

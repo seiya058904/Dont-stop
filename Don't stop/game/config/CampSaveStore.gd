@@ -20,6 +20,7 @@ window.towdownSave = window.towdownSave || {
  },
  verify(path, text, revision, callback) {
   const started = performance.now();
+  const hardDeadline = started + 18000;
   const trace = (event, fields = {}, detailed = false) => this.record(event, Object.assign({ revision, elapsed_ms: performance.now() - started }, fields), detailed);
   const hashBytes = this.diagnosticsEnabled ? bytes => {
    let hash = 0x811c9dc5;
@@ -78,7 +79,11 @@ window.towdownSave = window.towdownSave || {
       };
       tx.oncomplete = () => {
        trace('transaction-complete', { poll: currentPoll, match: matches }, true);
-       if (matches) { trace('verify-match', { poll: currentPoll, expected_hash: expectedHash }); finish(true, '已保存到浏览器'); }
+       if (matches && performance.now() >= hardDeadline) {
+        trace('verify-timeout', { total_deadline_ms: 18000, observed_after_deadline: true });
+        finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出');
+       }
+       else if (matches) { trace('verify-match', { poll: currentPoll, expected_hash: expectedHash }); finish(true, '已保存到浏览器'); }
        else setTimeout(poll, 100);
       };
       tx.onabort = () => { trace('transaction-abort', { poll: currentPoll, error: String(tx.error || '') }); finish(false, '浏览器存储读取失败；请重试或导出当前进度'); };
