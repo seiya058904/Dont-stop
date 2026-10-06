@@ -150,6 +150,7 @@ fs.mkdirSync(out, { recursive: true });
    const match = diagnostic.verifier.find(event => event.event === 'verify-match');
    const verifyStart = diagnostic.verifier.find(event => event.event === 'verify-start');
    const fsSyncStart = diagnostic.verifier.find(event => event.event === 'force-fs-sync-start');
+   const fsSyncTimer = diagnostic.verifier.find(event => event.event === 'force-fs-sync-timer-created');
    const writeUnblocked = diagnostic.verifier.find(event => event.event === 'slow-fixture-write-unblocked');
    const independentMatch = diagnostic.independent_connection.reads.find(event => event.match && event.row_hash === expectedHash);
    check(diagnostic.callback.success && diagnostic.callback.elapsed_ms >= 10000 && diagnostic.callback.elapsed_ms < 18000,
@@ -161,7 +162,7 @@ fs.mkdirSync(out, { recursive: true });
    check(syncDelay === 11000,
     'slow-visibility fixture schedules the real force_fs_sync after the 8 s fast window');
    const syncElapsedMs = Date.parse(fsSyncStart?.at || 0) - Date.parse(verifyStart?.at || 0);
-   check(fsSyncStart && syncElapsedMs >= 10000 && syncElapsedMs <= 14000
+   check(fsSyncTimer?.delay_ms === 11000 && fsSyncStart && syncElapsedMs >= 10000 && syncElapsedMs <= 14000
     && writeUnblocked && writeUnblocked.delay_ms === 10500,
     'slow-visibility fixture holds IndexedDB puts until the delayed real force_fs_sync window');
    check(match && match.elapsed_ms >= 10000 && match.elapsed_ms <= 14000 && match.expected_hash === expectedHash,
