@@ -66,7 +66,7 @@ fs.mkdirSync(out, { recursive: true });
    window.leaveVerifier = verify;
    window.towdownSave.verify = function (path, text, revision, callback) {
     const started = performance.now(), traceStart = window.towdownSave.diagnostics.length;
-    const observation = { reads: [], expected_hash: null, done: false };
+    const observation = { reads: [], expected_hash: null, done: false, targetObserved: false };
     const hashBytes = bytes => {
      let hash = 0x811c9dc5;
      for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
@@ -103,6 +103,7 @@ fs.mkdirSync(out, { recursive: true });
        entry.match = new TextDecoder().decode(bytes) === text;
        entry.row_observed_at = new Date().toISOString();
       } else { entry.row_hash = null; entry.match = false; }
+      if (entry.match && entry.row_hash === observation.expected_hash) observation.targetObserved = true;
       entry.phase = 'transaction-complete';
      } catch (error) { entry.phase = 'error'; entry.error = String(error); }
      finally { if (db) db.close(); entry.completed_at = new Date().toISOString(); entry.duration_ms = performance.now() - openStarted; }
@@ -140,10 +141,14 @@ fs.mkdirSync(out, { recursive: true });
       window.towdownSave.record('slow-fixture-commit-error', { verifier_elapsed_ms: performance.now() - started, error: String(error) });
      } finally { if (db) db.close(); }
     };
+    observation.requireIndependentMatch = slowVisibilityDelayMs > 0;
     const monitor = (async () => {
-     while (!observation.done) {
+     const deadline = performance.now() + 30000;
+     while ((!observation.done || (observation.requireIndependentMatch && !observation.targetObserved))
+       && performance.now() < deadline) {
       await independentRead();
-      if (!observation.done) await new Promise(resolve => setTimeout(resolve, 100));
+      if (!observation.done || (observation.requireIndependentMatch && !observation.targetObserved))
+       await new Promise(resolve => setTimeout(resolve, 100));
      }
     })();
     const result = verify.call(this, path, text, revision, (...args) => {
