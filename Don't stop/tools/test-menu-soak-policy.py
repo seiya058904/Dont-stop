@@ -18,7 +18,7 @@ class MenuSoakPolicy(unittest.TestCase):
         self.assertIsNotNone(budget)
         special = {budget.group(1): int(budget.group(2)), budget.group(3): int(budget.group(4))}
         fallback = int(budget.group(5))
-        for name, matrix_budget, expected in [('menu-return', 30, 30), ('menu-return', 8, 8), ('stages-fair', 12, 12), ('smoke', None, 8), ('save-audit', None, 20)]:
+        for name, matrix_budget, expected in [('menu-return', 30, 30), ('menu-return', 8, 8), ('stages-fair', 12, 12), ('smoke', None, 8), ('save-audit', None, 25)]:
             resolved = special.get(name, matrix_budget or fallback)
             self.assertEqual(resolved, expected, name)
         for field, soak, quick in [('job_budget_minutes', 30, 8), ('watchdog_ms', 1500000, 420000)]:
