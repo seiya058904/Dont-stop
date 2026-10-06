@@ -9,38 +9,90 @@ var _web_callback
 const WEB_CONFIRM = """
 window.towdownSave = window.towdownSave || {
  dirty: false,
+ diagnosticsEnabled: false,
+ diagnostics: [],
+ record(event, fields = {}, detailed = false) {
+  if (detailed && !this.diagnosticsEnabled) return;
+  const entry = Object.assign({ event, at: new Date().toISOString(), elapsed_ms: performance.now() }, fields);
+  this.diagnostics.push(entry);
+  const limit = this.diagnosticsEnabled ? 4000 : 64;
+  if (this.diagnostics.length > limit) this.diagnostics.splice(0, this.diagnostics.length - limit);
+ },
  verify(path, text, revision, callback) {
+  const started = performance.now();
+  const hardDeadline = started + 18000;
+  const trace = (event, fields = {}, detailed = false) => this.record(event, Object.assign({ revision, elapsed_ms: performance.now() - started }, fields), detailed);
+  const hashBytes = this.diagnosticsEnabled ? bytes => {
+   let hash = 0x811c9dc5;
+   for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
+   return (hash >>> 0).toString(16).padStart(8, '0');
+  } : null;
+  const expectedBytes = this.diagnosticsEnabled ? new TextEncoder().encode(text) : null;
+  const expectedHash = expectedBytes ? hashBytes(expectedBytes) : null;
+  let pollNumber = 0, observedRow = false;
+  trace('verify-start', { path, expected_hash: expectedHash, expected_bytes: expectedBytes ? expectedBytes.length : null });
   this.dirty = true;
   let finished = false, db = null;
   const finish = (ok, reason) => {
    if (finished) return;
    finished = true; clearTimeout(timeout);
+   trace('verify-callback', { success: ok, reason });
    if (db) db.close();
    callback(revision, ok, reason);
   };
-  const timeout = setTimeout(() => finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出'), 8000);
+  // Keep the existing fast confirmation window, then allow one evidence-based
+  // commit grace period: the CI trace observed this exact snapshot at 13.14 s.
+  let timeout = setTimeout(() => {
+   trace('verify-slow-path', { fast_deadline_ms: 8000, grace_ms: 10000 });
+   timeout = setTimeout(() => {
+    trace('verify-timeout', { total_deadline_ms: 18000 });
+    finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出');
+   }, 10000);
+  }, 8000);
   try {
+   trace('open-start', { database: '/userfs' }, true);
    const open = indexedDB.open('/userfs');
-   open.onerror = () => finish(false, '浏览器存储不可用；请重试或导出当前进度');
-   open.onblocked = () => finish(false, '浏览器存储被阻止；请关闭同源游戏页后重试');
+   open.onerror = () => { trace('open-error', { error: String(open.error || '') }); finish(false, '浏览器存储不可用；请重试或导出当前进度'); };
+   open.onblocked = () => { trace('open-blocked'); finish(false, '浏览器存储被阻止；请关闭同源游戏页后重试'); };
    open.onsuccess = () => {
     db = open.result;
+    trace('open-success', { database: db.name, version: db.version, stores: Array.from(db.objectStoreNames) }, true);
     if (finished) { db.close(); return; }
     if (!db.objectStoreNames.contains('FILE_DATA')) return finish(false, '浏览器未启用持久化；请导出当前进度');
     const poll = () => {
      if (finished) return;
+     const currentPoll = ++pollNumber;
+     trace('poll-start', { poll: currentPoll }, true);
      try {
       const tx = db.transaction('FILE_DATA', 'readonly');
       const read = tx.objectStore('FILE_DATA').get(path);
       let matches = false;
-      read.onsuccess = () => { matches = !!read.result && new TextDecoder().decode(read.result.contents) === text; };
-      tx.oncomplete = () => matches ? finish(true, '已保存到浏览器') : setTimeout(poll, 100);
-      tx.onabort = tx.onerror = () => finish(false, '浏览器存储读取失败；请重试或导出当前进度');
-     } catch (e) { finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
+      read.onsuccess = () => {
+       const row = read.result;
+       matches = !!row && new TextDecoder().decode(row.contents) === text;
+       if (row && this.diagnosticsEnabled) {
+        const bytes = row.contents instanceof Uint8Array ? row.contents : new Uint8Array(row.contents);
+        const rowHash = hashBytes(bytes);
+        trace('row-hash', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, expected_hash: expectedHash, match: matches }, true);
+        if (!observedRow) { observedRow = true; trace('first-row', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, match: matches }, true); }
+       } else if (!row && this.diagnosticsEnabled) trace('row-missing', { poll: currentPoll, expected_hash: expectedHash }, true);
+      };
+      tx.oncomplete = () => {
+       trace('transaction-complete', { poll: currentPoll, match: matches }, true);
+       if (matches && performance.now() >= hardDeadline) {
+        trace('verify-timeout', { total_deadline_ms: 18000, observed_after_deadline: true });
+        finish(false, '浏览器持久化未确认；进度仍在内存，请重试或导出');
+       }
+       else if (matches) { trace('verify-match', { poll: currentPoll, expected_hash: expectedHash }); finish(true, '已保存到浏览器'); }
+       else setTimeout(poll, 100);
+      };
+      tx.onabort = () => { trace('transaction-abort', { poll: currentPoll, error: String(tx.error || '') }); finish(false, '浏览器存储读取失败；请重试或导出当前进度'); };
+      tx.onerror = () => { trace('transaction-error', { poll: currentPoll, error: String(tx.error || '') }); finish(false, '浏览器存储读取失败；请重试或导出当前进度'); };
+     } catch (e) { trace('poll-error', { poll: currentPoll, error: String(e) }); finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
     };
     poll();
    };
-  } catch (e) { finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
+  } catch (e) { trace('verify-error', { error: String(e) }); finish(false, '浏览器存储不可用；请重试或导出当前进度'); }
  }
 };
 if (!window.towdownSaveUnload) {
@@ -59,6 +111,7 @@ func _ensure_web_bridge() -> void:
 func confirm_web(path: String, revision: int) -> void:
 	_ensure_web_bridge()
 	JavaScriptBridge.get_interface("towdownSave").verify(ProjectSettings.globalize_path(path),FileAccess.get_file_as_string(path),revision,_web_callback)
+	JavaScriptBridge.eval("if (window.towdownSave) window.towdownSave.record('force-fs-sync-start', {revision:" + str(revision) + "})",true)
 	JavaScriptBridge.force_fs_sync()
 
 func mark_web_dirty(value: bool) -> void:

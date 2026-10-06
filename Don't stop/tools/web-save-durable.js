@@ -11,6 +11,7 @@ fs.mkdirSync(out, { recursive: true });
  const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
  await context.addInitScript(() => {
   const put = IDBObjectStore.prototype.put;
+  window.__nativeIDBPut = put;
   IDBObjectStore.prototype.put = function (...args) {
    if (window.saveFault === 'quota') throw new DOMException('Injected full storage', 'QuotaExceededError');
    const request = put.apply(this, args);
@@ -57,25 +58,160 @@ fs.mkdirSync(out, { recursive: true });
  async function returned() {
   await until(() => rects['menu-start-button']?.visible, 'returned main menu');
  }
- async function holdConfirmation() {
-  await page.evaluate(() => {
+ async function holdConfirmation(slowVisibilityDelayMs = 0) {
+  await page.evaluate(slowVisibilityDelayMs => {
    window.leaveConfirmations = [];
+   window.towdownSave.diagnosticsEnabled = true;
    const verify = window.towdownSave.verify;
    window.leaveVerifier = verify;
    window.towdownSave.verify = function (path, text, revision, callback) {
-    return verify.call(this, path, text, revision, (...args) => {
-     window.leaveConfirmations.push({ args, release: () => callback(...args) });
+    const started = performance.now(), traceStart = window.towdownSave.diagnostics.length;
+    const observation = { reads: [], expected_hash: null, done: false };
+    const hashBytes = bytes => {
+     let hash = 0x811c9dc5;
+     for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
+     return (hash >>> 0).toString(16).padStart(8, '0');
+    };
+    observation.expected_hash = hashBytes(new TextEncoder().encode(text));
+    const independentRead = async () => {
+     const openStarted = performance.now();
+     const entry = { started_at: new Date().toISOString(), elapsed_ms: openStarted - started, phase: 'open-start' };
+     observation.reads.push(entry);
+     let db;
+     try {
+      db = await new Promise((resolve, reject) => {
+       const request = indexedDB.open('/userfs');
+       request.onsuccess = () => resolve(request.result);
+       request.onerror = () => reject(request.error || new Error('IndexedDB open failed'));
+       request.onblocked = () => reject(new Error('IndexedDB open blocked'));
+      });
+      entry.phase = 'read-start'; entry.connection_name = db.name; entry.connection_version = db.version;
+      if (!db.objectStoreNames.contains('FILE_DATA')) throw new Error('FILE_DATA missing');
+      const result = await new Promise((resolve, reject) => {
+       const tx = db.transaction('FILE_DATA', 'readonly');
+       const request = tx.objectStore('FILE_DATA').get(path);
+       let row;
+       request.onsuccess = () => { row = request.result; };
+       request.onerror = () => reject(request.error || new Error('IndexedDB request failed'));
+       tx.oncomplete = () => resolve(row);
+       tx.onabort = () => reject(tx.error || new Error('IndexedDB transaction aborted'));
+       tx.onerror = () => { entry.transaction_error = String(tx.error || ''); };
+      });
+      if (result) {
+       const bytes = result.contents instanceof Uint8Array ? result.contents : new Uint8Array(result.contents);
+       entry.row_hash = hashBytes(bytes); entry.row_bytes = bytes.length;
+       entry.match = new TextDecoder().decode(bytes) === text;
+       entry.row_observed_at = new Date().toISOString();
+      } else { entry.row_hash = null; entry.match = false; }
+      entry.phase = 'transaction-complete';
+     } catch (error) { entry.phase = 'error'; entry.error = String(error); }
+     finally { if (db) db.close(); entry.completed_at = new Date().toISOString(); entry.duration_ms = performance.now() - openStarted; }
+    };
+    const commitSlowSnapshot = async () => {
+     const commitStarted = performance.now();
+     window.towdownSave.record('slow-fixture-commit-start', { verifier_elapsed_ms: commitStarted - started });
+     let db;
+     try {
+      db = await new Promise((resolve, reject) => {
+       const request = indexedDB.open('/userfs');
+       request.onsuccess = () => resolve(request.result);
+       request.onerror = () => reject(request.error || new Error('IndexedDB open failed'));
+       request.onblocked = () => reject(new Error('IndexedDB open blocked'));
+      });
+      const tx = db.transaction('FILE_DATA', 'readwrite'), store = tx.objectStore('FILE_DATA');
+      const request = store.get(path);
+      request.onsuccess = () => {
+       if (!request.result) { tx.abort(); return; }
+       const row = Object.assign({}, request.result);
+       row.contents = new TextEncoder().encode(text);
+       row.timestamp = new Date();
+       window.__nativeIDBPut.call(store, row, path);
+      };
+      request.onerror = () => tx.abort();
+      await new Promise((resolve, reject) => {
+       tx.oncomplete = resolve;
+       tx.onabort = () => reject(tx.error || new Error('slow fixture commit aborted'));
+       tx.onerror = () => {};
+      });
+      window.towdownSave.record('slow-fixture-commit-complete', { verifier_elapsed_ms: performance.now() - started,
+       transaction_elapsed_ms: performance.now() - commitStarted, path });
+      window.saveFault = '';
+     } catch (error) {
+      window.towdownSave.record('slow-fixture-commit-error', { verifier_elapsed_ms: performance.now() - started, error: String(error) });
+     } finally { if (db) db.close(); }
+    };
+    const monitor = (async () => {
+     const deadline = performance.now() + 30000;
+     if (slowVisibilityDelayMs > 0) {
+      while (!observation.done && performance.now() < deadline) await new Promise(resolve => setTimeout(resolve, 100));
+      if (observation.done) await independentRead();
+      return;
+     }
+     while (!observation.done && performance.now() < deadline) {
+      await independentRead();
+      if (!observation.done) await new Promise(resolve => setTimeout(resolve, 100));
+     }
+    })();
+    const result = verify.call(this, path, text, revision, (...args) => {
+     observation.done = true;
+     window.leaveConfirmations.push({ args, callback_received_at: new Date().toISOString(), callback_elapsed_ms: performance.now() - started,
+      trace_start: traceStart, observation, monitor, release: () => callback(...args) });
     });
+    if (slowVisibilityDelayMs > 0) {
+     window.towdownSave.record('slow-fixture-commit-scheduled', { delay_ms: slowVisibilityDelayMs });
+     window.setTimeout(commitSlowSnapshot, slowVisibilityDelayMs);
+    }
+    return result;
    };
-  });
+   if (slowVisibilityDelayMs > 0) {
+    window.saveFault = 'abort';
+   }
+  }, slowVisibilityDelayMs);
  }
  async function releaseConfirmation() {
   await page.waitForFunction(() => window.leaveConfirmations.length === 1);
-  check(await page.evaluate(() => window.leaveConfirmations[0].args[1] === true), 'leave waits for a real successful IndexedDB commit');
+  const diagnostic = await page.evaluate(async () => {
+   const confirmation = window.leaveConfirmations[0];
+   await confirmation.monitor;
+   return {
+    callback: { revision: confirmation.args[0], success: confirmation.args[1], reason: confirmation.args[2],
+     callback_received_at: confirmation.callback_received_at, elapsed_ms: confirmation.callback_elapsed_ms },
+    verifier: window.towdownSave.diagnostics.slice(confirmation.trace_start),
+    independent_connection: confirmation.observation
+   };
+  });
+  (report.durableConfirmations ||= []).push(diagnostic);
+  fs.writeFileSync(path.join(out, 'durable-confirmation-' + report.durableConfirmations.length + '.json'), JSON.stringify(diagnostic, null, 2));
+  const fixtureDelay = diagnostic.verifier.find(event => event.event === 'slow-fixture-commit-scheduled')?.delay_ms;
+  if (fixtureDelay === 7000) {
+   const expectedHash = diagnostic.verifier.find(event => event.event === 'verify-start')?.expected_hash;
+   const oldRows = diagnostic.verifier.filter(event => event.event === 'row-hash' && event.elapsed_ms < 8000);
+   const slowPath = diagnostic.verifier.find(event => event.event === 'verify-slow-path');
+   const match = diagnostic.verifier.find(event => event.event === 'verify-match');
+   const verifyStart = diagnostic.verifier.find(event => event.event === 'verify-start');
+   const fixtureCommit = diagnostic.verifier.find(event => event.event === 'slow-fixture-commit-complete');
+   const independentMatch = diagnostic.independent_connection.reads.find(event => event.match && event.row_hash === expectedHash);
+   check(diagnostic.callback.success && diagnostic.callback.elapsed_ms >= 10000 && diagnostic.callback.elapsed_ms < 18000,
+    'slow-visibility fixture receives no early failure and succeeds before the 18 s hard limit');
+   check(oldRows.length > 0 && oldRows.every(event => !event.match && event.row_hash !== expectedHash),
+    'slow-visibility verifier sees only the previous durable snapshot during the first 8 s');
+   check(slowPath?.fast_deadline_ms === 8000 && slowPath.grace_ms === 10000,
+    'slow-visibility verifier enters its recorded 10 s grace after the 8 s fast window');
+   check(fixtureDelay === 7000 && fixtureCommit && fixtureCommit.verifier_elapsed_ms >= 8000 && fixtureCommit.verifier_elapsed_ms < 18000,
+    'slow-visibility fixture commits the expected row in a real IndexedDB transaction after 8 s');
+   check(match && match.elapsed_ms >= 10000 && match.elapsed_ms < 18000 && match.expected_hash === expectedHash,
+    'slow-visibility grace polls the real expected IndexedDB bytes before the 18 s hard limit');
+   check(independentMatch,
+    'slow-visibility fixture independently observes the committed expected IndexedDB bytes');
+  }
+  const callbackSucceeded = await page.evaluate(() => window.leaveConfirmations[0].args[1] === true);
   await page.evaluate(() => {
+   window.towdownSave.diagnosticsEnabled = false;
    window.towdownSave.verify = window.leaveVerifier;
    window.leaveConfirmations.shift().release();
   });
+  if (!callbackSucceeded) await until(() => carry?.saved === false && /未确认|不可用|失败/.test(carry?.message || ''), 'terminal confirmation failure', 5000);
+  check(callbackSucceeded, 'leave waits for a real successful IndexedDB commit');
  }
  async function start() {
   await page.waitForFunction(() => window.__dontStopState?.outcome === 'game-reported-ready'
@@ -160,7 +296,52 @@ fs.mkdirSync(out, { recursive: true });
   const purchasedDisk = await disk();
   check(purchasedDisk.gold === purchasedGold && purchasedDisk.weapons.some(w => +w.id === 0)
    && dialogCount() === dialogs, 'purchase is durable before returning to the main menu');
-  await start(); await settleStartupSave();
+  for (const id of [3, 4]) {
+   await start(); await settleStartupSave(); await select(id); await holdConfirmation(id === 3 ? 7000 : 0);
+   await click('camp-action-0');
+   await until(() => carry?.owned.includes(id) && !carry.saved, 'repeated purchased snapshot pending ' + id);
+   const cycleGold = carry.gold; dialogs = dialogCount(); revision = recovery.revision;
+   await leaveCamp();
+   check(dialogCount() === dialogs && recovery.revision === revision, 'immediate post-purchase leave stays pending for weapon ' + id);
+   await releaseConfirmation(); await returned();
+   if (id === 3) check(!(await page.evaluate(() => window.towdownSave.dirty)),
+    'slow-path durable success clears the dirty and beforeunload guard');
+   const cycleDisk = await disk();
+   check(cycleDisk.gold === cycleGold && cycleDisk.weapons.some(w => +w.id === id),
+    'weapon ' + id + ' purchase is committed before immediate return');
+  }
+  await start(); await settleStartupSave(); await select(2);
+  const timeoutTraceStart = await page.evaluate(() => {
+   window.towdownSave.diagnosticsEnabled = true;
+   window.saveFault = 'abort';
+   return window.towdownSave.diagnostics.length;
+  });
+  await click('camp-action-0');
+  await until(() => carry?.owned.includes(2) && !carry.saved, 'never-submitted purchase pending');
+  const timeoutRevision = recovery.revision;
+  await leaveCamp();
+  check(await page.evaluate(() => window.towdownSave.dirty), 'never-submitted snapshot stays dirty during pending leave');
+  await until(() => carry?.saved === false && /未确认/.test(carry?.message || ''), '18-second durable hard timeout', 30000);
+  const timeoutEvidence = await page.evaluate(({ start, revision }) => {
+   const events = window.towdownSave.diagnostics.slice(start).filter(event => event.revision === revision);
+   return { revision, events, expectedHash: events.find(event => event.event === 'verify-start')?.expected_hash };
+  }, { start: timeoutTraceStart, revision: timeoutRevision });
+  fs.writeFileSync(path.join(out, 'durable-hard-timeout.json'), JSON.stringify(timeoutEvidence, null, 2));
+  const slowDeadline = timeoutEvidence.events.find(event => event.event === 'verify-slow-path');
+  const hardDeadline = timeoutEvidence.events.find(event => event.event === 'verify-timeout');
+  const terminalCallback = timeoutEvidence.events.find(event => event.event === 'verify-callback');
+  check(slowDeadline?.fast_deadline_ms === 8000 && hardDeadline?.total_deadline_ms === 18000,
+   'never-submitted snapshot passes the 8-second fast window and reaches the 18-second hard timeout');
+  check(terminalCallback?.success === false && terminalCallback.elapsed_ms >= 18000
+   && terminalCallback.reason.includes('未确认') && !timeoutEvidence.events.some(event => event.event === 'verify-match'),
+   'never-submitted snapshot fails at the bounded hard timeout without a successful confirmation');
+  check(await page.evaluate(() => window.towdownSave.dirty), '18-second hard timeout retains dirty and beforeunload protection');
+  check(!(await disk()).weapons.some(weapon => +weapon.id === 2), 'never-submitted purchase never appears in durable IndexedDB');
+  await page.evaluate(() => { window.towdownSave.diagnosticsEnabled = false; window.saveFault = ''; });
+  await until(() => recovery?.dialog && rects['save-discard']?.visible, 'hard-timeout protection actions');
+  await click('save-discard'); await start();
+  check(!carry.owned.includes(2), 'discard after the hard timeout restores the last committed save');
+  await settleStartupSave();
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
    await click('camp-action-0');
