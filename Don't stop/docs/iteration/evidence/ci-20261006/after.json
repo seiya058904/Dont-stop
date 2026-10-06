@@ -1,0 +1,4901 @@
+{
+  "measurement": "GitHub job/step timestamps; observed_wait_seconds includes scheduling and final workflow completion",
+  "product_baseline": "v1.3.5 / cb7eed5a13823412f39b3f8e58182d05447c8367",
+  "runs": [
+    {
+      "id": 37446526323,
+      "name": "Build and deploy Web release",
+      "head_sha": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "event": "pull_request",
+      "html_url": "https://github.com/seiya058904/Dont-stop/actions/runs/37446526323",
+      "created_at": "2026-10-06T09:57:33Z",
+      "run_started_at": "2026-10-06T09:57:33Z",
+      "updated_at": "2026-10-06T10:03:26Z",
+      "conclusion": "success",
+      "observed_wait_seconds": 353.0
+    },
+    {
+      "id": 37446541314,
+      "name": "Build and deploy Web release",
+      "head_sha": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "event": "workflow_dispatch",
+      "html_url": "https://github.com/seiya058904/Dont-stop/actions/runs/37446541314",
+      "created_at": "2026-10-06T09:57:41Z",
+      "run_started_at": "2026-10-06T09:57:41Z",
+      "updated_at": "2026-10-06T10:19:11Z",
+      "conclusion": "success",
+      "observed_wait_seconds": 1290.0
+    },
+    {
+      "id": 37446546587,
+      "name": "Native gameplay tests",
+      "head_sha": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "event": "workflow_dispatch",
+      "html_url": "https://github.com/seiya058904/Dont-stop/actions/runs/37446546587",
+      "created_at": "2026-10-06T09:57:43Z",
+      "run_started_at": "2026-10-06T09:57:43Z",
+      "updated_at": "2026-10-06T10:23:09Z",
+      "conclusion": "success",
+      "observed_wait_seconds": 1526.0
+    },
+    {
+      "id": 37447338134,
+      "name": "Build Windows artifact (manual)",
+      "head_sha": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "event": "workflow_dispatch",
+      "html_url": "https://github.com/seiya058904/Dont-stop/actions/runs/37447338134",
+      "created_at": "2026-10-06T10:04:36Z",
+      "run_started_at": "2026-10-06T10:04:36Z",
+      "updated_at": "2026-10-06T10:05:49Z",
+      "conclusion": "success",
+      "observed_wait_seconds": 73.0
+    },
+    {
+      "id": 37449480517,
+      "name": "Build and deploy Web release",
+      "head_sha": "20ca5e95db58eed18068082fbb8581e0545d0325",
+      "event": "push",
+      "html_url": "https://github.com/seiya058904/Dont-stop/actions/runs/37449480517",
+      "created_at": "2026-10-06T10:23:37Z",
+      "run_started_at": "2026-10-06T10:23:37Z",
+      "updated_at": "2026-10-06T10:29:16Z",
+      "conclusion": "success",
+      "observed_wait_seconds": 339.0
+    }
+  ],
+  "jobs": [
+    {
+      "run": 37446526323,
+      "job": "Build and test exact Web artifact",
+      "id": 112212587714,
+      "conclusion": "success",
+      "seconds": 101.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Scope (docs-only detection, no extra runner)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Import project (once, fail fast)",
+          "seconds": 15.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Stage-specific native regression preflight",
+          "seconds": 60.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Export the validated Web candidate",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Stamp build identity (commit SHA + artifact digest)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload candidate Pages bytes (deploy waits for the gates; no rebuild)",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload the same Web candidate for fast/full browser acceptance",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload build identity",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload candidate diagnostics",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:57:45.5923047Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+        "2026-10-06T09:57:47.1725110Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446526323,
+      "job": "Gate smoke",
+      "id": 112213228658,
+      "conclusion": "success",
+      "seconds": 241.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 6.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 224.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:30.0701392Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T09:59:32.0530633Z \u001b[36;1mecho \"GATE_smoke=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446526323,
+      "job": "Gate menu-return",
+      "id": 112213228764,
+      "conclusion": "success",
+      "seconds": 124.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 108.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:31.7467825Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T09:59:32.7600840Z \u001b[36;1mecho \"GATE_menu-return=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m",
+        "2026-10-06T10:00:43.3874081Z [menu-e2e] note CYCLE1 cycle wall clock 29480ms",
+        "2026-10-06T10:01:14.2616413Z [menu-e2e] note RESTART_AFTER_LAST_RETURN cycle wall clock 30875ms",
+        "2026-10-06T10:01:20.4095720Z [menu-e2e] timing WALL_CLOCK                         107241ms"
+      ]
+    },
+    {
+      "run": 37446526323,
+      "job": "Stable preflight",
+      "id": 112213228826,
+      "conclusion": "success",
+      "seconds": 2.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run test \"$RESULT\" = success",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446526323,
+      "job": "Web required gate",
+      "id": 112214760447,
+      "conclusion": "success",
+      "seconds": 3.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run test \"$RESULT\" = success",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446526323,
+      "job": "Deploy and verify live Pages identity",
+      "id": 112214794200,
+      "conclusion": "skipped",
+      "seconds": 0.0,
+      "steps": [],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37447338134,
+      "job": "build-windows",
+      "id": 112215238727,
+      "conclusion": "success",
+      "seconds": 70.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source",
+          "seconds": 9.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Godot and Windows export template",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Import project",
+          "seconds": 31.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Export Windows x64 release",
+          "seconds": 10.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Package ZIP and SHA-256",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload build artifact",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446541314,
+      "job": "Build and test exact Web artifact",
+      "id": 112212644875,
+      "conclusion": "success",
+      "seconds": 112.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 10.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Scope (docs-only detection, no extra runner)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 8.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Import project (once, fail fast)",
+          "seconds": 14.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Stage-specific native regression preflight",
+          "seconds": 59.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Export the validated Web candidate",
+          "seconds": 6.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Stamp build identity (commit SHA + artifact digest)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload candidate Pages bytes (deploy waits for the gates; no rebuild)",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload the same Web candidate for fast/full browser acceptance",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload build identity",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload candidate diagnostics",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:02.8455938Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+        "2026-10-06T09:58:06.0587856Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate aim-fault",
+      "id": 112213351079,
+      "conclusion": "success",
+      "seconds": 98.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 13.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 74.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:57.5584024Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T10:00:00.4718593Z \u001b[36;1mecho \"GATE_aim-fault=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate aim-core",
+      "id": 112213351112,
+      "conclusion": "success",
+      "seconds": 282.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 267.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:49.9323685Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T09:59:51.3435974Z \u001b[36;1mecho \"GATE_aim-core=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate menu-return",
+      "id": 112213351123,
+      "conclusion": "success",
+      "seconds": 1142.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 1127.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:49.7618479Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T09:59:51.1597806Z \u001b[36;1mecho \"GATE_menu-return=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m",
+        "2026-10-06T10:01:59.4390963Z [menu-e2e] note CYCLE1 cycle wall clock 46766ms",
+        "2026-10-06T10:02:48.9650815Z [menu-e2e] note CYCLE2 cycle wall clock 49528ms",
+        "2026-10-06T10:03:38.4600863Z [menu-e2e] note CYCLE3 cycle wall clock 49491ms",
+        "2026-10-06T10:04:27.9773386Z [menu-e2e] note CYCLE4 cycle wall clock 49520ms",
+        "2026-10-06T10:05:17.5910736Z [menu-e2e] note CYCLE5 cycle wall clock 49611ms",
+        "2026-10-06T10:06:07.0851710Z [menu-e2e] note CYCLE6 cycle wall clock 49496ms",
+        "2026-10-06T10:06:56.5470613Z [menu-e2e] note CYCLE7 cycle wall clock 49464ms",
+        "2026-10-06T10:07:46.1068745Z [menu-e2e] note CYCLE8 cycle wall clock 49560ms",
+        "2026-10-06T10:08:35.5593942Z [menu-e2e] note CYCLE9 cycle wall clock 49450ms",
+        "2026-10-06T10:09:25.0726225Z [menu-e2e] note CYCLE10 cycle wall clock 49514ms",
+        "2026-10-06T10:10:14.4294895Z [menu-e2e] note CYCLE11 cycle wall clock 49356ms",
+        "2026-10-06T10:11:03.9092155Z [menu-e2e] note CYCLE12 cycle wall clock 49477ms",
+        "2026-10-06T10:11:53.3931543Z [menu-e2e] note CYCLE13 cycle wall clock 49485ms",
+        "2026-10-06T10:12:42.7742788Z [menu-e2e] note CYCLE14 cycle wall clock 49383ms",
+        "2026-10-06T10:13:32.0761045Z [menu-e2e] note CYCLE15 cycle wall clock 49300ms",
+        "2026-10-06T10:14:21.5446942Z [menu-e2e] note CYCLE16 cycle wall clock 49471ms",
+        "2026-10-06T10:15:11.1305336Z [menu-e2e] note CYCLE17 cycle wall clock 49585ms",
+        "2026-10-06T10:15:59.0600737Z [menu-e2e] note CYCLE18 cycle wall clock 47925ms",
+        "2026-10-06T10:16:48.7042300Z [menu-e2e] note CYCLE19 cycle wall clock 49648ms",
+        "2026-10-06T10:17:38.2560915Z [menu-e2e] note CYCLE20 cycle wall clock 49548ms",
+        "2026-10-06T10:18:27.8410973Z [menu-e2e] note RESTART_AFTER_LAST_RETURN cycle wall clock 49581ms",
+        "2026-10-06T10:18:38.4598444Z [menu-e2e] timing WALL_CLOCK                         1126666ms"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate stages-fair",
+      "id": 112213351124,
+      "conclusion": "success",
+      "seconds": 368.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 9.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 11.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 338.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T10:00:02.8893909Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T10:00:05.5235459Z \u001b[36;1mecho \"GATE_stages-fair=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate save-audit",
+      "id": 112213351134,
+      "conclusion": "success",
+      "seconds": 355.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 7.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 332.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T10:00:31.6378135Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T10:00:33.7111752Z \u001b[36;1mecho \"GATE_save-audit=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate smoke",
+      "id": 112213351173,
+      "conclusion": "success",
+      "seconds": 250.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 6.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 228.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:55.7219473Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T09:59:56.9400498Z \u001b[36;1mecho \"GATE_smoke=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Gate durable-save",
+      "id": 112213351315,
+      "conclusion": "success",
+      "seconds": 1163.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 10.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 1139.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:59:58.4724775Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T10:00:00.5158057Z \u001b[36;1mecho \"GATE_durable-save=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37446541314,
+      "job": "Stable preflight",
+      "id": 112213352972,
+      "conclusion": "skipped",
+      "seconds": null,
+      "steps": [],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446541314,
+      "job": "Web required gate",
+      "id": 112220579642,
+      "conclusion": "success",
+      "seconds": 3.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run test \"$RESULT\" = success",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446541314,
+      "job": "Deploy and verify live Pages identity",
+      "id": 112220615806,
+      "conclusion": "skipped",
+      "seconds": 0.0,
+      "steps": [],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native candidate preflight",
+      "id": 112212660855,
+      "conclusion": "success",
+      "seconds": 30.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Pin the released coverage and fail-closed runner policy",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Import the project",
+          "seconds": 19.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Share the imported candidate (no second import in consumers)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:57:53.0640459Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native pressure-1",
+      "id": 112212858545,
+      "conclusion": "success",
+      "seconds": 428.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 6.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore the same imported commit",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated timed shard",
+          "seconds": 407.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload every result and diagnostic (including failure)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:32.1710586Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native pressure-3",
+      "id": 112212858567,
+      "conclusion": "success",
+      "seconds": 185.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore the same imported commit",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated timed shard",
+          "seconds": 174.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload every result and diagnostic (including failure)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:25.3972884Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native contracts-3",
+      "id": 112212858581,
+      "conclusion": "success",
+      "seconds": 264.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore the same imported commit",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated timed shard",
+          "seconds": 253.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload every result and diagnostic (including failure)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:24.6360092Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native contracts-1",
+      "id": 112212858632,
+      "conclusion": "success",
+      "seconds": 1486.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore the same imported commit",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated timed shard",
+          "seconds": 1476.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload every result and diagnostic (including failure)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:24.5269634Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native contracts-2",
+      "id": 112212858645,
+      "conclusion": "success",
+      "seconds": 815.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore the same imported commit",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated timed shard",
+          "seconds": 796.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload every result and diagnostic (including failure)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:28.3200176Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native pressure-2",
+      "id": 112212858776,
+      "conclusion": "success",
+      "seconds": 210.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore the same imported commit",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run isolated timed shard",
+          "seconds": 191.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload every result and diagnostic (including failure)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T09:58:29.5008105Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Historical / frozen evidence audit (informational)",
+      "id": 112212860265,
+      "conclusion": "skipped",
+      "seconds": 0.0,
+      "steps": [],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37446546587,
+      "job": "Native required gate",
+      "id": 112222056940,
+      "conclusion": "success",
+      "seconds": 2.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run test \"$SETUP\" = success && test \"$CONTRACTS\" = success && test \"$PRESSURE\" = success",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37449480517,
+      "job": "Build and test exact Web artifact",
+      "id": 112222262013,
+      "conclusion": "success",
+      "seconds": 49.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 8.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Scope (docs-only detection, no extra runner)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Import project (once, fail fast)",
+          "seconds": 12.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Stage-specific native regression preflight",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Export the validated Web candidate",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Stamp build identity (commit SHA + artifact digest)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload candidate Pages bytes (deploy waits for the gates; no rebuild)",
+          "seconds": 3.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload the same Web candidate for fast/full browser acceptance",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload build identity",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload candidate diagnostics",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T10:23:55.0800643Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+        "2026-10-06T10:23:56.9799127Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1"
+      ],
+      "gate_timing": []
+    },
+    {
+      "run": 37449480517,
+      "job": "Gate menu-return",
+      "id": 112222578749,
+      "conclusion": "success",
+      "seconds": 138.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 122.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T10:24:44.1222834Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T10:24:45.0155181Z \u001b[36;1mecho \"GATE_menu-return=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m",
+        "2026-10-06T10:26:07.9533505Z [menu-e2e] note CYCLE1 cycle wall clock 31160ms",
+        "2026-10-06T10:26:39.9404584Z [menu-e2e] note RESTART_AFTER_LAST_RETURN cycle wall clock 31990ms",
+        "2026-10-06T10:26:47.2972541Z [menu-e2e] timing WALL_CLOCK                         121847ms"
+      ]
+    },
+    {
+      "run": 37449480517,
+      "job": "Gate smoke",
+      "id": 112222578887,
+      "conclusion": "success",
+      "seconds": 250.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out source (gate scripts)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify continuous-soak budget contract",
+          "seconds": 0.0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Download the Web build under test (the same bytes as every other job)",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run ./.github/actions/setup-browser",
+          "seconds": 7.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run the gate",
+          "seconds": 227.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload gate evidence",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-browser",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out source (gate scripts)",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [
+        "2026-10-06T10:24:49.3900663Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+      ],
+      "gate_timing": [
+        "2026-10-06T10:24:50.6707099Z \u001b[36;1mecho \"GATE_smoke=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+      ]
+    },
+    {
+      "run": 37449480517,
+      "job": "Stable preflight",
+      "id": 112222580999,
+      "conclusion": "skipped",
+      "seconds": 0.0,
+      "steps": [],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37449480517,
+      "job": "Web required gate",
+      "id": 112224100096,
+      "conclusion": "success",
+      "seconds": 3.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run test \"$RESULT\" = success",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    },
+    {
+      "run": 37449480517,
+      "job": "Deploy and verify live Pages identity",
+      "id": 112224127430,
+      "conclusion": "success",
+      "seconds": 24.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "seconds": 5.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/download-artifact@v4",
+          "seconds": 1.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Deploy tested artifact",
+          "seconds": 7.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify production SHA and every payload byte",
+          "seconds": 4.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload live identity evidence",
+          "seconds": 2.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "seconds": 0.0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0.0,
+          "conclusion": "success"
+        }
+      ],
+      "scenes": [],
+      "cache_lines": [],
+      "gate_timing": []
+    }
+  ],
+  "native": [
+    {
+      "shard": "contracts-1",
+      "commit": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "requested": [
+        "M8Encounters"
+      ],
+      "cases": [
+        {
+          "id": "M8Encounters",
+          "seconds": 1473.478,
+          "success": true,
+          "exit": 0,
+          "checks": 60,
+          "minimum_checks": 60,
+          "issues": [],
+          "completed": true
+        }
+      ],
+      "wall_seconds": 1473.917,
+      "success": true
+    },
+    {
+      "shard": "contracts-2",
+      "commit": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "requested": [
+        "M6EncounterAudit"
+      ],
+      "cases": [
+        {
+          "id": "M6EncounterAudit",
+          "seconds": 792.479,
+          "success": true,
+          "exit": 0,
+          "checks": 60,
+          "minimum_checks": 60,
+          "issues": [],
+          "completed": true
+        }
+      ],
+      "wall_seconds": 793.094,
+      "success": true
+    },
+    {
+      "shard": "contracts-3",
+      "commit": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "requested": [
+        "M3Weapons",
+        "B13TalentEffects",
+        "B3Hazards",
+        "PresentationLifecycle",
+        "B11Stages",
+        "B4Fog",
+        "B16CombatMix",
+        "P0HudParity",
+        "M4Talents",
+        "R1Timeline",
+        "B14Growth",
+        "B16Pickup",
+        "P0ReleaseDamage",
+        "B6Progression",
+        "B6Progression --hell-unlock",
+        "CombatReadability",
+        "B16Camp",
+        "DeepPresentation",
+        "B11Fairness",
+        "CameraTransitions",
+        "B14Feedback",
+        "B13UI",
+        "B14Rail",
+        "B191Runtime",
+        "B13Unequip",
+        "PresentationContracts",
+        "WebPhysicsContracts",
+        "CampPresentation",
+        "DeepQuality",
+        "LegacyHpCompatibility",
+        "R1RecoveryUI",
+        "B12UI",
+        "B14Loadout",
+        "B17Contracts",
+        "B12LineOfSightRegression",
+        "B17Resources",
+        "PresentationRng",
+        "WeaponVisualPose",
+        "B12Save",
+        "B13Catalog",
+        "B13UpgradeEffects",
+        "B13Economy",
+        "B16Effects",
+        "B12Catalog",
+        "BaselineRegression",
+        "B14EncounterContracts",
+        "B17NativeRules",
+        "B16Growth",
+        "P0ReleaseDamage --e2e",
+        "P0SaveSanity",
+        "B16Save",
+        "B19Contracts",
+        "B17Sources",
+        "R1Persistence",
+        "B17Saved",
+        "B194Contracts"
+      ],
+      "cases": [
+        {
+          "id": "M3Weapons",
+          "seconds": 36.349,
+          "success": true,
+          "exit": 0,
+          "checks": 72,
+          "minimum_checks": 72,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B13TalentEffects",
+          "seconds": 26.075,
+          "success": true,
+          "exit": 0,
+          "checks": 37,
+          "minimum_checks": 37,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B3Hazards",
+          "seconds": 20.061,
+          "success": true,
+          "exit": 0,
+          "checks": 128,
+          "minimum_checks": 128,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "PresentationLifecycle",
+          "seconds": 13.145,
+          "success": true,
+          "exit": 0,
+          "checks": 52,
+          "minimum_checks": 52,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B11Stages",
+          "seconds": 12.244,
+          "success": true,
+          "exit": 0,
+          "checks": 57,
+          "minimum_checks": 57,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B4Fog",
+          "seconds": 12.046,
+          "success": true,
+          "exit": 0,
+          "checks": 110,
+          "minimum_checks": 110,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B16CombatMix",
+          "seconds": 8.784,
+          "success": true,
+          "exit": 0,
+          "checks": 27,
+          "minimum_checks": 27,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "P0HudParity",
+          "seconds": 9.136,
+          "success": true,
+          "exit": 0,
+          "checks": 13,
+          "minimum_checks": 13,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "M4Talents",
+          "seconds": 7.031,
+          "success": true,
+          "exit": 0,
+          "checks": 233,
+          "minimum_checks": 233,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "R1Timeline",
+          "seconds": 7.031,
+          "success": true,
+          "exit": 0,
+          "checks": 41,
+          "minimum_checks": 41,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B14Growth",
+          "seconds": 6.63,
+          "success": true,
+          "exit": 0,
+          "checks": 13,
+          "minimum_checks": 13,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B16Pickup",
+          "seconds": 5.777,
+          "success": true,
+          "exit": 0,
+          "checks": 12,
+          "minimum_checks": 12,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "P0ReleaseDamage",
+          "seconds": 3.372,
+          "success": true,
+          "exit": 0,
+          "checks": 6,
+          "minimum_checks": 6,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B6Progression",
+          "seconds": 3.372,
+          "success": true,
+          "exit": 0,
+          "checks": 41,
+          "minimum_checks": 41,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B6Progression --hell-unlock",
+          "seconds": 3.372,
+          "success": true,
+          "exit": 0,
+          "checks": 41,
+          "minimum_checks": 41,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "CombatReadability",
+          "seconds": 3.171,
+          "success": true,
+          "exit": 0,
+          "checks": 30,
+          "minimum_checks": 30,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B16Camp",
+          "seconds": 3.071,
+          "success": true,
+          "exit": 0,
+          "checks": 15,
+          "minimum_checks": 15,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "DeepPresentation",
+          "seconds": 2.822,
+          "success": true,
+          "exit": 0,
+          "checks": 34,
+          "minimum_checks": 34,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B11Fairness",
+          "seconds": 2.821,
+          "success": true,
+          "exit": 0,
+          "checks": 61,
+          "minimum_checks": 61,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "CameraTransitions",
+          "seconds": 2.62,
+          "success": true,
+          "exit": 0,
+          "checks": 48,
+          "minimum_checks": 48,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B14Feedback",
+          "seconds": 2.619,
+          "success": true,
+          "exit": 0,
+          "checks": 6,
+          "minimum_checks": 6,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B13UI",
+          "seconds": 2.52,
+          "success": true,
+          "exit": 0,
+          "checks": 138,
+          "minimum_checks": 138,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B14Rail",
+          "seconds": 2.269,
+          "success": true,
+          "exit": 0,
+          "checks": 8,
+          "minimum_checks": 8,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B191Runtime",
+          "seconds": 2.42,
+          "success": true,
+          "exit": 0,
+          "checks": 55,
+          "minimum_checks": 55,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B13Unequip",
+          "seconds": 2.419,
+          "success": true,
+          "exit": 0,
+          "checks": 55,
+          "minimum_checks": 55,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "PresentationContracts",
+          "seconds": 2.319,
+          "success": true,
+          "exit": 0,
+          "checks": 58,
+          "minimum_checks": 58,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "WebPhysicsContracts",
+          "seconds": 2.319,
+          "success": true,
+          "exit": 0,
+          "checks": 154,
+          "minimum_checks": 154,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "CampPresentation",
+          "seconds": 2.169,
+          "success": true,
+          "exit": 0,
+          "checks": 71,
+          "minimum_checks": 71,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "DeepQuality",
+          "seconds": 2.169,
+          "success": true,
+          "exit": 0,
+          "checks": 34,
+          "minimum_checks": 34,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "LegacyHpCompatibility",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 31,
+          "minimum_checks": 31,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "R1RecoveryUI",
+          "seconds": 1.668,
+          "success": true,
+          "exit": 0,
+          "checks": 39,
+          "minimum_checks": 39,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B12UI",
+          "seconds": 1.768,
+          "success": true,
+          "exit": 0,
+          "checks": 75,
+          "minimum_checks": 75,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B14Loadout",
+          "seconds": 1.768,
+          "success": true,
+          "exit": 0,
+          "checks": 86,
+          "minimum_checks": 86,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B17Contracts",
+          "seconds": 1.768,
+          "success": true,
+          "exit": 0,
+          "checks": 20,
+          "minimum_checks": 20,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B12LineOfSightRegression",
+          "seconds": 1.768,
+          "success": true,
+          "exit": 0,
+          "checks": 12,
+          "minimum_checks": 12,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B17Resources",
+          "seconds": 1.668,
+          "success": true,
+          "exit": 0,
+          "checks": 10,
+          "minimum_checks": 10,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "PresentationRng",
+          "seconds": 1.668,
+          "success": true,
+          "exit": 0,
+          "checks": 8,
+          "minimum_checks": 8,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "WeaponVisualPose",
+          "seconds": 1.568,
+          "success": true,
+          "exit": 0,
+          "checks": 144,
+          "minimum_checks": 144,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B12Save",
+          "seconds": 1.567,
+          "success": true,
+          "exit": 0,
+          "checks": 14,
+          "minimum_checks": 14,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B13Catalog",
+          "seconds": 1.567,
+          "success": true,
+          "exit": 0,
+          "checks": 532,
+          "minimum_checks": 532,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B13UpgradeEffects",
+          "seconds": 1.567,
+          "success": true,
+          "exit": 0,
+          "checks": 85,
+          "minimum_checks": 85,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B13Economy",
+          "seconds": 1.567,
+          "success": true,
+          "exit": 0,
+          "checks": 159,
+          "minimum_checks": 159,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B16Effects",
+          "seconds": 1.567,
+          "success": true,
+          "exit": 0,
+          "checks": 5,
+          "minimum_checks": 5,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B12Catalog",
+          "seconds": 1.567,
+          "success": true,
+          "exit": 0,
+          "checks": 182,
+          "minimum_checks": 182,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "BaselineRegression",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 4,
+          "minimum_checks": 4,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B14EncounterContracts",
+          "seconds": 1.418,
+          "success": true,
+          "exit": 0,
+          "checks": 85,
+          "minimum_checks": 85,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B17NativeRules",
+          "seconds": 1.417,
+          "success": true,
+          "exit": 0,
+          "checks": 13,
+          "minimum_checks": 13,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B16Growth",
+          "seconds": 1.417,
+          "success": true,
+          "exit": 0,
+          "checks": 7,
+          "minimum_checks": 7,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "P0ReleaseDamage --e2e",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 3,
+          "minimum_checks": 3,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "P0SaveSanity",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 10,
+          "minimum_checks": 10,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B16Save",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 80,
+          "minimum_checks": 80,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B19Contracts",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 24,
+          "minimum_checks": 24,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B17Sources",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 5,
+          "minimum_checks": 5,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "R1Persistence",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 51,
+          "minimum_checks": 51,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B17Saved",
+          "seconds": 1.317,
+          "success": true,
+          "exit": 0,
+          "checks": 13,
+          "minimum_checks": 13,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B194Contracts",
+          "seconds": 1.016,
+          "success": true,
+          "exit": 0,
+          "checks": 6,
+          "minimum_checks": 6,
+          "issues": [],
+          "completed": true
+        }
+      ],
+      "wall_seconds": 250.97,
+      "success": true
+    },
+    {
+      "shard": "pressure-1",
+      "commit": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "requested": [
+        "B5Bosses"
+      ],
+      "cases": [
+        {
+          "id": "B5Bosses",
+          "seconds": 404.692,
+          "success": true,
+          "exit": 0,
+          "checks": 166,
+          "minimum_checks": 166,
+          "issues": [],
+          "completed": true
+        }
+      ],
+      "wall_seconds": 405.136,
+      "success": true
+    },
+    {
+      "shard": "pressure-2",
+      "commit": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "requested": [
+        "M10Density stages=22,31",
+        "B11Perf stage=39 seconds=75",
+        "M10Bosses full"
+      ],
+      "cases": [
+        {
+          "id": "M10Density stages=22,31",
+          "seconds": 93.113,
+          "success": true,
+          "exit": 0,
+          "checks": 11,
+          "minimum_checks": 11,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B11Perf stage=39 seconds=75",
+          "seconds": 77.577,
+          "success": true,
+          "exit": 0,
+          "checks": 6,
+          "minimum_checks": 6,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "M10Bosses full",
+          "seconds": 17.403,
+          "success": true,
+          "exit": 0,
+          "checks": 39,
+          "minimum_checks": 39,
+          "issues": [],
+          "completed": true
+        }
+      ],
+      "wall_seconds": 188.714,
+      "success": true
+    },
+    {
+      "shard": "pressure-3",
+      "commit": "d54deeaffc8c32d7bd2589f81c9916efd5be4456",
+      "requested": [
+        "M10Density probe stages=22,31",
+        "B11Perf stage=40 seconds=75"
+      ],
+      "cases": [
+        {
+          "id": "M10Density probe stages=22,31",
+          "seconds": 93.161,
+          "success": true,
+          "exit": 0,
+          "checks": 6,
+          "minimum_checks": 6,
+          "issues": [],
+          "completed": true
+        },
+        {
+          "id": "B11Perf stage=40 seconds=75",
+          "seconds": 77.536,
+          "success": true,
+          "exit": 0,
+          "checks": 6,
+          "minimum_checks": 6,
+          "issues": [],
+          "completed": true
+        }
+      ],
+      "wall_seconds": 171.301,
+      "success": true
+    }
+  ],
+  "coverage": {
+    "native_cases": 64,
+    "native_pass_assertions": 3707,
+    "durable_checks": 89,
+    "menu_continuous_cycles": 20,
+    "menu_restart": true,
+    "menu_tokens": 456,
+    "menu_wall_seconds": 1126.666,
+    "assertions_weakened": false,
+    "product_files_changed": false
+  },
+  "durable": {
+    "success": true,
+    "checks": [
+      "initial snapshot is committed in IndexedDB",
+      "Home no edits returns with zero SaveDialog creations",
+      "durable Home return creates no new revision",
+      "pending Home return stays silent and reuses the submitted revision",
+      "pending leave blocks keyboard dismissal and duplicate exit",
+      "pending leave preserves beforeunload protection",
+      "leave waits for a real successful IndexedDB commit",
+      "pending Home confirmation returns without a Dialog flash",
+      "immediate post-purchase leave does not flash or resubmit",
+      "leave waits for a real successful IndexedDB commit",
+      "purchase is durable before returning to the main menu",
+      "immediate post-purchase leave stays pending for weapon 3",
+      "slow-visibility fixture receives no early failure and succeeds before the 18 s hard limit",
+      "slow-visibility verifier sees only the previous durable snapshot during the first 8 s",
+      "slow-visibility verifier enters its recorded 10 s grace after the 8 s fast window",
+      "slow-visibility fixture commits the expected row in a real IndexedDB transaction after 8 s",
+      "slow-visibility grace polls the real expected IndexedDB bytes before the 18 s hard limit",
+      "slow-visibility fixture independently observes the committed expected IndexedDB bytes",
+      "leave waits for a real successful IndexedDB commit",
+      "slow-path durable success clears the dirty and beforeunload guard",
+      "weapon 3 purchase is committed before immediate return",
+      "immediate post-purchase leave stays pending for weapon 4",
+      "leave waits for a real successful IndexedDB commit",
+      "weapon 4 purchase is committed before immediate return",
+      "never-submitted snapshot stays dirty during pending leave",
+      "never-submitted snapshot passes the 8-second fast window and reaches the 18-second hard timeout",
+      "never-submitted snapshot fails at the bounded hard timeout without a successful confirmation",
+      "18-second hard timeout retains dirty and beforeunload protection",
+      "never-submitted purchase never appears in durable IndexedDB",
+      "discard after the hard timeout restores the last committed save",
+      "failed transaction leave does not show Dialog while confirmation is pending",
+      "abort: failure is visible and memory stays dirty",
+      "abort: old durable snapshot survives failed transaction",
+      "failed pending leave keeps the unload guard",
+      "abort: retry never charges purchase again",
+      "abort: retry is actually committed",
+      "abort: refresh restores ownership and loadout",
+      "quota: failure is visible and memory stays dirty",
+      "quota: old durable snapshot survives failed transaction",
+      "quota: retry never charges purchase again",
+      "quota: retry is actually committed",
+      "quota: refresh restores ownership and loadout",
+      "explicit discard returns to the committed loadout instead of pending MEMFS bytes",
+      "corrupt original download preserves every byte including invalid UTF-8",
+      "failed new-save takeover retains the corrupt original byte for byte",
+      "pending takeover has a real durable confirmation awaiting delivery",
+      "DS-001 pending close and Escape cannot leave or replace recovery",
+      "DS-001 pending real T01 purchase accepts no charge or rank change",
+      "DS-001 pending takeover retains the unload guard",
+      "DS-001 completed takeover contains no overwritten accepted pending purchase",
+      "DS-001 post-confirmation purchase is committed with its charge",
+      "DS-001 confirmed purchase survives a full reload without rollback or duplicate charge",
+      "unavailable: failed first save keeps the unload guard",
+      "unavailable: fresh T01 starts at rank zero",
+      "unavailable: fresh T07 starts at rank zero",
+      "unavailable: real progress export contains both unsaved purchases",
+      "unavailable: export does not claim browser persistence",
+      "unavailable: no snapshot was ever durably committed",
+      "unavailable: same-page restart rolls back the discarded talent",
+      "unavailable: discard clears talent ranks and purchase receipts",
+      "unavailable: discard restores legal initial health and progression",
+      "unavailable: discard restores the initial wallet, supplies and ownership",
+      "unavailable: discard restores empty loadout, legacy ownership and stage progress",
+      "unavailable: full-page reload remains a fresh session",
+      "abort: failed first save keeps the unload guard",
+      "abort: fresh T01 starts at rank zero",
+      "abort: fresh T07 starts at rank zero",
+      "abort: real progress export contains both unsaved purchases",
+      "abort: export does not claim browser persistence",
+      "abort: no snapshot was ever durably committed",
+      "abort: same-page restart rolls back the discarded talent",
+      "abort: discard clears talent ranks and purchase receipts",
+      "abort: discard restores legal initial health and progression",
+      "abort: discard restores the initial wallet, supplies and ownership",
+      "abort: discard restores empty loadout, legacy ownership and stage progress",
+      "abort: full-page reload remains a fresh session",
+      "quota: failed first save keeps the unload guard",
+      "quota: fresh T01 starts at rank zero",
+      "quota: fresh T07 starts at rank zero",
+      "quota: real progress export contains both unsaved purchases",
+      "quota: export does not claim browser persistence",
+      "quota: no snapshot was ever durably committed",
+      "quota: same-page restart rolls back the discarded talent",
+      "quota: discard clears talent ranks and purchase receipts",
+      "quota: discard restores legal initial health and progression",
+      "quota: discard restores the initial wallet, supplies and ownership",
+      "quota: discard restores empty loadout, legacy ownership and stage progress",
+      "quota: full-page reload remains a fresh session",
+      "no engine script errors or uncaught browser errors"
+    ],
+    "evidence_sha256": "5f2aafdfb05c7340763a21bdfffb9ab1a755e9ab18ee95b71cb6cf943e5ef67d"
+  },
+  "menu": {
+    "success": true,
+    "evidence_sha256": "4dbebb417f3f5eecf575457292b51df7c6c09848f8cc48f03337c4ba42cc61d3",
+    "cycle_measurements": {
+      "CYCLE1": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 149.7362,
+            "y": 99.73537
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 0.06109276634758779
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 22,
+          "framesAfter": 22,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 1,
+          "sessAfter": 2,
+          "state": {
+            "raw": "[probe] sess=2 frames=28 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.7248, -11.7248) hp=5.0 aimworld=(256.0251, 208.1635) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(235.805, 116.3169)",
+            "sess": 2,
+            "frames": 28,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.7248,
+              "y": -11.7248
+            }
+          }
+        }
+      },
+      "CYCLE2": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.892,
+            "y": 98.61067
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.376454234800237
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 43,
+          "framesAfter": 43,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 2,
+          "sessAfter": 3,
+          "state": {
+            "raw": "[probe] sess=3 frames=49 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.774, -11.774) hp=5.0 aimworld=(251.8283, 205.5053) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(240.0019, 118.9751)",
+            "sess": 3,
+            "frames": 49,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.774,
+              "y": -11.774
+            }
+          }
+        }
+      },
+      "CYCLE3": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8551,
+            "y": 98.6842
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.310776958167957
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 65,
+          "framesAfter": 65,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 3,
+          "sessAfter": 4,
+          "state": {
+            "raw": "[probe] sess=4 frames=71 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.6808, -11.6808) hp=5.0 aimworld=(254.8921, 207.4459) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(236.938, 117.0346)",
+            "sess": 4,
+            "frames": 71,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.6808,
+              "y": -11.6808
+            }
+          }
+        }
+      },
+      "CYCLE4": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.6175,
+            "y": 98.72513
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.079997539061052
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 87,
+          "framesAfter": 87,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 4,
+          "sessAfter": 5,
+          "state": {
+            "raw": "[probe] sess=5 frames=93 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.968, -11.968) hp=5.0 aimworld=(250.3283, 204.5552) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(241.5019, 119.9252)",
+            "sess": 5,
+            "frames": 93,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.968,
+              "y": -11.968
+            }
+          }
+        }
+      },
+      "CYCLE5": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.7301,
+            "y": 98.62965
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.224221531435205
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 109,
+          "framesAfter": 109,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 5,
+          "sessAfter": 6,
+          "state": {
+            "raw": "[probe] sess=6 frames=115 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.8292, -11.8292) hp=5.0 aimworld=(253.2485, 206.4048) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(238.5816, 118.0756)",
+            "sess": 6,
+            "frames": 115,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.8292,
+              "y": -11.8292
+            }
+          }
+        }
+      },
+      "CYCLE6": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.9231,
+            "y": 98.6944
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.3679357251412068
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 130,
+          "framesAfter": 130,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 6,
+          "sessAfter": 7,
+          "state": {
+            "raw": "[probe] sess=7 frames=136 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.6748, -11.6748) hp=5.0 aimworld=(255.1953, 207.6379) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(236.6348, 116.8425)",
+            "sess": 7,
+            "frames": 136,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.6748,
+              "y": -11.6748
+            }
+          }
+        }
+      },
+      "CYCLE7": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.9837,
+            "y": 98.61486
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.4567357351575287
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 151,
+          "framesAfter": 151,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 7,
+          "sessAfter": 8,
+          "state": {
+            "raw": "[probe] sess=8 frames=157 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.8928, -11.8928) hp=5.0 aimworld=(250.041, 204.3733) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(241.7891, 120.1071)",
+            "sess": 8,
+            "frames": 157,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.8928,
+              "y": -11.8928
+            }
+          }
+        }
+      },
+      "CYCLE8": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.9671,
+            "y": 98.66015
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.4222716282242045
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 172,
+          "framesAfter": 172,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 8,
+          "sessAfter": 9,
+          "state": {
+            "raw": "[probe] sess=9 frames=178 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.7392, -11.7392) hp=5.0 aimworld=(252.7219, 206.0713) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(239.1082, 118.4091)",
+            "sess": 9,
+            "frames": 178,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.7392,
+              "y": -11.7392
+            }
+          }
+        }
+      },
+      "CYCLE9": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8155,
+            "y": 98.65755
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.287030020987905
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 194,
+          "framesAfter": 194,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 9,
+          "sessAfter": 10,
+          "state": {
+            "raw": "[probe] sess=10 frames=200 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.8704, -11.8704) hp=5.0 aimworld=(251.9559, 205.5861) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(239.8742, 118.8943)",
+            "sess": 10,
+            "frames": 200,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.8704,
+              "y": -11.8704
+            }
+          }
+        }
+      },
+      "CYCLE10": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8504,
+            "y": 98.63753
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.3272066974164605
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 216,
+          "framesAfter": 216,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 10,
+          "sessAfter": 11,
+          "state": {
+            "raw": "[probe] sess=11 frames=222 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.7648, -11.7648) hp=5.0 aimworld=(251.3017, 205.1718) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(240.5285, 119.3087)",
+            "sess": 11,
+            "frames": 222,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.7648,
+              "y": -11.7648
+            }
+          }
+        }
+      },
+      "CYCLE11": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.9167,
+            "y": 98.56602
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.4188633271848925
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 238,
+          "framesAfter": 238,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 11,
+          "sessAfter": 12,
+          "state": {
+            "raw": "[probe] sess=12 frames=244 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.71, -11.71) hp=5.0 aimworld=(254.924, 207.4661) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(236.9061, 117.0143)",
+            "sess": 12,
+            "frames": 244,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.71,
+              "y": -11.71
+            }
+          }
+        }
+      },
+      "CYCLE12": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8217,
+            "y": 98.60418
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.317017093160938
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 260,
+          "framesAfter": 260,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 12,
+          "sessAfter": 13,
+          "state": {
+            "raw": "[probe] sess=13 frames=266 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.9048, -11.9048) hp=5.0 aimworld=(250.2006, 204.4743) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(241.6295, 120.0061)",
+            "sess": 13,
+            "frames": 266,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.9048,
+              "y": -11.9048
+            }
+          }
+        }
+      },
+      "CYCLE13": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8369,
+            "y": 98.74541
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.2683164798810678
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 281,
+          "framesAfter": 281,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 13,
+          "sessAfter": 14,
+          "state": {
+            "raw": "[probe] sess=14 frames=287 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.7252, -11.7252) hp=5.0 aimworld=(256.44, 208.4263) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(235.3902, 116.0542)",
+            "sess": 14,
+            "frames": 287,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.7252,
+              "y": -11.7252
+            }
+          }
+        }
+      },
+      "CYCLE14": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.792,
+            "y": 98.72266
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.237250940417724
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 303,
+          "framesAfter": 303,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 14,
+          "sessAfter": 15,
+          "state": {
+            "raw": "[probe] sess=15 frames=309 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.6824, -11.6824) hp=5.0 aimworld=(256.6953, 208.588) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(235.1348, 115.8924)",
+            "sess": 15,
+            "frames": 309,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.6824,
+              "y": -11.6824
+            }
+          }
+        }
+      },
+      "CYCLE15": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.7935,
+            "y": 98.59104
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.298356623677004
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 325,
+          "framesAfter": 325,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 15,
+          "sessAfter": 16,
+          "state": {
+            "raw": "[probe] sess=16 frames=331 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.8076, -11.8076) hp=5.0 aimworld=(251.0304, 204.9999) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(240.7997, 119.4805)",
+            "sess": 16,
+            "frames": 331,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.8076,
+              "y": -11.8076
+            }
+          }
+        }
+      },
+      "CYCLE16": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.7479,
+            "y": 98.62804
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.240659208715137
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 347,
+          "framesAfter": 347,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 16,
+          "sessAfter": 17,
+          "state": {
+            "raw": "[probe] sess=17 frames=353 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.8112, -11.8112) hp=5.0 aimworld=(255.0198, 207.5267) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=2 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(236.8104, 116.9537)",
+            "sess": 17,
+            "frames": 353,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.8112,
+              "y": -11.8112
+            }
+          }
+        }
+      },
+      "CYCLE17": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8336,
+            "y": 98.55472
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.3509559101778033
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 369,
+          "framesAfter": 369,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 17,
+          "sessAfter": 18,
+          "state": {
+            "raw": "[probe] sess=18 frames=375 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.9264, -11.9264) hp=5.0 aimworld=(252.8017, 206.1218) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(239.0285, 118.3586)",
+            "sess": 18,
+            "frames": 375,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.9264,
+              "y": -11.9264
+            }
+          }
+        }
+      },
+      "CYCLE18": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8272,
+            "y": 98.74442
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.2599072365033046
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 389,
+          "framesAfter": 389,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 18,
+          "sessAfter": 19,
+          "state": {
+            "raw": "[probe] sess=19 frames=394 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.7048, -11.7048) hp=5.0 aimworld=(255.7857, 208.0119) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(236.0444, 116.4686)",
+            "sess": 19,
+            "frames": 394,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.7048,
+              "y": -11.7048
+            }
+          }
+        }
+      },
+      "CYCLE19": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.7728,
+            "y": 98.61227
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.2700565935896755
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 409,
+          "framesAfter": 409,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 19,
+          "sessAfter": 20,
+          "state": {
+            "raw": "[probe] sess=20 frames=415 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.8752, -11.8752) hp=5.0 aimworld=(252.6102, 206.0005) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(239.2199, 118.4799)",
+            "sess": 20,
+            "frames": 415,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.8752,
+              "y": -11.8752
+            }
+          }
+        }
+      },
+      "CYCLE20": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.7602,
+            "y": 98.70645
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.2157204839284166
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 431,
+          "framesAfter": 431,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 20,
+          "sessAfter": 21,
+          "state": {
+            "raw": "[probe] sess=21 frames=437 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.6916, -11.6916) hp=5.0 aimworld=(254.7804, 207.3751) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(237.0497, 117.1053)",
+            "sess": 21,
+            "frames": 437,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.6916,
+              "y": -11.6916
+            }
+          }
+        }
+      },
+      "RESTART_AFTER_LAST_RETURN": {
+        "aim": {
+          "aimD": {
+            "x": 150,
+            "y": 100
+          },
+          "css": {
+            "x": 499.7560975609756,
+            "y": 333.9130434782609
+          },
+          "aimvp": {
+            "x": 149.7731,
+            "y": 99.68668
+          },
+          "crh": {
+            "x": 151.8362,
+            "y": 98.61359
+          },
+          "err": 0.38685014204469803,
+          "crossErr": 2.3254900038701414
+        },
+        "blocked": {
+          "panels": 1,
+          "paused": true,
+          "framesBefore": 453,
+          "framesAfter": 453,
+          "playerBefore": {
+            "x": 225,
+            "y": 117
+          },
+          "playerAfter": {
+            "x": 225,
+            "y": 117
+          },
+          "moved": 0
+        },
+        "return": {
+          "sessBefore": 21,
+          "sessAfter": 22,
+          "state": {
+            "raw": "[probe] sess=22 frames=459 proj=0 start=false sm=CAMP pause=false panels=0 ingame=true gun=-1 bullets=-1/-1 mm=0 player=(225.0, 117.0) aimvp=(266.8301, 207.4804) crh=(-10.7464, -11.7464) hp=5.0 aimworld=(252.2272, 205.758) projv=(0.0, 0.0) projang=999.0 projshots=0 fr=true fps=1 stage=1 camp=false hellc=false next=1 sel=1 pt=0 fog=false scroll=-1 player_vp=(239.6029, 118.7224)",
+            "sess": 22,
+            "frames": 459,
+            "proj": 0,
+            "start": false,
+            "pause": false,
+            "panels": 0,
+            "ingame": true,
+            "gun": -1,
+            "bullets": -1,
+            "bulletsMax": -1,
+            "mm": 0,
+            "player": {
+              "x": 225,
+              "y": 117
+            },
+            "aimvp": {
+              "x": 266.8301,
+              "y": 207.4804
+            },
+            "crh": {
+              "x": -10.7464,
+              "y": -11.7464
+            }
+          }
+        }
+      },
+      "latest_save": {
+        "expected_sha256": "971bf88b19f0c6bd35e317b83b8cf2c0de17ac0e7f2b165cf198d1d7da1a9826",
+        "reloaded_sha256": "971bf88b19f0c6bd35e317b83b8cf2c0de17ac0e7f2b165cf198d1d7da1a9826"
+      }
+    },
+    "timings": [
+      {
+        "name": "fixture-seed-profile",
+        "ms": 62071
+      },
+      {
+        "name": "acceptance-load",
+        "ms": 17420
+      },
+      {
+        "name": "CYCLE1-start",
+        "ms": 1916
+      },
+      {
+        "name": "CYCLE1-close-panel",
+        "ms": 3970
+      },
+      {
+        "name": "CYCLE1-liveness",
+        "ms": 3849
+      },
+      {
+        "name": "CYCLE1-aim",
+        "ms": 1949
+      },
+      {
+        "name": "CYCLE1-pause-resume",
+        "ms": 4785
+      },
+      {
+        "name": "CYCLE1-blocked-input",
+        "ms": 8598
+      },
+      {
+        "name": "CYCLE1-leave",
+        "ms": 21698
+      },
+      {
+        "name": "CYCLE1-total",
+        "ms": 46766
+      },
+      {
+        "name": "CYCLE2-start",
+        "ms": 4231
+      },
+      {
+        "name": "CYCLE2-close-panel",
+        "ms": 4290
+      },
+      {
+        "name": "CYCLE2-liveness",
+        "ms": 3953
+      },
+      {
+        "name": "CYCLE2-aim",
+        "ms": 1902
+      },
+      {
+        "name": "CYCLE2-pause-resume",
+        "ms": 4804
+      },
+      {
+        "name": "CYCLE2-blocked-input",
+        "ms": 8560
+      },
+      {
+        "name": "CYCLE2-leave",
+        "ms": 21788
+      },
+      {
+        "name": "CYCLE2-total",
+        "ms": 49528
+      },
+      {
+        "name": "CYCLE3-start",
+        "ms": 4203
+      },
+      {
+        "name": "CYCLE3-close-panel",
+        "ms": 4294
+      },
+      {
+        "name": "CYCLE3-liveness",
+        "ms": 3874
+      },
+      {
+        "name": "CYCLE3-aim",
+        "ms": 1958
+      },
+      {
+        "name": "CYCLE3-pause-resume",
+        "ms": 4774
+      },
+      {
+        "name": "CYCLE3-blocked-input",
+        "ms": 8554
+      },
+      {
+        "name": "CYCLE3-leave",
+        "ms": 21834
+      },
+      {
+        "name": "CYCLE3-total",
+        "ms": 49491
+      },
+      {
+        "name": "CYCLE4-start",
+        "ms": 4197
+      },
+      {
+        "name": "CYCLE4-close-panel",
+        "ms": 4281
+      },
+      {
+        "name": "CYCLE4-liveness",
+        "ms": 3905
+      },
+      {
+        "name": "CYCLE4-aim",
+        "ms": 1892
+      },
+      {
+        "name": "CYCLE4-pause-resume",
+        "ms": 4820
+      },
+      {
+        "name": "CYCLE4-blocked-input",
+        "ms": 8557
+      },
+      {
+        "name": "CYCLE4-leave",
+        "ms": 21868
+      },
+      {
+        "name": "CYCLE4-total",
+        "ms": 49520
+      },
+      {
+        "name": "CYCLE5-start",
+        "ms": 4238
+      },
+      {
+        "name": "CYCLE5-close-panel",
+        "ms": 4325
+      },
+      {
+        "name": "CYCLE5-liveness",
+        "ms": 3991
+      },
+      {
+        "name": "CYCLE5-aim",
+        "ms": 1929
+      },
+      {
+        "name": "CYCLE5-pause-resume",
+        "ms": 4755
+      },
+      {
+        "name": "CYCLE5-blocked-input",
+        "ms": 8563
+      },
+      {
+        "name": "CYCLE5-leave",
+        "ms": 21810
+      },
+      {
+        "name": "CYCLE5-total",
+        "ms": 49611
+      },
+      {
+        "name": "CYCLE6-start",
+        "ms": 4231
+      },
+      {
+        "name": "CYCLE6-close-panel",
+        "ms": 4309
+      },
+      {
+        "name": "CYCLE6-liveness",
+        "ms": 3943
+      },
+      {
+        "name": "CYCLE6-aim",
+        "ms": 1879
+      },
+      {
+        "name": "CYCLE6-pause-resume",
+        "ms": 4801
+      },
+      {
+        "name": "CYCLE6-blocked-input",
+        "ms": 8562
+      },
+      {
+        "name": "CYCLE6-leave",
+        "ms": 21771
+      },
+      {
+        "name": "CYCLE6-total",
+        "ms": 49496
+      },
+      {
+        "name": "CYCLE7-start",
+        "ms": 4231
+      },
+      {
+        "name": "CYCLE7-close-panel",
+        "ms": 4305
+      },
+      {
+        "name": "CYCLE7-liveness",
+        "ms": 3948
+      },
+      {
+        "name": "CYCLE7-aim",
+        "ms": 1951
+      },
+      {
+        "name": "CYCLE7-pause-resume",
+        "ms": 4779
+      },
+      {
+        "name": "CYCLE7-blocked-input",
+        "ms": 8534
+      },
+      {
+        "name": "CYCLE7-leave",
+        "ms": 21716
+      },
+      {
+        "name": "CYCLE7-total",
+        "ms": 49464
+      },
+      {
+        "name": "CYCLE8-start",
+        "ms": 4270
+      },
+      {
+        "name": "CYCLE8-close-panel",
+        "ms": 4331
+      },
+      {
+        "name": "CYCLE8-liveness",
+        "ms": 3948
+      },
+      {
+        "name": "CYCLE8-aim",
+        "ms": 1901
+      },
+      {
+        "name": "CYCLE8-pause-resume",
+        "ms": 4768
+      },
+      {
+        "name": "CYCLE8-blocked-input",
+        "ms": 8575
+      },
+      {
+        "name": "CYCLE8-leave",
+        "ms": 21767
+      },
+      {
+        "name": "CYCLE8-total",
+        "ms": 49560
+      },
+      {
+        "name": "CYCLE9-start",
+        "ms": 4200
+      },
+      {
+        "name": "CYCLE9-close-panel",
+        "ms": 4279
+      },
+      {
+        "name": "CYCLE9-liveness",
+        "ms": 3907
+      },
+      {
+        "name": "CYCLE9-aim",
+        "ms": 1939
+      },
+      {
+        "name": "CYCLE9-pause-resume",
+        "ms": 4759
+      },
+      {
+        "name": "CYCLE9-blocked-input",
+        "ms": 8551
+      },
+      {
+        "name": "CYCLE9-leave",
+        "ms": 21815
+      },
+      {
+        "name": "CYCLE9-total",
+        "ms": 49450
+      },
+      {
+        "name": "CYCLE10-start",
+        "ms": 4188
+      },
+      {
+        "name": "CYCLE10-close-panel",
+        "ms": 4286
+      },
+      {
+        "name": "CYCLE10-liveness",
+        "ms": 3905
+      },
+      {
+        "name": "CYCLE10-aim",
+        "ms": 1905
+      },
+      {
+        "name": "CYCLE10-pause-resume",
+        "ms": 4801
+      },
+      {
+        "name": "CYCLE10-blocked-input",
+        "ms": 8560
+      },
+      {
+        "name": "CYCLE10-leave",
+        "ms": 21869
+      },
+      {
+        "name": "CYCLE10-total",
+        "ms": 49514
+      },
+      {
+        "name": "CYCLE11-start",
+        "ms": 4178
+      },
+      {
+        "name": "CYCLE11-close-panel",
+        "ms": 4279
+      },
+      {
+        "name": "CYCLE11-liveness",
+        "ms": 3903
+      },
+      {
+        "name": "CYCLE11-aim",
+        "ms": 1878
+      },
+      {
+        "name": "CYCLE11-pause-resume",
+        "ms": 4807
+      },
+      {
+        "name": "CYCLE11-blocked-input",
+        "ms": 8562
+      },
+      {
+        "name": "CYCLE11-leave",
+        "ms": 21749
+      },
+      {
+        "name": "CYCLE11-total",
+        "ms": 49356
+      },
+      {
+        "name": "CYCLE12-start",
+        "ms": 4190
+      },
+      {
+        "name": "CYCLE12-close-panel",
+        "ms": 4282
+      },
+      {
+        "name": "CYCLE12-liveness",
+        "ms": 3940
+      },
+      {
+        "name": "CYCLE12-aim",
+        "ms": 1891
+      },
+      {
+        "name": "CYCLE12-pause-resume",
+        "ms": 4765
+      },
+      {
+        "name": "CYCLE12-blocked-input",
+        "ms": 8567
+      },
+      {
+        "name": "CYCLE12-leave",
+        "ms": 21842
+      },
+      {
+        "name": "CYCLE12-total",
+        "ms": 49477
+      },
+      {
+        "name": "CYCLE13-start",
+        "ms": 4218
+      },
+      {
+        "name": "CYCLE13-close-panel",
+        "ms": 4327
+      },
+      {
+        "name": "CYCLE13-liveness",
+        "ms": 3957
+      },
+      {
+        "name": "CYCLE13-aim",
+        "ms": 1940
+      },
+      {
+        "name": "CYCLE13-pause-resume",
+        "ms": 4779
+      },
+      {
+        "name": "CYCLE13-blocked-input",
+        "ms": 8551
+      },
+      {
+        "name": "CYCLE13-leave",
+        "ms": 21712
+      },
+      {
+        "name": "CYCLE13-total",
+        "ms": 49485
+      },
+      {
+        "name": "CYCLE14-start",
+        "ms": 4170
+      },
+      {
+        "name": "CYCLE14-close-panel",
+        "ms": 4320
+      },
+      {
+        "name": "CYCLE14-liveness",
+        "ms": 3908
+      },
+      {
+        "name": "CYCLE14-aim",
+        "ms": 1914
+      },
+      {
+        "name": "CYCLE14-pause-resume",
+        "ms": 4797
+      },
+      {
+        "name": "CYCLE14-blocked-input",
+        "ms": 8539
+      },
+      {
+        "name": "CYCLE14-leave",
+        "ms": 21735
+      },
+      {
+        "name": "CYCLE14-total",
+        "ms": 49383
+      },
+      {
+        "name": "CYCLE15-start",
+        "ms": 4201
+      },
+      {
+        "name": "CYCLE15-close-panel",
+        "ms": 4269
+      },
+      {
+        "name": "CYCLE15-liveness",
+        "ms": 3863
+      },
+      {
+        "name": "CYCLE15-aim",
+        "ms": 1905
+      },
+      {
+        "name": "CYCLE15-pause-resume",
+        "ms": 4790
+      },
+      {
+        "name": "CYCLE15-blocked-input",
+        "ms": 8540
+      },
+      {
+        "name": "CYCLE15-leave",
+        "ms": 21732
+      },
+      {
+        "name": "CYCLE15-total",
+        "ms": 49300
+      },
+      {
+        "name": "CYCLE16-start",
+        "ms": 4212
+      },
+      {
+        "name": "CYCLE16-close-panel",
+        "ms": 4289
+      },
+      {
+        "name": "CYCLE16-liveness",
+        "ms": 3905
+      },
+      {
+        "name": "CYCLE16-aim",
+        "ms": 1899
+      },
+      {
+        "name": "CYCLE16-pause-resume",
+        "ms": 4788
+      },
+      {
+        "name": "CYCLE16-blocked-input",
+        "ms": 8564
+      },
+      {
+        "name": "CYCLE16-leave",
+        "ms": 21814
+      },
+      {
+        "name": "CYCLE16-total",
+        "ms": 49471
+      },
+      {
+        "name": "CYCLE17-start",
+        "ms": 4197
+      },
+      {
+        "name": "CYCLE17-close-panel",
+        "ms": 4313
+      },
+      {
+        "name": "CYCLE17-liveness",
+        "ms": 3901
+      },
+      {
+        "name": "CYCLE17-aim",
+        "ms": 1902
+      },
+      {
+        "name": "CYCLE17-pause-resume",
+        "ms": 4822
+      },
+      {
+        "name": "CYCLE17-blocked-input",
+        "ms": 8596
+      },
+      {
+        "name": "CYCLE17-leave",
+        "ms": 21854
+      },
+      {
+        "name": "CYCLE17-total",
+        "ms": 49585
+      },
+      {
+        "name": "CYCLE18-start",
+        "ms": 4240
+      },
+      {
+        "name": "CYCLE18-close-panel",
+        "ms": 4363
+      },
+      {
+        "name": "CYCLE18-liveness",
+        "ms": 3957
+      },
+      {
+        "name": "CYCLE18-aim",
+        "ms": 1955
+      },
+      {
+        "name": "CYCLE18-pause-resume",
+        "ms": 3899
+      },
+      {
+        "name": "CYCLE18-blocked-input",
+        "ms": 7625
+      },
+      {
+        "name": "CYCLE18-leave",
+        "ms": 21886
+      },
+      {
+        "name": "CYCLE18-total",
+        "ms": 47925
+      },
+      {
+        "name": "CYCLE19-start",
+        "ms": 4213
+      },
+      {
+        "name": "CYCLE19-close-panel",
+        "ms": 4343
+      },
+      {
+        "name": "CYCLE19-liveness",
+        "ms": 3946
+      },
+      {
+        "name": "CYCLE19-aim",
+        "ms": 1945
+      },
+      {
+        "name": "CYCLE19-pause-resume",
+        "ms": 4762
+      },
+      {
+        "name": "CYCLE19-blocked-input",
+        "ms": 8566
+      },
+      {
+        "name": "CYCLE19-leave",
+        "ms": 21873
+      },
+      {
+        "name": "CYCLE19-total",
+        "ms": 49648
+      },
+      {
+        "name": "CYCLE20-start",
+        "ms": 4188
+      },
+      {
+        "name": "CYCLE20-close-panel",
+        "ms": 4294
+      },
+      {
+        "name": "CYCLE20-liveness",
+        "ms": 3905
+      },
+      {
+        "name": "CYCLE20-aim",
+        "ms": 1934
+      },
+      {
+        "name": "CYCLE20-pause-resume",
+        "ms": 4779
+      },
+      {
+        "name": "CYCLE20-blocked-input",
+        "ms": 8566
+      },
+      {
+        "name": "CYCLE20-leave",
+        "ms": 21882
+      },
+      {
+        "name": "CYCLE20-total",
+        "ms": 49548
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-start",
+        "ms": 4165
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-close-panel",
+        "ms": 4266
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-liveness",
+        "ms": 3859
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-aim",
+        "ms": 1916
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-pause-resume",
+        "ms": 4820
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-blocked-input",
+        "ms": 8562
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-leave",
+        "ms": 21993
+      },
+      {
+        "name": "RESTART_AFTER_LAST_RETURN-total",
+        "ms": 49581
+      },
+      {
+        "name": "cycles",
+        "ms": 1035165
+      },
+      {
+        "name": "save-reload",
+        "ms": 10601
+      },
+      {
+        "name": "error-audit",
+        "ms": 0
+      }
+    ]
+  },
+  "pages": {
+    "identity": {
+      "build_sha": "20ca5e95db58eed18068082fbb8581e0545d0325",
+      "artifact_digest": "36df5e57a11d18a1d8eb91a089171e32d8c2b6b15574ede902f503b5ad494421",
+      "digest_algo": "sha256(index.wasm || index.pck || index.js)",
+      "payload": {
+        "index.wasm": {
+          "bytes": 39514754,
+          "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+        },
+        "index.pck": {
+          "bytes": 41575964,
+          "sha256": "68dcd3f61fb12464a44a68498524edc14e1a2fcbaa9f6bb5d4ec339198b909f1"
+        },
+        "index.js": {
+          "bytes": 279815,
+          "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+        }
+      }
+    },
+    "ci_run": 37449480517,
+    "live_evidence": "pages-verification-evidence artifact and ci-after/main-pages local download"
+  },
+  "windows": {
+    "ci_run": 37447338134,
+    "bytes": 76868242,
+    "sha256": "5b5897f5cc9b02b5c652193ddc70f376eba47b92d0503b4d92b7bfdc995d8dbc"
+  },
+  "evidence_location": "C:\\Users\\admin\\.codex\\visualizations\\2026\\10\\06\\01a11081-06f9-7b83-8e37-96db26a1267a\\ci-after"
+}

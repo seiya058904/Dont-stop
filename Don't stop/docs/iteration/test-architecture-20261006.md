@@ -86,7 +86,7 @@ M8 的两次同提交实测为 1396/1436 秒；夹具连续经过 30 关，bot c
 
 ## 验证状态
 
-6 项结构/失败传播测试、3 项 menu-soak policy、12 项 stress completion 和 JavaScript syntax/YAML parse 检查通过。本地首次 fast（复制+import+3 个场景）实测 68.781 秒。完整当前候选及远端优化后的实测尚待补入；预计值不是通过记录。历史失败：console launcher CreateProcess 193；首次 full 在复制 `.godot/editor` 的长文件名时触发 Windows MAX_PATH；均没有计为 acceptance 通过，原日志保留。
+6 项结构/失败传播测试、3 项 menu-soak policy、12 项 stress completion 和 JavaScript syntax/YAML parse 检查通过。本地首次 fast（复制+import+3 个场景）实测 68.781 秒。下面保留本地尝试，包括失败；正式远端 CI 结果另列，不把失败尝试转记为通过。历史失败：console launcher CreateProcess 193；首次 full 在复制 `.godot/editor` 的长文件名时触发 Windows MAX_PATH；均没有计为 acceptance 通过，原日志保留。
 
 
 ### 新候选本地尝试（不计为完整通过）
@@ -98,7 +98,48 @@ M8 的两次同提交实测为 1396/1436 秒；夹具连续经过 30 关，bot c
 - `pressure-2` 独立完整重跑成功：density 100.730 秒 / 11 PASS、B11 stage 39 原 `seconds=75` 调用 81.070 秒 / 6 PASS、M10Bosses full 49.114 秒 / 39 PASS；完整层含准备/证据用时 253.630 秒。最终 fast 复用 import，45.868 秒、20 PASS、0 FAIL。
 - 本地默认改为 `--jobs 1`，原生完成后运行单浏览器 gates；CI 的分布式 shard 保留。没有放宽 55 秒、18 秒或任何原有断言/故障语义。
 
-PR/main/full/release 优化后的 GitHub 实测尚未执行：需要发布这份 workflow 候选并运行独立 runner。预计 native critical path ~42 分钟 → ~24 分钟（M8 下限），不是已达成结果；预计 Web save critical path 从 core+durable 变为 max(core,durable)，约省 291–338 秒，20-cycle 与 durable 的实测新结果仍决定下限。main 的原 build-browser 串行步骤迁至独立 fast gates，并补回 1-cycle menu-return；预计按现有同提交 job 样本落在 5–6 分钟附近，尚未验证。
+实现时的预计值为 native critical path ~42 分钟 → ~24 分钟、Web save 去掉 core+durable 的串行叠加；下节记录完成后的实测。预计值不能代替完整 gate 结果。
+
+### 完成后的 GitHub Actions 实测
+
+用户授权测试分支、测试架构 PR、完整 CI、合并和 Pages 部署后，候选 `d54deeaffc8c32d7bd2589f81c9916efd5be4456` 经 [PR #36](https://github.com/seiya058904/Dont-stop/pull/36) 合并为 `20ca5e95db58eed18068082fbb8581e0545d0325`。临时 `codex/test-architecture-closeout` 本地/远端分支已删除。没有发布新 Release；正式产品 tag 仍为 v1.3.5，原正式源码/资源/fixture 与封板代码逐文件一致。
+
+`evidence/ci-20261006/after.json` 保存每个 job/step 和全部 64 个 scene 的真实 wall-clock、覆盖结果、构建身份、Windows ZIP 回验摘要。原始日志及下载回来的 gate/fixture evidence 保存在本次工作区的外部审计目录，历史本地失败材料仍保留。下面总等待使用 GitHub `created_at → updated_at`，包含调度；job 秒数使用 `started_at → completed_at`，不能混为一谈。
+
+| 路径 | 优化前实测总等待 | 优化后实测总等待 | 结果 / run |
+| --- | ---: | ---: | --- |
+| PR | 4m39s | 5m53s | PASS / [37446526323](https://github.com/seiya058904/Dont-stop/actions/runs/37446526323) |
+| main → verified Pages | 5m13s | 5m39s | PASS / [37449480517](https://github.com/seiya058904/Dont-stop/actions/runs/37449480517) |
+| full Web | 23m43s（Release）；33m58s（manual，含调度） | 21m30s | PASS / [37446541314](https://github.com/seiya058904/Dont-stop/actions/runs/37446541314) |
+| full native | 42m25s（Release）；41m40s（manual） | 25m26s | PASS / [37446546587](https://github.com/seiya058904/Dont-stop/actions/runs/37446546587) |
+| Windows headless package / 下载回验 | 1m11s | 1m13s | PASS / [37447338134](https://github.com/seiya058904/Dont-stop/actions/runs/37447338134) |
+| Release-equivalent（full Web/native 并行 + Windows package） | longest gate 42m25s | longest gate 25m26s | 以上同候选全部通过；未发布新 Release |
+
+PR/main 已满足快速路径目标，但该组样本没有证明它们比历史样本更快：main 补回了 menu-return，PR 保留完整 loader/identity。完整验收的主要等待缩短来自 native 并行（约 40%），不是 PR/main 的速度宣称。Full Web 的两个历史运行受到不同 runner 调度影响，不能把 manual 的全部 12m28s 差额归功于脚本优化。
+
+| job / shard | 优化前 job 秒数 | 优化后 job 秒数 |
+| --- | ---: | ---: |
+| native setup | 26–28 | 30 |
+| native contracts 串行 / 三片 | 2455–2513 | 1486 / 815 / 264 |
+| native pressure 串行 / 三片 | 730–746 | 428 / 210 / 185 |
+| full Web build | 97–102 | 112 |
+| save core + durable 串行 / 独立 gates | 1318–1526 | core 355；durable 1163（并行） |
+| 20-cycle menu-return | 946–1158 | 1142 |
+| smoke（含 loader/identity） | 141–259 | 250 |
+| aim core / fault | 211–212 / 86–92 | 282 / 98 |
+| stages-fair | 180–352 | 368 |
+| Windows build | 67 | 70 |
+| main build / deploy+live identity | 284 / 21 | 49 / 24（browser 在独立 gate） |
+
+64 个 native 调用全部完成，PASS 总计 **3707**：M8 60、M6 60、短 contracts 3353、三片 pressure 166/56/12。全部正常退出，无 FAIL/SCRIPT ERROR，完成标记齐全。M8 单场景实测约 1473 秒，M6 约 792 秒，参数、30 关连续状态、真实 physics tick 和原 timeout 均保留。Native job critical path 从 contracts 2513 秒降至最慢 shard 1486 秒；完整 workflow 2545 秒 → 1526 秒。
+
+Web durable **89/89**，真实 IndexedDB 确认、18 秒故障边界、坏档恢复、失败/重试/退出及原文下载断言均执行。Menu 是 **20 个连续 cycles + 最后 restart**，456 个 token 全部成功，脚本 wall-clock 1126.666 秒；driver 保持一个 continuous session，没有降成短循环。固定 700/500ms 的拒绝输入观察及 1 秒暂停稳定窗口维持原语义；启动/菜单返回已等游戏状态/日志，40/120ms polling 不是长时间固定 sleep。没有充分依据删除真实观察窗口。
+
+本次 24 次 cache restore 全部命中，0 miss。Native import 19 秒，只做一次，分享 imported candidate 上传 2 秒、下载 1–4 秒，继续共享比重导入快。Web export 每条 workflow 一次；main build 49 秒，smoke/menu-return 在独立 runner 并行后部署同一 Pages artifact。所有失败 gate 仍阻止正式 gate/部署，full tests 没有 continue-on-error、fake success、帧数提前退出、time-scale 或放宽断言。
+
+**没有达到 full Web/native/Release 15 分钟目标。** 当前真实下限是 M8 连续 30 关约 24.5 分钟；full Web 的 durable 约 19 分钟和 continuous soak 约 18.8 分钟也超过 15 分钟。不能通过拆散跨关状态、缩短真实故障观察或减少 soak 覆盖宣称达标。下次仍优先 `verify-fast`/targeted 与 fast Web；完整 Release 门禁保持完整。
+
+Pages 已部署并由 CI 和本机第二次独立下载核验：SHA **20ca5e95db58eed18068082fbb8581e0545d0325**，payload digest **36df5e57a11d18a1d8eb91a089171e32d8c2b6b15574ede902f503b5ad494421**，wasm/pck/js 长度及各 SHA-256 全部匹配同次受测 artifact。Windows ZIP 下载回验 SHA-256 **5b5897f5cc9b02b5c652193ddc70f376eba47b92d0503b4d92b7bfdc995d8dbc**，包内 EXE/PCK 为 109197312/41575964 bytes。后续仅报告提交不重新部署游戏，不能据最新文档 SHA 推断 Pages 身份。
 
 ### 仓库清理状态
 

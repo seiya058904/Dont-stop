@@ -28,6 +28,8 @@ CI native 用 `tools/native-cases.json` 的实测时间 LPT 分片：contracts �
 
 不要以预算替代实测：M8 连续 30 关的历史 wall-clock 为 23–24 分钟，是保留既有跨关状态语义时的真实下限；不能把并行计划写成已达成 15 分钟。PR 快速门禁与 main build-once/test-same-bytes/deploy-same-bytes 仍保持；月度/Release/full 仍是完整门禁。
 
+2026-10-06 新架构完整 CI 已通过：PR 5m53s、main 到 verified Pages 5m39s、full Web 21m30s、full native 25m26s（64 调用、3707 PASS）、durable 89/89、continuous 20-cycle 加 restart。完整等待仍超过 15 分钟；默认采用 fast/targeted 层级，Release 保持全部门禁。实际 Pages 构建为 `20ca5e95db58eed18068082fbb8581e0545d0325`；后续报告提交不改变线上身份。完整 before/after、run 与 payload 摘要见上述测试架构文档。
+
 使用 Godot **4.7.2-stable** 及匹配导出模板、Python 3、CI Node **22**、Playwright **1.60.0** 及其配套 Chromium。权威版本见 `.github/workflows/` 和 `.github/actions/setup-browser/action.yml`。以下命令从 Git 根运行，`GODOT` 指向实际引擎；Windows 用等价参数并等待进程退出。
 
 ```bash
