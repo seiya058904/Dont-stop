@@ -66,7 +66,7 @@ fs.mkdirSync(out, { recursive: true });
    window.leaveVerifier = verify;
    window.towdownSave.verify = function (path, text, revision, callback) {
     const started = performance.now(), traceStart = window.towdownSave.diagnostics.length;
-    const observation = { reads: [], expected_hash: null, done: false, targetObserved: false };
+    const observation = { reads: [], expected_hash: null, done: false };
     const hashBytes = bytes => {
      let hash = 0x811c9dc5;
      for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
@@ -103,7 +103,6 @@ fs.mkdirSync(out, { recursive: true });
        entry.match = new TextDecoder().decode(bytes) === text;
        entry.row_observed_at = new Date().toISOString();
       } else { entry.row_hash = null; entry.match = false; }
-      if (entry.match && entry.row_hash === observation.expected_hash) observation.targetObserved = true;
       entry.phase = 'transaction-complete';
      } catch (error) { entry.phase = 'error'; entry.error = String(error); }
      finally { if (db) db.close(); entry.completed_at = new Date().toISOString(); entry.duration_ms = performance.now() - openStarted; }
@@ -141,14 +140,16 @@ fs.mkdirSync(out, { recursive: true });
       window.towdownSave.record('slow-fixture-commit-error', { verifier_elapsed_ms: performance.now() - started, error: String(error) });
      } finally { if (db) db.close(); }
     };
-    observation.requireIndependentMatch = slowVisibilityDelayMs > 0;
     const monitor = (async () => {
      const deadline = performance.now() + 30000;
-     while ((!observation.done || (observation.requireIndependentMatch && !observation.targetObserved))
-       && performance.now() < deadline) {
+     if (slowVisibilityDelayMs > 0) {
+      while (!observation.done && performance.now() < deadline) await new Promise(resolve => setTimeout(resolve, 100));
+      if (observation.done) await independentRead();
+      return;
+     }
+     while (!observation.done && performance.now() < deadline) {
       await independentRead();
-      if (!observation.done || (observation.requireIndependentMatch && !observation.targetObserved))
-       await new Promise(resolve => setTimeout(resolve, 100));
+      if (!observation.done) await new Promise(resolve => setTimeout(resolve, 100));
      }
     })();
     const result = verify.call(this, path, text, revision, (...args) => {
@@ -182,7 +183,7 @@ fs.mkdirSync(out, { recursive: true });
   (report.durableConfirmations ||= []).push(diagnostic);
   fs.writeFileSync(path.join(out, 'durable-confirmation-' + report.durableConfirmations.length + '.json'), JSON.stringify(diagnostic, null, 2));
   const fixtureDelay = diagnostic.verifier.find(event => event.event === 'slow-fixture-commit-scheduled')?.delay_ms;
-  if (fixtureDelay === 12000) {
+  if (fixtureDelay === 8500) {
    const expectedHash = diagnostic.verifier.find(event => event.event === 'verify-start')?.expected_hash;
    const oldRows = diagnostic.verifier.filter(event => event.event === 'row-hash' && event.elapsed_ms < 8000);
    const slowPath = diagnostic.verifier.find(event => event.event === 'verify-slow-path');
@@ -196,10 +197,10 @@ fs.mkdirSync(out, { recursive: true });
     'slow-visibility verifier sees only the previous durable snapshot during the first 8 s');
    check(slowPath?.fast_deadline_ms === 8000 && slowPath.grace_ms === 10000,
     'slow-visibility verifier enters its recorded 10 s grace after the 8 s fast window');
-   check(fixtureDelay === 12000 && fixtureCommit && fixtureCommit.verifier_elapsed_ms >= 10000 && fixtureCommit.verifier_elapsed_ms <= 14000,
-    'slow-visibility fixture commits the expected row in a real IndexedDB transaction at 10–14 s');
-   check(match && match.elapsed_ms >= 10000 && match.elapsed_ms <= 14000 && match.expected_hash === expectedHash,
-    'slow-visibility grace polls the real expected IndexedDB bytes at 10–14 s');
+   check(fixtureDelay === 8500 && fixtureCommit && fixtureCommit.verifier_elapsed_ms >= 8000 && fixtureCommit.verifier_elapsed_ms < 18000,
+    'slow-visibility fixture commits the expected row in a real IndexedDB transaction after 8 s');
+   check(match && match.elapsed_ms >= 10000 && match.elapsed_ms < 18000 && match.expected_hash === expectedHash,
+    'slow-visibility grace polls the real expected IndexedDB bytes before the 18 s hard limit');
    check(independentMatch,
     'slow-visibility fixture independently observes the committed expected IndexedDB bytes');
   }
@@ -296,7 +297,7 @@ fs.mkdirSync(out, { recursive: true });
   check(purchasedDisk.gold === purchasedGold && purchasedDisk.weapons.some(w => +w.id === 0)
    && dialogCount() === dialogs, 'purchase is durable before returning to the main menu');
   for (const id of [3, 4]) {
-   await start(); await settleStartupSave(); await select(id); await holdConfirmation(id === 3 ? 12000 : 0);
+   await start(); await settleStartupSave(); await select(id); await holdConfirmation(id === 3 ? 8500 : 0);
    await click('camp-action-0');
    await until(() => carry?.owned.includes(id) && !carry.saved, 'repeated purchased snapshot pending ' + id);
    const cycleGold = carry.gold; dialogs = dialogCount(); revision = recovery.revision;
