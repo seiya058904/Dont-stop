@@ -57,9 +57,10 @@ fs.mkdirSync(out, { recursive: true });
  async function returned() {
   await until(() => rects['menu-start-button']?.visible, 'returned main menu');
  }
- async function holdConfirmation() {
-  await page.evaluate(() => {
+ async function holdConfirmation(forceSyncDelayMs = 0) {
+  await page.evaluate(forceSyncDelayMs => {
    window.leaveConfirmations = [];
+   window.towdownSave.diagnosticsEnabled = true;
    const verify = window.towdownSave.verify;
    window.leaveVerifier = verify;
    window.towdownSave.verify = function (path, text, revision, callback) {
@@ -117,7 +118,8 @@ fs.mkdirSync(out, { recursive: true });
       trace_start: traceStart, observation, monitor, release: () => callback(...args) });
     });
    };
-  });
+   window.towdownSave.testForceSyncDelayMs = forceSyncDelayMs;
+  }, forceSyncDelayMs);
  }
  async function releaseConfirmation() {
   await page.waitForFunction(() => window.leaveConfirmations.length === 1);
@@ -133,8 +135,32 @@ fs.mkdirSync(out, { recursive: true });
   });
   (report.durableConfirmations ||= []).push(diagnostic);
   fs.writeFileSync(path.join(out, 'durable-confirmation-' + report.durableConfirmations.length + '.json'), JSON.stringify(diagnostic, null, 2));
+  const syncDelay = diagnostic.verifier.find(event => event.event === 'force-fs-sync-scheduled')?.delay_ms;
+  if (syncDelay === 11000) {
+   const expectedHash = diagnostic.verifier.find(event => event.event === 'verify-start')?.expected_hash;
+   const oldRows = diagnostic.verifier.filter(event => event.event === 'row-hash' && event.elapsed_ms < 8000);
+   const slowPath = diagnostic.verifier.find(event => event.event === 'verify-slow-path');
+   const match = diagnostic.verifier.find(event => event.event === 'verify-match');
+   const verifyStart = diagnostic.verifier.find(event => event.event === 'verify-start');
+   const fsSyncStart = diagnostic.verifier.find(event => event.event === 'force-fs-sync-start');
+   check(diagnostic.callback.success && diagnostic.callback.elapsed_ms >= 10000 && diagnostic.callback.elapsed_ms < 18000,
+    'slow-visibility fixture receives no early failure and succeeds before the 18 s hard limit');
+   check(oldRows.length > 0 && oldRows.every(event => !event.match && event.row_hash !== expectedHash),
+    'slow-visibility verifier sees only the previous durable snapshot during the first 8 s');
+   check(slowPath?.fast_deadline_ms === 8000 && slowPath.grace_ms === 10000,
+    'slow-visibility verifier enters its recorded 10 s grace after the 8 s fast window');
+   const syncElapsedMs = Date.parse(fsSyncStart?.at || 0) - Date.parse(verifyStart?.at || 0);
+   check(fsSyncStart && syncElapsedMs >= 10000 && syncElapsedMs <= 14000,
+    'slow-visibility fixture starts the real force_fs_sync after the 8 s deadline');
+   check(match && match.elapsed_ms >= 10000 && match.elapsed_ms <= 14000 && match.expected_hash === expectedHash,
+    'slow-visibility grace polls until the real expected IndexedDB bytes match at 10–14 s');
+   check(diagnostic.independent_connection.reads.some(event => event.match && event.row_hash === expectedHash),
+    'slow-visibility fixture independently observes the committed expected IndexedDB bytes');
+  }
   const callbackSucceeded = await page.evaluate(() => window.leaveConfirmations[0].args[1] === true);
   await page.evaluate(() => {
+   window.towdownSave.testForceSyncDelayMs = 0;
+   window.towdownSave.diagnosticsEnabled = false;
    window.towdownSave.verify = window.leaveVerifier;
    window.leaveConfirmations.shift().release();
   });
@@ -225,18 +251,51 @@ fs.mkdirSync(out, { recursive: true });
   check(purchasedDisk.gold === purchasedGold && purchasedDisk.weapons.some(w => +w.id === 0)
    && dialogCount() === dialogs, 'purchase is durable before returning to the main menu');
   for (const id of [3, 4]) {
-   await start(); await settleStartupSave(); await select(id); await holdConfirmation();
+   await start(); await settleStartupSave(); await select(id); await holdConfirmation(id === 3 ? 11000 : 0);
    await click('camp-action-0');
    await until(() => carry?.owned.includes(id) && !carry.saved, 'repeated purchased snapshot pending ' + id);
    const cycleGold = carry.gold; dialogs = dialogCount(); revision = recovery.revision;
    await leaveCamp();
    check(dialogCount() === dialogs && recovery.revision === revision, 'immediate post-purchase leave stays pending for weapon ' + id);
    await releaseConfirmation(); await returned();
+   if (id === 3) check(!(await page.evaluate(() => window.towdownSave.dirty)),
+    'slow-path durable success clears the dirty and beforeunload guard');
    const cycleDisk = await disk();
    check(cycleDisk.gold === cycleGold && cycleDisk.weapons.some(w => +w.id === id),
     'weapon ' + id + ' purchase is committed before immediate return');
   }
-  await start(); await settleStartupSave();
+  await start(); await settleStartupSave(); await select(2);
+  const timeoutTraceStart = await page.evaluate(() => {
+   window.towdownSave.diagnosticsEnabled = true;
+   window.towdownSave.testForceSyncDelayMs = -1;
+   return window.towdownSave.diagnostics.length;
+  });
+  await click('camp-action-0');
+  await until(() => carry?.owned.includes(2) && !carry.saved, 'never-submitted purchase pending');
+  const timeoutRevision = recovery.revision;
+  await leaveCamp();
+  check(await page.evaluate(() => window.towdownSave.dirty), 'never-submitted snapshot stays dirty during pending leave');
+  await until(() => carry?.saved === false && /未确认/.test(carry?.message || ''), '18-second durable hard timeout', 30000);
+  const timeoutEvidence = await page.evaluate(({ start, revision }) => {
+   const events = window.towdownSave.diagnostics.slice(start).filter(event => event.revision === revision);
+   return { revision, events, expectedHash: events.find(event => event.event === 'verify-start')?.expected_hash };
+  }, { start: timeoutTraceStart, revision: timeoutRevision });
+  fs.writeFileSync(path.join(out, 'durable-hard-timeout.json'), JSON.stringify(timeoutEvidence, null, 2));
+  const slowDeadline = timeoutEvidence.events.find(event => event.event === 'verify-slow-path');
+  const hardDeadline = timeoutEvidence.events.find(event => event.event === 'verify-timeout');
+  const terminalCallback = timeoutEvidence.events.find(event => event.event === 'verify-callback');
+  check(slowDeadline?.fast_deadline_ms === 8000 && hardDeadline?.total_deadline_ms === 18000,
+   'never-submitted snapshot passes the 8-second fast window and reaches the 18-second hard timeout');
+  check(terminalCallback?.success === false && terminalCallback.elapsed_ms >= 18000
+   && terminalCallback.reason.includes('未确认') && !timeoutEvidence.events.some(event => event.event === 'verify-match'),
+   'never-submitted snapshot fails at the bounded hard timeout without a successful confirmation');
+  check(await page.evaluate(() => window.towdownSave.dirty), '18-second hard timeout retains dirty and beforeunload protection');
+  check(!(await disk()).weapons.some(weapon => +weapon.id === 2), 'never-submitted purchase never appears in durable IndexedDB');
+  await page.evaluate(() => { window.towdownSave.diagnosticsEnabled = false; window.towdownSave.testForceSyncDelayMs = 0; });
+  await until(() => recovery?.dialog && rects['save-discard']?.visible, 'hard-timeout protection actions');
+  await click('save-discard'); await start();
+  check(!carry.owned.includes(2), 'discard after the hard timeout restores the last committed save');
+  await settleStartupSave();
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
    await click('camp-action-0');

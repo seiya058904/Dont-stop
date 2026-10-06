@@ -9,24 +9,27 @@ var _web_callback
 const WEB_CONFIRM = """
 window.towdownSave = window.towdownSave || {
  dirty: false,
+ diagnosticsEnabled: false,
  diagnostics: [],
- record(event, fields = {}) {
+ record(event, fields = {}, detailed = false) {
+  if (detailed && !this.diagnosticsEnabled) return;
   const entry = Object.assign({ event, at: new Date().toISOString(), elapsed_ms: performance.now() }, fields);
   this.diagnostics.push(entry);
-  if (this.diagnostics.length > 4000) this.diagnostics.splice(0, this.diagnostics.length - 4000);
+  const limit = this.diagnosticsEnabled ? 4000 : 64;
+  if (this.diagnostics.length > limit) this.diagnostics.splice(0, this.diagnostics.length - limit);
  },
  verify(path, text, revision, callback) {
   const started = performance.now();
-  const trace = (event, fields = {}) => this.record(event, Object.assign({ revision, elapsed_ms: performance.now() - started }, fields));
-  const hashBytes = bytes => {
+  const trace = (event, fields = {}, detailed = false) => this.record(event, Object.assign({ revision, elapsed_ms: performance.now() - started }, fields), detailed);
+  const hashBytes = this.diagnosticsEnabled ? bytes => {
    let hash = 0x811c9dc5;
    for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
    return (hash >>> 0).toString(16).padStart(8, '0');
-  };
-  const expectedBytes = new TextEncoder().encode(text);
-  const expectedHash = hashBytes(expectedBytes);
+  } : null;
+  const expectedBytes = this.diagnosticsEnabled ? new TextEncoder().encode(text) : null;
+  const expectedHash = expectedBytes ? hashBytes(expectedBytes) : null;
   let pollNumber = 0, observedRow = false;
-  trace('verify-start', { path, expected_hash: expectedHash, expected_bytes: expectedBytes.length });
+  trace('verify-start', { path, expected_hash: expectedHash, expected_bytes: expectedBytes ? expectedBytes.length : null });
   this.dirty = true;
   let finished = false, db = null;
   const finish = (ok, reason) => {
@@ -46,19 +49,19 @@ window.towdownSave = window.towdownSave || {
    }, 10000);
   }, 8000);
   try {
-   trace('open-start', { database: '/userfs' });
+   trace('open-start', { database: '/userfs' }, true);
    const open = indexedDB.open('/userfs');
    open.onerror = () => { trace('open-error', { error: String(open.error || '') }); finish(false, '浏览器存储不可用；请重试或导出当前进度'); };
    open.onblocked = () => { trace('open-blocked'); finish(false, '浏览器存储被阻止；请关闭同源游戏页后重试'); };
    open.onsuccess = () => {
     db = open.result;
-    trace('open-success', { database: db.name, version: db.version, stores: Array.from(db.objectStoreNames) });
+    trace('open-success', { database: db.name, version: db.version, stores: Array.from(db.objectStoreNames) }, true);
     if (finished) { db.close(); return; }
     if (!db.objectStoreNames.contains('FILE_DATA')) return finish(false, '浏览器未启用持久化；请导出当前进度');
     const poll = () => {
      if (finished) return;
      const currentPoll = ++pollNumber;
-     trace('poll-start', { poll: currentPoll });
+     trace('poll-start', { poll: currentPoll }, true);
      try {
       const tx = db.transaction('FILE_DATA', 'readonly');
       const read = tx.objectStore('FILE_DATA').get(path);
@@ -66,15 +69,15 @@ window.towdownSave = window.towdownSave || {
       read.onsuccess = () => {
        const row = read.result;
        matches = !!row && new TextDecoder().decode(row.contents) === text;
-       if (row) {
+       if (row && this.diagnosticsEnabled) {
         const bytes = row.contents instanceof Uint8Array ? row.contents : new Uint8Array(row.contents);
         const rowHash = hashBytes(bytes);
-        trace('row-hash', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, expected_hash: expectedHash, match: matches });
-        if (!observedRow) { observedRow = true; trace('first-row', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, match: matches }); }
-       } else trace('row-missing', { poll: currentPoll, expected_hash: expectedHash });
+        trace('row-hash', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, expected_hash: expectedHash, match: matches }, true);
+        if (!observedRow) { observedRow = true; trace('first-row', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, match: matches }, true); }
+       } else if (!row && this.diagnosticsEnabled) trace('row-missing', { poll: currentPoll, expected_hash: expectedHash }, true);
       };
       tx.oncomplete = () => {
-       trace('transaction-complete', { poll: currentPoll, match: matches });
+       trace('transaction-complete', { poll: currentPoll, match: matches }, true);
        if (matches) { trace('verify-match', { poll: currentPoll, expected_hash: expectedHash }); finish(true, '已保存到浏览器'); }
        else setTimeout(poll, 100);
       };
@@ -103,6 +106,14 @@ func _ensure_web_bridge() -> void:
 func confirm_web(path: String, revision: int) -> void:
 	_ensure_web_bridge()
 	JavaScriptBridge.get_interface("towdownSave").verify(ProjectSettings.globalize_path(path),FileAccess.get_file_as_string(path),revision,_web_callback)
+	var fixture_delay_ms = int(JavaScriptBridge.eval("(function(){var state=window.towdownSave;var delay=Number(state.testForceSyncDelayMs)||0;if(delay>0)state.record('force-fs-sync-scheduled',{revision:" + str(revision) + ",delay_ms:delay});else if(delay<0)state.record('force-fs-sync-suppressed-test',{revision:" + str(revision) + "});else state.record('force-fs-sync-start',{revision:" + str(revision) + "});return delay;})()",true))
+	if fixture_delay_ms > 0:
+		var tree := Engine.get_main_loop() as SceneTree
+		if tree != null: tree.create_timer(float(fixture_delay_ms) / 1000.0).timeout.connect(_force_fs_sync.bind(revision),CONNECT_ONE_SHOT)
+	elif fixture_delay_ms == 0:
+		JavaScriptBridge.force_fs_sync()
+
+func _force_fs_sync(revision: int) -> void:
 	JavaScriptBridge.eval("if (window.towdownSave) window.towdownSave.record('force-fs-sync-start', {revision:" + str(revision) + "})",true)
 	JavaScriptBridge.force_fs_sync()
 
