@@ -123,8 +123,8 @@ fs.mkdirSync(out, { recursive: true });
     window.saveFault = 'abort';
     window.setTimeout(() => {
      window.saveFault = '';
-     window.towdownSave.record('slow-fixture-write-unblocked', { delay_ms: forceSyncDelayMs - 500 });
-    }, forceSyncDelayMs - 500);
+     window.towdownSave.record('slow-fixture-write-unblocked', { delay_ms: forceSyncDelayMs - 1500 });
+    }, forceSyncDelayMs - 1500);
    }
   }, forceSyncDelayMs);
  }
@@ -163,7 +163,7 @@ fs.mkdirSync(out, { recursive: true });
     'slow-visibility fixture schedules the real force_fs_sync after the 8 s fast window');
    const syncElapsedMs = Date.parse(fsSyncStart?.at || 0) - Date.parse(verifyStart?.at || 0);
    check(fsSyncTimer?.delay_ms === 11000 && fsSyncStart && syncElapsedMs >= 10000 && syncElapsedMs <= 14000
-    && writeUnblocked && writeUnblocked.delay_ms === 10500,
+    && writeUnblocked && writeUnblocked.delay_ms === 9500,
     'slow-visibility fixture holds IndexedDB puts until the delayed real force_fs_sync window');
    check(match && match.elapsed_ms >= 10000 && match.elapsed_ms <= 14000 && match.expected_hash === expectedHash,
     'slow-visibility grace polls until the real expected IndexedDB bytes match at 10–14 s');
