@@ -1,0 +1,96 @@
+{
+  "fast_seconds": 68.781,
+  "windows": {
+    "commit": "cb7eed5a13823412f39b3f8e58182d05447c8367",
+    "seconds": 65.598,
+    "files": {
+      "Don't stop.exe": {
+        "bytes": 109197312,
+        "sha256": "971b30fea325c6aaa7f2d9f56ba6d5959db0c8c29ac29d4fb432b40db66e2316"
+      },
+      "Don't stop.pck": {
+        "bytes": 41575964,
+        "sha256": "651527e1cde9ee759554e3d3aa9746fe66e51c4603187d9e084a40934a9d42ed"
+      }
+    },
+    "success": true
+  },
+  "durable_isolated": [
+    {
+      "name": "after",
+      "exit": 1,
+      "seconds": 42.688,
+      "checks": 12,
+      "success": false
+    },
+    {
+      "name": "before",
+      "exit": 1,
+      "seconds": 43.341,
+      "checks": 12,
+      "success": false
+    }
+  ],
+  "full_attempt": {
+    "success": false,
+    "stopped": true,
+    "reason": "density stage 31 and durable slow confirmation assertion failed; no completion claimed"
+  },
+  "cleanup": {
+    "deleted_files": 0,
+    "deleted_directories": 0,
+    "released_bytes": 0,
+    "blocked": "blocked by policy"
+  },
+  "fast_reused_seconds": 45.868,
+  "pressure_2_retry": {
+    "commit": "cb7eed5a13823412f39b3f8e58182d05447c8367",
+    "tier": "verify-native",
+    "wall_seconds": 253.63,
+    "reports": [
+      {
+        "commit": "cb7eed5a13823412f39b3f8e58182d05447c8367",
+        "requested": [
+          "M10Density stages=22,31",
+          "B11Perf stage=39 seconds=75",
+          "M10Bosses full"
+        ],
+        "cases": [
+          {
+            "id": "M10Density stages=22,31",
+            "seconds": 100.73,
+            "success": true,
+            "exit": 0,
+            "checks": 11,
+            "minimum_checks": 11,
+            "issues": [],
+            "completed": true
+          },
+          {
+            "id": "B11Perf stage=39 seconds=75",
+            "seconds": 81.07,
+            "success": true,
+            "exit": 0,
+            "checks": 6,
+            "minimum_checks": 6,
+            "issues": [],
+            "completed": true
+          },
+          {
+            "id": "M10Bosses full",
+            "seconds": 49.114,
+            "success": true,
+            "exit": 0,
+            "checks": 39,
+            "minimum_checks": 39,
+            "issues": [],
+            "completed": true
+          }
+        ],
+        "wall_seconds": 245.55,
+        "success": true
+      }
+    ],
+    "success": true
+  }
+}

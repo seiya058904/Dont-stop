@@ -85,14 +85,17 @@ jobs:
       - name: Stage-specific native regression preflight
         if: steps.scope.outputs.game == 'true'
         shell: bash
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
           set -euo pipefail
           run_case () {
             local name="$1"
-            local log="$RUNNER_TEMP/preflight-$name.log"
+            shift
+            local log="$RUNNER_TEMP/preflight-$name-$(echo "$*" | tr -d ' ,=-').log"
             set +e
             timeout 300 "$GODOT" --headless --path "$PROJECT_PATH" --quit-after 60000 \
-              "res://tests/$name.tscn" > "$log" 2>&1
+              "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
             local code=$?
             set -e
             local issues checks
@@ -123,6 +126,17 @@ jobs:
             # Former standalone legacy-hp job, sharing this one engine/import.
             run_case LegacyHpCompatibility
             run_case B17Saved
+          fi
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            # Add coverage for changed save/game/UI paths; retain established fast gates.
+            python3 "$PROJECT_PATH/tools/verify.py" verify-fast --list-fast --base "$BASE_SHA" > "$RUNNER_TEMP/targeted-cases.txt"
+            while IFS= read -r identity; do
+              case "$identity" in
+                B194Contracts|P0SaveSanity|BaselineRegression|CombatReadability|WeaponVisualPose|DeepQuality|WebPhysicsContracts|CampPresentation|CameraTransitions|B17Contracts|M3Weapons|LegacyHpCompatibility|B17Saved) continue ;;
+              esac
+              read -r -a case_args <<< "$identity"
+              run_case "${case_args[@]}"
+            done < "$RUNNER_TEMP/targeted-cases.txt"
           fi
 
       - name: Export the validated Web candidate
@@ -165,37 +179,14 @@ jobs:
           python3 "$PROJECT_PATH/tools/stamp-build-identity.py" \
             "$PROJECT_PATH/build/web" "$GITHUB_SHA" "$RUNNER_TEMP/build-identity.json"
 
-      - uses: ./.github/actions/setup-browser
-        if: steps.scope.outputs.game == 'true' && github.event_name == 'push'
-
-      - name: Real browser gates on the final candidate
-        if: steps.scope.outputs.game == 'true' && github.event_name == 'push'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p smoke-evidence menu-return-evidence
-          python3 -m http.server 8788 --directory "$PROJECT_PATH/build/web" &
-          SERVER=$!
-          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
-          for attempt in {1..20}; do
-            if curl --fail --silent http://localhost:8788/index.html > /dev/null; then break; fi
-            sleep 0.2
-          done
-          export E2E_SCREENSHOTS=none
-          node "$PROJECT_PATH/tools/web-loader-check.js" http://localhost:8788/index.html smoke-evidence/loader
-          # Main has one browser process; PR/acceptance use isolated matrix runners.
-          node "$PROJECT_PATH/tools/smoke-web.js" http://localhost:8788/index.html smoke-evidence 2>&1 | tee smoke-evidence/run.log
-          # Recompute all payload hashes after the browser tests: fail if they changed.
-          node "$PROJECT_PATH/tools/verify-pages-deployment.js" http://localhost:8788/index.html "$GITHUB_SHA" "$RUNNER_TEMP/build-identity.json" smoke-evidence/identity
-
-      - name: Upload tested Pages bytes (no rebuild)
+      - name: Upload candidate Pages bytes (deploy waits for the gates; no rebuild)
         if: steps.scope.outputs.game == 'true' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || inputs.deploy == true)
         uses: actions/upload-pages-artifact@v3
         with:
           path: "Don't stop/build/web"
 
-      - name: Upload Web candidate for PR/full browser acceptance
-        if: steps.scope.outputs.game == 'true' && github.event_name != 'push'
+      - name: Upload the same Web candidate for fast/full browser acceptance
+        if: steps.scope.outputs.game == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: web-build
@@ -236,7 +227,7 @@ jobs:
   web-required-gate:
     name: Web required gate
     needs: [build, browser-gates]
-    if: always() && github.event_name == 'pull_request'
+    if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
@@ -255,16 +246,16 @@ jobs:
   browser-gates:
     name: "Gate ${{ matrix.name }}"
     needs: build
-    if: needs.build.outputs.game == 'true' && github.event_name != 'push'
+    if: needs.build.outputs.game == 'true'
     runs-on: ubuntu-24.04
     # Full save acceptance includes transaction faults and repeated reloads.
-    timeout-minutes: ${{ matrix.name == 'save-audit' && 30 || matrix.name == 'stages-fair' && 12 || matrix.job_budget_minutes || 8 }}
+    timeout-minutes: ${{ (matrix.name == 'save-audit' || matrix.name == 'durable-save') && 30 || matrix.name == 'stages-fair' && 12 || matrix.job_budget_minutes || 8 }}
     env:
-      GATE_JOB_BUDGET_MINUTES: ${{ matrix.name == 'save-audit' && 30 || matrix.name == 'stages-fair' && 12 || matrix.job_budget_minutes || 8 }}
+      GATE_JOB_BUDGET_MINUTES: ${{ (matrix.name == 'save-audit' || matrix.name == 'durable-save') && 30 || matrix.name == 'stages-fair' && 12 || matrix.job_budget_minutes || 8 }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        name: ${{ fromJSON(github.event_name == 'pull_request' && '["smoke","menu-return"]' || '["smoke","save-audit","aim-core","aim-fault","menu-return","stages-fair"]') }}
+        name: ${{ fromJSON((github.event_name == 'pull_request' || github.event_name == 'push') && '["smoke","menu-return"]' || '["smoke","save-audit","durable-save","aim-core","aim-fault","menu-return","stages-fair"]') }}
         include:
           - name: menu-return
             # Observed CI cycles span 31-50s: 21 iterations can take 17.5m,
@@ -302,7 +293,10 @@ jobs:
           python3 -m http.server 8788 --directory build/web &
           SERVER=$!
           trap 'kill "$SERVER" 2>/dev/null || true' EXIT
-          sleep 2
+          for attempt in {1..40}; do
+            if curl --fail --silent http://localhost:8788/index.html > /dev/null; then break; fi
+            sleep 0.1
+          done
           curl --fail --silent --show-error http://localhost:8788/index.html > /dev/null
           if [ "${{ matrix.name }}" = smoke ]; then
             node "$PROJECT_PATH/tools/web-loader-check.js" http://localhost:8788/index.html "$OUT/loader"
@@ -313,6 +307,7 @@ jobs:
           case "${{ matrix.name }}" in
             smoke) SCRIPT=tools/smoke-web.js ;;
             save-audit) SCRIPT=tools/save-audit-web.js ;;
+            durable-save) SCRIPT=tools/web-save-durable.js ;;
             aim-core|aim-fault) SCRIPT=tools/web-aim-e2e.js ;;
             menu-return) SCRIPT=tools/web-menu-return-e2e.js ;;
             stages-fair) SCRIPT=tools/web-b11-stagerun.js ;;
@@ -341,9 +336,6 @@ jobs:
           if [ "${{ matrix.name }}" = smoke ]; then
             node "$PROJECT_PATH/tools/verify-pages-deployment.js" http://localhost:8788/index.html "$GITHUB_SHA" build-identity/build-identity.json "$OUT/identity"
           fi
-          if [ "${{ matrix.name }}" = save-audit ]; then
-            E2E_HEADED=0 node "$PROJECT_PATH/tools/web-save-durable.js" http://localhost:8788/index.html "$OUT/durable" 2>&1 | tee "$OUT/durable.log"
-          fi
           echo "GATE_${{ matrix.name }}=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
       - name: Upload gate evidence
@@ -356,12 +348,13 @@ jobs:
 
   deploy:
     name: Deploy and verify live Pages identity
-    needs: [build, browser-gates]
-    # Browser smoke already passed on the build runner for daily pushes.
+    needs: [build, browser-gates, web-required-gate]
+    # All fast/full browser gates must pass on the same once-exported bytes.
     if: >-
       always() && needs.build.result == 'success'
       && needs.build.outputs.game == 'true'
-      && (needs.browser-gates.result == 'success' || needs.browser-gates.result == 'skipped')
+      && needs.web-required-gate.result == 'success'
+      && needs.browser-gates.result == 'success'
       && github.ref == 'refs/heads/main'
       && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
     permissions:

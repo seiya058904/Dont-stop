@@ -1,0 +1,3140 @@
+[
+  {
+    "run": 37428112731,
+    "job": "Build and test exact Web artifact",
+    "id": 112152334195,
+    "conclusion": "success",
+    "seconds": 97.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Scope (docs-only detection, no extra runner)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import project (once, fail fast)",
+        "seconds": 15.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stage-specific native regression preflight",
+        "seconds": 59.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Export the validated Web candidate",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stamp build identity (commit SHA + artifact digest)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Real browser gates on the final candidate",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload tested Pages bytes (no rebuild)",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload Web candidate for PR/full browser acceptance",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload build identity",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload candidate diagnostics",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:11:29.3460941Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+      "2026-10-06T07:11:30.6009175Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112731,
+    "job": "Gate aim-fault",
+    "id": 112152866178,
+    "conclusion": "success",
+    "seconds": 86.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 71.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:13:09.8235920Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T07:13:11.1351600Z \u001b[36;1mecho \"GATE_aim-fault=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37428112731,
+    "job": "Gate aim-core",
+    "id": 112152866198,
+    "conclusion": "success",
+    "seconds": 212.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 192.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:13:15.1623573Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T07:13:16.1431186Z \u001b[36;1mecho \"GATE_aim-core=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37428112731,
+    "job": "Gate smoke",
+    "id": 112152866240,
+    "conclusion": "success",
+    "seconds": 141.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 8.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 117.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:13:17.3465023Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T07:13:19.4577618Z \u001b[36;1mecho \"GATE_smoke=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37428112731,
+    "job": "Gate stages-fair",
+    "id": 112152866254,
+    "conclusion": "success",
+    "seconds": 180.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 164.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:13:13.7356020Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T07:13:14.8666504Z \u001b[36;1mecho \"GATE_stages-fair=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37428112731,
+    "job": "Gate menu-return",
+    "id": 112152866255,
+    "conclusion": "success",
+    "seconds": 946.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 924.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:13:16.7810896Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T07:13:18.3500840Z \u001b[36;1mecho \"GATE_menu-return=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m",
+      "2026-10-06T07:15:01.3761683Z [menu-e2e] note CYCLE1 cycle wall clock 37952ms",
+      "2026-10-06T07:15:42.0831876Z [menu-e2e] note CYCLE2 cycle wall clock 40707ms",
+      "2026-10-06T07:16:22.6195224Z [menu-e2e] note CYCLE3 cycle wall clock 40536ms",
+      "2026-10-06T07:17:03.2235452Z [menu-e2e] note CYCLE4 cycle wall clock 40600ms",
+      "2026-10-06T07:17:43.8725146Z [menu-e2e] note CYCLE5 cycle wall clock 40648ms",
+      "2026-10-06T07:18:24.6102337Z [menu-e2e] note CYCLE6 cycle wall clock 40744ms",
+      "2026-10-06T07:19:05.2405129Z [menu-e2e] note CYCLE7 cycle wall clock 40627ms",
+      "2026-10-06T07:19:45.7215808Z [menu-e2e] note CYCLE8 cycle wall clock 40478ms",
+      "2026-10-06T07:20:26.2625697Z [menu-e2e] note CYCLE9 cycle wall clock 40541ms",
+      "2026-10-06T07:21:06.9136809Z [menu-e2e] note CYCLE10 cycle wall clock 40653ms",
+      "2026-10-06T07:21:47.4775168Z [menu-e2e] note CYCLE11 cycle wall clock 40561ms",
+      "2026-10-06T07:22:28.0109052Z [menu-e2e] note CYCLE12 cycle wall clock 40537ms",
+      "2026-10-06T07:23:08.6925198Z [menu-e2e] note CYCLE13 cycle wall clock 40678ms",
+      "2026-10-06T07:23:49.2555170Z [menu-e2e] note CYCLE14 cycle wall clock 40565ms",
+      "2026-10-06T07:24:29.8185320Z [menu-e2e] note CYCLE15 cycle wall clock 40562ms",
+      "2026-10-06T07:25:10.3895347Z [menu-e2e] note CYCLE16 cycle wall clock 40571ms",
+      "2026-10-06T07:25:50.8857638Z [menu-e2e] note CYCLE17 cycle wall clock 40494ms",
+      "2026-10-06T07:26:31.4684853Z [menu-e2e] note CYCLE18 cycle wall clock 40584ms",
+      "2026-10-06T07:27:12.0584077Z [menu-e2e] note CYCLE19 cycle wall clock 40591ms",
+      "2026-10-06T07:27:52.6675953Z [menu-e2e] note CYCLE20 cycle wall clock 40610ms",
+      "2026-10-06T07:28:33.2735498Z [menu-e2e] note RESTART_AFTER_LAST_RETURN cycle wall clock 40607ms",
+      "2026-10-06T07:28:42.6055753Z [menu-e2e] timing WALL_CLOCK                         921951ms"
+    ]
+  },
+  {
+    "run": 37428112731,
+    "job": "Gate save-audit",
+    "id": 112152866306,
+    "conclusion": "success",
+    "seconds": 1318.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 11.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 1293.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:13:19.6712630Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T07:13:22.3319463Z \u001b[36;1mecho \"GATE_save-audit=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ],
+    "save_core_seconds_including_server_start": 290.722,
+    "durable_seconds": 1002.278
+  },
+  {
+    "run": 37428112731,
+    "job": "Stable preflight",
+    "id": 112152868037,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112731,
+    "job": "Deploy and verify live Pages identity",
+    "id": 112160182714,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112731,
+    "job": "Web required gate",
+    "id": 112160182816,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112716,
+    "job": "Native candidate preflight",
+    "id": 112152333669,
+    "conclusion": "success",
+    "seconds": 26.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import the project",
+        "seconds": 10.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Share the imported candidate (no second import in consumers)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T07:11:29.2911096Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112716,
+    "job": "contracts",
+    "id": 112152481957,
+    "conclusion": "success",
+    "seconds": 2513.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Restore the already imported candidate",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Save-file contracts, hazard system, fog and progression",
+        "seconds": 2496.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload contract logs",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [
+      {
+        "scene": "BaselineRegression",
+        "args": "",
+        "seconds": null,
+        "exit": 0,
+        "checks": 4,
+        "issues": 0
+      },
+      {
+        "scene": "B194Contracts",
+        "args": "",
+        "seconds": 0.859434,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "LegacyHpCompatibility",
+        "args": "",
+        "seconds": 1.591553,
+        "exit": 0,
+        "checks": 31,
+        "issues": 0
+      },
+      {
+        "scene": "B11Stages",
+        "args": "",
+        "seconds": 12.003267,
+        "exit": 0,
+        "checks": 57,
+        "issues": 0
+      },
+      {
+        "scene": "B11Fairness",
+        "args": "",
+        "seconds": 2.488244,
+        "exit": 0,
+        "checks": 61,
+        "issues": 0
+      },
+      {
+        "scene": "B6Progression",
+        "args": "",
+        "seconds": 3.141117,
+        "exit": 0,
+        "checks": 41,
+        "issues": 0
+      },
+      {
+        "scene": "R1Persistence",
+        "args": "",
+        "seconds": 0.999668,
+        "exit": 0,
+        "checks": 51,
+        "issues": 0
+      },
+      {
+        "scene": "R1RecoveryUI",
+        "args": "",
+        "seconds": 1.467496,
+        "exit": 0,
+        "checks": 39,
+        "issues": 0
+      },
+      {
+        "scene": "B6Progression",
+        "args": "--hell-unlock",
+        "seconds": 3.140809,
+        "exit": 0,
+        "checks": 41,
+        "issues": 0
+      },
+      {
+        "scene": "B3Hazards",
+        "args": "",
+        "seconds": 19.921381,
+        "exit": 0,
+        "checks": 128,
+        "issues": 0
+      },
+      {
+        "scene": "B4Fog",
+        "args": "",
+        "seconds": 11.812752,
+        "exit": 0,
+        "checks": 110,
+        "issues": 0
+      },
+      {
+        "scene": "M6EncounterAudit",
+        "args": "",
+        "seconds": 861.503,
+        "exit": 0,
+        "checks": 60,
+        "issues": 0
+      },
+      {
+        "scene": "M8Encounters",
+        "args": "",
+        "seconds": 1396.17484,
+        "exit": 0,
+        "checks": 60,
+        "issues": 0
+      },
+      {
+        "scene": "B12Catalog",
+        "args": "",
+        "seconds": 1.368977,
+        "exit": 0,
+        "checks": 182,
+        "issues": 0
+      },
+      {
+        "scene": "B12Save",
+        "args": "",
+        "seconds": 1.37021,
+        "exit": 0,
+        "checks": 14,
+        "issues": 0
+      },
+      {
+        "scene": "B12UI",
+        "args": "",
+        "seconds": 1.558064,
+        "exit": 0,
+        "checks": 75,
+        "issues": 0
+      },
+      {
+        "scene": "B12LineOfSightRegression",
+        "args": "",
+        "seconds": 1.555396,
+        "exit": 0,
+        "checks": 12,
+        "issues": 0
+      },
+      {
+        "scene": "B13Catalog",
+        "args": "",
+        "seconds": 1.370227,
+        "exit": 0,
+        "checks": 532,
+        "issues": 0
+      },
+      {
+        "scene": "B13UpgradeEffects",
+        "args": "",
+        "seconds": 1.370287,
+        "exit": 0,
+        "checks": 85,
+        "issues": 0
+      },
+      {
+        "scene": "B13TalentEffects",
+        "args": "",
+        "seconds": 25.914349,
+        "exit": 0,
+        "checks": 37,
+        "issues": 0
+      },
+      {
+        "scene": "B13Economy",
+        "args": "",
+        "seconds": 1.370023,
+        "exit": 0,
+        "checks": 159,
+        "issues": 0
+      },
+      {
+        "scene": "B13Unequip",
+        "args": "",
+        "seconds": 2.208724,
+        "exit": 0,
+        "checks": 55,
+        "issues": 0
+      },
+      {
+        "scene": "B13UI",
+        "args": "",
+        "seconds": 2.302752,
+        "exit": 0,
+        "checks": 138,
+        "issues": 0
+      },
+      {
+        "scene": "CampPresentation",
+        "args": "",
+        "seconds": 2.021856,
+        "exit": 0,
+        "checks": 71,
+        "issues": 0
+      },
+      {
+        "scene": "PresentationContracts",
+        "args": "",
+        "seconds": 2.115792,
+        "exit": 0,
+        "checks": 58,
+        "issues": 0
+      },
+      {
+        "scene": "DeepPresentation",
+        "args": "",
+        "seconds": 2.48868,
+        "exit": 0,
+        "checks": 34,
+        "issues": 0
+      },
+      {
+        "scene": "PresentationRng",
+        "args": "",
+        "seconds": 1.462258,
+        "exit": 0,
+        "checks": 8,
+        "issues": 0
+      },
+      {
+        "scene": "PresentationLifecycle",
+        "args": "",
+        "seconds": 12.933835,
+        "exit": 0,
+        "checks": 52,
+        "issues": 0
+      },
+      {
+        "scene": "CombatReadability",
+        "args": "",
+        "seconds": 2.955219,
+        "exit": 0,
+        "checks": 30,
+        "issues": 0
+      },
+      {
+        "scene": "WeaponVisualPose",
+        "args": "",
+        "seconds": 1.462074,
+        "exit": 0,
+        "checks": 144,
+        "issues": 0
+      },
+      {
+        "scene": "DeepQuality",
+        "args": "",
+        "seconds": 1.836904,
+        "exit": 0,
+        "checks": 34,
+        "issues": 0
+      },
+      {
+        "scene": "WebPhysicsContracts",
+        "args": "",
+        "seconds": 2.115404,
+        "exit": 0,
+        "checks": 154,
+        "issues": 0
+      },
+      {
+        "scene": "CameraTransitions",
+        "args": "",
+        "seconds": 2.39513,
+        "exit": 0,
+        "checks": 48,
+        "issues": 0
+      },
+      {
+        "scene": "M4Talents",
+        "args": "",
+        "seconds": 6.784795,
+        "exit": 0,
+        "checks": 233,
+        "issues": 0
+      },
+      {
+        "scene": "B14Loadout",
+        "args": "",
+        "seconds": 1.556252,
+        "exit": 0,
+        "checks": 86,
+        "issues": 0
+      },
+      {
+        "scene": "B14Growth",
+        "args": "",
+        "seconds": 6.506041,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "B14Rail",
+        "args": "",
+        "seconds": 2.285732,
+        "exit": 0,
+        "checks": 8,
+        "issues": 0
+      },
+      {
+        "scene": "B14Feedback",
+        "args": "",
+        "seconds": 2.30319,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "P0ReleaseDamage",
+        "args": "",
+        "seconds": 3.307511,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "P0ReleaseDamage",
+        "args": "--e2e",
+        "seconds": 1.09283,
+        "exit": 0,
+        "checks": 3,
+        "issues": 0
+      },
+      {
+        "scene": "P0HudParity",
+        "args": "",
+        "seconds": 8.926039,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "P0SaveSanity",
+        "args": "",
+        "seconds": 1.094318,
+        "exit": 0,
+        "checks": 10,
+        "issues": 0
+      },
+      {
+        "scene": "B14EncounterContracts",
+        "args": "",
+        "seconds": 1.18495,
+        "exit": 0,
+        "checks": 85,
+        "issues": 0
+      },
+      {
+        "scene": "B17Contracts",
+        "args": "",
+        "seconds": 1.555023,
+        "exit": 0,
+        "checks": 20,
+        "issues": 0
+      },
+      {
+        "scene": "B19Contracts",
+        "args": "",
+        "seconds": 1.092235,
+        "exit": 0,
+        "checks": 24,
+        "issues": 0
+      },
+      {
+        "scene": "B191Runtime",
+        "args": "",
+        "seconds": 2.209486,
+        "exit": 0,
+        "checks": 55,
+        "issues": 0
+      },
+      {
+        "scene": "B17Sources",
+        "args": "",
+        "seconds": 1.090768,
+        "exit": 0,
+        "checks": 5,
+        "issues": 0
+      },
+      {
+        "scene": "B17Saved",
+        "args": "",
+        "seconds": 0.997506,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "B17Resources",
+        "args": "",
+        "seconds": 1.465603,
+        "exit": 0,
+        "checks": 10,
+        "issues": 0
+      },
+      {
+        "scene": "B17NativeRules",
+        "args": "",
+        "seconds": 1.184885,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "R1Timeline",
+        "args": "",
+        "seconds": 6.785151,
+        "exit": 0,
+        "checks": 41,
+        "issues": 0
+      },
+      {
+        "scene": "B16Camp",
+        "args": "",
+        "seconds": 2.862492,
+        "exit": 0,
+        "checks": 15,
+        "issues": 0
+      },
+      {
+        "scene": "B16Growth",
+        "args": "",
+        "seconds": 1.183536,
+        "exit": 0,
+        "checks": 7,
+        "issues": 0
+      },
+      {
+        "scene": "B16Pickup",
+        "args": "",
+        "seconds": 5.566818,
+        "exit": 0,
+        "checks": 12,
+        "issues": 0
+      },
+      {
+        "scene": "B16Save",
+        "args": "",
+        "seconds": 1.09362,
+        "exit": 0,
+        "checks": 80,
+        "issues": 0
+      },
+      {
+        "scene": "B16Effects",
+        "args": "",
+        "seconds": 1.370323,
+        "exit": 0,
+        "checks": 5,
+        "issues": 0
+      },
+      {
+        "scene": "B16CombatMix",
+        "args": "",
+        "seconds": 8.565134,
+        "exit": 0,
+        "checks": 27,
+        "issues": 0
+      },
+      {
+        "scene": "M3Weapons",
+        "args": "",
+        "seconds": 36.175029,
+        "exit": 0,
+        "checks": 72,
+        "issues": 0
+      }
+    ],
+    "cache_lines": [
+      "2026-10-06T07:11:58.2190929Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112716,
+    "job": "pressure",
+    "id": 112152481978,
+    "conclusion": "success",
+    "seconds": 730.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Restore the already imported candidate",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Boss phases, Hell density and spawn legality",
+        "seconds": 716.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload pressure evidence",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [
+      {
+        "scene": "M10Bosses",
+        "args": "full",
+        "seconds": null,
+        "exit": 0,
+        "checks": 39,
+        "issues": 0
+      },
+      {
+        "scene": "B5Bosses",
+        "args": "",
+        "seconds": 356.88775,
+        "exit": 0,
+        "checks": 166,
+        "issues": 0
+      },
+      {
+        "scene": "M10Density",
+        "args": "stages=22,31",
+        "seconds": 93.157032,
+        "exit": 0,
+        "checks": 11,
+        "issues": 0
+      },
+      {
+        "scene": "M10Density",
+        "args": "probe stages=22,31",
+        "seconds": 93.116444,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "B11Perf",
+        "args": "stage=39 seconds=75",
+        "seconds": 77.470255,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "B11Perf",
+        "args": "stage=40 seconds=75",
+        "seconds": 77.548956,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      }
+    ],
+    "cache_lines": [
+      "2026-10-06T07:11:56.3010989Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37428112716,
+    "job": "Historical / frozen evidence audit (informational)",
+    "id": 112152483699,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423621783,
+    "job": "Native candidate preflight",
+    "id": 112138310937,
+    "conclusion": "success",
+    "seconds": 28.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import the project",
+        "seconds": 16.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Share the imported candidate (no second import in consumers)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:25:34.5515995Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37423621783,
+    "job": "pressure",
+    "id": 112138456933,
+    "conclusion": "success",
+    "seconds": 746.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Restore the already imported candidate",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Boss phases, Hell density and spawn legality",
+        "seconds": 732.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload pressure evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [
+      {
+        "scene": "M10Bosses",
+        "args": "full",
+        "seconds": null,
+        "exit": 0,
+        "checks": 39,
+        "issues": 0
+      },
+      {
+        "scene": "B5Bosses",
+        "args": "",
+        "seconds": 381.51491,
+        "exit": 0,
+        "checks": 166,
+        "issues": 0
+      },
+      {
+        "scene": "M10Density",
+        "args": "stages=22,31",
+        "seconds": 92.965711,
+        "exit": 0,
+        "checks": 11,
+        "issues": 0
+      },
+      {
+        "scene": "M10Density",
+        "args": "probe stages=22,31",
+        "seconds": 92.81961,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "B11Perf",
+        "args": "stage=39 seconds=75",
+        "seconds": 77.312782,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "B11Perf",
+        "args": "stage=40 seconds=75",
+        "seconds": 77.215123,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      }
+    ],
+    "cache_lines": [
+      "2026-10-06T06:26:05.3274415Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37423621783,
+    "job": "contracts",
+    "id": 112138456938,
+    "conclusion": "success",
+    "seconds": 2455.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Restore the already imported candidate",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Save-file contracts, hazard system, fog and progression",
+        "seconds": 2437.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload contract logs",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [
+      {
+        "scene": "BaselineRegression",
+        "args": "",
+        "seconds": null,
+        "exit": 0,
+        "checks": 4,
+        "issues": 0
+      },
+      {
+        "scene": "B194Contracts",
+        "args": "",
+        "seconds": 0.811138,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "LegacyHpCompatibility",
+        "args": "",
+        "seconds": 1.093641,
+        "exit": 0,
+        "checks": 31,
+        "issues": 0
+      },
+      {
+        "scene": "B11Stages",
+        "args": "",
+        "seconds": 11.998787,
+        "exit": 0,
+        "checks": 57,
+        "issues": 0
+      },
+      {
+        "scene": "B11Fairness",
+        "args": "",
+        "seconds": 2.487676,
+        "exit": 0,
+        "checks": 61,
+        "issues": 0
+      },
+      {
+        "scene": "B6Progression",
+        "args": "",
+        "seconds": 3.142531,
+        "exit": 0,
+        "checks": 41,
+        "issues": 0
+      },
+      {
+        "scene": "R1Persistence",
+        "args": "",
+        "seconds": 0.999276,
+        "exit": 0,
+        "checks": 51,
+        "issues": 0
+      },
+      {
+        "scene": "R1RecoveryUI",
+        "args": "",
+        "seconds": 1.558065,
+        "exit": 0,
+        "checks": 39,
+        "issues": 0
+      },
+      {
+        "scene": "B6Progression",
+        "args": "--hell-unlock",
+        "seconds": 3.140637,
+        "exit": 0,
+        "checks": 41,
+        "issues": 0
+      },
+      {
+        "scene": "B3Hazards",
+        "args": "",
+        "seconds": 19.924441,
+        "exit": 0,
+        "checks": 128,
+        "issues": 0
+      },
+      {
+        "scene": "B4Fog",
+        "args": "",
+        "seconds": 11.811227,
+        "exit": 0,
+        "checks": 110,
+        "issues": 0
+      },
+      {
+        "scene": "M6EncounterAudit",
+        "args": "",
+        "seconds": 760.90833,
+        "exit": 0,
+        "checks": 60,
+        "issues": 0
+      },
+      {
+        "scene": "M8Encounters",
+        "args": "",
+        "seconds": 1435.584437,
+        "exit": 0,
+        "checks": 60,
+        "issues": 0
+      },
+      {
+        "scene": "B12Catalog",
+        "args": "",
+        "seconds": 1.36906,
+        "exit": 0,
+        "checks": 182,
+        "issues": 0
+      },
+      {
+        "scene": "B12Save",
+        "args": "",
+        "seconds": 1.37029,
+        "exit": 0,
+        "checks": 14,
+        "issues": 0
+      },
+      {
+        "scene": "B12UI",
+        "args": "",
+        "seconds": 1.557615,
+        "exit": 0,
+        "checks": 75,
+        "issues": 0
+      },
+      {
+        "scene": "B12LineOfSightRegression",
+        "args": "",
+        "seconds": 1.555042,
+        "exit": 0,
+        "checks": 12,
+        "issues": 0
+      },
+      {
+        "scene": "B13Catalog",
+        "args": "",
+        "seconds": 1.369438,
+        "exit": 0,
+        "checks": 532,
+        "issues": 0
+      },
+      {
+        "scene": "B13UpgradeEffects",
+        "args": "",
+        "seconds": 1.370369,
+        "exit": 0,
+        "checks": 85,
+        "issues": 0
+      },
+      {
+        "scene": "B13TalentEffects",
+        "args": "",
+        "seconds": 25.913733,
+        "exit": 0,
+        "checks": 37,
+        "issues": 0
+      },
+      {
+        "scene": "B13Economy",
+        "args": "",
+        "seconds": 1.369288,
+        "exit": 0,
+        "checks": 159,
+        "issues": 0
+      },
+      {
+        "scene": "B13Unequip",
+        "args": "",
+        "seconds": 2.208255,
+        "exit": 0,
+        "checks": 55,
+        "issues": 0
+      },
+      {
+        "scene": "B13UI",
+        "args": "",
+        "seconds": 2.303235,
+        "exit": 0,
+        "checks": 138,
+        "issues": 0
+      },
+      {
+        "scene": "CampPresentation",
+        "args": "",
+        "seconds": 2.022051,
+        "exit": 0,
+        "checks": 71,
+        "issues": 0
+      },
+      {
+        "scene": "PresentationContracts",
+        "args": "",
+        "seconds": 2.115359,
+        "exit": 0,
+        "checks": 58,
+        "issues": 0
+      },
+      {
+        "scene": "DeepPresentation",
+        "args": "",
+        "seconds": 2.489925,
+        "exit": 0,
+        "checks": 34,
+        "issues": 0
+      },
+      {
+        "scene": "PresentationRng",
+        "args": "",
+        "seconds": 1.461965,
+        "exit": 0,
+        "checks": 8,
+        "issues": 0
+      },
+      {
+        "scene": "PresentationLifecycle",
+        "args": "",
+        "seconds": 12.933479,
+        "exit": 0,
+        "checks": 52,
+        "issues": 0
+      },
+      {
+        "scene": "CombatReadability",
+        "args": "",
+        "seconds": 2.955778,
+        "exit": 0,
+        "checks": 30,
+        "issues": 0
+      },
+      {
+        "scene": "WeaponVisualPose",
+        "args": "",
+        "seconds": 1.462454,
+        "exit": 0,
+        "checks": 144,
+        "issues": 0
+      },
+      {
+        "scene": "DeepQuality",
+        "args": "",
+        "seconds": 1.835406,
+        "exit": 0,
+        "checks": 34,
+        "issues": 0
+      },
+      {
+        "scene": "WebPhysicsContracts",
+        "args": "",
+        "seconds": 2.114654,
+        "exit": 0,
+        "checks": 154,
+        "issues": 0
+      },
+      {
+        "scene": "CameraTransitions",
+        "args": "",
+        "seconds": 2.394719,
+        "exit": 0,
+        "checks": 48,
+        "issues": 0
+      },
+      {
+        "scene": "M4Talents",
+        "args": "",
+        "seconds": 6.784381,
+        "exit": 0,
+        "checks": 233,
+        "issues": 0
+      },
+      {
+        "scene": "B14Loadout",
+        "args": "",
+        "seconds": 1.558005,
+        "exit": 0,
+        "checks": 86,
+        "issues": 0
+      },
+      {
+        "scene": "B14Growth",
+        "args": "",
+        "seconds": 6.508354,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "B14Rail",
+        "args": "",
+        "seconds": 2.025753,
+        "exit": 0,
+        "checks": 8,
+        "issues": 0
+      },
+      {
+        "scene": "B14Feedback",
+        "args": "",
+        "seconds": 2.304125,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "P0ReleaseDamage",
+        "args": "",
+        "seconds": 3.237298,
+        "exit": 0,
+        "checks": 6,
+        "issues": 0
+      },
+      {
+        "scene": "P0ReleaseDamage",
+        "args": "--e2e",
+        "seconds": 1.093927,
+        "exit": 0,
+        "checks": 3,
+        "issues": 0
+      },
+      {
+        "scene": "P0HudParity",
+        "args": "",
+        "seconds": 8.923328,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "P0SaveSanity",
+        "args": "",
+        "seconds": 1.091651,
+        "exit": 0,
+        "checks": 10,
+        "issues": 0
+      },
+      {
+        "scene": "B14EncounterContracts",
+        "args": "",
+        "seconds": 1.184075,
+        "exit": 0,
+        "checks": 85,
+        "issues": 0
+      },
+      {
+        "scene": "B17Contracts",
+        "args": "",
+        "seconds": 1.556181,
+        "exit": 0,
+        "checks": 20,
+        "issues": 0
+      },
+      {
+        "scene": "B19Contracts",
+        "args": "",
+        "seconds": 1.093412,
+        "exit": 0,
+        "checks": 24,
+        "issues": 0
+      },
+      {
+        "scene": "B191Runtime",
+        "args": "",
+        "seconds": 2.209842,
+        "exit": 0,
+        "checks": 55,
+        "issues": 0
+      },
+      {
+        "scene": "B17Sources",
+        "args": "",
+        "seconds": 1.090276,
+        "exit": 0,
+        "checks": 5,
+        "issues": 0
+      },
+      {
+        "scene": "B17Saved",
+        "args": "",
+        "seconds": 0.997916,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "B17Resources",
+        "args": "",
+        "seconds": 1.463287,
+        "exit": 0,
+        "checks": 10,
+        "issues": 0
+      },
+      {
+        "scene": "B17NativeRules",
+        "args": "",
+        "seconds": 1.18389,
+        "exit": 0,
+        "checks": 13,
+        "issues": 0
+      },
+      {
+        "scene": "R1Timeline",
+        "args": "",
+        "seconds": 6.784565,
+        "exit": 0,
+        "checks": 41,
+        "issues": 0
+      },
+      {
+        "scene": "B16Camp",
+        "args": "",
+        "seconds": 2.862128,
+        "exit": 0,
+        "checks": 15,
+        "issues": 0
+      },
+      {
+        "scene": "B16Growth",
+        "args": "",
+        "seconds": 1.183896,
+        "exit": 0,
+        "checks": 7,
+        "issues": 0
+      },
+      {
+        "scene": "B16Pickup",
+        "args": "",
+        "seconds": 5.56613,
+        "exit": 0,
+        "checks": 12,
+        "issues": 0
+      },
+      {
+        "scene": "B16Save",
+        "args": "",
+        "seconds": 0.997765,
+        "exit": 0,
+        "checks": 80,
+        "issues": 0
+      },
+      {
+        "scene": "B16Effects",
+        "args": "",
+        "seconds": 1.37036,
+        "exit": 0,
+        "checks": 5,
+        "issues": 0
+      },
+      {
+        "scene": "B16CombatMix",
+        "args": "",
+        "seconds": 10.713498,
+        "exit": 0,
+        "checks": 27,
+        "issues": 0
+      },
+      {
+        "scene": "M3Weapons",
+        "args": "",
+        "seconds": 36.171305,
+        "exit": 0,
+        "checks": 72,
+        "issues": 0
+      }
+    ],
+    "cache_lines": [
+      "2026-10-06T06:26:07.9327384Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37423621783,
+    "job": "Historical / frozen evidence audit (informational)",
+    "id": 112138459173,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423585870,
+    "job": "Build and test exact Web artifact",
+    "id": 112140097615,
+    "conclusion": "success",
+    "seconds": 102.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Scope (docs-only detection, no extra runner)",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import project (once, fail fast)",
+        "seconds": 17.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stage-specific native regression preflight",
+        "seconds": 58.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Export the validated Web candidate",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stamp build identity (commit SHA + artifact digest)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Real browser gates on the final candidate",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload tested Pages bytes (no rebuild)",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload Web candidate for PR/full browser acceptance",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload build identity",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload candidate diagnostics",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:31:46.8426444Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+      "2026-10-06T06:31:48.8854433Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37423585870,
+    "job": "Gate aim-fault",
+    "id": 112140612198,
+    "conclusion": "success",
+    "seconds": 92.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 73.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:33:36.2424475Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:33:37.3861854Z \u001b[36;1mecho \"GATE_aim-fault=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37423585870,
+    "job": "Gate stages-fair",
+    "id": 112140612256,
+    "conclusion": "success",
+    "seconds": 352.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 8.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 334.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:33:34.2332241Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:33:36.5760119Z \u001b[36;1mecho \"GATE_stages-fair=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37423585870,
+    "job": "Gate aim-core",
+    "id": 112140612311,
+    "conclusion": "success",
+    "seconds": 211.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 194.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:33:34.2457542Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:33:35.2292847Z \u001b[36;1mecho \"GATE_aim-core=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37423585870,
+    "job": "Gate smoke",
+    "id": 112140612320,
+    "conclusion": "success",
+    "seconds": 259.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 12.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 228.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:33:44.8364141Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:33:48.0041741Z \u001b[36;1mecho \"GATE_smoke=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37423585870,
+    "job": "Gate menu-return",
+    "id": 112140612330,
+    "conclusion": "success",
+    "seconds": 1158.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 6.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 1137.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:33:37.3308228Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:33:38.5920452Z \u001b[36;1mecho \"GATE_menu-return=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m",
+      "2026-10-06T06:35:48.1147083Z [menu-e2e] note CYCLE1 cycle wall clock 46796ms",
+      "2026-10-06T06:36:37.9564037Z [menu-e2e] note CYCLE2 cycle wall clock 49841ms",
+      "2026-10-06T06:37:27.7657071Z [menu-e2e] note CYCLE3 cycle wall clock 49806ms",
+      "2026-10-06T06:38:17.6912269Z [menu-e2e] note CYCLE4 cycle wall clock 49930ms",
+      "2026-10-06T06:39:07.6310598Z [menu-e2e] note CYCLE5 cycle wall clock 49938ms",
+      "2026-10-06T06:39:57.4517286Z [menu-e2e] note CYCLE6 cycle wall clock 49821ms",
+      "2026-10-06T06:40:47.1672165Z [menu-e2e] note CYCLE7 cycle wall clock 49717ms",
+      "2026-10-06T06:41:36.9027085Z [menu-e2e] note CYCLE8 cycle wall clock 49733ms",
+      "2026-10-06T06:42:26.6527595Z [menu-e2e] note CYCLE9 cycle wall clock 49750ms",
+      "2026-10-06T06:43:16.4493461Z [menu-e2e] note CYCLE10 cycle wall clock 49793ms",
+      "2026-10-06T06:44:06.3247121Z [menu-e2e] note CYCLE11 cycle wall clock 49880ms",
+      "2026-10-06T06:44:56.3028062Z [menu-e2e] note CYCLE12 cycle wall clock 49977ms",
+      "2026-10-06T06:45:46.2697049Z [menu-e2e] note CYCLE13 cycle wall clock 49969ms",
+      "2026-10-06T06:46:36.2792194Z [menu-e2e] note CYCLE14 cycle wall clock 50008ms",
+      "2026-10-06T06:47:26.3229820Z [menu-e2e] note CYCLE15 cycle wall clock 50043ms",
+      "2026-10-06T06:48:16.3217007Z [menu-e2e] note CYCLE16 cycle wall clock 49996ms",
+      "2026-10-06T06:49:06.0937192Z [menu-e2e] note CYCLE17 cycle wall clock 49771ms",
+      "2026-10-06T06:49:55.8912489Z [menu-e2e] note CYCLE18 cycle wall clock 49800ms",
+      "2026-10-06T06:50:45.6357067Z [menu-e2e] note CYCLE19 cycle wall clock 49743ms",
+      "2026-10-06T06:51:35.3763253Z [menu-e2e] note CYCLE20 cycle wall clock 49740ms",
+      "2026-10-06T06:52:25.0647453Z [menu-e2e] note RESTART_AFTER_LAST_RETURN cycle wall clock 49690ms",
+      "2026-10-06T06:52:35.7288223Z [menu-e2e] timing WALL_CLOCK                         1134745ms"
+    ]
+  },
+  {
+    "run": 37423585870,
+    "job": "Gate save-audit",
+    "id": 112140612337,
+    "conclusion": "success",
+    "seconds": 1526.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 9.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 1507.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:33:35.4578162Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:33:37.8748855Z \u001b[36;1mecho \"GATE_save-audit=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ],
+    "save_core_seconds_including_server_start": 337.984,
+    "durable_seconds": 1169.016
+  },
+  {
+    "run": 37423585870,
+    "job": "Stable preflight",
+    "id": 112140613585,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423585870,
+    "job": "Web required gate",
+    "id": 112148337270,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423585870,
+    "job": "Deploy and verify live Pages identity",
+    "id": 112148338780,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423070602,
+    "job": "build-windows",
+    "id": 112136546014,
+    "conclusion": "success",
+    "seconds": 67.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source",
+        "seconds": 9.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Install pinned Godot and Windows export template",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import project",
+        "seconds": 30.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Export Windows x64 release",
+        "seconds": 9.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Package ZIP and SHA-256",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload build artifact",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423029708,
+    "job": "Build and test exact Web artifact",
+    "id": 112136413322,
+    "conclusion": "success",
+    "seconds": 284.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Scope (docs-only detection, no extra runner)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import project (once, fail fast)",
+        "seconds": 15.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stage-specific native regression preflight",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Export the validated Web candidate",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stamp build identity (commit SHA + artifact digest)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 7.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Real browser gates on the final candidate",
+        "seconds": 234.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload tested Pages bytes (no rebuild)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload Web candidate for PR/full browser acceptance",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload build identity",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload candidate diagnostics",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:18:57.8406140Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+      "2026-10-06T06:18:59.3008518Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1",
+      "2026-10-06T06:19:27.8536968Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37423029708,
+    "job": "Deploy and verify live Pages identity",
+    "id": 112137768597,
+    "conclusion": "success",
+    "seconds": 21.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Deploy tested artifact",
+        "seconds": 7.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify production SHA and every payload byte",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload live identity evidence",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423029708,
+    "job": "Stable preflight",
+    "id": 112137769344,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423029708,
+    "job": "Gate ${{ matrix.name }}",
+    "id": 112137769651,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37423029708,
+    "job": "Web required gate",
+    "id": 112137770325,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37422547393,
+    "job": "Build and test exact Web artifact",
+    "id": 112134901228,
+    "conclusion": "success",
+    "seconds": 99.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Scope (docs-only detection, no extra runner)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-godot",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Import project (once, fail fast)",
+        "seconds": 19.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stage-specific native regression preflight",
+        "seconds": 56.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Export the validated Web candidate",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Stamp build identity (commit SHA + artifact digest)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Real browser gates on the final candidate",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload tested Pages bytes (no rebuild)",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Upload Web candidate for PR/full browser acceptance",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload build identity",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload candidate diagnostics",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-godot",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:13:33.8111575Z Cache restored from key: godot-Linux-4.7.2-stable-engine-v1",
+      "2026-10-06T06:13:35.2158439Z Cache restored from key: godot-Linux-4.7.2-stable-web-extracted-v1"
+    ],
+    "gate_timing": []
+  },
+  {
+    "run": 37422547393,
+    "job": "Gate smoke",
+    "id": 112135382061,
+    "conclusion": "success",
+    "seconds": 148.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 3.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 127.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:15:21.4271672Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:15:22.3930905Z \u001b[36;1mecho \"GATE_smoke=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m"
+    ]
+  },
+  {
+    "run": 37422547393,
+    "job": "Stable preflight",
+    "id": 112135382130,
+    "conclusion": "success",
+    "seconds": 3.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run test \"$RESULT\" = success",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37422547393,
+    "job": "Gate menu-return",
+    "id": 112135382214,
+    "conclusion": "success",
+    "seconds": 169.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Check out source (gate scripts)",
+        "seconds": 4.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify continuous-soak budget contract",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Download the Web build under test (the same bytes as every other job)",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/download-artifact@v4",
+        "seconds": 0.0,
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Run ./.github/actions/setup-browser",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run the gate",
+        "seconds": 154.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload gate evidence",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-browser",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Check out source (gate scripts)",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [
+      "2026-10-06T06:15:16.9136941Z Cache restored from key: pw-Linux-ubuntu24-1.60.0-runtime-v1"
+    ],
+    "gate_timing": [
+      "2026-10-06T06:15:18.2407260Z \u001b[36;1mecho \"GATE_menu-return=PASS tier=${TIER} wall_clock=$((SECONDS-START))s budget=${GATE_JOB_BUDGET_MINUTES}m cycles=${MENU_CYCLES} watchdog_ms=${E2E_WATCHDOG_MS:-script-default}\" >> \"${GITHUB_STEP_SUMMARY:-/dev/null}\"\u001b[0m",
+      "2026-10-06T06:17:02.1074787Z [menu-e2e] note CYCLE1 cycle wall clock 38106ms",
+      "2026-10-06T06:17:42.8084821Z [menu-e2e] note RESTART_AFTER_LAST_RETURN cycle wall clock 40701ms",
+      "2026-10-06T06:17:52.2498452Z [menu-e2e] timing WALL_CLOCK                         151429ms"
+    ]
+  },
+  {
+    "run": 37422547393,
+    "job": "Web required gate",
+    "id": 112136175261,
+    "conclusion": "success",
+    "seconds": 2.0,
+    "steps": [
+      {
+        "name": "Set up job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Run test \"$RESULT\" = success",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  },
+  {
+    "run": 37422547393,
+    "job": "Deploy and verify live Pages identity",
+    "id": 112136176310,
+    "conclusion": "skipped",
+    "seconds": null,
+    "steps": [],
+    "scenes": [],
+    "cache_lines": [],
+    "gate_timing": []
+  }
+]

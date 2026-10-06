@@ -1,0 +1,656 @@
+{
+  "schema": 1,
+  "baseline_commit": "cb7eed5a13823412f39b3f8e58182d05447c8367",
+  "timing_runs": [
+    37423621783,
+    37428112716
+  ],
+  "timing_method": "maximum of two same-commit CI observations; first-case startup estimated from the bounded job step",
+  "groups": {
+    "contracts": {
+      "cases": [
+        {
+          "id": "BaselineRegression",
+          "scene": "BaselineRegression",
+          "args": [],
+          "observed_seconds": 1.2,
+          "min_checks": 4,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B194Contracts",
+          "scene": "B194Contracts",
+          "args": [],
+          "observed_seconds": 0.859,
+          "min_checks": 6,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "LegacyHpCompatibility",
+          "scene": "LegacyHpCompatibility",
+          "args": [],
+          "observed_seconds": 1.592,
+          "min_checks": 31,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B11Stages",
+          "scene": "B11Stages",
+          "args": [],
+          "observed_seconds": 12.003,
+          "min_checks": 57,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B11Fairness",
+          "scene": "B11Fairness",
+          "args": [],
+          "observed_seconds": 2.488,
+          "min_checks": 61,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B6Progression",
+          "scene": "B6Progression",
+          "args": [],
+          "observed_seconds": 3.143,
+          "min_checks": 41,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "R1Persistence",
+          "scene": "R1Persistence",
+          "args": [],
+          "observed_seconds": 1.0,
+          "min_checks": 51,
+          "timeout_seconds": 900,
+          "completion_marker": "^R1 PERSISTENCE checks=[0-9]+ failures=0"
+        },
+        {
+          "id": "R1RecoveryUI",
+          "scene": "R1RecoveryUI",
+          "args": [],
+          "observed_seconds": 1.558,
+          "min_checks": 39,
+          "timeout_seconds": 900,
+          "completion_marker": "^R1 RECOVERY UI checks=[0-9]+ failures=0"
+        },
+        {
+          "id": "B6Progression --hell-unlock",
+          "scene": "B6Progression",
+          "args": [
+            "--hell-unlock"
+          ],
+          "observed_seconds": 3.141,
+          "min_checks": 41,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B3Hazards",
+          "scene": "B3Hazards",
+          "args": [],
+          "observed_seconds": 19.924,
+          "min_checks": 128,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B4Fog",
+          "scene": "B4Fog",
+          "args": [],
+          "observed_seconds": 11.813,
+          "min_checks": 110,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "M6EncounterAudit",
+          "scene": "M6EncounterAudit",
+          "args": [],
+          "observed_seconds": 861.503,
+          "min_checks": 60,
+          "timeout_seconds": 1800,
+          "completion_marker": "^M6 AUDIT COMPLETE tier=basic rows=30 failures=0"
+        },
+        {
+          "id": "M8Encounters",
+          "scene": "M8Encounters",
+          "args": [],
+          "observed_seconds": 1435.584,
+          "min_checks": 60,
+          "timeout_seconds": 2400,
+          "completion_marker": "^M8 ENCOUNTERS SUMMARY checks=60 failures=0"
+        },
+        {
+          "id": "B12Catalog",
+          "scene": "B12Catalog",
+          "args": [],
+          "observed_seconds": 1.369,
+          "min_checks": 182,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B12Save",
+          "scene": "B12Save",
+          "args": [],
+          "observed_seconds": 1.37,
+          "min_checks": 14,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B12UI",
+          "scene": "B12UI",
+          "args": [],
+          "observed_seconds": 1.558,
+          "min_checks": 75,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B12LineOfSightRegression",
+          "scene": "B12LineOfSightRegression",
+          "args": [],
+          "observed_seconds": 1.555,
+          "min_checks": 12,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B13Catalog",
+          "scene": "B13Catalog",
+          "args": [],
+          "observed_seconds": 1.37,
+          "min_checks": 532,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B13UpgradeEffects",
+          "scene": "B13UpgradeEffects",
+          "args": [],
+          "observed_seconds": 1.37,
+          "min_checks": 85,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B13TalentEffects",
+          "scene": "B13TalentEffects",
+          "args": [],
+          "observed_seconds": 25.914,
+          "min_checks": 37,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B13Economy",
+          "scene": "B13Economy",
+          "args": [],
+          "observed_seconds": 1.37,
+          "min_checks": 159,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B13Unequip",
+          "scene": "B13Unequip",
+          "args": [],
+          "observed_seconds": 2.209,
+          "min_checks": 55,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B13UI",
+          "scene": "B13UI",
+          "args": [],
+          "observed_seconds": 2.303,
+          "min_checks": 138,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "CampPresentation",
+          "scene": "CampPresentation",
+          "args": [],
+          "observed_seconds": 2.022,
+          "min_checks": 71,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "PresentationContracts",
+          "scene": "PresentationContracts",
+          "args": [],
+          "observed_seconds": 2.116,
+          "min_checks": 58,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "DeepPresentation",
+          "scene": "DeepPresentation",
+          "args": [],
+          "observed_seconds": 2.49,
+          "min_checks": 34,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "PresentationRng",
+          "scene": "PresentationRng",
+          "args": [],
+          "observed_seconds": 1.462,
+          "min_checks": 8,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "PresentationLifecycle",
+          "scene": "PresentationLifecycle",
+          "args": [],
+          "observed_seconds": 12.934,
+          "min_checks": 52,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "CombatReadability",
+          "scene": "CombatReadability",
+          "args": [],
+          "observed_seconds": 2.956,
+          "min_checks": 30,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "WeaponVisualPose",
+          "scene": "WeaponVisualPose",
+          "args": [],
+          "observed_seconds": 1.462,
+          "min_checks": 144,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "DeepQuality",
+          "scene": "DeepQuality",
+          "args": [],
+          "observed_seconds": 1.837,
+          "min_checks": 34,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "WebPhysicsContracts",
+          "scene": "WebPhysicsContracts",
+          "args": [],
+          "observed_seconds": 2.115,
+          "min_checks": 154,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "CameraTransitions",
+          "scene": "CameraTransitions",
+          "args": [],
+          "observed_seconds": 2.395,
+          "min_checks": 48,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "M4Talents",
+          "scene": "M4Talents",
+          "args": [],
+          "observed_seconds": 6.785,
+          "min_checks": 233,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B14Loadout",
+          "scene": "B14Loadout",
+          "args": [],
+          "observed_seconds": 1.558,
+          "min_checks": 86,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B14Growth",
+          "scene": "B14Growth",
+          "args": [],
+          "observed_seconds": 6.508,
+          "min_checks": 13,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B14Rail",
+          "scene": "B14Rail",
+          "args": [],
+          "observed_seconds": 2.286,
+          "min_checks": 8,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B14Feedback",
+          "scene": "B14Feedback",
+          "args": [],
+          "observed_seconds": 2.304,
+          "min_checks": 6,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "P0ReleaseDamage",
+          "scene": "P0ReleaseDamage",
+          "args": [],
+          "observed_seconds": 3.308,
+          "min_checks": 6,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "P0ReleaseDamage --e2e",
+          "scene": "P0ReleaseDamage",
+          "args": [
+            "--e2e"
+          ],
+          "observed_seconds": 1.094,
+          "min_checks": 3,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "P0HudParity",
+          "scene": "P0HudParity",
+          "args": [],
+          "observed_seconds": 8.926,
+          "min_checks": 13,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "P0SaveSanity",
+          "scene": "P0SaveSanity",
+          "args": [],
+          "observed_seconds": 1.094,
+          "min_checks": 10,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B14EncounterContracts",
+          "scene": "B14EncounterContracts",
+          "args": [],
+          "observed_seconds": 1.185,
+          "min_checks": 85,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B17Contracts",
+          "scene": "B17Contracts",
+          "args": [],
+          "observed_seconds": 1.556,
+          "min_checks": 20,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B19Contracts",
+          "scene": "B19Contracts",
+          "args": [],
+          "observed_seconds": 1.093,
+          "min_checks": 24,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B191Runtime",
+          "scene": "B191Runtime",
+          "args": [],
+          "observed_seconds": 2.21,
+          "min_checks": 55,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B17Sources",
+          "scene": "B17Sources",
+          "args": [],
+          "observed_seconds": 1.091,
+          "min_checks": 5,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B17Saved",
+          "scene": "B17Saved",
+          "args": [],
+          "observed_seconds": 0.998,
+          "min_checks": 13,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B17Resources",
+          "scene": "B17Resources",
+          "args": [],
+          "observed_seconds": 1.466,
+          "min_checks": 10,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B17NativeRules",
+          "scene": "B17NativeRules",
+          "args": [],
+          "observed_seconds": 1.185,
+          "min_checks": 13,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "R1Timeline",
+          "scene": "R1Timeline",
+          "args": [],
+          "observed_seconds": 6.785,
+          "min_checks": 41,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B16Camp",
+          "scene": "B16Camp",
+          "args": [],
+          "observed_seconds": 2.862,
+          "min_checks": 15,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B16Growth",
+          "scene": "B16Growth",
+          "args": [],
+          "observed_seconds": 1.184,
+          "min_checks": 7,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B16Pickup",
+          "scene": "B16Pickup",
+          "args": [],
+          "observed_seconds": 5.567,
+          "min_checks": 12,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B16Save",
+          "scene": "B16Save",
+          "args": [],
+          "observed_seconds": 1.094,
+          "min_checks": 80,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B16Effects",
+          "scene": "B16Effects",
+          "args": [],
+          "observed_seconds": 1.37,
+          "min_checks": 5,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "B16CombatMix",
+          "scene": "B16CombatMix",
+          "args": [],
+          "observed_seconds": 10.713,
+          "min_checks": 27,
+          "timeout_seconds": 900
+        },
+        {
+          "id": "M3Weapons",
+          "scene": "M3Weapons",
+          "args": [],
+          "observed_seconds": 36.175,
+          "min_checks": 72,
+          "timeout_seconds": 900
+        }
+      ],
+      "shards": [
+        {
+          "name": "contracts-1",
+          "cases": [
+            "M8Encounters"
+          ],
+          "estimated_seconds": 1435.584
+        },
+        {
+          "name": "contracts-2",
+          "cases": [
+            "M6EncounterAudit"
+          ],
+          "estimated_seconds": 861.503
+        },
+        {
+          "name": "contracts-3",
+          "cases": [
+            "M3Weapons",
+            "B13TalentEffects",
+            "B3Hazards",
+            "PresentationLifecycle",
+            "B11Stages",
+            "B4Fog",
+            "B16CombatMix",
+            "P0HudParity",
+            "M4Talents",
+            "R1Timeline",
+            "B14Growth",
+            "B16Pickup",
+            "P0ReleaseDamage",
+            "B6Progression",
+            "B6Progression --hell-unlock",
+            "CombatReadability",
+            "B16Camp",
+            "DeepPresentation",
+            "B11Fairness",
+            "CameraTransitions",
+            "B14Feedback",
+            "B13UI",
+            "B14Rail",
+            "B191Runtime",
+            "B13Unequip",
+            "PresentationContracts",
+            "WebPhysicsContracts",
+            "CampPresentation",
+            "DeepQuality",
+            "LegacyHpCompatibility",
+            "R1RecoveryUI",
+            "B12UI",
+            "B14Loadout",
+            "B17Contracts",
+            "B12LineOfSightRegression",
+            "B17Resources",
+            "PresentationRng",
+            "WeaponVisualPose",
+            "B12Save",
+            "B13Catalog",
+            "B13UpgradeEffects",
+            "B13Economy",
+            "B16Effects",
+            "B12Catalog",
+            "BaselineRegression",
+            "B14EncounterContracts",
+            "B17NativeRules",
+            "B16Growth",
+            "P0ReleaseDamage --e2e",
+            "P0SaveSanity",
+            "B16Save",
+            "B19Contracts",
+            "B17Sources",
+            "R1Persistence",
+            "B17Saved",
+            "B194Contracts"
+          ],
+          "estimated_seconds": 241.295
+        }
+      ]
+    },
+    "pressure": {
+      "cases": [
+        {
+          "id": "M10Bosses full",
+          "scene": "M10Bosses",
+          "args": [
+            "full"
+          ],
+          "observed_seconds": 19.0,
+          "min_checks": 39,
+          "timeout_seconds": 1800
+        },
+        {
+          "id": "B5Bosses",
+          "scene": "B5Bosses",
+          "args": [],
+          "observed_seconds": 381.515,
+          "min_checks": 166,
+          "timeout_seconds": 1800
+        },
+        {
+          "id": "M10Density stages=22,31",
+          "scene": "M10Density",
+          "args": [
+            "stages=22,31"
+          ],
+          "observed_seconds": 93.157,
+          "min_checks": 11,
+          "timeout_seconds": 1800
+        },
+        {
+          "id": "M10Density probe stages=22,31",
+          "scene": "M10Density",
+          "args": [
+            "probe",
+            "stages=22,31"
+          ],
+          "observed_seconds": 93.116,
+          "min_checks": 6,
+          "timeout_seconds": 1800
+        },
+        {
+          "id": "B11Perf stage=39 seconds=75",
+          "scene": "B11Perf",
+          "args": [
+            "stage=39",
+            "seconds=75"
+          ],
+          "observed_seconds": 77.47,
+          "min_checks": 6,
+          "timeout_seconds": 1800
+        },
+        {
+          "id": "B11Perf stage=40 seconds=75",
+          "scene": "B11Perf",
+          "args": [
+            "stage=40",
+            "seconds=75"
+          ],
+          "observed_seconds": 77.549,
+          "min_checks": 6,
+          "timeout_seconds": 1800
+        }
+      ],
+      "shards": [
+        {
+          "name": "pressure-1",
+          "cases": [
+            "B5Bosses"
+          ],
+          "estimated_seconds": 381.515
+        },
+        {
+          "name": "pressure-2",
+          "cases": [
+            "M10Density stages=22,31",
+            "B11Perf stage=39 seconds=75",
+            "M10Bosses full"
+          ],
+          "estimated_seconds": 189.627
+        },
+        {
+          "name": "pressure-3",
+          "cases": [
+            "M10Density probe stages=22,31",
+            "B11Perf stage=40 seconds=75"
+          ],
+          "estimated_seconds": 170.665
+        }
+      ]
+    }
+  }
+}

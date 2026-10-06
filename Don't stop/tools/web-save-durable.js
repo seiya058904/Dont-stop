@@ -19,7 +19,11 @@ fs.mkdirSync(out, { recursive: true });
    return request;
   };
  });
+ const runStarted = Date.now();
  const lines = [], rects = {}, report = { checks: [] };
+ async function screenshot(name) {
+  if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: path.join(out, name) });
+ }
  let page = await context.newPage();
  let carry, canvas, camp, recovery;
  function observe() { page.on('console', m => {
@@ -366,7 +370,7 @@ fs.mkdirSync(out, { recursive: true });
     await until(() => !recovery.dialog, 'cancel failed leave');
     await page.keyboard.press('Escape');
    }
-   await page.screenshot({ path: path.join(out, fault + '-failed.png') });
+   await screenshot(fault + '-failed.png');
    await page.evaluate(() => window.saveFault = '');
    await click('camp-save-retry'); await until(() => carry?.saved === true, 'durable retry');
    check(carry.gold === paid, fault + ': retry never charges purchase again');
@@ -402,7 +406,7 @@ fs.mkdirSync(out, { recursive: true });
   const download = page.waitForEvent('download'); await click('save-export-original');
   const file = await download; const filename = path.join(out, file.suggestedFilename()); await file.saveAs(filename);
   check(fs.readFileSync(filename).equals(Buffer.from(bytes)), 'corrupt original download preserves every byte including invalid UTF-8');
-  await page.screenshot({ path: path.join(out, 'original-downloaded.png') });
+  await screenshot('original-downloaded.png');
   await page.evaluate(() => window.saveFault = 'abort');
   const takeoverDownload = page.waitForEvent('download'); await click('save-create-new'); await takeoverDownload;
   await until(() => recovery?.pending === false && recovery.dialog && /未确认|不可用|失败/.test(carry?.message || ''), 'failed takeover confirmation');
@@ -439,7 +443,7 @@ fs.mkdirSync(out, { recursive: true });
   check(camp.selection === 'T01' && camp.rank === 0 && carry.gold === pendingGold,
    'DS-001 pending real T01 purchase accepts no charge or rank change');
   check(await page.evaluate(() => window.towdownSave.dirty), 'DS-001 pending takeover retains the unload guard');
-  await page.screenshot({ path: path.join(out, 'ds001-pending-blocked.png') });
+  await screenshot('ds001-pending-blocked.png');
   await page.evaluate(() => window.recoveryConfirmations.shift().release());
   await until(() => recovery?.pending === false && recovery.dialog === false, 'confirmation releases recovery');
   await until(() => carry?.saved === true && carry.owned.length === 0, 'confirmed new-save takeover');
@@ -502,11 +506,11 @@ fs.mkdirSync(out, { recursive: true });
    check(await page.evaluate(() => window.towdownSave.dirty), fault + ': export does not claim browser persistence');
    check(!lines.slice(lineStart).some(t => t.startsWith('[save-durable]') && t.includes('success=true')),
     fault + ': no snapshot was ever durably committed');
-   await page.screenshot({ path: path.join(out, fault + '-first-save-discard.png') });
+   await screenshot(fault + '-first-save-discard.png');
    delete rects['menu-start-button']; carry = null; camp = null;
    await click('save-discard'); await start(); await click('camp-talent-tab'); await select('T01');
    await until(() => camp?.selection === 'T01', 'restarted talent selection');
-   await page.screenshot({ path: path.join(out, fault + '-after-discard.png') });
+   await screenshot(fault + '-after-discard.png');
    check(camp.rank === 0, fault + ': same-page restart rolls back the discarded talent');
    await click('camp-settings-button'); await click('leave-entry');
    const afterDiscard = await downloadProgress('after-discard');
@@ -538,5 +542,5 @@ fs.mkdirSync(out, { recursive: true });
   console.error(report.error);
   await page.screenshot({ path: path.join(out, 'failure.png') }).catch(() => {});
  }
- finally { fs.writeFileSync(path.join(out, 'result.json'), JSON.stringify(report, null, 2)); fs.writeFileSync(path.join(out, 'console.log'), lines.join('\n')); await browser.close(); }
+ finally { report.wall_clock_ms = Date.now() - runStarted; fs.writeFileSync(path.join(out, 'result.json'), JSON.stringify(report, null, 2)); fs.writeFileSync(path.join(out, 'console.log'), lines.join('\n')); await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
