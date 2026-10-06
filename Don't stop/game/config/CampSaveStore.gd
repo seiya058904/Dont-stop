@@ -106,20 +106,6 @@ func _ensure_web_bridge() -> void:
 func confirm_web(path: String, revision: int) -> void:
 	_ensure_web_bridge()
 	JavaScriptBridge.get_interface("towdownSave").verify(ProjectSettings.globalize_path(path),FileAccess.get_file_as_string(path),revision,_web_callback)
-	var fixture_delay_ms = int(JavaScriptBridge.eval("(function(){var state=window.towdownSave;var delay=Number(state.testForceSyncDelayMs)||0;if(delay>0)state.record('force-fs-sync-scheduled',{revision:" + str(revision) + ",delay_ms:delay});else if(delay<0)state.record('force-fs-sync-suppressed-test',{revision:" + str(revision) + "});else state.record('force-fs-sync-start',{revision:" + str(revision) + "});return delay;})()",true))
-	if fixture_delay_ms > 0:
-		var tree := Engine.get_main_loop() as SceneTree
-		if tree != null:
-			JavaScriptBridge.eval("if (window.towdownSave) window.towdownSave.record('force-fs-sync-timer-created', {revision:" + str(revision) + ",delay_ms:" + str(fixture_delay_ms) + "})",true)
-			var sync_timer := tree.create_timer(float(fixture_delay_ms) / 1000.0,true,false,true)
-			var sync_callback := func() -> void: _force_fs_sync(revision)
-			sync_timer.timeout.connect(sync_callback,CONNECT_ONE_SHOT)
-		else:
-			JavaScriptBridge.eval("if (window.towdownSave) window.towdownSave.record('force-fs-sync-timer-error', {revision:" + str(revision) + ",reason:'SceneTree unavailable'})",true)
-	elif fixture_delay_ms == 0:
-		JavaScriptBridge.force_fs_sync()
-
-func _force_fs_sync(revision: int) -> void:
 	JavaScriptBridge.eval("if (window.towdownSave) window.towdownSave.record('force-fs-sync-start', {revision:" + str(revision) + "})",true)
 	JavaScriptBridge.force_fs_sync()
 
