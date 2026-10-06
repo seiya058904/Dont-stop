@@ -5,10 +5,28 @@
 - Git 根是本目录；Godot 项目是 `Don't stop/project.godot`，不是外层目录。命令中的项目路径必须整体引用，避免空格和英文撇号被 shell 拆分。
 - `boot/Boot.tscn` 是配置入口，加载 `game/map/Main.tscn`；Web 启动界面由 `web/loader.html` 提供。以上路径均相对于 Godot 项目目录。
 - 项目内 `autoload/` 管理全局状态，`game/` 包含玩法与配置，`ui/` 包含界面，`Sprites/`、`audio/`、`fonts/`、`shader/` 与 `addons/` 是产品资源。`tests/` 是原生回归场景，`tools/` 是导出、浏览器与证据校验工具。
-- 根 README 提供正式下载与试玩入口。封板版本为 `v1.3.4`；Release tag 指向通过验收的 `main`，Pages 发布该 main 构建中实际测试过的 Web bytes。今后的仅文档提交可以不重新部署游戏；不能据 Git 最新 SHA 推断线上身份。
+- 根 README 提供正式下载与试玩入口。封板产品版本为 `v1.3.5 / cb7eed5a13823412f39b3f8e58182d05447c8367`；Release tag 指向通过验收的正式代码，Pages 发布实际测试过的 Web bytes。后续测试工具或文档提交不能用最新 Git SHA 推断线上身份。
 - `Don't stop/docs/iteration/release-v1.3.4.md` 是最终收口记录，`release-v1.3.2.md` 保留性能与 Boss 审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
 
 ## 运行与验证
+
+### 按改动选择验证层级
+
+从 Git 根执行 `python "Don't stop/tools/verify.py" <tier>`。`--godot` 可指定固定 4.7.2 引擎；本地默认使用保留的便携 exe（Python 等待真正进程退出），浏览器须能解析既有 Playwright 1.60.0。不要为普通 UI/文档改动默认跑完整验收。
+
+- `verify-fast --base origin/main`：B194/P0Save/Baseline 加变更相关回归；未知产品脚本/场景/资源改动保守选择全部短 contracts。`--list-fast` 只查看选择。
+- `verify-web`：fast、一次 Web export、loader/smoke、1-cycle menu-return 加 restart、identity。测试后重验 stamped bytes 未改变。
+- `verify-native`：完整 64 个 active native 调用；本地默认 `--jobs 1`，`--shard contracts-3` 等可选单片。完整验收仍须运行所有分片。
+- `verify-full`：完整 native 后运行 full Web；Web 保留 save core、89 项 durable/recovery、aim core/fault、stages-fair 和一个连续 session 的 20-cycle 加 restart。CI 的两个 workflow 使用独立 runner 并行；本机不让压力场景与软件浏览器争抢资源。
+- `verify-release`：full 加 Windows headless export/文件 SHA-256；不发布/部署。正式发布仍须既有 provenance、包上传与下载回验、线上 byte identity。
+
+本地 `--jobs N` 只并行原生分片，默认 1；确认机器负载与 physics/wall-clock 能满足原断言后才提高。2026-10-06 的六路原生加双浏览器尝试触发 density stage 31 和 durable 慢确认真实失败，已保留并停止；不能照搬 CI 六个独立 runner 的并发数到同一电脑，也不能通过放宽 watchdog/断言适配过载。
+
+所有场景使用隔离源码副本与逐 case 用户数据；证据写入 ignored `output/verify-时间/`。后续命令可加 `--candidate <上次证据目录>/candidate`，校验同 commit 与产品资源 hashes 后共享已导入候选。不要把 profile/存档和可写 evidence 放进并行共享目录，不要合并 Godot 进程导致 Autoload/RNG/clock 跨场景污染。
+
+CI native 用 `tools/native-cases.json` 的实测时间 LPT 分片：contracts 三片（完整 M8、完整 M6、其余 56 调用）、pressure 三片。一次 import 的同提交 artifact 由六片复用，`candidate-sha` 必须匹配；`Native required gate` 等待全部分片，失败/取消/跳过均不能通过。Web full 的 save core 与 durable 是独立并行 gates，使用同一 Web artifact。完整覆盖、原参数和 completion marker 不得削弱；计时、基线与限制见 `Don't stop/docs/iteration/test-architecture-20261006.md`。
+
+不要以预算替代实测：M8 连续 30 关的历史 wall-clock 为 23–24 分钟，是保留既有跨关状态语义时的真实下限；不能把并行计划写成已达成 15 分钟。PR 快速门禁与 main build-once/test-same-bytes/deploy-same-bytes 仍保持；月度/Release/full 仍是完整门禁。
 
 使用 Godot **4.7.2-stable** 及匹配导出模板、Python 3、CI Node **22**、Playwright **1.60.0** 及其配套 Chromium。权威版本见 `.github/workflows/` 和 `.github/actions/setup-browser/action.yml`。以下命令从 Git 根运行，`GODOT` 指向实际引擎；Windows 用等价参数并等待进程退出。
 
@@ -81,9 +99,9 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 
 ## CI/CD 与发布
 
-- `deploy-pages.yml`：PR 做 native preflight 和独立 runner 的 smoke/menu-return 必需 gates；main 快速链做 import、B194Contracts/P0SaveSanity、一次 Web export、loader/smoke/identity，然后部署同一 bytes 并验证线上身份。仅文档变更跳过游戏构建/部署。
+- `deploy-pages.yml`：PR 做 native preflight、变更相关回归和独立 runner 的 smoke/menu-return 必需 gates；main 快速链做 import、B194Contracts/P0SaveSanity、一次 Web export，再由独立 runner 并行验证 smoke（含 loader/identity）和 1-cycle menu-return，加 restart。最终 required gate 全部成功才部署同一 bytes 并验证线上身份。仅文档变更跳过游戏构建/部署。
 - 月度、Release published、manual full Web acceptance 包含 smoke、save-audit（含 `web-save-durable.js` 的真实故障/恢复事务测试）、aim core/fault、20 次 menu-return soak、stages-fair。manual 默认不部署，只有 main 且 `deploy=true` 才上线。完整 active native 包含 64 个调用；R1Persistence/R1RecoveryUI 固定覆盖普通保存、坏档事务 pending、旧确认、失败/重试/退出与确认后购买。
-- `native-tests.yml`：月度、Release published、manual 完整 active native acceptance，独立 contracts/pressure jobs；历史证据按显式参数选择。`build-windows.yml` 是 manual headless export/package，不需启动本地 Windows 游戏。
+- `native-tests.yml`：月度、Release published、manual 完整 active native acceptance，contracts/pressure 各三个独立 shard 与最终 required gate；历史证据按显式参数选择。`build-windows.yml` 是 manual headless export/package，不需启动本地 Windows 游戏。
 - Release 为非 draft、非 prerelease 的正式 patch tag。Windows/Web ZIP 与 SHA-256 按既有命名上传；下载回验。tag 必须指向已验证 main，Web 资产优先复用经过验收的 Pages artifact，不将同 SHA 的重新构建视为同 bytes。
 - 普通文档维护不触发重型验收或新 Release。发版时最终代码、最终包、实际 Actions run 与在线身份须关联；保留历史失败及最终修复证据，不把信息诊断写成零告警。
 

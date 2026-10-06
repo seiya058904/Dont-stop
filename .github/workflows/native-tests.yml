@@ -5,7 +5,7 @@ name: Native gameplay tests
 # the unchanged protected check name "Stable preflight".
 on:
   schedule:
-    - cron: '17 4 1 * *'
+    - cron: '17 3 1 * *'
   release:
     types: [published]
   workflow_dispatch:
@@ -33,6 +33,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-godot
+      - name: Pin the released coverage and fail-closed runner policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin refs/tags/v1.3.5:refs/tags/v1.3.5
+          python3 "$PROJECT_PATH/tools/test-verification-policy.py"
       - name: Import the project
         shell: bash
         run: |
@@ -40,6 +46,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/godot"
           "$GODOT" --headless --path "$PROJECT_PATH" --editor --import --quit --log-file "$RUNNER_TEMP/import.log"
           python3 "$PROJECT_PATH/tools/b194_import_check.py" "$PROJECT_PATH" "$RUNNER_TEMP/import.log"
+          printf '%s\n' "$GITHUB_SHA" > "$PROJECT_PATH/.godot/candidate-sha"
           tar -C "$PROJECT_PATH" -cf "$RUNNER_TEMP/native-import.tar" .godot
       - name: Share the imported candidate (no second import in consumers)
         uses: actions/upload-artifact@v4
@@ -49,11 +56,15 @@ jobs:
           retention-days: 1
 
   contracts:
+    name: "Native ${{ matrix.shard }}"
     needs: setup
     runs-on: ubuntu-24.04
-    # M6/M8 each walk all 30 stages in real time. Give them time to finish;
-    # an engine frame limit can otherwise exit successfully part-way through.
+    # Wall-time hang protection; no engine frame limit on full acceptance.
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [contracts-1, contracts-2, contracts-3]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-godot
@@ -61,141 +72,38 @@ jobs:
         with:
           name: native-import
           path: ${{ runner.temp }}/native-import
-      - name: Restore the already imported candidate
-        run: tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
-      - name: Save-file contracts, hazard system, fog and progression
+      - name: Restore the same imported commit
         shell: bash
         run: |
           set -euo pipefail
-          run_case () {
-            local name="$1"; shift
-            local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' -').log"
-            local budget=900
-            if [ "$name" = M6EncounterAudit ]; then budget=1800; fi
-            if [ "$name" = M8Encounters ]; then budget=2400; fi
-            set +e
-            timeout "$budget" "$GODOT" --headless --path "$PROJECT_PATH" \
-              "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
-            local code=$?
-            set -e
-            local issues checks completed=1
-            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
-            checks=$(grep -cE '^PASS ' "$log" || true)
-            if [ "$name" = M6EncounterAudit ] && ! grep -qE '^M6 AUDIT COMPLETE tier=basic rows=30 failures=0' "$log"; then completed=0; fi
-            if [ "$name" = M8Encounters ] && ! grep -qE '^M8 ENCOUNTERS SUMMARY checks=60 failures=0' "$log"; then completed=0; fi
-            if [ "$name" = R1RecoveryUI ] && ! grep -qE '^R1 RECOVERY UI checks=[0-9]+ failures=0' "$log"; then completed=0; fi
-            if [ "$name" = R1Persistence ] && ! grep -qE '^R1 PERSISTENCE checks=[0-9]+ failures=0' "$log"; then completed=0; fi
-            echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
-            tail -n 40 "$log"
-            echo "::endgroup::"
-            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ] || [ "$completed" -ne 1 ]; then
-              echo "FAILED: $name $*"
-              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
-              exit 1
-            fi
-            echo "PASSED: $name $* checks=$checks"
-          }
-          run_case BaselineRegression
-          run_case B194Contracts
-          run_case LegacyHpCompatibility
-          # B11: the stage table is the product's selectability contract (1-40, always open), and the
-          # attack audit is the fairness contract (computed reaction window, frozen lock geometry,
-          # bounded contact hit rate). Both are state driven and read the live actors.
-          run_case B11Stages
-          run_case B11Fairness
-          # SaveRunner is deliberately NOT in this list: it fails on origin/main in this
-          # environment with "Invalid access to property or key 'instance_id' on a base object
-          # of type 'Dictionary'" at SaveRunner.gd:19 (ContractRunner fails the same way), so
-          # it is a pre-existing defect in that scene family rather than a B批 contract. The
-          # save namespace and migration contract this batch actually touches is asserted by
-          # B6Progression, which is green on Linux.
-          run_case B6Progression
-          run_case R1Persistence
-          run_case R1RecoveryUI
-          run_case B6Progression --hell-unlock
-          run_case B3Hazards
-          run_case B4Fog
-          run_case M6EncounterAudit
-          run_case M8Encounters
-          # B12 weapon-quality contracts. The heavy 24x3 B12WeaponBench stays OUT of per-PR
-          # CI on purpose (it is evidence generation, ~30 min); these assert the frozen
-          # evidence against the live catalog and the shop UI instead.
-          run_case B12Catalog
-          # Current-source contracts remain active; historical frozen evidence runs only in the
-          # explicitly requested informational job below.
-          run_case B12Save
-          run_case B12UI
-          # Pins the B12 clear_line fix: footprint consumes the shared exclusions_dirty
-          # flag before the LOS query, freed RIDs must not survive actor churn, and a
-          # real wall must still block the ray.
-          run_case B12LineOfSightRegression
-          # B13 growth contracts: catalog shape, per-item real effects, exact talent
-          # magnitudes, economy bands/refunds, the unequip state machine, the shop UI,
-          # and the frozen-benchmark strength relation. B13GrowthBench stays OUT of
-          # per-PR CI on purpose (it is evidence generation, ~10 min).
-          run_case B13Catalog
-          run_case B13UpgradeEffects
-          run_case B13TalentEffects
-          run_case B13Economy
-          run_case B13Unequip
-          run_case B13UI
-          run_case CampPresentation
-          run_case PresentationContracts
-          run_case DeepPresentation
-          run_case PresentationRng
-          run_case PresentationLifecycle
-          run_case CombatReadability
-          run_case WeaponVisualPose
-          run_case DeepQuality
-          run_case WebPhysicsContracts
-          run_case CameraTransitions
-          # B13 reworked all 24 talents, so the M4 talent behaviour audit runs in the same
-          # job as the B13 contracts that pin their new magnitudes.
-          run_case M4Talents
-          run_case B14Loadout
-          run_case B14Growth
-          run_case B14Rail
-          run_case B14Feedback
-          # P0 release gate: normal and explicit E2E command lines must diverge
-          # only at the deliberate invulnerability guard, with real HP assertions.
-          run_case P0ReleaseDamage
-          run_case P0ReleaseDamage --e2e
-          # P0 HUD gate: the live product HP bar is compared against PlayerData on
-          # every frame of a real round where monsters attack a player who never
-          # presses anything, so "HP stayed full" can never again be ambiguous.
-          run_case P0HudParity
-          # P0 save gate: a diagnostic survivability pool must never be persisted and
-          # must be repaired on load, because a 100001/100001 bar reads 100% forever.
-          run_case P0SaveSanity
-          run_case B14EncounterContracts
-          run_case B17Contracts
-          run_case B19Contracts
-          run_case B191Runtime
-          run_case B17Sources
-          run_case B17Saved
-          run_case B17Resources
-          run_case B17NativeRules
-          run_case R1Timeline
-          run_case B16Camp
-          run_case B16Growth
-          run_case B16Pickup
-          run_case B16Save
-          run_case B16Effects
-          run_case B16CombatMix
-          run_case M3Weapons
-          # Keep safety/event checks runnable before the retained quality floor.
-      - name: Upload contract logs
+          tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
+          test "$(cat "$PROJECT_PATH/.godot/candidate-sha")" = "$GITHUB_SHA"
+      - name: Run isolated timed shard
+        run: python3 "$PROJECT_PATH/tools/verify.py" verify-native --shard "${{ matrix.shard }}" --godot "$GODOT" --imported --out "$RUNNER_TEMP/${{ matrix.shard }}"
+      - name: Upload every result and diagnostic (including failure)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: native-contract-logs
-          path: ${{ runner.temp }}/*.log
-          if-no-files-found: warn
+          name: native-${{ matrix.shard }}-evidence
+          path: |
+            ${{ runner.temp }}/${{ matrix.shard }}/preparation.json
+            ${{ runner.temp }}/${{ matrix.shard }}/results.json
+            ${{ runner.temp }}/${{ matrix.shard }}/${{ matrix.shard }}/*.log
+            ${{ runner.temp }}/${{ matrix.shard }}/${{ matrix.shard }}/results.json
+            ${{ runner.temp }}/${{ matrix.shard }}/${{ matrix.shard }}/fixture-evidence
+          retention-days: 14
+          if-no-files-found: error
 
   pressure:
+    name: "Native ${{ matrix.shard }}"
     needs: setup
     runs-on: ubuntu-24.04
+    # Wall-time hang protection; no engine frame limit on full acceptance.
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [pressure-1, pressure-2, pressure-3]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-godot
@@ -203,55 +111,40 @@ jobs:
         with:
           name: native-import
           path: ${{ runner.temp }}/native-import
-      - name: Restore the already imported candidate
-        run: tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
-      - name: Boss phases, Hell density and spawn legality
+      - name: Restore the same imported commit
         shell: bash
         run: |
           set -euo pipefail
-          run_case () {
-            local name="$1"; shift
-            local log="$RUNNER_TEMP/$name-$(echo "$*" | tr -d ' ,=-').log"
-            set +e
-            timeout 1800 "$GODOT" --headless --path "$PROJECT_PATH" \
-              "res://tests/$name.tscn" -- "$@" > "$log" 2>&1
-            local code=$?
-            set -e
-            local issues checks
-            issues=$(grep -cE '^FAIL |^SCRIPT ERROR' "$log" || true)
-            checks=$(grep -cE '^PASS ' "$log" || true)
-            echo "::group::$name $* (exit $code, checks $checks, issues $issues)"
-            grep -E '^M10 DENSITY |^B5 BOSS |^R3_SPAWN_AUDIT |^B11 PERF ' "$log" || true
-            tail -n 30 "$log"
-            echo "::endgroup::"
-            if [ "$code" -ne 0 ] || [ "$issues" -ne 0 ] || [ "$checks" -eq 0 ]; then
-              echo "FAILED: $name $*"
-              grep -E '^FAIL |^SCRIPT ERROR' "$log" || true
-              exit 1
-            fi
-            echo "PASSED: $name $* checks=$checks"
-          }
-          run_case M10Bosses full
-          run_case B5Bosses
-          run_case M10Density stages=22,31
-          run_case M10Density probe stages=22,31
-          # The two stages a human reported frame-rate collapse on, measured as real rounds rather
-          # than as a synthetic pile of monsters. The gate is convergence, not a frame rate: a CI
-          # software renderer cannot report what a player's GPU will do, but it can report whether
-          # node/projectile/telegraph counts keep climbing or settle.
-          run_case B11Perf stage=39 seconds=75
-          run_case B11Perf stage=40 seconds=75
-      - name: Upload pressure evidence
+          tar -C "$PROJECT_PATH" -xf "$RUNNER_TEMP/native-import/native-import.tar"
+          test "$(cat "$PROJECT_PATH/.godot/candidate-sha")" = "$GITHUB_SHA"
+      - name: Run isolated timed shard
+        run: python3 "$PROJECT_PATH/tools/verify.py" verify-native --shard "${{ matrix.shard }}" --godot "$GODOT" --imported --out "$RUNNER_TEMP/${{ matrix.shard }}"
+      - name: Upload every result and diagnostic (including failure)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: native-pressure-evidence
+          name: native-${{ matrix.shard }}-evidence
           path: |
-            ${{ runner.temp }}/*.log
-            Don't stop/docs/iteration/evidence/m10/density.json
-            Don't stop/docs/iteration/evidence/m10/boss-*.json
-            Don't stop/docs/iteration/evidence/b/bosses.json
-          if-no-files-found: warn
+            ${{ runner.temp }}/${{ matrix.shard }}/preparation.json
+            ${{ runner.temp }}/${{ matrix.shard }}/results.json
+            ${{ runner.temp }}/${{ matrix.shard }}/${{ matrix.shard }}/*.log
+            ${{ runner.temp }}/${{ matrix.shard }}/${{ matrix.shard }}/results.json
+            ${{ runner.temp }}/${{ matrix.shard }}/${{ matrix.shard }}/fixture-evidence
+          retention-days: 14
+          if-no-files-found: error
+
+  native-required-gate:
+    name: Native required gate
+    needs: [setup, contracts, pressure]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - env:
+          SETUP: ${{ needs.setup.result }}
+          CONTRACTS: ${{ needs.contracts.result }}
+          PRESSURE: ${{ needs.pressure.result }}
+        run: test "$SETUP" = success && test "$CONTRACTS" = success && test "$PRESSURE" = success
 
   historical-evidence:
     name: Historical / frozen evidence audit (informational)

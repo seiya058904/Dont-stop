@@ -14,11 +14,11 @@ class MenuSoakPolicy(unittest.TestCase):
         gate = WORKFLOW.split('  browser-gates:', 1)[1].split('  deploy:', 1)[0]
         expression = re.search(r'timeout-minutes: \$\{\{ (.+) \}\}', gate).group(1)
         self.assertIn('GATE_JOB_BUDGET_MINUTES: ${{ ' + expression + ' }}', gate)
-        budget = re.fullmatch(r"matrix.name == '([^']+)' && (\d+) \|\| matrix.name == '([^']+)' && (\d+) \|\| matrix.job_budget_minutes \|\| (\d+)", expression)
+        budget = re.fullmatch(r"\(matrix.name == 'save-audit' \|\| matrix.name == 'durable-save'\) && (\d+) \|\| matrix.name == '([^']+)' && (\d+) \|\| matrix.job_budget_minutes \|\| (\d+)", expression)
         self.assertIsNotNone(budget)
-        special = {budget.group(1): int(budget.group(2)), budget.group(3): int(budget.group(4))}
-        fallback = int(budget.group(5))
-        for name, matrix_budget, expected in [('menu-return', 30, 30), ('menu-return', 8, 8), ('stages-fair', 12, 12), ('smoke', None, 8), ('save-audit', None, 30)]:
+        special = {'save-audit': int(budget.group(1)), 'durable-save': int(budget.group(1)), budget.group(2): int(budget.group(3))}
+        fallback = int(budget.group(4))
+        for name, matrix_budget, expected in [('menu-return', 30, 30), ('menu-return', 8, 8), ('stages-fair', 12, 12), ('smoke', None, 8), ('save-audit', None, 30), ('durable-save', None, 30)]:
             resolved = special.get(name, matrix_budget or fallback)
             self.assertEqual(resolved, expected, name)
         for field, soak, quick in [('job_budget_minutes', 30, 8), ('watchdog_ms', 1500000, 420000)]:
@@ -34,11 +34,17 @@ class MenuSoakPolicy(unittest.TestCase):
 
     def test_full_save_gate_does_not_expand_the_pr_matrix(self):
         gate = WORKFLOW.split('  browser-gates:', 1)[1].split('  deploy:', 1)[0]
-        names = re.search(r"github.event_name == 'pull_request' && '([^']+)' \|\| '([^']+)'", gate)
+        names = re.search(r"\(github.event_name == 'pull_request' \|\| github.event_name == 'push'\) && '([^']+)' \|\| '([^']+)'", gate)
+        self.assertIsNotNone(names)
         self.assertEqual(json.loads(names.group(1)), ['smoke', 'menu-return'])
         self.assertIn('save-audit', json.loads(names.group(2)))
+        self.assertIn('durable-save', json.loads(names.group(2)))
+        self.assertEqual(json.loads(names.group(2)).count('durable-save'), 1)
         self.assertNotIn('- name: save-audit', gate)
         self.assertIn('tools/web-save-durable.js', gate)
+        self.assertIn('durable-save) SCRIPT=tools/web-save-durable.js ;;', gate)
+        self.assertNotIn('E2E_HEADED=0 node', gate)
+        self.assertIn('fail-fast: false', gate)
         self.assertNotIn('- name: stages-fair', gate)
 
     def test_monthly_does_not_shard_or_reduce_the_session(self):
