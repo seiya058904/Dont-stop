@@ -268,6 +268,7 @@ fs.mkdirSync(out, { recursive: true });
   const timeoutTraceStart = await page.evaluate(() => {
    window.towdownSave.diagnosticsEnabled = true;
    window.towdownSave.testForceSyncDelayMs = -1;
+   window.saveFault = 'abort';
    return window.towdownSave.diagnostics.length;
   });
   await click('camp-action-0');
@@ -291,7 +292,7 @@ fs.mkdirSync(out, { recursive: true });
    'never-submitted snapshot fails at the bounded hard timeout without a successful confirmation');
   check(await page.evaluate(() => window.towdownSave.dirty), '18-second hard timeout retains dirty and beforeunload protection');
   check(!(await disk()).weapons.some(weapon => +weapon.id === 2), 'never-submitted purchase never appears in durable IndexedDB');
-  await page.evaluate(() => { window.towdownSave.diagnosticsEnabled = false; window.towdownSave.testForceSyncDelayMs = 0; });
+  await page.evaluate(() => { window.towdownSave.diagnosticsEnabled = false; window.towdownSave.testForceSyncDelayMs = 0; window.saveFault = ''; });
   await until(() => recovery?.dialog && rects['save-discard']?.visible, 'hard-timeout protection actions');
   await click('save-discard'); await start();
   check(!carry.owned.includes(2), 'discard after the hard timeout restores the last committed save');
