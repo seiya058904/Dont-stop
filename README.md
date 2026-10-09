@@ -6,7 +6,8 @@ A top-down 2D survival shooter / roguelite built with Godot 4. Survive encounter
 
 **[▶ Play the Web build](https://seiya058904.github.io/Dont-stop/)** · [⬇️ Windows download](https://github.com/seiya058904/Dont-stop/releases/latest) · [Controls](#controls) · [Development](#develop-with-godot)
 
-![Don't Stop main menu, captured from the game](Don't%20stop/docs/iteration/evidence/gilded/after-menu.png)
+<img width="1672" height="941" alt="ChatGPT 图像 2026年9月27日 22_38_06" src="https://github.com/user-attachments/assets/8ff7c8c7-fc6e-44f0-9ac3-80a178cdcaed" />
+
 
 
 ## The loop
