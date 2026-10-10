@@ -37,6 +37,35 @@ def revision():
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+# Tools/docs retain their existing mutable reuse policy. The other roots are
+# generated destinations, excluded from source by .gitignore and this runner.
+REUSE_IGNORED_ROOTS = {'.godot', 'tools', 'docs', 'build', 'evidence', 'output'}
+
+def reuse_identity_path(relative):
+    parts = Path(relative).parts
+    return bool(parts) and parts[0] not in REUSE_IGNORED_ROOTS and not (
+        len(parts) == 1 and relative.endswith('.log'))
+
+def reuse_source_hashes(project):
+    return {p.relative_to(project).as_posix(): digest(p)
+            for p in project.rglob('*')
+            if p.is_file() and reuse_identity_path(p.relative_to(project).as_posix())}
+
+def require_same_source(actual, expected, label):
+    missing = sorted(expected.keys() - actual.keys())
+    added = sorted(actual.keys() - expected.keys())
+    changed = sorted(k for k in expected.keys() & actual.keys()
+                     if expected[k] != actual[k])
+    if missing or added or changed:
+        raise RuntimeError(f'{label} source identity differs: '
+                           f'missing={missing[:8]}, added={added[:8]}, changed={changed[:8]}')
+
+def require_engine_version(engine):
+    version = subprocess.check_output([engine, '--version'], text=True, encoding='utf-8').strip()
+    if not version.startswith('4.7.2.stable.'):
+        raise RuntimeError('Godot must be pinned to 4.7.2 stable')
+    return version
+
 def isolated_env(directory):
     directory.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
@@ -83,11 +112,12 @@ def clone_candidate(project, destination):
 def prepare(engine, out, imported):
     t = time.perf_counter()
     project = copy_candidate(out / 'candidate', imported)
+    # git ls-files intentionally selects the candidate. Fail before import if
+    # untracked product files would otherwise be silently omitted.
+    require_same_source(reuse_source_hashes(project), reuse_source_hashes(PROJECT), 'prepared candidate')
     preparation = {'copy_seconds': round(time.perf_counter() - t, 3), 'commit': revision(),
-                   'engine_version': subprocess.check_output([engine, '--version'], text=True, encoding='utf-8').strip(),
+                   'engine_version': require_engine_version(engine),
                    'source_sha256': {p.relative_to(project).as_posix(): digest(p) for p in project.rglob('*') if p.is_file() and '.godot' not in p.relative_to(project).parts}}
-    if not preparation['engine_version'].startswith('4.7.2.stable.'):
-        raise RuntimeError('Godot must be pinned to 4.7.2 stable')
     if imported:
         if (project / '.godot/candidate-sha').read_text().strip() != revision():
             raise RuntimeError('imported candidate commit differs from tested commit')
@@ -119,6 +149,14 @@ def native_shard(project, engine, out, ids):
                        for rel in ['docs/iteration/evidence', 'evidence']
                        for p in (project / rel).rglob('*') if p.is_file()}
     try:
+        # Legacy fixtures write directly into historical evidence directories.
+        # Slim source handoffs omit those generated files (and empty directories),
+        # so create only the output parents before running unchanged test scenes.
+        for relative in ['evidence/visual-upgrade-20260919', 'docs/iteration/evidence/b',
+                         'docs/iteration/evidence/m7/regression-artifacts',
+                         'docs/iteration/evidence/m8', 'docs/iteration/evidence/m9',
+                         'docs/iteration/evidence/m10', 'docs/iteration/evidence/m11']:
+            (project / relative).mkdir(parents=True, exist_ok=True)
         # All processes within a shard share the immutable imported candidate;
         # each shard owns its writable source/evidence and each case owns its save.
         for index, identity in enumerate(ids):
@@ -255,11 +293,17 @@ def main():
         record = json.loads((imported_project.parent / 'preparation.json').read_text(encoding='utf-8'))
         if record['commit'] != revision():
             raise RuntimeError('reused candidate commit differs from checkout')
-        # Runtime/source identity must still match; tools/docs may change without
-        # invalidating imported product resources. Actual test scripts come from ROOT.
-        for relative, expected in record['source_sha256'].items():
-            if not relative.startswith(('tools/', 'docs/')) and digest(PROJECT / relative) != expected:
-                raise RuntimeError('reused candidate source changed: ' + relative)
+        actual_engine_version = require_engine_version(engine)
+        if record.get('engine_version') != actual_engine_version:
+            raise RuntimeError('reused candidate engine differs from preparation')
+        # Validate the complete product file set on BOTH sides. Checking only
+        # recorded checkout paths missed candidate edits and newly added files.
+        # GDScript tests remain part of this identity; the manifest overlay
+        # below retains the existing mutable tooling policy.
+        expected = {relative: value for relative, value in record['source_sha256'].items()
+                    if reuse_identity_path(relative)}
+        require_same_source(reuse_source_hashes(PROJECT), expected, 'checkout')
+        require_same_source(reuse_source_hashes(imported_project), expected, 'reused candidate')
         project = out / 'candidate'
         clone_candidate(imported_project, project)
         shutil.copy2(PROJECT / 'tools/native-cases.json', project / 'tools/native-cases.json')
