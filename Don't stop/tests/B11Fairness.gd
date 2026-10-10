@@ -56,6 +56,89 @@ func clean_actors():
 			if is_instance_valid(node): node.queue_free()
 	await wait(0.15)
 
+func audit_demo_warning(id: String, elite := false, wall_end := false) -> void:
+	# Observe the production factory and complete state machine. The empty lane
+	# separates its own warning/recovery clocks from unrelated arena obstacles;
+	# the wall case then exercises a real collision as the other dash-end path.
+	await clean_actors()
+	LevelServer.level = 5
+	LevelServer.state = "COMBAT"
+	LevelServer.timerStop()
+	Utils.player.set_process(false)
+	Utils.player.set_physics_process(false)
+	Utils.player.global_position = Vector2(-8000,-8000)
+	Utils.player.velocity = Vector2.ZERO
+	var actor = M5Content.spawn(id,LevelServer.town.monster_root,Utils.player.global_position+Vector2(120,0))
+	check(actor != null and actor.get_script() == MONSTER_BASE,"real DemoEnemy factory path "+id)
+	if actor == null: return
+	actor.set_physics_process(false)
+	actor.phase = "move"; actor.phase_time = 0.0
+	actor.path_refresh = 1000.0; actor.cached_step = Utils.player.global_position
+	if elite:
+		M5Content.promote_elite(actor,M5Content.elite_modifier_for(id))
+		check(actor.is_elite and actor.get_meta("elite_modifier","") == "double_charge","real E04 promotion selects double_charge")
+	var starting_hp: float = actor.HP
+	var starting_speed: float = actor.SPEED
+	var clearance: float = actor.required_clearance("charge",0.0,MONSTER_BASE.CHARGE_WIDTH) if id == "E04" else actor.volley_clearance()
+	var promised: float = actor.reaction_interval(clearance)
+	var step := 1.0/60.0
+	var warning_started := -1
+	var frozen_at := -1
+	var frozen_direction := Vector2.ZERO
+	var warnings: Array = []
+	var attacks := 0
+	var recoveries := 0
+	var shots_created := 0
+	var barrier = null
+	var saw_wall := false
+	for tick_index in 720:
+		await get_tree().physics_frame
+		var before: String = actor.phase
+		var shot_before = get_tree().get_nodes_in_group("enemy_projectiles").size()
+		actor._physics_process(step)
+		if actor.phase == "warn" and before != "warn":
+			warning_started = tick_index
+			frozen_at = -1
+		if actor.phase == "warn" and actor.lock_frozen and frozen_at < 0:
+			frozen_at = tick_index
+			frozen_direction = actor.locked_direction
+			# A post-lock target movement must not retarget the attack. It also
+			# allows the expiry case to finish without colliding with the player.
+			Utils.player.global_position += actor.locked_direction.orthogonal()*90.0
+		if before == "warn" and actor.phase != "warn":
+			attacks += 1
+			shots_created += get_tree().get_nodes_in_group("enemy_projectiles").size()-shot_before
+			warnings.append({"attack":attacks,"warn_ticks":tick_index-warning_started,
+				"frozen_ticks":tick_index-frozen_at if frozen_at >= 0 else -1,
+				"frozen":actor.lock_frozen,"direction_kept":actor.locked_direction.is_equal_approx(frozen_direction)})
+			if wall_end and attacks == 1:
+				barrier = wall(actor.global_position+actor.locked_direction*30.0,Vector2(4,120))
+			if id == "E05" or attacks > (2 if elite else 1): break
+		if before == "dash" and actor.phase != "dash" and is_instance_valid(barrier):
+			saw_wall = actor.get_slide_collision_count() > 0
+			barrier.queue_free(); barrier = null
+		if actor.phase == "recover":
+			recoveries += 1
+			break
+	var label := id+(" elite" if elite else " ordinary")+(" wall" if wall_end else " expiry")
+	print("B11_DEMO_WARNING ",JSON.stringify({"case":label,"promised_after_freeze":promised,
+		"attacks":attacks,"recoveries":recoveries,"shots_created":shots_created,"wall_seen":saw_wall,"warnings":warnings}))
+	check(not warnings.is_empty(),label+" reaches an actual attack")
+	for row in warnings:
+		check(row.frozen and row.direction_kept,label+" attack %d uses the frozen direction" % row.attack)
+		check(row.frozen_ticks >= 0 and row.frozen_ticks*step+2.0*step >= promised,
+			label+" attack %d keeps the full computed FREEZE-to-attack interval" % row.attack)
+	if id == "E05":
+		check(shots_created > 0,"E05 really emits its volley after the warning")
+	else:
+		check(attacks == (2 if elite else 1) and recoveries == 1,label+" reaches recovery after exactly its authored dash count")
+	if wall_end: check(saw_wall,"elite follow-up regression exercised a real wall collision")
+	check(actor.is_elite == elite and is_equal_approx(actor.HP,starting_hp) and is_equal_approx(actor.SPEED,starting_speed),
+		label+" retains elite identity, HP and movement speed")
+	if is_instance_valid(barrier): barrier.queue_free()
+	actor.queue_free()
+	await clean_actors()
+
 func _ready():
 	await boot()
 	configure(124)
@@ -253,6 +336,12 @@ func _ready():
 	check(not Utils.player.source_throttled("contact"),"an expired window throttles nothing")
 
 	await clean_actors()
+	# The TacticalEnemy laser above does not cover the separate DemoEnemy
+	# timer consumer. Observe first attacks and both double-charge endings too.
+	await audit_demo_warning("E04")
+	await audit_demo_warning("E05")
+	await audit_demo_warning("E04",true)
+	await audit_demo_warning("E04",true,true)
 	print("B11_FAIRNESS checks=",checks," failures=",failures)
 	if failures: get_tree().quit(1)
 	else: await Demo.quit_game()
