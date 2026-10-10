@@ -14,6 +14,55 @@ verification = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(verification)
 
 
+# These are the only reviewed source migrations from the published durable
+# fixture: optional screenshots/timing, and the real slow-write scheduler.
+# Compare the WHOLE script. Splitting at the first `finally` stopped inside
+# independentRead() and silently left every executed assertion unprotected.
+DURABLE_GRACE_SCHEDULE = """     // Schedule the fault's real write inside the slow confirmation window.
+     // A 7 s timer alone can correctly confirm before the asserted 10 s floor.
+     // This anchor follows verify.call, so its clock starts after the verifier.
+     const commitNotBefore = performance.now() + 10000;
+     const commitInGrace = () => {
+      const remaining = commitNotBefore - performance.now();
+      if (remaining > 0) {
+       window.towdownSave.record('slow-fixture-commit-wait', { remaining_ms: remaining, minimum_delay_ms: 10000 });
+       window.setTimeout(commitInGrace, Math.ceil(remaining));
+       return;
+      }
+      commitSlowSnapshot();
+     };
+     window.setTimeout(commitInGrace, slowVisibilityDelayMs);"""
+DURABLE_SCREENSHOT_HELPER = """ async function screenshot(name) {
+  if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: path.join(out, name) });
+ }
+"""
+
+
+def durable_contract_source(source, current=False):
+    source = source.replace('\r\n', '\n')
+    if current:
+        report_declaration = ' const lines = [], rects = {}, report = { checks: [] };\n'
+        page_declaration = ' let page = await context.newPage();\n'
+        migrations = [
+            (' const runStarted = Date.now();\n' + report_declaration, report_declaration),
+            (DURABLE_SCREENSHOT_HELPER + page_declaration, page_declaration),
+            (' finally { report.wall_clock_ms = Date.now() - runStarted; fs.writeFileSync', ' finally { fs.writeFileSync'),
+            (DURABLE_GRACE_SCHEDULE, '     window.setTimeout(commitSlowSnapshot, slowVisibilityDelayMs);'),
+        ]
+        for argument in ["fault + '-failed.png'", "'original-downloaded.png'", "'ds001-pending-blocked.png'",
+                         "fault + '-first-save-discard.png'", "fault + '-after-discard.png'"]:
+            migrations.append(('await screenshot(' + argument + ');',
+                               'await page.screenshot({ path: path.join(out, ' + argument + ') });'))
+        for old, new in migrations:
+            if source.count(old) != 1:
+                raise ValueError('Expected exactly one reviewed durable fixture migration: ' + old.splitlines()[0])
+            source = source.replace(old, new, 1)
+    # Keep all body whitespace, including string literals, and every screenshot
+    # argument. Removing them can hide a disabled fault or an early process exit.
+    # Adjacent anchors also prevent a reviewed declaration from moving scope.
+    return source.rstrip('\n')
+
+
 class VerificationPolicy(unittest.TestCase):
     def test_exact_release_case_set_and_arguments(self):
         original = subprocess.check_output(['git', 'show', 'v1.3.5:.github/workflows/native-tests.yml'], cwd=ROOT, text=True, encoding='utf-8')
@@ -80,13 +129,51 @@ class VerificationPolicy(unittest.TestCase):
     def test_durable_assertions_and_faults_are_unchanged(self):
         original = subprocess.check_output(['git', 'show', "v1.3.5:Don't stop/tools/web-save-durable.js"], cwd=ROOT, text=True, encoding='utf-8')
         current = (TOOLS / 'web-save-durable.js').read_text(encoding='utf-8')
-        # All semantic code is unchanged except diagnostic timing/screenshots.
-        normalise = lambda s: re.sub(r'\s+', '', re.sub(r'await (?:page\.screenshot\(\{ path: path\.join\(out, (.*?)\) \}\)|screenshot\((.*?)\))\s*;', '', s))
-        # Compare the test body, excluding the new diagnostic helper and finally timing.
-        old = original.split(' async function until(', 1)[1].split(' finally {', 1)[0]
-        new = current.split(' async function until(', 1)[1].split(' finally {', 1)[0]
-        self.assertEqual(normalise(old), normalise(new))
+        self.assertEqual(durable_contract_source(original), durable_contract_source(current, current=True))
         self.assertIn("await page.screenshot({ path: path.join(out, 'failure.png') })", current)
+
+    def test_durable_guard_rejects_changed_assertions_faults_and_scheduler(self):
+        current = (TOOLS / 'web-save-durable.js').read_text(encoding='utf-8')
+        accepted = durable_contract_source(current, current=True)
+        changes = [
+            ('diagnostic.callback.elapsed_ms >= 10000', 'diagnostic.callback.elapsed_ms >= 0'),
+            ('diagnostic.callback.elapsed_ms < 18000', 'diagnostic.callback.elapsed_ms < 99999'),
+            ('fixtureDelay === 7000', 'fixtureDelay === -1'),
+            ('match.elapsed_ms >= 10000', 'match.elapsed_ms >= 0'),
+            ('window.__nativeIDBPut.call(store, row, path);', 'void 0;'),
+            ("if (window.saveFault === 'abort') this.transaction.abort();", 'void 0;'),
+            ("if (window.saveFault === 'quota') throw new DOMException('Injected full storage', 'QuotaExceededError');", 'void 0;'),
+            ("window.saveFault === 'abort'", "window.saveFault === 'ab ort'"),
+            ("check(camp.rank === 0 && carry.gold === 9999,", 'check(true,'),
+            ("check(camp.rank === 0, fault + ': full-page reload remains a fresh session');", "check(true, fault + ': full-page reload remains a fresh session');"),
+        ]
+        for old, new in changes:
+            with self.subTest(mutation=old):
+                self.assertIn(old, current)
+                self.assertNotEqual(accepted, durable_contract_source(current.replace(old, new, 1), current=True))
+        for mutation in [
+            current.replace(DURABLE_GRACE_SCHEDULE, '', 1),
+            current + '\n' + DURABLE_GRACE_SCHEDULE,
+            current.replace('const commitNotBefore = performance.now() + 10000;', 'const commitNotBefore = performance.now() + 7000;', 1),
+        ]:
+            with self.subTest(scheduler_migration='missing, duplicate or altered'):
+                with self.assertRaises(ValueError):
+                    durable_contract_source(mutation, current=True)
+        relocated = current.replace(DURABLE_GRACE_SCHEDULE, '', 1) + '\n' + DURABLE_GRACE_SCHEDULE
+        self.assertNotEqual(accepted, durable_contract_source(relocated, current=True))
+        for block in [
+            ' const runStarted = Date.now();\n',
+            DURABLE_SCREENSHOT_HELPER,
+            'report.wall_clock_ms = Date.now() - runStarted; ',
+        ]:
+            with self.subTest(relocated_reviewed_block=block.splitlines()[0]):
+                relocated = current.replace(block, '', 1) + '\n' + block
+                with self.assertRaises(ValueError):
+                    durable_contract_source(relocated, current=True)
+        screenshot_side_effect = current.replace("await screenshot(fault + '-failed.png');",
+                                                 "await screenshot((process.exit(0), fault + '-failed.png'));", 1)
+        with self.assertRaises(ValueError):
+            durable_contract_source(screenshot_side_effect, current=True)
 
 
 if __name__ == '__main__':

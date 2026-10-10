@@ -163,7 +163,20 @@ fs.mkdirSync(out, { recursive: true });
     });
     if (slowVisibilityDelayMs > 0) {
      window.towdownSave.record('slow-fixture-commit-scheduled', { delay_ms: slowVisibilityDelayMs });
-     window.setTimeout(commitSlowSnapshot, slowVisibilityDelayMs);
+     // Schedule the fault's real write inside the slow confirmation window.
+     // A 7 s timer alone can correctly confirm before the asserted 10 s floor.
+     // This anchor follows verify.call, so its clock starts after the verifier.
+     const commitNotBefore = performance.now() + 10000;
+     const commitInGrace = () => {
+      const remaining = commitNotBefore - performance.now();
+      if (remaining > 0) {
+       window.towdownSave.record('slow-fixture-commit-wait', { remaining_ms: remaining, minimum_delay_ms: 10000 });
+       window.setTimeout(commitInGrace, Math.ceil(remaining));
+       return;
+      }
+      commitSlowSnapshot();
+     };
+     window.setTimeout(commitInGrace, slowVisibilityDelayMs);
     }
     return result;
    };

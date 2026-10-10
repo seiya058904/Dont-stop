@@ -99,10 +99,18 @@ func walkable_area() -> float:
 
 ## Share of the walkable arena currently covered by a damaging hazard footprint.
 func coverage_share() -> float:
-	var total = 0.0
-	for hazard in get_tree().get_nodes_in_group(StageHazard.GROUP):
-		total += ArenaHazards.footprint_area(hazard.kind)
-	return total/maxf(1.0,walkable_area())
+	return projected_coverage(get_tree(),arena)
+
+## Shared admission calculation for environmental and actor-owned fields. Use
+## instantiated geometry and the same sum-of-footprints convention everywhere.
+static func projected_coverage(tree: SceneTree, arena_node: Node2D, added_area := 0.0) -> float:
+	var area := 880.0*660.0
+	if is_instance_valid(arena_node) and arena_node.has_method("walkable_area"):
+		area = arena_node.walkable_area()
+	var total = added_area
+	for hazard in tree.get_nodes_in_group(StageHazard.GROUP):
+		total += hazard.footprint_area()
+	return total/maxf(1.0,area)
 
 func _tick_poison(delta: float) -> void:
 	poison_clock -= delta
@@ -145,7 +153,7 @@ func _spawn() -> void:
 		return
 	# Coverage is a hard ceiling, checked before placement so a rejected hazard is never
 	# drawn for a frame and then removed.
-	var projected = coverage_share()+ArenaHazards.footprint_area(kind)/maxf(1.0,walkable_area())
+	var projected = projected_coverage(get_tree(),arena,ArenaHazards.footprint_area(kind))
 	if projected > float(plan.coverage):
 		audit_event("coverage_cap",kind)
 		StageHazard.audit_rejected += 1

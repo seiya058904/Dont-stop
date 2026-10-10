@@ -8,6 +8,7 @@ var locked_direction = Vector2.ZERO
 ## shared lock writes both, and TacticalEnemy (which extends this class) aims artillery at it.
 var locked_point = Vector2.ZERO
 var contact_cooldown = 0.0
+var _charge_steps := 0
 var _last_draw_phase := ""
 var _last_draw_lock_frozen := true
 
@@ -258,6 +259,7 @@ func _physics_process(delta):
 		if phase_time <= 0:
 			if role == "E04":
 				phase = "dash"
+				_charge_steps += 1
 				# The charge is SIZED TO ARRIVE, and it keeps that property: it runs for exactly the
 				# time it needs to cross the distance the lock was taken at, at its own dash speed.
 				# The frozen direction is what the warning showed, so arriving means arriving on the
@@ -284,14 +286,13 @@ func _physics_process(delta):
 			Utils.player.onHit(contact_damage(),self,1.0,"contact")
 			contact_cooldown = 0.8
 		if phase_time <= 0 or get_slide_collision_count() > 0:
-			if role == "E04" and is_elite:
+			if role == "E04" and is_elite and _charge_steps < 2:
 				# Elite charge is a two-step, and the second step gets a FULL new warning: a fresh
 				# tracking phase, a fresh freeze, and the computed reaction interval after it. The
 				# old fixed 0.4 s warning was shorter than the interval a charge needs, which is how
 				# a "two-step" turned into an unavoidable second hit.
-				is_elite = true
 				phase = "warn"
-				begin_lock(0.6,0.0,required_clearance("charge",0.0,CHARGE_WIDTH))
+				_begin_warning(0.6,0.0,required_clearance("charge",0.0,CHARGE_WIDTH))
 				preload("res://game/effects/HostileVFX.gd").emit_at(get_tree().current_scene,global_position,16,locked_direction,"charge")
 				return
 			phase = "recover"
@@ -306,6 +307,7 @@ func _physics_process(delta):
 	super._physics_process(delta)
 	if distance < 170 and distance > 35 and Combat.clear_line(global_position,Utils.player.global_position):
 		phase = "warn"
+		_charge_steps = 0
 		# The wanted warning is the SMALLEST value that still fits the freeze plus the computed
 		# reaction interval, so it cannot regress by an edit and cannot be padded by accident.
 		if role == "E04":
@@ -313,12 +315,18 @@ func _physics_process(delta):
 			# the clearance is the player's own diameter plus the dash's contact reach. No lead:
 			# a charge aimed at where the player is GOING is a charge that cannot be out-walked.
 			var clearance := required_clearance("charge",0.0,CHARGE_WIDTH)
-			phase_time = begin_lock(warning_for(clearance),0.0,clearance)
+			_begin_warning(warning_for(clearance),0.0,clearance)
 		else:
 			# A pellet volley may lead by its own flight time, bounded by lead_cap().
 			var clearance := volley_clearance()
 			var reaction := reaction_interval(clearance)
-			phase_time = begin_lock(warning_for(clearance),projectile_lead(145.0,reaction),clearance)
+			_begin_warning(warning_for(clearance),projectile_lead(145.0,reaction),clearance)
+
+func _begin_warning(full_warning: float, lead: float, clearance: float) -> void:
+	# begin_lock returns the interval AFTER tracking. This roster decrements
+	# phase_time during tracking too, so its clock must retain both intervals.
+	var frozen_warning := begin_lock(full_warning,lead,clearance)
+	phase_time = lock_track+frozen_warning
 
 func onAtk():
 	pass

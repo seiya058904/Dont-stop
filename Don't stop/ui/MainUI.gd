@@ -64,7 +64,11 @@ func _build_presentation() -> void:
 func _apply_web_rendering_fallback() -> void:
 	if not OS.has_feature("web"):
 		return
-	var scene := get_tree().current_scene
+	# add_child(next) runs this _ready before the safe scene swap updates
+	# current_scene. Apply the policy to this menu's own incoming scene.
+	var scene := get_parent()
+	while scene != null and not scene.has_node("WorldEnvironment"):
+		scene = scene.get_parent()
 	if scene == null:
 		return
 	var world := scene.get_node_or_null("WorldEnvironment") as WorldEnvironment
@@ -79,17 +83,29 @@ func _apply_web_rendering_fallback() -> void:
 			light.shadow_enabled = false
 
 func _warm_web_first_use() -> void:
+	var revealed := Utils._web_boot_reported
+	var settings_modulate: Color = setting_ui.modulate
+	var settings_process: ProcessMode = setting_ui.process_mode
+	if revealed:
+		setting_ui.modulate.a = 0.0
+		setting_ui.process_mode = Node.PROCESS_MODE_DISABLED
 	# The settings tree is already part of the menu scene; one covered frame
 	# compiles its controls before the first real click.
 	setting_ui.show()
 	await RenderingServer.frame_post_draw
 	setting_ui.hide()
+	setting_ui.modulate = settings_modulate
+	setting_ui.process_mode = settings_process
 	# CampPanel is intentionally created on demand in normal play. Build and
 	# draw one disposable copy while the Web loader still covers the canvas so
 	# the first real Start click does not pay its UI shader/layout cost.
 	var warm_panel := Control.new()
 	warm_panel.set_script(load("res://ui/CampPanel.gd"))
+	if revealed: warm_panel.modulate.a = 0.0
 	Utils.canvasLayer.add_child(warm_panel)
+	# CampPanel._enter_tree sets ALWAYS. Disable only this disposable instance
+	# after construction; keeping that construction preserves legacy RNG draws.
+	if revealed: warm_panel.process_mode = Node.PROCESS_MODE_DISABLED
 	Demo.pop_pause(warm_panel)
 	await RenderingServer.frame_post_draw
 	warm_panel.queue_free()

@@ -3,6 +3,9 @@ class_name CampSaveStore
 
 signal web_confirmed(revision: int, success: bool, reason: String)
 var _web_callback
+## Only populated after a failed rollback. A retry must restore this verified
+## predecessor before save() may rotate .previous again.
+var _pending_rollbacks: Dictionary = {}
 
 # force_fs_sync has no completion result. Confirm the exact bytes in a separate
 # IndexedDB read transaction, after commit, rather than reading MEMFS again.
@@ -27,8 +30,10 @@ window.towdownSave = window.towdownSave || {
    for (const byte of bytes) { hash ^= byte; hash = Math.imul(hash, 0x01000193); }
    return (hash >>> 0).toString(16).padStart(8, '0');
   } : null;
-  const expectedBytes = this.diagnosticsEnabled ? new TextEncoder().encode(text) : null;
-  const expectedHash = expectedBytes ? hashBytes(expectedBytes) : null;
+  // Decoding can discard a BOM or replace invalid UTF-8. Persistence confirms
+  // the submitted bytes, including their length, rather than a decoded alias.
+  const expectedBytes = new TextEncoder().encode(text);
+  const expectedHash = this.diagnosticsEnabled ? hashBytes(expectedBytes) : null;
   let pollNumber = 0, observedRow = false;
   trace('verify-start', { path, expected_hash: expectedHash, expected_bytes: expectedBytes ? expectedBytes.length : null });
   this.dirty = true;
@@ -69,13 +74,16 @@ window.towdownSave = window.towdownSave || {
       let matches = false;
       read.onsuccess = () => {
        const row = read.result;
-       matches = !!row && new TextDecoder().decode(row.contents) === text;
-       if (row && this.diagnosticsEnabled) {
-        const bytes = row.contents instanceof Uint8Array ? row.contents : new Uint8Array(row.contents);
-        const rowHash = hashBytes(bytes);
-        trace('row-hash', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, expected_hash: expectedHash, match: matches }, true);
-        if (!observedRow) { observedRow = true; trace('first-row', { poll: currentPoll, row_hash: rowHash, row_bytes: bytes.length, match: matches }, true); }
-       } else if (!row && this.diagnosticsEnabled) trace('row-missing', { poll: currentPoll, expected_hash: expectedHash }, true);
+       const contents = row && row.contents;
+       const bytes = contents instanceof ArrayBuffer ? new Uint8Array(contents)
+        : ArrayBuffer.isView(contents) ? new Uint8Array(contents.buffer, contents.byteOffset, contents.byteLength) : null;
+       matches = !!bytes && bytes.length === expectedBytes.length && bytes.every((byte, index) => byte === expectedBytes[index]);
+       if (row && hashBytes) {
+        const rowHash = bytes ? hashBytes(bytes) : null;
+        const rowLength = bytes ? bytes.length : null;
+        trace('row-hash', { poll: currentPoll, row_hash: rowHash, row_bytes: rowLength, expected_hash: expectedHash, match: matches }, true);
+        if (!observedRow) { observedRow = true; trace('first-row', { poll: currentPoll, row_hash: rowHash, row_bytes: rowLength, match: matches }, true); }
+       } else if (!row && hashBytes) trace('row-missing', { poll: currentPoll, expected_hash: expectedHash }, true);
       };
       tx.oncomplete = () => {
        trace('transaction-complete', { poll: currentPoll, match: matches }, true);
@@ -131,33 +139,69 @@ func write_temp(file: FileAccess, text: String) -> Error:
 func replace_file(source: String, destination: String) -> Error:
 	return DirAccess.rename_absolute(source,destination)
 
+func protected_previous_path(path: String) -> String:
+	return path+".previous" if _pending_rollbacks.has(path) else ""
+
+func protect_previous(path: String, original: PackedByteArray) -> void:
+	# The first failed transaction owns this identity until exact restoration.
+	# A later caller cannot replace it with newly read, damaged backup bytes.
+	if not _pending_rollbacks.has(path): _pending_rollbacks[path] = original.duplicate()
+
+func protected_previous_intact(path: String) -> bool:
+	return not _pending_rollbacks.has(path) or (FileAccess.file_exists(path+".previous") and FileAccess.get_file_as_bytes(path+".previous") == _pending_rollbacks[path])
+
 func save(path: String, data: Dictionary) -> Dictionary:
+	if _pending_rollbacks.has(path):
+		# An explicit discard or external repair can already have restored the
+		# exact pinned main snapshot. Do not keep rejecting future saves merely
+		# because the old backup is now unavailable. A successful read is required.
+		var restored_file = FileAccess.open(path,FileAccess.READ)
+		if restored_file != null:
+			var restored_bytes = restored_file.get_buffer(restored_file.get_length())
+			var restored_error = restored_file.get_error()
+			restored_file.close()
+			if restored_error == OK and restored_bytes == _pending_rollbacks[path]:
+				_pending_rollbacks.erase(path)
+	if _pending_rollbacks.has(path):
+		var protected_bytes: PackedByteArray = _pending_rollbacks[path]
+		if not protected_previous_intact(path) or not restore_previous(path+".previous",path+".tmp",path,protected_bytes):
+			return {"success":false,"reason":"上一快照尚未恢复；请检查 .previous 备份后重试保存"}
+		_pending_rollbacks.erase(path)
 	var text = JSON.stringify(data,"\t")
+	var expected_bytes := text.to_utf8_buffer()
 	var temporary = path+".tmp"
 	var file = open_temp(temporary)
 	if file == null: return {"success":false,"reason":"无法打开临时存档"}
 	var error = write_temp(file,text)
 	file.close()
-	if error != OK or FileAccess.get_file_as_string(temporary) != text:
+	if error != OK or FileAccess.get_file_as_bytes(temporary) != expected_bytes:
 		return {"success":false,"reason":"写入或刷新存档失败"}
 	var previous_path = path+".previous"
 	var had_previous = FileAccess.file_exists(path)
-	var previous_text = FileAccess.get_file_as_string(path) if had_previous else ""
+	var previous_bytes = FileAccess.get_file_as_bytes(path) if had_previous else PackedByteArray()
 	if had_previous:
-		if DirAccess.copy_absolute(path,previous_path) != OK or FileAccess.get_file_as_string(previous_path) != previous_text:
+		if DirAccess.copy_absolute(path,previous_path) != OK or FileAccess.get_file_as_bytes(previous_path) != previous_bytes:
 			return {"success":false,"reason":"保留上一快照失败；原存档未替换"}
 	if replace_file(temporary,path) != OK:
 		return {"success":false,"reason":"替换存档失败，上一份快照已保留"}
-	if FileAccess.get_file_as_string(path) != text:
-		if had_previous and restore_previous(previous_path,temporary,path,previous_text):
+	if FileAccess.get_file_as_bytes(path) != expected_bytes:
+		if had_previous and restore_previous(previous_path,temporary,path,previous_bytes):
 			return {"success":false,"reason":"存档回读不一致；已恢复上一份快照"}
+		if had_previous: protect_previous(path,previous_bytes)
 		return {"success":false,"reason":"存档回读不一致；上一快照保留在.previous文件，请重试保存" if had_previous else "首次存档回读失败；请重试保存"}
 	if OS.has_feature("web"):
 		return {"success":false,"pending":true,"memory_written":true,"reason":"进度在内存中；正在确认浏览器持久化…"}
 	return {"success":true,"reason":"已保存"}
 
-func restore_previous(previous_path: String, temporary: String, path: String, text: String) -> bool:
+func restore_previous(previous_path: String, temporary: String, path: String, expected) -> bool:
 	# Keep the backup even if storage remains unavailable during rollback.
-	if DirAccess.copy_absolute(previous_path,temporary) != OK or FileAccess.get_file_as_string(temporary) != text: return false
+	# String callers remain supported; production recovery passes original bytes
+	# so an invalid UTF-8 document is never decoded and rewritten during rollback.
+	var original: PackedByteArray = expected if expected is PackedByteArray else str(expected).to_utf8_buffer()
+	if _pending_rollbacks.has(path) and original != _pending_rollbacks[path]: return false
+	if not FileAccess.file_exists(previous_path) or FileAccess.get_file_as_bytes(previous_path) != original: return false
+	if DirAccess.copy_absolute(previous_path,temporary) != OK or FileAccess.get_file_as_bytes(temporary) != original: return false
 	if DirAccess.rename_absolute(temporary,path) != OK: return false
-	return FileAccess.get_file_as_string(path) == text
+	if FileAccess.get_file_as_bytes(path) != original: return false
+	_pending_rollbacks.erase(path)
+	return true
