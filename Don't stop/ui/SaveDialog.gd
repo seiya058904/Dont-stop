@@ -38,7 +38,7 @@ func _ready():
 			else: note.text = "仍无法读取；请导出原文后检查"))
 		recovery_actions.append(add_button(box,"明确建立新体验档（先备份原文）",func():
 			if Demo.create_new_save(): queue_free()
-			else: note.text = Demo.save_result.reason if Demo.save_result.get("pending",false) else "新档建立失败，未接管原文件"))
+			else: note.text = Demo.save_result.reason))
 	else:
 		retry = add_button(box,"重试保存（不重复购买）",func():
 			var result = Demo.save_camp()

@@ -27,9 +27,11 @@ var kind := "poison"
 var at := Vector2.ZERO
 var direction := Vector2.RIGHT
 var sweep := 0.0
-var radius := 96.0
-var length := 340.0
-var width := 22.0
+## Negative means unspecified. Placement callers can provide geometry that has
+## already passed clearance checks; _ready must not silently replace it.
+var radius := -1.0
+var length := -1.0
+var width := -1.0
 var warning := 1.0
 var active_time := 4.8
 var rest := 0.5
@@ -78,9 +80,9 @@ func _ready() -> void:
 	# Below every telegraph and every actor: a ground hazard is terrain first.
 	z_index = -2
 	var spec = ArenaHazards.shape(kind)
-	if kind in ["poison","vent","frost","meteor"]: radius = spec.radius
-	elif kind == "laser": length = spec.length; width = spec.width
-	elif kind == "shock": length = spec.length; width = spec.width
+	if radius < 0.0: radius = 96.0 if kind in ["laser","shock"] else float(spec.get("radius",96.0))
+	if length < 0.0: length = float(spec.get("length",340.0))
+	if width < 0.0: width = float(spec.get("width",22.0))
 	if HellMode.is_hell(stage):
 		warning = maxf(warning,ArenaHazards.WARNING_FLOOR)
 	clipped = length
@@ -233,6 +235,11 @@ func _player_on_slick() -> bool:
 
 func contains_player() -> bool:
 	return kind == "poison" and phase == "active" and _player_inside()
+
+func footprint_area() -> float:
+	# Keep the director's existing area convention, using the actual geometry
+	# shared by collision, warning and drawing rather than the kind's defaults.
+	return length*width if kind in ["laser","shock"] else PI*radius*radius
 
 ## Shared with HostileZone: has any part of the damaging footprint been inside the
 ## player's lit radius yet? Normal mode reports a huge radius, so this is free outside

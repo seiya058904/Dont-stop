@@ -210,9 +210,13 @@ func release_field(kind: String, at: Vector2, warning_value: float, active: floa
 	var player_at = Utils.player.global_position if is_instance_valid(Utils.player) else at
 	if at.distance_to(player_at) < ArenaHazards.MIN_EDGE_DISTANCE+radius_value:
 		remember("field_refused"); return false
+	var arena: Node2D = LevelServer.town.arena if is_instance_valid(LevelServer.town) else null
+	var footprint := radius_value*radius_value if kind in ["laser","shock"] else PI*radius_value*radius_value
+	var ceiling := ArenaHazards.HELL_COVERAGE if HellMode.is_hell(LevelServer.level) else ArenaHazards.MAX_COVERAGE
+	if preload("res://game/map/ArenaHazardDirector.gd").projected_coverage(tree,arena,footprint) > ceiling:
+		remember("field_refused"); return false
 	if is_instance_valid(LevelServer.town) and is_instance_valid(LevelServer.town.arena):
-		var arena = LevelServer.town.arena
-		if not arena.point_clear(at,radius_value*0.55+10.0): remember("field_refused"); return false
+		if not arena.point_clear(at,radius_value*0.55+10.0,[get_rid()]): remember("field_refused"); return false
 		if not arena.reachable_from_player(at): remember("field_refused"); return false
 	var field = load("res://game/map/StageHazard.gd").new()
 	field.kind = kind; field.at = at; field.owner_ref = weakref(self)

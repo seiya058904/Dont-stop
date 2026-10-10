@@ -48,6 +48,10 @@ var dirty = false
 var save_result = {"success":true,"reason":""}
 var save_revision := 0
 var creating_new_save := false
+## A failed takeover may leave fresh bytes in the main file. Until rollback
+## succeeds, .previous is the original and must not be rotated by another write.
+var _recovery_original_path := ""
+var _pending_recovery_original := PackedByteArray()
 var committed_web_save := PackedByteArray()
 ## Consumed by the next real session, after the outgoing Hero has been released.
 ## Removing an uncommitted Web file alone cannot roll back autoload numbers.
@@ -454,7 +458,8 @@ func save_camp() -> Dictionary:
 
 func _web_save_confirmed(revision: int, success: bool, reason: String) -> void:
 	# A confirmation of an older snapshot must never clear newer unsaved changes.
-	if revision != save_revision: return
+	# A completed revision is terminal too: duplicate delivery cannot reverse it.
+	if revision != save_revision or not save_result.get("pending",false): return
 	save_result = {"success":success,"reason":reason,"durable":success}
 	dirty = not success
 	save_store.mark_web_dirty(dirty)
@@ -462,10 +467,16 @@ func _web_save_confirmed(revision: int, success: bool, reason: String) -> void:
 	print("[save-durable] revision=%d success=%s dirty=%s" % [revision,str(success),str(dirty)])
 	if creating_new_save:
 		creating_new_save = false
-		if success: load_camp()
-		elif FileAccess.file_exists(save_path+".previous"):
-			var original = FileAccess.get_file_as_string(save_path+".previous")
-			save_store.restore_previous(save_path+".previous",save_path+".tmp",save_path,original)
+		if success:
+			_recovery_original_path = ""
+			load_camp()
+		else:
+			if not save_store.restore_previous(save_path+".previous",save_path+".tmp",save_path,_pending_recovery_original):
+				save_store.protect_previous(save_path,_pending_recovery_original)
+				_recovery_original_path = save_path+".previous"
+				reason += "；原文回滚失败，请重试或检查 .previous 备份"
+				save_result.reason = reason
+		_pending_recovery_original = PackedByteArray()
 	if is_instance_valid(ui): ui.message.text = reason
 	changed.emit()
 	if not success and is_instance_valid(Utils.canvasLayer): Utils.showToast(reason,5)
@@ -566,6 +577,8 @@ func _restore_camp_snapshot(parsed: Dictionary) -> bool:
 	if Utils.player.gun == null and data.equipped != "" and data.has("weapon_slots"): explicitly_unequipped = true
 	loading = false
 	_discarded_without_snapshot = false
+	_recovery_original_path = ""
+	_pending_recovery_original = PackedByteArray()
 	save_blocked = false; dirty = false
 	save_result = {"success":true,"reason":"已恢复"}
 	restored.emit()
@@ -592,8 +605,13 @@ func show_save_dialog(recovery = false, quitting = false):
 	Utils.canvasLayer.add_child(save_dialog)
 
 func export_bad_save() -> String:
+	if not save_store.protected_previous_intact(save_path):
+		return "导出失败；原文备份缺失或校验失败，恢复锁已保留"
+	var original_path = _recovery_original_path if not _recovery_original_path.is_empty() else save_path
+	var protected_path = save_store.protected_previous_path(save_path)
+	if _recovery_original_path.is_empty() and not protected_path.is_empty(): original_path = protected_path
 	if OS.has_feature("web"):
-		var file = FileAccess.open(save_path,FileAccess.READ)
+		var file = FileAccess.open(original_path,FileAccess.READ)
 		if file == null: return "导出失败；无法读取原文件"
 		var bytes = file.get_buffer(file.get_length())
 		var error = file.get_error()
@@ -602,18 +620,35 @@ func export_bad_save() -> String:
 		JavaScriptBridge.download_buffer(bytes,"DontStop-invalid-%d.json" % Time.get_ticks_usec(),"application/octet-stream")
 		return "已请求下载坏档原文；原文件未改动"
 	var destination = save_path+".invalid-"+str(Time.get_ticks_usec())+".json"
-	return ProjectSettings.globalize_path(destination) if DirAccess.copy_absolute(save_path,destination) == OK else "导出失败；原文件未改动"
+	return ProjectSettings.globalize_path(destination) if DirAccess.copy_absolute(original_path,destination) == OK else "导出失败；原文件未改动"
 
 func _initial_camp_snapshot() -> Dictionary:
 	return {"schema_version":6,"campaign_complete":false,"hell_complete":false,"gold":DemoConfig.INITIAL_GOLD,"points":DemoConfig.INITIAL_TALENT_POINTS,"reserve_magazines":10,"level":1,"exp":0,"hp":5,"hp_max":5,"weapons":[],"owned_global_upgrades":[],"talents":{},"talent_payments":[],"legacy":[],"legacy_state":{},"next_stage":1,"selected_stage":1,"unequipped":false,"equipped":""}
 
 func create_new_save() -> bool:
 	if creating_new_save: return false
+	if _recovery_original_path.is_empty(): _recovery_original_path = save_store.protected_previous_path(save_path)
+	if not _recovery_original_path.is_empty():
+		var intact = save_store.protected_previous_intact(save_path) and FileAccess.file_exists(_recovery_original_path)
+		var original = FileAccess.get_file_as_bytes(_recovery_original_path) if intact else PackedByteArray()
+		if not intact or not save_store.restore_previous(_recovery_original_path,save_path+".tmp",save_path,original):
+			dirty = true
+			save_blocked = true
+			save_store.mark_web_dirty(true)
+			save_result = {"success":false,"reason":"原文仍无法回滚；请重试或检查 .previous 备份"}
+			changed.emit()
+			return false
+		_recovery_original_path = ""
 	var exported = export_bad_save()
-	if exported.begins_with("导出失败"): return false
+	if exported.begins_with("导出失败"):
+		save_result = {"success":false,"reason":exported}
+		changed.emit()
+		return false
 	var fresh = _initial_camp_snapshot()
+	var original_bytes = FileAccess.get_file_as_bytes(save_path)
 	var result = save_store.save(save_path,fresh)
 	if result.get("pending",false):
+		_pending_recovery_original = original_bytes
 		save_revision += 1
 		dirty = true
 		creating_new_save = true
@@ -624,7 +659,13 @@ func create_new_save() -> bool:
 		save_store.confirm_web(save_path,save_revision)
 		changed.emit()
 		return false
-	if not result.success: return false
+	if not result.success:
+		_recovery_original_path = save_store.protected_previous_path(save_path)
+		dirty = true
+		save_store.mark_web_dirty(true)
+		save_result = result
+		changed.emit()
+		return false
 	return load_camp()
 
 func discard_and_leave():
