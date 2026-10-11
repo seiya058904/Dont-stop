@@ -6,6 +6,7 @@ var _web_callback
 ## Only populated after a failed rollback. A retry must restore this verified
 ## predecessor before save() may rotate .previous again.
 var _pending_rollbacks: Dictionary = {}
+var _recovery_errors: Dictionary = {}
 
 # force_fs_sync has no completion result. Confirm the exact bytes in a separate
 # IndexedDB read transaction, after commit, rather than reading MEMFS again.
@@ -139,18 +140,142 @@ func write_temp(file: FileAccess, text: String) -> Error:
 func replace_file(source: String, destination: String) -> Error:
 	return DirAccess.rename_absolute(source,destination)
 
+func _hash_bytes(bytes: PackedByteArray) -> String:
+	var context = HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update(bytes)
+	return context.finish().hex_encode()
+
+func _matches_hash(path: String, expected: String) -> bool:
+	var file = FileAccess.open(path,FileAccess.READ)
+	if file == null: return false
+	var bytes = file.get_buffer(file.get_length())
+	var error = file.get_error()
+	file.close()
+	return error == OK and _hash_bytes(bytes) == expected
+
+func preserve_recovery_bytes(path: String, bytes: PackedByteArray) -> String:
+	# Legacy transactions had no identity record. Preserve their predecessor
+	# independently instead of guessing that it owns the current damaged main.
+	var destination = path+".recovered-"+_hash_bytes(bytes)+".json"
+	if FileAccess.file_exists(destination):
+		return destination if _matches_bytes(destination,bytes) else ""
+	var temporary = destination+".tmp"
+	var file = FileAccess.open(temporary,FileAccess.WRITE)
+	if file == null: return ""
+	file.store_buffer(bytes)
+	file.flush()
+	var error = file.get_error()
+	file.close()
+	if error != OK or not _matches_bytes(temporary,bytes): return ""
+	if FileAccess.file_exists(destination):
+		return destination if _matches_bytes(destination,bytes) else ""
+	if DirAccess.rename_absolute(temporary,destination) != OK: return ""
+	return destination if _matches_bytes(destination,bytes) else ""
+
+func _matches_bytes(path: String, expected: PackedByteArray) -> bool:
+	var file = FileAccess.open(path,FileAccess.READ)
+	if file == null: return false
+	var bytes = file.get_buffer(file.get_length())
+	var error = file.get_error()
+	file.close()
+	return error == OK and bytes == expected
+
+func valid_utf8(bytes: PackedByteArray) -> bool:
+	var remaining = 0
+	var minimum = 0x80
+	var maximum = 0xbf
+	for byte in bytes:
+		if remaining > 0:
+			if byte < minimum or byte > maximum: return false
+			remaining -= 1
+			minimum = 0x80; maximum = 0xbf
+		elif byte <= 0x7f: continue
+		elif byte >= 0xc2 and byte <= 0xdf: remaining = 1
+		elif byte >= 0xe0 and byte <= 0xef:
+			remaining = 2
+			minimum = 0xa0 if byte == 0xe0 else 0x80
+			maximum = 0x9f if byte == 0xed else 0xbf
+		elif byte >= 0xf0 and byte <= 0xf4:
+			remaining = 3
+			minimum = 0x90 if byte == 0xf0 else 0x80
+			maximum = 0x8f if byte == 0xf4 else 0xbf
+		else: return false
+	return remaining == 0
+
+func _write_recovery(path: String, record: Dictionary) -> bool:
+	# Write/read back a separate sidecar before replacing either identity. An
+	# incomplete sidecar never replaces the last authoritative recovery record.
+	var destination = path+".recovery"
+	var temporary = destination+".tmp"
+	var bytes = JSON.stringify(record).to_utf8_buffer()
+	var file = FileAccess.open(temporary,FileAccess.WRITE)
+	if file == null: return false
+	file.store_buffer(bytes)
+	file.flush()
+	var error = file.get_error()
+	file.close()
+	return error == OK and FileAccess.get_file_as_bytes(temporary) == bytes and DirAccess.rename_absolute(temporary,destination) == OK and FileAccess.get_file_as_bytes(destination) == bytes
+
+func complete_recovery(path: String) -> bool:
+	# Keep an inactive record rather than deleting a file. If this write fails,
+	# the active record still pins the predecessor; a fresh process may recognize
+	# an exactly written candidate as a completed transaction.
+	if FileAccess.file_exists(path+".recovery") and not _write_recovery(path,{"version":1,"active":false}): return false
+	_pending_rollbacks.erase(path)
+	_recovery_errors.erase(path)
+	return true
+
+func _load_recovery(path: String) -> void:
+	if _pending_rollbacks.has(path):
+		# A transient journal write failure is retryable while this process still
+		# owns the verified predecessor identity. Never adopt reread backup bytes.
+		if _recovery_errors.has(path) and _write_recovery(path,{"version":1,"active":true,"original_sha256":_hash_bytes(_pending_rollbacks[path]),"candidate_sha256":""}):
+			_recovery_errors.erase(path)
+		return
+	_recovery_errors.erase(path)
+	if not FileAccess.file_exists(path+".recovery"): return
+	var parser = JSON.new()
+	var error = parser.parse(FileAccess.get_file_as_string(path+".recovery"))
+	var record = parser.data if error == OK else null
+	if not record is Dictionary or record.get("version") != 1 or not record.get("active") is bool:
+		_recovery_errors[path] = true
+		return
+	if not record.active: return
+	var original = record.get("original_sha256","")
+	var candidate = record.get("candidate_sha256","")
+	if not original is String or original.length() != 64 or not original.is_valid_hex_number(false) or not candidate is String or (not candidate.is_empty() and (candidate.length() != 64 or not candidate.is_valid_hex_number(false))):
+		_recovery_errors[path] = true
+		return
+	# On reload the file is read from the native filesystem / hydrated userfs,
+	# rather than the former process's staged memory. Either exact terminal state
+	# finishes the interrupted transaction without undoing a completed save.
+	if _matches_hash(path,original) or (not candidate.is_empty() and _matches_hash(path,candidate)):
+		if not complete_recovery(path): _recovery_errors[path] = true
+	elif _matches_hash(path+".previous",original):
+		_pending_rollbacks[path] = FileAccess.get_file_as_bytes(path+".previous")
+	else:
+		_recovery_errors[path] = true
+
 func protected_previous_path(path: String) -> String:
-	return path+".previous" if _pending_rollbacks.has(path) else ""
+	_load_recovery(path)
+	return path+".previous" if _pending_rollbacks.has(path) or _recovery_errors.has(path) else ""
 
 func protect_previous(path: String, original: PackedByteArray) -> void:
 	# The first failed transaction owns this identity until exact restoration.
 	# A later caller cannot replace it with newly read, damaged backup bytes.
 	if not _pending_rollbacks.has(path): _pending_rollbacks[path] = original.duplicate()
+	# A failed confirmation cannot be treated as a completed candidate on reload.
+	if not _write_recovery(path,{"version":1,"active":true,"original_sha256":_hash_bytes(_pending_rollbacks[path]),"candidate_sha256":""}):
+		_recovery_errors[path] = true
 
 func protected_previous_intact(path: String) -> bool:
+	_load_recovery(path)
+	if _recovery_errors.has(path): return false
 	return not _pending_rollbacks.has(path) or (FileAccess.file_exists(path+".previous") and FileAccess.get_file_as_bytes(path+".previous") == _pending_rollbacks[path])
 
 func save(path: String, data: Dictionary) -> Dictionary:
+	_load_recovery(path)
 	if _pending_rollbacks.has(path):
 		# An explicit discard or external repair can already have restored the
 		# exact pinned main snapshot. Do not keep rejecting future saves merely
@@ -161,7 +286,9 @@ func save(path: String, data: Dictionary) -> Dictionary:
 			var restored_error = restored_file.get_error()
 			restored_file.close()
 			if restored_error == OK and restored_bytes == _pending_rollbacks[path]:
-				_pending_rollbacks.erase(path)
+				if not complete_recovery(path): return {"success":false,"reason":"恢复记录无法确认；原文保持，请重试保存"}
+	if _recovery_errors.has(path):
+		return {"success":false,"reason":"恢复记录或原文备份缺失、损坏；请检查 .recovery 和 .previous 后重试"}
 	if _pending_rollbacks.has(path):
 		var protected_bytes: PackedByteArray = _pending_rollbacks[path]
 		if not protected_previous_intact(path) or not restore_previous(path+".previous",path+".tmp",path,protected_bytes):
@@ -182,6 +309,9 @@ func save(path: String, data: Dictionary) -> Dictionary:
 	if had_previous:
 		if DirAccess.copy_absolute(path,previous_path) != OK or FileAccess.get_file_as_bytes(previous_path) != previous_bytes:
 			return {"success":false,"reason":"保留上一快照失败；原存档未替换"}
+		if not _write_recovery(path,{"version":1,"active":true,"original_sha256":_hash_bytes(previous_bytes),"candidate_sha256":_hash_bytes(expected_bytes)}):
+			return {"success":false,"reason":"恢复保护记录写入失败；原存档未替换"}
+		_pending_rollbacks[path] = previous_bytes.duplicate()
 	if replace_file(temporary,path) != OK:
 		return {"success":false,"reason":"替换存档失败，上一份快照已保留"}
 	if FileAccess.get_file_as_bytes(path) != expected_bytes:
@@ -191,6 +321,7 @@ func save(path: String, data: Dictionary) -> Dictionary:
 		return {"success":false,"reason":"存档回读不一致；上一快照保留在.previous文件，请重试保存" if had_previous else "首次存档回读失败；请重试保存"}
 	if OS.has_feature("web"):
 		return {"success":false,"pending":true,"memory_written":true,"reason":"进度在内存中；正在确认浏览器持久化…"}
+	if not complete_recovery(path): return {"success":false,"reason":"存档已写入但恢复记录未确认；请重试保存"}
 	return {"success":true,"reason":"已保存"}
 
 func restore_previous(previous_path: String, temporary: String, path: String, expected) -> bool:
@@ -198,10 +329,11 @@ func restore_previous(previous_path: String, temporary: String, path: String, ex
 	# String callers remain supported; production recovery passes original bytes
 	# so an invalid UTF-8 document is never decoded and rewritten during rollback.
 	var original: PackedByteArray = expected if expected is PackedByteArray else str(expected).to_utf8_buffer()
+	_load_recovery(path)
+	if _recovery_errors.has(path): return false
 	if _pending_rollbacks.has(path) and original != _pending_rollbacks[path]: return false
 	if not FileAccess.file_exists(previous_path) or FileAccess.get_file_as_bytes(previous_path) != original: return false
 	if DirAccess.copy_absolute(previous_path,temporary) != OK or FileAccess.get_file_as_bytes(temporary) != original: return false
 	if DirAccess.rename_absolute(temporary,path) != OK: return false
 	if FileAccess.get_file_as_bytes(path) != original: return false
-	_pending_rollbacks.erase(path)
-	return true
+	return complete_recovery(path)

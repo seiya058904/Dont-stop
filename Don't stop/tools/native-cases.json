@@ -76,6 +76,16 @@
           "completion_marker": "^R1 RECOVERY UI checks=[0-9]+ failures=0"
         },
         {
+          "id": "R1RecoveryJournal",
+          "scene": "R1RecoveryJournal",
+          "args": [],
+          "observed_seconds": 1.831,
+          "timing_source": "Phase II isolated local Godot 4.7.2, 49 checks; not one of the historical CI timing_runs",
+          "min_checks": 49,
+          "timeout_seconds": 900,
+          "completion_marker": "^R1 RECOVERY JOURNAL checks=[0-9]+ failures=0"
+        },
+        {
           "id": "B6Progression --hell-unlock",
           "scene": "B6Progression",
           "args": [
@@ -554,6 +564,7 @@
             "B19Contracts",
             "B17Sources",
             "R1Persistence",
+              "R1RecoveryJournal",
             "B17Saved",
             "B194Contracts"
           ],

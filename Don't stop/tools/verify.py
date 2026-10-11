@@ -25,7 +25,7 @@ CASES = {c['id']: c for g in MANIFEST['groups'].values() for c in g['cases']}
 SHARDS = {s['name']: s['cases'] for g in MANIFEST['groups'].values() for s in g['shards']}
 BASE_FAST = ['B194Contracts', 'P0SaveSanity', 'BaselineRegression']
 TARGETS = [
-    (r'/(autoload/Demo|ui/SaveDialog|web/loader)', ['R1Persistence', 'R1RecoveryUI', 'B12Save', 'B17Saved']),
+    (r'/(autoload/Demo|game/config/CampSaveStore|ui/SaveDialog|web/loader)', ['R1Persistence', 'R1RecoveryUI', 'R1RecoveryJournal', 'B12Save', 'B17Saved']),
     (r'/(ui|fonts|shader)/', ['CampPresentation', 'DeepQuality', 'WeaponVisualPose']),
     (r'/(game/guns|game/bullets|game/config)/', ['M3Weapons', 'B12Catalog', 'B13Catalog']),
     (r'/(game/map|autoload/SceneManager|autoload/Camera)', ['CameraTransitions', 'WebPhysicsContracts', 'B11Stages']),

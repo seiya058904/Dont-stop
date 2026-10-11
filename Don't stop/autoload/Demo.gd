@@ -460,6 +460,9 @@ func _web_save_confirmed(revision: int, success: bool, reason: String) -> void:
 	# A confirmation of an older snapshot must never clear newer unsaved changes.
 	# A completed revision is terminal too: duplicate delivery cannot reverse it.
 	if revision != save_revision or not save_result.get("pending",false): return
+	if success and not save_store.complete_recovery(save_path):
+		success = false
+		reason = "进度已写入但恢复记录未确认；请重试或导出"
 	save_result = {"success":success,"reason":reason,"durable":success}
 	dirty = not success
 	save_store.mark_web_dirty(dirty)
@@ -495,10 +498,42 @@ func export_current_save() -> String:
 	JavaScriptBridge.download_buffer(JSON.stringify(snapshot(),"\t").to_utf8_buffer(),"DontStop-progress.json","application/json")
 	return "已请求下载当前进度；浏览器存档仍需重试保存"
 
+func _preserve_legacy_previous() -> Dictionary:
+	# Former versions left no journal after a double failure. A valid surviving
+	# predecessor may still contain recoverable progress. Archive it independently
+	# without changing export_bad_save's ownership of the current damaged main.
+	if not FileAccess.file_exists(save_path+".previous"): return {"success":true}
+	var file = FileAccess.open(save_path+".previous",FileAccess.READ)
+	if file == null: return {"success":false,"reason":"上一快照无法读取；原文件保持"}
+	var bytes = file.get_buffer(file.get_length())
+	var error = file.get_error()
+	file.close()
+	if error != OK: return {"success":false,"reason":"上一快照读取失败；原文件保持"}
+	var archive = save_store.preserve_recovery_bytes(save_path,bytes)
+	if archive.is_empty(): return {"success":false,"reason":"上一快照独立备份失败；原文件保持"}
+	if FileAccess.file_exists(save_path) or not save_store.valid_utf8(bytes): return {"success":true,"archive":archive}
+	# With no main file there is no competing bad-main original. Only a valid
+	# actual camp snapshot may own the existing explicit recovery transaction.
+	var parser = JSON.new()
+	if parser.parse(bytes.get_string_from_utf8()) == OK and valid_save(parser.data):
+		save_store.protect_previous(save_path,bytes)
+	return {"success":true,"archive":archive}
+
 func load_camp() -> bool:
 	if creating_new_save: return false
 	if OS.has_feature("web") and dirty: return false
-	if not FileAccess.file_exists(save_path): return false
+	if not save_store.protected_previous_path(save_path).is_empty():
+		save_blocked = true
+		save_result = {"success":false,"reason":"存档恢复尚未完成；原文保持，请重试或检查备份"}
+		if not test_mode: show_save_dialog.call_deferred(true)
+		return false
+	if not FileAccess.file_exists(save_path):
+		var legacy = _preserve_legacy_previous()
+		if not legacy.success or not save_store.protected_previous_path(save_path).is_empty():
+			save_blocked = true
+			save_result = legacy if not legacy.success else {"success":false,"reason":"主存档缺失；上一快照保持，请重试或检查备份"}
+			if not test_mode: show_save_dialog.call_deferred(true)
+		return false
 	committed_web_save = FileAccess.get_file_as_bytes(save_path)
 	var parser = JSON.new()
 	var parse_error = parser.parse(FileAccess.get_file_as_string(save_path))
@@ -627,6 +662,13 @@ func _initial_camp_snapshot() -> Dictionary:
 
 func create_new_save() -> bool:
 	if creating_new_save: return false
+	if _recovery_original_path.is_empty() and save_store.protected_previous_path(save_path).is_empty():
+		var legacy = _preserve_legacy_previous()
+		if not legacy.success:
+			dirty = true; save_blocked = true
+			save_result = legacy
+			changed.emit()
+			return false
 	if _recovery_original_path.is_empty(): _recovery_original_path = save_store.protected_previous_path(save_path)
 	if not _recovery_original_path.is_empty():
 		var intact = save_store.protected_previous_intact(save_path) and FileAccess.file_exists(_recovery_original_path)

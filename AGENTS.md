@@ -16,7 +16,7 @@
 
 - `verify-fast --base origin/main`：B194/P0Save/Baseline 加变更相关回归；未知产品脚本/场景/资源改动保守选择全部短 contracts。`--list-fast` 只查看选择。
 - `verify-web`：fast、一次 Web export、loader/smoke、1-cycle menu-return 加 restart、identity。测试后重验 stamped bytes 未改变。
-- `verify-native`：完整 64 个 active native 调用；本地默认 `--jobs 1`，`--shard contracts-3` 等可选单片。完整验收仍须运行所有分片。
+- `verify-native`：完整 65 个 active native 调用；本地默认 `--jobs 1`，`--shard contracts-3` 等可选单片。完整验收仍须运行所有分片。
 - `verify-full`：完整 native 后运行 full Web；Web 保留 save core、89 项 durable/recovery、aim core/fault、stages-fair 和一个连续 session 的 20-cycle 加 restart。CI 的两个 workflow 使用独立 runner 并行；本机不让压力场景与软件浏览器争抢资源。
 - `verify-release`：full 加 Windows headless export/文件 SHA-256；不发布/部署。正式发布仍须既有 provenance、包上传与下载回验、线上 byte identity。
 
@@ -45,7 +45,7 @@ python "Don't stop/tools/test-menu-soak-policy.py"
 
 按改动选择额外场景，以当前 CI 中的调用为准。新缓存的首次导入可能先报告字体/光标尚未导入；只有导入校验器确认资源已生成，且后续 B194Contracts 通过，才能接受这些特定早期诊断。其他脚本错误或失败断言不能忽略。
 
-正式候选须运行 `native-tests.yml` 中全部 active cases（当前 58 个 contracts 和 6 个 pressure 调用，参数也是用例身份的一部分），含 DeepQuality、CameraTransitions、WebPhysicsContracts、Boss full/pressure/contracts。`historical-evidence` 是显式选用的历史测量，不计 active gate。用隔离源码副本和 APPDATA/user-data 运行会写 evidence 的场景，避免污染 canonical 记录或真实存档。通过必须同时有正常退出、PASS 断言且无 FAIL/SCRIPT ERROR；不能把旧提交结果转记到新候选。
+正式候选须运行 `native-tests.yml` 中全部 active cases（当前 59 个 contracts 和 6 个 pressure 调用，参数也是用例身份的一部分），含 DeepQuality、CameraTransitions、WebPhysicsContracts、Boss full/pressure/contracts。`historical-evidence` 是显式选用的历史测量，不计 active gate。用隔离源码副本和 APPDATA/user-data 运行会写 evidence 的场景，避免污染 canonical 记录或真实存档。通过必须同时有正常退出、PASS 断言且无 FAIL/SCRIPT ERROR；不能把旧提交结果转记到新候选。
 
 完整 active native acceptance 不传引擎 `--quit-after`：该参数按 render frames 终止，长套件可能以 exit 0、部分 PASS 提前退出。保留外部 wall-time timeout，等夹具自然完成；M6/M8 必须有 30 关完整记录及结束标记。contracts job 60 分钟，M6/M8 单用例预算分别 1800/2400 秒，其他短用例 900 秒；pressure 保留 1800 秒预算。快速 preflight 的有限帧防挂不能替代完整验收。
 
@@ -102,7 +102,7 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 ## CI/CD 与发布
 
 - `deploy-pages.yml`：PR 做 native preflight、变更相关回归和独立 runner 的 smoke/menu-return 必需 gates；main 快速链做 import、B194Contracts/P0SaveSanity、一次 Web export，再由独立 runner 并行验证 smoke（含 loader/identity）和 1-cycle menu-return，加 restart。最终 required gate 全部成功才部署同一 bytes 并验证线上身份。仅文档变更跳过游戏构建/部署。
-- 月度、Release published、manual full Web acceptance 包含 smoke、save-audit（含 `web-save-durable.js` 的真实故障/恢复事务测试）、aim core/fault、20 次 menu-return soak、stages-fair。manual 默认不部署，只有 main 且 `deploy=true` 才上线。完整 active native 包含 64 个调用；R1Persistence/R1RecoveryUI 固定覆盖普通保存、坏档事务 pending、旧确认、失败/重试/退出与确认后购买。
+- 月度、Release published、manual full Web acceptance 包含 smoke、save-audit（含 `web-save-durable.js` 的真实故障/恢复事务测试）、aim core/fault、20 次 menu-return soak、stages-fair。manual 默认不部署，只有 main 且 `deploy=true` 才上线。完整 active native 包含 65 个调用；R1Persistence/R1RecoveryUI/R1RecoveryJournal 固定覆盖普通保存、坏档事务 pending、旧确认、失败/重试/退出、确认后购买与恢复记录边界。
 - `native-tests.yml`：月度、Release published、manual 完整 active native acceptance，contracts/pressure 各三个独立 shard 与最终 required gate；历史证据按显式参数选择。`build-windows.yml` 是 manual headless export/package，不需启动本地 Windows 游戏。
 - Release 为非 draft、非 prerelease 的正式 patch tag。Windows/Web ZIP 与 SHA-256 按既有命名上传；下载回验。tag 必须指向已验证 main，Web 资产优先复用经过验收的 Pages artifact，不将同 SHA 的重新构建视为同 bytes。
 - 普通文档维护不触发重型验收或新 Release。发版时最终代码、最终包、实际 Actions run 与在线身份须关联；保留历史失败及最终修复证据，不把信息诊断写成零告警。
@@ -113,10 +113,10 @@ v1.3.5 审计修复（PR #37，merge commit `48205f5`）已合并至 main 并完
 
 ### RISK-SAVE-CROSS-PROCESS — 存档跨进程恢复保护（优先级：高，下次维护时优先处理）
 
-- 已确认事实：`CampSaveStore.gd` 的 `_pending_rollbacks` 仅存在于进程内存。
-- 潜在后果：连续写入失败、回滚失败后若发生进程终止或浏览器关闭，重启可能丢失原件保护身份；特定后续保存路径下可能造成有效备份被覆盖。
-- 后续建议：研究持久化恢复标记、原件保护和跨重启事务恢复。
-- 验收重点：写入失败 → 回滚失败 → 强制关闭 → 重启 → 再次保存，保证可恢复原件不丢失。
+- 当前保存层在替换主档前写入经过读回校验的 `.recovery` 身份记录，以 SHA-256 识别前驱和候选。读回/回滚失败会持久保护前驱；重启后，恢复记录损坏或其中指认的备份缺失/损坏时拒绝覆写。旧档没有恢复记录时保持兼容。不要把 `.previous` 或 `.recovery` 当缓存清理。
+- 旧版本可能留下没有恢复记录的坏主档和唯一 `.previous`。明确新建存档前，先将前驱精确字节写入 `.recovered-<SHA256>.json`，原子提交并读回校验；同名目标存在时只能接受完全相同的字节。失败则拒绝替换，不猜测前驱是否拥有坏主档，不改变坏主档原文导出契约。主档缺失且前驱是真正有效的营地存档时，可按原有恢复事务保护前驱。`.recovered-*` 是恢复证据，禁止当缓存清理。
+- `R1RecoveryJournal` 的 49 项边界已纳入原生/fast 门禁；跨真实进程回归使用 `tools/test-cross-process-recovery.py --godot <4.7.2引擎> --project <独立已导入候选> --out <全新证据目录>`。它先制造读回与回滚双故障，再启动新进程执行真实新档路径，最后再重启核对独立前驱档案和原文导出；保留全部证据和用户目录，不在正式项目运行。
+- 本地 Phase II 已验证原生有效 schema-6 存档、前驱原文导出、明确新档和异常记录边界。未发布；Web IndexedDB 跨 reload 的真实持久化故障仍须单独验收，不能用原生或模拟确认回调替代。
 
 ### RISK-WEB-BACKUP-CONFIRM — Web 坏档备份下载确认（优先级：中，建议与第一项一起处理）
 
