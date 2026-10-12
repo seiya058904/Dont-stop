@@ -152,6 +152,7 @@ func check_restored_main_releases_protection(data: Dictionary):
 		file = FileAccess.open(path,FileAccess.WRITE)
 		file.store_buffer(original); file.close()
 		check(FileAccess.get_file_as_bytes(path) == original,"R04 restored main "+mode+" contains the committed original byte for byte")
+		check(store.protected_previous_path(path).is_empty(),"R04 restored main "+mode+" releases protection before startup load without another save")
 		check(store.save(path,updated).success,"R04 restored main "+mode+" permits saving after exact original restoration")
 		check(store.protected_previous_path(path).is_empty(),"R04 restored main "+mode+" releases the completed recovery identity")
 		check(FileAccess.get_file_as_bytes(path) == updated_bytes and FileAccess.get_file_as_bytes(path+".previous") == original,"R04 restored main "+mode+" writes the desired state and reconstructs the original backup")

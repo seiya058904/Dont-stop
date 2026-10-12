@@ -357,8 +357,11 @@ fs.mkdirSync(out, { recursive: true });
   await page.evaluate(() => { window.towdownSave.diagnosticsEnabled = false; window.saveFault = ''; });
   await until(() => recovery?.dialog && rects['save-discard']?.visible, 'hard-timeout protection actions');
   await click('save-discard'); await start();
-  check(!carry.owned.includes(2), 'discard after the hard timeout restores the last committed save');
+  check(!carry.owned.includes(2) && [0, 3, 4].every(id => carry.owned.includes(id)),
+   'discard after the hard timeout restores every previously committed weapon');
   await settleStartupSave();
+  check(!recovery.blocked && !recovery.dialog && !recovery.dirty,
+   'discard completes the predecessor recovery before the next startup save');
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
    await click('camp-action-0');
