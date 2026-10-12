@@ -8,7 +8,10 @@ fs.mkdirSync(out, { recursive: true });
 (async () => {
  const browser = await chromium.launch({ headless: process.env.E2E_HEADED !== '1', executablePath: process.env.CHROME_EXE,
   args: ['--enable-unsafe-swiftshader', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows'] });
- const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
+ // Durability faults exercise the real 410x230 canvas and IndexedDB contract.
+ // Keep software rendering from consuming the verifier's unchanged 18 s window;
+ // input coordinates below still scale from the actual visible canvas rectangle.
+ const context = await browser.newContext({ viewport: { width: 640, height: 360 }, serviceWorkers: 'block' });
  await context.addInitScript(() => {
   const put = IDBObjectStore.prototype.put;
   window.__nativeIDBPut = put;
