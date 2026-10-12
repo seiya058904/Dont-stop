@@ -228,6 +228,17 @@ func complete_recovery(path: String) -> bool:
 
 func _load_recovery(path: String) -> void:
 	if _pending_rollbacks.has(path):
+		# Explicit Web discard restores the exact committed predecessor before
+		# the next load. Recognize that terminal state in this process too, rather
+		# than blocking load_camp until a save (which startup never reaches).
+		var restored = FileAccess.open(path,FileAccess.READ)
+		if restored != null:
+			var bytes = restored.get_buffer(restored.get_length())
+			var read_error = restored.get_error()
+			restored.close()
+			if read_error == OK and bytes == _pending_rollbacks[path]:
+				if not complete_recovery(path): _recovery_errors[path] = true
+				return
 		# A transient journal write failure is retryable while this process still
 		# owns the verified predecessor identity. Never adopt reread backup bytes.
 		if _recovery_errors.has(path) and _write_recovery(path,{"version":1,"active":true,"original_sha256":_hash_bytes(_pending_rollbacks[path]),"candidate_sha256":""}):

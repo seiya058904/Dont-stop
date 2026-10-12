@@ -15,7 +15,10 @@ spec.loader.exec_module(verification)
 
 
 # These are the only reviewed source migrations from the published durable
-# fixture: optional screenshots/timing, and the real slow-write scheduler.
+# fixture: optional screenshots/timing, the real slow-write scheduler, and
+# stricter predecessor ownership/lock assertions after hard-timeout discard.
+# The durability context uses a smaller viewport; gameplay/performance gates
+# retain their own original viewports, and every real durability deadline stays.
 # Compare the WHOLE script. Splitting at the first `finally` stopped inside
 # independentRead() and silently left every executed assertion unprotected.
 DURABLE_GRACE_SCHEDULE = """     // Schedule the fault's real write inside the slow confirmation window.
@@ -36,6 +39,11 @@ DURABLE_SCREENSHOT_HELPER = """ async function screenshot(name) {
   if (process.env.E2E_SCREENSHOTS !== 'none') await page.screenshot({ path: path.join(out, name) });
  }
 """
+DURABLE_DISCARD_ASSERTIONS = """  check(!carry.owned.includes(2) && [0, 3, 4].every(id => carry.owned.includes(id)),
+   'discard after the hard timeout restores every previously committed weapon');
+  await settleStartupSave();
+  check(!recovery.blocked && !recovery.dialog && !recovery.dirty,
+   'discard completes the predecessor recovery before the next startup save');"""
 
 
 def durable_contract_source(source, current=False):
@@ -44,10 +52,17 @@ def durable_contract_source(source, current=False):
         report_declaration = ' const lines = [], rects = {}, report = { checks: [] };\n'
         page_declaration = ' let page = await context.newPage();\n'
         migrations = [
+            (" // Durability faults exercise the real 410x230 canvas and IndexedDB contract.\n"
+             " // Keep software rendering from consuming the verifier's unchanged 18 s window;\n"
+             " // input coordinates below still scale from the actual visible canvas rectangle.\n"
+             " const context = await browser.newContext({ viewport: { width: 640, height: 360 }, serviceWorkers: 'block' });",
+             " const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });"),
             (' const runStarted = Date.now();\n' + report_declaration, report_declaration),
             (DURABLE_SCREENSHOT_HELPER + page_declaration, page_declaration),
             (' finally { report.wall_clock_ms = Date.now() - runStarted; fs.writeFileSync', ' finally { fs.writeFileSync'),
             (DURABLE_GRACE_SCHEDULE, '     window.setTimeout(commitSlowSnapshot, slowVisibilityDelayMs);'),
+            (DURABLE_DISCARD_ASSERTIONS,
+             "  check(!carry.owned.includes(2), 'discard after the hard timeout restores the last committed save');\n  await settleStartupSave();"),
         ]
         for argument in ["fault + '-failed.png'", "'original-downloaded.png'", "'ds001-pending-blocked.png'",
                          "fault + '-first-save-discard.png'", "fault + '-after-discard.png'"]:
@@ -66,16 +81,21 @@ def durable_contract_source(source, current=False):
 class VerificationPolicy(unittest.TestCase):
     def test_exact_release_case_set_and_arguments(self):
         original = subprocess.check_output(['git', 'show', 'v1.3.5:.github/workflows/native-tests.yml'], cwd=ROOT, text=True, encoding='utf-8')
-        for group, expected_count in [('contracts', 58), ('pressure', 6)]:
+        for group, expected_count in [('contracts', 59), ('pressure', 6)]:
             part = original.split(f'  {group}:', 1)[1].split('\n  ' + ('pressure:' if group == 'contracts' else 'historical-evidence:'), 1)[0]
             expected = [shlex.split(c) for c in re.findall(r'^          run_case ([A-Za-z0-9].*)$', part, re.M)]
+            if group == 'contracts':
+                # Phase II added this exact cross-process journal regression;
+                # retain every released call and forbid any other list drift.
+                expected.append(['R1RecoveryJournal'])
             actual = verification.MANIFEST['groups'][group]
             self.assertEqual(len(actual['cases']), expected_count)
             self.assertCountEqual([[c['scene'], *c['args']] for c in actual['cases']], expected)
             assigned = [c for s in actual['shards'] for c in s['cases']]
             self.assertCountEqual(assigned, [c['id'] for c in actual['cases']])
             self.assertEqual(len(assigned), len(set(assigned)))
-        self.assertEqual(sum(c['min_checks'] for c in verification.CASES.values()), 3707)
+        self.assertEqual(verification.CASES['R1RecoveryJournal']['min_checks'], 49)
+        self.assertEqual(sum(c['min_checks'] for c in verification.CASES.values()), 3756)
 
     def test_fail_closed_on_partial_exit_script_error_or_missing_marker(self):
         case = dict(min_checks=2, completion_marker='^COMPLETE$')
@@ -159,6 +179,13 @@ class VerificationPolicy(unittest.TestCase):
             with self.subTest(scheduler_migration='missing, duplicate or altered'):
                 with self.assertRaises(ValueError):
                     durable_contract_source(mutation, current=True)
+        for old, new in [
+            ('[0, 3, 4].every(id => carry.owned.includes(id))', 'true'),
+            ('!recovery.blocked && !recovery.dialog && !recovery.dirty', 'true'),
+        ]:
+            with self.subTest(stronger_discard_assertion=old):
+                with self.assertRaises(ValueError):
+                    durable_contract_source(current.replace(old, new, 1), current=True)
         relocated = current.replace(DURABLE_GRACE_SCHEDULE, '', 1) + '\n' + DURABLE_GRACE_SCHEDULE
         self.assertNotEqual(accepted, durable_contract_source(relocated, current=True))
         for block in [

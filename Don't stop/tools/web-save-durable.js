@@ -8,7 +8,10 @@ fs.mkdirSync(out, { recursive: true });
 (async () => {
  const browser = await chromium.launch({ headless: process.env.E2E_HEADED !== '1', executablePath: process.env.CHROME_EXE,
   args: ['--enable-unsafe-swiftshader', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows'] });
- const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
+ // Durability faults exercise the real 410x230 canvas and IndexedDB contract.
+ // Keep software rendering from consuming the verifier's unchanged 18 s window;
+ // input coordinates below still scale from the actual visible canvas rectangle.
+ const context = await browser.newContext({ viewport: { width: 640, height: 360 }, serviceWorkers: 'block' });
  await context.addInitScript(() => {
   const put = IDBObjectStore.prototype.put;
   window.__nativeIDBPut = put;
@@ -357,8 +360,11 @@ fs.mkdirSync(out, { recursive: true });
   await page.evaluate(() => { window.towdownSave.diagnosticsEnabled = false; window.saveFault = ''; });
   await until(() => recovery?.dialog && rects['save-discard']?.visible, 'hard-timeout protection actions');
   await click('save-discard'); await start();
-  check(!carry.owned.includes(2), 'discard after the hard timeout restores the last committed save');
+  check(!carry.owned.includes(2) && [0, 3, 4].every(id => carry.owned.includes(id)),
+   'discard after the hard timeout restores every previously committed weapon');
   await settleStartupSave();
+  check(!recovery.blocked && !recovery.dialog && !recovery.dirty,
+   'discard completes the predecessor recovery before the next startup save');
   for (const [fault, id] of [['abort', 1], ['quota', 6]]) {
    await select(id); await page.evaluate(f => window.saveFault = f, fault);
    await click('camp-action-0');

@@ -23,7 +23,7 @@
 
 <p align="center">
   <sub>GODOT 4 &nbsp;·&nbsp; TOP-DOWN COMBAT &nbsp;·&nbsp; 24 WEAPONS &nbsp;·&nbsp; 30 CORE ENCOUNTERS + HELL STAGES</sub><br>
-  <sub>WEB + WINDOWS x64 &nbsp;·&nbsp; CURRENT RELEASE v1.3.5</sub>
+  <sub>WEB + WINDOWS x64 &nbsp;·&nbsp; CURRENT RELEASE v1.3.6</sub>
 </p>
 
 <p align="center">
@@ -121,16 +121,16 @@ The desktop game is designed for mouse and keyboard. The Web build may behave di
       <h3>🖥️ Windows — Native Build</h3>
       <p><sub>WINDOWS x64 · RELEASE ZIP</sub></p>
       <p>Download the published Windows archive, extract it, and launch the packaged game from the extracted files.</p>
-      <p><strong><a href="https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.5">⬇️ Get v1.3.5 →</a></strong></p>
+      <p><strong><a href="https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.6">⬇️ Get v1.3.6 →</a></strong></p>
     </td>
   </tr>
 </table>
 
-The [**v1.3.5 release**](https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.5) also includes a **Web ZIP** and separate SHA-256 checksum files. A downloaded Godot Web export should be served through an appropriate local HTTP server; the live Pages URL is the simplest way to play online.
+The [**v1.3.6 release**](https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.6) also includes a **Web ZIP** and separate SHA-256 checksum files. A downloaded Godot Web export should be served through an appropriate local HTTP server; the live Pages URL is the simplest way to play online.
 
 ### 🔒 A Note About Saves
 
-The **v1.3.5** patch specifically improves confirmation of **slow browser save writes** when returning to the menu after a purchase. A successful Web save is reported only after the required snapshot has been committed to and verified in IndexedDB. If persistence fails, the existing retry, export, or discard paths remain available.
+The **v1.3.6** patch retains verification of **slow browser save writes** and adds byte-preserving cross-process recovery and safe same-page startup after discarding a failed Web save. A successful Web save is reported only after the required snapshot has been committed to and verified in IndexedDB. If persistence fails, the existing retry, export, or discard paths remain available.
 
 > [!IMPORTANT]
 > **Local saves are not cloud synchronization.** Browser storage can be cleared or unavailable, and native Windows saves belong to their own local environment. Preserve important progress before resetting storage, changing browser profiles, or removing user data. A save warning should not be mistaken for a successful backup.

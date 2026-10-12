@@ -97,6 +97,28 @@ func _ready():
 	store.refuse_active = false
 	check(store.protected_previous_intact(path) and store.save(path,data).success,"journal protection is retryable using only the captured exact identity")
 	check(FileAccess.get_file_as_bytes(path+".previous") == original,"journal retry keeps the authoritative predecessor")
+	path = "user://journal-same-process-discard.json"
+	check(CampSaveStore.new().save(path,data).success,"same-process discard fixture starts with a normal save")
+	original = FileAccess.get_file_as_bytes(path)
+	var held = FaultStore.new()
+	check(not held.save(path,{"gold":778}).success,"same-process failed rollback captures the predecessor")
+	check(DirAccess.rename_absolute(path,path+".unreadable-evidence") == OK,"same-process read fault retains main evidence")
+	check(not held.protected_previous_path(path).is_empty(),"unreadable main cannot release the captured predecessor")
+	write_bytes(path,JSON.stringify({"gold":779},"\t").to_utf8_buffer())
+	check(not held.protected_previous_path(path).is_empty(),"different main bytes cannot release the captured predecessor")
+	write_bytes(path,original)
+	check(held.protected_previous_path(path).is_empty(),"exact same-process discard releases protection before another save")
+	path = "user://journal-discard-completion-refused.json"
+	store = JournalFailureStore.new()
+	check(store.save(path,data).success,"discard completion refusal starts normally")
+	original = FileAccess.get_file_as_bytes(path)
+	store.refuse_completion = true
+	check(not store.save(path,{"gold":778}).success,"discard completion refusal reports the pending journal")
+	write_bytes(path,original)
+	check(not store.protected_previous_path(path).is_empty(),"exact restored main remains blocked when journal completion is refused")
+	check(FileAccess.get_file_as_bytes(path) == original,"refused completion preserves restored main bytes")
+	store.refuse_completion = false
+	check(store.protected_previous_path(path).is_empty(),"exact restoration retries journal completion safely")
 	for bytes in [PackedByteArray(),"正常中文🙂".to_utf8_buffer(),PackedByteArray([0xc2,0x80]),PackedByteArray([0xe0,0xa0,0x80]),PackedByteArray([0xf4,0x8f,0xbf,0xbf])]:
 		check(store.valid_utf8(bytes),"legacy UTF-8 validator accepts valid complete encoding")
 	for bytes in [PackedByteArray([0x80]),PackedByteArray([0xc0,0x80]),PackedByteArray([0xe0,0x80,0x80]),PackedByteArray([0xed,0xa0,0x80]),PackedByteArray([0xf4,0x90,0x80,0x80]),PackedByteArray([0xf0,0x90])]:

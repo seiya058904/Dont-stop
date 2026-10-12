@@ -5,7 +5,7 @@
 - Git 根是本目录；Godot 项目是 `Don't stop/project.godot`，不是外层目录。命令中的项目路径必须整体引用，避免空格和英文撇号被 shell 拆分。
 - `boot/Boot.tscn` 是配置入口，加载 `game/map/Main.tscn`；Web 启动界面由 `web/loader.html` 提供。以上路径均相对于 Godot 项目目录。
 - 项目内 `autoload/` 管理全局状态，`game/` 包含玩法与配置，`ui/` 包含界面，`Sprites/`、`audio/`、`fonts/`、`shader/` 与 `addons/` 是产品资源。`tests/` 是原生回归场景，`tools/` 是导出、浏览器与证据校验工具。
-- 根 README 提供正式下载与试玩入口。封板产品版本为 `v1.3.5 / cb7eed5a13823412f39b3f8e58182d05447c8367`；Release tag 指向通过验收的正式代码，Pages 发布实际测试过的 Web bytes。后续测试工具或文档提交不能用最新 Git SHA 推断线上身份。
+- 根 README 提供正式下载与试玩入口。当前发行候选为 `v1.3.6`，包含跨进程保护、Web 丢弃后同实例恢复与完整 durable 回归；是否已正式发布以 GitHub latest Release 及对应 provenance 为准，不能从版本预设推断已发布。Release tag 指向通过验收的正式代码，Pages 发布实际测试过的 Web bytes。后续测试工具或文档提交不能用最新 Git SHA 推断线上身份。
 - `Don't stop/docs/iteration/release-v1.3.4.md` 是最终收口记录，`release-v1.3.2.md` 保留性能与 Boss 审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
 
 ## 运行与验证
@@ -109,7 +109,7 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 
 ## 已知残余风险与后续维护
 
-v1.3.5 审计修复（PR #37，merge commit `48205f5`）已合并至 main 并完成本地完整验收与 Pages 部署；当前正式版本仍为 v1.3.5。以下三项风险在审计结束后均**未决**，后续 Agent 按优先级逐项处理即可；不得因本文列出了建议就自动开展大规模重构，每项处置仍须按上文验证层级与授权约束执行。
+历史 v1.3.5 审计修复（PR #37，merge commit `48205f5`）已合并至 main。跨进程保护已经补齐原生验证；Web 的同实例 discard/load 保护在 v1.3.6 候选中修复，正式接受须以该候选完整 Web/native 门禁为准。以下记录区分已实现保护和仍需关注的边界，不代表所有风险均未修复；不得据此自动开展大规模重构。
 
 ### RISK-SAVE-CROSS-PROCESS — 存档跨进程恢复保护（优先级：高，下次维护时优先处理）
 
