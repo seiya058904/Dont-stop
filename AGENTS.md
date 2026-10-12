@@ -5,8 +5,8 @@
 - Git 根是本目录；Godot 项目是 `Don't stop/project.godot`，不是外层目录。命令中的项目路径必须整体引用，避免空格和英文撇号被 shell 拆分。
 - `boot/Boot.tscn` 是配置入口，加载 `game/map/Main.tscn`；Web 启动界面由 `web/loader.html` 提供。以上路径均相对于 Godot 项目目录。
 - 项目内 `autoload/` 管理全局状态，`game/` 包含玩法与配置，`ui/` 包含界面，`Sprites/`、`audio/`、`fonts/`、`shader/` 与 `addons/` 是产品资源。`tests/` 是原生回归场景，`tools/` 是导出、浏览器与证据校验工具。
-- 根 README 提供正式下载与试玩入口。当前发行候选为 `v1.3.6`，包含跨进程保护、Web 丢弃后同实例恢复与完整 durable 回归；是否已正式发布以 GitHub latest Release 及对应 provenance 为准，不能从版本预设推断已发布。Release tag 指向通过验收的正式代码，Pages 发布实际测试过的 Web bytes。后续测试工具或文档提交不能用最新 Git SHA 推断线上身份。
-- `Don't stop/docs/iteration/release-v1.3.4.md` 是最终收口记录，`release-v1.3.2.md` 保留性能与 Boss 审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
+- 根 README 提供正式下载与试玩入口。当前维护发行版本为 `v1.3.6`，包含跨进程保护、Web 丢弃后同实例恢复与完整 durable 回归；具体发布身份以 GitHub latest Release 及对应 provenance 为准，不能从版本预设推断线上 bytes。Release tag 指向通过验收的正式代码，Pages 发布实际测试过的 Web bytes。后续测试工具或文档提交不能用最新 Git SHA 推断线上身份。
+- `Don't stop/docs/iteration/release-v1.3.6.md` 是当前发行记录，`release-v1.3.4.md` 和 `release-v1.3.2.md` 保留离开流程、性能与 Boss 历史审计；其他 iteration 文档保留历史证据，旧 SHA、性能样本和未完成事项不代表当前状态。
 
 ## 运行与验证
 
@@ -109,16 +109,16 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 
 ## 已知残余风险与后续维护
 
-历史 v1.3.5 审计修复（PR #37，merge commit `48205f5`）已合并至 main。跨进程保护已经补齐原生验证；Web 的同实例 discard/load 保护在 v1.3.6 候选中修复，正式接受须以该候选完整 Web/native 门禁为准。以下记录区分已实现保护和仍需关注的边界，不代表所有风险均未修复；不得据此自动开展大规模重构。
+历史 v1.3.5 审计修复（PR #37，merge commit `48205f5`）已合并至 main。v1.3.6 已收口跨进程保护与 Web 同实例 discard/load 恢复，并完成完整 Web/native 门禁；正式包和线上身份以对应 Release provenance 为准。以下记录区分已收口保护和仍需关注的边界，不代表所有风险均未修复；不得据此自动开展大规模重构。
 
-### RISK-SAVE-CROSS-PROCESS — 存档跨进程恢复保护（优先级：高，下次维护时优先处理）
+### 存档跨进程恢复保护与验收边界（v1.3.6 已收口）
 
 - 当前保存层在替换主档前写入经过读回校验的 `.recovery` 身份记录，以 SHA-256 识别前驱和候选。读回/回滚失败会持久保护前驱；重启后，恢复记录损坏或其中指认的备份缺失/损坏时拒绝覆写。旧档没有恢复记录时保持兼容。不要把 `.previous` 或 `.recovery` 当缓存清理。
 - 旧版本可能留下没有恢复记录的坏主档和唯一 `.previous`。明确新建存档前，先将前驱精确字节写入 `.recovered-<SHA256>.json`，原子提交并读回校验；同名目标存在时只能接受完全相同的字节。失败则拒绝替换，不猜测前驱是否拥有坏主档，不改变坏主档原文导出契约。主档缺失且前驱是真正有效的营地存档时，可按原有恢复事务保护前驱。`.recovered-*` 是恢复证据，禁止当缓存清理。
-- `R1RecoveryJournal` 的 49 项边界已纳入原生/fast 门禁；跨真实进程回归使用 `tools/test-cross-process-recovery.py --godot <4.7.2引擎> --project <独立已导入候选> --out <全新证据目录>`。它先制造读回与回滚双故障，再启动新进程执行真实新档路径，最后再重启核对独立前驱档案和原文导出；保留全部证据和用户目录，不在正式项目运行。
-- 本地 Phase II 已验证原生有效 schema-6 存档、前驱原文导出、明确新档和异常记录边界。未发布；Web IndexedDB 跨 reload 的真实持久化故障仍须单独验收，不能用原生或模拟确认回调替代。
+- `R1RecoveryJournal` 的恢复身份边界已纳入原生/fast 门禁；跨真实进程回归使用 `tools/test-cross-process-recovery.py --godot <4.7.2引擎> --project <独立已导入候选> --out <全新证据目录>`。它先制造读回与回滚双故障，再启动新进程执行真实新档路径，最后再重启核对独立前驱档案和原文导出；保留全部证据和用户目录，不在正式项目运行。
+- v1.3.6 已验证原生有效 schema-6 存档、前驱原文导出、明确新档与异常记录边界，以及 Web IndexedDB 的真实 abort/quota/reload 和故障恢复。隔离浏览器进程强杀后，重启保留已提交购买并拒绝未确认购买；完整门禁与资产身份见 Release provenance。物理断电、操作系统崩溃与存储硬件故障未验证，不能用以上证据替代。
 
-### RISK-WEB-BACKUP-CONFIRM — Web 坏档备份下载确认（优先级：中，建议与第一项一起处理）
+### RISK-WEB-BACKUP-CONFIRM — Web 坏档备份下载确认（保留的下载确认边界）
 
 - 已确认事实：`Demo.gd` 的 `export_bad_save()` 调用 `JavaScriptBridge.download_buffer()` 只能表示已请求下载，不能证明用户实际保存成功。
 - 潜在后果：当前新档接管流程存在用户未取得备份却继续操作的条件性风险。
