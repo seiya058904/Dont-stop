@@ -1,59 +1,149 @@
+<h1 align="center">⚡ DON'T STOP</h1>
+
 <p align="center">
-  <img src="docs/assets/readme-hero.svg" width="100%" alt="Don't Stop" />
+  <strong>Keep moving. Make every shot count.</strong>
 </p>
 
-A top-down 2D survival shooter. Fight through an escalating route of encounters, return to camp to rebuild your loadout, and go again.
+<p align="center">
+  A top-down 2D survival shooter built around fast decisions, relentless encounters,<br>
+  evolving weapons, and one more run into the arena.
+</p>
 
-**[Play in your browser](https://seiya058904.github.io/Dont-stop/)** · [Windows download](https://github.com/seiya058904/Dont-stop/releases/latest) · [Controls](#how-to-play) · [Development](#development)
+<p align="center">
+  <a href="https://seiya058904.github.io/Dont-stop/"><strong>▶ Play in Browser</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/seiya058904/Dont-stop/releases/latest">⬇️ Windows Download</a>
+  &nbsp;·&nbsp;
+  <a href="#the-survival-loop">🎮 Gameplay</a>
+  &nbsp;·&nbsp;
+  <a href="#controls">⌨️ Controls</a>
+  &nbsp;·&nbsp;
+  <a href="#for-developers">⚙️ Development</a>
+</p>
 
-[![Deploy Pages](https://github.com/seiya058904/Dont-stop/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/seiya058904/Dont-stop/actions/workflows/deploy-pages.yml) [![Native tests](https://github.com/seiya058904/Dont-stop/actions/workflows/native-tests.yml/badge.svg)](https://github.com/seiya058904/Dont-stop/actions/workflows/native-tests.yml)
+<p align="center">
+  <sub>GODOT 4 &nbsp;·&nbsp; TOP-DOWN COMBAT &nbsp;·&nbsp; 24 WEAPONS &nbsp;·&nbsp; 30 CORE ENCOUNTERS + HELL STAGES</sub><br>
+  <sub>WEB + WINDOWS x64 &nbsp;·&nbsp; CURRENT RELEASE v1.3.6</sub>
+</p>
 
-Built with Godot 4.7.2 for the web and Windows x64. Current release: [v1.3.6](https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.6). The in-game interface is in Chinese; this README is in English.
+<p align="center">
+  <img width="760" alt="Don't Stop — original top-down survival shooter project artwork" src="https://github.com/user-attachments/assets/8ff7c8c7-fc6e-44f0-9ac3-80a178cdcaed" />
+</p>
 
-![The Don't Stop title screen over the camp, with the Start and Settings buttons](docs/assets/readme-title-1280.jpg)
+---
 
-*The title screen of the live web build, captured at 1280×720 from a fresh browser profile.*
+> **Standing still is a decision. Usually the wrong one.**
+>
+> Enter the fight, find a rhythm, build a loadout, and survive long enough to return to camp. Don't Stop is about the space between danger and reaction—where movement, ammunition, positioning, and upgrades meet.
 
-## Features
+<a id="the-survival-loop"></a>
+## 🎮 The Survival Loop
 
-- **24 weapons.** The catalog spans spread and straight-fire guns, arc chains, and plasma orbs, each with its own tier, price, and handling. You carry up to seven and switch with the number keys.
-- **A camp between every run.** Buy and upgrade weapons, restock ammunition, spend talent points, then deploy. The camp's weapon tab lets you search and filter the catalog.
-- **A 30-encounter normal route.** Pressure builds through enemy waves, equipment choices, and boss fights.
-- **Hell stages 31–40.** Difficulty comes from combined enemy density, special enemies, elites, hazards, and reduced visibility. Enemy health, damage, speed, and density each ramp within bounded ranges instead of an unbounded stat multiplier ([`HellMode.gd`](Don't%20stop/game/config/HellMode.gd)).
-- **Readable combat.** Weapon effects, hit feedback, enemy telegraphs, and a focused HUD show what is dangerous without hiding the action.
-- **Saves you can trust.** The web build reports a save as successful only after the snapshot is committed to and verified in the browser's IndexedDB. If persistence fails, retry, export, and discard options stay available.
+<p align="center"><code>MOVE → FIGHT → COLLECT → RETURN TO CAMP → BUILD → GO AGAIN</code></p>
 
-## How to Play
+Every attempt connects moment-to-moment shooting with longer-term preparation. You are not just trying to clear the screen; you are choosing how to face what comes next.
 
-Each run follows one loop: **move, fight, collect, return to camp, build, go again.** Reloading, dashing, picking a target, and finding a safe angle all matter, even with a strong weapon.
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🔫 Weapons With Character</h3>
+      <p><sub>PROJECTILES · BEAMS · EXPLOSIONS · SPECIAL MECHANICS</sub></p>
+      <p>Switch between weapons with distinct firing patterns, reload behavior, recoil, and impact feedback—from conventional guns to energy and experimental weaponry.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>⚡ Build Your Next Run</h3>
+      <p><sub>UPGRADES · TALENTS · ATTACHMENTS · REWARDS</sub></p>
+      <p>Return to camp to inspect your loadout and invest in different kinds of improvements. A stronger build is about combining effects, not merely collecting bigger numbers.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>👾 A Crowded Arena</h3>
+      <p><sub>ENEMY WAVES · ELITES · BOSSES</sub></p>
+      <p>Respond to shifting enemy density, approaching threats, and readable attack patterns. Later encounters demand more active positioning and sharper choices.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>💥 Combat You Can Read</h3>
+      <p><sub>MUZZLE FLASH · HIT IMPACT · DAMAGE · STATUS</sub></p>
+      <p>Weapon effects, enemy telegraphs, hit feedback, animation, and a focused HUD keep the action expressive without hiding the information needed to survive.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🗺️ An Escalating Route</h3>
+      <p><sub>30 ENCOUNTERS · SIX REGIONS · THREE BOSSES</sub></p>
+      <p>Work through the normal encounter route, then face the higher-pressure Hell stage range, 31–40. Its difficulty comes from combined threats rather than an unbounded health multiplier.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>💾 Return Without Guesswork</h3>
+      <p><sub>CAMP SAVES · RECOVERY · WEB PERSISTENCE</sub></p>
+      <p>Persistence is treated as part of gameplay. The Web edition checks whether a saved snapshot actually reached browser storage before reporting durable success.</p>
+    </td>
+  </tr>
+</table>
+
+## 🏁 One More Encounter
+
+The campaign is built around a **30-encounter normal route**, with increasing pressure from enemy waves, equipment decisions, and boss fights. The later **Hell stages (31–40)** extend the challenge with stronger combinations of enemy density, visibility, elite pressure, and arena hazards.
+
+The core project includes **24 weapons**, alongside authored attachments, talents, and rewards. Different builds emphasize different tactics: sustained fire, precise burst damage, crowd control, survival, or mobility.
+
+> [!TIP]
+> **Movement is part of the build.** Reloading, dodging, choosing a target, and finding a safe angle matter even when the weapon is powerful. The combat experience is designed to reward active play rather than leaving the character stationary.
+
+<a id="controls"></a>
+## ⌨️ Controls
 
 | Input | Action |
 | --- | --- |
-| WASD or arrow keys | Move |
-| Mouse | Aim |
-| Left mouse button | Fire |
-| R | Reload |
-| Shift | Dash |
-| 1–7 | Switch weapons |
-| E or Tab | Open the camp or loadout |
+| **WASD** / **Arrow keys** | Move |
+| **Mouse** | Aim |
+| **Left mouse button** | Fire |
+| **R** | Reload |
+| **Shift** | Dash |
+| **1–7** | Switch weapons |
+| **E** / **Tab** | Camp or loadout interactions |
 
-The game is designed for mouse and keyboard. The web build can behave differently depending on browser, GPU, and device, so do not treat it as a performance benchmark for the native Windows build.
+The desktop game is designed for mouse and keyboard. The Web build may behave differently depending on browser, GPU, and device capabilities; it should not be treated as an identical performance benchmark for the native Windows edition.
 
-## Play and Download
+<a id="play-and-download"></a>
+## 🚀 Play & Download
 
-- **Web:** play at <https://seiya058904.github.io/Dont-stop/> in a desktop browser. It is the Godot Web export, deployed through GitHub Pages.
-- **Windows:** download `Don.t.Stop-v1.3.6-Windows-x64.zip` from the [v1.3.6 release](https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.6), extract it, and run the game from the extracted files. A separate Web ZIP, SHA-256 checksum files, and a publication preflight record are attached to the same release. A downloaded Web export must be served from an HTTP server rather than opened as a file.
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🌐 Web — Play Now</h3>
+      <p><sub>GITHUB PAGES · GODOT WEB EXPORT</sub></p>
+      <p>Launch the game directly in a desktop browser without installing the Windows executable.</p>
+      <p><strong><a href="https://seiya058904.github.io/Dont-stop/">▶ Enter the Web Arena →</a></strong></p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🖥️ Windows — Native Build</h3>
+      <p><sub>WINDOWS x64 · RELEASE ZIP</sub></p>
+      <p>Download the published Windows archive, extract it, and launch the packaged game from the extracted files.</p>
+      <p><strong><a href="https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.6">⬇️ Get v1.3.6 →</a></strong></p>
+    </td>
+  </tr>
+</table>
+
+The [**v1.3.6 release**](https://github.com/seiya058904/Dont-stop/releases/tag/v1.3.6) also includes a **Web ZIP** and separate SHA-256 checksum files. A downloaded Godot Web export should be served through an appropriate local HTTP server; the live Pages URL is the simplest way to play online.
+
+### 🔒 A Note About Saves
+
+The **v1.3.6** patch retains verification of **slow browser save writes** and adds byte-preserving cross-process recovery and safe same-page startup after discarding a failed Web save. A successful Web save is reported only after the required snapshot has been committed to and verified in IndexedDB. If persistence fails, the existing retry, export, or discard paths remain available.
 
 > [!IMPORTANT]
-> Local saves are not cloud synchronization. Browser storage can be cleared or unavailable, and native Windows saves stay in their own local environment. Preserve important progress before resetting storage, changing browser profiles, or removing user data. A save warning is not a successful backup.
+> **Local saves are not cloud synchronization.** Browser storage can be cleared or unavailable, and native Windows saves belong to their own local environment. Preserve important progress before resetting storage, changing browser profiles, or removing user data. A save warning should not be mistaken for a successful backup.
 
-## Development
+<a id="for-developers"></a>
+## ⚙️ For Developers
 
-The Git repository root is not the Godot project root. Open [`Don't stop/project.godot`](Don't%20stop/project.godot) with Godot 4.7.2, and quote the directory name in command-line tools:
+Don't Stop is a **Godot 4.7.2** project. The Git repository root is **not** the Godot project root: open the nested [`Don't stop/project.godot`](Don't%20stop/project.godot), and quote the directory name when using command-line tools.
 
-```bash
-"$GODOT" --path "Don't stop"
-```
+<details>
+<summary><strong>🛠️ Expand source layout, verification &amp; export workflow</strong></summary>
+
+### Source map
 
 | Path | Responsibility |
 | --- | --- |
@@ -61,28 +151,44 @@ The Git repository root is not the Godot project root. Open [`Don't stop/project
 | [`Don't stop/game/`](Don't%20stop/game/) | Player, weapons, enemies, maps, encounters, and combat |
 | [`Don't stop/autoload/`](Don't%20stop/autoload/) | Shared game state and persistence services |
 | [`Don't stop/ui/`](Don't%20stop/ui/) | Camp, loadout, HUD, and interface screens |
+| [`Don't stop/Sprites/`](Don't%20stop/Sprites/) | Visual assets and sprite resources |
 | [`Don't stop/tests/`](Don't%20stop/tests/) | Native regression scenarios |
-| [`Don't stop/tools/`](Don't%20stop/tools/) | Verification, web testing, and build-identity utilities |
-| [`Don't stop/web/loader.html`](Don't%20stop/web/loader.html) | Browser export loading screen |
+| [`Don't stop/tools/`](Don't%20stop/tools/) | Verification, Web testing, and build-identity utilities |
+| [`Don't stop/web/loader.html`](Don't%20stop/web/loader.html) | Browser export loading presentation |
 
-[`Don't stop/PLAY_GAME.bat`](Don't%20stop/PLAY_GAME.bat) is a workspace-specific development launcher that relies on a local portable Godot install; it is not a distributable installer.
+### Open the project
 
-Verification is tiered, so a small change does not need a full release test. From the Git root:
+With a matching Godot 4.7.2 executable available:
+
+```bash
+"$GODOT" --path "Don't stop"
+```
+
+On Windows, use the corresponding Godot executable path. The repository also contains [`Don't stop/PLAY_GAME.bat`](Don't%20stop/PLAY_GAME.bat), a workspace-specific development launcher that relies on the documented local portable Godot installation; it is **not** a distributable installer.
+
+### Choose the right verification tier
+
+From the Git root, the project provides targeted verification rather than requiring a full release test for every small change:
 
 ```bash
 python "Don't stop/tools/verify.py" verify-fast --base origin/main
 ```
 
-Broader tiers are `verify-web`, `verify-native`, `verify-full`, and `verify-release`. They need the matching Godot, browser, and test environment, and the full native suite and web stress checks take considerably longer. The release workflow carries the same tested web artifact through verification and deployment and checks the deployed build's identity. Historical test results apply to the code and asset hashes they were run against, not to later revisions.
+For broader product changes, documented tiers include `verify-web`, `verify-native`, `verify-full`, and `verify-release`. They require the appropriate Godot, browser, and test environment. The full native suite and Web stress checks are significantly more extensive; **documentation-only work should not be presented as a completed game-export acceptance**.
 
-Further reading: [repository guidance](AGENTS.md), [Godot project play guide](Don't%20stop/README-PLAY.md), [v1.3.4 save audit](Don't%20stop/docs/iteration/release-v1.3.4.md), and [presentation and performance work](Don't%20stop/docs/iteration/deep-pass.md).
+The release workflow preserves **the same tested Web artifact** through verification and deployment, and checks the deployed build's identity. Historical test results are evidence for their particular code and asset hashes, not blanket proof for all later revisions.
 
-## Concept Art
+**Further reading:** [Repository guidance](AGENTS.md) · [Godot project play guide](Don't%20stop/README-PLAY.md) · [v1.3.4 save audit](Don't%20stop/docs/iteration/release-v1.3.4.md) · [Presentation and performance work](Don't%20stop/docs/iteration/deep-pass.md)
 
-Concept art made for this project. It is an illustration, not a screenshot, and details may differ from the shipped interface.
+</details>
 
-![A concept render of the arena combat.](docs/assets/concept-art.jpg)
+## 📜 Origins & Licensing
 
-## Origins and License
+**Don't Stop is a derivative of [SakuyaCN/TowDownGame](https://github.com/SakuyaCN/TowDownGame).** Its upstream README identifies the project as using the **GNU General Public License**. This documentation does not assume a specific GPL version without a verified licensing source. Preserve upstream attribution and review applicable upstream and asset licenses before redistributing derivative builds.
 
-Don't Stop is a derivative of [SakuyaCN/TowDownGame](https://github.com/SakuyaCN/TowDownGame). Its upstream README identifies that project as using the GNU General Public License; this repository does not assume a specific GPL version without a verified licensing source. Keep the upstream attribution, and review the applicable upstream and asset licenses before redistributing derivative builds.
+---
+
+<p align="center">
+  <sub>MOVE. FIGHT. ADAPT. GO AGAIN.</sub><br>
+  <sub>Don't Stop · A top-down survival shooter built for the next run.</sub>
+</p>
