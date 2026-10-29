@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="cover-title cover-desc">
+  <title id="cover-title">Dont-stop — illustrated project cover</title>
+  <desc id="cover-desc">Keep moving. Make every shot count. A decorative vector illustration accompanies the project title.</desc>
+  <rect width="1200" height="360" rx="24" fill="#101D2B"/>
+  <path d="M56 70h38" stroke="#F0B665" stroke-width="4" stroke-linecap="round"/>
+  <text x="110" y="76" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#F0B665" letter-spacing="2">A TOP-DOWN SURVIVAL SHOOTER</text>
+  <text x="56" y="174" font-family="Arial, Helvetica, sans-serif" font-size="65" font-weight="700" fill="#F6EDDF" letter-spacing="0">DON’T STOP</text>
+  
+  <text x="58" y="220" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="400" fill="#F6EDDF" letter-spacing="0">Keep moving. Make every shot count.</text>
+  <text x="58" y="315" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#F0B665" letter-spacing="2">MOVE · FIGHT · ADAPT · GO AGAIN</text>
+  <g transform="translate(749 28)">
+  <path d="M31 40h332v230H31Z" fill="#172637" stroke="#354255"/>
+  <path d="M31 98h332M31 155h332M31 212h332M86 40v230M141 40v230M196 40v230M251 40v230M306 40v230" stroke="#263447"/>
+  <path d="M85 213Q128 154 186 166T295 95" fill="none" stroke="#798592" stroke-width="2" stroke-dasharray="7 8"/>
+  <circle cx="172" cy="166" r="28" fill="#F0B665" opacity=".14"/>
+  <circle cx="172" cy="166" r="12" fill="#F9C27B"/><path d="M179 161l21-14" stroke="#F9C27B" stroke-width="8" stroke-linecap="round"/>
+  <path d="M221 137l12-8M242 123l12-8" stroke="#FFE2B7" stroke-width="3"/>
+  <path d="M287 76l12 19-12 19-12-19Z" fill="#EC765C"/><path d="M85 87l11 17-11 17-11-17Z" fill="#EC765C"/><path d="M289 210l11 17-11 17-11-17Z" fill="#EC765C"/>
+  <circle cx="287" cy="95" r="27" fill="none" stroke="#EC765C" stroke-width="2"/><path d="M287 60v15M287 115v15M252 95h15M307 95h15" stroke="#EC765C" stroke-width="2"/>
+  <path d="M15 40V24h29M350 286h29v-20" fill="none" stroke="#F0B665" stroke-width="3"/>
+  </g>
+</svg>

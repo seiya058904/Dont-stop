@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/readme-cover.svg" width="100%" alt="DON’T STOP — illustrated project cover" />
+</p>
+
 <h1 align="center">⚡ DON'T STOP</h1>
 
 <p align="center">
