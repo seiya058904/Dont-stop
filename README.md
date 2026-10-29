@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="docs/readme-cover.svg" width="100%" alt="DON’T STOP — illustrated project cover" />
+  <a href="https://seiya058904.github.io/Dont-stop/">
+    <img src="docs/readme-cover.svg" width="100%" alt="DON’T STOP — illustrated project cover" />
+  </a>
 </p>
 
 <h1 align="center">⚡ DON'T STOP</h1>
@@ -162,13 +164,13 @@ Don't Stop is a **Godot 4.7.2** project. The Git repository root is **not** the 
 
 ### Open the project
 
-With a matching Godot 4.7.2 executable available:
+Set `GODOT` to the path of a matching Godot 4.7.2 editor executable, then open the project in the editor:
 
 ```bash
-"$GODOT" --path "Don't stop"
+"$GODOT" --editor --path "Don't stop"
 ```
 
-On Windows, use the corresponding Godot executable path. The repository also contains [`Don't stop/PLAY_GAME.bat`](Don't%20stop/PLAY_GAME.bat), a workspace-specific development launcher that relies on the documented local portable Godot installation; it is **not** a distributable installer.
+Omit `--editor` to run the game directly. In PowerShell, invoke the editor with `& $GODOT --editor --path "Don't stop"`. The repository also contains [`Don't stop/PLAY_GAME.bat`](Don't%20stop/PLAY_GAME.bat), a workspace-specific development launcher that relies on the documented local portable Godot installation; it is **not** a distributable installer.
 
 ### Choose the right verification tier
 
@@ -182,7 +184,7 @@ For broader product changes, documented tiers include `verify-web`, `verify-nati
 
 The release workflow preserves **the same tested Web artifact** through verification and deployment, and checks the deployed build's identity. Historical test results are evidence for their particular code and asset hashes, not blanket proof for all later revisions.
 
-**Further reading:** [Repository guidance](AGENTS.md) · [Godot project play guide](Don't%20stop/README-PLAY.md) · [v1.3.4 save audit](Don't%20stop/docs/iteration/release-v1.3.4.md) · [Presentation and performance work](Don't%20stop/docs/iteration/deep-pass.md)
+**Further reading:** [Repository guidance](AGENTS.md) · [Godot project play guide](Don't%20stop/README-PLAY.md) · [Current v1.3.6 release record](Don't%20stop/docs/iteration/release-v1.3.6.md) · [Presentation and performance work](Don't%20stop/docs/iteration/deep-pass.md)
 
 </details>
 
