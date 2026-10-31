@@ -131,3 +131,8 @@ Identity 只在未 stamp 的导出上写一次；之后测试、打包、部署�
 - 处置规则：保留现有门限和测试规则，不得通过修改阈值掩盖问题；只有出现稳定复现、持续增长或实际性能退化时，才启动针对性调查。
 
 修改保持单目的；先检查现有工作区，完成适用回归、构建、入口 smoke 和 `git diff --check`，再审阅最终 diff。发布、tag、远端配置与历史改写必须有明确授权。
+
+## Browser tool selection
+
+- Prefer Ego Browser for exploratory navigation, visual review and interactive checks when available. Use Playwright for repeatable regression, CI, isolation, request interception or other automation requiring its APIs; combine tools when useful. If Ego is unavailable, use a suitable existing browser tool.
+- Keep this repository's required browser commands, versions, profiles and safety boundaries; an exploratory check does not replace required automated tests. Do not alter real user data or production state for testing. Report the tools, coverage and any untested paths.
