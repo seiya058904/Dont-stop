@@ -51,6 +51,17 @@
 		@media (max-aspect-ratio: 4/5) { #composition { width: 100%; height: 100%; } #world { object-position: 68% center; opacity: .62; } #brand { top: 25%; left: 8%; width: 74%; } #departure { left: 8%; right: 8%; bottom: 8%; } .tagline { margin-top: 24px; } #status-row { margin-bottom: 12px; } #stages { margin-top: 14px; gap: 8px; } #field-note { margin-top: 24px; line-height: 1.7; } }
 		@media (prefers-reduced-motion: reduce) { #world, #brand, .motes i, #bar.busy::after { animation: none; } .motes { display: none; } #bar-fill, #frame { transition: none; } }
 	</style>
+<!-- Cloudflare Web Analytics: public website only -->
+<script type="module">
+// Aggregate page visits on the public website only; local and offline copies stay offline.
+if (location.hostname === "seiya058904.github.io" && !document.querySelector("script[data-cf-beacon]")) {
+  const beacon = document.createElement("script");
+  beacon.type = "module";
+  beacon.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  beacon.dataset.cfBeacon = JSON.stringify({ token: "092f74f76781425ab5ed9495073e4d0f", spa: false });
+  document.head.appendChild(beacon);
+}
+</script>
 </head>
 <body>
 	<div id="canvas-host"><canvas id="canvas"></canvas></div>
