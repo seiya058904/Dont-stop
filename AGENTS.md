@@ -15,4 +15,4 @@
 - **隐性导出陷阱**：`SceneManager` 动态拼装 `shader_patterns` 路径，保留 `Boot.gd` 预加载与 `export_presets.cfg` include filter，严禁按“未引用”删除（无静态检查保护）。
 - **清理保护边界**：删除前逐项核验路径；严禁误删正式素材与 `.import`、权威文档/证据/溯源、测试夹具、`PLAY_GAME.bat`/`PLAY_WEB.bat`、根目录 `archive/` 及存档恢复文件（`.previous`、`.recovery`、`.recovered-*`）。
 - **线上身份红线**：严禁仅凭最新 Git SHA、预设版本号或 HTTP 200 推断线上 Pages/Release 身份；必须核验 `"Don't stop/tools/stamp-build-identity.py"` 与 `"Don't stop/tools/verify-pages-deployment.js"` 的 SHA 及 `index.wasm || index.pck || index.js` 组合哈希。
-- **变更与授权**：不因已知残余风险自发启动大重构；完成前跑适用检查与 `git diff --check`；发布、打 tag、改远端配置或重写历史须获明确授权。
+- **变更与授权**：完成前跑 `git diff --check`；打 tag 须获明确授权。
