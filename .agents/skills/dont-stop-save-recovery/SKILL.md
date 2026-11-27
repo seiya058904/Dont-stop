@@ -1,6 +1,6 @@
 ---
 name: dont-stop-save-recovery
-description: Use when editing or auditing save persistence, Demo.gd, CampSaveStore.gd, SaveDialog.gd, cross-process recovery journals (.recovery/.previous/.recovered-*), or Web bad-save UX in Don't stop.
+description: Use when editing or auditing save persistence, Demo.gd, Don't stop/game/config/CampSaveStore.gd, SaveDialog.gd, cross-process recovery journals (.recovery/.previous/.recovered-*), or Web bad-save UX in Don't stop.
 ---
 
 # Don't Stop Save Durability & Cross-Process Recovery

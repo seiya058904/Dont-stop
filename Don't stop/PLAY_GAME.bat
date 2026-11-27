@@ -1,11 +1,24 @@
 @echo off
 setlocal EnableExtensions
 for %%I in ("%~dp0.") do set "GAME_DIR=%%~fI"
-set "GODOT=%~dp0..\archive\workspace-support\_tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe"
+set "GODOT_LOCAL=%~dp0..\archive\workspace-support\_tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe"
+set "GODOT_SHARED=D:\tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe"
+if defined GODOT if exist "%GODOT%" goto :godot_found
+if defined GODOT_EXE if exist "%GODOT_EXE%" (
+    set "GODOT=%GODOT_EXE%"
+    goto :godot_found
+)
+if exist "%GODOT_LOCAL%" (
+    set "GODOT=%GODOT_LOCAL%"
+    goto :godot_found
+)
+set "GODOT=%GODOT_SHARED%"
+:godot_found
 set "SOURCE_RUNTIME_DIR=%GAME_DIR%\build\source-runtime"
 set "SOURCE_RUNTIME_EXE=%SOURCE_RUNTIME_DIR%\Don't stop.exe"
 if not exist "%GODOT%" (
-    echo The workspace portable Godot 4.7.2 runtime is missing.
+    echo The Godot 4.7.2 runtime was not found.
+    echo Checked %%GODOT%%, %%GODOT_EXE%%, "%GODOT_LOCAL%", and "%GODOT_SHARED%".
     echo See README-PLAY.md in this project folder.
     pause
     exit /b 1

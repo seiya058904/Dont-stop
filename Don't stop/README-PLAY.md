@@ -4,7 +4,7 @@
 
 ## Requirements
 
-Keep the workspace's Godot 4.7.2 portable runtime available under `archive/workspace-support/_tools/godot/4.7.2/`.
+Provide a Godot 4.7.2-stable Windows executable via `GODOT` or `GODOT_EXE`, at `D:\tools\godot\4.7.2\Godot_v4.7.2-stable_win64.exe` (moved out of the legacy `archive/workspace-support/_tools/godot/4.7.2/` path per [`AGENTS.md`](../AGENTS.md)), or under the legacy local path.
 
 ## Controls
 
